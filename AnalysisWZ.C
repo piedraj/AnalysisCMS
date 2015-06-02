@@ -1,12 +1,5 @@
 #define AnalysisWZ_cxx
 #include "AnalysisWZ.h"
-#include <TCanvas.h>
-#include <TH2.h>
-#include <TLorentzVector.h>
-#include <TStyle.h>
-#include <TSystem.h>
-#include <fstream>
-#include <iostream>
 
 
 //==============================================================================
@@ -83,15 +76,13 @@ ofstream            txt_output;
 TFile*              root_output;
 TString             directory;
 TString             filename;
-
+  
 TH1F*               hcounter[nchannel][ncut];
 
 
-//==============================================================================
-//
+//------------------------------------------------------------------------------
 // Loop
-//
-//==============================================================================
+//------------------------------------------------------------------------------
 void AnalysisWZ::Loop()
 {
   luminosity = 500;
@@ -234,11 +225,8 @@ void AnalysisWZ::Loop()
     }
 
 
-    //==========================================================================
-    //
     // Fill histograms
-    //
-    //==========================================================================
+    //--------------------------------------------------------------------------
     FillHistograms(channel, Exactly3Leptons);
 
     if (fabs(mll - Z_MASS) > 20.) continue;
