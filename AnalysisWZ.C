@@ -2,28 +2,41 @@
 #include "AnalysisWZ.h"
 #include <TCanvas.h>
 #include <TH2.h>
+#include <TLorentzVector.h>
 #include <TStyle.h>
+#include <TSystem.h>
+#include <fstream>
 #include <iostream>
 
 
-const int n_channel = 4;
+//==============================================================================
+//
+// Constants, enums and structs
+//
+//==============================================================================
+const float E_MASS =  0.000511;  // [GeV]
+const float M_MASS =  0.106;     // [GeV]
+const float Z_MASS = 91.1876;    // [GeV]
+
+
+const int nchannel = 4;
 
 enum {
-  EEE,
-  EEM,
-  MME,
-  MMM
+  eee,
+  eem,
+  mme,
+  mmm
 };
 
-const TString s_channel[n_channel] = {
-  "EEE",
-  "EEM",
-  "MME",
-  "MMM"
+const TString schannel[nchannel] = {
+  "eee",
+  "eem",
+  "mme",
+  "mmm"
 };
 
 
-const int n_cut = 3;
+const int ncut = 3;
 
 enum {
   Exactly3Leptons,
@@ -31,24 +44,71 @@ enum {
   HasW
 };
 
-const TString s_cut[n_cut] = {
+const TString scut[ncut] = {
   "Exactly3Leptons",
   "HasZ",
   "HasW"
 };
 
 
-int n_event[n_channel][n_cut];
+enum {Muon, Electron};
+
+enum {Loose, Tight};
+
+struct Lepton
+{
+  int            index;
+  int            flavor;  // Muon, Electron
+  int            type;    // Loose, Tight
+  float          charge;
+  TLorentzVector v;
+};
 
 
-//------------------------------------------------------------------------------
+//==============================================================================
+//
+// Data members
+//
+//==============================================================================
+std::vector<Lepton> AnalysisLeptons;
+Lepton              WLepton;
+Lepton              ZLepton1;
+Lepton              ZLepton2;
+
+float               luminosity;
+float               mll;
+int                 channel;
+int                 nelectron;
+ofstream            txt_output;
+TFile*              root_output;
+TString             directory;
+TString             filename;
+
+TH1F*               hcounter[nchannel][ncut];
+
+
+//==============================================================================
+//
 // Loop
-//------------------------------------------------------------------------------
+//
+//==============================================================================
 void AnalysisWZ::Loop()
 {
-  for (int i=0; i<n_channel; i++)
-    for (int j=0; j<n_cut; j++)
-      n_event[i][j] = 0;
+  luminosity = 500;
+  directory  = "test";
+  filename   = "WZ13TeV";
+
+  root_output = new TFile(directory + "/" + filename + ".root", "recreate");
+
+
+  // Initialize histograms
+  //----------------------------------------------------------------------------
+  for (int i=0; i<nchannel; i++) {
+    for (int j=0; j<ncut; j++) {
+
+      hcounter[i][j] = new TH1F("hcounter_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
+    }
+  }
 
 
   // Loop over events
@@ -72,89 +132,175 @@ void AnalysisWZ::Loop()
 
     // Loop over leptons
     //--------------------------------------------------------------------------
-    int vsize = std_vector_lepton_pt->size();
+    AnalysisLeptons.clear();
 
-    int n_electron = 0;
-    int n_muon     = 0;
+    int vsize = std_vector_lepton_pt->size();
 
     for (int i=0; i<vsize; i++) {
 
-      if (std_vector_lepton_pt->at(i) < 10) continue;
+      if (!IsFiducialLepton(i)) continue;
 
-      float aeta = fabs(std_vector_lepton_eta->at(i));
+      float pt  = std_vector_lepton_pt ->at(i);
+      float eta = std_vector_lepton_eta->at(i);
+      float phi = std_vector_lepton_phi->at(i);
+      float id  = std_vector_lepton_id ->at(i);
 
-      // Electrons
-      if (fabs(std_vector_lepton_id->at(i)) == 11)
+      Lepton lep;
+      
+      lep.index  = i;
+      lep.charge = id;
+      lep.type   = Loose;
+      
+      float mass = -999;
+
+      if (fabs(id) == 11)
 	{
-	  if (aeta > 2.5)                  continue;
-	  if (!IsTightLepton(i))           continue;
-	  if (RelativeIsolation(i) > 0.15) continue;
-
-	  n_electron++;
+	  lep.flavor = Electron;
+	  mass = E_MASS;
 	}
-      // Muons
-      else if (fabs(std_vector_lepton_id->at(i)) == 13)
+      else if (fabs(id) == 13)
 	{
-	  if (aeta > 2.4)                  continue;
-	  if (!IsTightLepton(i))           continue;
-	  if (RelativeIsolation(i) > 0.12) continue;
-	  
-	  n_muon++;
+	  lep.flavor = Muon;
+	  mass = M_MASS;
 	}
+
+      if (!IsTightLepton(i))    continue;
+      if (!IsIsolatedLepton(i)) continue;
+
+      lep.type = Tight;
+
+      TLorentzVector tlv;
+
+      tlv.SetPtEtaPhiM(pt, eta, phi, mass);
+      
+      lep.v = tlv;
+
+      AnalysisLeptons.push_back(lep);
     }
-    
-    int n_lepton = n_electron + n_muon;
 
-    if (n_lepton != 3) continue;
 
-    if      (n_electron == 3) n_event[EEE][Exactly3Leptons]++;
-    else if (n_electron == 2) n_event[EEM][Exactly3Leptons]++;
-    else if (n_electron == 1) n_event[MME][Exactly3Leptons]++;
-    else if (n_electron == 0) n_event[MMM][Exactly3Leptons]++;
+    // Require exactly three leptons
+    //--------------------------------------------------------------------------
+    if (AnalysisLeptons.size() != 3) continue;
+
+
+    // Classify the channels
+    //--------------------------------------------------------------------------
+    nelectron = 0;
+
+    for (int i=0; i<3; i++)
+      {
+	if (AnalysisLeptons[i].flavor == Electron) nelectron++;
+      }
+
+    channel = -1;
+
+    if      (nelectron == 0) channel = mmm;
+    else if (nelectron == 1) channel = mme;
+    else if (nelectron == 2) channel = eem;
+    else if (nelectron == 3) channel = eee;
+
+
+    // Make Z and W candidates
+    //--------------------------------------------------------------------------
+    mll = 999;
+
+    for (UInt_t i=0; i<AnalysisLeptons.size(); i++) {
+
+      for (UInt_t j=i+1; j<AnalysisLeptons.size(); j++) {
+      
+	if (AnalysisLeptons[i].flavor != AnalysisLeptons[j].flavor) continue;
+
+	if (AnalysisLeptons[i].charge * AnalysisLeptons[j].charge > 0.) continue;
+
+	float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
+
+	if (fabs(inv_mass - Z_MASS) < fabs(mll - Z_MASS)) {
+
+	  mll = inv_mass;
+
+	  ZLepton1 = AnalysisLeptons[i];
+	  ZLepton2 = AnalysisLeptons[j];
+	  
+	  for (UInt_t k=0; k<3; k++) {
+	
+	    if (k == i) continue;
+	    if (k == j) continue;
+
+	    WLepton = AnalysisLeptons[k];
+	  }
+	}
+      }
+    }
+
+
+    //==========================================================================
+    //
+    // Fill histograms
+    //
+    //==========================================================================
+    FillHistograms(channel, Exactly3Leptons);
+
+    if (fabs(mll - Z_MASS) > 20.) continue;
+    if (ZLepton1.v.Pt()    < 20.) continue;
+
+    FillHistograms(channel, HasZ);
+
+    if (WLepton.v.DeltaR(ZLepton1.v) < 0.1) continue;
+    if (WLepton.v.DeltaR(ZLepton2.v) < 0.1) continue;
+    if (WLepton.v.Pt()               < 20.) continue;
+    if (pfType1Met                   < 30.) continue;
+
+    FillHistograms(channel, HasW);
   }
 
 
+  printf("\n\n");
+
+
+  //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  printf("\n\n");
-  for (int i=0; i<n_channel; i++)
-    printf(" n_event[%s][%s]: %d\n",
-	   s_channel[i].Data(),
-	   s_cut[Exactly3Leptons].Data(),
-	   n_event[i][Exactly3Leptons]);
-  printf("\n");
+  gSystem->mkdir(directory, kTRUE);
+
+  txt_output.open(directory + "/" + filename + ".txt");
+
+  txt_output << Form("\n %39s results with %7.1f pb\n", filename.Data(), luminosity);
+
+  Summary();
+
+  txt_output.close();
+
+
+  root_output->cd();
+
+  root_output->Write("", TObject::kOverwrite);
+
+  root_output->Close();
 }
 
 
 //------------------------------------------------------------------------------
-// RelativeIsolation
+// IsFiducialLepton
 //------------------------------------------------------------------------------
-float AnalysisWZ::RelativeIsolation(int k)
+bool AnalysisWZ::IsFiducialLepton(int k)
 {
-  float isolation = -999;
+  float pt  = std_vector_lepton_pt ->at(k);
+  float eta = std_vector_lepton_eta->at(k);
+  float id  = std_vector_lepton_id ->at(k);
 
-  if (fabs(std_vector_lepton_id->at(k)) == 13)
+  bool is_fiducial_lepton = false;
+
+  if (fabs(id) == 13)
     {
-      isolation = std_vector_lepton_chargedHadronIso->at(k) + max(float(0.0), float(std_vector_lepton_photonIso->at(k) + std_vector_lepton_neutralHadronIso->at(k) - 0.5*std_vector_lepton_sumPUPt->at(k)));
+      is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.4);
     }
-  else if (fabs(std_vector_lepton_id->at(k)) == 11)
+  else if (fabs(id) == 11)
     {
-      float aeta = fabs(std_vector_lepton_eta->at(k));
-
-      float effective_area = -999;
-
-      if      (aeta >  2.2)               effective_area = 0.2680;
-      else if (aeta >= 2.0 && aeta < 2.2) effective_area = 0.1565;
-      else if (aeta >= 1.3 && aeta < 2.0) effective_area = 0.1077;
-      else if (aeta >= 0.8 && aeta < 1.3) effective_area = 0.1734;
-      else if (aeta <  0.8)               effective_area = 0.1830;
-
-      isolation = std_vector_lepton_chargedHadronIso->at(k) + max(float(0.0), float(std_vector_lepton_photonIso->at(k) + std_vector_lepton_neutralHadronIso->at(k) - jetRho*effective_area));
+      is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.5);
     }
-  
-  float relative_isolation = isolation / std_vector_lepton_pt->at(k);
 
-  return relative_isolation;
+  return is_fiducial_lepton;
 }
 
 
@@ -198,4 +344,92 @@ bool AnalysisWZ::IsTightLepton(int k)
     }
 
   return is_tight_lepton;
+}
+
+
+//------------------------------------------------------------------------------
+// IsIsolatedLepton
+//------------------------------------------------------------------------------
+bool AnalysisWZ::IsIsolatedLepton(int k)
+{
+  float pt = std_vector_lepton_pt->at(k);
+  float id = std_vector_lepton_id->at(k);
+
+  float isolation = 999;
+
+  bool is_isolated_lepton = false;
+
+  if (fabs(id) == 13)
+    {
+      isolation =
+	std_vector_lepton_chargedHadronIso->at(k) +
+	max(float(0.0),
+	    float(std_vector_lepton_photonIso->at(k) +
+		  std_vector_lepton_neutralHadronIso->at(k) -
+		  0.5*std_vector_lepton_sumPUPt->at(k)));
+
+      is_isolated_lepton = (isolation/pt < 0.12);
+    }
+  else if (fabs(id) == 11)
+    {
+      float aeta = fabs(std_vector_lepton_eta->at(k));
+
+      float effective_area = -999;
+
+      if      (aeta >  2.2)               effective_area = 0.2680;
+      else if (aeta >= 2.0 && aeta < 2.2) effective_area = 0.1565;
+      else if (aeta >= 1.3 && aeta < 2.0) effective_area = 0.1077;
+      else if (aeta >= 0.8 && aeta < 1.3) effective_area = 0.1734;
+      else if (aeta <  0.8)               effective_area = 0.1830;
+
+      isolation =
+	std_vector_lepton_chargedHadronIso->at(k) +
+	max(float(0.0),
+	    float(std_vector_lepton_photonIso->at(k) +
+		  std_vector_lepton_neutralHadronIso->at(k) -
+		  jetRho*effective_area));
+
+      is_isolated_lepton = (isolation/pt < 0.15);
+    }
+  
+  return is_isolated_lepton;
+}
+
+
+//------------------------------------------------------------------------------
+// FillHistograms
+//------------------------------------------------------------------------------
+void AnalysisWZ::FillHistograms(int ichannel, int icut)
+{
+  hcounter[ichannel][icut]->Fill(1);
+}
+
+
+//------------------------------------------------------------------------------
+// Summary
+//------------------------------------------------------------------------------
+void AnalysisWZ::Summary()
+{
+  txt_output << Form("\n %19s %13s %13s %13s %13s\n",
+		     " ",
+		     schannel[0].Data(),
+		     schannel[1].Data(),
+		     schannel[2].Data(),
+		     schannel[3].Data());
+
+  for (int i=0; i<ncut; i++) {
+      
+    txt_output << Form(" %19s", scut[i].Data());
+
+    for (int j=0; j<nchannel; j++) {
+
+      float integral = hcounter[j][i]->Integral();
+
+      txt_output << Form(" %13.3f", integral);
+    }
+      
+    txt_output << "\n";
+  }
+
+  txt_output << "\n";
 }

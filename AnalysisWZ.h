@@ -920,8 +920,14 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 
-   float   RelativeIsolation(int k);
-   bool    IsTightLepton    (int k);
+
+   // User defined functions
+   //---------------------------------------------------------------------------
+   bool IsFiducialLepton (int k);
+   bool IsTightLepton    (int k);
+   bool IsIsolatedLepton (int k);
+   void FillHistograms   (int ichannel, int icut);
+   void Summary          ();
 };
 
 #endif
@@ -1510,6 +1516,7 @@ Int_t AnalysisWZ::Cut(Long64_t entry)
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
-   return 1;
+  fChain->Show(entry);
+  return 1;
 }
 #endif // #ifdef AnalysisWZ_cxx
