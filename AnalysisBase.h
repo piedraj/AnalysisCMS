@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Jun  2 18:15:45 2015 by ROOT version 5.34/18
+// Fri Jun  5 15:26:11 2015 by ROOT version 5.34/23
 // from TTree latino/probe_tree
-// found on file: ../../latino/latino_WZJets.root
+// found on file: ../../latino/latino_WZJets_3.root
 //////////////////////////////////////////////////////////
 
 #ifndef AnalysisBase_h
@@ -313,10 +313,17 @@ public :
    Float_t         softssvhb;
    Float_t         softssvhe;
    Float_t         softtche;
-   vector<float>   *std_vector_HoE;
-   vector<float>   *std_vector_deltaEtaIn;
-   vector<float>   *std_vector_deltaPhiIn;
-   vector<float>   *std_vector_effectiveArea;
+   vector<float>   *std_vector_electron_HoE;
+   vector<float>   *std_vector_electron_d0;
+   vector<float>   *std_vector_electron_deltaEtaIn;
+   vector<float>   *std_vector_electron_deltaPhiIn;
+   vector<float>   *std_vector_electron_dz;
+   vector<float>   *std_vector_electron_effectiveArea;
+   vector<float>   *std_vector_electron_numHits;
+   vector<float>   *std_vector_electron_ooEooP;
+   vector<float>   *std_vector_electron_passConversion;
+   vector<float>   *std_vector_electron_scEta;
+   vector<float>   *std_vector_electron_sigmaIetaIeta;
    vector<float>   *std_vector_jetGen_eta;
    vector<float>   *std_vector_jetGen_phi;
    vector<float>   *std_vector_jetGen_pt;
@@ -334,6 +341,7 @@ public :
    vector<float>   *std_vector_jet_pfcsv;
    vector<float>   *std_vector_jet_phi;
    vector<float>   *std_vector_jet_pt;
+   vector<float>   *std_vector_jet_puid;
    vector<float>   *std_vector_jet_ssvhb;
    vector<float>   *std_vector_jet_ssvhe;
    vector<float>   *std_vector_jet_tche;
@@ -363,6 +371,7 @@ public :
    vector<float>   *std_vector_lepton_elSIP3D;
    vector<float>   *std_vector_lepton_eta;
    vector<float>   *std_vector_lepton_id;
+   vector<float>   *std_vector_lepton_isMediumMuon;
    vector<float>   *std_vector_lepton_isTightMuon;
    vector<float>   *std_vector_lepton_muSIP3D;
    vector<float>   *std_vector_lepton_neutralHadronIso;
@@ -370,11 +379,9 @@ public :
    vector<float>   *std_vector_lepton_photonIso;
    vector<float>   *std_vector_lepton_pt;
    vector<float>   *std_vector_lepton_sumPUPt;
-   vector<float>   *std_vector_numHits;
    vector<float>   *std_vector_puppijet_eta;
    vector<float>   *std_vector_puppijet_phi;
    vector<float>   *std_vector_puppijet_pt;
-   vector<float>   *std_vector_sigmaIetaIeta;
    vector<float>   *std_vector_tau_eta;
    vector<float>   *std_vector_tau_phi;
    vector<float>   *std_vector_tau_pt;
@@ -762,10 +769,17 @@ public :
    TBranch        *b_softssvhb;   //!
    TBranch        *b_softssvhe;   //!
    TBranch        *b_softtche;   //!
-   TBranch        *b_std_vector_HoE;   //!
-   TBranch        *b_std_vector_deltaEtaIn;   //!
-   TBranch        *b_std_vector_deltaPhiIn;   //!
-   TBranch        *b_std_vector_effectiveArea;   //!
+   TBranch        *b_std_vector_electron_HoE;   //!
+   TBranch        *b_std_vector_electron_d0;   //!
+   TBranch        *b_std_vector_electron_deltaEtaIn;   //!
+   TBranch        *b_std_vector_electron_deltaPhiIn;   //!
+   TBranch        *b_std_vector_electron_dz;   //!
+   TBranch        *b_std_vector_electron_effectiveArea;   //!
+   TBranch        *b_std_vector_electron_numHits;   //!
+   TBranch        *b_std_vector_electron_ooEooP;   //!
+   TBranch        *b_std_vector_electron_passConversion;   //!
+   TBranch        *b_std_vector_electron_scEta;   //!
+   TBranch        *b_std_vector_electron_sigmaIetaIeta;   //!
    TBranch        *b_std_vector_jetGen_eta;   //!
    TBranch        *b_std_vector_jetGen_phi;   //!
    TBranch        *b_std_vector_jetGen_pt;   //!
@@ -783,6 +797,7 @@ public :
    TBranch        *b_std_vector_jet_pfcsv;   //!
    TBranch        *b_std_vector_jet_phi;   //!
    TBranch        *b_std_vector_jet_pt;   //!
+   TBranch        *b_std_vector_jet_puid;   //!
    TBranch        *b_std_vector_jet_ssvhb;   //!
    TBranch        *b_std_vector_jet_ssvhe;   //!
    TBranch        *b_std_vector_jet_tche;   //!
@@ -812,6 +827,7 @@ public :
    TBranch        *b_std_vector_lepton_elSIP3D;   //!
    TBranch        *b_std_vector_lepton_eta;   //!
    TBranch        *b_std_vector_lepton_id;   //!
+   TBranch        *b_std_vector_lepton_isMediumMuon;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
    TBranch        *b_std_vector_lepton_muSIP3D;   //!
    TBranch        *b_std_vector_lepton_neutralHadronIso;   //!
@@ -819,11 +835,9 @@ public :
    TBranch        *b_std_vector_lepton_photonIso;   //!
    TBranch        *b_std_vector_lepton_pt;   //!
    TBranch        *b_std_vector_lepton_sumPUPt;   //!
-   TBranch        *b_std_vector_numHits;   //!
    TBranch        *b_std_vector_puppijet_eta;   //!
    TBranch        *b_std_vector_puppijet_phi;   //!
    TBranch        *b_std_vector_puppijet_pt;   //!
-   TBranch        *b_std_vector_sigmaIetaIeta;   //!
    TBranch        *b_std_vector_tau_eta;   //!
    TBranch        *b_std_vector_tau_phi;   //!
    TBranch        *b_std_vector_tau_pt;   //!
@@ -929,9 +943,9 @@ AnalysisBase::AnalysisBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../../latino/latino_WZJets.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../../latino/latino_WZJets_3.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../../latino/latino_WZJets.root");
+         f = new TFile("../../latino/latino_WZJets_3.root");
       }
       f->GetObject("latino",tree);
 
@@ -975,10 +989,17 @@ void AnalysisBase::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
-   std_vector_HoE = 0;
-   std_vector_deltaEtaIn = 0;
-   std_vector_deltaPhiIn = 0;
-   std_vector_effectiveArea = 0;
+   std_vector_electron_HoE = 0;
+   std_vector_electron_d0 = 0;
+   std_vector_electron_deltaEtaIn = 0;
+   std_vector_electron_deltaPhiIn = 0;
+   std_vector_electron_dz = 0;
+   std_vector_electron_effectiveArea = 0;
+   std_vector_electron_numHits = 0;
+   std_vector_electron_ooEooP = 0;
+   std_vector_electron_passConversion = 0;
+   std_vector_electron_scEta = 0;
+   std_vector_electron_sigmaIetaIeta = 0;
    std_vector_jetGen_eta = 0;
    std_vector_jetGen_phi = 0;
    std_vector_jetGen_pt = 0;
@@ -996,6 +1017,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_jet_pfcsv = 0;
    std_vector_jet_phi = 0;
    std_vector_jet_pt = 0;
+   std_vector_jet_puid = 0;
    std_vector_jet_ssvhb = 0;
    std_vector_jet_ssvhe = 0;
    std_vector_jet_tche = 0;
@@ -1025,6 +1047,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_elSIP3D = 0;
    std_vector_lepton_eta = 0;
    std_vector_lepton_id = 0;
+   std_vector_lepton_isMediumMuon = 0;
    std_vector_lepton_isTightMuon = 0;
    std_vector_lepton_muSIP3D = 0;
    std_vector_lepton_neutralHadronIso = 0;
@@ -1032,11 +1055,9 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_photonIso = 0;
    std_vector_lepton_pt = 0;
    std_vector_lepton_sumPUPt = 0;
-   std_vector_numHits = 0;
    std_vector_puppijet_eta = 0;
    std_vector_puppijet_phi = 0;
    std_vector_puppijet_pt = 0;
-   std_vector_sigmaIetaIeta = 0;
    std_vector_tau_eta = 0;
    std_vector_tau_phi = 0;
    std_vector_tau_pt = 0;
@@ -1334,10 +1355,17 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("softssvhb", &softssvhb, &b_softssvhb);
    fChain->SetBranchAddress("softssvhe", &softssvhe, &b_softssvhe);
    fChain->SetBranchAddress("softtche", &softtche, &b_softtche);
-   fChain->SetBranchAddress("std_vector_HoE", &std_vector_HoE, &b_std_vector_HoE);
-   fChain->SetBranchAddress("std_vector_deltaEtaIn", &std_vector_deltaEtaIn, &b_std_vector_deltaEtaIn);
-   fChain->SetBranchAddress("std_vector_deltaPhiIn", &std_vector_deltaPhiIn, &b_std_vector_deltaPhiIn);
-   fChain->SetBranchAddress("std_vector_effectiveArea", &std_vector_effectiveArea, &b_std_vector_effectiveArea);
+   fChain->SetBranchAddress("std_vector_electron_HoE", &std_vector_electron_HoE, &b_std_vector_electron_HoE);
+   fChain->SetBranchAddress("std_vector_electron_d0", &std_vector_electron_d0, &b_std_vector_electron_d0);
+   fChain->SetBranchAddress("std_vector_electron_deltaEtaIn", &std_vector_electron_deltaEtaIn, &b_std_vector_electron_deltaEtaIn);
+   fChain->SetBranchAddress("std_vector_electron_deltaPhiIn", &std_vector_electron_deltaPhiIn, &b_std_vector_electron_deltaPhiIn);
+   fChain->SetBranchAddress("std_vector_electron_dz", &std_vector_electron_dz, &b_std_vector_electron_dz);
+   fChain->SetBranchAddress("std_vector_electron_effectiveArea", &std_vector_electron_effectiveArea, &b_std_vector_electron_effectiveArea);
+   fChain->SetBranchAddress("std_vector_electron_numHits", &std_vector_electron_numHits, &b_std_vector_electron_numHits);
+   fChain->SetBranchAddress("std_vector_electron_ooEooP", &std_vector_electron_ooEooP, &b_std_vector_electron_ooEooP);
+   fChain->SetBranchAddress("std_vector_electron_passConversion", &std_vector_electron_passConversion, &b_std_vector_electron_passConversion);
+   fChain->SetBranchAddress("std_vector_electron_scEta", &std_vector_electron_scEta, &b_std_vector_electron_scEta);
+   fChain->SetBranchAddress("std_vector_electron_sigmaIetaIeta", &std_vector_electron_sigmaIetaIeta, &b_std_vector_electron_sigmaIetaIeta);
    fChain->SetBranchAddress("std_vector_jetGen_eta", &std_vector_jetGen_eta, &b_std_vector_jetGen_eta);
    fChain->SetBranchAddress("std_vector_jetGen_phi", &std_vector_jetGen_phi, &b_std_vector_jetGen_phi);
    fChain->SetBranchAddress("std_vector_jetGen_pt", &std_vector_jetGen_pt, &b_std_vector_jetGen_pt);
@@ -1355,6 +1383,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jet_pfcsv", &std_vector_jet_pfcsv, &b_std_vector_jet_pfcsv);
    fChain->SetBranchAddress("std_vector_jet_phi", &std_vector_jet_phi, &b_std_vector_jet_phi);
    fChain->SetBranchAddress("std_vector_jet_pt", &std_vector_jet_pt, &b_std_vector_jet_pt);
+   fChain->SetBranchAddress("std_vector_jet_puid", &std_vector_jet_puid, &b_std_vector_jet_puid);
    fChain->SetBranchAddress("std_vector_jet_ssvhb", &std_vector_jet_ssvhb, &b_std_vector_jet_ssvhb);
    fChain->SetBranchAddress("std_vector_jet_ssvhe", &std_vector_jet_ssvhe, &b_std_vector_jet_ssvhe);
    fChain->SetBranchAddress("std_vector_jet_tche", &std_vector_jet_tche, &b_std_vector_jet_tche);
@@ -1384,6 +1413,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_elSIP3D", &std_vector_lepton_elSIP3D, &b_std_vector_lepton_elSIP3D);
    fChain->SetBranchAddress("std_vector_lepton_eta", &std_vector_lepton_eta, &b_std_vector_lepton_eta);
    fChain->SetBranchAddress("std_vector_lepton_id", &std_vector_lepton_id, &b_std_vector_lepton_id);
+   fChain->SetBranchAddress("std_vector_lepton_isMediumMuon", &std_vector_lepton_isMediumMuon, &b_std_vector_lepton_isMediumMuon);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
    fChain->SetBranchAddress("std_vector_lepton_muSIP3D", &std_vector_lepton_muSIP3D, &b_std_vector_lepton_muSIP3D);
    fChain->SetBranchAddress("std_vector_lepton_neutralHadronIso", &std_vector_lepton_neutralHadronIso, &b_std_vector_lepton_neutralHadronIso);
@@ -1391,11 +1421,9 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_photonIso", &std_vector_lepton_photonIso, &b_std_vector_lepton_photonIso);
    fChain->SetBranchAddress("std_vector_lepton_pt", &std_vector_lepton_pt, &b_std_vector_lepton_pt);
    fChain->SetBranchAddress("std_vector_lepton_sumPUPt", &std_vector_lepton_sumPUPt, &b_std_vector_lepton_sumPUPt);
-   fChain->SetBranchAddress("std_vector_numHits", &std_vector_numHits, &b_std_vector_numHits);
    fChain->SetBranchAddress("std_vector_puppijet_eta", &std_vector_puppijet_eta, &b_std_vector_puppijet_eta);
    fChain->SetBranchAddress("std_vector_puppijet_phi", &std_vector_puppijet_phi, &b_std_vector_puppijet_phi);
    fChain->SetBranchAddress("std_vector_puppijet_pt", &std_vector_puppijet_pt, &b_std_vector_puppijet_pt);
-   fChain->SetBranchAddress("std_vector_sigmaIetaIeta", &std_vector_sigmaIetaIeta, &b_std_vector_sigmaIetaIeta);
    fChain->SetBranchAddress("std_vector_tau_eta", &std_vector_tau_eta, &b_std_vector_tau_eta);
    fChain->SetBranchAddress("std_vector_tau_phi", &std_vector_tau_phi, &b_std_vector_tau_phi);
    fChain->SetBranchAddress("std_vector_tau_pt", &std_vector_tau_pt, &b_std_vector_tau_pt);
@@ -1507,7 +1535,6 @@ Int_t AnalysisBase::Cut(Long64_t entry)
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
-   fChain->Show(entry);
    return 1;
 }
 #endif // #ifdef AnalysisBase_cxx
