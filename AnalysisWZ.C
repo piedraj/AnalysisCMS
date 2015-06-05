@@ -317,8 +317,8 @@ bool AnalysisWZ::IsTightLepton(int k)
 	      std_vector_electron_HoE->at(k)              < 0.050537 &&
 	      fabs(std_vector_electron_d0->at(k))         < 0.012235 &&
 	      fabs(std_vector_electron_dz->at(k))         < 0.042020 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.091942)
-	    //	      std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.091942 &&
+	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
 	    }
@@ -331,8 +331,8 @@ bool AnalysisWZ::IsTightLepton(int k)
 	      std_vector_electron_HoE->at(k)              < 0.086782 &&
 	      fabs(std_vector_electron_d0->at(k))         < 0.036719 &&
 	      fabs(std_vector_electron_dz->at(k))         < 0.138142 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.100683)
-	    //	      std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.100683 &&
+	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
 	    }
