@@ -23,8 +23,8 @@ Run
 Results
 ====
 
-                              eee           eem           mme           mmm
-    Exactly3Leptons      2305.000      3551.000      4788.000      7295.000
-               HasZ      2043.000      3078.000      4050.000      6426.000
-               HasW      1431.000      2084.000      2732.000      4229.000
+                               eee           eem           mme           mmm
+     Exactly3Leptons          1796          2106          2391          2757
+                HasZ          1622          1823          2025          2429
+                HasW          1119          1222          1378          1605
 

@@ -943,9 +943,9 @@ AnalysisBase::AnalysisBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../../latino/latino_WZJets_3.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../../latino/latino_WZJets.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../../latino/latino_WZJets_3.root");
+         f = new TFile("../../latino/latino_WZJets.root");
       }
       f->GetObject("latino",tree);
 
@@ -1536,5 +1536,6 @@ Int_t AnalysisBase::Cut(Long64_t entry)
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
+   fChain->Show(entry);
 }
 #endif // #ifdef AnalysisBase_cxx

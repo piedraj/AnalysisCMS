@@ -421,7 +421,7 @@ void AnalysisWZ::Summary()
 
       float integral = hcounter[j][i]->Integral();
 
-      txt_output << Form(" %13.3f", integral);
+      txt_output << Form(" %13.0f", integral);
     }
       
     txt_output << "\n";
