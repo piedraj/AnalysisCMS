@@ -76,7 +76,9 @@ ofstream            txt_output;
 TFile*              root_output;
 TString             directory;
 TString             filename;
-  
+
+TH1F*               hcounter_e;
+TH1F*               hcounter_m;
 TH1F*               hcounter[nchannel][ncut];
 
 
@@ -89,11 +91,16 @@ void AnalysisWZ::Loop()
   directory  = "test";
   filename   = "WZ13TeV";
 
+  gSystem->mkdir(directory, kTRUE);
+
   root_output = new TFile(directory + "/" + filename + ".root", "recreate");
 
 
   // Initialize histograms
   //----------------------------------------------------------------------------
+  hcounter_e = new TH1F("hcounter_e", "", 3, 0, 3);
+  hcounter_m = new TH1F("hcounter_m", "", 3, 0, 3);
+
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
@@ -104,9 +111,6 @@ void AnalysisWZ::Loop()
 
   // Loop over events
   //----------------------------------------------------------------------------
-  int all_tight_electrons = 0;
-  int all_tight_muons     = 0;
-
   if (fChain == 0) return;
 
   Long64_t nentries = fChain->GetEntries();
@@ -161,8 +165,8 @@ void AnalysisWZ::Loop()
       if (!IsTightLepton(i))    continue;
       if (!IsIsolatedLepton(i)) continue;
 
-      if (lep.flavor == Electron) all_tight_electrons++;
-      if (lep.flavor == Muon)     all_tight_muons++;
+      if (lep.flavor == Electron) hcounter_e->Fill(1);
+      if (lep.flavor == Muon)     hcounter_m->Fill(1);
 
       lep.type = Tight;
 
@@ -255,21 +259,7 @@ void AnalysisWZ::Loop()
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  printf("\n");
-  printf(" all_tight_electrons: %d\n", all_tight_electrons);
-  printf(" all_tight_muons:     %d\n", all_tight_muons);
-  printf("\n");
-
-  gSystem->mkdir(directory, kTRUE);
-
-  txt_output.open(directory + "/" + filename + ".txt");
-
-  txt_output << Form("\n %39s results with %7.1f pb\n", filename.Data(), luminosity);
-
   Summary();
-
-  txt_output.close();
-
 
   root_output->cd();
 
@@ -305,6 +295,10 @@ bool AnalysisWZ::IsFiducialLepton(int k)
 
 //------------------------------------------------------------------------------
 // IsTightLepton
+//
+// Devin is using
+// egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V1-miniAOD-standalone-medium
+// https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2?rev=13
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsTightLepton(int k)
 {
@@ -321,28 +315,28 @@ bool AnalysisWZ::IsTightLepton(int k)
       float aeta = fabs(std_vector_electron_scEta->at(k));
 
       if (aeta <= 1.479)
-	{
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.008925 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.035973 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.009996 &&
-	      std_vector_electron_HoE->at(k)              < 0.050537 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.012235 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.042020 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.091942 &&
+	{                                                   //V1         //V2
+	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.007641 &&  //0.008925 &&
+	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.032643 &&  //0.035973 &&
+	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.010399 &&  //0.009996 &&
+	      std_vector_electron_HoE->at(k)              < 0.060662 &&  //0.050537 &&
+	      fabs(std_vector_electron_d0->at(k))         < 0.011811 &&  //0.012235 &&
+	      fabs(std_vector_electron_dz->at(k))         < 0.070775 &&  //0.042020 &&
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.153897 &&  //0.091942 &&
 	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
 	    }
 	}
       else if (aeta > 1.479 && aeta < 2.5)
-	{
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.007429 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.067879 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.030135 &&
-	      std_vector_electron_HoE->at(k)              < 0.086782 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.036719 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.138142 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.100683 &&
+	{                                                   //V1         //V2
+	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.009285 &&  //0.007429 &&
+	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.042447 &&  //0.067879 &&
+	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.029524 &&  //0.030135 &&
+	      std_vector_electron_HoE->at(k)              < 0.104263 &&  //0.086782 &&
+	      fabs(std_vector_electron_d0->at(k))         < 0.051682 &&  //0.036719 &&
+	      fabs(std_vector_electron_dz->at(k))         < 0.180720 &&  //0.138142 &&
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.137468 &&  //0.100683 &&
 	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
@@ -417,6 +411,13 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::Summary()
 {
+  txt_output.open(directory + "/" + filename + ".txt");
+
+  txt_output << Form("\n %39s results with %7.1f pb\n\n", filename.Data(), luminosity);
+
+  txt_output << Form(" number of tight electrons: %.0f\n", hcounter_e->Integral());
+  txt_output << Form(" number of tight muons:     %.0f\n", hcounter_m->Integral());
+
   txt_output << Form("\n %19s %13s %13s %13s %13s\n",
 		     " ",
 		     schannel[0].Data(),
@@ -439,4 +440,6 @@ void AnalysisWZ::Summary()
   }
 
   txt_output << "\n";
+
+  txt_output.close();
 }

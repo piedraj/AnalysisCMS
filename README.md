@@ -1,3 +1,4 @@
+
 Get ROOT
 ====
 
@@ -23,7 +24,10 @@ Run
 Results
 ====
 
+ number of tight electrons: 129241
+ number of tight muons:     149109
+
                                eee           eem           mme           mmm
-     Exactly3Leptons          4953          5704          6576          7292
-                HasZ          4434          4910          5587          6423
-                HasW          3095          3332          3778          4227
+     Exactly3Leptons          5373          6053          6749          7292
+                HasZ          4802          5195          5735          6424
+                HasW          3341          3515          3845          4229
