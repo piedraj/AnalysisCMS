@@ -72,7 +72,8 @@ float               luminosity;
 float               mll;
 int                 channel;
 int                 nelectron;
-ofstream            txt_output;
+ofstream            txt_summary;
+ofstream            txt_mmm;
 TFile*              root_output;
 TString             directory;
 TString             filename;
@@ -94,6 +95,8 @@ void AnalysisWZ::Loop()
   gSystem->mkdir(directory, kTRUE);
 
   root_output = new TFile(directory + "/" + filename + ".root", "recreate");
+
+  txt_mmm.open(directory + "/" + filename + "_mmm.txt");
 
 
   // Initialize histograms
@@ -180,6 +183,26 @@ void AnalysisWZ::Loop()
     }
 
 
+    // Synchronization
+    //--------------------------------------------------------------------------
+    if ((run == 1 && lumi == 1355 && event == 135499) ||
+        (run == 1 && lumi == 1593 && event == 159297) ||
+        (run == 1 && lumi == 2101 && event ==  10040) ||
+        (run == 1 && lumi ==  363 && event ==  36225) ||
+        (run == 1 && lumi ==  404 && event ==  40309) ||
+        (run == 1 && lumi ==  444 && event ==  44384))
+      {
+	printf("\n%u:%u:%u -- ", run, lumi, event);
+	
+	for (UInt_t i=0; i<AnalysisLeptons.size(); i++)
+	  {
+	    TString lepton_flavor = (AnalysisLeptons[i].flavor == Electron) ? "e" : "m";
+	    printf("%s", lepton_flavor.Data());
+	  }
+	printf("\n");
+      }
+    
+    
     // Require exactly three leptons
     //--------------------------------------------------------------------------
     if (AnalysisLeptons.size() != 3) continue;
@@ -239,6 +262,15 @@ void AnalysisWZ::Loop()
     //--------------------------------------------------------------------------
     FillHistograms(channel, Exactly3Leptons);
 
+
+    // Synchronization
+    //--------------------------------------------------------------------------
+    if (channel == mmm)
+      {
+	txt_mmm << Form("%u:%u:%u\n", run, lumi, event);
+      }
+
+
     if (fabs(mll - Z_MASS) > 20.) continue;
     if (ZLepton1.v.Pt()    < 20.) continue;
 
@@ -259,6 +291,8 @@ void AnalysisWZ::Loop()
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
+  txt_mmm.close();
+
   Summary();
 
   root_output->cd();
@@ -411,14 +445,14 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::Summary()
 {
-  txt_output.open(directory + "/" + filename + ".txt");
+  txt_summary.open(directory + "/" + filename + ".txt");
 
-  txt_output << Form("\n %39s results with %7.1f pb\n\n", filename.Data(), luminosity);
+  txt_summary << Form("\n %39s results with %7.1f pb\n\n", filename.Data(), luminosity);
 
-  txt_output << Form(" number of tight electrons: %.0f\n", hcounter_e->Integral());
-  txt_output << Form(" number of tight muons:     %.0f\n", hcounter_m->Integral());
+  txt_summary << Form(" number of tight electrons: %.0f\n", hcounter_e->Integral());
+  txt_summary << Form(" number of tight muons:     %.0f\n", hcounter_m->Integral());
 
-  txt_output << Form("\n %19s %13s %13s %13s %13s\n",
+  txt_summary << Form("\n %19s %13s %13s %13s %13s\n",
 		     " ",
 		     schannel[0].Data(),
 		     schannel[1].Data(),
@@ -427,19 +461,19 @@ void AnalysisWZ::Summary()
 
   for (int i=0; i<ncut; i++) {
       
-    txt_output << Form(" %19s", scut[i].Data());
+    txt_summary << Form(" %19s", scut[i].Data());
 
     for (int j=0; j<nchannel; j++) {
 
       float integral = hcounter[j][i]->Integral();
 
-      txt_output << Form(" %13.0f", integral);
+      txt_summary << Form(" %13.0f", integral);
     }
       
-    txt_output << "\n";
+    txt_summary << "\n";
   }
 
-  txt_output << "\n";
+  txt_summary << "\n";
 
-  txt_output.close();
+  txt_summary.close();
 }
