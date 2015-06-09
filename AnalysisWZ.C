@@ -104,6 +104,9 @@ void AnalysisWZ::Loop()
 
   // Loop over events
   //----------------------------------------------------------------------------
+  int all_tight_electrons = 0;
+  int all_tight_muons     = 0;
+
   if (fChain == 0) return;
 
   Long64_t nentries = fChain->GetEntries();
@@ -157,6 +160,9 @@ void AnalysisWZ::Loop()
 
       if (!IsTightLepton(i))    continue;
       if (!IsIsolatedLepton(i)) continue;
+
+      if (lep.flavor == Electron) all_tight_electrons++;
+      if (lep.flavor == Muon)     all_tight_muons++;
 
       lep.type = Tight;
 
@@ -249,6 +255,11 @@ void AnalysisWZ::Loop()
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
+  printf("\n");
+  printf(" all_tight_electrons: %d\n", all_tight_electrons);
+  printf(" all_tight_muons:     %d\n", all_tight_muons);
+  printf("\n");
+
   gSystem->mkdir(directory, kTRUE);
 
   txt_output.open(directory + "/" + filename + ".txt");
