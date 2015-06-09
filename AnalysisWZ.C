@@ -368,22 +368,22 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
     }
   else if (fabs(id) == 11)
     {
-      //      float aeta = fabs(std_vector_lepton_eta->at(k));
-      //
-      //      float effective_area = -999;
-      //
-      //      if      (aeta >  2.2)               effective_area = 0.2680;
-      //      else if (aeta >= 2.0 && aeta < 2.2) effective_area = 0.1565;
-      //      else if (aeta >= 1.3 && aeta < 2.0) effective_area = 0.1077;
-      //      else if (aeta >= 0.8 && aeta < 1.3) effective_area = 0.1734;
-      //      else if (aeta <  0.8)               effective_area = 0.1830;
+      float aeta = fabs(std_vector_lepton_eta->at(k));
+      
+      float effective_area = -999;
+      
+      if      (aeta >  2.2)               effective_area = 0.2680;
+      else if (aeta >= 2.0 && aeta < 2.2) effective_area = 0.1565;
+      else if (aeta >= 1.3 && aeta < 2.0) effective_area = 0.1077;
+      else if (aeta >= 0.8 && aeta < 1.3) effective_area = 0.1734;
+      else if (aeta <  0.8)               effective_area = 0.1830;
 
       isolation =
 	std_vector_lepton_chargedHadronIso->at(k) +
 	max(float(0.0),
 	    float(std_vector_lepton_photonIso->at(k) +
 		  std_vector_lepton_neutralHadronIso->at(k) -
-		  jetRho*std_vector_electron_effectiveArea->at(k)));
+		  jetRho*effective_area));
 
       is_isolated_lepton = (isolation/pt < 0.15);
     }

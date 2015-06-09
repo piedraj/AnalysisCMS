@@ -24,7 +24,6 @@ Results
 ====
 
                                eee           eem           mme           mmm
-     Exactly3Leptons          1796          2106          2391          2757
-                HasZ          1622          1823          2025          2429
-                HasW          1119          1222          1378          1605
-
+     Exactly3Leptons          4953          5704          6576          7292
+                HasZ          4434          4910          5587          6423
+                HasW          3095          3332          3778          4227
