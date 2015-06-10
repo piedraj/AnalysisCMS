@@ -15,12 +15,14 @@ class AnalysisWZ : public AnalysisBase
 {
  public :
 
-  void Loop             ();
-  bool IsFiducialLepton (int k);
-  bool IsTightLepton    (int k);
-  bool IsIsolatedLepton (int k);
-  void FillHistograms   (int ichannel, int icut);
-  void Summary          ();
+  void  Loop             ();
+  float MuonIsolation    (int k);
+  float ElectronIsolation(int k);
+  bool  IsFiducialLepton (int k);
+  bool  IsTightLepton    (int k);
+  bool  IsIsolatedLepton (int k);
+  void  FillHistograms   (int ichannel, int icut);
+  void  Summary          ();
 
 };
 

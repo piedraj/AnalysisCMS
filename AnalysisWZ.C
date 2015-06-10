@@ -7,6 +7,9 @@
 // Constants, enums and structs
 //
 //==============================================================================
+const int verbosity = 1;
+
+
 const float E_MASS =  0.000511;  // [GeV]
 const float M_MASS =  0.106;     // [GeV]
 const float Z_MASS = 91.1876;    // [GeV]
@@ -118,7 +121,7 @@ void AnalysisWZ::Loop()
 
   Long64_t nentries = fChain->GetEntries();
 
-  printf("\n Will run on %lld events\n\n", nentries);
+  if (verbosity > 0) printf("\n Will run on %lld events\n\n", nentries);
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
@@ -128,7 +131,7 @@ void AnalysisWZ::Loop()
 
     fChain->GetEntry(jentry);
 
-    if (jentry%10000 == 0) std::cout << "." << std::flush;
+    if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
 
 
     // Loop over leptons
@@ -185,21 +188,24 @@ void AnalysisWZ::Loop()
 
     // Synchronization
     //--------------------------------------------------------------------------
-    if ((run == 1 && lumi == 1355 && event == 135499) ||
-        (run == 1 && lumi == 1593 && event == 159297) ||
-        (run == 1 && lumi == 2101 && event ==  10040) ||
-        (run == 1 && lumi ==  363 && event ==  36225) ||
-        (run == 1 && lumi ==  404 && event ==  40309) ||
-        (run == 1 && lumi ==  444 && event ==  44384))
+    if (verbosity == 2)
       {
-	printf("\n%u:%u:%u -- ", run, lumi, event);
-	
-	for (UInt_t i=0; i<AnalysisLeptons.size(); i++)
+	if ((run == 1 && lumi == 1355 && event == 135499) ||
+	    (run == 1 && lumi == 1593 && event == 159297) ||
+	    (run == 1 && lumi == 2101 && event ==  10040) ||
+	    (run == 1 && lumi ==  363 && event ==  36225) ||
+	    (run == 1 && lumi ==  404 && event ==  40309) ||
+	    (run == 1 && lumi ==  444 && event ==  44384))
 	  {
-	    TString lepton_flavor = (AnalysisLeptons[i].flavor == Electron) ? "e" : "m";
-	    printf("%s", lepton_flavor.Data());
+	    printf("%u:%u:%u -- ", run, lumi, event);
+	    
+	    for (UInt_t i=0; i<AnalysisLeptons.size(); i++)
+	      {
+		TString lepton_flavor = (AnalysisLeptons[i].flavor == Electron) ? "e" : "m";
+		printf("%s", lepton_flavor.Data());
+	      }
+	    printf("\n");
 	  }
-	printf("\n");
       }
     
     
@@ -285,7 +291,8 @@ void AnalysisWZ::Loop()
   }
 
 
-  printf("\n\n");
+  if (verbosity >  0) printf("\n");
+  if (verbosity == 1) printf("\n");
 
 
   //----------------------------------------------------------------------------
@@ -330,9 +337,8 @@ bool AnalysisWZ::IsFiducialLepton(int k)
 //------------------------------------------------------------------------------
 // IsTightLepton
 //
-// Devin is using
-// egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V1-miniAOD-standalone-medium
-// https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2?rev=13
+// https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
+// egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-medium
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsTightLepton(int k)
 {
@@ -349,28 +355,30 @@ bool AnalysisWZ::IsTightLepton(int k)
       float aeta = fabs(std_vector_electron_scEta->at(k));
 
       if (aeta <= 1.479)
-	{                                                   //V1         //V2
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.007641 &&  //0.008925 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.032643 &&  //0.035973 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.010399 &&  //0.009996 &&
-	      std_vector_electron_HoE->at(k)              < 0.060662 &&  //0.050537 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.011811 &&  //0.012235 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.070775 &&  //0.042020 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.153897 &&  //0.091942 &&
+	{
+	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.008925 &&
+	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.035973 &&
+	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.009996 &&
+	      std_vector_electron_HoE->at(k)              < 0.050537 &&
+	      fabs(std_vector_electron_d0->at(k))         < 0.012235 &&
+	      fabs(std_vector_electron_dz->at(k))         < 0.042020 &&
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.091942 &&
+	      ElectronIsolation(k)                        < 0.107587 &&
 	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
 	    }
 	}
       else if (aeta > 1.479 && aeta < 2.5)
-	{                                                   //V1         //V2
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.009285 &&  //0.007429 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.042447 &&  //0.067879 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.029524 &&  //0.030135 &&
-	      std_vector_electron_HoE->at(k)              < 0.104263 &&  //0.086782 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.051682 &&  //0.036719 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.180720 &&  //0.138142 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.137468 &&  //0.100683 &&
+	{
+	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.007429 &&
+	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.067879 &&
+	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.030135 &&
+	      std_vector_electron_HoE->at(k)              < 0.086782 &&
+	      fabs(std_vector_electron_d0->at(k))         < 0.036719 &&
+	      fabs(std_vector_electron_dz->at(k))         < 0.138142 &&
+	      fabs(std_vector_electron_ooEooP->at(k))     < 0.100683 &&
+	      ElectronIsolation(k)                        < 0.113254 &&
 	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
 	    {
 	      is_tight_lepton = true;
@@ -383,49 +391,66 @@ bool AnalysisWZ::IsTightLepton(int k)
 
 
 //------------------------------------------------------------------------------
-// IsIsolatedLepton
+// MuonIsolation
 //------------------------------------------------------------------------------
-bool AnalysisWZ::IsIsolatedLepton(int k)
+float AnalysisWZ::MuonIsolation(int k)
 {
   float pt = std_vector_lepton_pt->at(k);
   float id = std_vector_lepton_id->at(k);
 
-  float isolation = 999;
+  float relative_isolation = -999;
+
+  if (fabs(id) != 13) return relative_isolation;
+
+  relative_isolation =
+    std_vector_lepton_chargedHadronIso->at(k) +
+    max(float(0.0),
+	float(std_vector_lepton_photonIso->at(k) +
+	      std_vector_lepton_neutralHadronIso->at(k) -
+	      0.5*std_vector_lepton_sumPUPt->at(k)));
+
+  relative_isolation /= pt;
+  
+  return relative_isolation;
+}
+
+
+//------------------------------------------------------------------------------
+// ElectronIsolation
+//------------------------------------------------------------------------------
+float AnalysisWZ::ElectronIsolation(int k)
+{
+  float pt = std_vector_lepton_pt->at(k);
+  float id = std_vector_lepton_id->at(k);
+
+  float relative_isolation = -999;
+
+  if (fabs(id) != 11) return relative_isolation;
+
+  relative_isolation =
+    std_vector_lepton_chargedHadronIso->at(k) +
+    max(float(0.0),
+	float(std_vector_lepton_photonIso->at(k) +
+	      std_vector_lepton_neutralHadronIso->at(k) -
+	      jetRho*std_vector_electron_effectiveArea->at(k)));
+  
+  relative_isolation /= pt;
+  
+  return relative_isolation;
+}
+
+
+//------------------------------------------------------------------------------
+// IsIsolatedLepton
+//------------------------------------------------------------------------------
+bool AnalysisWZ::IsIsolatedLepton(int k)
+{
+  float id = std_vector_lepton_id->at(k);
 
   bool is_isolated_lepton = false;
 
-  if (fabs(id) == 13)
-    {
-      isolation =
-	std_vector_lepton_chargedHadronIso->at(k) +
-	max(float(0.0),
-	    float(std_vector_lepton_photonIso->at(k) +
-		  std_vector_lepton_neutralHadronIso->at(k) -
-		  0.5*std_vector_lepton_sumPUPt->at(k)));
-
-      is_isolated_lepton = (isolation/pt < 0.12);
-    }
-  else if (fabs(id) == 11)
-    {
-      float aeta = fabs(std_vector_lepton_eta->at(k));
-      
-      float effective_area = -999;
-      
-      if      (aeta >  2.2)               effective_area = 0.2680;
-      else if (aeta >= 2.0 && aeta < 2.2) effective_area = 0.1565;
-      else if (aeta >= 1.3 && aeta < 2.0) effective_area = 0.1077;
-      else if (aeta >= 0.8 && aeta < 1.3) effective_area = 0.1734;
-      else if (aeta <  0.8)               effective_area = 0.1830;
-
-      isolation =
-	std_vector_lepton_chargedHadronIso->at(k) +
-	max(float(0.0),
-	    float(std_vector_lepton_photonIso->at(k) +
-		  std_vector_lepton_neutralHadronIso->at(k) -
-		  jetRho*effective_area));
-
-      is_isolated_lepton = (isolation/pt < 0.15);
-    }
+  if      (fabs(id) == 11) is_isolated_lepton = true;//(ElectronIsolation(k) < 0.15);
+  else if (fabs(id) == 13) is_isolated_lepton = (MuonIsolation(k)     < 0.12);
   
   return is_isolated_lepton;
 }

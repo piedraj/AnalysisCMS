@@ -24,10 +24,11 @@ Run
 Results
 ====
 
- number of tight electrons: 129241
+ number of tight electrons: 120160
  number of tight muons:     149109
 
                                eee           eem           mme           mmm
-     Exactly3Leptons          5373          6053          6749          7292
-                HasZ          4802          5195          5735          6424
-                HasW          3341          3515          3845          4229
+     Exactly3Leptons          4420          5306          6311          7292
+                HasZ          3984          4581          5365          6423
+                HasW          2795          3112          3654          4227
+
