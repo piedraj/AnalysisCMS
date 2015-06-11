@@ -20,14 +20,14 @@ const int nchannel = 4;
 enum {
   eee,
   eem,
-  mme,
+  emm,
   mmm
 };
 
 const TString schannel[nchannel] = {
   "eee",
   "eem",
-  "mme",
+  "emm",
   "mmm"
 };
 
@@ -76,9 +76,11 @@ float               mll;
 int                 channel;
 int                 nelectron;
 ofstream            txt_summary;
-ofstream            txt_mmm;
+ofstream            txt_events_eee;
+ofstream            txt_events_eem;
+ofstream            txt_events_emm;
+ofstream            txt_events_mmm;
 TFile*              root_output;
-TString             directory;
 TString             filename;
 
 TH1F*               hcounter_e;
@@ -92,14 +94,17 @@ TH1F*               hcounter[nchannel][ncut];
 void AnalysisWZ::Loop()
 {
   luminosity = 500;
-  directory  = "test";
   filename   = "WZ13TeV";
 
-  gSystem->mkdir(directory, kTRUE);
+  gSystem->mkdir("rootfiles", kTRUE);
+  gSystem->mkdir("txt",       kTRUE);
 
-  root_output = new TFile(directory + "/" + filename + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + filename + ".root", "recreate");
 
-  txt_mmm.open(directory + "/" + filename + "_mmm.txt");
+  txt_events_eee.open("txt/" + filename + "_eee.txt");
+  txt_events_eem.open("txt/" + filename + "_eem.txt");
+  txt_events_emm.open("txt/" + filename + "_emm.txt");
+  txt_events_mmm.open("txt/" + filename + "_mmm.txt");
 
 
   // Initialize histograms
@@ -225,10 +230,10 @@ void AnalysisWZ::Loop()
 
     channel = -1;
 
-    if      (nelectron == 0) channel = mmm;
-    else if (nelectron == 1) channel = mme;
+    if      (nelectron == 3) channel = eee;
     else if (nelectron == 2) channel = eem;
-    else if (nelectron == 3) channel = eee;
+    else if (nelectron == 1) channel = emm;
+    else if (nelectron == 0) channel = mmm;
 
 
     // Make Z and W candidates
@@ -271,10 +276,10 @@ void AnalysisWZ::Loop()
 
     // Synchronization
     //--------------------------------------------------------------------------
-    if (channel == mmm)
-      {
-	txt_mmm << Form("%u:%u:%u\n", run, lumi, event);
-      }
+    if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
+    if (channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
+    if (channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
+    if (channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
 
 
     if (fabs(mll - Z_MASS) > 20.) continue;
@@ -298,7 +303,10 @@ void AnalysisWZ::Loop()
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  txt_mmm.close();
+  txt_events_eee.close();
+  txt_events_eem.close();
+  txt_events_emm.close();
+  txt_events_mmm.close();
 
   Summary();
 
@@ -470,7 +478,7 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::Summary()
 {
-  txt_summary.open(directory + "/" + filename + ".txt");
+  txt_summary.open("txt/" + filename + ".txt");
 
   txt_summary << Form("\n %39s results with %7.1f pb\n\n", filename.Data(), luminosity);
 
