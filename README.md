@@ -24,11 +24,21 @@ Run
 Results
 ====
 
- number of tight electrons: 120160
- number of tight muons:     149109
+                               eee           eem           emm           mmm
+     Exactly3Leptons          4078          5029          6145          7295
+                HasZ          3679          4364          5230          6425
+                HasW          2569          2952          3569          4229
 
-                               eee           eem           mme           mmm
-     Exactly3Leptons          4420          5306          6311          7292
-                HasZ          3984          4581          5365          6423
-                HasW          2795          3112          3654          4227
+
+Synchronization
+====
+
+    cd txt
+    sort -k 2 --field-separator=":" WZ13TeV_mmm.txt   > WZ13TeV_mmm_sorted.txt
+    sort -k 2 --field-separator=":" events_WZ_mmm.txt > events_WZ_mmm_sorted.txt
+
+    diff WZ13TeV_mmm_sorted.txt events_WZ_mmm_sorted.txt | grep -E "<|>"
+    > 1:2101:10040
+    > 1:404:40309
+    < 1:4984:98324
 

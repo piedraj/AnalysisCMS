@@ -7,7 +7,7 @@
 // Constants, enums and structs
 //
 //==============================================================================
-const int verbosity = 1;
+const int verbosity = 2;
 
 
 const float E_MASS =  0.000511;  // [GeV]
@@ -195,12 +195,9 @@ void AnalysisWZ::Loop()
     //--------------------------------------------------------------------------
     if (verbosity == 2)
       {
-	if ((run == 1 && lumi == 1355 && event == 135499) ||
-	    (run == 1 && lumi == 1593 && event == 159297) ||
-	    (run == 1 && lumi == 2101 && event ==  10040) ||
-	    (run == 1 && lumi ==  363 && event ==  36225) ||
+	if ((run == 1 && lumi == 2101 && event ==  10040) ||
 	    (run == 1 && lumi ==  404 && event ==  40309) ||
-	    (run == 1 && lumi ==  444 && event ==  44384))
+	    (run == 1 && lumi == 4984 && event ==  98324))
 	  {
 	    printf("%u:%u:%u -- ", run, lumi, event);
 	    
@@ -364,30 +361,32 @@ bool AnalysisWZ::IsTightLepton(int k)
 
       if (aeta <= 1.479)
 	{
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.008925 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.035973 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.009996 &&
-	      std_vector_electron_HoE->at(k)              < 0.050537 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.012235 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.042020 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.091942 &&
-	      ElectronIsolation(k)                        < 0.107587 &&
-	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
+	  if (fabs(std_vector_electron_dEtaIn->at(k))             < 0.008925 &&
+	      fabs(std_vector_electron_dPhiIn->at(k))             < 0.035973 &&
+	      std_vector_electron_full5x5_sigmaIetaIeta->at(k)    < 0.009996 &&
+	      std_vector_electron_hOverE->at(k)                   < 0.050537 &&
+	      fabs(std_vector_electron_d0->at(k))                 < 0.012235 &&
+	      fabs(std_vector_electron_dz->at(k))                 < 0.042020 &&
+	      fabs(std_vector_electron_ooEmooP->at(k))            < 0.091942 &&
+	      ElectronIsolation(k)                                < 0.107587 &&
+	      std_vector_electron_expectedMissingInnerHits->at(k) < 2 &&
+	      std_vector_electron_passConversionVeto->at(k))
 	    {
 	      is_tight_lepton = true;
 	    }
 	}
       else if (aeta > 1.479 && aeta < 2.5)
 	{
-	  if (fabs(std_vector_electron_deltaEtaIn->at(k)) < 0.007429 &&
-	      fabs(std_vector_electron_deltaPhiIn->at(k)) < 0.067879 &&
-	      std_vector_electron_sigmaIetaIeta->at(k)    < 0.030135 &&
-	      std_vector_electron_HoE->at(k)              < 0.086782 &&
-	      fabs(std_vector_electron_d0->at(k))         < 0.036719 &&
-	      fabs(std_vector_electron_dz->at(k))         < 0.138142 &&
-	      fabs(std_vector_electron_ooEooP->at(k))     < 0.100683 &&
-	      ElectronIsolation(k)                        < 0.113254 &&
-	      !std_vector_electron_passConversion->at(k))  // Includes expectedMissingInnerHits
+	  if (fabs(std_vector_electron_dEtaIn->at(k))             < 0.007429 &&
+	      fabs(std_vector_electron_dPhiIn->at(k))             < 0.067879 &&
+	      std_vector_electron_full5x5_sigmaIetaIeta->at(k)    < 0.030135 &&
+	      std_vector_electron_hOverE->at(k)                   < 0.086782 &&
+	      fabs(std_vector_electron_d0->at(k))                 < 0.036719 &&
+	      fabs(std_vector_electron_dz->at(k))                 < 0.138142 &&
+	      fabs(std_vector_electron_ooEmooP->at(k))            < 0.100683 &&
+	      ElectronIsolation(k)                                < 0.113254 &&
+	      std_vector_electron_expectedMissingInnerHits->at(k) < 2 &&
+	      std_vector_electron_passConversionVeto->at(k))
 	    {
 	      is_tight_lepton = true;
 	    }
