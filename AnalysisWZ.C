@@ -358,41 +358,6 @@ bool AnalysisWZ::IsTightLepton(int k)
   else if (fabs(std_vector_lepton_id->at(k)) == 11)
     {
       is_tight_lepton = std_vector_lepton_eleIdMedium->at(k);
-
-      //      float aeta = fabs(std_vector_electron_scEta->at(k));
-      //
-      //      if (aeta <= 1.479)
-      //	{
-      //	  if (fabs(std_vector_electron_dEtaIn->at(k))             < 0.008925 &&
-      //	      fabs(std_vector_electron_dPhiIn->at(k))             < 0.035973 &&
-      //	      std_vector_electron_full5x5_sigmaIetaIeta->at(k)    < 0.009996 &&
-      //	      std_vector_electron_hOverE->at(k)                   < 0.050537 &&
-      //	      fabs(std_vector_electron_d0->at(k))                 < 0.012235 &&
-      //	      fabs(std_vector_electron_dz->at(k))                 < 0.042020 &&
-      //	      fabs(std_vector_electron_ooEmooP->at(k))            < 0.091942 &&
-      //	      ElectronIsolation(k)                                < 0.107587 &&
-      //	      std_vector_electron_expectedMissingInnerHits->at(k) < 2 &&
-      //	      std_vector_electron_passConversionVeto->at(k))
-      //	    {
-      //	      is_tight_lepton = true;
-      //	    }
-      //	}
-      //      else if (aeta > 1.479 && aeta < 2.5)
-      //	{
-      //	  if (fabs(std_vector_electron_dEtaIn->at(k))             < 0.007429 &&
-      //	      fabs(std_vector_electron_dPhiIn->at(k))             < 0.067879 &&
-      //	      std_vector_electron_full5x5_sigmaIetaIeta->at(k)    < 0.030135 &&
-      //	      std_vector_electron_hOverE->at(k)                   < 0.086782 &&
-      //	      fabs(std_vector_electron_d0->at(k))                 < 0.036719 &&
-      //	      fabs(std_vector_electron_dz->at(k))                 < 0.138142 &&
-      //	      fabs(std_vector_electron_ooEmooP->at(k))            < 0.100683 &&
-      //	      ElectronIsolation(k)                                < 0.113254 &&
-      //	      std_vector_electron_expectedMissingInnerHits->at(k) < 2 &&
-      //	      std_vector_electron_passConversionVeto->at(k))
-      //	    {
-      //	      is_tight_lepton = true;
-      //	    }
-      //	}
     }
 
   return is_tight_lepton;
@@ -458,7 +423,7 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 
   bool is_isolated_lepton = false;
 
-  if      (fabs(id) == 11) is_isolated_lepton = true;//(ElectronIsolation(k) < 0.15);
+  if      (fabs(id) == 11) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
   else if (fabs(id) == 13) is_isolated_lepton = (MuonIsolation(k)     < 0.12);
   
   return is_isolated_lepton;

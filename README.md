@@ -25,9 +25,9 @@ Results
 ====
 
                                eee           eem           emm           mmm
-     Exactly3Leptons          4078          5029          6145          7295
-                HasZ          3679          4364          5230          6425
-                HasW          2569          2952          3569          4229
+     Exactly3Leptons          4130          5065          6164          7290
+                HasZ          3723          4384          5246          6420
+                HasW          2600          2965          3573          4226
 
 
 Synchronization
