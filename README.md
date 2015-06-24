@@ -3,10 +3,7 @@ Get ROOT
 ====
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
-    source /cvmfs/cms.cern.ch/cmsset_default.sh
-    pushd /gpfs/csic_users/piedra/CMSSW_7_3_0/src
-    cmsenv
-    popd
+    source setup.sh
 
 
 Get the material
@@ -26,8 +23,8 @@ Results
 
                                eee           eem           emm           mmm
      Exactly3Leptons          4130          5065          6164          7290
-                HasZ          3723          4384          5246          6420
-                HasW          2600          2965          3573          4226
+                HasZ          3823          4493          5377          6653
+                HasW          2668          3030          3661          4382
 
 
 Synchronization

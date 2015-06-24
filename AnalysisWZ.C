@@ -74,7 +74,8 @@ Lepton              ZLepton2;
 float               luminosity;
 float               mll;
 int                 channel;
-int                 nelectron;
+unsigned int        nelectron;
+unsigned int        nlepton;
 ofstream            txt_summary;
 ofstream            txt_events_eee;
 ofstream            txt_events_eem;
@@ -190,18 +191,25 @@ void AnalysisWZ::Loop()
       AnalysisLeptons.push_back(lep);
     }
 
+    nlepton = AnalysisLeptons.size();
+
 
     // Synchronization
     //--------------------------------------------------------------------------
     if (verbosity == 2)
       {
-	if ((run == 1 && lumi == 2101 && event ==  10040) ||
+	if ((run == 1 && lumi == 1679 && event == 167809) ||
+	    (run == 1 && lumi == 2101 && event ==  10040) ||
+	    (run == 1 && lumi == 2174 && event ==  17347) ||
+	    (run == 1 && lumi == 3106 && event == 110551) ||
+	    (run == 1 && lumi == 3325 && event == 132450) ||
 	    (run == 1 && lumi ==  404 && event ==  40309) ||
-	    (run == 1 && lumi == 4984 && event ==  98324))
+	    (run == 1 && lumi == 4984 && event ==  98324) ||
+	    (run == 1 && lumi ==  742 && event ==  74108))
 	  {
-	    printf("%u:%u:%u -- ", run, lumi, event);
+	    printf("%u:%u:%u -- %u leptons found ", run, lumi, event, nlepton);
 	    
-	    for (UInt_t i=0; i<AnalysisLeptons.size(); i++)
+	    for (UInt_t i=0; i<nlepton; i++)
 	      {
 		TString lepton_flavor = (AnalysisLeptons[i].flavor == Electron) ? "e" : "m";
 		printf("%s", lepton_flavor.Data());
@@ -213,7 +221,7 @@ void AnalysisWZ::Loop()
     
     // Require exactly three leptons
     //--------------------------------------------------------------------------
-    if (AnalysisLeptons.size() != 3) continue;
+    if (nlepton != 3) continue;
 
 
     // Classify the channels
@@ -237,9 +245,9 @@ void AnalysisWZ::Loop()
     //--------------------------------------------------------------------------
     mll = 999;
 
-    for (UInt_t i=0; i<AnalysisLeptons.size(); i++) {
+    for (UInt_t i=0; i<nlepton; i++) {
 
-      for (UInt_t j=i+1; j<AnalysisLeptons.size(); j++) {
+      for (UInt_t j=i+1; j<nlepton; j++) {
       
 	if (AnalysisLeptons[i].flavor != AnalysisLeptons[j].flavor) continue;
 
@@ -266,11 +274,6 @@ void AnalysisWZ::Loop()
     }
 
 
-    // Fill histograms
-    //--------------------------------------------------------------------------
-    FillHistograms(channel, Exactly3Leptons);
-
-
     // Synchronization
     //--------------------------------------------------------------------------
     if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
@@ -279,8 +282,13 @@ void AnalysisWZ::Loop()
     if (channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
 
 
-    if (fabs(mll - Z_MASS) > 20.) continue;
-    if (ZLepton1.v.Pt()    < 20.) continue;
+    // Fill histograms
+    //--------------------------------------------------------------------------
+    FillHistograms(channel, Exactly3Leptons);
+
+    if (mll <  60.) continue;
+    if (mll > 120.) continue;
+    if (ZLepton1.v.Pt() < 20.) continue;
 
     FillHistograms(channel, HasZ);
 
@@ -384,7 +392,7 @@ float AnalysisWZ::MuonIsolation(int k)
 	      0.5*std_vector_lepton_sumPUPt->at(k)));
 
   relative_isolation /= pt;
-  
+
   return relative_isolation;
 }
 
