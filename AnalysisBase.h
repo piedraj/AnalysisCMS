@@ -1615,6 +1615,7 @@ Int_t AnalysisBase::Cut(Long64_t entry)
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
+   fChain->Show(entry);
    return 1;
 }
 #endif // #ifdef AnalysisBase_cxx
