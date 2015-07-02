@@ -5,7 +5,7 @@ Everything starts here
 
     export SCRAM_ARCH=slc6_amd64_gcc491
     cmsrel CMSSW_7_4_6
-    cd CMSSW_7_4_6/src/
+    cd CMSSW_7_4_6/src
     cmsenv
 
 
@@ -18,6 +18,7 @@ Get the material
 Run
 ====
 
+    cd WZ13TeV
     root -l -b -q runAnalysisWZ.C
 
 
