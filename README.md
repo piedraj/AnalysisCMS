@@ -35,10 +35,10 @@ Synchronization
 ====
 
     cd txt
-    sort -k 2 --field-separator=":" WZ13TeV_mmm.txt   > WZ13TeV_mmm_sorted.txt
-    sort -k 2 --field-separator=":" events_WZ_mmm.txt > events_WZ_mmm_sorted.txt
+    sort -k 2 --field-separator=":" WZ_mmm_ifca.txt > WZ_mmm_ifca_sorted.txt
+    sort -k 2 --field-separator=":" WZ_mmm_uw.txt   > WZ_mmm_uw_sorted.txt
 
-    diff WZ13TeV_mmm_sorted.txt events_WZ_mmm_sorted.txt | grep -E "<|>"
+    diff WZ_mmm_ifca_sorted.txt WZ_mmm_uw_sorted.txt | grep -E "<|>"
     > 1:2101:10040
     > 1:404:40309
     < 1:4984:98324
