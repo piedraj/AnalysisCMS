@@ -14,7 +14,7 @@
 // Constants, enums and structs
 //
 //==============================================================================
-const int verbosity = 2;
+const int verbosity = 1;
 
 
 const float E_MASS =  0.000511;  // [GeV]
@@ -22,35 +22,41 @@ const float M_MASS =  0.106;     // [GeV]
 const float Z_MASS = 91.1876;    // [GeV]
 
 
-const int nchannel = 4;
+const int nchannel = 5;
 
 enum {
   eee,
   eem,
   emm,
-  mmm
+  mmm,
+  all
 };
 
 const TString schannel[nchannel] = {
   "eee",
   "eem",
   "emm",
-  "mmm"
+  "mmm",
+  "all"
 };
 
 
-const int ncut = 3;
+const int ncut = 5;
 
 enum {
   Exactly3Leptons,
   HasZ,
-  HasW
+  HasW,
+  OneBJet,
+  NoBJets
 };
 
 const TString scut[ncut] = {
   "Exactly3Leptons",
   "HasZ",
-  "HasW"
+  "HasW",
+  "OneBJet",
+  "NoBJets"
 };
 
 
@@ -91,9 +97,8 @@ ofstream            txt_events_mmm;
 TFile*              root_output;
 TString             filename;
 
-TH1F*               hcounter_e;
-TH1F*               hcounter_m;
-TH1F*               hcounter[nchannel][ncut];
+TH1F*               hcounter_raw[nchannel][ncut];
+TH1F*               hcounter_lum[nchannel][ncut];
 
 
 //------------------------------------------------------------------------------
@@ -101,7 +106,9 @@ TH1F*               hcounter[nchannel][ncut];
 //------------------------------------------------------------------------------
 void AnalysisWZ::Loop()
 {
-  luminosity = 500;
+  TH1::SetDefaultSumw2();
+
+  luminosity = 1;  // fb-1
   filename   = "WZ13TeV";
 
   gSystem->mkdir("rootfiles", kTRUE);
@@ -117,13 +124,11 @@ void AnalysisWZ::Loop()
 
   // Initialize histograms
   //----------------------------------------------------------------------------
-  hcounter_e = new TH1F("hcounter_e", "", 3, 0, 3);
-  hcounter_m = new TH1F("hcounter_m", "", 3, 0, 3);
-
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
-      hcounter[i][j] = new TH1F("hcounter_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
+      hcounter_raw[i][j] = new TH1F("hcounter_raw_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
+      hcounter_lum[i][j] = new TH1F("hcounter_lum_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
     }
   }
 
@@ -151,9 +156,9 @@ void AnalysisWZ::Loop()
     //--------------------------------------------------------------------------
     AnalysisLeptons.clear();
 
-    int vsize = std_vector_lepton_pt->size();
+    int vector_lepton_size = std_vector_lepton_pt->size();
 
-    for (int i=0; i<vsize; i++) {
+    for (int i=0; i<vector_lepton_size; i++) {
 
       if (!IsFiducialLepton(i)) continue;
 
@@ -184,9 +189,6 @@ void AnalysisWZ::Loop()
       if (!IsTightLepton(i))    continue;
       if (!IsIsolatedLepton(i)) continue;
 
-      if (lep.flavor == Electron) hcounter_e->Fill(1);
-      if (lep.flavor == Muon)     hcounter_m->Fill(1);
-
       lep.type = Tight;
 
       TLorentzVector tlv;
@@ -201,7 +203,7 @@ void AnalysisWZ::Loop()
     nlepton = AnalysisLeptons.size();
 
 
-    // Synchronization
+    // For synchronization
     //--------------------------------------------------------------------------
     if (verbosity == 2)
       {
@@ -281,7 +283,33 @@ void AnalysisWZ::Loop()
     }
 
 
-    // Synchronization
+    // Loop over jets
+    //--------------------------------------------------------------------------
+    int vector_jet_size = std_vector_jet_pt->size();
+
+    int nbjet = 0;
+
+    for (int i=0; i<vector_jet_size; i++) {
+
+      float pt   = std_vector_jet_pt   ->at(i);
+      float eta  = std_vector_jet_eta  ->at(i);
+      float phi  = std_vector_jet_phi  ->at(i);
+      float btag = std_vector_jet_pfcsv->at(i);
+
+      TLorentzVector jet;
+
+      jet.SetPtEtaPhiM(pt, eta, phi, 0.0);
+      
+      if ((pt > 30.) &&
+	  (fabs(eta) < 2.4) &&
+	  (jet.DeltaR(ZLepton1.v) > 0.4) &&
+	  (jet.DeltaR(ZLepton2.v) > 0.4) &&
+	  (jet.DeltaR(WLepton.v)  > 0.4) &&
+	  (btag > 0)) nbjet++;
+    }
+
+
+    // For synchronization
     //--------------------------------------------------------------------------
     if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
     if (channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
@@ -305,6 +333,14 @@ void AnalysisWZ::Loop()
     if (pfType1Met                   < 30.) continue;
 
     FillHistograms(channel, HasW);
+
+    if (nbjet > 1) continue;
+
+    FillHistograms(channel, OneBJet);
+
+    if (nbjet > 0) continue;
+
+    FillHistograms(channel, NoBJets);
   }
 
 
@@ -312,15 +348,25 @@ void AnalysisWZ::Loop()
   if (verbosity == 1) printf("\n");
 
 
-  //----------------------------------------------------------------------------
-  // Summary
+  // For synchronization
   //----------------------------------------------------------------------------
   txt_events_eee.close();
   txt_events_eem.close();
   txt_events_emm.close();
   txt_events_mmm.close();
 
-  Summary();
+
+  //----------------------------------------------------------------------------
+  // Summary
+  //----------------------------------------------------------------------------
+  txt_summary.open("txt/" + filename + ".txt");
+
+  txt_summary << Form("\n %39s results with %.0f fb\n", filename.Data(), luminosity);
+
+  Summary("raw");
+  Summary("lum");
+
+  txt_summary.close();
 
   root_output->cd();
 
@@ -450,28 +496,25 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisWZ::FillHistograms(int ichannel, int icut)
 {
-  hcounter[ichannel][icut]->Fill(1);
+  hcounter_raw[ichannel][icut]->Fill(1);
+  hcounter_lum[ichannel][icut]->Fill(1, 2.2 * luminosity * 1e3 / 237484.);
+
+  if (ichannel != all) FillHistograms(all, icut);
 }
 
 
 //------------------------------------------------------------------------------
 // Summary
 //------------------------------------------------------------------------------
-void AnalysisWZ::Summary()
+void AnalysisWZ::Summary(TString title)
 {
-  txt_summary.open("txt/" + filename + ".txt");
+  txt_summary << Form("\n %39s yields\n", title.Data());
 
-  txt_summary << Form("\n %39s results with %7.1f pb\n\n", filename.Data(), luminosity);
+  txt_summary << Form("\n %2s", " ");
+  
+  for (int i=0; i<nchannel; i++) txt_summary << Form("%31s", schannel[i].Data());
 
-  txt_summary << Form(" number of tight electrons: %.0f\n", hcounter_e->Integral());
-  txt_summary << Form(" number of tight muons:     %.0f\n", hcounter_m->Integral());
-
-  txt_summary << Form("\n %19s %13s %13s %13s %13s\n",
-		     " ",
-		     schannel[0].Data(),
-		     schannel[1].Data(),
-		     schannel[2].Data(),
-		     schannel[3].Data());
+  txt_summary << Form("\n");
 
   for (int i=0; i<ncut; i++) {
       
@@ -479,15 +522,18 @@ void AnalysisWZ::Summary()
 
     for (int j=0; j<nchannel; j++) {
 
-      float integral = hcounter[j][i]->Integral();
+      TH1F* hcounter = hcounter_raw[j][i];
 
-      txt_summary << Form(" %13.0f", integral);
+      if (title.Contains("lum")) hcounter = hcounter_lum[j][i];
+
+      float yield = hcounter->Integral();
+      float error = sqrt(hcounter->GetSumw2()->GetSum());
+
+      txt_summary << Form(" %13.2f +- %-13.2f", yield, error);
     }
       
     txt_summary << "\n";
   }
-
+  
   txt_summary << "\n";
-
-  txt_summary.close();
 }

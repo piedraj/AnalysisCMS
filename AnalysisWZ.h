@@ -978,13 +978,14 @@ public :
 
    
    // User defined functions
-   float MuonIsolation    (int k);
-   float ElectronIsolation(int k);
-   bool  IsFiducialLepton (int k);
-   bool  IsTightLepton    (int k);
-   bool  IsIsolatedLepton (int k);
-   void  FillHistograms   (int ichannel, int icut);
-   void  Summary          ();
+   float MuonIsolation    (int     k);
+   float ElectronIsolation(int     k);
+   bool  IsFiducialLepton (int     k);
+   bool  IsTightLepton    (int     k);
+   bool  IsIsolatedLepton (int     k);
+   void  FillHistograms   (int     ichannel,
+			   int     icut);
+   void  Summary          (TString title);
 };
 
 #endif
