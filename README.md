@@ -13,13 +13,15 @@ Get the material
 ====
 
     git clone https://github.com/piedraj/WZ13TeV
+    cd WZ13TeV
 
 
 Run
 ====
 
-    cd WZ13TeV
-    root -l -b -q runAnalysisWZ.C
+    root -l AnalysisWZ.C+
+    root[1] AnalysisWZ awz
+    root[2] awz.Loop()
 
 
 Results

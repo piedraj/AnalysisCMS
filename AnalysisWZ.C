@@ -1,6 +1,13 @@
 #define AnalysisWZ_cxx
 #include "AnalysisWZ.h"
 
+#include <TH1.h>
+#include <TLorentzVector.h>
+#include <TStyle.h>
+#include <TSystem.h>
+#include <fstream>
+#include <iostream>
+
 
 //==============================================================================
 //
