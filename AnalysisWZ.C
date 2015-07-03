@@ -334,11 +334,12 @@ void AnalysisWZ::Loop()
 
     FillHistograms(channel, HasW);
 
-    if (nbjet > 1) continue;
+    //    if (nbjet > 1) continue;
+    if (bveto_ip != 1 || nbjettche != 0) continue;
 
     FillHistograms(channel, OneBJet);
 
-    if (nbjet > 0) continue;
+    //    if (nbjet > 0) continue;
 
     FillHistograms(channel, NoBJets);
   }
@@ -361,10 +362,10 @@ void AnalysisWZ::Loop()
   //----------------------------------------------------------------------------
   txt_summary.open("txt/" + filename + ".txt");
 
-  txt_summary << Form("\n %39s results with %.0f fb\n", filename.Data(), luminosity);
+  txt_summary << Form("\n%20s results with %.0f fb\n", filename.Data(), luminosity);
 
-  Summary("raw");
-  Summary("lum");
+  Summary("raw yields");
+  Summary("predicted yields");
 
   txt_summary.close();
 
@@ -508,28 +509,26 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::Summary(TString title)
 {
-  txt_summary << Form("\n %39s yields\n", title.Data());
+  txt_summary << Form("\n%20s", title.Data());
 
-  txt_summary << Form("\n %2s", " ");
-  
-  for (int i=0; i<nchannel; i++) txt_summary << Form("%31s", schannel[i].Data());
+  for (int i=0; i<nchannel; i++) txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
 
-  txt_summary << Form("\n");
+  txt_summary << Form("\n---------------------\n");
 
   for (int i=0; i<ncut; i++) {
       
-    txt_summary << Form(" %19s", scut[i].Data());
+    txt_summary << Form("%20s", scut[i].Data());
 
     for (int j=0; j<nchannel; j++) {
 
       TH1F* hcounter = hcounter_raw[j][i];
 
-      if (title.Contains("lum")) hcounter = hcounter_lum[j][i];
+      if (title.Contains("predicted")) hcounter = hcounter_lum[j][i];
 
       float yield = hcounter->Integral();
       float error = sqrt(hcounter->GetSumw2()->GetSum());
 
-      txt_summary << Form(" %13.2f +- %-13.2f", yield, error);
+      txt_summary << Form("%11.2f +- %-11.2f", yield, error);
     }
       
     txt_summary << "\n";
