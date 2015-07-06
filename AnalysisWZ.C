@@ -14,7 +14,8 @@
 // Constants, enums and structs
 //
 //==============================================================================
-const int verbosity = 1;
+const bool print_events = false;
+const int  verbosity    = 1;
 
 
 const float E_MASS =  0.000511;  // [GeV]
@@ -85,6 +86,7 @@ Lepton              ZLepton1;
 Lepton              ZLepton2;
 
 float               luminosity;
+float               event_weight;
 float               mll;
 int                 channel;
 unsigned int        nelectron;
@@ -97,29 +99,35 @@ ofstream            txt_events_mmm;
 TFile*              root_output;
 TString             filename;
 
-TH1F*               hcounter_raw[nchannel][ncut];
-TH1F*               hcounter_lum[nchannel][ncut];
+TH1F*               h_counter_raw[nchannel][ncut];
+TH1F*               h_counter_lum[nchannel][ncut];
+TH1F*               h_invMass2Lep[nchannel][ncut];
 
 
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisWZ::Loop()
+void AnalysisWZ::Loop(TString sample)
 {
   TH1::SetDefaultSumw2();
 
-  luminosity = 1;  // fb-1
-  filename   = "WZ13TeV";
+  luminosity   = 1.;  // fb-1
+  event_weight = 2.2 * luminosity * 1e3 / 237484;
+
+  filename = sample;
 
   gSystem->mkdir("rootfiles", kTRUE);
   gSystem->mkdir("txt",       kTRUE);
 
   root_output = new TFile("rootfiles/" + filename + ".root", "recreate");
 
-  txt_events_eee.open("txt/" + filename + "_eee.txt");
-  txt_events_eem.open("txt/" + filename + "_eem.txt");
-  txt_events_emm.open("txt/" + filename + "_emm.txt");
-  txt_events_mmm.open("txt/" + filename + "_mmm.txt");
+  if (print_events)
+    {
+      txt_events_eee.open("txt/" + filename + "_eee.txt");
+      txt_events_eem.open("txt/" + filename + "_eem.txt");
+      txt_events_emm.open("txt/" + filename + "_emm.txt");
+      txt_events_mmm.open("txt/" + filename + "_mmm.txt");
+    }
 
 
   // Initialize histograms
@@ -127,8 +135,9 @@ void AnalysisWZ::Loop()
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
-      hcounter_raw[i][j] = new TH1F("hcounter_raw_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
-      hcounter_lum[i][j] = new TH1F("hcounter_lum_" + schannel[i] + "_" + scut[j], "", 3, 0, 3);
+      h_counter_raw[i][j] = new TH1F("h_counter_raw_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
+      h_counter_lum[i][j] = new TH1F("h_counter_lum_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
+      h_invMass2Lep[i][j] = new TH1F("h_invMass2Lep_" + schannel[i] + "_" + scut[j], "", 400, 0, 200);
     }
   }
 
@@ -139,7 +148,9 @@ void AnalysisWZ::Loop()
 
   Long64_t nentries = fChain->GetEntries();
 
-  if (verbosity > 0) printf("\n Will run on %lld events\n\n", nentries);
+  if (verbosity > 0) printf("\n Reading latino_%s.root sample. Will run on %lld events\n\n",
+			    filename.Data(),
+			    nentries);
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
@@ -311,10 +322,13 @@ void AnalysisWZ::Loop()
 
     // For synchronization
     //--------------------------------------------------------------------------
-    if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
-    if (channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
-    if (channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
-    if (channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
+    if (print_events)
+      {
+	if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
+	if (channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
+	if (channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
+	if (channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
+      }
 
 
     // Fill histograms
@@ -351,10 +365,13 @@ void AnalysisWZ::Loop()
 
   // For synchronization
   //----------------------------------------------------------------------------
-  txt_events_eee.close();
-  txt_events_eem.close();
-  txt_events_emm.close();
-  txt_events_mmm.close();
+  if (print_events)
+    {
+      txt_events_eee.close();
+      txt_events_eem.close();
+      txt_events_emm.close();
+      txt_events_mmm.close();
+    }
 
 
   //----------------------------------------------------------------------------
@@ -497,8 +514,10 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisWZ::FillHistograms(int ichannel, int icut)
 {
-  hcounter_raw[ichannel][icut]->Fill(1);
-  hcounter_lum[ichannel][icut]->Fill(1, 2.2 * luminosity * 1e3 / 237484.);
+  h_counter_raw[ichannel][icut]->Fill(1);
+  h_counter_lum[ichannel][icut]->Fill(1, event_weight);
+
+  h_invMass2Lep[ichannel][icut]->Fill(mll, event_weight);
 
   if (ichannel != all) FillHistograms(all, icut);
 }
@@ -521,12 +540,12 @@ void AnalysisWZ::Summary(TString title)
 
     for (int j=0; j<nchannel; j++) {
 
-      TH1F* hcounter = hcounter_raw[j][i];
+      TH1F* h_counter = h_counter_raw[j][i];
 
-      if (title.Contains("predicted")) hcounter = hcounter_lum[j][i];
+      if (title.Contains("predicted")) h_counter = h_counter_lum[j][i];
 
-      float yield = hcounter->Integral();
-      float error = sqrt(hcounter->GetSumw2()->GetSum());
+      float yield = h_counter->Integral();
+      float error = sqrt(h_counter->GetSumw2()->GetSum());
 
       txt_summary << Form("%11.2f +- %-11.2f", yield, error);
     }
