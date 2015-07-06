@@ -17,6 +17,8 @@
 #include "Math/GenVector/LorentzVector.h"
 #include "Math/GenVector/PxPyPzE4D.h"
 
+using namespace std;
+
 class AnalysisWZ {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain

@@ -19,7 +19,6 @@ Get the material
 Run
 ====
 
-    root -l AnalysisWZ.C+
-    root[1] AnalysisWZ awz
-    root[2] awz.Loop()
+    g++ -o runWZ runWZ.C `root-config --cflags --glibs`
+    ./runWZ 
 
