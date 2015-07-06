@@ -104,10 +104,8 @@ void AnalysisWZ::Loop(TString sample)
 {
   TH1::SetDefaultSumw2();
 
-  luminosity   = 1.;  // fb-1
-  event_weight = 2.2 * luminosity * 1e3 / 237484;
-
-  filename = sample;
+  luminosity = 1.;  // fb-1
+  filename   = sample;
 
   gSystem->mkdir("rootfiles", kTRUE);
   gSystem->mkdir("txt",       kTRUE);
@@ -140,6 +138,8 @@ void AnalysisWZ::Loop(TString sample)
   if (fChain == 0) return;
 
   Long64_t nentries = fChain->GetEntries();
+
+  event_weight = 2.2 * luminosity * 1e3 / nentries;  // Temporary, until baseW works
 
   if (verbosity > 0) printf("\n Reading latino_%s.root sample. Will run on %lld events\n\n",
 			    filename.Data(),
@@ -295,10 +295,13 @@ void AnalysisWZ::Loop(TString sample)
 
     for (int i=0; i<vector_jet_size; i++) {
 
-      float pt   = std_vector_jet_pt   ->at(i);
-      float eta  = std_vector_jet_eta  ->at(i);
-      float phi  = std_vector_jet_phi  ->at(i);
-      float btag = std_vector_jet_pfcsv->at(i);
+      float pt  = std_vector_jet_pt ->at(i);
+      float eta = std_vector_jet_eta->at(i);
+      float phi = std_vector_jet_phi->at(i);
+
+      // https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
+      // Medium WP
+      bool btag = (std_vector_jet_csvv2ivf->at(i) > 0.814);
 
       TLorentzVector jet;
 
@@ -309,7 +312,7 @@ void AnalysisWZ::Loop(TString sample)
 	  (jet.DeltaR(ZLepton1.v) > 0.4) &&
 	  (jet.DeltaR(ZLepton2.v) > 0.4) &&
 	  (jet.DeltaR(WLepton.v)  > 0.4) &&
-	  (btag > 0)) nbjet++;
+	  btag) nbjet++;  
     }
 
 
@@ -341,12 +344,11 @@ void AnalysisWZ::Loop(TString sample)
 
     FillHistograms(channel, HasW);
 
-    //    if (nbjet > 1) continue;
-    if (bveto_ip != 1 || nbjettche != 0) continue;
+    if (nbjet > 1) continue;
 
     FillHistograms(channel, OneBJet);
 
-    //    if (nbjet > 0) continue;
+    if (nbjet > 0) continue;
 
     FillHistograms(channel, NoBJets);
   }

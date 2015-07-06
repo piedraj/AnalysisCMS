@@ -4,7 +4,7 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 
-void AnalysisBase::Loop(TString sample)
+void AnalysisBase::Loop()
 {
 //   In a ROOT session, you can do:
 //      root> .L AnalysisBase.C

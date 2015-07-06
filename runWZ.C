@@ -20,6 +20,7 @@ void runWZ(TString sample)
 int main()
 {
   runWZ("WZJets_PHYS14");
+  runWZ("WZTo3LNu_25ns");
 
   return 0;
 }
