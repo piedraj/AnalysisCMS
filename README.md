@@ -19,6 +19,6 @@ Get the material
 Run
 ====
 
-    g++ -o runWZ runWZ.C `root-config --cflags --glibs`
+    `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
     ./runWZ 
 
