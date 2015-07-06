@@ -300,7 +300,10 @@ void AnalysisWZ::Loop(TString sample)
       float phi = std_vector_jet_phi->at(i);
 
       // https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
-      // Medium WP
+      // Loose  WP = 0.423
+      // Medium WP = 0.814
+      // Tight  WP = 0.941
+
       bool btag = (std_vector_jet_csvv2ivf->at(i) > 0.814);
 
       TLorentzVector jet;
