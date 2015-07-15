@@ -1,12 +1,12 @@
 #include "AnalysisWZ.C"
 
 
-TString local_path = "/gpfs/csic_projects/cms/piedra/latino/";
+//TString local_path = "/gpfs/csic_projects/cms/piedra/latino/kbutanov/RunII/15Jul/25ns/";
 
 
-void runWZ(TString sample)
+void runWZ(TString sample, TString filename)
 {
-  TFile* file = new TFile(local_path + "latino_" + sample + ".root");
+  TFile* file = TFile::Open(filename);
 
   TTree* latino = (TTree*)file->Get("latino");
 
@@ -19,8 +19,7 @@ void runWZ(TString sample)
 # ifndef __CINT__
 int main()
 {
-  runWZ("WZJets_PHYS14");
-  runWZ("WZTo3LNu_25ns");
+  runWZ("WZ", "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/kbutanov/RunII/15Jul/25ns/latino_WZ.root");
 
   return 0;
 }
