@@ -11,9 +11,10 @@ const bool print_events = false;
 const int  verbosity    = 1;
 
 
-const float E_MASS =  0.000511;  // [GeV]
-const float M_MASS =  0.106;     // [GeV]
-const float Z_MASS = 91.1876;    // [GeV]
+const float ELECTRON_MASS =  0.000511;  // [GeV]
+const float MUON_MASS     =  0.106;     // [GeV]
+const float TAU_MASS      =  1.777;     // [GeV]
+const float Z_MASS        = 91.188;     // [GeV]
 
 
 const int nchannel = 5;
@@ -54,15 +55,15 @@ const TString scut[ncut] = {
 };
 
 
-enum {Muon, Electron};
+enum {Muon, Electron, Tau};
 
-enum {Loose, Tight};
+enum {Loose, Tight, Gen};
 
 struct Lepton
 {
   int            index;
-  int            flavor;  // Muon, Electron
-  int            type;    // Loose, Tight
+  int            flavor;  // Muon, Electron, Tau
+  int            type;    // Loose, Tight, Gen
   float          charge;
   TLorentzVector v;
 };
@@ -74,6 +75,7 @@ struct Lepton
 //
 //==============================================================================
 std::vector<Lepton> AnalysisLeptons;
+std::vector<Lepton> GenLeptons;
 Lepton              WLepton;
 Lepton              ZLepton1;
 Lepton              ZLepton2;
@@ -91,6 +93,8 @@ ofstream            txt_events_emm;
 ofstream            txt_events_mmm;
 TFile*              root_output;
 TString             filename;
+
+TH1F*               h_gen_mZ;
 
 TH1F*               h_counter_raw[nchannel][ncut];
 TH1F*               h_counter_lum[nchannel][ncut];
@@ -123,6 +127,8 @@ void AnalysisWZ::Loop(TString sample)
 
   // Initialize histograms
   //----------------------------------------------------------------------------
+  h_gen_mZ = new TH1F("h_gen_mZ", "", 400, 0, 200);
+
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
@@ -139,7 +145,9 @@ void AnalysisWZ::Loop(TString sample)
 
   Long64_t nentries = fChain->GetEntries();
 
-  event_weight = 2.2 * luminosity * 1e3 / nentries;  // Temporary, until baseW works
+  event_weight = (sample.Contains("WZTo3LNu")) ? 0.00230 : baseW;
+
+  event_weight *= luminosity;
 
   if (verbosity > 0) printf("\n Reading latino_%s.root sample. Will run on %lld events\n\n",
 			    filename.Data(),
@@ -154,6 +162,82 @@ void AnalysisWZ::Loop(TString sample)
     fChain->GetEntry(jentry);
 
     if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
+
+
+    // Loop over GEN leptons
+    //--------------------------------------------------------------------------
+    GenLeptons.clear();
+
+    int vector_leptonGen_size = std_vector_leptonGen_pt->size();
+
+    for (int i=0; i<vector_leptonGen_size; i++) {
+
+      float pt   = std_vector_leptonGen_pt  ->at(i);
+      float eta  = std_vector_leptonGen_eta ->at(i);
+      float phi  = std_vector_leptonGen_phi ->at(i);
+      float pid  = std_vector_leptonGen_pid ->at(i);
+      float mpid = std_vector_leptonGen_mpid->at(i);
+
+      Lepton lep;
+
+      lep.index  = i;
+      lep.charge = pid;
+      lep.type   = Gen;
+
+      float mass = -999;
+      
+      if (fabs(pid) == 11)
+	{
+	  lep.flavor = Electron;
+	  mass = ELECTRON_MASS;
+	}
+      else if (fabs(pid) == 13)
+	{
+	  lep.flavor = Muon;
+	  mass = MUON_MASS;
+	}
+      else if (fabs(pid) == 15)
+	{
+	  lep.flavor = Tau;
+	  mass = TAU_MASS;
+	}
+
+      if (fabs(mpid) != 23) continue;  // Require leptons from Z
+
+      TLorentzVector tlv;
+
+      tlv.SetPtEtaPhiM(pt, eta, phi, mass);
+
+      lep.v = tlv;
+
+      GenLeptons.push_back(lep);
+    }
+
+    unsigned int ngenlepton = GenLeptons.size();
+
+
+    // Make GEN Z mass
+    //--------------------------------------------------------------------------
+    float mZ = 999;
+
+    for (UInt_t i=0; i<ngenlepton; i++) {
+
+      for (UInt_t j=i+1; j<ngenlepton; j++) {
+      
+	if (GenLeptons[i].flavor != GenLeptons[j].flavor) continue;
+
+	if (GenLeptons[i].charge * GenLeptons[j].charge > 0.) continue;
+
+	float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
+
+	if (fabs(inv_mass - Z_MASS) < fabs(mZ - Z_MASS)) {
+
+	  mZ = inv_mass;
+	}
+      }
+    }
+
+    if (mZ < 999.) h_gen_mZ->Fill(mZ);
 
 
     // Loop over leptons
@@ -182,12 +266,12 @@ void AnalysisWZ::Loop(TString sample)
       if (fabs(id) == 11)
 	{
 	  lep.flavor = Electron;
-	  mass = E_MASS;
+	  mass = ELECTRON_MASS;
 	}
       else if (fabs(id) == 13)
 	{
 	  lep.flavor = Muon;
-	  mass = M_MASS;
+	  mass = MUON_MASS;
 	}
 
       if (!IsTightLepton(i))    continue;
@@ -379,8 +463,8 @@ void AnalysisWZ::Loop(TString sample)
 
   txt_summary << Form("\n%20s results with %.0f fb\n", filename.Data(), luminosity);
 
-  Summary("raw yields");
-  Summary("predicted yields");
+  Summary("11.0", "raw yields");
+  Summary("11.2", "predicted yields");
 
   txt_summary.close();
 
@@ -524,7 +608,7 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 // Summary
 //------------------------------------------------------------------------------
-void AnalysisWZ::Summary(TString title)
+void AnalysisWZ::Summary(TString precision, TString title)
 {
   txt_summary << Form("\n%20s", title.Data());
 
@@ -545,7 +629,11 @@ void AnalysisWZ::Summary(TString title)
       float yield = h_counter->Integral();
       float error = sqrt(h_counter->GetSumw2()->GetSum());
 
-      txt_summary << Form("%11.2f +- %-11.2f", yield, error);
+      TString yield_error = Form("%s%sf +- %s-%sf",
+				 "%", precision.Data(),
+				 "%", precision.Data());
+
+      txt_summary << Form(yield_error.Data(), yield, error);
     }
       
     txt_summary << "\n";

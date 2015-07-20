@@ -27,7 +27,8 @@ class AnalysisWZ : public AnalysisBase
   void  FillHistograms   (int     ichannel,
 			  int     icut);
   void  Loop             (TString sample);
-  void  Summary          (TString title);
+  void  Summary          (TString precision,
+			  TString title);
 };
 
 #endif
