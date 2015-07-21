@@ -149,10 +149,16 @@ void AnalysisWZ::Loop(TString sample)
 
   event_weight *= luminosity;
 
-  if (verbosity > 0) printf("\n Reading latino_%s.root sample. Will run on %lld events\n\n",
-			    filename.Data(),
-			    nentries);
-
+  if (verbosity > 0)
+    {
+      printf("\n");
+      printf(" [%s]\n", sample.Data());
+      printf(" Will run on %lld events\n", nentries);
+      printf(" event_weight: %f\n", event_weight);
+      printf(" baseW:        %f\n", baseW);
+      printf("\n");
+    }
+  
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
