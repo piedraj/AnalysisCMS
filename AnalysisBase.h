@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jul 15 17:13:55 2015 by ROOT version 6.02/05
+// Mon Sep 14 10:23:45 2015 by ROOT version 6.02/05
 // from TTree latino/probe_tree
-// found on file: /gpfs/csic_projects/cms/piedra/latino/kbutanov/RunII/15Jul/25ns/latino_WZ.root
+// found on file: /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root
 //////////////////////////////////////////////////////////
 
 #ifndef AnalysisBase_h
@@ -27,7 +27,8 @@ public :
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
-   Float_t         baseW;
+   Float_t         GEN_weight_SM;
+   Float_t         LHE_weight_SM;
    Float_t         bdt1;
    Float_t         bdt2;
    Float_t         bdt3;
@@ -304,7 +305,6 @@ public :
    Float_t         pt3;
    Float_t         pt4;
    Float_t         ptll;
-   Float_t         puW;
    Float_t         pupMet;
    Float_t         puppijetpt1;
    Float_t         redmet;
@@ -319,6 +319,8 @@ public :
    Float_t         softssvhb;
    Float_t         softssvhe;
    Float_t         softtche;
+   vector<float>   *std_vector_GEN_weight;
+   vector<float>   *std_vector_LHE_weight;
    vector<float>   *std_vector_VBoson_eta;
    vector<float>   *std_vector_VBoson_fromHardProcessBeforeFSR;
    vector<float>   *std_vector_VBoson_isHardProcess;
@@ -388,6 +390,7 @@ public :
    vector<float>   *std_vector_lepton_NumOfMatchedStations;
    vector<float>   *std_vector_lepton_SegCompatibilty;
    vector<float>   *std_vector_lepton_TrkKink;
+   vector<float>   *std_vector_lepton_ch;
    vector<float>   *std_vector_lepton_chargedHadronIso;
    vector<float>   *std_vector_lepton_chargedParticleIso;
    vector<float>   *std_vector_lepton_closejet_PartonFlavour;
@@ -402,7 +405,6 @@ public :
    vector<float>   *std_vector_lepton_eleIdVeto;
    vector<float>   *std_vector_lepton_eta;
    vector<float>   *std_vector_lepton_flavour;
-   vector<float>   *std_vector_lepton_id;
    vector<float>   *std_vector_lepton_isMediumMuon;
    vector<float>   *std_vector_lepton_isTightMuon;
    vector<float>   *std_vector_lepton_muSIP3D;
@@ -423,11 +425,13 @@ public :
    vector<float>   *std_vector_tau_eta;
    vector<float>   *std_vector_tau_phi;
    vector<float>   *std_vector_tau_pt;
+   vector<float>   *std_vector_trigger_special;
    Float_t         tightmu;
    Float_t         triggAW;
    Float_t         triggBW;
    Float_t         triggW;
    Float_t         trigger;
+   Float_t         triggerFakeRate;
    Float_t         trkMet;
 // //ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > *v_jet1;
 //   Double_t        fCoordinates_fX;
@@ -488,7 +492,7 @@ public :
 //   Double_t        fCoordinates_fX;
 //   Double_t        fCoordinates_fY;
 //   Double_t        fCoordinates_fZ;
-   Double_t        fCoordinates_fT;
+//   Double_t        fCoordinates_fT;
    Float_t         worstJetLepPt;
    Float_t         yll;
    Float_t         itpu;
@@ -507,9 +511,12 @@ public :
    UInt_t          run;
    UInt_t          lumi;
    UInt_t          event;
+   Float_t         baseW;
+   Float_t         puW;
 
    // List of branches
-   TBranch        *b_baseW;   //!
+   TBranch        *b_GEN_weight_SM;   //!
+   TBranch        *b_LHE_weight_SM;   //!
    TBranch        *b_bdt1;   //!
    TBranch        *b_bdt2;   //!
    TBranch        *b_bdt3;   //!
@@ -786,7 +793,6 @@ public :
    TBranch        *b_pt3;   //!
    TBranch        *b_pt4;   //!
    TBranch        *b_ptll;   //!
-   TBranch        *b_puW;   //!
    TBranch        *b_pupMet;   //!
    TBranch        *b_puppijetpt1;   //!
    TBranch        *b_redmet;   //!
@@ -801,6 +807,8 @@ public :
    TBranch        *b_softssvhb;   //!
    TBranch        *b_softssvhe;   //!
    TBranch        *b_softtche;   //!
+   TBranch        *b_std_vector_GEN_weight;   //!
+   TBranch        *b_std_vector_LHE_weight;   //!
    TBranch        *b_std_vector_VBoson_eta;   //!
    TBranch        *b_std_vector_VBoson_fromHardProcessBeforeFSR;   //!
    TBranch        *b_std_vector_VBoson_isHardProcess;   //!
@@ -870,6 +878,7 @@ public :
    TBranch        *b_std_vector_lepton_NumOfMatchedStations;   //!
    TBranch        *b_std_vector_lepton_SegCompatibilty;   //!
    TBranch        *b_std_vector_lepton_TrkKink;   //!
+   TBranch        *b_std_vector_lepton_ch;   //!
    TBranch        *b_std_vector_lepton_chargedHadronIso;   //!
    TBranch        *b_std_vector_lepton_chargedParticleIso;   //!
    TBranch        *b_std_vector_lepton_closejet_PartonFlavour;   //!
@@ -884,7 +893,6 @@ public :
    TBranch        *b_std_vector_lepton_eleIdVeto;   //!
    TBranch        *b_std_vector_lepton_eta;   //!
    TBranch        *b_std_vector_lepton_flavour;   //!
-   TBranch        *b_std_vector_lepton_id;   //!
    TBranch        *b_std_vector_lepton_isMediumMuon;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
    TBranch        *b_std_vector_lepton_muSIP3D;   //!
@@ -905,11 +913,13 @@ public :
    TBranch        *b_std_vector_tau_eta;   //!
    TBranch        *b_std_vector_tau_phi;   //!
    TBranch        *b_std_vector_tau_pt;   //!
+   TBranch        *b_std_vector_trigger_special;   //!
    TBranch        *b_tightmu;   //!
    TBranch        *b_triggAW;   //!
    TBranch        *b_triggBW;   //!
    TBranch        *b_triggW;   //!
    TBranch        *b_trigger;   //!
+   TBranch        *b_triggerFakeRate;   //!
    TBranch        *b_trkMet;   //!
 //   TBranch        *b_v_jet1_fCoordinates_fX;   //!
 //   TBranch        *b_v_jet1_fCoordinates_fY;   //!
@@ -977,6 +987,8 @@ public :
    TBranch        *b_run;   //!
    TBranch        *b_lumi;   //!
    TBranch        *b_event;   //!
+   TBranch        *b_baseW;   //!
+   TBranch        *b_puW;   //!
 
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
@@ -997,9 +1009,9 @@ AnalysisBase::AnalysisBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/cms/piedra/latino/kbutanov/RunII/15Jul/25ns/latino_WZ.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/gpfs/csic_projects/cms/piedra/latino/kbutanov/RunII/15Jul/25ns/latino_WZ.root");
+         f = new TFile("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root");
       }
       f->GetObject("latino",tree);
 
@@ -1043,6 +1055,8 @@ void AnalysisBase::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
+   std_vector_GEN_weight = 0;
+   std_vector_LHE_weight = 0;
    std_vector_VBoson_eta = 0;
    std_vector_VBoson_fromHardProcessBeforeFSR = 0;
    std_vector_VBoson_isHardProcess = 0;
@@ -1112,6 +1126,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_NumOfMatchedStations = 0;
    std_vector_lepton_SegCompatibilty = 0;
    std_vector_lepton_TrkKink = 0;
+   std_vector_lepton_ch = 0;
    std_vector_lepton_chargedHadronIso = 0;
    std_vector_lepton_chargedParticleIso = 0;
    std_vector_lepton_closejet_PartonFlavour = 0;
@@ -1126,7 +1141,6 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_eleIdVeto = 0;
    std_vector_lepton_eta = 0;
    std_vector_lepton_flavour = 0;
-   std_vector_lepton_id = 0;
    std_vector_lepton_isMediumMuon = 0;
    std_vector_lepton_isTightMuon = 0;
    std_vector_lepton_muSIP3D = 0;
@@ -1147,13 +1161,15 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_tau_eta = 0;
    std_vector_tau_phi = 0;
    std_vector_tau_pt = 0;
+   std_vector_trigger_special = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
-   fChain->SetBranchAddress("baseW", &baseW, &b_baseW);
+   fChain->SetBranchAddress("GEN_weight_SM", &GEN_weight_SM, &b_GEN_weight_SM);
+   fChain->SetBranchAddress("LHE_weight_SM", &LHE_weight_SM, &b_LHE_weight_SM);
    fChain->SetBranchAddress("bdt1", &bdt1, &b_bdt1);
    fChain->SetBranchAddress("bdt2", &bdt2, &b_bdt2);
    fChain->SetBranchAddress("bdt3", &bdt3, &b_bdt3);
@@ -1430,7 +1446,6 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("pt3", &pt3, &b_pt3);
    fChain->SetBranchAddress("pt4", &pt4, &b_pt4);
    fChain->SetBranchAddress("ptll", &ptll, &b_ptll);
-   fChain->SetBranchAddress("puW", &puW, &b_puW);
    fChain->SetBranchAddress("pupMet", &pupMet, &b_pupMet);
    fChain->SetBranchAddress("puppijetpt1", &puppijetpt1, &b_puppijetpt1);
    fChain->SetBranchAddress("redmet", &redmet, &b_redmet);
@@ -1445,6 +1460,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("softssvhb", &softssvhb, &b_softssvhb);
    fChain->SetBranchAddress("softssvhe", &softssvhe, &b_softssvhe);
    fChain->SetBranchAddress("softtche", &softtche, &b_softtche);
+   fChain->SetBranchAddress("std_vector_GEN_weight", &std_vector_GEN_weight, &b_std_vector_GEN_weight);
+   fChain->SetBranchAddress("std_vector_LHE_weight", &std_vector_LHE_weight, &b_std_vector_LHE_weight);
    fChain->SetBranchAddress("std_vector_VBoson_eta", &std_vector_VBoson_eta, &b_std_vector_VBoson_eta);
    fChain->SetBranchAddress("std_vector_VBoson_fromHardProcessBeforeFSR", &std_vector_VBoson_fromHardProcessBeforeFSR, &b_std_vector_VBoson_fromHardProcessBeforeFSR);
    fChain->SetBranchAddress("std_vector_VBoson_isHardProcess", &std_vector_VBoson_isHardProcess, &b_std_vector_VBoson_isHardProcess);
@@ -1514,6 +1531,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_NumOfMatchedStations", &std_vector_lepton_NumOfMatchedStations, &b_std_vector_lepton_NumOfMatchedStations);
    fChain->SetBranchAddress("std_vector_lepton_SegCompatibilty", &std_vector_lepton_SegCompatibilty, &b_std_vector_lepton_SegCompatibilty);
    fChain->SetBranchAddress("std_vector_lepton_TrkKink", &std_vector_lepton_TrkKink, &b_std_vector_lepton_TrkKink);
+   fChain->SetBranchAddress("std_vector_lepton_ch", &std_vector_lepton_ch, &b_std_vector_lepton_ch);
    fChain->SetBranchAddress("std_vector_lepton_chargedHadronIso", &std_vector_lepton_chargedHadronIso, &b_std_vector_lepton_chargedHadronIso);
    fChain->SetBranchAddress("std_vector_lepton_chargedParticleIso", &std_vector_lepton_chargedParticleIso, &b_std_vector_lepton_chargedParticleIso);
    fChain->SetBranchAddress("std_vector_lepton_closejet_PartonFlavour", &std_vector_lepton_closejet_PartonFlavour, &b_std_vector_lepton_closejet_PartonFlavour);
@@ -1528,7 +1546,6 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_eleIdVeto", &std_vector_lepton_eleIdVeto, &b_std_vector_lepton_eleIdVeto);
    fChain->SetBranchAddress("std_vector_lepton_eta", &std_vector_lepton_eta, &b_std_vector_lepton_eta);
    fChain->SetBranchAddress("std_vector_lepton_flavour", &std_vector_lepton_flavour, &b_std_vector_lepton_flavour);
-   fChain->SetBranchAddress("std_vector_lepton_id", &std_vector_lepton_id, &b_std_vector_lepton_id);
    fChain->SetBranchAddress("std_vector_lepton_isMediumMuon", &std_vector_lepton_isMediumMuon, &b_std_vector_lepton_isMediumMuon);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
    fChain->SetBranchAddress("std_vector_lepton_muSIP3D", &std_vector_lepton_muSIP3D, &b_std_vector_lepton_muSIP3D);
@@ -1549,11 +1566,13 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_tau_eta", &std_vector_tau_eta, &b_std_vector_tau_eta);
    fChain->SetBranchAddress("std_vector_tau_phi", &std_vector_tau_phi, &b_std_vector_tau_phi);
    fChain->SetBranchAddress("std_vector_tau_pt", &std_vector_tau_pt, &b_std_vector_tau_pt);
+   fChain->SetBranchAddress("std_vector_trigger_special", &std_vector_trigger_special, &b_std_vector_trigger_special);
    fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
    fChain->SetBranchAddress("triggAW", &triggAW, &b_triggAW);
    fChain->SetBranchAddress("triggBW", &triggBW, &b_triggBW);
    fChain->SetBranchAddress("triggW", &triggW, &b_triggW);
    fChain->SetBranchAddress("trigger", &trigger, &b_trigger);
+   fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    fChain->SetBranchAddress("trkMet", &trkMet, &b_trkMet);
 //    fChain->SetBranchAddress("fCoordinates.fX", &fCoordinates_fX, &b_v_jet1_fCoordinates_fX);
 //    fChain->SetBranchAddress("fCoordinates.fY", &fCoordinates_fY, &b_v_jet1_fCoordinates_fY);
@@ -1621,6 +1640,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("run", &run, &b_run);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
    fChain->SetBranchAddress("event", &event, &b_event);
+   fChain->SetBranchAddress("baseW", &baseW, &b_baseW);
+   fChain->SetBranchAddress("puW", &puW, &b_puW);
    Notify();
 }
 

@@ -10,6 +10,10 @@
 const bool print_events = false;
 const int  verbosity    = 1;
 
+const int ELECTRON_FLAVOUR = 11;
+const int MUON_FLAVOUR     = 13;
+const int TAU_FLAVOUR      = 15;
+const int Z_FLAVOUR        = 23;
 
 const float ELECTRON_MASS =  0.000511;  // [GeV]
 const float MUON_MASS     =  0.106;     // [GeV]
@@ -55,16 +59,13 @@ const TString scut[ncut] = {
 };
 
 
-enum {Muon, Electron, Tau};
-
 enum {Loose, Tight, Gen};
 
 struct Lepton
 {
   int            index;
-  int            flavor;  // Muon, Electron, Tau
-  int            type;    // Loose, Tight, Gen
-  float          charge;
+  int            type;  // Loose, Tight, Gen
+  int            flavour;
   TLorentzVector v;
 };
 
@@ -145,17 +146,11 @@ void AnalysisWZ::Loop(TString sample)
 
   Long64_t nentries = fChain->GetEntries();
 
-  event_weight = (sample.Contains("WZTo3LNu")) ? 0.00230 : baseW;
-
-  event_weight *= luminosity;
-
   if (verbosity > 0)
     {
       printf("\n");
       printf(" [%s]\n", sample.Data());
       printf(" Will run on %lld events\n", nentries);
-      printf(" event_weight: %f\n", event_weight);
-      printf(" baseW:        %f\n", baseW);
       printf("\n");
     }
   
@@ -166,6 +161,8 @@ void AnalysisWZ::Loop(TString sample)
     if (ientry < 0) break;
 
     fChain->GetEntry(jentry);
+
+    event_weight = baseW * luminosity;
 
     if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
 
@@ -178,37 +175,23 @@ void AnalysisWZ::Loop(TString sample)
 
     for (int i=0; i<vector_leptonGen_size; i++) {
 
-      float pt   = std_vector_leptonGen_pt  ->at(i);
-      float eta  = std_vector_leptonGen_eta ->at(i);
-      float phi  = std_vector_leptonGen_phi ->at(i);
-      float pid  = std_vector_leptonGen_pid ->at(i);
-      float mpid = std_vector_leptonGen_mpid->at(i);
+      float pt  = std_vector_leptonGen_pt ->at(i);
+      float eta = std_vector_leptonGen_eta->at(i);
+      float phi = std_vector_leptonGen_phi->at(i);
 
       Lepton lep;
 
-      lep.index  = i;
-      lep.charge = pid;
-      lep.type   = Gen;
+      lep.index   = i;
+      lep.type    = Gen;
+      lep.flavour = std_vector_leptonGen_pid->at(i);
 
       float mass = -999;
       
-      if (fabs(pid) == 11)
-	{
-	  lep.flavor = Electron;
-	  mass = ELECTRON_MASS;
-	}
-      else if (fabs(pid) == 13)
-	{
-	  lep.flavor = Muon;
-	  mass = MUON_MASS;
-	}
-      else if (fabs(pid) == 15)
-	{
-	  lep.flavor = Tau;
-	  mass = TAU_MASS;
-	}
+      if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
+      else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
+      else if (abs(lep.flavour) == TAU_FLAVOUR)	     mass = TAU_MASS;
 
-      if (fabs(mpid) != 23) continue;  // Require leptons from Z
+      if (fabs(std_vector_leptonGen_mpid->at(i)) != Z_FLAVOUR) continue;  // Require leptons from Z
 
       TLorentzVector tlv;
 
@@ -230,9 +213,9 @@ void AnalysisWZ::Loop(TString sample)
 
       for (UInt_t j=i+1; j<ngenlepton; j++) {
       
-	if (GenLeptons[i].flavor != GenLeptons[j].flavor) continue;
+	if (abs(GenLeptons[i].flavour) != abs(GenLeptons[j].flavour)) continue;
 
-	if (GenLeptons[i].charge * GenLeptons[j].charge > 0.) continue;
+	if (GenLeptons[i].flavour * GenLeptons[j].flavour > 0) continue;
 
 	float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
 
@@ -259,26 +242,17 @@ void AnalysisWZ::Loop(TString sample)
       float pt  = std_vector_lepton_pt ->at(i);
       float eta = std_vector_lepton_eta->at(i);
       float phi = std_vector_lepton_phi->at(i);
-      float id  = std_vector_lepton_id ->at(i);
 
       Lepton lep;
       
-      lep.index  = i;
-      lep.charge = id;
-      lep.type   = Loose;
+      lep.index   = i;
+      lep.type    = Loose;
+      lep.flavour = std_vector_lepton_flavour->at(i);
       
       float mass = -999;
 
-      if (fabs(id) == 11)
-	{
-	  lep.flavor = Electron;
-	  mass = ELECTRON_MASS;
-	}
-      else if (fabs(id) == 13)
-	{
-	  lep.flavor = Muon;
-	  mass = MUON_MASS;
-	}
+      if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
+      else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
 
       if (!IsTightLepton(i))    continue;
       if (!IsIsolatedLepton(i)) continue;
@@ -314,8 +288,8 @@ void AnalysisWZ::Loop(TString sample)
 	    
 	    for (UInt_t i=0; i<nlepton; i++)
 	      {
-		TString lepton_flavor = (AnalysisLeptons[i].flavor == Electron) ? "e" : "m";
-		printf("%s", lepton_flavor.Data());
+		TString lepton_flavour = (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) ? "e" : "m";
+		printf("%s", lepton_flavour.Data());
 	      }
 	    printf("\n");
 	  }
@@ -333,7 +307,7 @@ void AnalysisWZ::Loop(TString sample)
 
     for (int i=0; i<3; i++)
       {
-	if (AnalysisLeptons[i].flavor == Electron) nelectron++;
+	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) nelectron++;
       }
 
     channel = -1;
@@ -352,9 +326,9 @@ void AnalysisWZ::Loop(TString sample)
 
       for (UInt_t j=i+1; j<nlepton; j++) {
       
-	if (AnalysisLeptons[i].flavor != AnalysisLeptons[j].flavor) continue;
+	if (abs(AnalysisLeptons[i].flavour) != abs(AnalysisLeptons[j].flavour)) continue;
 
-	if (AnalysisLeptons[i].charge * AnalysisLeptons[j].charge > 0.) continue;
+	if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
 
 	float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
 
@@ -487,17 +461,17 @@ void AnalysisWZ::Loop(TString sample)
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsFiducialLepton(int k)
 {
-  float pt  = std_vector_lepton_pt ->at(k);
-  float eta = std_vector_lepton_eta->at(k);
-  float id  = std_vector_lepton_id ->at(k);
+  float pt      = std_vector_lepton_pt     ->at(k);
+  float eta     = std_vector_lepton_eta    ->at(k);
+  float flavour = std_vector_lepton_flavour->at(k);
 
   bool is_fiducial_lepton = false;
 
-  if (fabs(id) == 13)
+  if (fabs(flavour) == MUON_FLAVOUR)
     {
       is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.4);
     }
-  else if (fabs(id) == 11)
+  else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
       is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.5);
     }
@@ -514,15 +488,17 @@ bool AnalysisWZ::IsFiducialLepton(int k)
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsTightLepton(int k)
 {
+  float flavour = std_vector_lepton_flavour->at(k);
+
   bool is_tight_lepton = false;
 
   // Muon tight ID
-  if (fabs(std_vector_lepton_id->at(k)) == 13)
+  if (fabs(flavour) == MUON_FLAVOUR)
     {
       is_tight_lepton = std_vector_lepton_isTightMuon->at(k);
     }
   // Electron cut based medium ID
-  else if (fabs(std_vector_lepton_id->at(k)) == 11)
+  else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
       is_tight_lepton = std_vector_lepton_eleIdMedium->at(k);
     }
@@ -536,12 +512,12 @@ bool AnalysisWZ::IsTightLepton(int k)
 //------------------------------------------------------------------------------
 float AnalysisWZ::MuonIsolation(int k)
 {
-  float pt = std_vector_lepton_pt->at(k);
-  float id = std_vector_lepton_id->at(k);
+  float pt      = std_vector_lepton_pt     ->at(k);
+  float flavour = std_vector_lepton_flavour->at(k);
 
   float relative_isolation = -999;
 
-  if (fabs(id) != 13) return relative_isolation;
+  if (fabs(flavour) != MUON_FLAVOUR) return relative_isolation;
 
   relative_isolation =
     std_vector_lepton_chargedHadronIso->at(k) +
@@ -561,12 +537,12 @@ float AnalysisWZ::MuonIsolation(int k)
 //------------------------------------------------------------------------------
 float AnalysisWZ::ElectronIsolation(int k)
 {
-  float pt = std_vector_lepton_pt->at(k);
-  float id = std_vector_lepton_id->at(k);
+  float pt      = std_vector_lepton_pt     ->at(k);
+  float flavour = std_vector_lepton_flavour->at(k);
 
   float relative_isolation = -999;
 
-  if (fabs(id) != 11) return relative_isolation;
+  if (fabs(flavour) != ELECTRON_FLAVOUR) return relative_isolation;
 
   relative_isolation =
     std_vector_lepton_chargedHadronIso->at(k) +
@@ -586,12 +562,12 @@ float AnalysisWZ::ElectronIsolation(int k)
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsIsolatedLepton(int k)
 {
-  float id = std_vector_lepton_id->at(k);
+  float flavour = std_vector_lepton_flavour->at(k);
 
   bool is_isolated_lepton = false;
 
-  if      (fabs(id) == 11) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
-  else if (fabs(id) == 13) is_isolated_lepton = (MuonIsolation(k)     < 0.12);
+  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
+  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k)     < 0.12);
   
   return is_isolated_lepton;
 }
