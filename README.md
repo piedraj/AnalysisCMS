@@ -35,7 +35,7 @@ Log in to lxplus
 
 `AnalysisBase` should be recreated when the latino trees have been updated. To do so, first read any new latino tree,
 
-    root -l /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZTo3LNu.root
+    root -l latino_WZTo3LNu.root
 
 Create the `AnalysisBase` skeleton,
 
