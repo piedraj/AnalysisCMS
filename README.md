@@ -33,15 +33,15 @@ Log in to lxplus
     git clone https://github.com/piedraj/WZ13TeV
     cd WZ13TeV
 
-`AnalysisBase` should be recreated when the latino trees have been updated. To do so, first read any new latino tree,
+The base class should be recreated when the latino trees have been updated. To do so, first read any new latino tree,
 
     root -l latino_WZTo3LNu.root
 
-Create the `AnalysisBase` skeleton,
+Then create `AnalysisBase`,
 
     latino->MakeClass("AnalysisBase")
 
-ROOT 6 is more exigent than ROOT 5. Please add `using namespace std;` before the `class AnalysisBase {` line.
+Finally, open `AnalysisBase.h` and add `using namespace std;`.
 
 
 4. Compile and run
