@@ -93,7 +93,6 @@ ofstream            txt_events_eem;
 ofstream            txt_events_emm;
 ofstream            txt_events_mmm;
 TFile*              root_output;
-TString             filename;
 
 TH1F*               h_gen_mZ;
 
@@ -105,24 +104,21 @@ TH1F*               h_invMass2Lep[nchannel][ncut];
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisWZ::Loop(TString sample)
+void AnalysisWZ::Loop(TString sample, float luminosity)
 {
   TH1::SetDefaultSumw2();
-
-  luminosity = 1.;  // fb-1
-  filename   = sample;
 
   gSystem->mkdir("rootfiles", kTRUE);
   gSystem->mkdir("txt",       kTRUE);
 
-  root_output = new TFile("rootfiles/" + filename + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + sample + ".root", "recreate");
 
   if (print_events)
     {
-      txt_events_eee.open("txt/" + filename + "_eee.txt");
-      txt_events_eem.open("txt/" + filename + "_eem.txt");
-      txt_events_emm.open("txt/" + filename + "_emm.txt");
-      txt_events_mmm.open("txt/" + filename + "_mmm.txt");
+      txt_events_eee.open("txt/" + sample + "_eee.txt");
+      txt_events_eem.open("txt/" + sample + "_eem.txt");
+      txt_events_emm.open("txt/" + sample + "_emm.txt");
+      txt_events_mmm.open("txt/" + sample + "_mmm.txt");
     }
 
 
@@ -162,9 +158,23 @@ void AnalysisWZ::Loop(TString sample)
 
     fChain->GetEntry(jentry);
 
+    if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
+
     event_weight = baseW * luminosity;
 
-    if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
+
+    // Deal with signed weights
+    //--------------------------------------------------------------------------
+    bool is_signed_weight = false;
+
+    if (sample.EqualTo("WJetsToLNu"))          {is_signed_weight = true; event_weight *= 0.683938;}
+    if (sample.EqualTo("DYJetsToLL_M-10to50")) {is_signed_weight = true; event_weight *= 0.727601;}
+    if (sample.EqualTo("DYJetsToLL_M-50"))     {is_signed_weight = true; event_weight *= 0.66998;}
+    if (sample.EqualTo("ZZTo2L2Q"))            {is_signed_weight = true; event_weight *= 0.631351;}
+    if (sample.EqualTo("ST_t-channel"))        {is_signed_weight = true; event_weight *= 0.215648;}
+    if (sample.EqualTo("TTJets"))              {is_signed_weight = true; event_weight *= 0.331658;}
+
+    if (is_signed_weight && LHE_weight_SM < 0) event_weight *= -1.;
 
 
     // Loop over GEN leptons
@@ -439,9 +449,9 @@ void AnalysisWZ::Loop(TString sample)
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  txt_summary.open("txt/" + filename + ".txt");
+  txt_summary.open("txt/" + sample + ".txt");
 
-  txt_summary << Form("\n%20s results with %.0f fb\n", filename.Data(), luminosity);
+  txt_summary << Form("\n%20s results with %.0f fb\n", sample.Data(), luminosity);
 
   Summary("11.0", "raw yields");
   Summary("11.2", "predicted yields");

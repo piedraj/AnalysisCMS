@@ -26,7 +26,8 @@ class AnalysisWZ : public AnalysisBase
   bool  IsIsolatedLepton (int     k);
   void  FillHistograms   (int     ichannel,
 			  int     icut);
-  void  Loop             (TString sample);
+  void  Loop             (TString sample,
+			  float   luminosity);
   void  Summary          (TString precision,
 			  TString title);
 };

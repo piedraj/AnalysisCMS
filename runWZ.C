@@ -9,7 +9,11 @@ void runWZ(TString sample, TString filename)
 
   AnalysisWZ awz(latino);
 
-  awz.Loop(sample);
+  // https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis
+  //
+  float luminosity = 0.01609;  // 25ns
+
+  awz.Loop(sample, luminosity);
 }
 
 
