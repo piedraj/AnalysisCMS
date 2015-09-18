@@ -50,3 +50,9 @@ Finally, open `AnalysisBase.h` and add `using namespace std;`.
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
     ./runWZ 
 
+
+5. Draw
+====
+
+    root -l -b -q 'draw.C+(HasW,1)'
+
