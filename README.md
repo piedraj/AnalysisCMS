@@ -71,5 +71,6 @@ Input files can be accessed directly from eos when working from lxplus
 5. Draw
 ====
 
+    cd test
     root -l -b -q 'draw.C+(HasW,1)'
 

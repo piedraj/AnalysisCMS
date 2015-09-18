@@ -76,7 +76,7 @@ enum {linY, logY};
 // Settings
 //------------------------------------------------------------------------------
 Double_t        _luminosity = 16.09; // pb
-TString         _datapath   = "rootfiles";
+TString         _datapath   = "../rootfiles";
 Bool_t          _batch;
 UInt_t          _cut;
 
