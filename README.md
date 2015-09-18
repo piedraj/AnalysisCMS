@@ -7,12 +7,12 @@
 1. Everything starts here
 ====
 
-Log in to gridui
+Log in to gridui.
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-Log in to lxplus
+Log in to lxplus.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
@@ -63,7 +63,7 @@ Finally, open `AnalysisBase.h` and add `using namespace std;`.
     ./runWZ "ggZZ4m"              "/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_ggZZ4m.root"
     ./runWZ "ggZZ4t"              "/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_ggZZ4t.root"
 
-Input files can be accessed directly from eos when working from lxplus
+Input files can be accessed directly from eos when working from lxplus.
 
     ./runWZ "WZ" "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/kbutanov/RunII/15Jul/25ns/latino_WZ.root"
 
