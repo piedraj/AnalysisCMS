@@ -174,7 +174,7 @@ void AnalysisWZ::Loop(TString sample, float luminosity)
     if (sample.EqualTo("ST_t-channel"))        {is_signed_weight = true; event_weight *= 0.215648;}
     if (sample.EqualTo("TTJets"))              {is_signed_weight = true; event_weight *= 0.331658;}
 
-    if (is_signed_weight && LHE_weight_SM < 0) event_weight *= -1.;
+    if (is_signed_weight && GEN_weight_SM < 0) event_weight *= -1.;
 
 
     // Loop over GEN leptons
