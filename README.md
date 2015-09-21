@@ -49,11 +49,13 @@ Finally, open `AnalysisBase.h` and add `using namespace std;`.
 
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
 
-    ./create-jobs.sh
+    ./create-jobs.sh /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeVRun2015B          50ns
+    ./create-jobs.sh /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU 50ns
+    ./create-jobs.sh /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU 25ns
 
 Input files can be accessed directly from eos when working from lxplus.
 
-    ./runWZ "WZ" "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/kbutanov/RunII/15Jul/25ns/latino_WZ.root"
+    ./runWZ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/kbutanov/RunII/15Jul/25ns/latino_WZ.root 25ns
 
 
 5. Draw
