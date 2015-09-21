@@ -41,7 +41,9 @@ Then create `AnalysisBase`,
 
     latino->MakeClass("AnalysisBase")
 
-Finally, open `AnalysisBase.h` and add `using namespace std;`.
+Finally, open `AnalysisBase.h` and add
+
+    using namespace std;
 
 
 4. Compile and run
