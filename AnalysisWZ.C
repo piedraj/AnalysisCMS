@@ -75,6 +75,8 @@ struct Lepton
 // Data members
 //
 //==============================================================================
+bool                isMC;
+
 std::vector<Lepton> AnalysisLeptons;
 std::vector<Lepton> GenLeptons;
 Lepton              WLepton;
@@ -106,6 +108,16 @@ TH1F*               h_invMass2Lep[nchannel][ncut];
 //------------------------------------------------------------------------------
 void AnalysisWZ::Loop(TString sample, float luminosity)
 {
+  isMC = true;
+
+  if (sample.EqualTo("DoubleEG"))          isMC = false;
+  if (sample.EqualTo("DoubleMuon"))        isMC = false;
+  if (sample.EqualTo("DoubleMuonLowMass")) isMC = false;
+  if (sample.EqualTo("MuonEG"))            isMC = false;
+  if (sample.EqualTo("SingleElectron"))    isMC = false;
+  if (sample.EqualTo("SingleMu"))          isMC = false;
+  if (sample.EqualTo("SingleMuon"))        isMC = false;
+
   TH1::SetDefaultSumw2();
 
   gSystem->mkdir("rootfiles", kTRUE);
@@ -162,81 +174,72 @@ void AnalysisWZ::Loop(TString sample, float luminosity)
 
     event_weight = baseW * luminosity;
 
-
-    // Deal with signed weights
-    //--------------------------------------------------------------------------
-    bool is_signed_weight = false;
-
-    if (sample.EqualTo("WJetsToLNu"))          {is_signed_weight = true; event_weight *= 0.683938;}
-    if (sample.EqualTo("DYJetsToLL_M-10to50")) {is_signed_weight = true; event_weight *= 0.727601;}
-    if (sample.EqualTo("DYJetsToLL_M-50"))     {is_signed_weight = true; event_weight *= 0.66998;}
-    if (sample.EqualTo("ZZTo2L2Q"))            {is_signed_weight = true; event_weight *= 0.631351;}
-    if (sample.EqualTo("ST_t-channel"))        {is_signed_weight = true; event_weight *= 0.215648;}
-    if (sample.EqualTo("TTJets"))              {is_signed_weight = true; event_weight *= 0.331658;}
-
-    if (is_signed_weight && GEN_weight_SM < 0) event_weight *= -1.;
+    ApplySignedWeight(sample);
 
 
     // Loop over GEN leptons
     //--------------------------------------------------------------------------
-    GenLeptons.clear();
+    if (isMC)
+      {
+	GenLeptons.clear();
 
-    int vector_leptonGen_size = std_vector_leptonGen_pt->size();
+	int vector_leptonGen_size = std_vector_leptonGen_pt->size();
 
-    for (int i=0; i<vector_leptonGen_size; i++) {
+	for (int i=0; i<vector_leptonGen_size; i++) {
 
-      float pt  = std_vector_leptonGen_pt ->at(i);
-      float eta = std_vector_leptonGen_eta->at(i);
-      float phi = std_vector_leptonGen_phi->at(i);
+	  float pt  = std_vector_leptonGen_pt ->at(i);
+	  float eta = std_vector_leptonGen_eta->at(i);
+	  float phi = std_vector_leptonGen_phi->at(i);
 
-      Lepton lep;
+	  Lepton lep;
 
-      lep.index   = i;
-      lep.type    = Gen;
-      lep.flavour = std_vector_leptonGen_pid->at(i);
+	  lep.index   = i;
+	  lep.type    = Gen;
+	  lep.flavour = std_vector_leptonGen_pid->at(i);
+	  
+	  float mass = -999;
+	  
+	  if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
+	  else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
+	  else if (abs(lep.flavour) == TAU_FLAVOUR)	     mass = TAU_MASS;
 
-      float mass = -999;
-      
-      if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
-      else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
-      else if (abs(lep.flavour) == TAU_FLAVOUR)	     mass = TAU_MASS;
+	  if (fabs(std_vector_leptonGen_mpid->at(i)) != Z_FLAVOUR) continue;  // Require leptons from Z
 
-      if (fabs(std_vector_leptonGen_mpid->at(i)) != Z_FLAVOUR) continue;  // Require leptons from Z
+	  TLorentzVector tlv;
+	  
+	  tlv.SetPtEtaPhiM(pt, eta, phi, mass);
 
-      TLorentzVector tlv;
+	  lep.v = tlv;
 
-      tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-
-      lep.v = tlv;
-
-      GenLeptons.push_back(lep);
-    }
-
-    unsigned int ngenlepton = GenLeptons.size();
-
-
-    // Make GEN Z mass
-    //--------------------------------------------------------------------------
-    float mZ = 999;
-
-    for (UInt_t i=0; i<ngenlepton; i++) {
-
-      for (UInt_t j=i+1; j<ngenlepton; j++) {
-      
-	if (abs(GenLeptons[i].flavour) != abs(GenLeptons[j].flavour)) continue;
-
-	if (GenLeptons[i].flavour * GenLeptons[j].flavour > 0) continue;
-
-	float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
-
-	if (fabs(inv_mass - Z_MASS) < fabs(mZ - Z_MASS)) {
-
-	  mZ = inv_mass;
+	  GenLeptons.push_back(lep);
 	}
-      }
-    }
+	
+	unsigned int ngenlepton = GenLeptons.size();
 
-    if (mZ < 999.) h_gen_mZ->Fill(mZ);
+
+	// Make GEN Z mass
+	//----------------------------------------------------------------------
+	float mZ = 999;
+
+	for (UInt_t i=0; i<ngenlepton; i++) {
+	  
+	  for (UInt_t j=i+1; j<ngenlepton; j++) {
+	    
+	    if (abs(GenLeptons[i].flavour) != abs(GenLeptons[j].flavour)) continue;
+	    
+	    if (GenLeptons[i].flavour * GenLeptons[j].flavour > 0) continue;
+	    
+	    float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
+	    
+	    if (fabs(inv_mass - Z_MASS) < fabs(mZ - Z_MASS)) {
+
+	      mZ = inv_mass;
+	    }
+	  }
+	}
+
+	if (mZ < 999.) h_gen_mZ->Fill(mZ);
+      }
 
 
     // Loop over leptons
@@ -632,4 +635,30 @@ void AnalysisWZ::Summary(TString precision, TString title)
   }
   
   txt_summary << "\n";
+}
+
+
+//------------------------------------------------------------------------------
+// ApplySignedWeight
+//------------------------------------------------------------------------------
+void AnalysisWZ::ApplySignedWeight(TString sample)
+{
+  if (!isMC) return;
+
+  float signed_weight = -999.;
+
+  if (sample.EqualTo("WJetsToLNu"))          {signed_weight = 0.683938;}
+  if (sample.EqualTo("DYJetsToLL_M-10to50")) {signed_weight = 0.727601;}
+  if (sample.EqualTo("DYJetsToLL_M-50"))     {signed_weight = 0.66998;}
+  if (sample.EqualTo("ZZTo2L2Q"))            {signed_weight = 0.631351;}
+  if (sample.EqualTo("ST_t-channel"))        {signed_weight = 0.215648;}
+  if (sample.EqualTo("TTJets"))              {signed_weight = 0.331658;}
+
+  if (signed_weight < 0) return;
+
+  if (GEN_weight_SM < 0) signed_weight *= -1.;
+
+  event_weight *= signed_weight;
+
+  return;
 }

@@ -30,6 +30,7 @@ class AnalysisWZ : public AnalysisBase
 			  float   luminosity);
   void  Summary          (TString precision,
 			  TString title);
+  void  ApplySignedWeight(TString sample);
 };
 
 #endif
