@@ -75,14 +75,14 @@ struct Lepton
 // Data members
 //
 //==============================================================================
-bool                isMC;
-
 std::vector<Lepton> AnalysisLeptons;
 std::vector<Lepton> GenLeptons;
 Lepton              WLepton;
 Lepton              ZLepton1;
 Lepton              ZLepton2;
 
+TString             sample;
+bool                isMC;
 float               luminosity;
 float               event_weight;
 float               mll;
@@ -106,8 +106,12 @@ TH1F*               h_invMass2Lep[nchannel][ncut];
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisWZ::Loop(TString sample, float luminosity)
+void AnalysisWZ::Loop(TString filename,
+		      TString era,
+		      float   luminosity)
 {
+  sample = GetSampleName(filename);
+
   isMC = true;
 
   if (sample.EqualTo("DoubleEG"))          isMC = false;
@@ -118,19 +122,38 @@ void AnalysisWZ::Loop(TString sample, float luminosity)
   if (sample.EqualTo("SingleMu"))          isMC = false;
   if (sample.EqualTo("SingleMuon"))        isMC = false;
 
+  if (fChain == 0) return;
+
+  Long64_t nentries = fChain->GetEntries();
+  
+  if (verbosity > 0)
+    {
+      printf("\n");
+      printf("   filename: %s\n",      filename.Data());
+      printf("     sample: %s\n",      sample.Data());
+      printf("        era: %s\n",      era.Data());
+      printf(" luminosity: %f fb-1\n", luminosity);
+      printf("   nentries: %lld\n",    nentries);
+      printf("\n");
+    }
+
+
+  // Additional settings
+  //----------------------------------------------------------------------------
   TH1::SetDefaultSumw2();
 
-  gSystem->mkdir("rootfiles", kTRUE);
-  gSystem->mkdir("txt",       kTRUE);
+  gSystem->mkdir(Form("rootfiles/%s", era.Data()), kTRUE);
 
-  root_output = new TFile("rootfiles/" + sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + era + "/" + sample + ".root", "recreate");
 
   if (print_events)
     {
-      txt_events_eee.open("txt/" + sample + "_eee.txt");
-      txt_events_eem.open("txt/" + sample + "_eem.txt");
-      txt_events_emm.open("txt/" + sample + "_emm.txt");
-      txt_events_mmm.open("txt/" + sample + "_mmm.txt");
+      gSystem->mkdir(Form("txt/%s", era.Data()), kTRUE);
+
+      txt_events_eee.open("txt/" + era + "/" + sample + "_eee.txt");
+      txt_events_eem.open("txt/" + era + "/" + sample + "_eem.txt");
+      txt_events_emm.open("txt/" + era + "/" + sample + "_emm.txt");
+      txt_events_mmm.open("txt/" + era + "/" + sample + "_mmm.txt");
     }
 
 
@@ -147,21 +170,9 @@ void AnalysisWZ::Loop(TString sample, float luminosity)
     }
   }
 
-
+  
   // Loop over events
   //----------------------------------------------------------------------------
-  if (fChain == 0) return;
-
-  Long64_t nentries = fChain->GetEntries();
-
-  if (verbosity > 0)
-    {
-      printf("\n");
-      printf(" [%s]\n", sample.Data());
-      printf(" Will run on %lld events\n", nentries);
-      printf("\n");
-    }
-  
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
@@ -174,7 +185,7 @@ void AnalysisWZ::Loop(TString sample, float luminosity)
 
     event_weight = baseW * luminosity;
 
-    ApplySignedWeight(sample);
+    ApplySignedWeight(sample, era);
 
 
     // Loop over GEN leptons
@@ -639,22 +650,56 @@ void AnalysisWZ::Summary(TString precision, TString title)
 
 
 //------------------------------------------------------------------------------
+// GetSampleName
+//------------------------------------------------------------------------------
+TString AnalysisWZ::GetSampleName(TString filename)
+{
+  TString samplename;
+
+  TString tok;
+
+  Ssiz_t from = 0;
+
+  while (filename.Tokenize(tok, from, "latino_")) {
+
+    if (tok.Contains(".root")) {
+
+      samplename = tok.ReplaceAll(".root", "");
+    }
+  }
+  
+  return samplename;
+}
+
+
+//------------------------------------------------------------------------------
 // ApplySignedWeight
 //------------------------------------------------------------------------------
-void AnalysisWZ::ApplySignedWeight(TString sample)
+void AnalysisWZ::ApplySignedWeight(TString sample,
+				   TString era)
 {
   if (!isMC) return;
 
-  float signed_weight = -999.;
+  float signed_weight = 999.;
 
-  if (sample.EqualTo("WJetsToLNu"))          {signed_weight = 0.683938;}
-  if (sample.EqualTo("DYJetsToLL_M-10to50")) {signed_weight = 0.727601;}
-  if (sample.EqualTo("DYJetsToLL_M-50"))     {signed_weight = 0.66998;}
-  if (sample.EqualTo("ZZTo2L2Q"))            {signed_weight = 0.631351;}
-  if (sample.EqualTo("ST_t-channel"))        {signed_weight = 0.215648;}
-  if (sample.EqualTo("TTJets"))              {signed_weight = 0.331658;}
+  if (era.EqualTo("50ns"))
+    {
+      if (sample.EqualTo("WJetsToLNu"))      signed_weight = 0.683927;
+      if (sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 0.670032;
+      if (sample.EqualTo("ST_t-channel"))    signed_weight = 0.215131;
+      if (sample.EqualTo("TTJets"))          signed_weight = 0.331907;
+    }
+  else if (era.EqualTo("25ns"))
+    {
+      if (sample.EqualTo("WJetsToLNu"))          signed_weight = 0.683938;
+      if (sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 0.727601;
+      if (sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 0.66998;
+      if (sample.EqualTo("ZZTo2L2Q"))            signed_weight = 0.631351;
+      if (sample.EqualTo("ST_t-channel"))        signed_weight = 0.215648;
+      if (sample.EqualTo("TTJets"))              signed_weight = 0.331658;
+    }
 
-  if (signed_weight < 0) return;
+  if (signed_weight > 1.) return;
 
   if (GEN_weight_SM < 0) signed_weight *= -1.;
 

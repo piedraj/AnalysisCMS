@@ -3,14 +3,14 @@
 
 #include "AnalysisBase.h"
 
+#include <fstream>
+#include <iostream>
 #include <TH1.h>
 #include <TLorentzVector.h>
 #include <TString.h>
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TTree.h>
-#include <fstream>
-#include <iostream>
 
 
 class AnalysisWZ : public AnalysisBase
@@ -19,18 +19,30 @@ class AnalysisWZ : public AnalysisBase
 
  AnalysisWZ(TTree *tree=0) : AnalysisBase(tree) {}
 
-  float MuonIsolation    (int     k);
-  float ElectronIsolation(int     k);
-  bool  IsFiducialLepton (int     k);
-  bool  IsTightLepton    (int     k);
-  bool  IsIsolatedLepton (int     k);
-  void  FillHistograms   (int     ichannel,
-			  int     icut);
-  void  Loop             (TString sample,
-			  float   luminosity);
-  void  Summary          (TString precision,
-			  TString title);
-  void  ApplySignedWeight(TString sample);
+  float   MuonIsolation    (int     k);
+
+  float   ElectronIsolation(int     k);
+
+  bool    IsFiducialLepton (int     k);
+
+  bool    IsTightLepton    (int     k);
+
+  bool    IsIsolatedLepton (int     k);
+
+  void    FillHistograms   (int     ichannel,
+			    int     icut);
+
+  void    Loop             (TString sample,
+			    TString era,
+			    float   luminosity);
+
+  void    Summary          (TString precision,
+			    TString title);
+
+  TString GetSampleName    (TString filename);
+
+  void    ApplySignedWeight(TString sample,
+			    TString era);
 };
 
 #endif

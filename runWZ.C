@@ -1,7 +1,9 @@
 #include "AnalysisWZ.C"
 
 
-void runWZ(TString sample, TString filename)
+void runWZ(TString filename,
+	   TString era,
+	   float   luminosity)
 {
   TFile* file = TFile::Open(filename);
 
@@ -9,16 +11,14 @@ void runWZ(TString sample, TString filename)
 
   AnalysisWZ awz(latino);
 
-  float luminosity = 0.01609;  // fb-1
-
-  awz.Loop(sample, luminosity);
+  awz.Loop(filename, era, luminosity);
 }
 
 
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  runWZ(argv[1], argv[2]);
+  runWZ(argv[1], argv[2], atof(argv[3]));
 
   return 0;
 }
