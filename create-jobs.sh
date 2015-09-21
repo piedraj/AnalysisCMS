@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -lt 3 ]; then
+if [ $# -lt 2 ]; then
     echo "  "
     echo "  ./create-jobs.sh /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeVRun2015B          50ns"
     echo "  ./create-jobs.sh /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU 50ns"
