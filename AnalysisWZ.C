@@ -181,9 +181,11 @@ void AnalysisWZ::Loop(TString filename,
 
     fChain->GetEntry(jentry);
 
+    if (!trigger) continue;
+
     if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
 
-    event_weight = baseW * luminosity;
+    event_weight = (isMC) ? baseW * luminosity : 1.0;
 
     ApplySignedWeight(sample, era);
 

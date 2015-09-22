@@ -62,5 +62,7 @@ Input files can be accessed directly from eos when working from lxplus.
 ====
 
     cd test
-    root -l -b -q 'draw.C+(HasW,1)'
+    root -l -b -q 'draw.C+(Exactly3Leptons)'
+    root -l -b -q 'draw.C+(HasZ)'
+    root -l -b -q 'draw.C+(HasW)'
 

@@ -54,15 +54,18 @@ TString scut[ncut] = {
 };
 
 
-const UInt_t nprocess = 6;
+const UInt_t nprocess = 9;
 
 enum {
   Data,
   WZ,
   ZZ,
   Top,
+  SingleTop,
+  WW,
   ZJets,
-  VVV
+  WJets,
+  QCD
 };
 
 Color_t cprocess[nprocess];
@@ -75,8 +78,8 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-Double_t        _luminosity = 16.09; // pb
-TString         _datapath   = "../rootfiles";
+Double_t        _luminosity = 71.52; // pb
+TString         _datapath   = "../rootfiles/50ns";
 Bool_t          _batch;
 UInt_t          _cut;
 
@@ -103,8 +106,6 @@ void     DrawHistogram            (TString       hname,
 				   Double_t      ymax         = -999,
 				   Bool_t        moveOverflow = false);
 
-Double_t Yield                    (TH1*          h);
-
 void     MakeOutputDirectory      (TString       format);
 
 
@@ -122,7 +123,6 @@ void draw(UInt_t cut   = Exactly3Leptons,
   if (ReadInputFiles() < 0) return;
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
-
     DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
     DrawHistogram("h_invMass2Lep", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV",  linY, 60, 120);
   }
@@ -171,13 +171,13 @@ void DrawHistogram(TString  hname,
 
   THStack* hstack = new THStack(hname, hname);
 
-  TH1D* hist[nprocess];
+  TH1F* hist[nprocess];
 
   for (UInt_t i=0; i<vprocess.size(); i++) {
 
     UInt_t j = vprocess.at(i);
 
-    hist[j] = (TH1D*)input[j]->Get(hname);
+    hist[j] = (TH1F*)input[j]->Get(hname);
 
     hist[j]->SetName(hname + "_" + sprocess[j]);
 
@@ -185,12 +185,17 @@ void DrawHistogram(TString  hname,
 
     if (ngroup > 0) hist[j]->Rebin(ngroup);
 
-    if (j != Data)
-      {
-	hist[j]->SetFillColor(cprocess[j]);
-	hist[j]->SetFillStyle(1001);
-	hist[j]->SetLineColor(cprocess[j]);
+    hist[j]->SetFillColor(cprocess[j]);
+    hist[j]->SetLineColor(cprocess[j]);
 
+    if (j == Data)
+      {
+	hist[j]->SetMarkerStyle(kFullCircle);
+	hist[j]->SetTitle("");
+      }
+    else
+      {
+	hist[j]->SetFillStyle(1001);
 	hstack->Add(hist[j]);
       }
   }
@@ -198,7 +203,7 @@ void DrawHistogram(TString  hname,
 
   // All MC
   //----------------------------------------------------------------------------
-  TH1D* allmc = (TH1D*)hist[Data]->Clone("allmc");
+  TH1F* allmc = (TH1F*)hist[Data]->Clone("allmc");
 
   allmc->SetFillColor  (kGray+1);
   allmc->SetFillStyle  (   3345);
@@ -206,7 +211,7 @@ void DrawHistogram(TString  hname,
   allmc->SetMarkerColor(kGray+1);
   allmc->SetMarkerSize (      0);
 
-  for (Int_t ibin=1; ibin<=allmc->GetNbinsX(); ibin++) {
+  for (Int_t ibin=0; ibin<=allmc->GetNbinsX()+1; ibin++) {
 
     Double_t binValue = 0.;
     Double_t binError = 0.;
@@ -233,38 +238,25 @@ void DrawHistogram(TString  hname,
   }
 
 
-  // Poisson errors for data
+  // Draw
   //----------------------------------------------------------------------------
-  TH1D* hdata = new TH1D(hname + "_data", "",
-			 hist[Data]->GetNbinsX(),
-			 hist[Data]->GetBinLowEdge(1),
-			 hist[Data]->GetBinLowEdge(hist[Data]->GetNbinsX())+hist[Data]->GetBinWidth(1));
-
-  hdata->SetBinErrorOption(TH1::kPoisson);  // Do not set Sumw2()
-
-  hdata->SetLineColor  (cprocess[Data]);
-  hdata->SetMarkerColor(cprocess[Data]);
-  hdata->SetMarkerStyle(kFullCircle);
-  hdata->SetTitle("");
-
-  for (int ibin=1; ibin<=hist[Data]->GetNbinsX(); ++ibin)
-    {
-      for (int f=0; f<hist[Data]->GetBinContent(ibin); f++)
-	{
-	  hdata->Fill(hist[Data]->GetBinCenter(ibin));
-	}
-    }
+  hist[Data]->Draw("ep");
+  hstack    ->Draw("hist,same");
+  allmc     ->Draw("e2,same");
+  hist[Data]->Draw("ep,same");
 
 
-  // Axis labels
+  // Adjust axes
   //----------------------------------------------------------------------------
-  TAxis* xaxis = hdata->GetXaxis();
-  TAxis* yaxis = hdata->GetYaxis();
+  TAxis* xaxis = hist[Data]->GetXaxis();
+  TAxis* yaxis = hist[Data]->GetYaxis();
+
+  xaxis->SetRangeUser(xmin, xmax);
 
   TString ytitle = Form("Events / %s.%df", "%", precision);
 
   xaxis->SetTitle(xtitle);
-  yaxis->SetTitle(Form(ytitle.Data(), hdata->GetBinWidth(0)));
+  yaxis->SetTitle(Form(ytitle.Data(), hist[Data]->GetBinWidth(0)));
 
   if (!units.Contains("NULL")) {
     
@@ -273,20 +265,10 @@ void DrawHistogram(TString  hname,
   }
 
 
-  // Draw
-  //----------------------------------------------------------------------------
-  xaxis->SetRangeUser(xmin, xmax);
-
-  hdata ->Draw("ep");
-  hstack->Draw("hist,same");
-  allmc ->Draw("e2,same");
-  hdata ->Draw("ep,same");
-
-
   // Adjust scale
   //----------------------------------------------------------------------------
-  Double_t theMax   = GetMaximumIncludingErrors(hdata, xmin, xmax);
-  Double_t theMaxMC = GetMaximumIncludingErrors(allmc, xmin, xmax);
+  Double_t theMax   = GetMaximumIncludingErrors(hist[Data], xmin, xmax);
+  Double_t theMaxMC = GetMaximumIncludingErrors(allmc,      xmin, xmax);
 
   if (theMaxMC > theMax)
     {
@@ -298,11 +280,11 @@ void DrawHistogram(TString  hname,
   else
     theMax *= 1.55;
 
-  hdata->SetMinimum(0.0);
-  hdata->SetMaximum(theMax);
+  hist[Data]->SetMinimum(0.0);
+  hist[Data]->SetMaximum(theMax);
 
-  if (ymin != -999) hdata->SetMinimum(ymin);
-  if (ymax != -999) hdata->SetMaximum(ymax);
+  if (ymin != -999) hist[Data]->SetMinimum(ymin);
+  if (ymax != -999) hist[Data]->SetMaximum(ymax);
 
 
   // Legend
@@ -313,29 +295,33 @@ void DrawHistogram(TString  hname,
   Double_t ndelta = 0;
   Double_t xdelta = 0.535;
 
-  TString sData = Form(" data (%.0f)", Yield(hdata));
+  TString sData = Form(" data (%.0f)", Yield(hist[Data]));
 
   if (channel != all) sData = Form(" %s%s", lchannel[channel].Data(), sData.Data());
 
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hdata,    sData,                                "lp"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,    Form(" all (%.0f)", Yield(allmc)),    "f");  ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WZ], Form(" WZ (%.0f)",  Yield(hist[WZ])), "f");  ndelta += delta;
-
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],   Form(" top (%.0f)",    Yield(hist[Top])),   "f"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZJets], Form(" Z+jets (%.0f)", Yield(hist[ZJets])), "f"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Data], sData,                                "lp"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)", Yield(allmc)),    "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WZ],   Form(" WZ (%.0f)",  Yield(hist[WZ])), "f");  ndelta += delta;
 
   ndelta = 0;
-  xdelta = 0.22;
+  xdelta = 0.3;
 
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZZ],  Form(" ZZ (%.0f)",       Yield(hist[ZZ])),  "f"); ndelta += delta;
-  //  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZG],  Form(" Z#gamma (%.0f)",  Yield(hist[ZG])),  "f"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[VVV], Form(" VVV (%.0f)",      Yield(hist[VVV])), "f"); ndelta += delta;
-  //  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WV],  Form(" W#gamma* (%.0f)", Yield(hist[WV])),  "f"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" top (%.0f)",        Yield(hist[Top])),       "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[SingleTop], Form(" single top (%.0f)", Yield(hist[SingleTop])), "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZJets],     Form(" Z+jets (%.0f)",     Yield(hist[ZJets])),     "f");  ndelta += delta;
+
+  ndelta = 0;
+  xdelta = 0.05;
+
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZZ],    Form(" ZZ (%.0f)",     Yield(hist[ZZ])),    "f"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WW],    Form(" WW (%.0f)",     Yield(hist[WW])),    "f"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WJets], Form(" W+jets (%.0f)", Yield(hist[WJets])), "f"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[QCD],   Form(" QCD (%.0f)",    Yield(hist[QCD])),   "f"); ndelta += delta;
 
 
   // CMS titles
   //----------------------------------------------------------------------------
-  DrawTLatex(61, 0.190, 0.945, 0.050, 11, "CMS"); // 42
+  DrawTLatex(61, 0.190, 0.945, 0.050, 11, "CMS");
   DrawTLatex(52, 0.288, 0.945, 0.030, 11, "Preliminary");
   DrawTLatex(42, 0.940, 0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", _luminosity));
 
@@ -345,8 +331,8 @@ void DrawHistogram(TString  hname,
   //----------------------------------------------------------------------------
   pad2->cd();
     
-  TH1D* ratio       = (TH1D*)hdata->Clone("ratio");
-  TH1D* uncertainty = (TH1D*)allmc->Clone("uncertainty");
+  TH1F* ratio       = (TH1F*)hist[Data]->Clone("ratio");
+  TH1F* uncertainty = (TH1F*)allmc->Clone("uncertainty");
 
   for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
@@ -385,8 +371,8 @@ void DrawHistogram(TString  hname,
 
   // Save
   //----------------------------------------------------------------------------
-  pad2->cd(); SetAxis(ratio, hdata->GetXaxis()->GetTitle(), "data / MC - 1", 0.105, 0.75);
-  pad1->cd(); SetAxis(hdata, "", hdata->GetYaxis()->GetTitle(), 0.045, 1.7);
+  pad2->cd(); SetAxis(ratio, hist[Data]->GetXaxis()->GetTitle(), "data / MC - 1", 0.105, 0.75);
+  pad1->cd(); SetAxis(hist[Data], "", hist[Data]->GetYaxis()->GetTitle(), 0.045, 1.7);
 
   canvas->cd();
 
@@ -409,22 +395,25 @@ void SetParameters()
 {
   if (_batch) gROOT->SetBatch();
 
-  sprocess[Data]  = "WZTo3LNu";
-  sprocess[WZ]    = "WZTo3LNu";
-  sprocess[ZZ]    = "ggZZ";
-  sprocess[Top]   = "TTTo2L2Nu";
-  sprocess[ZJets] = "DYJetsToLL_M-50";
-  sprocess[VVV]   = "TTZToLLNuNu_M-10";
+  sprocess[Data]      = "01_Data";
+  sprocess[WZ]        = "02_WZ";
+  sprocess[ZZ]        = "03_ZZ";
+  sprocess[Top]       = "04_Top";
+  sprocess[SingleTop] = "05_SingleTop";
+  sprocess[WW]        = "06_WW";
+  sprocess[ZJets]     = "07_ZJets";
+  sprocess[WJets]     = "08_WJets";
+  sprocess[QCD]       = "09_QCD";
 
-  cprocess[Data]  = kBlack;
-  //  cprocess[Fakes] = kAzure-7;
-  cprocess[WZ]    = kOrange-2;
-  cprocess[ZZ]    = kRed+3;
-  //  cprocess[ZG]    = kGreen-5;
-  cprocess[Top]   = kYellow;
-  cprocess[ZJets] = kGreen+2;
-  cprocess[VVV]   = kAzure-9;
-  //  cprocess[WV]    = kGray+1;
+  cprocess[Data]      = kBlack;
+  cprocess[WZ]        = kOrange-2;
+  cprocess[ZZ]        = kRed+3;
+  cprocess[Top]       = kYellow;
+  cprocess[SingleTop] = kYellow-6;
+  cprocess[WW]        = kAzure-7;
+  cprocess[ZJets]     = kGreen+2;
+  cprocess[WJets]     = kAzure-9;
+  cprocess[QCD]       = kGray+1;
 
   MakeOutputDirectory("pdf");
   MakeOutputDirectory("png");
@@ -432,12 +421,13 @@ void SetParameters()
   vprocess.clear();
 
   vprocess.push_back(Data);
-  //  vprocess.push_back(WV);
-  vprocess.push_back(VVV);
-  vprocess.push_back(Top);
+  vprocess.push_back(QCD);
+  vprocess.push_back(WJets);
   vprocess.push_back(ZJets);
+  vprocess.push_back(WW);
+  vprocess.push_back(SingleTop);
+  vprocess.push_back(Top);
   vprocess.push_back(ZZ);
-  //  vprocess.push_back(ZG);
   vprocess.push_back(WZ);
 }
 
@@ -455,7 +445,7 @@ Int_t ReadInputFiles()
 
     input[j] = new TFile(fname);
 
-    TH1D* dummy = (TH1D*)input[j]->Get("h_counter_raw_all_" + scut[_cut]);
+    TH1F* dummy = (TH1F*)input[j]->Get("h_counter_raw_all_" + scut[_cut]);
 
     if (!dummy)
       {
