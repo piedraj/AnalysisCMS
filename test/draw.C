@@ -403,7 +403,12 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 void SetParameters()
 {
-  if (_batch) gROOT->SetBatch();
+  if (_batch)
+    {
+      gROOT->SetBatch();
+      MakeOutputDirectory("pdf");
+      MakeOutputDirectory("png");
+    }
 
   sprocess[Data]      = "01_Data";
   sprocess[WZ]        = "02_WZ";
@@ -425,11 +430,7 @@ void SetParameters()
   cprocess[WJets]     = kAzure-9;
   cprocess[QCD]       = kGray+1;
 
-  MakeOutputDirectory("pdf");
-  MakeOutputDirectory("png");
-
   vprocess.clear();
-
   vprocess.push_back(Data);
   vprocess.push_back(QCD);
   vprocess.push_back(WJets);
