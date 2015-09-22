@@ -124,7 +124,7 @@ void draw(UInt_t cut   = Exactly3Leptons,
   if (ReadInputFiles() < 0) return;
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
-    //    DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
+    DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
     DrawHistogram("h_invMass2Lep", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV",  linY, 60, 120);
   }
 }
