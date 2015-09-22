@@ -2,8 +2,8 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/rootfiles/50ns"
-    echo "  ./merge.sh /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/rootfiles/25ns"
+    echo "  ./merge.sh ../rootfiles/50ns"
+    echo "  ./merge.sh ../rootfiles/25ns"
     echo "  "
     exit -1
 fi

@@ -78,8 +78,9 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-Double_t        _luminosity = 71.52; // pb
-TString         _datapath   = "../rootfiles/50ns";
+Double_t        _luminosity = 40.03; // pb
+TString         _datapath   = "../rootfiles";
+TString         _era        = "50ns";
 Bool_t          _batch;
 UInt_t          _cut;
 
@@ -123,7 +124,7 @@ void draw(UInt_t cut   = Exactly3Leptons,
   if (ReadInputFiles() < 0) return;
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
-    DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
+    //    DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
     DrawHistogram("h_invMass2Lep", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV",  linY, 60, 120);
   }
 }
@@ -180,6 +181,16 @@ void DrawHistogram(TString  hname,
     hist[j] = (TH1F*)input[j]->Get(hname);
 
     hist[j]->SetName(hname + "_" + sprocess[j]);
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Temporary patch
+    //
+    if (j != Data) hist[j]->Scale(_luminosity/71.52);
+    //
+    // Temporary patch
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
     if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
 
@@ -278,7 +289,7 @@ void DrawHistogram(TString  hname,
   if (pad1->GetLogy())
     theMax = TMath::Power(10, TMath::Log10(theMax) + 2);
   else
-    theMax *= 1.55;
+    theMax *= 1.4;  // 1.55
 
   hist[Data]->SetMinimum(0.0);
   hist[Data]->SetMaximum(theMax);
@@ -382,8 +393,8 @@ void DrawHistogram(TString  hname,
 
       if (setLogy) cname += "_log";
 
-      canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
-      canvas->SaveAs(Form("png/%s.png", cname.Data()));
+      canvas->SaveAs(Form("pdf/%s/%s.pdf", _era.Data(), cname.Data()));
+      canvas->SaveAs(Form("png/%s/%s.png", _era.Data(), cname.Data()));
     }
 }
 
@@ -441,7 +452,7 @@ Int_t ReadInputFiles()
 
     UInt_t j = vprocess.at(i);
 
-    TString fname = _datapath + "/" + sprocess[j] + ".root";
+    TString fname = _datapath + "/" + _era + "/" + sprocess[j] + ".root";
 
     input[j] = new TFile(fname);
 
@@ -465,7 +476,5 @@ Int_t ReadInputFiles()
 //------------------------------------------------------------------------------
 void MakeOutputDirectory(TString format)
 {
-  gSystem->mkdir(format, kTRUE);
-
-  gSystem->mkdir(format + "/" + scut[_cut], kTRUE);
+  gSystem->mkdir(format + "/" + _era + "/" + scut[_cut], kTRUE);
 }
