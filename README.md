@@ -62,6 +62,9 @@ Input files can be accessed directly from eos when working from lxplus.
 ====
 
     cd test
+
+    ./merge.sh
+
     root -l -b -q 'draw.C+(Exactly3Leptons)'
     root -l -b -q 'draw.C+(HasZ)'
     root -l -b -q 'draw.C+(HasW)'
