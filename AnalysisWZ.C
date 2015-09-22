@@ -81,14 +81,17 @@ Lepton              WLepton;
 Lepton              ZLepton1;
 Lepton              ZLepton2;
 
-TString             sample;
-bool                isMC;
-float               luminosity;
-float               event_weight;
-float               mll;
-int                 channel;
-unsigned int        nelectron;
-unsigned int        nlepton;
+TString             _sample;
+bool                _ismc;
+float               _event_weight;
+float               _m2l;
+float               _m3l;
+int                 _channel;
+unsigned int        _nelectron;
+unsigned int        _nlepton;
+unsigned int        _njet;
+unsigned int        _nbjet;
+
 ofstream            txt_summary;
 ofstream            txt_events_eee;
 ofstream            txt_events_eem;
@@ -100,7 +103,12 @@ TH1F*               h_gen_mZ;
 
 TH1F*               h_counter_raw[nchannel][ncut];
 TH1F*               h_counter_lum[nchannel][ncut];
-TH1F*               h_invMass2Lep[nchannel][ncut];
+TH1F*               h_m2l        [nchannel][ncut];
+TH1F*               h_m3l        [nchannel][ncut];
+TH1F*               h_njet       [nchannel][ncut];
+TH1F*               h_nbjet      [nchannel][ncut];
+TH1F*               h_nvtx       [nchannel][ncut];
+TH1F*               h_pfType1Met [nchannel][ncut];
 
 
 //------------------------------------------------------------------------------
@@ -110,17 +118,17 @@ void AnalysisWZ::Loop(TString filename,
 		      TString era,
 		      float   luminosity)
 {
-  sample = GetSampleName(filename);
+  _sample = GetSampleName(filename);
 
-  isMC = true;
+  _ismc = true;
 
-  if (sample.EqualTo("DoubleEG"))          isMC = false;
-  if (sample.EqualTo("DoubleMuon"))        isMC = false;
-  if (sample.EqualTo("DoubleMuonLowMass")) isMC = false;
-  if (sample.EqualTo("MuonEG"))            isMC = false;
-  if (sample.EqualTo("SingleElectron"))    isMC = false;
-  if (sample.EqualTo("SingleMu"))          isMC = false;
-  if (sample.EqualTo("SingleMuon"))        isMC = false;
+  if (_sample.EqualTo("DoubleEG"))          _ismc = false;
+  if (_sample.EqualTo("DoubleMuon"))        _ismc = false;
+  if (_sample.EqualTo("DoubleMuonLowMass")) _ismc = false;
+  if (_sample.EqualTo("MuonEG"))            _ismc = false;
+  if (_sample.EqualTo("SingleElectron"))    _ismc = false;
+  if (_sample.EqualTo("SingleMu"))          _ismc = false;
+  if (_sample.EqualTo("SingleMuon"))        _ismc = false;
 
   if (fChain == 0) return;
 
@@ -130,9 +138,9 @@ void AnalysisWZ::Loop(TString filename,
     {
       printf("\n");
       printf("   filename: %s\n",      filename.Data());
-      printf("     sample: %s\n",      sample.Data());
+      printf("     sample: %s\n",      _sample.Data());
       printf("        era: %s\n",      era.Data());
-      printf(" luminosity: %f fb-1\n", luminosity);
+      printf(" luminosity: %f pb-1\n", 1e3*luminosity);
       printf("   nentries: %lld\n",    nentries);
       printf("\n");
     }
@@ -144,16 +152,16 @@ void AnalysisWZ::Loop(TString filename,
 
   gSystem->mkdir(Form("rootfiles/%s", era.Data()), kTRUE);
 
-  root_output = new TFile("rootfiles/" + era + "/" + sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
 
   if (print_events)
     {
       gSystem->mkdir(Form("txt/%s", era.Data()), kTRUE);
 
-      txt_events_eee.open("txt/" + era + "/" + sample + "_eee.txt");
-      txt_events_eem.open("txt/" + era + "/" + sample + "_eem.txt");
-      txt_events_emm.open("txt/" + era + "/" + sample + "_emm.txt");
-      txt_events_mmm.open("txt/" + era + "/" + sample + "_mmm.txt");
+      txt_events_eee.open("txt/" + era + "/" + _sample + "_eee.txt");
+      txt_events_eem.open("txt/" + era + "/" + _sample + "_eem.txt");
+      txt_events_emm.open("txt/" + era + "/" + _sample + "_emm.txt");
+      txt_events_mmm.open("txt/" + era + "/" + _sample + "_mmm.txt");
     }
 
 
@@ -166,7 +174,12 @@ void AnalysisWZ::Loop(TString filename,
 
       h_counter_raw[i][j] = new TH1F("h_counter_raw_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
       h_counter_lum[i][j] = new TH1F("h_counter_lum_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
-      h_invMass2Lep[i][j] = new TH1F("h_invMass2Lep_" + schannel[i] + "_" + scut[j], "", 400, 0, 200);
+      h_m2l        [i][j] = new TH1F("h_m2l_"         + schannel[i] + "_" + scut[j], "", 400, 0, 200);
+      h_m3l        [i][j] = new TH1F("h_m3l_"         + schannel[i] + "_" + scut[j], "", 400, 0, 400);
+      h_njet       [i][j] = new TH1F("h_njet_"        + schannel[i] + "_" + scut[j], "",  10, 0,  10);
+      h_nbjet      [i][j] = new TH1F("h_nbjet_"       + schannel[i] + "_" + scut[j], "",  10, 0,  10);
+      h_nvtx       [i][j] = new TH1F("h_nvtx_"        + schannel[i] + "_" + scut[j], "",  50, 0,  50);
+      h_pfType1Met [i][j] = new TH1F("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "", 200, 0, 200);
     }
   }
 
@@ -185,14 +198,14 @@ void AnalysisWZ::Loop(TString filename,
 
     if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
 
-    event_weight = (isMC) ? baseW * luminosity : 1.0;
+    _event_weight = (_ismc) ? baseW * luminosity : 1.0;
 
-    ApplySignedWeight(sample, era);
+    ApplySignedWeight(_sample, era);
 
 
     // Loop over GEN leptons
     //--------------------------------------------------------------------------
-    if (isMC)
+    if (_ismc)
       {
 	GenLeptons.clear();
 
@@ -294,7 +307,7 @@ void AnalysisWZ::Loop(TString filename,
       AnalysisLeptons.push_back(lep);
     }
 
-    nlepton = AnalysisLeptons.size();
+    _nlepton = AnalysisLeptons.size();
 
 
     // For synchronization
@@ -310,9 +323,9 @@ void AnalysisWZ::Loop(TString filename,
 	    (run == 1 && lumi == 4984 && event ==  98324) ||
 	    (run == 1 && lumi ==  742 && event ==  74108))
 	  {
-	    printf("%u:%u:%u -- %u leptons found ", run, lumi, event, nlepton);
+	    printf("%u:%u:%u -- %u leptons found ", run, lumi, event, _nlepton);
 	    
-	    for (UInt_t i=0; i<nlepton; i++)
+	    for (UInt_t i=0; i<_nlepton; i++)
 	      {
 		TString lepton_flavour = (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) ? "e" : "m";
 		printf("%s", lepton_flavour.Data());
@@ -324,33 +337,33 @@ void AnalysisWZ::Loop(TString filename,
     
     // Require exactly three leptons
     //--------------------------------------------------------------------------
-    if (nlepton != 3) continue;
+    if (_nlepton != 3) continue;
 
 
     // Classify the channels
     //--------------------------------------------------------------------------
-    nelectron = 0;
+    _nelectron = 0;
 
     for (int i=0; i<3; i++)
       {
-	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) nelectron++;
+	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
       }
 
-    channel = -1;
+    _channel = -1;
 
-    if      (nelectron == 3) channel = eee;
-    else if (nelectron == 2) channel = eem;
-    else if (nelectron == 1) channel = emm;
-    else if (nelectron == 0) channel = mmm;
+    if      (_nelectron == 3) _channel = eee;
+    else if (_nelectron == 2) _channel = eem;
+    else if (_nelectron == 1) _channel = emm;
+    else if (_nelectron == 0) _channel = mmm;
 
 
     // Make Z and W candidates
     //--------------------------------------------------------------------------
-    mll = 999;
+    _m2l = 999;
 
-    for (UInt_t i=0; i<nlepton; i++) {
+    for (UInt_t i=0; i<_nlepton; i++) {
 
-      for (UInt_t j=i+1; j<nlepton; j++) {
+      for (UInt_t j=i+1; j<_nlepton; j++) {
       
 	if (abs(AnalysisLeptons[i].flavour) != abs(AnalysisLeptons[j].flavour)) continue;
 
@@ -358,9 +371,9 @@ void AnalysisWZ::Loop(TString filename,
 
 	float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
 
-	if (fabs(inv_mass - Z_MASS) < fabs(mll - Z_MASS)) {
+	if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
 
-	  mll = inv_mass;
+	  _m2l = inv_mass;
 
 	  ZLepton1 = AnalysisLeptons[i];
 	  ZLepton2 = AnalysisLeptons[j];
@@ -381,7 +394,8 @@ void AnalysisWZ::Loop(TString filename,
     //--------------------------------------------------------------------------
     int vector_jet_size = std_vector_jet_pt->size();
 
-    int nbjet = 0;
+    _njet  = 0;
+    _nbjet = 0;
 
     for (int i=0; i<vector_jet_size; i++) {
 
@@ -404,8 +418,12 @@ void AnalysisWZ::Loop(TString filename,
 	  (fabs(eta) < 2.4) &&
 	  (jet.DeltaR(ZLepton1.v) > 0.4) &&
 	  (jet.DeltaR(ZLepton2.v) > 0.4) &&
-	  (jet.DeltaR(WLepton.v)  > 0.4) &&
-	  btag) nbjet++;  
+	  (jet.DeltaR(WLepton.v)  > 0.4))
+	{
+	  _njet++;
+	  
+	  if (btag) _nbjet++;
+	}
     }
 
 
@@ -413,37 +431,39 @@ void AnalysisWZ::Loop(TString filename,
     //--------------------------------------------------------------------------
     if (print_events)
       {
-	if (channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
-	if (channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
-	if (channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
-	if (channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
+	if (_channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
+	if (_channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
+	if (_channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
+	if (_channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
       }
 
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    FillHistograms(channel, Exactly3Leptons);
+    _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
 
-    if (mll <  60.) continue;
-    if (mll > 120.) continue;
+    FillHistograms(_channel, Exactly3Leptons);
+
+    if (_m2l <  60.) continue;
+    if (_m2l > 120.) continue;
     if (ZLepton1.v.Pt() < 20.) continue;
 
-    FillHistograms(channel, HasZ);
+    FillHistograms(_channel, HasZ);
 
     if (WLepton.v.DeltaR(ZLepton1.v) < 0.1) continue;
     if (WLepton.v.DeltaR(ZLepton2.v) < 0.1) continue;
     if (WLepton.v.Pt()               < 20.) continue;
     if (pfType1Met                   < 30.) continue;
 
-    FillHistograms(channel, HasW);
+    FillHistograms(_channel, HasW);
 
-    if (nbjet > 1) continue;
+    if (_nbjet > 1) continue;
 
-    FillHistograms(channel, OneBJet);
+    FillHistograms(_channel, OneBJet);
 
-    if (nbjet > 0) continue;
+    if (_nbjet > 0) continue;
 
-    FillHistograms(channel, NoBJets);
+    FillHistograms(_channel, NoBJets);
   }
 
 
@@ -465,9 +485,9 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  txt_summary.open("txt/" + sample + ".txt");
+  txt_summary.open("txt/" + _sample + ".txt");
 
-  txt_summary << Form("\n%20s results with %.0f fb\n", sample.Data(), luminosity);
+  txt_summary << Form("\n%20s results with %.0f fb\n", _sample.Data(), luminosity);
 
   Summary("11.0", "raw yields");
   Summary("11.2", "predicted yields");
@@ -605,9 +625,14 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 void AnalysisWZ::FillHistograms(int ichannel, int icut)
 {
   h_counter_raw[ichannel][icut]->Fill(1);
-  h_counter_lum[ichannel][icut]->Fill(1, event_weight);
+  h_counter_lum[ichannel][icut]->Fill(1, _event_weight);
 
-  h_invMass2Lep[ichannel][icut]->Fill(mll, event_weight);
+  h_m2l       [ichannel][icut]->Fill(_m2l,       _event_weight);
+  h_m3l       [ichannel][icut]->Fill(_m3l,       _event_weight);
+  h_njet      [ichannel][icut]->Fill(_njet,      _event_weight);
+  h_nbjet     [ichannel][icut]->Fill(_nbjet,     _event_weight);
+  h_nvtx      [ichannel][icut]->Fill(nvtx,       _event_weight);
+  h_pfType1Met[ichannel][icut]->Fill(pfType1Met, _event_weight);
 
   if (ichannel != all) FillHistograms(all, icut);
 }
@@ -680,32 +705,32 @@ TString AnalysisWZ::GetSampleName(TString filename)
 void AnalysisWZ::ApplySignedWeight(TString sample,
 				   TString era)
 {
-  if (!isMC) return;
+  if (!_ismc) return;
 
   float signed_weight = 999.;
 
   if (era.EqualTo("50ns"))
     {
-      if (sample.EqualTo("WJetsToLNu"))      signed_weight = 0.683927;
-      if (sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 0.670032;
-      if (sample.EqualTo("ST_t-channel"))    signed_weight = 0.215131;
-      if (sample.EqualTo("TTJets"))          signed_weight = 0.331907;
+      if (_sample.EqualTo("WJetsToLNu"))      signed_weight = 0.683927;
+      if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 0.670032;
+      if (_sample.EqualTo("ST_t-channel"))    signed_weight = 0.215131;
+      if (_sample.EqualTo("TTJets"))          signed_weight = 0.331907;
     }
   else if (era.EqualTo("25ns"))
     {
-      if (sample.EqualTo("WJetsToLNu"))          signed_weight = 0.683938;
-      if (sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 0.727601;
-      if (sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 0.66998;
-      if (sample.EqualTo("ZZTo2L2Q"))            signed_weight = 0.631351;
-      if (sample.EqualTo("ST_t-channel"))        signed_weight = 0.215648;
-      if (sample.EqualTo("TTJets"))              signed_weight = 0.331658;
+      if (_sample.EqualTo("WJetsToLNu"))          signed_weight = 0.683938;
+      if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 0.727601;
+      if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 0.66998;
+      if (_sample.EqualTo("ZZTo2L2Q"))            signed_weight = 0.631351;
+      if (_sample.EqualTo("ST_t-channel"))        signed_weight = 0.215648;
+      if (_sample.EqualTo("TTJets"))              signed_weight = 0.331658;
     }
 
   if (signed_weight > 1.) return;
 
   if (GEN_weight_SM < 0) signed_weight *= -1.;
 
-  event_weight *= signed_weight;
+  _event_weight *= signed_weight;
 
   return;
 }

@@ -124,8 +124,16 @@ void draw(UInt_t cut   = Exactly3Leptons,
   if (ReadInputFiles() < 0) return;
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
-    DrawHistogram("h_counter_lum", channel, cut, "yield",            -1, 0, "NULL", linY);
-    DrawHistogram("h_invMass2Lep", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV",  linY, 60, 120);
+
+    if (channel != all) continue;
+
+    DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
+    DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
+    DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY);
+    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", linY, 0, 4);
+    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", linY, 0, 4);
+    DrawHistogram("h_m2l",         channel, cut, "m_{#font[12]{ll}}",                        4, 0, "GeV",  linY, 60, 120);
+    DrawHistogram("h_m3l",         channel, cut, "m_{#font[12]{3l}}",                       10, 0, "GeV",  linY, 60, 350);
   }
 }
 
@@ -181,16 +189,6 @@ void DrawHistogram(TString  hname,
     hist[j] = (TH1F*)input[j]->Get(hname);
 
     hist[j]->SetName(hname + "_" + sprocess[j]);
-
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Temporary patch
-    //
-    if (j != Data) hist[j]->Scale(_luminosity/71.52);
-    //
-    // Temporary patch
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
     if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
 
@@ -315,7 +313,7 @@ void DrawHistogram(TString  hname,
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WZ],   Form(" WZ (%.0f)",  Yield(hist[WZ])), "f");  ndelta += delta;
 
   ndelta = 0;
-  xdelta = 0.3;
+  xdelta = 0.31;
 
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" top (%.0f)",        Yield(hist[Top])),       "f");  ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[SingleTop], Form(" single top (%.0f)", Yield(hist[SingleTop])), "f");  ndelta += delta;

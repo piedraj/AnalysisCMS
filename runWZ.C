@@ -9,7 +9,7 @@ void runWZ(TString filename, TString era)
 
   AnalysisWZ awz(latino);
 
-  float luminosity = (era.EqualTo("50ns")) ? 0.07152 : 0.01547;  // fb-1
+  float luminosity = (era.EqualTo("50ns")) ? 0.04003 : 0.01547;  // fb-1
 
   awz.Loop(filename, era, luminosity);
 }
