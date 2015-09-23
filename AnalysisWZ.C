@@ -127,11 +127,11 @@ void AnalysisWZ::Loop(TString filename,
   if (verbosity > 0)
     {
       printf("\n");
-      printf("   filename: %s\n",      filename.Data());
-      printf("     sample: %s\n",      _sample.Data());
-      printf("        era: %s\n",      era.Data());
-      printf(" luminosity: %f pb-1\n", 1e3*luminosity);
-      printf("   nentries: %lld\n",    nentries);
+      printf("   filename: %s\n",        filename.Data());
+      printf("     sample: %s\n",        _sample.Data());
+      printf("        era: %s\n",        era.Data());
+      printf(" luminosity: %.2f pb-1\n", 1e3*luminosity);
+      printf("   nentries: %lld\n",      nentries);
       printf("\n");
     }
 
@@ -189,7 +189,7 @@ void AnalysisWZ::Loop(TString filename,
 
     _event_weight = (_ismc) ? baseW * luminosity : 1.0;
 
-    ApplySignedWeight(_sample, era);
+    ApplyWeights(_sample, era);
 
 
     // Loop over GEN leptons
@@ -451,7 +451,9 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
-  txt_summary << Form("\n%20s results with %.0f fb\n", _sample.Data(), luminosity);
+  txt_summary << Form("\n%20s results with %.2f pb-1\n",
+		      _sample.Data(),
+		      1e3*luminosity);
 
   Summary("11.0", "raw yields");
   Summary("11.2", "predicted yields");
@@ -672,10 +674,9 @@ void AnalysisWZ::GetSampleName(TString filename)
 
 
 //------------------------------------------------------------------------------
-// ApplySignedWeight
+// ApplyWeights
 //------------------------------------------------------------------------------
-void AnalysisWZ::ApplySignedWeight(TString sample,
-				   TString era)
+void AnalysisWZ::ApplyWeights(TString sample, TString era)
 {
   if (!_ismc) return;
 
@@ -683,6 +684,8 @@ void AnalysisWZ::ApplySignedWeight(TString sample,
 
   if (era.EqualTo("50ns"))
     {
+      if (_sample.EqualTo("WWTo2L2Nu_NLL")) _event_weight *= nllW;
+
       if (_sample.EqualTo("WJetsToLNu"))      signed_weight = 0.683927;
       if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 0.670032;
       if (_sample.EqualTo("ST_t-channel"))    signed_weight = 0.215131;

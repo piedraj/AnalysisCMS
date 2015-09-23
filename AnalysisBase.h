@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Sep 14 10:23:45 2015 by ROOT version 6.02/05
+// Wed Sep 23 17:47:30 2015 by ROOT version 6.02/05
 // from TTree latino/probe_tree
-// found on file: /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root
+// found on file: /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU/latino_WWTo2L2Nu_NLL.root
 //////////////////////////////////////////////////////////
 
 #ifndef AnalysisBase_h
@@ -513,6 +513,11 @@ public :
    UInt_t          event;
    Float_t         baseW;
    Float_t         puW;
+   Float_t         nllW;
+   Float_t         nllW_Rup;
+   Float_t         nllW_Qup;
+   Float_t         nllW_Rdown;
+   Float_t         nllW_Qdown;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -989,6 +994,11 @@ public :
    TBranch        *b_event;   //!
    TBranch        *b_baseW;   //!
    TBranch        *b_puW;   //!
+   TBranch        *b_nllW;   //!
+   TBranch        *b_nllW_Rup;   //!
+   TBranch        *b_nllW_Qup;   //!
+   TBranch        *b_nllW_Rdown;   //!
+   TBranch        *b_nllW_Qdown;   //!
 
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
@@ -1009,9 +1019,9 @@ AnalysisBase::AnalysisBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU/latino_WWTo2L2Nu_NLL.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU/latino_WZJets.root");
+         f = new TFile("/gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU/latino_WWTo2L2Nu_NLL.root");
       }
       f->GetObject("latino",tree);
 
@@ -1642,6 +1652,11 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("event", &event, &b_event);
    fChain->SetBranchAddress("baseW", &baseW, &b_baseW);
    fChain->SetBranchAddress("puW", &puW, &b_puW);
+   fChain->SetBranchAddress("nllW", &nllW, &b_nllW);
+   fChain->SetBranchAddress("nllW_Rup", &nllW_Rup, &b_nllW_Rup);
+   fChain->SetBranchAddress("nllW_Qup", &nllW_Qup, &b_nllW_Qup);
+   fChain->SetBranchAddress("nllW_Rdown", &nllW_Rdown, &b_nllW_Rdown);
+   fChain->SetBranchAddress("nllW_Qdown", &nllW_Qdown, &b_nllW_Qdown);
    Notify();
 }
 
