@@ -39,7 +39,7 @@ class AnalysisWZ : public AnalysisBase
   void    Summary          (TString precision,
 			    TString title);
 
-  TString GetSampleName    (TString filename);
+  void    GetSampleName    (TString filename);
 
   void    ApplySignedWeight(TString sample,
 			    TString era);

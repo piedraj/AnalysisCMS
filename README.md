@@ -53,7 +53,7 @@ Finally, open `AnalysisBase.h` and add
 
     ./submit-jobs.sh
 
-Input files can be accessed directly from eos when working from lxplus.
+Notice that input files can be accessed directly from eos when working from lxplus.
 
     ./runWZ root://eoscms.cern.ch//eos/cms/store/group/../latino_WZ.root 25ns
 

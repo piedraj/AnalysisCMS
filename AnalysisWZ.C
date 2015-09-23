@@ -118,17 +118,7 @@ void AnalysisWZ::Loop(TString filename,
 		      TString era,
 		      float   luminosity)
 {
-  _sample = GetSampleName(filename);
-
-  _ismc = true;
-
-  if (_sample.EqualTo("DoubleEG"))          _ismc = false;
-  if (_sample.EqualTo("DoubleMuon"))        _ismc = false;
-  if (_sample.EqualTo("DoubleMuonLowMass")) _ismc = false;
-  if (_sample.EqualTo("MuonEG"))            _ismc = false;
-  if (_sample.EqualTo("SingleElectron"))    _ismc = false;
-  if (_sample.EqualTo("SingleMu"))          _ismc = false;
-  if (_sample.EqualTo("SingleMuon"))        _ismc = false;
+  GetSampleName(filename);
 
   if (fChain == 0) return;
 
@@ -148,16 +138,13 @@ void AnalysisWZ::Loop(TString filename,
 
   // Additional settings
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
   gSystem->mkdir(Form("rootfiles/%s", era.Data()), kTRUE);
+  gSystem->mkdir(Form("txt/%s",       era.Data()), kTRUE);
 
   root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
 
   if (print_events)
     {
-      gSystem->mkdir(Form("txt/%s", era.Data()), kTRUE);
-
       txt_events_eee.open("txt/" + era + "/" + _sample + "_eee.txt");
       txt_events_eem.open("txt/" + era + "/" + _sample + "_eem.txt");
       txt_events_emm.open("txt/" + era + "/" + _sample + "_emm.txt");
@@ -165,8 +152,10 @@ void AnalysisWZ::Loop(TString filename,
     }
 
 
-  // Initialize histograms
+  // Define histograms
   //----------------------------------------------------------------------------
+  TH1::SetDefaultSumw2();
+
   h_gen_mZ = new TH1F("h_gen_mZ", "", 400, 0, 200);
 
   for (int i=0; i<nchannel; i++) {
@@ -310,31 +299,6 @@ void AnalysisWZ::Loop(TString filename,
     _nlepton = AnalysisLeptons.size();
 
 
-    // For synchronization
-    //--------------------------------------------------------------------------
-    if (verbosity == 2)
-      {
-	if ((run == 1 && lumi == 1679 && event == 167809) ||
-	    (run == 1 && lumi == 2101 && event ==  10040) ||
-	    (run == 1 && lumi == 2174 && event ==  17347) ||
-	    (run == 1 && lumi == 3106 && event == 110551) ||
-	    (run == 1 && lumi == 3325 && event == 132450) ||
-	    (run == 1 && lumi ==  404 && event ==  40309) ||
-	    (run == 1 && lumi == 4984 && event ==  98324) ||
-	    (run == 1 && lumi ==  742 && event ==  74108))
-	  {
-	    printf("%u:%u:%u -- %u leptons found ", run, lumi, event, _nlepton);
-	    
-	    for (UInt_t i=0; i<_nlepton; i++)
-	      {
-		TString lepton_flavour = (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) ? "e" : "m";
-		printf("%s", lepton_flavour.Data());
-	      }
-	    printf("\n");
-	  }
-      }
-    
-    
     // Require exactly three leptons
     //--------------------------------------------------------------------------
     if (_nlepton != 3) continue;
@@ -389,6 +353,8 @@ void AnalysisWZ::Loop(TString filename,
       }
     }
 
+    _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
+
 
     // Loop over jets
     //--------------------------------------------------------------------------
@@ -440,8 +406,6 @@ void AnalysisWZ::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
-
     FillHistograms(_channel, Exactly3Leptons);
 
     if (_m2l <  60.) continue;
@@ -485,7 +449,7 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
-  txt_summary.open("txt/" + _sample + ".txt");
+  txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
   txt_summary << Form("\n%20s results with %.0f fb\n", _sample.Data(), luminosity);
 
@@ -679,10 +643,8 @@ void AnalysisWZ::Summary(TString precision, TString title)
 //------------------------------------------------------------------------------
 // GetSampleName
 //------------------------------------------------------------------------------
-TString AnalysisWZ::GetSampleName(TString filename)
+void AnalysisWZ::GetSampleName(TString filename)
 {
-  TString samplename;
-
   TString tok;
 
   Ssiz_t from = 0;
@@ -691,11 +653,21 @@ TString AnalysisWZ::GetSampleName(TString filename)
 
     if (tok.Contains(".root")) {
 
-      samplename = tok.ReplaceAll(".root", "");
+      _sample = tok.ReplaceAll(".root", "");
     }
   }
-  
-  return samplename;
+
+  _ismc = true;
+
+  if (_sample.EqualTo("DoubleEG"))          _ismc = false;
+  if (_sample.EqualTo("DoubleMuon"))        _ismc = false;
+  if (_sample.EqualTo("DoubleMuonLowMass")) _ismc = false;
+  if (_sample.EqualTo("MuonEG"))            _ismc = false;
+  if (_sample.EqualTo("SingleElectron"))    _ismc = false;
+  if (_sample.EqualTo("SingleMu"))          _ismc = false;
+  if (_sample.EqualTo("SingleMuon"))        _ismc = false;
+
+  return;
 }
 
 
