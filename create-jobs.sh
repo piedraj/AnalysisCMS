@@ -13,4 +13,3 @@ export FILEPATH=$1
 export ERA=$2
 
 ls -1 $FILEPATH | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
-

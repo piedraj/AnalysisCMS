@@ -1,0 +1,16 @@
+#!/bin/sh
+#$ -P l.gaes
+#$ -S /bin/bash
+#$ -cwd
+#$ -t 1-1
+#$ -N AnalysisWZ
+#$ -pe proof 4
+#$ -o job_$JOB_ID-$TASK_ID.out
+#$ -j y
+
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+pushd /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src
+eval `scramv1 runtime -sh`
+popd
+
+`./create-jobs.sh $FILEPATH $ERA | awk -v line=$SGE_TASK_ID '{ if (NR==line) print }'`

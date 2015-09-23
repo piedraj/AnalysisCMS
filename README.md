@@ -51,7 +51,7 @@ Finally, open `AnalysisBase.h` and add
 
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
 
-    ./create-jobs.sh
+    ./submit-jobs.sh
 
 Input files can be accessed directly from eos when working from lxplus.
 
