@@ -456,7 +456,8 @@ void AnalysisWZ::Loop(TString filename,
 		      1e3*luminosity);
 
   Summary("11.0", "raw yields");
-  Summary("11.2", "predicted yields");
+  
+  if (_ismc) Summary("11.2", "predicted yields");
 
   txt_summary.close();
 
