@@ -42,19 +42,19 @@ const TString schannel[nchannel] = {
 const int ncut = 5;
 
 enum {
-  Exactly3Leptons,
-  HasZ,
-  HasW,
-  OneBJet,
-  NoBJets
+  WZ00_Exactly3Leptons,
+  WZ01_HasZ,
+  WZ02_HasW,
+  WZ03_OneBJet,
+  WZ04_NoBJets
 };
 
 const TString scut[ncut] = {
-  "Exactly3Leptons",
-  "HasZ",
-  "HasW",
-  "OneBJet",
-  "NoBJets"
+  "WZ00_Exactly3Leptons",
+  "WZ01_HasZ",
+  "WZ02_HasW",
+  "WZ03_OneBJet",
+  "WZ04_NoBJets"
 };
 
 
@@ -403,13 +403,13 @@ void AnalysisWZ::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    FillHistograms(_channel, Exactly3Leptons);
+    FillHistograms(_channel, WZ00_Exactly3Leptons);
 
     if (_m2l <  60.) continue;
     if (_m2l > 120.) continue;
     if (ZLepton1.v.Pt() < 20.) continue;
 
-    FillHistograms(_channel, HasZ);
+    FillHistograms(_channel, WZ01_HasZ);
 
     if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
     if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
@@ -417,15 +417,15 @@ void AnalysisWZ::Loop(TString filename,
     if (pfType1Met                   <  30.) continue;
     if (_m3l                         < 100.) continue;
 
-    FillHistograms(_channel, HasW);
+    FillHistograms(_channel, WZ02_HasW);
 
     if (_nbjet > 1) continue;
 
-    FillHistograms(_channel, OneBJet);
+    FillHistograms(_channel, WZ03_OneBJet);
 
     if (_nbjet > 0) continue;
 
-    FillHistograms(_channel, NoBJets);
+    FillHistograms(_channel, WZ04_NoBJets);
   }
 
 

@@ -38,19 +38,19 @@ TString lchannel[nchannel] = {
 const UInt_t ncut = 5;
 
 enum {
-  Exactly3Leptons,
-  HasZ,
-  HasW,
-  OneBJet,
-  NoBJets
+  WZ00_Exactly3Leptons,
+  WZ01_HasZ,
+  WZ02_HasW,
+  WZ03_OneBJet,
+  WZ04_NoBJets
 };
 
 TString scut[ncut] = {
-  "Exactly3Leptons",
-  "HasZ",
-  "HasW",
-  "OneBJet",
-  "NoBJets"
+  "WZ00_Exactly3Leptons",
+  "WZ01_HasZ",
+  "WZ02_HasW",
+  "WZ03_OneBJet",
+  "WZ04_NoBJets"
 };
 
 
@@ -113,7 +113,7 @@ void     MakeOutputDirectory      (TString       format);
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
-void draw(UInt_t cut   = Exactly3Leptons,
+void draw(UInt_t cut   = WZ00_Exactly3Leptons,
 	  Bool_t batch = kTRUE)
 {
   _cut   = cut;
@@ -127,8 +127,7 @@ void draw(UInt_t cut   = Exactly3Leptons,
 
     if (channel != all) continue;
 
-    //    DrawHistogram("h_counter_lum", channel, cut, "yield", -1, 0, "NULL", linY);
-
+    DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
     DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
     DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, 0, 40);
     DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", linY, 0, 4);

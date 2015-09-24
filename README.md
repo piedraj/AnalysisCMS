@@ -64,9 +64,9 @@ Notice that input files can be accessed directly from eos when working from lxpl
 
     ./merge.sh
 
-    root -l -b -q 'draw.C+(Exactly3Leptons)'
-    root -l -b -q 'draw.C+(HasZ)'
-    root -l -b -q 'draw.C+(HasW)'
+    root -l -b -q 'draw.C+(WZ00_Exactly3Leptons)'
+    root -l -b -q 'draw.C+(WZ01_HasZ)'
+    root -l -b -q 'draw.C+(WZ02_HasW)'
 
 
 6. Create your website
