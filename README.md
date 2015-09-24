@@ -74,15 +74,14 @@ Notice that input files can be accessed directly from eos when working from lxpl
 6. Create your website
 ====
 
-1. Follow the instructions at [Permissions for your AFS folder](https://espace.cern.ch/webservices-help/websitemanagement/ConfiguringAFSSites/Pages/PermissionsforyourAFSfolder.aspx).
+Follow the instructions at [Permissions for your AFS folder](https://espace.cern.ch/webservices-help/websitemanagement/ConfiguringAFSSites/Pages/PermissionsforyourAFSfolder.aspx).
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
 
-
-2. Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
+Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
 You should choose the "AFS folder" site type.
 
 
