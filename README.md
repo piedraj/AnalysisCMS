@@ -55,7 +55,8 @@ Finally, open `AnalysisBase.h` and add
 
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runWZ root://eoscms.cern.ch//eos/cms/store/group/../latino_WZ.root 25ns
+    ./runWZ /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns/latino_WZTo3LNu.root 25ns
+    ./runWZ root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
 
 
 5. Draw

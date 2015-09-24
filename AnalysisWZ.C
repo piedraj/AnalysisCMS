@@ -7,8 +7,7 @@
 // Constants, enums and structs
 //
 //==============================================================================
-const bool print_events = false;
-const int  verbosity    = 1;
+const int verbosity = 1;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -143,7 +142,7 @@ void AnalysisWZ::Loop(TString filename,
 
   root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
 
-  if (print_events)
+  if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
     {
       txt_events_eee.open("txt/" + era + "/" + _sample + "_eee.txt");
       txt_events_eem.open("txt/" + era + "/" + _sample + "_eem.txt");
@@ -187,9 +186,7 @@ void AnalysisWZ::Loop(TString filename,
 
     if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
 
-    _event_weight = (_ismc) ? baseW * luminosity : 1.0;
-
-    ApplyWeights(_sample, era);
+    ApplyWeights(_sample, era, luminosity);
 
 
     // Loop over GEN leptons
@@ -395,7 +392,7 @@ void AnalysisWZ::Loop(TString filename,
 
     // For synchronization
     //--------------------------------------------------------------------------
-    if (print_events)
+    if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
       {
 	if (_channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
 	if (_channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
@@ -414,10 +411,11 @@ void AnalysisWZ::Loop(TString filename,
 
     FillHistograms(_channel, HasZ);
 
-    if (WLepton.v.DeltaR(ZLepton1.v) < 0.1) continue;
-    if (WLepton.v.DeltaR(ZLepton2.v) < 0.1) continue;
-    if (WLepton.v.Pt()               < 20.) continue;
-    if (pfType1Met                   < 30.) continue;
+    if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
+    if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
+    if (WLepton.v.Pt()               <  20.) continue;
+    if (pfType1Met                   <  30.) continue;
+    if (_m3l                         < 100.) continue;
 
     FillHistograms(_channel, HasW);
 
@@ -437,7 +435,7 @@ void AnalysisWZ::Loop(TString filename,
 
   // For synchronization
   //----------------------------------------------------------------------------
-  if (print_events)
+  if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
     {
       txt_events_eee.close();
       txt_events_eem.close();
@@ -497,7 +495,8 @@ bool AnalysisWZ::IsFiducialLepton(int k)
 // IsTightLepton
 //
 // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
-// egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-medium
+// egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V2-standalone-medium
+// egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V2-standalone-medium
 //------------------------------------------------------------------------------
 bool AnalysisWZ::IsTightLepton(int k)
 {
@@ -677,8 +676,12 @@ void AnalysisWZ::GetSampleName(TString filename)
 //------------------------------------------------------------------------------
 // ApplyWeights
 //------------------------------------------------------------------------------
-void AnalysisWZ::ApplyWeights(TString sample, TString era)
+void AnalysisWZ::ApplyWeights(TString sample,
+			      TString era,
+			      float   luminosity)
 {
+  _event_weight = (_ismc) ? puW * baseW * luminosity : 1.;
+
   if (!_ismc) return;
 
   float signed_weight = 999.;

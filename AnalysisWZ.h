@@ -42,7 +42,8 @@ class AnalysisWZ : public AnalysisBase
   void    GetSampleName    (TString filename);
 
   void    ApplyWeights     (TString sample,
-			    TString era);
+			    TString era,
+			    float   luminosity);
 };
 
 #endif
