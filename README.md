@@ -88,13 +88,18 @@ You should choose the "AFS folder" site type.
 7. Share on the web
 ====
 
+Create a soft link to your `png` folder.
+
+    ssh -Y gridui.ifca.es
+    ln -s /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/test/png
+
 Copy the distributions to lxplus.
 
-    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    ssh -Y lxplus.cern.ch
     cd www
-    scp -r piedra@gridui.ifca.es:/gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/test/png .
+    scp -r piedra@gridui.ifca.es:~/png .
 
-They should appear here,
+And they should appear here,
 
     https://piedra.web.cern.ch/piedra/png/
 
