@@ -44,11 +44,16 @@ Open `AnalysisBase.h` and add
 
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
 
+With the following script all jobs will be submitted to the gridui batch system.
+
     ./submit-jobs.sh
+
+In any case one can always run interactively.
+
+    ./runWZ /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns/latino_WZTo3LNu.root 25ns
 
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runWZ /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns/latino_WZTo3LNu.root 25ns
     ./runWZ root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
 
 
