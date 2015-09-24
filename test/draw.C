@@ -477,4 +477,7 @@ Int_t ReadInputFiles()
 void MakeOutputDirectory(TString format)
 {
   gSystem->mkdir(format + "/" + _era + "/" + scut[_cut], kTRUE);
+
+  gSystem->Exec(Form("cp index.php %s/%s/.",    format.Data(), _era.Data()));
+  gSystem->Exec(Form("cp index.php %s/%s/%s/.", format.Data(), _era.Data(), scut[_cut].Data()));
 }
