@@ -70,3 +70,10 @@ Notice that input files can be accessed directly from eos when working from lxpl
     root -l -b -q 'draw.C+(HasZ)'
     root -l -b -q 'draw.C+(HasW)'
 
+
+6. Share on the web
+====
+
+First go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
+You should choose the "AFS folder" site type.
+
