@@ -76,13 +76,13 @@ Notice that input files can be accessed directly from eos when working from lxpl
 
 Follow the instructions at [Permissions for your AFS folder](https://espace.cern.ch/webservices-help/websitemanagement/ConfiguringAFSSites/Pages/PermissionsforyourAFSfolder.aspx).
 
-    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    ssh -Y lxplus.cern.ch
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
 
 Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
-You should choose the "AFS folder" site type.
+Choose the "AFS folder" site type.
 
 
 7. Share on the web
@@ -96,8 +96,7 @@ Create a soft link to your `png` folder.
 Copy the distributions to lxplus.
 
     ssh -Y lxplus.cern.ch
-    cd www
-    scp -r piedra@gridui.ifca.es:~/png .
+    scp -r piedra@gridui.ifca.es:~/png www/.
 
 And they should appear here,
 
