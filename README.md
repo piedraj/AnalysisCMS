@@ -12,11 +12,6 @@ Log in to gridui.
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-Log in to lxplus.
-
-    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
-    bash -l
-
 
 2. Set a CMSSW release
 ====
@@ -33,15 +28,13 @@ Log in to lxplus.
     git clone https://github.com/piedraj/WZ13TeV
     cd WZ13TeV
 
-The base class should be recreated when the latino trees have been updated. To do so, first read any new latino tree,
+The base class should be recreated anytime the latino trees have been updated.
+Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
-    root -l latino_WZTo3LNu.root
-
-Then create `AnalysisBase`,
-
+    root -l latino_DYJetsToLL_M-50.root
     latino->MakeClass("AnalysisBase")
 
-Finally, open `AnalysisBase.h` and add
+Open `AnalysisBase.h` and add
 
     using namespace std;
 
