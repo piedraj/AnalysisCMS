@@ -94,3 +94,7 @@ Copy the distributions to lxplus.
     cd www
     scp -r piedra@gridui.ifca.es:/gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/test/png .
 
+They should appear here,
+
+    https://piedra.web.cern.ch/piedra/png/
+
