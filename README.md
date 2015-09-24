@@ -1,4 +1,4 @@
-0. Documentation
+0. Analysis documentation
 ====
 
     https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
