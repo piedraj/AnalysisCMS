@@ -81,7 +81,6 @@ enum {linY, logY};
 Double_t        _luminosity = 40.03; // pb
 TString         _datapath   = "../rootfiles";
 TString         _era        = "50ns";
-Bool_t          _debug      = kFALSE;
 Bool_t          _batch;
 Bool_t          _drawratio;
 UInt_t          _cut;
@@ -129,7 +128,7 @@ void draw(UInt_t cut       = WZ00_Exactly3Leptons,
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
 
-    if (_debug && channel != all) continue;
+    if (!_batch && channel != all) continue;
 
     DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
     DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
