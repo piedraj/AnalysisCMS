@@ -51,7 +51,8 @@ void      SetAxis                  (TH1*          hist,
 				    TString       xtitle,
 				    TString       ytitle,
 				    Float_t       size,
-				    Float_t       offset);
+				    Float_t       xoffset,
+				    Float_t       yoffset);
 
 Double_t  Yield                    (TH1*          h);
 

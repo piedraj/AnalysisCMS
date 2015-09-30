@@ -81,7 +81,9 @@ enum {linY, logY};
 Double_t        _luminosity = 40.03; // pb
 TString         _datapath   = "../rootfiles";
 TString         _era        = "50ns";
+Bool_t          _debug      = kFALSE;
 Bool_t          _batch;
+Bool_t          _drawratio;
 UInt_t          _cut;
 
 vector<UInt_t>   vprocess;
@@ -113,11 +115,13 @@ void     MakeOutputDirectory      (TString       format);
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
-void draw(UInt_t cut   = WZ00_Exactly3Leptons,
-	  Bool_t batch = kTRUE)
+void draw(UInt_t cut       = WZ00_Exactly3Leptons,
+	  Bool_t batch     = kTRUE,
+	  Bool_t drawratio = kFALSE)
 {
-  _cut   = cut;
-  _batch = batch;
+  _cut       = cut;
+  _batch     = batch;
+  _drawratio = drawratio;
 
   SetParameters();
 
@@ -125,7 +129,7 @@ void draw(UInt_t cut   = WZ00_Exactly3Leptons,
 
   for (UInt_t channel=0; channel<nchannel; channel++) {
 
-    if (channel != all) continue;
+    if (_debug && channel != all) continue;
 
     DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
     DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
@@ -157,18 +161,33 @@ void DrawHistogram(TString  hname,
 {
   hname += "_" + schannel[channel] + "_" + scut[cut];
 
-  TCanvas* canvas = new TCanvas(hname, hname, 550, 720);
+  TCanvas* canvas = NULL;
 
-  TPad* pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
-  TPad* pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
+  TPad* pad1 = NULL;
+  TPad* pad2 = NULL;
 
-  pad1->SetTopMargin   (0.08);
-  pad1->SetBottomMargin(0.02);
-  pad1->Draw();
+  if (_drawratio)
+    {
+      canvas = new TCanvas(hname, hname, 550, 720);
 
-  pad2->SetTopMargin   (0.08);
-  pad2->SetBottomMargin(0.35);
-  pad2->Draw();
+      pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+      pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
+
+      pad1->SetTopMargin   (0.08);
+      pad1->SetBottomMargin(0.02);
+      pad1->Draw();
+
+      pad2->SetTopMargin   (0.08);
+      pad2->SetBottomMargin(0.35);
+      pad2->Draw();
+    }
+  else
+    {
+      canvas = new TCanvas(hname, hname);
+
+      pad1 = new TPad("pad1", "pad1", 0, 0, 1, 1);
+      pad1->Draw();
+    }
 
 
   //----------------------------------------------------------------------------
@@ -255,27 +274,22 @@ void DrawHistogram(TString  hname,
   hist[Data]->Draw("ep,same");
 
 
-  // Adjust axes
+  // Set xtitle and ytitle
   //----------------------------------------------------------------------------
-  TAxis* xaxis = hist[Data]->GetXaxis();
-  TAxis* yaxis = hist[Data]->GetYaxis();
+  TString ytitle = Form("events / %s.%df", "%", precision);
 
-  xaxis->SetRangeUser(xmin, xmax);
-
-  TString ytitle = Form("Events / %s.%df", "%", precision);
-
-  xaxis->SetTitle(xtitle);
-  yaxis->SetTitle(Form(ytitle.Data(), hist[Data]->GetBinWidth(0)));
+  ytitle = Form(ytitle.Data(), hist[Data]->GetBinWidth(0));
 
   if (!units.Contains("NULL")) {
-    
-    xaxis->SetTitle(Form("%s [%s]", xaxis->GetTitle(), units.Data()));
-    yaxis->SetTitle(Form("%s %s",   yaxis->GetTitle(), units.Data()));
+    xtitle = Form("%s [%s]", xtitle.Data(), units.Data());
+    ytitle = Form("%s %s",   ytitle.Data(), units.Data());
   }
 
 
-  // Adjust scale
+  // Adjust scales
   //----------------------------------------------------------------------------
+  hist[Data]->GetXaxis()->SetRangeUser(xmin, xmax);
+
   Double_t theMax   = GetMaximumIncludingErrors(hist[Data], xmin, xmax);
   Double_t theMaxMC = GetMaximumIncludingErrors(allmc,      xmin, xmax);
 
@@ -328,61 +342,68 @@ void DrawHistogram(TString  hname,
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[QCD],   Form(" QCD (%.0f)",    Yield(hist[QCD])),   "f"); ndelta += delta;
 
 
-  // CMS titles
+  // Titles
   //----------------------------------------------------------------------------
-  DrawTLatex(61, 0.190, 0.945, 0.050, 11, "CMS");
-  DrawTLatex(52, 0.288, 0.945, 0.030, 11, "Preliminary");
-  DrawTLatex(42, 0.940, 0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", _luminosity));
+  Double_t xprelim = (_drawratio) ? 0.288 : 0.300;
+
+  DrawTLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+  DrawTLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", _luminosity));
+
+  SetAxis(hist[Data], xtitle, ytitle, 0.045, 1.5, 1.7);
 
 
   //----------------------------------------------------------------------------
   // pad2
   //----------------------------------------------------------------------------
-  pad2->cd();
+  if (_drawratio)
+    {
+      pad2->cd();
     
-  TH1F* ratio       = (TH1F*)hist[Data]->Clone("ratio");
-  TH1F* uncertainty = (TH1F*)allmc->Clone("uncertainty");
+      TH1F* ratio       = (TH1F*)hist[Data]->Clone("ratio");
+      TH1F* uncertainty = (TH1F*)allmc->Clone("uncertainty");
 
-  for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
+      for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
-    Double_t mcValue = allmc->GetBinContent(ibin);
-    Double_t mcError = allmc->GetBinError  (ibin);
+	Double_t mcValue = allmc->GetBinContent(ibin);
+	Double_t mcError = allmc->GetBinError  (ibin);
     
-    Double_t dtValue = ratio->GetBinContent(ibin);
-    Double_t dtError = ratio->GetBinError  (ibin);
+	Double_t dtValue = ratio->GetBinContent(ibin);
+	Double_t dtError = ratio->GetBinError  (ibin);
 
-    Double_t ratioVal         = 0.0;
-    Double_t ratioErr         = 1e-9;
-    Double_t uncertaintyError = 1e-9;
+	Double_t ratioVal         = 0.0;
+	Double_t ratioErr         = 1e-9;
+	Double_t uncertaintyError = 1e-9;
 
-    if (mcValue > 0 && dtValue > 0)
-      {
-	ratioVal         = dtValue / mcValue - 1.0;
-	ratioErr         = dtError / mcValue;
-	uncertaintyError = ratioVal * mcError / mcValue;
+	if (mcValue > 0 && dtValue > 0)
+	  {
+	    ratioVal         = dtValue / mcValue - 1.0;
+	    ratioErr         = dtError / mcValue;
+	    uncertaintyError = ratioVal * mcError / mcValue;
+	  }
+	
+	ratio->SetBinContent(ibin, ratioVal);
+	ratio->SetBinError  (ibin, ratioErr);
+	
+	uncertainty->SetBinContent(ibin, 0.0);
+	uncertainty->SetBinError  (ibin, uncertaintyError);
       }
 
-    ratio->SetBinContent(ibin, ratioVal);
-    ratio->SetBinError  (ibin, ratioErr);
+      ratio->Draw("ep");
 
-    uncertainty->SetBinContent(ibin, 0.0);
-    uncertainty->SetBinError  (ibin, uncertaintyError);
-  }
+      ratio->GetYaxis()->SetRangeUser(-2, 2);
 
-  ratio->Draw("ep");
+      uncertainty->Draw("e2,same");
 
-  ratio->GetYaxis()->SetRangeUser(-2, 2);
+      ratio->Draw("ep,same");
 
-  uncertainty->Draw("e2,same");
-
-  ratio->Draw("ep,same");
+      SetAxis(ratio, xtitle, "data / MC - 1", 0.105, 1.4, 0.75);
+    }
 
 
-  // Save
   //----------------------------------------------------------------------------
-  pad2->cd(); SetAxis(ratio, hist[Data]->GetXaxis()->GetTitle(), "data / MC - 1", 0.105, 0.75);
-  pad1->cd(); SetAxis(hist[Data], "", hist[Data]->GetYaxis()->GetTitle(), 0.045, 1.7);
-
+  // Save it
+  //----------------------------------------------------------------------------
   canvas->cd();
 
   if (_batch)

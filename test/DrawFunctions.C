@@ -181,7 +181,8 @@ void SetAxis(TH1*    hist,
 	     TString xtitle,
 	     TString ytitle,
 	     Float_t size,
-	     Float_t offset)
+	     Float_t xoffset,
+	     Float_t yoffset)
 {
   gPad->cd();
   gPad->Update();
@@ -196,8 +197,8 @@ void SetAxis(TH1*    hist,
 
   xaxis->SetLabelOffset(0.025);
   yaxis->SetLabelOffset(0.025);
-  xaxis->SetTitleOffset(1.4);
-  yaxis->SetTitleOffset(offset);
+  xaxis->SetTitleOffset(xoffset);
+  yaxis->SetTitleOffset(yoffset);
 
   xaxis->SetLabelSize(size);
   yaxis->SetLabelSize(size);
