@@ -38,7 +38,7 @@ TString lchannel[nchannel] = {
   "ee",
   "e#mu",
   "#mu#mu",
-  "ll"
+  "ll",
   "eee",
   "ee#mu",
   "e#mu#mu",
@@ -350,9 +350,9 @@ void DrawHistogram(TString  hname,
   Double_t ndelta = 0;
   Double_t xdelta = 0.535;
 
-  TString sData = Form(" data (%.0f)", Yield(hist[Data]));
+  TString sData = Form(" %s (%.0f)", lchannel[channel].Data(), Yield(hist[Data]));
 
-  if (channel != ll && channel != lll) sData = Form(" %s%s", lchannel[channel].Data(), sData.Data());
+  if (channel == ll || channel == lll) sData = Form(" data (%.0f)", Yield(hist[Data]));
 
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Data], sData,                                "lp"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)", Yield(allmc)),    "f");  ndelta += delta;
