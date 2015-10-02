@@ -50,7 +50,7 @@ With the following script all jobs will be submitted to the gridui batch system.
 
 In any case one can always run interactively.
 
-    ./runWZ /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns/latino_WZTo3LNu.root 25ns
+    ./create-jobs.sh
 
 Notice that input files can be accessed directly from eos when working from lxplus.
 
@@ -64,9 +64,11 @@ Notice that input files can be accessed directly from eos when working from lxpl
 
     ./merge.sh
 
-    root -l -b -q 'draw.C+(WZ00_Exactly3Leptons)'
-    root -l -b -q 'draw.C+(WZ01_HasZ)'
-    root -l -b -q 'draw.C+(WZ02_HasW)'
+    root -l -b -q 'draw.C+(nlep2_cut0_Exactly2Leptons)'
+    root -l -b -q 'draw.C+(nlep3_cut0_Exactly3Leptons)'
+    root -l -b -q 'draw.C+(nlep3_cut1_HasZ)'
+    root -l -b -q 'draw.C+(nlep3_cut2_HasW)'
+    root -l -b -q 'draw.C+(nlep3_cut3_OneBJet)'
 
 
 6. Create your website

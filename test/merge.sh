@@ -26,11 +26,9 @@ pushd $FOLDER
 	
 hadd -f -k 01_Data.root    \
     SingleElectron.root    \
-    SingleMu.root          \
     SingleMuon.root        \
     DoubleEG.root          \
     DoubleMuon.root        \
-    DoubleMuonLowMass.root \
     MuonEG.root
 
 hadd -f -k 02_WZ.root \
@@ -56,8 +54,5 @@ hadd -f -k 07_ZJets.root \
 
 hadd -f -k 08_WJets.root \
     WJetsToLNu.root
-
-hadd -f -k 09_QCD.root \
-    QCD_Pt-15to20_MuEnrichedPt5.root
 
 popd

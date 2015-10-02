@@ -8,53 +8,65 @@
 
 // Data members
 //------------------------------------------------------------------------------
-const UInt_t nchannel = 5;
+const UInt_t nchannel = 9;
 
 enum {
+  ee,
+  em,
+  mm,
+  ll,
   eee,
   eem,
   emm,
   mmm,
-  all
+  lll
 };
 
 TString schannel[nchannel] = {
+  "ee",
+  "em",
+  "mm",
+  "ll",
   "eee",
   "eem",
   "emm",
   "mmm",
-  "all"
+  "lll"
 };
 
 TString lchannel[nchannel] = {
+  "ee",
+  "e#mu",
+  "#mu#mu",
+  "ll"
   "eee",
   "ee#mu",
   "e#mu#mu",
   "#mu#mu#mu",
-  "all"
+  "lll"
 };
 
 
 const UInt_t ncut = 5;
 
 enum {
-  WZ00_Exactly3Leptons,
-  WZ01_HasZ,
-  WZ02_HasW,
-  WZ03_OneBJet,
-  WZ04_NoBJets
+  nlep2_cut0_Exactly2Leptons,
+  nlep3_cut0_Exactly3Leptons,
+  nlep3_cut1_HasZ,
+  nlep3_cut2_HasW,
+  nlep3_cut3_OneBJet
 };
 
 TString scut[ncut] = {
-  "WZ00_Exactly3Leptons",
-  "WZ01_HasZ",
-  "WZ02_HasW",
-  "WZ03_OneBJet",
-  "WZ04_NoBJets"
+  "nlep2_cut0_Exactly2Leptons",
+  "nlep3_cut0_Exactly3Leptons",
+  "nlep3_cut1_HasZ",
+  "nlep3_cut2_HasW",
+  "nlep3_cut3_OneBJet"
 };
 
 
-const UInt_t nprocess = 9;
+const UInt_t nprocess = 8;
 
 enum {
   Data,
@@ -64,8 +76,7 @@ enum {
   SingleTop,
   WW,
   ZJets,
-  WJets,
-  QCD
+  WJets
 };
 
 Color_t cprocess[nprocess];
@@ -83,16 +94,15 @@ TString         _datapath   = "../rootfiles";
 TString         _era        = "50ns";
 Bool_t          _batch;
 Bool_t          _drawratio;
-UInt_t          _cut;
 
 vector<UInt_t>   vprocess;
 
 
 // Member functions
 //------------------------------------------------------------------------------
-void     SetParameters            ();
+void     SetParameters            (UInt_t        cut);
 
-Int_t    ReadInputFiles           ();
+Int_t    ReadInputFiles           (UInt_t        cut);
 
 void     DrawHistogram            (TString       hname,
 				   UInt_t        channel,
@@ -108,35 +118,55 @@ void     DrawHistogram            (TString       hname,
 				   Double_t      ymax         = -999,
 				   Bool_t        moveOverflow = false);
 
-void     MakeOutputDirectory      (TString       format);
+void     MakeOutputDirectory      (TString       format,
+				   UInt_t        cut);
 
 
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
-void draw(UInt_t cut       = WZ00_Exactly3Leptons,
+void draw(UInt_t cut       = nlep3_cut0_Exactly3Leptons,
 	  Bool_t batch     = kTRUE,
 	  Bool_t drawratio = kFALSE)
 {
-  _cut       = cut;
   _batch     = batch;
   _drawratio = drawratio;
 
-  SetParameters();
+  SetParameters(cut);
 
-  if (ReadInputFiles() < 0) return;
+  if (ReadInputFiles(cut) < 0) return;
 
-  for (UInt_t channel=0; channel<nchannel; channel++) {
 
-    if (!_batch && channel != all) continue;
+  // Loop over channels
+  //----------------------------------------------------------------------------
+  UInt_t firstChannel = eee;
+  UInt_t lastChannel  = lll;
 
-    DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
+  if (cut < nlep3_cut0_Exactly3Leptons)
+    {
+      firstChannel = ee;
+      lastChannel  = ll;
+    }
+
+  for (UInt_t channel=firstChannel; channel<=lastChannel; channel++) {
+
+    if (!_batch && channel != lastChannel) continue;
+
+    if (cut < nlep3_cut0_Exactly3Leptons)
+      {
+	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", logY);
+      }
+    else
+      {
+	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, 60, 120);
+	DrawHistogram("h_m3l", channel, cut, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, 60, 350);
+      }
+
+//  DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
     DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
     DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, 0, 40);
-    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", linY, 0, 4);
-    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", linY, 0, 4);
-    DrawHistogram("h_m2l",         channel, cut, "m_{#font[12]{ll}}",                        4, 0, "GeV",  linY, 60, 120);
-    DrawHistogram("h_m3l",         channel, cut, "m_{#font[12]{3l}}",                        5, 0, "GeV",  linY, 60, 350);
+//  DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", linY, 0, 4);
+//  DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", linY, 0, 4);
   }
 }
 
@@ -285,24 +315,27 @@ void DrawHistogram(TString  hname,
   }
 
 
-  // Adjust scales
+  // Adjust xaxis and yaxis
   //----------------------------------------------------------------------------
   hist[Data]->GetXaxis()->SetRangeUser(xmin, xmax);
 
+  Double_t theMin   = 0.0;
   Double_t theMax   = GetMaximumIncludingErrors(hist[Data], xmin, xmax);
   Double_t theMaxMC = GetMaximumIncludingErrors(allmc,      xmin, xmax);
 
-  if (theMaxMC > theMax)
-    {
-      theMax = theMaxMC;
-    }
+  if (theMaxMC > theMax) theMax = theMaxMC;
 
   if (pad1->GetLogy())
-    theMax = TMath::Power(10, TMath::Log10(theMax) + 2);
+    {
+      theMin = 1e-1;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 2);
+    }
   else
-    theMax *= 1.4;  // 1.55
+    {
+      theMax *= 1.4;
+    }
 
-  hist[Data]->SetMinimum(0.0);
+  hist[Data]->SetMinimum(theMin);
   hist[Data]->SetMaximum(theMax);
 
   if (ymin != -999) hist[Data]->SetMinimum(ymin);
@@ -319,7 +352,7 @@ void DrawHistogram(TString  hname,
 
   TString sData = Form(" data (%.0f)", Yield(hist[Data]));
 
-  if (channel != all) sData = Form(" %s%s", lchannel[channel].Data(), sData.Data());
+  if (channel != ll && channel != lll) sData = Form(" %s%s", lchannel[channel].Data(), sData.Data());
 
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Data], sData,                                "lp"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)", Yield(allmc)),    "f");  ndelta += delta;
@@ -338,7 +371,6 @@ void DrawHistogram(TString  hname,
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZZ],    Form(" ZZ (%.0f)",     Yield(hist[ZZ])),    "f"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WW],    Form(" WW (%.0f)",     Yield(hist[WW])),    "f"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WJets], Form(" W+jets (%.0f)", Yield(hist[WJets])), "f"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[QCD],   Form(" QCD (%.0f)",    Yield(hist[QCD])),   "f"); ndelta += delta;
 
 
   // Titles
@@ -407,7 +439,7 @@ void DrawHistogram(TString  hname,
 
   if (_batch)
     {
-      TString cname = scut[_cut] + "/" + hname;
+      TString cname = scut[cut] + "/" + hname;
 
       if (setLogy) cname += "_log";
 
@@ -420,13 +452,13 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 // SetParameters
 //------------------------------------------------------------------------------
-void SetParameters()
+void SetParameters(UInt_t cut)
 {
   if (_batch)
     {
       gROOT->SetBatch();
-      MakeOutputDirectory("pdf");
-      MakeOutputDirectory("png");
+      MakeOutputDirectory("pdf", cut);
+      MakeOutputDirectory("png", cut);
     }
 
   sprocess[Data]      = "01_Data";
@@ -437,7 +469,6 @@ void SetParameters()
   sprocess[WW]        = "06_WW";
   sprocess[ZJets]     = "07_ZJets";
   sprocess[WJets]     = "08_WJets";
-  sprocess[QCD]       = "09_QCD";
 
   cprocess[Data]      = kBlack;
   cprocess[WZ]        = kOrange-2;
@@ -447,11 +478,9 @@ void SetParameters()
   cprocess[WW]        = kAzure-7;
   cprocess[ZJets]     = kGreen+2;
   cprocess[WJets]     = kAzure-9;
-  cprocess[QCD]       = kGray+1;
 
   vprocess.clear();
   vprocess.push_back(Data);
-  vprocess.push_back(QCD);
   vprocess.push_back(WJets);
   vprocess.push_back(ZJets);
   vprocess.push_back(WW);
@@ -465,7 +494,7 @@ void SetParameters()
 //------------------------------------------------------------------------------
 // ReadInputFiles
 //------------------------------------------------------------------------------
-Int_t ReadInputFiles()
+Int_t ReadInputFiles(UInt_t cut)
 {
   for (UInt_t i=0; i<vprocess.size(); i++) {
 
@@ -475,7 +504,7 @@ Int_t ReadInputFiles()
 
     input[j] = new TFile(fname);
 
-    TH1F* dummy = (TH1F*)input[j]->Get("h_counter_raw_all_" + scut[_cut]);
+    TH1F* dummy = (TH1F*)input[j]->Get("h_counter_raw_lll_" + scut[cut]);
 
     if (!dummy)
       {
@@ -493,11 +522,11 @@ Int_t ReadInputFiles()
 //------------------------------------------------------------------------------
 // MakeOutputDirectory
 //------------------------------------------------------------------------------
-void MakeOutputDirectory(TString format)
+void MakeOutputDirectory(TString format, UInt_t cut)
 {
-  gSystem->mkdir(format + "/" + _era + "/" + scut[_cut], kTRUE);
+  gSystem->mkdir(format + "/" + _era + "/" + scut[cut], kTRUE);
 
   gSystem->Exec(Form("cp index.php %s/.",       format.Data()));
   gSystem->Exec(Form("cp index.php %s/%s/.",    format.Data(), _era.Data()));
-  gSystem->Exec(Form("cp index.php %s/%s/%s/.", format.Data(), _era.Data(), scut[_cut].Data()));
+  gSystem->Exec(Form("cp index.php %s/%s/%s/.", format.Data(), _era.Data(), scut[cut].Data()));
 }

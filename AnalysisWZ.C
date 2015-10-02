@@ -8,6 +8,11 @@
 //
 //==============================================================================
 const int verbosity = 1;
+const int interval  = 10000;
+// verbosity = 0 (silent)  doesn't print anything
+// verbosity > 0 (default) prints the input values and "." every <interval> events
+// verbosity > 1 (debug)
+
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -20,41 +25,49 @@ const float TAU_MASS      =  1.777;     // [GeV]
 const float Z_MASS        = 91.188;     // [GeV]
 
 
-const int nchannel = 5;
+const int nchannel = 9;
 
 enum {
+  ee,
+  em,
+  mm,
+  ll,
   eee,
   eem,
   emm,
   mmm,
-  all
+  lll
 };
 
 const TString schannel[nchannel] = {
+  "ee",
+  "em",
+  "mm",
+  "ll",
   "eee",
   "eem",
   "emm",
   "mmm",
-  "all"
+  "lll"
 };
 
 
 const int ncut = 5;
 
 enum {
-  WZ00_Exactly3Leptons,
-  WZ01_HasZ,
-  WZ02_HasW,
-  WZ03_OneBJet,
-  WZ04_NoBJets
+  nlep2_cut0_Exactly2Leptons,
+  nlep3_cut0_Exactly3Leptons,
+  nlep3_cut1_HasZ,
+  nlep3_cut2_HasW,
+  nlep3_cut3_OneBJet
 };
 
 const TString scut[ncut] = {
-  "WZ00_Exactly3Leptons",
-  "WZ01_HasZ",
-  "WZ02_HasW",
-  "WZ03_OneBJet",
-  "WZ04_NoBJets"
+  "nlep2_cut0_Exactly2Leptons",
+  "nlep3_cut0_Exactly3Leptons",
+  "nlep3_cut1_HasZ",
+  "nlep3_cut2_HasW",
+  "nlep3_cut3_OneBJet"
 };
 
 
@@ -88,6 +101,7 @@ float               _m3l;
 int                 _channel;
 unsigned int        _nelectron;
 unsigned int        _nlepton;
+unsigned int        _ntight;
 unsigned int        _njet;
 unsigned int        _nbjet;
 
@@ -184,7 +198,7 @@ void AnalysisWZ::Loop(TString filename,
 
     if (!trigger) continue;
 
-    if (verbosity == 1 && jentry%10000 == 0) std::cout << "." << std::flush;
+    if (verbosity > 0 && jentry%interval == 0) std::cout << "." << std::flush;
 
     ApplyWeights(_sample, era, luminosity);
 
@@ -279,10 +293,7 @@ void AnalysisWZ::Loop(TString filename,
       if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
       else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
 
-      if (!IsTightLepton(i))    continue;
-      if (!IsIsolatedLepton(i)) continue;
-
-      lep.type = Tight;
+      if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;
 
       TLorentzVector tlv;
 
@@ -296,61 +307,91 @@ void AnalysisWZ::Loop(TString filename,
     _nlepton = AnalysisLeptons.size();
 
 
-    // Require exactly three leptons
+    // Count the number of tight leptons
     //--------------------------------------------------------------------------
-    if (_nlepton != 3) continue;
+    _ntight = 0;
+
+    for (int i=0; i<_nlepton; i++)
+      {
+	if (AnalysisLeptons[i].type == Tight) _ntight++;
+      }
 
 
-    // Classify the channels
+    // Count the number of electrons
     //--------------------------------------------------------------------------
     _nelectron = 0;
 
-    for (int i=0; i<3; i++)
+    for (int i=0; i<_nlepton; i++)
       {
 	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
       }
 
+
+    // Define the channel
+    //--------------------------------------------------------------------------
     _channel = -1;
 
-    if      (_nelectron == 3) _channel = eee;
-    else if (_nelectron == 2) _channel = eem;
-    else if (_nelectron == 1) _channel = emm;
-    else if (_nelectron == 0) _channel = mmm;
+    if (_nlepton == 2 && _ntight == 2)
+      {
+	if      (_nelectron == 2) _channel = ee;
+	else if (_nelectron == 1) _channel = em;
+	else if (_nelectron == 0) _channel = mm;
+      }
+    else if (_nlepton == 3 && _ntight == 3)
+      {
+	if      (_nelectron == 3) _channel = eee;
+	else if (_nelectron == 2) _channel = eem;
+	else if (_nelectron == 1) _channel = emm;
+	else if (_nelectron == 0) _channel = mmm;
+      }
+
+
+    // From here we have at least two tight leptons
+    //--------------------------------------------------------------------------
+    if (_channel < 0) continue;
 
 
     // Make Z and W candidates
     //--------------------------------------------------------------------------
-    _m2l = 999;
+    if (_channel < eee)
+      {
+	_m2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
+	_m3l = 999;
+      }
+    else
+      {
+	_m2l = 999;
 
-    for (UInt_t i=0; i<_nlepton; i++) {
+	for (UInt_t i=0; i<_nlepton; i++) {
 
-      for (UInt_t j=i+1; j<_nlepton; j++) {
+	  for (UInt_t j=i+1; j<_nlepton; j++) {
       
-	if (abs(AnalysisLeptons[i].flavour) != abs(AnalysisLeptons[j].flavour)) continue;
+	    if (abs(AnalysisLeptons[i].flavour) != abs(AnalysisLeptons[j].flavour)) continue;
 
-	if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
+	    if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
 
-	float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
+	    float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
 
-	if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
+	    if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
 
-	  _m2l = inv_mass;
+	      _m2l = inv_mass;
 
-	  ZLepton1 = AnalysisLeptons[i];
-	  ZLepton2 = AnalysisLeptons[j];
+	      ZLepton1 = AnalysisLeptons[i];
+	      ZLepton2 = AnalysisLeptons[j];
 	  
-	  for (UInt_t k=0; k<3; k++) {
-	
-	    if (k == i) continue;
-	    if (k == j) continue;
+	      for (UInt_t k=0; k<3; k++) {
+		
+		if (k == i) continue;
+		if (k == j) continue;
 
-	    WLepton = AnalysisLeptons[k];
+		WLepton = AnalysisLeptons[k];
+	      }
+	    }
 	  }
 	}
-      }
-    }
 
-    _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
+	_m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
+      }
 
 
     // Loop over jets
@@ -366,33 +407,35 @@ void AnalysisWZ::Loop(TString filename,
       float eta = std_vector_jet_eta->at(i);
       float phi = std_vector_jet_phi->at(i);
 
+      if (pt < 30. || fabs(eta) < 2.4) continue;
+
+      TLorentzVector jet;
+
+      jet.SetPtEtaPhiM(pt, eta, phi, 0.0);
+
+      bool is_lepton = false;
+
+      for (int j=0; j<_nlepton; j++)
+	{
+	  if (jet.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
+	}
+
+      if (is_lepton) continue;
+
+      _njet++;
+
       // https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
       // Loose  WP = 0.423
       // Medium WP = 0.814
       // Tight  WP = 0.941
 
-      bool btag = (std_vector_jet_csvv2ivf->at(i) > 0.814);
-
-      TLorentzVector jet;
-
-      jet.SetPtEtaPhiM(pt, eta, phi, 0.0);
-      
-      if ((pt > 30.) &&
-	  (fabs(eta) < 2.4) &&
-	  (jet.DeltaR(ZLepton1.v) > 0.4) &&
-	  (jet.DeltaR(ZLepton2.v) > 0.4) &&
-	  (jet.DeltaR(WLepton.v)  > 0.4))
-	{
-	  _njet++;
-	  
-	  if (btag) _nbjet++;
-	}
+      if (std_vector_jet_csvv2ivf->at(i) > 0.814) _nbjet++;
     }
 
 
-    // For synchronization
+    // For WZ synchronization
     //--------------------------------------------------------------------------
-    if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
+    if (_nlepton == 3 && _sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
       {
 	if (_channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
 	if (_channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
@@ -403,39 +446,41 @@ void AnalysisWZ::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    FillHistograms(_channel, WZ00_Exactly3Leptons);
+    if (_nlepton == 2)
+      {
+	FillHistograms(_channel, nlep2_cut0_Exactly2Leptons);
+      }
+    else
+      {
+	FillHistograms(_channel, nlep3_cut0_Exactly3Leptons);
+    
+	if (_m2l <  60.) continue;
+	if (_m2l > 120.) continue;
+	if (ZLepton1.v.Pt() < 20.) continue;
 
-    if (_m2l <  60.) continue;
-    if (_m2l > 120.) continue;
-    if (ZLepton1.v.Pt() < 20.) continue;
+	FillHistograms(_channel, nlep3_cut1_HasZ);
 
-    FillHistograms(_channel, WZ01_HasZ);
+	if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
+	if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
+	if (WLepton.v.Pt()               <  20.) continue;
+	if (pfType1Met                   <  30.) continue;
+	if (_m3l                         < 100.) continue;
 
-    if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
-    if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
-    if (WLepton.v.Pt()               <  20.) continue;
-    if (pfType1Met                   <  30.) continue;
-    if (_m3l                         < 100.) continue;
-
-    FillHistograms(_channel, WZ02_HasW);
-
-    if (_nbjet > 1) continue;
-
-    FillHistograms(_channel, WZ03_OneBJet);
-
-    if (_nbjet > 0) continue;
-
-    FillHistograms(_channel, WZ04_NoBJets);
+	FillHistograms(_channel, nlep3_cut2_HasW);
+	
+	if (_nbjet > 1) continue;
+	
+	FillHistograms(_channel, nlep3_cut3_OneBJet);
+      }
   }
-
-
-  if (verbosity >  0) printf("\n");
-  if (verbosity == 1) printf("\n");
+   
+ 
+  if (verbosity > 0) printf("\n");
 
 
   // For synchronization
   //----------------------------------------------------------------------------
-  if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
+  if (_nlepton == 3 && _sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
     {
       txt_events_eee.close();
       txt_events_eem.close();
@@ -600,7 +645,8 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
   h_nvtx      [ichannel][icut]->Fill(nvtx,       _event_weight);
   h_pfType1Met[ichannel][icut]->Fill(pfType1Met, _event_weight);
 
-  if (ichannel != all) FillHistograms(all, icut);
+  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut);
+  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut);
 }
 
 
@@ -609,17 +655,17 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::Summary(TString precision, TString title)
 {
-  txt_summary << Form("\n%20s", title.Data());
+  txt_summary << Form("\n%30s", title.Data());
 
-  for (int i=0; i<nchannel; i++) txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
+  for (int i=eee; i<nchannel; i++) txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
 
-  txt_summary << Form("\n---------------------\n");
+  txt_summary << Form("\n-------------------------------\n");
 
   for (int i=0; i<ncut; i++) {
       
-    txt_summary << Form("%20s", scut[i].Data());
+    txt_summary << Form("%30s", scut[i].Data());
 
-    for (int j=0; j<nchannel; j++) {
+    for (int j=eee; j<nchannel; j++) {
 
       TH1F* h_counter = h_counter_raw[j][i];
 
