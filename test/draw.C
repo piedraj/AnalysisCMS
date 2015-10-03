@@ -167,8 +167,8 @@ void draw(UInt_t cut       = nlep3_cut0_Exactly3Leptons,
 //  DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
     DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
     DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, 0, 40);
-//  DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", linY, 0, 4);
-//  DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", linY, 0, 4);
+    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, 0, 4);
+    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, 0, 4);
   }
 }
 

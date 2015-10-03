@@ -70,7 +70,6 @@ Notice that input files can be accessed directly from eos when working from lxpl
     root -l -b -q 'draw.C+(nlep3_cut0_Exactly3Leptons)'
     root -l -b -q 'draw.C+(nlep3_cut1_HasZ)'
     root -l -b -q 'draw.C+(nlep3_cut2_HasW)'
-    root -l -b -q 'draw.C+(nlep3_cut3_OneBJet)'
 
 
 6. Create your website
