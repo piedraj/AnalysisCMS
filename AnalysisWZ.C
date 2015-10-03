@@ -52,10 +52,11 @@ const TString schannel[nchannel] = {
 };
 
 
-const int ncut = 5;
+const int ncut = 6;
 
 enum {
   nlep2_cut0_Exactly2Leptons,
+  nlep2_cut1_ZVeto,
   nlep3_cut0_Exactly3Leptons,
   nlep3_cut1_HasZ,
   nlep3_cut2_HasW,
@@ -64,6 +65,7 @@ enum {
 
 const TString scut[ncut] = {
   "nlep2_cut0_Exactly2Leptons",
+  "nlep2_cut1_ZVeto",
   "nlep3_cut0_Exactly3Leptons",
   "nlep3_cut1_HasZ",
   "nlep3_cut2_HasW",
@@ -96,6 +98,7 @@ Lepton              ZLepton2;
 TString             _sample;
 bool                _ismc;
 float               _event_weight;
+float               _pt2l;
 float               _m2l;
 float               _m3l;
 int                 _channel;
@@ -355,8 +358,9 @@ void AnalysisWZ::Loop(TString filename,
     //--------------------------------------------------------------------------
     if (_channel < eee)
       {
-	_m2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
-	_m3l = 999;
+	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
+	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
+	_m3l  = 999;
       }
     else
       {
@@ -390,7 +394,8 @@ void AnalysisWZ::Loop(TString filename,
 	  }
 	}
 
-	_m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
+	_pt2l = (ZLepton1.v + ZLepton2.v).Pt();
+	_m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
       }
 
 
@@ -448,7 +453,19 @@ void AnalysisWZ::Loop(TString filename,
     //--------------------------------------------------------------------------
     if (_nlepton == 2)
       {
+	if (AnalysisLeptons[0].v.Pt() < 20.) continue;
+	if (AnalysisLeptons[1].v.Pt() < 20.) continue;
+	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
+
 	FillHistograms(_channel, nlep2_cut0_Exactly2Leptons);
+
+	if (pfType1Met < 20.) continue;
+	if (_m2l       < 12.) continue;
+	if (_nelectron != 1 && fabs(_m2l - Z_MASS) < 15.) continue;
+	if (_nelectron != 1 && _pt2l < 45.) continue;
+	if (_nelectron == 1 && _pt2l < 30.) continue;
+
+	FillHistograms(_channel, nlep2_cut1_ZVeto);
       }
     else
       {

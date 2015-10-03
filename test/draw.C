@@ -47,10 +47,11 @@ TString lchannel[nchannel] = {
 };
 
 
-const UInt_t ncut = 5;
+const UInt_t ncut = 6;
 
 enum {
   nlep2_cut0_Exactly2Leptons,
+  nlep2_cut1_ZVeto,
   nlep3_cut0_Exactly3Leptons,
   nlep3_cut1_HasZ,
   nlep3_cut2_HasW,
@@ -59,6 +60,7 @@ enum {
 
 TString scut[ncut] = {
   "nlep2_cut0_Exactly2Leptons",
+  "nlep2_cut1_ZVeto",
   "nlep3_cut0_Exactly3Leptons",
   "nlep3_cut1_HasZ",
   "nlep3_cut2_HasW",

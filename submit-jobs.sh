@@ -11,6 +11,6 @@ fi
 
 export FILEPATH=$1
 export ERA=$2
-export NJOBS=`ls -1 $FILEPATH | wc -l`
+export NJOBS=`ls -1 $FILEPATH | grep -v QCD | wc -l`
 
 qsub -t 1-$NJOBS -v FILEPATH -v ERA settings.sge
