@@ -94,6 +94,8 @@ enum {linY, logY};
 Double_t        _luminosity = 40.03; // pb
 TString         _datapath   = "../rootfiles";
 TString         _era        = "50ns";
+Bool_t          _savepdf    = kFALSE;
+Bool_t          _savepng    = kTRUE;
 Bool_t          _batch;
 Bool_t          _drawratio;
 
@@ -102,7 +104,8 @@ vector<UInt_t>   vprocess;
 
 // Member functions
 //------------------------------------------------------------------------------
-void     SetParameters            (UInt_t        cut);
+void     SetParameters            (UInt_t        cut,
+				   Bool_t        drawratio);
 
 Int_t    ReadInputFiles           (UInt_t        cut);
 
@@ -127,14 +130,32 @@ void     MakeOutputDirectory      (TString       format,
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
-void draw(UInt_t cut       = nlep3_cut0_Exactly3Leptons,
-	  Bool_t batch     = kTRUE,
+void draw(Int_t  cut       = -1,
 	  Bool_t drawratio = kFALSE)
 {
-  _batch     = batch;
-  _drawratio = drawratio;
+  // Print help
+  //----------------------------------------------------------------------------
+  if (cut < 0)
+    {
+      printf("\n");
+      
+      if (_savepdf) printf(" rm -rf pdf\n");
+      if (_savepng) printf(" rm -rf png\n");
 
-  SetParameters(cut);
+      if (_savepdf || _savepng) printf("\n");
+
+      for (UInt_t i=0; i<ncut; i++)
+	printf(" root -l -b -q \'draw.C+(%s)\'\n", scut[i].Data());
+
+      printf("\n");
+      
+      return;
+    }
+
+
+  // Setup
+  //----------------------------------------------------------------------------
+  SetParameters(cut, drawratio);
 
   if (ReadInputFiles(cut) < 0) return;
 
@@ -156,7 +177,7 @@ void draw(UInt_t cut       = nlep3_cut0_Exactly3Leptons,
 
     if (cut < nlep3_cut0_Exactly3Leptons)
       {
-	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", logY);
+	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 8, 0, "GeV", logY);
       }
     else
       {
@@ -330,11 +351,11 @@ void DrawHistogram(TString  hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-1;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 2);
+      theMax = 2. * TMath::Power(10, TMath::Log10(theMax) + 2);
     }
   else
     {
-      theMax *= 1.4;
+      theMax *= 1.45;
     }
 
   hist[Data]->SetMinimum(theMin);
@@ -445,8 +466,8 @@ void DrawHistogram(TString  hname,
 
       if (setLogy) cname += "_log";
 
-      canvas->SaveAs(Form("pdf/%s/%s.pdf", _era.Data(), cname.Data()));
-      canvas->SaveAs(Form("png/%s/%s.png", _era.Data(), cname.Data()));
+      if (_savepdf) canvas->SaveAs(Form("pdf/%s/%s.pdf", _era.Data(), cname.Data()));
+      if (_savepng) canvas->SaveAs(Form("png/%s/%s.png", _era.Data(), cname.Data()));
     }
 }
 
@@ -454,13 +475,15 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 // SetParameters
 //------------------------------------------------------------------------------
-void SetParameters(UInt_t cut)
+void SetParameters(UInt_t cut, Bool_t drawratio)
 {
+  _batch     = gROOT->IsBatch();
+  _drawratio = drawratio;
+
   if (_batch)
     {
-      gROOT->SetBatch();
-      MakeOutputDirectory("pdf", cut);
-      MakeOutputDirectory("png", cut);
+      if (_savepdf) MakeOutputDirectory("pdf", cut);
+      if (_savepng) MakeOutputDirectory("png", cut);
     }
 
   sprocess[Data]      = "01_Data";
@@ -484,11 +507,11 @@ void SetParameters(UInt_t cut)
   vprocess.clear();
   vprocess.push_back(Data);
   vprocess.push_back(WJets);
-  vprocess.push_back(ZJets);
   vprocess.push_back(WW);
   vprocess.push_back(SingleTop);
   vprocess.push_back(Top);
   vprocess.push_back(ZZ);
+  vprocess.push_back(ZJets);
   vprocess.push_back(WZ);
 }
 

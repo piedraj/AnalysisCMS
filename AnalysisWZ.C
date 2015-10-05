@@ -230,7 +230,7 @@ void AnalysisWZ::Loop(TString filename,
 	  
 	  if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
 	  else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
-	  else if (abs(lep.flavour) == TAU_FLAVOUR)	     mass = TAU_MASS;
+	  else if (abs(lep.flavour) == TAU_FLAVOUR)      mass = TAU_MASS;
 
 	  if (fabs(std_vector_leptonGen_mpid->at(i)) != Z_FLAVOUR) continue;  // Require leptons from Z
 
@@ -454,7 +454,7 @@ void AnalysisWZ::Loop(TString filename,
     if (_nlepton == 2)
       {
 	if (AnalysisLeptons[0].v.Pt() < 20.) continue;
-	if (AnalysisLeptons[1].v.Pt() < 20.) continue;
+	if (AnalysisLeptons[1].v.Pt() < 10.) continue;
 	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
 
 	FillHistograms(_channel, nlep2_cut0_Exactly2Leptons);
@@ -753,19 +753,19 @@ void AnalysisWZ::ApplyWeights(TString sample,
     {
       if (_sample.EqualTo("WWTo2L2Nu_NLL")) _event_weight *= nllW;
 
-      if (_sample.EqualTo("WJetsToLNu"))      signed_weight = 0.683927;
-      if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 0.670032;
-      if (_sample.EqualTo("ST_t-channel"))    signed_weight = 0.215131;
-      if (_sample.EqualTo("TTJets"))          signed_weight = 0.331907;
+      if (_sample.EqualTo("WJetsToLNu"))      signed_weight /= 0.683927;
+      if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight /= 0.670032;
+      if (_sample.EqualTo("ST_t-channel"))    signed_weight /= 0.215131;
+      if (_sample.EqualTo("TTJets"))          signed_weight /= 0.331907;
     }
   else if (era.EqualTo("25ns"))
     {
-      if (_sample.EqualTo("WJetsToLNu"))          signed_weight = 0.683938;
-      if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 0.727601;
-      if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 0.66998;
-      if (_sample.EqualTo("ZZTo2L2Q"))            signed_weight = 0.631351;
-      if (_sample.EqualTo("ST_t-channel"))        signed_weight = 0.215648;
-      if (_sample.EqualTo("TTJets"))              signed_weight = 0.331658;
+      if (_sample.EqualTo("WJetsToLNu"))          signed_weight /= 0.683938;
+      if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight /= 0.727601;
+      if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight /= 0.66998;
+      if (_sample.EqualTo("ZZTo2L2Q"))            signed_weight /= 0.631351;
+      if (_sample.EqualTo("ST_t-channel"))        signed_weight /= 0.215648;
+      if (_sample.EqualTo("TTJets"))              signed_weight /= 0.331658;
     }
 
   if (signed_weight > 1.) return;
