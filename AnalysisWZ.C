@@ -177,14 +177,14 @@ void AnalysisWZ::Loop(TString filename,
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
-      h_counter_raw[i][j] = new TH1F("h_counter_raw_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
-      h_counter_lum[i][j] = new TH1F("h_counter_lum_" + schannel[i] + "_" + scut[j], "",   3, 0,   3);
-      h_m2l        [i][j] = new TH1F("h_m2l_"         + schannel[i] + "_" + scut[j], "", 400, 0, 200);
-      h_m3l        [i][j] = new TH1F("h_m3l_"         + schannel[i] + "_" + scut[j], "", 400, 0, 400);
-      h_njet       [i][j] = new TH1F("h_njet_"        + schannel[i] + "_" + scut[j], "",  10, 0,  10);
-      h_nbjet      [i][j] = new TH1F("h_nbjet_"       + schannel[i] + "_" + scut[j], "",  10, 0,  10);
-      h_nvtx       [i][j] = new TH1F("h_nvtx_"        + schannel[i] + "_" + scut[j], "",  50, 0,  50);
-      h_pfType1Met [i][j] = new TH1F("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "", 200, 0, 200);
+      h_counter_raw[i][j] = new TH1F("h_counter_raw_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
+      h_counter_lum[i][j] = new TH1F("h_counter_lum_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
+      h_m2l        [i][j] = new TH1F("h_m2l_"         + schannel[i] + "_" + scut[j], "",  400, 0,  200);
+      h_m3l        [i][j] = new TH1F("h_m3l_"         + schannel[i] + "_" + scut[j], "", 4000, 0, 4000);
+      h_njet       [i][j] = new TH1F("h_njet_"        + schannel[i] + "_" + scut[j], "",   10, 0,   10);
+      h_nbjet      [i][j] = new TH1F("h_nbjet_"       + schannel[i] + "_" + scut[j], "",   10, 0,   10);
+      h_nvtx       [i][j] = new TH1F("h_nvtx_"        + schannel[i] + "_" + scut[j], "",   50, 0,   50);
+      h_pfType1Met [i][j] = new TH1F("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "",  200, 0,  200);
     }
   }
 

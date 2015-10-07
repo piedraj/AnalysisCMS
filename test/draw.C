@@ -117,11 +117,11 @@ void     DrawHistogram            (TString       hname,
 				   Int_t         precision    =  0,
 				   TString       units        = "NULL",
 				   Bool_t        setLogy      = false,
+				   Bool_t        moveOverflow = false,
 				   Double_t      xmin         = -999,
 				   Double_t      xmax         = -999,
 				   Double_t      ymin         = -999,
-				   Double_t      ymax         = -999,
-				   Bool_t        moveOverflow = false);
+				   Double_t      ymax         = -999);
 
 void     MakeOutputDirectory      (TString       format,
 				   UInt_t        cut);
@@ -177,19 +177,19 @@ void draw(Int_t  cut       = -1,
 
     if (cut < nlep3_cut0_Exactly3Leptons)
       {
-	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 8, 0, "GeV", logY);
+	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
       }
     else
       {
-	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, 60, 120);
-	DrawHistogram("h_m3l", channel, cut, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, 60, 350);
+	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
+	DrawHistogram("h_m3l", channel, cut, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
       }
 
-//  DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY);
-    DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
-    DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, 0, 40);
-    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, 0, 4);
-    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, 0, 4);
+    DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY, true);
+    DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
+    DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
+    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
   }
 }
 
@@ -205,11 +205,11 @@ void DrawHistogram(TString  hname,
 		   Int_t    precision,
 		   TString  units,
 		   Bool_t   setLogy,
+		   Bool_t   moveOverflow,
 		   Double_t xmin,
 		   Double_t xmax,
 		   Double_t ymin,
-		   Double_t ymax,
-		   Bool_t   moveOverflow)
+		   Double_t ymax)
 {
   hname += "_" + schannel[channel] + "_" + scut[cut];
 
@@ -259,7 +259,8 @@ void DrawHistogram(TString  hname,
 
     hist[j] = (TH1F*)input[j]->Get(hname);
 
-    hist[j]->SetName(hname + "_" + sprocess[j]);
+    if (xmin == -999) xmin = hist[j]->GetXaxis()->GetXmin();
+    if (xmax == -999) xmax = hist[j]->GetXaxis()->GetXmax();
 
     if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
 
