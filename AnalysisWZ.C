@@ -115,16 +115,16 @@ ofstream            txt_events_emm;
 ofstream            txt_events_mmm;
 TFile*              root_output;
 
-TH1F*               h_gen_mZ;
+TH1D*               h_gen_mZ;
 
-TH1F*               h_counter_raw[nchannel][ncut];
-TH1F*               h_counter_lum[nchannel][ncut];
-TH1F*               h_m2l        [nchannel][ncut];
-TH1F*               h_m3l        [nchannel][ncut];
-TH1F*               h_njet       [nchannel][ncut];
-TH1F*               h_nbjet      [nchannel][ncut];
-TH1F*               h_nvtx       [nchannel][ncut];
-TH1F*               h_pfType1Met [nchannel][ncut];
+TH1D*               h_counter_raw[nchannel][ncut];
+TH1D*               h_counter_lum[nchannel][ncut];
+TH1D*               h_m2l        [nchannel][ncut];
+TH1D*               h_m3l        [nchannel][ncut];
+TH1D*               h_njet       [nchannel][ncut];
+TH1D*               h_nbjet      [nchannel][ncut];
+TH1D*               h_nvtx       [nchannel][ncut];
+TH1D*               h_pfType1Met [nchannel][ncut];
 
 
 //------------------------------------------------------------------------------
@@ -172,19 +172,19 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   TH1::SetDefaultSumw2();
 
-  h_gen_mZ = new TH1F("h_gen_mZ", "", 400, 0, 200);
+  h_gen_mZ = new TH1D("h_gen_mZ", "", 400, 0, 200);
 
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
 
-      h_counter_raw[i][j] = new TH1F("h_counter_raw_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
-      h_counter_lum[i][j] = new TH1F("h_counter_lum_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
-      h_m2l        [i][j] = new TH1F("h_m2l_"         + schannel[i] + "_" + scut[j], "",  400, 0,  200);
-      h_m3l        [i][j] = new TH1F("h_m3l_"         + schannel[i] + "_" + scut[j], "", 4000, 0, 4000);
-      h_njet       [i][j] = new TH1F("h_njet_"        + schannel[i] + "_" + scut[j], "",   10, 0,   10);
-      h_nbjet      [i][j] = new TH1F("h_nbjet_"       + schannel[i] + "_" + scut[j], "",   10, 0,   10);
-      h_nvtx       [i][j] = new TH1F("h_nvtx_"        + schannel[i] + "_" + scut[j], "",   50, 0,   50);
-      h_pfType1Met [i][j] = new TH1F("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "",  200, 0,  200);
+      h_counter_raw[i][j] = new TH1D("h_counter_raw_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
+      h_counter_lum[i][j] = new TH1D("h_counter_lum_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
+      h_m2l        [i][j] = new TH1D("h_m2l_"         + schannel[i] + "_" + scut[j], "",  400, 0,  200);
+      h_m3l        [i][j] = new TH1D("h_m3l_"         + schannel[i] + "_" + scut[j], "", 4000, 0, 4000);
+      h_njet       [i][j] = new TH1D("h_njet_"        + schannel[i] + "_" + scut[j], "",   10, 0,   10);
+      h_nbjet      [i][j] = new TH1D("h_nbjet_"       + schannel[i] + "_" + scut[j], "",   10, 0,   10);
+      h_nvtx       [i][j] = new TH1D("h_nvtx_"        + schannel[i] + "_" + scut[j], "",   50, 0,   50);
+      h_pfType1Met [i][j] = new TH1D("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "",  200, 0,  200);
     }
   }
 
@@ -652,8 +652,8 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisWZ::FillHistograms(int ichannel, int icut)
 {
-  h_counter_raw[ichannel][icut]->Fill(1);
-  h_counter_lum[ichannel][icut]->Fill(1, _event_weight);
+  h_counter_raw[ichannel][icut]->Fill(1.);
+  h_counter_lum[ichannel][icut]->Fill(1., _event_weight);
 
   h_m2l       [ichannel][icut]->Fill(_m2l,       _event_weight);
   h_m3l       [ichannel][icut]->Fill(_m3l,       _event_weight);
@@ -684,7 +684,7 @@ void AnalysisWZ::Summary(TString precision, TString title)
 
     for (int j=eee; j<nchannel; j++) {
 
-      TH1F* h_counter = h_counter_raw[j][i];
+      TH1D* h_counter = h_counter_raw[j][i];
 
       if (title.Contains("predicted")) h_counter = h_counter_lum[j][i];
 

@@ -251,13 +251,13 @@ void DrawHistogram(TString  hname,
 
   THStack* hstack = new THStack(hname, hname);
 
-  TH1F* hist[nprocess];
+  TH1D* hist[nprocess];
 
   for (UInt_t i=0; i<vprocess.size(); i++) {
 
     UInt_t j = vprocess.at(i);
 
-    hist[j] = (TH1F*)input[j]->Get(hname);
+    hist[j] = (TH1D*)input[j]->Get(hname);
 
     if (xmin == -999) xmin = hist[j]->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = hist[j]->GetXaxis()->GetXmax();
@@ -284,7 +284,7 @@ void DrawHistogram(TString  hname,
 
   // All MC
   //----------------------------------------------------------------------------
-  TH1F* allmc = (TH1F*)hist[Data]->Clone("allmc");
+  TH1D* allmc = (TH1D*)hist[Data]->Clone("allmc");
 
   allmc->SetFillColor  (kGray+1);
   allmc->SetFillStyle  (   3345);
@@ -415,8 +415,8 @@ void DrawHistogram(TString  hname,
     {
       pad2->cd();
     
-      TH1F* ratio       = (TH1F*)hist[Data]->Clone("ratio");
-      TH1F* uncertainty = (TH1F*)allmc->Clone("uncertainty");
+      TH1D* ratio       = (TH1D*)hist[Data]->Clone("ratio");
+      TH1D* uncertainty = (TH1D*)allmc->Clone("uncertainty");
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
@@ -530,7 +530,7 @@ Int_t ReadInputFiles(UInt_t cut)
 
     input[j] = new TFile(fname);
 
-    TH1F* dummy = (TH1F*)input[j]->Get("h_counter_raw_lll_" + scut[cut]);
+    TH1D* dummy = (TH1D*)input[j]->Get("h_counter_raw_lll_" + scut[cut]);
 
     if (!dummy)
       {
