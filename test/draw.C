@@ -387,7 +387,7 @@ void DrawHistogram(TString  hname,
   ndelta = 0;
   xdelta = 0.31;
 
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" tt (%.0f)",         Yield(hist[Top])),       "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" tt+jets (%.0f)",    Yield(hist[Top])),       "f");  ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[SingleTop], Form(" single top (%.0f)", Yield(hist[SingleTop])), "f");  ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZJets],     Form(" Z+jets (%.0f)",     Yield(hist[ZJets])),     "f");  ndelta += delta;
 
