@@ -68,7 +68,7 @@ TString scut[ncut] = {
 };
 
 
-const UInt_t nprocess = 8;
+const UInt_t nprocess = 10;
 
 enum {
   Data,
@@ -78,7 +78,9 @@ enum {
   SingleTop,
   WW,
   ZJets,
-  WJets
+  WJets,
+  TTW,
+  TTZ
 };
 
 Color_t cprocess[nprocess];
@@ -91,13 +93,13 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-Double_t        _luminosity = 40.03; // pb
-TString         _datapath   = "../rootfiles";
-TString         _era        = "50ns";
-Bool_t          _savepdf    = kFALSE;
-Bool_t          _savepng    = kTRUE;
+TString         _datapath = "../rootfiles";
+TString         _era      = "50ns";
+Bool_t          _savepdf  = kFALSE;
+Bool_t          _savepng  = kTRUE;
 Bool_t          _batch;
 Bool_t          _drawratio;
+Double_t        _luminosity;
 
 vector<UInt_t>   vprocess;
 
@@ -385,7 +387,7 @@ void DrawHistogram(TString  hname,
   ndelta = 0;
   xdelta = 0.31;
 
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" top (%.0f)",        Yield(hist[Top])),       "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Top],       Form(" tt (%.0f)",         Yield(hist[Top])),       "f");  ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[SingleTop], Form(" single top (%.0f)", Yield(hist[SingleTop])), "f");  ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZJets],     Form(" Z+jets (%.0f)",     Yield(hist[ZJets])),     "f");  ndelta += delta;
 
@@ -395,6 +397,12 @@ void DrawHistogram(TString  hname,
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[ZZ],    Form(" ZZ (%.0f)",     Yield(hist[ZZ])),    "f"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WW],    Form(" WW (%.0f)",     Yield(hist[WW])),    "f"); ndelta += delta;
   DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WJets], Form(" W+jets (%.0f)", Yield(hist[WJets])), "f"); ndelta += delta;
+
+  if (_era.EqualTo("25ns"))
+    {
+      DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[TTW], Form(" ttW (%.0f)", Yield(hist[TTW])), "f"); ndelta += delta;
+      DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[TTZ], Form(" ttZ (%.0f)", Yield(hist[TTZ])), "f"); ndelta += delta;
+    }
 
 
   // Titles
@@ -478,8 +486,9 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 void SetParameters(UInt_t cut, Bool_t drawratio)
 {
-  _batch     = gROOT->IsBatch();
-  _drawratio = drawratio;
+  _batch      = gROOT->IsBatch();
+  _drawratio  = drawratio;
+  _luminosity = (_era.EqualTo("25ns")) ? 15.48 : 40.03;  // pb
 
   if (_batch)
     {
@@ -495,6 +504,8 @@ void SetParameters(UInt_t cut, Bool_t drawratio)
   sprocess[WW]        = "06_WW";
   sprocess[ZJets]     = "07_ZJets";
   sprocess[WJets]     = "08_WJets";
+  sprocess[TTW]       = "09_TTW";
+  sprocess[TTZ]       = "10_TTZ";
 
   cprocess[Data]      = kBlack;
   cprocess[WZ]        = kOrange-2;
@@ -504,6 +515,8 @@ void SetParameters(UInt_t cut, Bool_t drawratio)
   cprocess[WW]        = kAzure-7;
   cprocess[ZJets]     = kGreen+2;
   cprocess[WJets]     = kAzure-9;
+  cprocess[TTW]       = kAzure-9;  // Temporary
+  cprocess[TTZ]       = kAzure-9;  // Temporary
 
   vprocess.clear();
   vprocess.push_back(Data);
@@ -514,6 +527,12 @@ void SetParameters(UInt_t cut, Bool_t drawratio)
   vprocess.push_back(ZZ);
   vprocess.push_back(ZJets);
   vprocess.push_back(WZ);
+
+  if (_era.EqualTo("25ns"))
+    {
+      vprocess.push_back(TTW);
+      vprocess.push_back(TTZ);
+    }
 }
 
 
@@ -528,14 +547,19 @@ Int_t ReadInputFiles(UInt_t cut)
 
     TString fname = _datapath + "/" + _era + "/" + sprocess[j] + ".root";
 
+    TString hname = "h_counter_raw_lll_" + scut[cut];
+
     input[j] = new TFile(fname);
 
-    TH1D* dummy = (TH1D*)input[j]->Get("h_counter_raw_lll_" + scut[cut]);
+    TH1D* dummy = (TH1D*)input[j]->Get(hname);
 
     if (!dummy)
       {
-	printf(" [ReadInputFiles] The %s file is broken or it does not exist.\n",
-	       sprocess[j].Data());
+	printf("\n");
+	printf(" [ReadInputFiles] Something went wrong reading a test histogram.\n\n");
+	printf(" \t Option1: the problem is in the input file %s.\n", fname.Data());
+	printf(" \t Option2: the problem is in the test histogram %s.\n", hname.Data());
+	printf("\n");
 	
 	return -1;
       }
