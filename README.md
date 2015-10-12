@@ -34,10 +34,6 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
     root -l latino_DYJetsToLL_M-50.root
     latino->MakeClass("AnalysisBase")
 
-Open `AnalysisBase.h` and add
-
-    using namespace std;
-
 
 4. Compile and run
 ====
