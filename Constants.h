@@ -39,6 +39,18 @@ const TString schannel[nchannel] = {
   "lll"
 };
 
+TString lchannel[nchannel] = {
+  "ee",
+  "e#mu",
+  "#mu#mu",
+  "ll",
+  "eee",
+  "ee#mu",
+  "e#mu#mu",
+  "#mu#mu#mu",
+  "lll"
+};
+
 
 const int ncut = 6;
 
