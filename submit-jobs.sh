@@ -19,8 +19,17 @@ if [ $# -lt 2 ]; then
     exit -1
 fi
 
+
+echo "  "
+echo "  Compiling runWZ..."
+`root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
+
+
+echo "  "
+echo "  Submitting jobs..."
 export FILEPATH=$1
 export ERA=$2
 export NJOBS=`ls -1 $FILEPATH | grepv | wc -l`
 
 qsub -t 1-$NJOBS -v FILEPATH -v ERA settings.sge
+echo "  "
