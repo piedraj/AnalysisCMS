@@ -15,8 +15,8 @@ export FILEPATH=$1
 export ERA=$2
 
 # Read all MC latino trees
-# ls -1 $FILEPATH | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
+#ls -1 $FILEPATH | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
 
 # Do not read some MC latino trees, like QCD
-ls -1 $FILEPATH | grep -v -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
+ls -1 $FILEPATH | grep -v -e Run2015C -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
 
