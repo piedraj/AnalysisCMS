@@ -44,6 +44,12 @@ With the following script all jobs will be submitted to the gridui batch system.
 
     ./submit-jobs.sh
 
+The following commands show the status of the jobs.
+
+    qstat -u piedra
+    qstat -j <job-ID.ja-task-ID>
+    qstat -j 6836598.3-5:1
+
 In any case one can always run interactively.
 
     ./create-jobs.sh
