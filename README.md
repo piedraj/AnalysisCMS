@@ -28,11 +28,13 @@ Log in to gridui.
     git clone https://github.com/piedraj/WZ13TeV
     cd WZ13TeV
 
+<!---
 The base class should be recreated anytime the latino trees have been updated.
 Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     root -l latino_DYJetsToLL_M-50.root
     latino->MakeClass("AnalysisBase")
+-->
 
 
 4. Compile and run
