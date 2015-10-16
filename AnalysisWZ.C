@@ -164,8 +164,8 @@ void AnalysisWZ::Loop(TString filename,
 	  lep.index   = i;
 	  lep.type    = Gen;
 	  lep.flavour = std_vector_leptonGen_pid->at(i);
-	  lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
-	  lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
+	  lep.dxy     = 0;
+	  lep.dz      = 0;
 	  
 	  float mass = -999;
 	  
@@ -230,7 +230,9 @@ void AnalysisWZ::Loop(TString filename,
       
       lep.index   = i;
       lep.type    = Loose;
-      lep.flavour = std_vector_lepton_flavour->at(i);
+      lep.flavour = std_vector_lepton_flavour     ->at(i);
+      lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
+      lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
       
       float mass = -999;
 
