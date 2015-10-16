@@ -205,9 +205,9 @@ void DrawHistogram(TString  hname,
     if (xmin == -999) xmin = hist[j]->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = hist[j]->GetXaxis()->GetXmax();
 
-    if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
-
     if (ngroup > 0) hist[j]->Rebin(ngroup);
+
+    if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
 
     hist[j]->SetFillColor(cprocess[j]);
     hist[j]->SetLineColor(cprocess[j]);

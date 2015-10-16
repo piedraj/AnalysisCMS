@@ -112,10 +112,7 @@ void MoveOverflowBins(TH1*     h,
       
       for (int i=0; i<=nbins+1; i++)
 	{
-	  double lowEdge  = xaxis->GetBinLowEdge(i);
-	  double binWidth = xaxis->GetBinWidth(i);
-
-	  if (lowEdge+binWidth < xmin)
+	  if (xaxis->GetBinLowEdge(i) < xmin)
 	    {
 	      firstVal += h->GetBinContent(i);
 	      firstErr += (h->GetBinError(i)*h->GetBinError(i));
