@@ -17,6 +17,8 @@ struct Lepton
   int            index;
   int            type;  // Loose, Tight, Gen
   int            flavour;
+  float          dxy;   // Tighter IP when requiring fabs(dxy) < 0.02
+  float          dz;    // Tighter IP when requiring fabs(dz)  < 0.10
   TLorentzVector v;
 };
 
@@ -162,6 +164,8 @@ void AnalysisWZ::Loop(TString filename,
 	  lep.index   = i;
 	  lep.type    = Gen;
 	  lep.flavour = std_vector_leptonGen_pid->at(i);
+	  lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
+	  lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
 	  
 	  float mass = -999;
 	  
