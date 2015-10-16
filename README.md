@@ -42,7 +42,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
 
-With the following script all jobs will be submitted to the gridui batch system.
+With the following script all jobs will listed or submitted to the gridui batch system.
 
     ./submit-jobs.sh
 
@@ -50,15 +50,12 @@ The following commands show the status of the jobs.
 
     qstat -u piedra
     qstat -j <job-ID.ja-task-ID>
-    qstat -j 6836598.3-5:1
 
-In any case one can always run interactively.
-
-    ./create-jobs.sh
-
+<!---
 Notice that input files can be accessed directly from eos when working from lxplus.
 
     ./runWZ root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
+-->
 
 
 5. Draw

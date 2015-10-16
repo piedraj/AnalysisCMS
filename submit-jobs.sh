@@ -1,16 +1,13 @@
 #!/bin/bash
 
-
 if [ $# -lt 2 ]; then
     ./create-jobs.sh
     exit -1
 fi
 
-
 echo "  "
 echo "  Let's play it safe. Compiling runWZ..."
 `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
-
 
 echo "  "
 echo "  Submitting jobs..."

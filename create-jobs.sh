@@ -1,9 +1,7 @@
 #!/bin/bash
 
-
 shopt -s expand_aliases
 alias grepv='grep -v -e Run2015C -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
-
 
 if [ $# -lt 2 ]; then
     echo "  "
