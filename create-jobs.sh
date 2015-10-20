@@ -1,7 +1,7 @@
 #!/bin/bash
 
 shopt -s expand_aliases
-alias grepv='grep -v -e Run2015C -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
+alias grepv='grep -v -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
 
 if [ $# -lt 2 ]; then
     echo "  "
@@ -15,11 +15,11 @@ if [ $# -lt 2 ]; then
     echo "  "
     echo "  Please choose 50ns or 25ns data"
     echo "  "
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/50ns             50ns"
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/50ns_August_PU 50ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/05Aug/50ns_Skim2l      50ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/05Aug/50ns_PU_Skim2l 50ns"
     echo "  "
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/25ns             25ns"
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/25ns_August_PU 25ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/17Sep/25ns   25ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/17Sep/25ns 25ns"
     echo "  "
     exit -1
 fi
