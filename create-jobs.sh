@@ -1,26 +1,32 @@
 #!/bin/bash
 
 shopt -s expand_aliases
-alias grepv='grep -v -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
+
+ alias grepv='grep latino'
+#alias grepv='grep -v -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
+#alias grepv='grep -e WWTo2L2Nu_NLL -e TTJets'
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  WARNING, will not read any latino tree that contains one of these strings"
-    echo "  "`alias | grep grepv | awk -F= '{print $2}' | sed "s/'//g" | sed "s/-e //g" | sed "s/grep -v //g"`
+    echo "  (Default) With 'grep latino' nothing is filtered"
+    echo "            With 'grep -v -e pattern1 ... -e patternN' these patterns are filtered out"
+    echo "            With 'grep -e pattern1 ... -e patternN' only these patterns are accepted"
+    echo "  "
+    echo "  You have chosen "`alias | grep grepv | awk -F= '{print $2}'`
     echo "  "
     echo "  Please choose one of these two aliases"
     echo "  "
     echo "  alias latino2hist='./create-jobs.sh'"
     echo "  alias latino2hist='./submit-jobs.sh'"
     echo "  "
-    echo "  Please choose 50ns or 25ns data"
+    echo "  Now you are ready to create or submit the jobs"
     echo "  "
     echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/05Aug/50ns_Skim2l      50ns"
     echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/05Aug/50ns_PU_Skim2l 50ns"
     echo "  "
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/17Sep/25ns   25ns"
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/17Sep/25ns 25ns"
-    echo "  "
+### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/17Sep/25ns   25ns"
+### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/17Sep/25ns 25ns"
+### echo "  "
     exit -1
 fi
 
