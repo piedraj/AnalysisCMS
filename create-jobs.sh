@@ -21,11 +21,11 @@ if [ $# -lt 2 ]; then
     echo "  "
     echo "  Now you are ready to create or submit the jobs"
     echo "  "
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/05Aug/50ns_Skim2l      50ns"
-    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/05Aug/50ns_PU_Skim2l 50ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/05Aug/50ns_Skim2l      50ns"
+    echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU_Skim2l 50ns"
     echo "  "
-### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/Data13TeV/17Sep/25ns   25ns"
-### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/MC_Spring15/17Sep/25ns 25ns"
+### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/17Sep/25ns   25ns"
+### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns 25ns"
 ### echo "  "
     exit -1
 fi
