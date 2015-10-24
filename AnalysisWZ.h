@@ -31,7 +31,7 @@ class AnalysisWZ : public AnalysisBase
 
   void    FillHistograms   (int     ichannel,
 			    int     icut,
-			    int     jetbin);
+			    int     ijet);
 
   void    Loop             (TString sample,
 			    TString era,
