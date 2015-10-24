@@ -128,11 +128,11 @@ void draw(Int_t  cut       = -1,
 	DrawHistogram("h_m3l", channel, cut, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
       }
 
-    DrawHistogram("h_counter_lum", channel, cut, "yield",                                   -1, 0, "NULL", linY, true);
-    DrawHistogram("h_pfType1Met",  channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
-    DrawHistogram("h_nvtx",        channel, cut, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
-    DrawHistogram("h_njet",        channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
-    DrawHistogram("h_nbjet",       channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram("h_counterLum", channel, cut, "yield",                                   -1, 0, "NULL", linY, true);
+    DrawHistogram("h_pfType1Met", channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
+    DrawHistogram("h_nvtx",       channel, cut, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
+    DrawHistogram("h_njet",       channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram("h_nbjet",      channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
   }
 }
 
@@ -488,7 +488,7 @@ Int_t ReadInputFiles(UInt_t cut)
 
     TString fname = _datapath + "/" + _era + "/" + sprocess[j] + ".root";
 
-    TString hname = "h_counter_raw_lll_" + scut[cut];
+    TString hname = "h_counterRaw_lll_" + scut[cut];
 
     input[j] = new TFile(fname);
 
