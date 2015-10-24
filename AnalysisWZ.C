@@ -147,7 +147,7 @@ void AnalysisWZ::Loop(TString filename,
 
     // Loop over GEN leptons
     //--------------------------------------------------------------------------
-    if (_ismc)
+    if (std_vector_leptonGen_pt != NULL)
       {
 	GenLeptons.clear();
 
@@ -195,9 +195,7 @@ void AnalysisWZ::Loop(TString filename,
 	  
 	  for (UInt_t j=i+1; j<ngenlepton; j++) {
 	    
-	    if (abs(GenLeptons[i].flavour) != abs(GenLeptons[j].flavour)) continue;
-	    
-	    if (GenLeptons[i].flavour * GenLeptons[j].flavour > 0) continue;
+	    if (GenLeptons[i].flavour + GenLeptons[j].flavour != 0) continue;
 	    
 	    float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
 	    
@@ -313,9 +311,7 @@ void AnalysisWZ::Loop(TString filename,
 
 	  for (UInt_t j=i+1; j<_nlepton; j++) {
       
-	    if (abs(AnalysisLeptons[i].flavour) != abs(AnalysisLeptons[j].flavour)) continue;
-
-	    if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
+	    if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
 
 	    float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
 
@@ -667,13 +663,11 @@ void AnalysisWZ::GetSampleName(TString filename)
 
   _ismc = true;
 
-  if (_sample.EqualTo("DoubleEG"))          _ismc = false;
-  if (_sample.EqualTo("DoubleMuon"))        _ismc = false;
-  if (_sample.EqualTo("DoubleMuonLowMass")) _ismc = false;
-  if (_sample.EqualTo("MuonEG"))            _ismc = false;
-  if (_sample.EqualTo("SingleElectron"))    _ismc = false;
-  if (_sample.EqualTo("SingleMu"))          _ismc = false;
-  if (_sample.EqualTo("SingleMuon"))        _ismc = false;
+  if (_sample.EqualTo("DoubleEG"))       _ismc = false;
+  if (_sample.EqualTo("DoubleMuon"))     _ismc = false;
+  if (_sample.EqualTo("MuonEG"))         _ismc = false;
+  if (_sample.EqualTo("SingleElectron")) _ismc = false;
+  if (_sample.EqualTo("SingleMuon"))     _ismc = false;
 
   return;
 }

@@ -27,6 +27,10 @@ if [ $# -lt 2 ]; then
 ### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/17Sep/25ns   25ns"
 ### echo "  latino2hist /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns 25ns"
 ### echo "  "
+    echo "  Synchronization with Oviedo"
+    echo "  "
+    echo "  ./runWZ /gpfs/csic_projects/cms/piedra/latino/latino_WZ_synchro.root 25ns"
+    echo "  "
     exit -1
 fi
 
