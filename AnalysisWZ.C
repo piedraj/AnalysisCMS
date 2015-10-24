@@ -46,6 +46,7 @@ unsigned int        _nlepton;
 unsigned int        _ntight;
 unsigned int        _njet;
 unsigned int        _nbjet;
+unsigned int        _jetbin;
 
 ofstream            txt_summary;
 ofstream            txt_events_eee;
@@ -396,16 +397,14 @@ void AnalysisWZ::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    int jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
+    _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 
     if (_nlepton == 2)
       {
 	if (AnalysisLeptons[0].v.Pt() < 20.) continue;
-	if (AnalysisLeptons[1].v.Pt() < 10.) continue;
 	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
 
-	FillHistograms(_channel, WW00_Exactly2Leptons, jetbin);
-	FillHistograms(_channel, WW00_Exactly2Leptons, njetbin);
+	LevelHistograms(WW00_Exactly2Leptons);
 
 	if (pfType1Met < 20.) continue;
 	if (_m2l       < 12.) continue;
@@ -413,20 +412,17 @@ void AnalysisWZ::Loop(TString filename,
 	if (_nelectron != 1 && _pt2l < 45.) continue;
 	if (_nelectron == 1 && _pt2l < 30.) continue;
 
-	FillHistograms(_channel, WW01_ZVeto, jetbin);
-	FillHistograms(_channel, WW01_ZVeto, njetbin);
+	LevelHistograms(WW01_ZVeto);
       }
     else
       {
-	FillHistograms(_channel, WZ00_Exactly3Leptons, jetbin);
-	FillHistograms(_channel, WZ00_Exactly3Leptons, njetbin);
+	LevelHistograms(WZ00_Exactly3Leptons);
     
 	if (_m2l <  60.) continue;
 	if (_m2l > 120.) continue;
 	if (ZLepton1.v.Pt() < 20.) continue;
 
-	FillHistograms(_channel, WZ01_HasZ, jetbin);
-	FillHistograms(_channel, WZ01_HasZ, njetbin);
+	LevelHistograms(WZ01_HasZ);
 
 	if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
 	if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
@@ -434,13 +430,11 @@ void AnalysisWZ::Loop(TString filename,
 	if (pfType1Met                   <  30.) continue;
 	if (_m3l                         < 100.) continue;
 
-	FillHistograms(_channel, WZ02_HasW, jetbin);
-	FillHistograms(_channel, WZ02_HasW, njetbin);
+	LevelHistograms(WZ02_HasW);
 	
 	if (_nbjet > 1) continue;
 	
-	FillHistograms(_channel, WZ03_OneBJet, jetbin);
-	FillHistograms(_channel, WZ03_OneBJet, njetbin);
+	LevelHistograms(WZ03_OneBJet);
       }
   }
    
@@ -491,16 +485,9 @@ bool AnalysisWZ::IsFiducialLepton(int k)
   float eta     = std_vector_lepton_eta    ->at(k);
   float flavour = std_vector_lepton_flavour->at(k);
 
-  bool is_fiducial_lepton = false;
+  float etamax = (fabs(flavour) == MUON_FLAVOUR) ? 2.4 : 2.5;
 
-  if (fabs(flavour) == MUON_FLAVOUR)
-    {
-      is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.4);
-    }
-  else if (fabs(flavour) == ELECTRON_FLAVOUR)
-    {
-      is_fiducial_lepton = (pt > 10. && fabs(eta) < 2.5);
-    }
+  bool is_fiducial_lepton = (pt > 10. && fabs(eta) < etamax);
 
   return is_fiducial_lepton;
 }
@@ -601,6 +588,16 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 
 
 //------------------------------------------------------------------------------
+// LevelHistograms
+//------------------------------------------------------------------------------
+void AnalysisWZ::LevelHistograms(int icut)
+{
+  FillHistograms(_channel, icut, _jetbin);
+  FillHistograms(_channel, icut, njetbin);
+}
+
+
+//------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
 void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
@@ -614,7 +611,7 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,     _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,       _event_weight);
   h_pfType1Met[ichannel][icut][ijet]->Fill(pfType1Met, _event_weight);
-    
+
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
 }

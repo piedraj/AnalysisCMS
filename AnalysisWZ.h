@@ -29,6 +29,8 @@ class AnalysisWZ : public AnalysisBase
 
   bool    IsIsolatedLepton (int     k);
 
+  void    LevelHistograms  (int     icut);
+
   void    FillHistograms   (int     ichannel,
 			    int     icut,
 			    int     ijet);
