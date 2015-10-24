@@ -56,14 +56,14 @@ TFile*              root_output;
 
 TH1D*               h_gen_mZ;
 
-TH1D*               h_counter_raw[nchannel][ncut];
-TH1D*               h_counter_lum[nchannel][ncut];
-TH1D*               h_m2l        [nchannel][ncut];
-TH1D*               h_m3l        [nchannel][ncut];
-TH1D*               h_njet       [nchannel][ncut];
-TH1D*               h_nbjet      [nchannel][ncut];
-TH1D*               h_nvtx       [nchannel][ncut];
-TH1D*               h_pfType1Met [nchannel][ncut];
+TH1D*               h_counterRaw[nchannel][ncut][njetbin+1];
+TH1D*               h_counterLum[nchannel][ncut][njetbin+1];
+TH1D*               h_m2l       [nchannel][ncut][njetbin+1];
+TH1D*               h_m3l       [nchannel][ncut][njetbin+1];
+TH1D*               h_njet      [nchannel][ncut][njetbin+1];
+TH1D*               h_nbjet     [nchannel][ncut][njetbin+1];
+TH1D*               h_nvtx      [nchannel][ncut][njetbin+1];
+TH1D*               h_pfType1Met[nchannel][ncut][njetbin+1];
 
 
 //------------------------------------------------------------------------------
@@ -115,19 +115,25 @@ void AnalysisWZ::Loop(TString filename,
 
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
+      for (int k=0; k<=njetbin; k++) {
 
-      h_counter_raw[i][j] = new TH1D("h_counter_raw_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
-      h_counter_lum[i][j] = new TH1D("h_counter_lum_" + schannel[i] + "_" + scut[j], "",    3, 0,    3);
-      h_m2l        [i][j] = new TH1D("h_m2l_"         + schannel[i] + "_" + scut[j], "",  400, 0,  200);
-      h_m3l        [i][j] = new TH1D("h_m3l_"         + schannel[i] + "_" + scut[j], "", 4000, 0, 4000);
-      h_njet       [i][j] = new TH1D("h_njet_"        + schannel[i] + "_" + scut[j], "",   10, 0,   10);
-      h_nbjet      [i][j] = new TH1D("h_nbjet_"       + schannel[i] + "_" + scut[j], "",   10, 0,   10);
-      h_nvtx       [i][j] = new TH1D("h_nvtx_"        + schannel[i] + "_" + scut[j], "",   50, 0,   50);
-      h_pfType1Met [i][j] = new TH1D("h_pfType1Met_"  + schannel[i] + "_" + scut[j], "",  200, 0,  200);
+	TString sbin = (k < njetbin) ? Form("_%djet", k) : "";
+
+	TString suffix = Form("_%s_%s%s", schannel[i].Data(), scut[j].Data(), sbin.Data());
+
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
+	h_m3l       [i][j][k] = new TH1D("h_m3l"        + suffix, "", 4000, 0, 4000);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",   10, 0,   10);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",   10, 0,   10);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50, 0,   50);
+	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "",  200, 0,  200);
+      }
     }
   }
 
-  
+
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -396,7 +402,8 @@ void AnalysisWZ::Loop(TString filename,
 	if (AnalysisLeptons[1].v.Pt() < 10.) continue;
 	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
 
-	FillHistograms(_channel, nlep2_cut0_Exactly2Leptons);
+	FillHistograms(_channel, WW00_Exactly2Leptons, _njet);
+	FillHistograms(_channel, WW00_Exactly2Leptons, njetbin);
 
 	if (pfType1Met < 20.) continue;
 	if (_m2l       < 12.) continue;
@@ -404,17 +411,20 @@ void AnalysisWZ::Loop(TString filename,
 	if (_nelectron != 1 && _pt2l < 45.) continue;
 	if (_nelectron == 1 && _pt2l < 30.) continue;
 
-	FillHistograms(_channel, nlep2_cut1_ZVeto);
+	FillHistograms(_channel, WW01_ZVeto, _njet);
+	FillHistograms(_channel, WW01_ZVeto, njetbin);
       }
     else
       {
-	FillHistograms(_channel, nlep3_cut0_Exactly3Leptons);
+	FillHistograms(_channel, WZ00_Exactly3Leptons, _njet);
+	FillHistograms(_channel, WZ00_Exactly3Leptons, njetbin);
     
 	if (_m2l <  60.) continue;
 	if (_m2l > 120.) continue;
 	if (ZLepton1.v.Pt() < 20.) continue;
 
-	FillHistograms(_channel, nlep3_cut1_HasZ);
+	FillHistograms(_channel, WZ01_HasZ, _njet);
+	FillHistograms(_channel, WZ01_HasZ, njetbin);
 
 	if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
 	if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
@@ -422,11 +432,13 @@ void AnalysisWZ::Loop(TString filename,
 	if (pfType1Met                   <  30.) continue;
 	if (_m3l                         < 100.) continue;
 
-	FillHistograms(_channel, nlep3_cut2_HasW);
+	FillHistograms(_channel, WZ02_HasW, _njet);
+	FillHistograms(_channel, WZ02_HasW, njetbin);
 	
 	if (_nbjet > 1) continue;
 	
-	FillHistograms(_channel, nlep3_cut3_OneBJet);
+	FillHistograms(_channel, WZ03_OneBJet, _njet);
+	FillHistograms(_channel, WZ03_OneBJet, njetbin);
       }
   }
    
@@ -589,20 +601,20 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
-void AnalysisWZ::FillHistograms(int ichannel, int icut)
+void AnalysisWZ::FillHistograms(int ichannel, int icut, int jetbin)
 {
-  h_counter_raw[ichannel][icut]->Fill(1.);
-  h_counter_lum[ichannel][icut]->Fill(1., _event_weight);
+  h_counterRaw[ichannel][icut][jetbin]->Fill(1);
+  h_counterLum[ichannel][icut][jetbin]->Fill(1, _event_weight);
 
-  h_m2l       [ichannel][icut]->Fill(_m2l,       _event_weight);
-  h_m3l       [ichannel][icut]->Fill(_m3l,       _event_weight);
-  h_njet      [ichannel][icut]->Fill(_njet,      _event_weight);
-  h_nbjet     [ichannel][icut]->Fill(_nbjet,     _event_weight);
-  h_nvtx      [ichannel][icut]->Fill(nvtx,       _event_weight);
-  h_pfType1Met[ichannel][icut]->Fill(pfType1Met, _event_weight);
+  h_m2l       [ichannel][icut][jetbin]->Fill(_m2l,       _event_weight);
+  h_m3l       [ichannel][icut][jetbin]->Fill(_m3l,       _event_weight);
+  h_njet      [ichannel][icut][jetbin]->Fill(_njet,      _event_weight);
+  h_nbjet     [ichannel][icut][jetbin]->Fill(_nbjet,     _event_weight);
+  h_nvtx      [ichannel][icut][jetbin]->Fill(nvtx,       _event_weight);
+  h_pfType1Met[ichannel][icut][jetbin]->Fill(pfType1Met, _event_weight);
 
-  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut);
-  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut);
+  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, jetbin);
+  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, jetbin);
 }
 
 
@@ -623,9 +635,9 @@ void AnalysisWZ::Summary(TString precision, TString title)
 
     for (int j=eee; j<nchannel; j++) {
 
-      TH1D* h_counter = h_counter_raw[j][i];
+      TH1D* h_counter = h_counterRaw[j][i][njetbin];
 
-      if (title.Contains("predicted")) h_counter = h_counter_lum[j][i];
+      if (title.Contains("predicted")) h_counter = h_counterLum[j][i][njetbin];
 
       float yield = h_counter->Integral();
       float error = sqrt(h_counter->GetSumw2()->GetSum());

@@ -30,7 +30,8 @@ class AnalysisWZ : public AnalysisBase
   bool    IsIsolatedLepton (int     k);
 
   void    FillHistograms   (int     ichannel,
-			    int     icut);
+			    int     icut,
+			    int     jetbin);
 
   void    Loop             (TString sample,
 			    TString era,

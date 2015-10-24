@@ -108,7 +108,7 @@ void draw(Int_t  cut       = -1,
   UInt_t firstChannel = eee;
   UInt_t lastChannel  = lll;
 
-  if (cut < nlep3_cut0_Exactly3Leptons)
+  if (cut < WZ00_Exactly3Leptons)
     {
       firstChannel = ee;
       lastChannel  = ll;
@@ -118,7 +118,7 @@ void draw(Int_t  cut       = -1,
 
     if (!_batch && channel != lastChannel) continue;
 
-    if (cut < nlep3_cut0_Exactly3Leptons)
+    if (cut < WZ00_Exactly3Leptons)
       {
 	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
       }

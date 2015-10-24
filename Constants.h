@@ -13,6 +13,9 @@ const float TAU_MASS      =  1.777;     // [GeV]
 const float Z_MASS        = 91.188;     // [GeV]
 
 
+const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
+
+
 const int nchannel = 9;
 
 enum {
@@ -55,21 +58,21 @@ TString lchannel[nchannel] = {
 const int ncut = 6;
 
 enum {
-  nlep2_cut0_Exactly2Leptons,
-  nlep2_cut1_ZVeto,
-  nlep3_cut0_Exactly3Leptons,
-  nlep3_cut1_HasZ,
-  nlep3_cut2_HasW,
-  nlep3_cut3_OneBJet
+  WW00_Exactly2Leptons,
+  WW01_ZVeto,
+  WZ00_Exactly3Leptons,
+  WZ01_HasZ,
+  WZ02_HasW,
+  WZ03_OneBJet
 };
 
 const TString scut[ncut] = {
-  "nlep2_cut0_Exactly2Leptons",
-  "nlep2_cut1_ZVeto",
-  "nlep3_cut0_Exactly3Leptons",
-  "nlep3_cut1_HasZ",
-  "nlep3_cut2_HasW",
-  "nlep3_cut3_OneBJet"
+  "WW00_Exactly2Leptons",
+  "WW01_ZVeto",
+  "WZ00_Exactly3Leptons",
+  "WZ01_HasZ",
+  "WZ02_HasW",
+  "WZ03_OneBJet"
 };
 
 
