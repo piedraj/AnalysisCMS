@@ -2,6 +2,10 @@
 #define MYLIB_CONSTANTS_H 1
 
 
+const float lumi50ns_fb = 0.04003;
+const float lumi25ns_fb = 0.01547;
+
+
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;

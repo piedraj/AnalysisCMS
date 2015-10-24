@@ -352,7 +352,7 @@ void DrawHistogram(TString  hname,
 
   DrawTLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
   DrawTLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
-  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", _luminosity));
+  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", 1e3*_luminosity));
 
   SetAxis(hist[Data], xtitle, ytitle, 0.045, 1.5, 1.7);
 
@@ -429,7 +429,7 @@ void SetParameters(UInt_t cut, Bool_t drawratio)
 {
   _batch      = gROOT->IsBatch();
   _drawratio  = drawratio;
-  _luminosity = (_era.EqualTo("25ns")) ? 15.48 : 40.03;  // pb
+  _luminosity = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
 
   if (_batch)
     {
