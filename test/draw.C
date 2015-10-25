@@ -34,27 +34,32 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-TString         _datapath = "../rootfiles";
-TString         _era      = "50ns";
 Bool_t          _savepdf  = kFALSE;
 Bool_t          _savepng  = kTRUE;
+TString         _datapath = "../rootfiles";
+TString         _era      = "50ns";
 Bool_t          _batch;
 Bool_t          _drawratio;
 Double_t        _luminosity;
+Int_t           _cut;
+Int_t           _jetbin;
+TString         _analysis;
 
 vector<UInt_t>   vprocess;
 
 
 // Member functions
 //------------------------------------------------------------------------------
+void     PrintHelp                ();
+
 void     SetParameters            (UInt_t        cut,
+				   UInt_t        jetbin,
 				   Bool_t        drawratio);
 
-Int_t    ReadInputFiles           (UInt_t        cut);
+Int_t    ReadInputFiles           ();
 
 void     DrawHistogram            (TString       hname,
 				   UInt_t        channel,
-				   UInt_t        cut,
 				   TString       xtitle,
 				   Int_t         ngroup       = -1,
 				   Int_t         precision    =  0,
@@ -66,41 +71,25 @@ void     DrawHistogram            (TString       hname,
 				   Double_t      ymin         = -999,
 				   Double_t      ymax         = -999);
 
-void     MakeOutputDirectory      (TString       format,
-				   UInt_t        cut);
+void     MakeOutputDirectory      (TString       format);
 
 
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
 void draw(Int_t  cut       = -1,
-	  Bool_t drawratio = kFALSE)
+	  Int_t  jetbin    = njetbin,
+	  Bool_t drawratio = false)
 {
-  // Print help
-  //----------------------------------------------------------------------------
   if (cut < 0)
     {
-      printf("\n");
-      
-      if (_savepdf) printf(" rm -rf pdf\n");
-      if (_savepng) printf(" rm -rf png\n");
-
-      if (_savepdf || _savepng) printf("\n");
-
-      for (UInt_t i=0; i<ncut; i++)
-	printf(" root -l -b -q \'draw.C+(%s)\'\n", scut[i].Data());
-
-      printf("\n");
-      
+      PrintHelp();
       return;
     }
 
+  SetParameters(cut, jetbin, drawratio);
 
-  // Setup
-  //----------------------------------------------------------------------------
-  SetParameters(cut, drawratio);
-
-  if (ReadInputFiles(cut) < 0) return;
+  if (ReadInputFiles() < 0) return;
 
 
   // Loop over channels
@@ -108,7 +97,7 @@ void draw(Int_t  cut       = -1,
   UInt_t firstChannel = eee;
   UInt_t lastChannel  = lll;
 
-  if (cut < WZ00_Exactly3Leptons)
+  if (_analysis.EqualTo("WW"))
     {
       firstChannel = ee;
       lastChannel  = ll;
@@ -118,22 +107,22 @@ void draw(Int_t  cut       = -1,
 
     if (!_batch && channel != lastChannel) continue;
 
-    if (cut < WZ00_Exactly3Leptons)
+    if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
+	DrawHistogram("h_m2l", channel, "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
       }
     else
       {
-	DrawHistogram("h_m2l", channel, cut, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
-	DrawHistogram("h_m3l", channel, cut, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
+	DrawHistogram("h_m2l", channel, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
+	DrawHistogram("h_m3l", channel, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
       }
 
-    DrawHistogram("h_counterLum", channel, cut, "yield",                                   -1, 0, "NULL", linY, true);
-    DrawHistogram("h_pfType1Met", channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
-    DrawHistogram("h_ht",         channel, cut, "H_{T}",                                    5, 0, "GeV",  linY, true);
-    DrawHistogram("h_nvtx",       channel, cut, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
-    DrawHistogram("h_njet",       channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
-    DrawHistogram("h_nbjet",      channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram("h_counterLum", channel, "yield",                                   -1, 0, "NULL", linY, true);
+    DrawHistogram("h_pfType1Met", channel, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
+    DrawHistogram("h_ht",         channel, "H_{T}",                                    5, 0, "GeV",  linY, true);
+    DrawHistogram("h_nvtx",       channel, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
+    DrawHistogram("h_njet",       channel, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram("h_nbjet",      channel, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
   }
 }
 
@@ -143,7 +132,6 @@ void draw(Int_t  cut       = -1,
 //------------------------------------------------------------------------------
 void DrawHistogram(TString  hname,
 		   UInt_t   channel,
-		   UInt_t   cut,
 		   TString  xtitle,
 		   Int_t    ngroup,
 		   Int_t    precision,
@@ -155,7 +143,9 @@ void DrawHistogram(TString  hname,
 		   Double_t ymin,
 		   Double_t ymax)
 {
-  hname += "_" + schannel[channel] + "_" + scut[cut];
+  hname += Form("_%s_%s", schannel[channel].Data(), scut[_cut].Data());
+
+  if (_jetbin < njetbin) hname += Form("_%djet", _jetbin);
 
   TCanvas* canvas = NULL;
 
@@ -413,12 +403,16 @@ void DrawHistogram(TString  hname,
 
   if (_batch)
     {
-      TString cname = scut[cut] + "/" + hname;
+      TString cname = _analysis + "/" + _era + "/" + scut[_cut];
+
+      if (_jetbin < njetbin) cname += Form("/%djet", _jetbin);
+
+      cname += "/" + hname;
 
       if (setLogy) cname += "_log";
 
-      if (_savepdf) canvas->SaveAs(Form("pdf/%s/%s.pdf", _era.Data(), cname.Data()));
-      if (_savepng) canvas->SaveAs(Form("png/%s/%s.png", _era.Data(), cname.Data()));
+      if (_savepdf) canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
+      if (_savepng) canvas->SaveAs(Form("png/%s.png", cname.Data()));
     }
 }
 
@@ -426,16 +420,21 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 // SetParameters
 //------------------------------------------------------------------------------
-void SetParameters(UInt_t cut, Bool_t drawratio)
+void SetParameters(UInt_t cut,
+		   UInt_t jetbin,
+		   Bool_t drawratio)
 {
+  _cut        = cut;
+  _jetbin     = jetbin;
   _batch      = gROOT->IsBatch();
   _drawratio  = drawratio;
   _luminosity = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
+  _analysis   = (_cut < WZ00_Exactly3Leptons) ? "WW" : "WZ";
 
   if (_batch)
     {
-      if (_savepdf) MakeOutputDirectory("pdf", cut);
-      if (_savepng) MakeOutputDirectory("png", cut);
+      if (_savepdf) MakeOutputDirectory("pdf");
+      if (_savepng) MakeOutputDirectory("png");
     }
 
   sprocess[Data]      = "01_Data";
@@ -481,7 +480,7 @@ void SetParameters(UInt_t cut, Bool_t drawratio)
 //------------------------------------------------------------------------------
 // ReadInputFiles
 //------------------------------------------------------------------------------
-Int_t ReadInputFiles(UInt_t cut)
+Int_t ReadInputFiles()
 {
   for (UInt_t i=0; i<vprocess.size(); i++) {
 
@@ -489,7 +488,7 @@ Int_t ReadInputFiles(UInt_t cut)
 
     TString fname = _datapath + "/" + _era + "/" + sprocess[j] + ".root";
 
-    TString hname = "h_counterRaw_lll_" + scut[cut];
+    TString hname = "h_counterRaw_lll_" + scut[_cut];
 
     input[j] = new TFile(fname);
 
@@ -514,11 +513,58 @@ Int_t ReadInputFiles(UInt_t cut)
 //------------------------------------------------------------------------------
 // MakeOutputDirectory
 //------------------------------------------------------------------------------
-void MakeOutputDirectory(TString format, UInt_t cut)
+void MakeOutputDirectory(TString format)
 {
-  gSystem->mkdir(format + "/" + _era + "/" + scut[cut], kTRUE);
+  TString sjetbin = (_jetbin < njetbin) ? Form("/%djet", _jetbin) : "";
 
-  gSystem->Exec(Form("cp index.php %s/.",       format.Data()));
-  gSystem->Exec(Form("cp index.php %s/%s/.",    format.Data(), _era.Data()));
-  gSystem->Exec(Form("cp index.php %s/%s/%s/.", format.Data(), _era.Data(), scut[cut].Data()));
+  gSystem->mkdir(format + "/" + _analysis + "/" + _era + "/" + scut[_cut] + sjetbin, kTRUE);
+
+  TString path = format;
+
+  gSystem->Exec(Form("cp index.php %s/.", path.Data()));
+
+  path += "/" + _analysis;
+
+  gSystem->Exec(Form("cp index.php %s/.", path.Data()));
+
+  path += "/" + _era;
+
+  gSystem->Exec(Form("cp index.php %s/.", path.Data()));
+
+  path += "/" + scut[_cut];
+
+  gSystem->Exec(Form("cp index.php %s/.", path.Data()));
+
+  path += sjetbin;
+
+  gSystem->Exec(Form("cp index.php %s/.", path.Data()));
+}
+
+
+//------------------------------------------------------------------------------
+// PrintHelp
+//------------------------------------------------------------------------------
+void PrintHelp()
+{
+  printf("\n");
+      
+  if (_savepdf) printf(" rm -rf pdf\n");
+  if (_savepng) printf(" rm -rf png\n");
+
+  if (_savepdf || _savepng) printf("\n");
+
+  for (UInt_t i=0; i<WZ00_Exactly3Leptons; i++)
+    for (UInt_t j=0; j<=njetbin; j++) {
+
+      TString sj = (j < njetbin) ? Form(",%d", j) : "";
+
+      printf(" root -l -b -q \'draw.C+(%s%s)\'\n", scut[i].Data(), sj.Data());
+    }
+     
+  printf("\n");
+
+  for (UInt_t i=WZ00_Exactly3Leptons; i<ncut; i++)
+    printf(" root -l -b -q \'draw.C+(%s)\'\n", scut[i].Data());
+
+  printf("\n");
 }
