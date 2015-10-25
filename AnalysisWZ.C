@@ -37,6 +37,7 @@ Lepton              ZLepton2;
 TString             _sample;
 bool                _ismc;
 float               _event_weight;
+float               _ht;
 float               _pt2l;
 float               _m2l;
 float               _m3l;
@@ -59,6 +60,7 @@ TH1D*               h_gen_mZ;
 
 TH1D*               h_counterRaw[nchannel][ncut][njetbin+1];
 TH1D*               h_counterLum[nchannel][ncut][njetbin+1];
+TH1D*               h_ht        [nchannel][ncut][njetbin+1];
 TH1D*               h_m2l       [nchannel][ncut][njetbin+1];
 TH1D*               h_m3l       [nchannel][ncut][njetbin+1];
 TH1D*               h_njet      [nchannel][ncut][njetbin+1];
@@ -124,6 +126,7 @@ void AnalysisWZ::Loop(TString filename,
 
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
 	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
 	h_m3l       [i][j][k] = new TH1D("h_m3l"        + suffix, "", 4000, 0, 4000);
 	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",   10, 0,   10);
@@ -345,6 +348,13 @@ void AnalysisWZ::Loop(TString filename,
       }
 
 
+    // Add the leptons and the MET to Ht
+    //--------------------------------------------------------------------------
+    _ht = pfType1Met;
+
+    for (int j=0; j<_nlepton; j++) _ht += AnalysisLeptons[j].v.Pt();
+
+
     // Loop over jets
     //--------------------------------------------------------------------------
     int vector_jet_size = std_vector_jet_pt->size();
@@ -374,6 +384,8 @@ void AnalysisWZ::Loop(TString filename,
       if (is_lepton) continue;
 
       _njet++;
+
+      _ht += jet.Pt();  // Add the jets to Ht
 
       // https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
       // Loose  WP = 0.423
@@ -605,6 +617,7 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
   h_counterLum[ichannel][icut][ijet]->Fill(1, _event_weight);
 
+  h_ht        [ichannel][icut][ijet]->Fill(_ht,        _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,       _event_weight);
   h_m3l       [ichannel][icut][ijet]->Fill(_m3l,       _event_weight);
   h_njet      [ichannel][icut][ijet]->Fill(_njet,      _event_weight);

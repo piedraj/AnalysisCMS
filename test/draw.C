@@ -130,6 +130,7 @@ void draw(Int_t  cut       = -1,
 
     DrawHistogram("h_counterLum", channel, cut, "yield",                                   -1, 0, "NULL", linY, true);
     DrawHistogram("h_pfType1Met", channel, cut, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
+    DrawHistogram("h_ht",         channel, cut, "H_{T}",                                    5, 0, "GeV",  linY, true);
     DrawHistogram("h_nvtx",       channel, cut, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
     DrawHistogram("h_njet",       channel, cut, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
     DrawHistogram("h_nbjet",      channel, cut, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
