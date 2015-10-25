@@ -57,6 +57,7 @@ ofstream            txt_events_mmm;
 TFile*              root_output;
 
 TH1D*               h_gen_mZ;
+TH1D*               h_ntight;
 
 TH1D*               h_counterRaw[nchannel][ncut][njetbin+1];
 TH1D*               h_counterLum[nchannel][ncut][njetbin+1];
@@ -115,6 +116,7 @@ void AnalysisWZ::Loop(TString filename,
   TH1::SetDefaultSumw2();
 
   h_gen_mZ = new TH1D("h_gen_mZ", "", 400, 0, 200);
+  h_ntight = new TH1D("h_ntight", "",  10, 0,  10);
 
   for (int i=0; i<nchannel; i++) {
     for (int j=0; j<ncut; j++) {
@@ -269,6 +271,8 @@ void AnalysisWZ::Loop(TString filename,
       {
 	if (AnalysisLeptons[i].type == Tight) _ntight++;
       }
+
+    h_ntight->Fill(_ntight);
 
 
     // Count the number of electrons
@@ -469,14 +473,17 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
-  txt_summary << Form("\n%20s results with %.2f pb-1\n",
-		      _sample.Data(),
-		      1e3*luminosity);
+  txt_summary << "\n";
+  txt_summary << Form("   filename: %s\n",        filename.Data());
+  txt_summary << Form("     sample: %s\n",        _sample.Data());
+  txt_summary << Form("        era: %s\n",        era.Data());
+  txt_summary << Form(" luminosity: %.2f pb-1\n", 1e3*luminosity);
+  txt_summary << Form("   nentries: %lld\n",      nentries);
+  txt_summary << "\n";
 
-  Summary("11.0", "raw yields");
+  Summary("WW", "11.0", "raw yields");
+  Summary("WZ", "11.0", "raw yields");
   
-  if (_ismc) Summary("11.2", "predicted yields");
-
   txt_summary.close();
 
   root_output->cd();
@@ -632,19 +639,27 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
 //------------------------------------------------------------------------------
 // Summary
 //------------------------------------------------------------------------------
-void AnalysisWZ::Summary(TString precision, TString title)
+void AnalysisWZ::Summary(TString analysis,
+			 TString precision,
+			 TString title)
 {
+  int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
+  int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
+  int firstCut     = (analysis.EqualTo("WZ")) ? WZ00_Exactly3Leptons : WW00_Exactly2Leptons;
+  int lastCut      = (analysis.EqualTo("WZ")) ? ncut : WZ00_Exactly3Leptons;
+
   txt_summary << Form("\n%30s", title.Data());
 
-  for (int i=eee; i<nchannel; i++) txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
+  for (int i=firstChannel; i<lastChannel; i++)
+    txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
 
   txt_summary << Form("\n-------------------------------\n");
 
-  for (int i=0; i<ncut; i++) {
+  for (int i=firstCut; i<lastCut; i++) {
       
     txt_summary << Form("%30s", scut[i].Data());
 
-    for (int j=eee; j<nchannel; j++) {
+    for (int j=firstChannel; j<lastChannel; j++) {
 
       TH1D* h_counter = h_counterRaw[j][i][njetbin];
 
@@ -664,6 +679,8 @@ void AnalysisWZ::Summary(TString precision, TString title)
   }
   
   txt_summary << "\n";
+
+  if (title.Contains("raw") && _ismc) Summary(analysis, "11.2", "predicted yields");
 }
 
 

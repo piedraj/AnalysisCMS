@@ -39,7 +39,8 @@ class AnalysisWZ : public AnalysisBase
 			    TString era,
 			    float   luminosity);
 
-  void    Summary          (TString precision,
+  void    Summary          (TString analysis,
+			    TString precision,
 			    TString title);
 
   void    GetSampleName    (TString filename);
