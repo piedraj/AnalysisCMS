@@ -59,25 +59,33 @@ TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 6;
+const int ncut = 7;
 
 enum {
   WW00_Exactly2Leptons,
   WW01_ZVeto,
+  WW02_BVetoTight,
   WZ00_Exactly3Leptons,
   WZ01_HasZ,
   WZ02_HasW,
-  WZ03_OneBJet
+  WZ03_BVetoTight
 };
 
 const TString scut[ncut] = {
   "WW00_Exactly2Leptons",
   "WW01_ZVeto",
+  "WW02_BVetoTight",
   "WZ00_Exactly3Leptons",
   "WZ01_HasZ",
   "WZ02_HasW",
-  "WZ03_OneBJet"
+  "WZ03_BVetoTight"
 };
+
+
+// https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
+const float csvv2ivf_looseWP  = 0.423;
+const float csvv2ivf_mediumWP = 0.814;
+const float csvv2ivf_tightWP  = 0.941;
 
 
 #endif

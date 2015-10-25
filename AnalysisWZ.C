@@ -387,12 +387,7 @@ void AnalysisWZ::Loop(TString filename,
 
       _ht += jet.Pt();  // Add the jets to Ht
 
-      // https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
-      // Loose  WP = 0.423
-      // Medium WP = 0.814
-      // Tight  WP = 0.941
-
-      if (std_vector_jet_csvv2ivf->at(i) > 0.814) _nbjet++;
+      if (std_vector_jet_csvv2ivf->at(i) > csvv2ivf_tightWP) _nbjet++;
     }
 
 
@@ -425,6 +420,10 @@ void AnalysisWZ::Loop(TString filename,
 	if (_nelectron == 1 && _pt2l < 30.) continue;
 
 	LevelHistograms(WW01_ZVeto);
+
+	if (_nbjet > 0) continue;
+
+	LevelHistograms(WW02_BVetoTight);
       }
     else
       {
@@ -444,9 +443,9 @@ void AnalysisWZ::Loop(TString filename,
 
 	LevelHistograms(WZ02_HasW);
 	
-	if (_nbjet > 1) continue;
+	if (_nbjet > 0) continue;
 	
-	LevelHistograms(WZ03_OneBJet);
+	LevelHistograms(WZ03_BVetoTight);
       }
   }
    
