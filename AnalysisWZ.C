@@ -22,12 +22,22 @@ struct Lepton
   TLorentzVector v;
 };
 
+enum {NoBtag, LooseBtag, MediumBtag, TightBtag};
+
+struct Jet
+{
+  int            index;
+  float          csvv2ivf;
+  TLorentzVector v;
+};
+
 
 //==============================================================================
 //
 // Data members
 //
 //==============================================================================
+std::vector<Jet>    AnalysisJets;
 std::vector<Lepton> AnalysisLeptons;
 std::vector<Lepton> GenLeptons;
 Lepton              WLepton;
@@ -127,7 +137,7 @@ void AnalysisWZ::Loop(TString filename,
 
       root_output->cd();
 
-      gDirectory->mkdir(directory);
+      if (k < njetbin) gDirectory->mkdir(directory);
 
       root_output->cd(directory);
 
@@ -359,21 +369,13 @@ void AnalysisWZ::Loop(TString filename,
 	_pt2l = (ZLepton1.v + ZLepton2.v).Pt();
 	_m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
       }
-
-
-    // Add the leptons and the MET to Ht
-    //--------------------------------------------------------------------------
-    _ht = pfType1Met;
-
-    for (int j=0; j<_nlepton; j++) _ht += AnalysisLeptons[j].v.Pt();
-
-
+    
+    
     // Loop over jets
     //--------------------------------------------------------------------------
-    int vector_jet_size = std_vector_jet_pt->size();
+    AnalysisJets.clear();
 
-    _njet  = 0;
-    _nbjet = 0;
+    int vector_jet_size = std_vector_jet_pt->size();
 
     for (int i=0; i<vector_jet_size; i++) {
 
@@ -383,25 +385,47 @@ void AnalysisWZ::Loop(TString filename,
 
       if (pt < 30. || fabs(eta) < 2.4) continue;
 
-      TLorentzVector jet;
+      TLorentzVector tlv;
 
-      jet.SetPtEtaPhiM(pt, eta, phi, 0.0);
+      tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
 
       bool is_lepton = false;
 
       for (int j=0; j<_nlepton; j++)
 	{
-	  if (jet.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
+	  if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
 	}
 
       if (is_lepton) continue;
 
-      _njet++;
+      Jet goodjet;
 
-      _ht += jet.Pt();  // Add the jets to Ht
+      goodjet.index    = i;
+      goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+      goodjet.v        = tlv;
 
-      if (std_vector_jet_csvv2ivf->at(i) > csvv2ivf_tightWP) _nbjet++;
+      AnalysisJets.push_back(goodjet);
     }
+
+    _njet = AnalysisJets.size();
+
+
+    // Count the number of b-jets
+    //--------------------------------------------------------------------------
+    _nbjet = 0;
+
+    for (int i=0; i<_njet; i++)
+      {
+	if (AnalysisJets[i].csvv2ivf > csvv2ivf_mediumWP) _nbjet++;
+      }
+
+	
+    // Compute Ht
+    //--------------------------------------------------------------------------
+    _ht = pfType1Met;
+
+    for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
+    for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
 
 
     // For WZ synchronization
@@ -422,6 +446,7 @@ void AnalysisWZ::Loop(TString filename,
     if (_nlepton == 2)
       {
 	if (AnalysisLeptons[0].v.Pt() < 20.) continue;
+	if (AnalysisLeptons[1].v.Pt() < 20.) continue;
 	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
 
 	LevelHistograms(WW00_Exactly2Leptons);
@@ -436,7 +461,7 @@ void AnalysisWZ::Loop(TString filename,
 
 	if (_nbjet > 0) continue;
 
-	LevelHistograms(WW02_BVetoTight);
+	LevelHistograms(WW02_BVeto);
       }
     else
       {
@@ -458,7 +483,7 @@ void AnalysisWZ::Loop(TString filename,
 	
 	if (_nbjet > 0) continue;
 	
-	LevelHistograms(WZ03_BVetoTight);
+	LevelHistograms(WZ03_BVeto);
       }
   }
    

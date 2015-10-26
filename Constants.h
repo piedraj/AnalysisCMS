@@ -64,21 +64,21 @@ const int ncut = 7;
 enum {
   WW00_Exactly2Leptons,
   WW01_ZVeto,
-  WW02_BVetoTight,
+  WW02_BVeto,
   WZ00_Exactly3Leptons,
   WZ01_HasZ,
   WZ02_HasW,
-  WZ03_BVetoTight
+  WZ03_BVeto
 };
 
 const TString scut[ncut] = {
   "WW00_Exactly2Leptons",
   "WW01_ZVeto",
-  "WW02_BVetoTight",
+  "WW02_BVeto",
   "WZ00_Exactly3Leptons",
   "WZ01_HasZ",
   "WZ02_HasW",
-  "WZ03_BVetoTight"
+  "WZ03_BVeto"
 };
 
 
