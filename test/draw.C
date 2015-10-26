@@ -34,10 +34,11 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-Bool_t          _savepdf  = kFALSE;
-Bool_t          _savepng  = kTRUE;
-TString         _datapath = "../rootfiles";
-TString         _era      = "50ns";
+Bool_t          _drawratio = kFALSE;
+Bool_t          _savepdf   = kFALSE;
+Bool_t          _savepng   = kTRUE;
+TString         _datapath  = "../rootfiles";
+TString         _era       = "50ns";
 Bool_t          _batch;
 Double_t        _luminosity;
 Int_t           _cut;
@@ -73,6 +74,8 @@ void     DrawHistogram            (TString       hname,
 				   Double_t      ymin         = -999,
 				   Double_t      ymax         = -999);
 
+void     DrawChannels             ();
+
 void     MakeOutputDirectory      (TString       format);
 
 TString  GetName                  (TString       prefix,
@@ -82,35 +85,40 @@ TString  GetName                  (TString       prefix,
 //------------------------------------------------------------------------------
 // draw
 //------------------------------------------------------------------------------
-void draw(Int_t  cut       = -1,
-	  Int_t  jetbin    = njetbin,
-	  Bool_t drawratio = false)
+void draw(Int_t cut    = -1,
+	  Int_t jetbin = njetbin)
 {
   if (SetParameters(cut, jetbin) < 0) return;
 
+  DrawChannels();
+}
 
-  // Loop over channels
-  //----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// DrawChannels
+//------------------------------------------------------------------------------
+void DrawChannels()
+{
   for (UInt_t channel=_firstchannel; channel<=_lastchannel; channel++) {
 
     if (!_batch && channel != _lastchannel) continue;
 
     if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", drawratio, logY);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", _drawratio, logY);
       }
     else
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", drawratio, linY, true, 60, 120);
-	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", drawratio, linY, true, 60, 120);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", _drawratio, linY, true, 60, 120);
+	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", _drawratio, linY, true, 60, 120);
       }
 
-    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", drawratio, linY);
-    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  drawratio, linY);
-    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  drawratio, linY);
-    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", drawratio, linY);
-    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", drawratio, logY);
-    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", drawratio, logY);
+    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", _drawratio, linY);
+    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  _drawratio, linY);
+    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  _drawratio, linY);
+    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", _drawratio, linY);
+    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", _drawratio, logY);
+    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", _drawratio, logY);
   }
 }
 
