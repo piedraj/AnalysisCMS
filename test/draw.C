@@ -39,7 +39,6 @@ Bool_t          _savepng  = kTRUE;
 TString         _datapath = "../rootfiles";
 TString         _era      = "50ns";
 Bool_t          _batch;
-Bool_t          _drawratio;
 Double_t        _luminosity;
 Int_t           _cut;
 Int_t           _jetbin;
@@ -57,8 +56,7 @@ vector<UInt_t>   vprocess;
 void     PrintHelp                ();
 
 Int_t    SetParameters            (Int_t         cut,
-				   Int_t         jetbin,
-				   Bool_t        drawratio);
+				   Int_t         jetbin);
 
 Int_t    ReadInputFiles           ();
 
@@ -67,8 +65,9 @@ void     DrawHistogram            (TString       hname,
 				   Int_t         ngroup       = -1,
 				   Int_t         precision    =  0,
 				   TString       units        = "NULL",
-				   Bool_t        setLogy      = false,
-				   Bool_t        moveOverflow = false,
+				   Bool_t        drawratio    = false,
+				   Bool_t        setlogy      = false,
+				   Bool_t        moveoverflow = true,
 				   Double_t      xmin         = -999,
 				   Double_t      xmax         = -999,
 				   Double_t      ymin         = -999,
@@ -87,9 +86,7 @@ void draw(Int_t  cut       = -1,
 	  Int_t  jetbin    = njetbin,
 	  Bool_t drawratio = false)
 {
-  if (SetParameters(cut, jetbin, drawratio) < 0) return;
-
-  if (ReadInputFiles() < 0) return;
+  if (SetParameters(cut, jetbin) < 0) return;
 
 
   // Loop over channels
@@ -100,20 +97,20 @@ void draw(Int_t  cut       = -1,
 
     if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", drawratio, logY);
       }
     else
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
-	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", drawratio, linY, true, 60, 120);
+	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", drawratio, linY, true, 60, 120);
       }
 
-    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", linY, true);
-    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
-    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  linY, true);
-    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
-    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
-    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", drawratio, linY);
+    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  drawratio, linY);
+    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  drawratio, linY);
+    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", drawratio, linY);
+    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", drawratio, logY);
+    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", drawratio, logY);
   }
 }
 
@@ -126,8 +123,9 @@ void DrawHistogram(TString  hname,
 		   Int_t    ngroup,
 		   Int_t    precision,
 		   TString  units,
-		   Bool_t   setLogy,
-		   Bool_t   moveOverflow,
+		   Bool_t   drawratio,
+		   Bool_t   setlogy,
+		   Bool_t   moveoverflow,
 		   Double_t xmin,
 		   Double_t xmax,
 		   Double_t ymin,
@@ -138,7 +136,7 @@ void DrawHistogram(TString  hname,
   TPad* pad1 = NULL;
   TPad* pad2 = NULL;
 
-  if (_drawratio)
+  if (drawratio)
     {
       canvas = new TCanvas(hname, hname, 550, 720);
 
@@ -167,7 +165,7 @@ void DrawHistogram(TString  hname,
   //----------------------------------------------------------------------------
   pad1->cd();
   
-  pad1->SetLogy(setLogy);
+  pad1->SetLogy(setlogy);
 
   THStack* hstack = new THStack(hname, hname);
 
@@ -184,7 +182,7 @@ void DrawHistogram(TString  hname,
 
     if (ngroup > 0) hist[j]->Rebin(ngroup);
 
-    if (moveOverflow) MoveOverflowBins(hist[j], xmin, xmax);
+    if (moveoverflow) MoveOverflowBins(hist[j], xmin, xmax);
 
     hist[j]->SetFillColor(cprocess[j]);
     hist[j]->SetLineColor(cprocess[j]);
@@ -321,7 +319,7 @@ void DrawHistogram(TString  hname,
 
   // Titles
   //----------------------------------------------------------------------------
-  Double_t xprelim = (_drawratio) ? 0.288 : 0.300;
+  Double_t xprelim = (drawratio) ? 0.288 : 0.300;
 
   DrawTLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
   DrawTLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
@@ -333,7 +331,7 @@ void DrawHistogram(TString  hname,
   //----------------------------------------------------------------------------
   // pad2
   //----------------------------------------------------------------------------
-  if (_drawratio)
+  if (drawratio)
     {
       pad2->cd();
     
@@ -387,7 +385,7 @@ void DrawHistogram(TString  hname,
     {
       TString cname = _analysis + "/" + _era + "/" + hname;
 
-      if (setLogy) cname += "_log";
+      if (setlogy) cname += "_log";
 
       if (_savepdf) canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
       if (_savepng) canvas->SaveAs(Form("png/%s.png", cname.Data()));
@@ -398,9 +396,7 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 // SetParameters
 //------------------------------------------------------------------------------
-Int_t SetParameters(Int_t  cut,
-		    Int_t  jetbin,
-		    Bool_t drawratio)
+Int_t SetParameters(Int_t cut, Int_t jetbin)
 {
   if (cut < 0)
     {
@@ -410,7 +406,6 @@ Int_t SetParameters(Int_t  cut,
 
   _cut          = cut;
   _jetbin       = jetbin;
-  _drawratio    = drawratio;
   _batch        = gROOT->IsBatch();
   _luminosity   = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
   _analysis     = (_cut < WZ00_Exactly3Leptons) ? "WW" : "WZ";
@@ -462,6 +457,8 @@ Int_t SetParameters(Int_t  cut,
       vprocess.push_back(TTW);
       vprocess.push_back(TTZ);
     }
+
+  if (ReadInputFiles() < 0) return -1;
 
   return 0;
 }

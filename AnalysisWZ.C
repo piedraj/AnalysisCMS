@@ -140,9 +140,9 @@ void AnalysisWZ::Loop(TString filename,
 	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
 	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
 	h_m3l       [i][j][k] = new TH1D("h_m3l"        + suffix, "", 4000, 0, 4000);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",   10, 0,   10);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",   10, 0,   10);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50, 0,   50);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
 	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "",  200, 0,  200);
       }
     }
