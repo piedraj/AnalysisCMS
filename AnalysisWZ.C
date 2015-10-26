@@ -118,13 +118,22 @@ void AnalysisWZ::Loop(TString filename,
   h_gen_mZ = new TH1D("h_gen_mZ", "", 400, 0, 200);
   h_ntight = new TH1D("h_ntight", "",  10, 0,  10);
 
-  for (int i=0; i<nchannel; i++) {
-    for (int j=0; j<ncut; j++) {
-      for (int k=0; k<=njetbin; k++) {
+  for (int j=0; j<ncut; j++) {
+    for (int k=0; k<=njetbin; k++) {
 
-	TString sbin = (k < njetbin) ? Form("_%djet", k) : "";
+      TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
 
-	TString suffix = Form("_%s_%s%s", schannel[i].Data(), scut[j].Data(), sbin.Data());
+      TString directory = scut[j] + sbin;
+
+      root_output->cd();
+
+      gDirectory->mkdir(directory);
+
+      root_output->cd(directory);
+
+      for (int i=0; i<nchannel; i++) {
+
+	TString suffix = "_" + schannel[i];
 
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);

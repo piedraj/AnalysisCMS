@@ -43,7 +43,11 @@ Bool_t          _drawratio;
 Double_t        _luminosity;
 Int_t           _cut;
 Int_t           _jetbin;
+UInt_t          _firstchannel;
+UInt_t          _lastchannel;
 TString         _analysis;
+TString         _directory;
+TString         _sjetbin;
 
 vector<UInt_t>   vprocess;
 
@@ -52,14 +56,13 @@ vector<UInt_t>   vprocess;
 //------------------------------------------------------------------------------
 void     PrintHelp                ();
 
-void     SetParameters            (UInt_t        cut,
-				   UInt_t        jetbin,
+Int_t    SetParameters            (Int_t         cut,
+				   Int_t         jetbin,
 				   Bool_t        drawratio);
 
 Int_t    ReadInputFiles           ();
 
 void     DrawHistogram            (TString       hname,
-				   UInt_t        channel,
 				   TString       xtitle,
 				   Int_t         ngroup       = -1,
 				   Int_t         precision    =  0,
@@ -73,6 +76,9 @@ void     DrawHistogram            (TString       hname,
 
 void     MakeOutputDirectory      (TString       format);
 
+TString  GetName                  (TString       prefix,
+				   UInt_t        channel);
+
 
 //------------------------------------------------------------------------------
 // draw
@@ -81,48 +87,33 @@ void draw(Int_t  cut       = -1,
 	  Int_t  jetbin    = njetbin,
 	  Bool_t drawratio = false)
 {
-  if (cut < 0)
-    {
-      PrintHelp();
-      return;
-    }
-
-  SetParameters(cut, jetbin, drawratio);
+  if (SetParameters(cut, jetbin, drawratio) < 0) return;
 
   if (ReadInputFiles() < 0) return;
 
 
   // Loop over channels
   //----------------------------------------------------------------------------
-  UInt_t firstChannel = eee;
-  UInt_t lastChannel  = lll;
+  for (UInt_t channel=_firstchannel; channel<=_lastchannel; channel++) {
 
-  if (_analysis.EqualTo("WW"))
-    {
-      firstChannel = ee;
-      lastChannel  = ll;
-    }
-
-  for (UInt_t channel=firstChannel; channel<=lastChannel; channel++) {
-
-    if (!_batch && channel != lastChannel) continue;
+    if (!_batch && channel != _lastchannel) continue;
 
     if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram("h_m2l", channel, "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", logY, true);
       }
     else
       {
-	DrawHistogram("h_m2l", channel, "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
-	DrawHistogram("h_m3l", channel, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", linY, true, 60, 120);
+	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 350);
       }
 
-    DrawHistogram("h_counterLum", channel, "yield",                                   -1, 0, "NULL", linY, true);
-    DrawHistogram("h_pfType1Met", channel, "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
-    DrawHistogram("h_ht",         channel, "H_{T}",                                    5, 0, "GeV",  linY, true);
-    DrawHistogram("h_nvtx",       channel, "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
-    DrawHistogram("h_njet",       channel, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
-    DrawHistogram("h_nbjet",      channel, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", linY, true);
+    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  linY, true);
+    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  linY, true);
+    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", linY, true, 0, 40);
+    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY, true, 0, 4);
+    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY, true, 0, 4);
   }
 }
 
@@ -131,7 +122,6 @@ void draw(Int_t  cut       = -1,
 // DrawHistogram
 //------------------------------------------------------------------------------
 void DrawHistogram(TString  hname,
-		   UInt_t   channel,
 		   TString  xtitle,
 		   Int_t    ngroup,
 		   Int_t    precision,
@@ -143,10 +133,6 @@ void DrawHistogram(TString  hname,
 		   Double_t ymin,
 		   Double_t ymax)
 {
-  hname += Form("_%s_%s", schannel[channel].Data(), scut[_cut].Data());
-
-  if (_jetbin < njetbin) hname += Form("_%djet", _jetbin);
-
   TCanvas* canvas = NULL;
 
   TPad* pad1 = NULL;
@@ -308,13 +294,9 @@ void DrawHistogram(TString  hname,
   Double_t ndelta = 0;
   Double_t xdelta = 0.535;
 
-  TString sData = Form(" %s (%.0f)", lchannel[channel].Data(), Yield(hist[Data]));
-
-  if (channel == ll || channel == lll) sData = Form(" data (%.0f)", Yield(hist[Data]));
-
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Data], sData,                                "lp"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)", Yield(allmc)),    "f");  ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WZ],   Form(" WZ (%.0f)",  Yield(hist[WZ])), "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[Data], Form(" data (%.0f)", Yield(hist[Data])), "lp"); ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)",  Yield(allmc)),      "f");  ndelta += delta;
+  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)hist[WZ],   Form(" WZ (%.0f)",   Yield(hist[WZ])),   "f");  ndelta += delta;
 
   ndelta = 0;
   xdelta = 0.31;
@@ -403,11 +385,7 @@ void DrawHistogram(TString  hname,
 
   if (_batch)
     {
-      TString cname = _analysis + "/" + _era + "/" + scut[_cut];
-
-      if (_jetbin < njetbin) cname += Form("/%djet", _jetbin);
-
-      cname += "/" + hname;
+      TString cname = _analysis + "/" + _era + "/" + hname;
 
       if (setLogy) cname += "_log";
 
@@ -420,16 +398,26 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 // SetParameters
 //------------------------------------------------------------------------------
-void SetParameters(UInt_t cut,
-		   UInt_t jetbin,
-		   Bool_t drawratio)
+Int_t SetParameters(Int_t  cut,
+		    Int_t  jetbin,
+		    Bool_t drawratio)
 {
-  _cut        = cut;
-  _jetbin     = jetbin;
-  _batch      = gROOT->IsBatch();
-  _drawratio  = drawratio;
-  _luminosity = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
-  _analysis   = (_cut < WZ00_Exactly3Leptons) ? "WW" : "WZ";
+  if (cut < 0)
+    {
+      PrintHelp();
+      return -1;
+    }
+
+  _cut          = cut;
+  _jetbin       = jetbin;
+  _drawratio    = drawratio;
+  _batch        = gROOT->IsBatch();
+  _luminosity   = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
+  _analysis     = (_cut < WZ00_Exactly3Leptons) ? "WW" : "WZ";
+  _sjetbin      = (_jetbin < njetbin) ? Form("/%djet", _jetbin) : "";
+  _directory    = scut[_cut] + _sjetbin + "/";
+  _firstchannel = (_analysis.EqualTo("WZ")) ? eee : ee;
+  _lastchannel  = (_analysis.EqualTo("WZ")) ? lll : ll;
 
   if (_batch)
     {
@@ -474,6 +462,8 @@ void SetParameters(UInt_t cut,
       vprocess.push_back(TTW);
       vprocess.push_back(TTZ);
     }
+
+  return 0;
 }
 
 
@@ -488,7 +478,7 @@ Int_t ReadInputFiles()
 
     TString fname = _datapath + "/" + _era + "/" + sprocess[j] + ".root";
 
-    TString hname = "h_counterRaw_lll_" + scut[_cut];
+    TString hname = _directory + "h_counterRaw_" + schannel[_lastchannel];
 
     input[j] = new TFile(fname);
 
@@ -515,9 +505,7 @@ Int_t ReadInputFiles()
 //------------------------------------------------------------------------------
 void MakeOutputDirectory(TString format)
 {
-  TString sjetbin = (_jetbin < njetbin) ? Form("/%djet", _jetbin) : "";
-
-  gSystem->mkdir(format + "/" + _analysis + "/" + _era + "/" + scut[_cut] + sjetbin, kTRUE);
+  gSystem->mkdir(format + "/" + _analysis + "/" + _era + "/" + _directory, kTRUE);
 
   TString path = format;
 
@@ -535,7 +523,7 @@ void MakeOutputDirectory(TString format)
 
   gSystem->Exec(Form("cp index.php %s/.", path.Data()));
 
-  path += sjetbin;
+  path += _sjetbin;
 
   gSystem->Exec(Form("cp index.php %s/.", path.Data()));
 }
@@ -567,4 +555,15 @@ void PrintHelp()
     printf(" root -l -b -q \'draw.C+(%s)\'\n", scut[i].Data());
 
   printf("\n");
+}
+
+
+//------------------------------------------------------------------------------
+// GetName
+//------------------------------------------------------------------------------
+TString GetName(TString prefix, UInt_t channel)
+{
+  TString hname = _directory + prefix + "_" + schannel[channel];
+
+  return hname;
 }
