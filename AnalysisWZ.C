@@ -22,8 +22,6 @@ struct Lepton
   TLorentzVector v;
 };
 
-enum {NoBtag, LooseBtag, MediumBtag, TightBtag};
-
 struct Jet
 {
   int            index;
