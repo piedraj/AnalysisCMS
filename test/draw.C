@@ -34,7 +34,7 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
-Bool_t          _drawratio = kFALSE;
+Bool_t          _drawratio = kTRUE;
 Bool_t          _savepdf   = kFALSE;
 Bool_t          _savepng   = kTRUE;
 TString         _datapath  = "../rootfiles";
@@ -105,7 +105,8 @@ void DrawChannels()
 
     if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 8, 0, "GeV", _drawratio, logY);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, linY, true, 40, 140);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, logY, true, 40, 140);
       }
     else
       {
@@ -139,6 +140,10 @@ void DrawHistogram(TString  hname,
 		   Double_t ymin,
 		   Double_t ymax)
 {
+  TString cname = _analysis + "/" + _era + "/" + hname;
+
+  if (setlogy) cname += "_log";
+
   TCanvas* canvas = NULL;
 
   TPad* pad1 = NULL;
@@ -146,7 +151,7 @@ void DrawHistogram(TString  hname,
 
   if (drawratio)
     {
-      canvas = new TCanvas(hname, hname, 550, 720);
+      canvas = new TCanvas(cname, cname, 550, 720);
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
@@ -161,7 +166,7 @@ void DrawHistogram(TString  hname,
     }
   else
     {
-      canvas = new TCanvas(hname, hname);
+      canvas = new TCanvas(cname, cname);
 
       pad1 = new TPad("pad1", "pad1", 0, 0, 1, 1);
       pad1->Draw();
@@ -183,7 +188,9 @@ void DrawHistogram(TString  hname,
 
     UInt_t j = vprocess.at(i);
 
-    hist[j] = (TH1D*)input[j]->Get(hname);
+    TH1D* dummy = (TH1D*)input[j]->Get(hname);
+
+    hist[j] = (TH1D*)dummy->Clone();
 
     if (xmin == -999) xmin = hist[j]->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = hist[j]->GetXaxis()->GetXmax();
@@ -251,6 +258,25 @@ void DrawHistogram(TString  hname,
   hstack    ->Draw("hist,same");
   allmc     ->Draw("e2,same");
   hist[Data]->Draw("ep,same");
+
+  
+  // Compare data and MC
+  //----------------------------------------------------------------------------
+  if (cname.Contains("m2l") && !cname.Contains("jet/"))
+    {
+      int firstBin = allmc->FindBin(50.);
+      int lastBin  = allmc->GetNbinsX() + 1;
+
+      float mcIntegral   = allmc     ->Integral(firstBin, lastBin);
+      float dataIntegral = hist[Data]->Integral(firstBin, lastBin);
+
+      printf("\n");
+      printf(" %s\n", hname.Data());
+      printf("      mc: %.0f\n", mcIntegral);
+      printf("    data: %.0f\n", dataIntegral);
+      printf(" mc/data: %.2f\n", mcIntegral/dataIntegral);
+      printf("\n");
+    }
 
 
   // Set xtitle and ytitle
@@ -389,15 +415,8 @@ void DrawHistogram(TString  hname,
   //----------------------------------------------------------------------------
   canvas->cd();
 
-  if (_batch)
-    {
-      TString cname = _analysis + "/" + _era + "/" + hname;
-
-      if (setlogy) cname += "_log";
-
-      if (_savepdf) canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
-      if (_savepng) canvas->SaveAs(Form("png/%s.png", cname.Data()));
-    }
+  if (_savepdf) canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
+  if (_savepng) canvas->SaveAs(Form("png/%s.png", cname.Data()));
 }
 
 
@@ -406,6 +425,11 @@ void DrawHistogram(TString  hname,
 //------------------------------------------------------------------------------
 Int_t SetParameters(Int_t cut, Int_t jetbin)
 {
+  _batch = gROOT->IsBatch();
+
+  _savepdf &= _batch;
+  _savepng &= _batch;
+
   if (cut < 0)
     {
       PrintHelp();
@@ -414,7 +438,6 @@ Int_t SetParameters(Int_t cut, Int_t jetbin)
 
   _cut          = cut;
   _jetbin       = jetbin;
-  _batch        = gROOT->IsBatch();
   _luminosity   = (_era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
   _analysis     = (_cut < WZ00_Exactly3Leptons) ? "WW" : "WZ";
   _sjetbin      = (_jetbin < njetbin) ? Form("/%djet", _jetbin) : "";
@@ -422,11 +445,8 @@ Int_t SetParameters(Int_t cut, Int_t jetbin)
   _firstchannel = (_analysis.EqualTo("WZ")) ? eee : ee;
   _lastchannel  = (_analysis.EqualTo("WZ")) ? lll : ll;
 
-  if (_batch)
-    {
-      if (_savepdf) MakeOutputDirectory("pdf");
-      if (_savepng) MakeOutputDirectory("png");
-    }
+  if (_savepdf) MakeOutputDirectory("pdf");
+  if (_savepng) MakeOutputDirectory("png");
 
   sprocess[Data]      = "01_Data";
   sprocess[WZ]        = "02_WZ";
@@ -493,8 +513,8 @@ Int_t ReadInputFiles()
       {
 	printf("\n");
 	printf(" [ReadInputFiles] Something went wrong reading a test histogram.\n\n");
-	printf(" \t Option1: the problem is in the input file %s.\n", fname.Data());
-	printf(" \t Option2: the problem is in the test histogram %s.\n", hname.Data());
+	printf(" \t Option1: the problem is in the input file %s\n", fname.Data());
+	printf(" \t Option2: the problem is in the test histogram %s\n", hname.Data());
 	printf("\n");
 	
 	return -1;
