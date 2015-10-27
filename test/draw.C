@@ -105,8 +105,8 @@ void DrawChannels()
 
     if (_analysis.EqualTo("WW"))
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, linY, true, 40, 140);
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, logY, true, 40, 140);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, linY, true, 50, 130);
+	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, logY, true, 50, 130);
       }
     else
       {
