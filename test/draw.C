@@ -260,7 +260,7 @@ void DrawHistogram(TString  hname,
   hist[Data]->Draw("ep,same");
 
   
-  // Compare data and MC
+  // Compare data and MC yields for m2l > 50 GeV
   //----------------------------------------------------------------------------
   if (cname.Contains("m2l") && !cname.Contains("jet/"))
     {
