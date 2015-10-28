@@ -328,16 +328,17 @@ void AnalysisWZ::Loop(TString filename,
 
     // Make Z and W candidates
     //--------------------------------------------------------------------------
+    _pt2l = -999;
+    _m2l  = -999;
+    _m3l  = -999;
+
     if (_channel < eee)
       {
 	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
 	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
-	_m3l  = 999;
       }
     else
       {
-	_m2l = 999;
-
 	for (UInt_t i=0; i<_nlepton; i++) {
 
 	  for (UInt_t j=i+1; j<_nlepton; j++) {
@@ -662,6 +663,8 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,     _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,       _event_weight);
   h_pfType1Met[ichannel][icut][ijet]->Fill(pfType1Met, _event_weight);
+
+  //  if (_m3l > 0)  // We can play with W and Z
 
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
