@@ -43,6 +43,7 @@ Lepton              ZLepton1;
 Lepton              ZLepton2;
 
 TString             _sample;
+bool                _hasZ;
 bool                _ismc;
 float               _event_weight;
 float               _ht;
@@ -79,9 +80,14 @@ TH1D*               h_nbjet     [nchannel][ncut][njetbin+1];
 TH1D*               h_nvtx      [nchannel][ncut][njetbin+1];
 TH1D*               h_pfType1Met[nchannel][ncut][njetbin+1];
 
+
+// 3-lepton histograms
+//------------------------------------------------------------------------------
+TH1D*               h_m3l[nchannel][ncut][njetbin+1];
+
+
 // WZ histograms
 //------------------------------------------------------------------------------
-TH1D*               h_m3l         [nchannel][ncut][njetbin+1];
 TH1D*               h_zl1pt       [nchannel][ncut][njetbin+1];
 TH1D*               h_zl2pt       [nchannel][ncut][njetbin+1];
 TH1D*               h_wlpt        [nchannel][ncut][njetbin+1];
@@ -158,6 +164,9 @@ void AnalysisWZ::Loop(TString filename,
 
 	TString suffix = "_" + schannel[i];
 
+
+	// Common histograms
+	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",   3, 0,   3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",   3, 0,   3);
 	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 400, 0, 400);
@@ -167,16 +176,23 @@ void AnalysisWZ::Loop(TString filename,
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",  40, 0,  40);
 	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "", 200, 0, 200);
 
-	h_m3l         [i][j][k] = new TH1D("h_m3l"          + suffix, "", 4000,  0, 4000);
-	h_zl1pt       [i][j][k] = new TH1D("h_zl1pt"        + suffix, "",  200,  0,  200);
-	h_zl2pt       [i][j][k] = new TH1D("h_zl2pt"        + suffix, "",  200,  0,  200);
-	h_wlpt        [i][j][k] = new TH1D("h_wlpt"         + suffix, "",  200,  0,  200);
-	h_zl1eta      [i][j][k] = new TH1D("h_zl1eta"       + suffix, "",  120, -3,    3);
-	h_zl2eta      [i][j][k] = new TH1D("h_zl2eta"       + suffix, "",  120, -3,    3);
-	h_wleta       [i][j][k] = new TH1D("h_wleta"        + suffix, "",  120, -3,    3);
-	h_wlzl1_deltar[i][j][k] = new TH1D("h_wlzl1_deltar" + suffix, "",  300,  0,    6);
-	h_wlzl2_deltar[i][j][k] = new TH1D("h_wlzl2_deltar" + suffix, "",  300,  0,    6);
-	h_wlzl_deltar [i][j][k] = new TH1D("h_wlzl_deltar"  + suffix, "",  300,  0,    6);
+
+	// 3-lepton histograms
+	//----------------------------------------------------------------------
+	h_m3l[i][j][k] = new TH1D("h_m3l" + suffix, "", 4000, 0, 4000);
+
+
+	// WZ histograms
+	//----------------------------------------------------------------------
+	h_zl1pt       [i][j][k] = new TH1D("h_zl1pt"        + suffix, "", 200,  0, 200);
+	h_zl2pt       [i][j][k] = new TH1D("h_zl2pt"        + suffix, "", 200,  0, 200);
+	h_wlpt        [i][j][k] = new TH1D("h_wlpt"         + suffix, "", 200,  0, 200);
+	h_zl1eta      [i][j][k] = new TH1D("h_zl1eta"       + suffix, "", 120, -3,   3);
+	h_zl2eta      [i][j][k] = new TH1D("h_zl2eta"       + suffix, "", 120, -3,   3);
+	h_wleta       [i][j][k] = new TH1D("h_wleta"        + suffix, "", 120, -3,   3);
+	h_wlzl1_deltar[i][j][k] = new TH1D("h_wlzl1_deltar" + suffix, "", 100,  0,   5);
+	h_wlzl2_deltar[i][j][k] = new TH1D("h_wlzl2_deltar" + suffix, "", 100,  0,   5);
+	h_wlzl_deltar [i][j][k] = new TH1D("h_wlzl_deltar"  + suffix, "", 100,  0,   5);
       }
     }
   }
@@ -243,7 +259,7 @@ void AnalysisWZ::Loop(TString filename,
 
 	// Make GEN Z mass
 	//----------------------------------------------------------------------
-	float mZ = 999;
+	float mZ = -999;
 
 	for (UInt_t i=0; i<ngenlepton; i++) {
 	  
@@ -260,7 +276,7 @@ void AnalysisWZ::Loop(TString filename,
 	  }
 	}
 
-	if (mZ < 999.) h_gen_mZ->Fill(mZ);
+	if (mZ > 0) h_gen_mZ->Fill(mZ);
       }
 
 
@@ -353,17 +369,13 @@ void AnalysisWZ::Loop(TString filename,
 
     // Make Z and W candidates
     //--------------------------------------------------------------------------
-    _pt2l = -999;
-    _m2l  = -999;
-    _m3l  = -999;
+    _hasZ = false;
+    
+    if (_channel > ll)
+      {
+	_m2l = -999;
+	_m3l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
 
-    if (_channel < eee)
-      {
-	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
-	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
-      }
-    else
-      {
 	for (UInt_t i=0; i<_nlepton; i++) {
 
 	  for (UInt_t j=i+1; j<_nlepton; j++) {
@@ -373,6 +385,8 @@ void AnalysisWZ::Loop(TString filename,
 	    float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
 
 	    if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
+
+	      _hasZ = true;
 
 	      _m2l = inv_mass;
 
@@ -389,12 +403,19 @@ void AnalysisWZ::Loop(TString filename,
 	    }
 	  }
 	}
-
-	_pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-	_m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
       }
-    
-    
+
+    if (_hasZ)
+      {
+	_pt2l = (ZLepton1.v + ZLepton2.v).Pt();
+      }
+    else
+      {
+	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
+	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
+      }
+
+
     // Loop over jets
     //--------------------------------------------------------------------------
     AnalysisJets.clear();
@@ -678,9 +699,10 @@ void AnalysisWZ::LevelHistograms(int icut)
 //------------------------------------------------------------------------------
 void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
 {
+  // Common histograms
+  //----------------------------------------------------------------------------
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
-  h_counterLum[ichannel][icut][ijet]->Fill(1, _event_weight);
-
+  h_counterLum[ichannel][icut][ijet]->Fill(1,          _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,        _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,       _event_weight);
   h_njet      [ichannel][icut][ijet]->Fill(_njet,      _event_weight);
@@ -688,13 +710,23 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,       _event_weight);
   h_pfType1Met[ichannel][icut][ijet]->Fill(pfType1Met, _event_weight);
 
-  if (_m3l > 0)
+
+  // 3-lepton histograms
+  //----------------------------------------------------------------------------
+  if (ichannel > ll)
+    {
+      h_m3l[ichannel][icut][ijet]->Fill(_m3l, _event_weight);
+    }
+
+
+  // WZ histograms
+  //----------------------------------------------------------------------------
+  if (_hasZ)
     {
       float wlzl1dr = WLepton.v.DeltaR(ZLepton1.v);
       float wlzl2dr = WLepton.v.DeltaR(ZLepton2.v);
       float wlzldr  = min(wlzl1dr, wlzl2dr);
 
-      h_m3l         [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
       h_zl1pt       [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
       h_zl2pt       [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
       h_wlpt        [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
