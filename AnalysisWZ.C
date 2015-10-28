@@ -67,15 +67,30 @@ TFile*              root_output;
 TH1D*               h_gen_mZ;
 TH1D*               h_ntight;
 
+
+// Common histograms
+//------------------------------------------------------------------------------
 TH1D*               h_counterRaw[nchannel][ncut][njetbin+1];
 TH1D*               h_counterLum[nchannel][ncut][njetbin+1];
 TH1D*               h_ht        [nchannel][ncut][njetbin+1];
 TH1D*               h_m2l       [nchannel][ncut][njetbin+1];
-TH1D*               h_m3l       [nchannel][ncut][njetbin+1];
 TH1D*               h_njet      [nchannel][ncut][njetbin+1];
 TH1D*               h_nbjet     [nchannel][ncut][njetbin+1];
 TH1D*               h_nvtx      [nchannel][ncut][njetbin+1];
 TH1D*               h_pfType1Met[nchannel][ncut][njetbin+1];
+
+// WZ histograms
+//------------------------------------------------------------------------------
+TH1D*               h_m3l         [nchannel][ncut][njetbin+1];
+TH1D*               h_zl1pt       [nchannel][ncut][njetbin+1];
+TH1D*               h_zl2pt       [nchannel][ncut][njetbin+1];
+TH1D*               h_wlpt        [nchannel][ncut][njetbin+1];
+TH1D*               h_zl1eta      [nchannel][ncut][njetbin+1];
+TH1D*               h_zl2eta      [nchannel][ncut][njetbin+1];
+TH1D*               h_wleta       [nchannel][ncut][njetbin+1];
+TH1D*               h_wlzl1_deltar[nchannel][ncut][njetbin+1];
+TH1D*               h_wlzl2_deltar[nchannel][ncut][njetbin+1];
+TH1D*               h_wlzl_deltar [nchannel][ncut][njetbin+1];
 
 
 //------------------------------------------------------------------------------
@@ -143,15 +158,25 @@ void AnalysisWZ::Loop(TString filename,
 
 	TString suffix = "_" + schannel[i];
 
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
-	h_m3l       [i][j][k] = new TH1D("h_m3l"        + suffix, "", 4000, 0, 4000);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
-	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "",  200, 0,  200);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",   3, 0,   3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",   3, 0,   3);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 400, 0, 400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 400, 0, 200);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",   4, 0,   4);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",   4, 0,   4);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",  40, 0,  40);
+	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "", 200, 0, 200);
+
+	h_m3l         [i][j][k] = new TH1D("h_m3l"          + suffix, "", 4000,  0, 4000);
+	h_zl1pt       [i][j][k] = new TH1D("h_zl1pt"        + suffix, "",  200,  0,  200);
+	h_zl2pt       [i][j][k] = new TH1D("h_zl2pt"        + suffix, "",  200,  0,  200);
+	h_wlpt        [i][j][k] = new TH1D("h_wlpt"         + suffix, "",  200,  0,  200);
+	h_zl1eta      [i][j][k] = new TH1D("h_zl1eta"       + suffix, "",  120, -3,    3);
+	h_zl2eta      [i][j][k] = new TH1D("h_zl2eta"       + suffix, "",  120, -3,    3);
+	h_wleta       [i][j][k] = new TH1D("h_wleta"        + suffix, "",  120, -3,    3);
+	h_wlzl1_deltar[i][j][k] = new TH1D("h_wlzl1_deltar" + suffix, "",  300,  0,    6);
+	h_wlzl2_deltar[i][j][k] = new TH1D("h_wlzl2_deltar" + suffix, "",  300,  0,    6);
+	h_wlzl_deltar [i][j][k] = new TH1D("h_wlzl_deltar"  + suffix, "",  300,  0,    6);
       }
     }
   }
@@ -658,13 +683,28 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
 
   h_ht        [ichannel][icut][ijet]->Fill(_ht,        _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,       _event_weight);
-  h_m3l       [ichannel][icut][ijet]->Fill(_m3l,       _event_weight);
   h_njet      [ichannel][icut][ijet]->Fill(_njet,      _event_weight);
   h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,     _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,       _event_weight);
   h_pfType1Met[ichannel][icut][ijet]->Fill(pfType1Met, _event_weight);
 
-  //  if (_m3l > 0)  // We can play with W and Z
+  if (_m3l > 0)
+    {
+      float wlzl1dr = WLepton.v.DeltaR(ZLepton1.v);
+      float wlzl2dr = WLepton.v.DeltaR(ZLepton2.v);
+      float wlzldr  = min(wlzl1dr, wlzl2dr);
+
+      h_m3l         [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
+      h_zl1pt       [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
+      h_zl2pt       [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
+      h_wlpt        [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
+      h_zl1eta      [ichannel][icut][ijet]->Fill(ZLepton1.v.Eta(), _event_weight);
+      h_zl2eta      [ichannel][icut][ijet]->Fill(ZLepton2.v.Eta(), _event_weight);
+      h_wleta       [ichannel][icut][ijet]->Fill(WLepton.v.Eta(),  _event_weight);
+      h_wlzl1_deltar[ichannel][icut][ijet]->Fill(wlzl1dr,          _event_weight);
+      h_wlzl2_deltar[ichannel][icut][ijet]->Fill(wlzl2dr,          _event_weight);
+      h_wlzl_deltar [ichannel][icut][ijet]->Fill(wlzldr,           _event_weight);
+    }
 
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
