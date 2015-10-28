@@ -103,23 +103,28 @@ void DrawChannels()
 
     if (!_batch && channel != _lastchannel) continue;
 
-    if (_analysis.EqualTo("WW"))
+    //    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, logY)
+    //    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, linY)
+    //    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", _drawratio, linY);
+    //    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  _drawratio, linY);
+    //    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  _drawratio, linY);
+    //    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", _drawratio, linY);
+    //    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", _drawratio, logY);
+    //    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", _drawratio, logY);
+    
+    if (_cut > WZ00_Exactly3Leptons)
       {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, linY, true, 50, 130);
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 5, 0, "GeV", _drawratio, logY, true, 50, 130);
+	DrawHistogram(GetName("h_m3l",          channel), "m_{#font[12]{3l}}",                    5, 0, "GeV",  _drawratio, linY);
+	DrawHistogram(GetName("h_zl1pt",        channel), "Z leading lepton p_{T}",              -1, 5, "GeV",  _drawratio, linY);
+	DrawHistogram(GetName("h_zl2pt",        channel), "Z trailing lepton p_{T}",             -1, 5, "GeV",  _drawratio, linY);
+	DrawHistogram(GetName("h_wlpt",         channel), "W lepton p_{T}",                      -1, 5, "GeV",  _drawratio, linY);
+	DrawHistogram(GetName("h_zl1eta",       channel), "Z leading lepton #eta",               -1, 5, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_zl2eta",       channel), "Z trailing lepton #eta",              -1, 5, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wleta",        channel), "W lepton #eta",                       -1, 5, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl1_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", -1, 5, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl2_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", -1, 5, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl_deltar",  channel), "#DeltaR(W lepton, Z leading lepton)", -1, 5, "NULL", _drawratio, linY);
       }
-    else
-      {
-	DrawHistogram(GetName("h_m2l", channel), "m_{#font[12]{ll}}", 4, 0, "GeV", _drawratio, linY, true, 60, 120);
-	DrawHistogram(GetName("h_m3l", channel), "m_{#font[12]{3l}}", 5, 0, "GeV", _drawratio, linY, true, 60, 120);
-      }
-
-    DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", _drawratio, linY);
-    DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  _drawratio, linY);
-    DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  _drawratio, linY);
-    DrawHistogram(GetName("h_nvtx",       channel), "number of vertices",                      -1, 0, "NULL", _drawratio, linY);
-    DrawHistogram(GetName("h_njet",       channel), "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", _drawratio, logY);
-    DrawHistogram(GetName("h_nbjet",      channel), "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", _drawratio, logY);
   }
 }
 
