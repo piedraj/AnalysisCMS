@@ -118,7 +118,7 @@ class AnalysisWZ : public AnalysisBase
   ofstream               txt_events_eem;  // only WZTo3LNu
   ofstream               txt_events_emm;  // only WZTo3LNu
   ofstream               txt_events_mmm;  // only WZTo3LNu
-  ofstream               txt_event_dump;  // only WZTo3LNu_synchro
+  ofstream               txt_event_dump;  // only WZ_synchro
   TFile*                 root_output;
   
 
