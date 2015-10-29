@@ -35,6 +35,7 @@ struct Lepton
   int            index;
   int            type;  // Loose, Tight
   int            flavour;
+  float          iso;
   float          dxy;   // Tighter IP when requiring fabs(dxy) < 0.02
   float          dz;    // Tighter IP when requiring fabs(dz)  < 0.10
   TLorentzVector v;
@@ -84,6 +85,8 @@ class AnalysisWZ : public AnalysisBase
 			    TString era,
 			    float   luminosity);
 
+  void    EventDump        ();
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -110,11 +113,12 @@ class AnalysisWZ : public AnalysisBase
   unsigned int           _nbjet;
   unsigned int           _jetbin;
   
-  ofstream               txt_summary;
-  ofstream               txt_events_eee;
-  ofstream               txt_events_eem;
-  ofstream               txt_events_emm;
-  ofstream               txt_events_mmm;
+  ofstream               txt_summary;     // all samples
+  ofstream               txt_events_eee;  // only WZTo3LNu
+  ofstream               txt_events_eem;  // only WZTo3LNu
+  ofstream               txt_events_emm;  // only WZTo3LNu
+  ofstream               txt_events_mmm;  // only WZTo3LNu
+  ofstream               txt_event_dump;  // only WZTo3LNu_synchro
   TFile*                 root_output;
   
 

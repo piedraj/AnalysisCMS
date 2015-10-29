@@ -42,6 +42,11 @@ void AnalysisWZ::Loop(TString filename,
       txt_events_mmm.open("txt/" + era + "/" + _sample + "_mmm.txt");
     }
 
+  if (_sample.EqualTo("WZ_synchro"))
+    {
+      txt_event_dump.open("txt/" + era + "/" + _sample + "_event_dump.txt");
+    }
+
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -204,8 +209,16 @@ void AnalysisWZ::Loop(TString filename,
       
       float mass = -999;
 
-      if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
-      else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
+      if (abs(lep.flavour) == ELECTRON_FLAVOUR)
+	{
+	  mass    = ELECTRON_MASS;
+	  lep.iso = ElectronIsolation(i);
+	}
+      else if (abs(lep.flavour) == MUON_FLAVOUR)
+	{
+	  mass    = MUON_MASS;
+	  lep.iso = MuonIsolation(i);
+	}
 
       if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;
 
@@ -410,6 +423,8 @@ void AnalysisWZ::Loop(TString filename,
       }
     else
       {
+	if (_sample.EqualTo("WZ_synchro")) EventDump();
+
 	LevelHistograms(WZ00_Exactly3Leptons);
     
 	if (_m2l <  60.) continue;
@@ -445,6 +460,8 @@ void AnalysisWZ::Loop(TString filename,
       txt_events_emm.close();
       txt_events_mmm.close();
     }
+
+  if (_sample.EqualTo("WZ_synchro")) txt_event_dump.close();
 
 
   //----------------------------------------------------------------------------
@@ -760,4 +777,36 @@ void AnalysisWZ::ApplyWeights(TString sample,
   _event_weight *= signed_weight;
 
   return;
+}
+
+
+//------------------------------------------------------------------------------
+// EventDump
+//------------------------------------------------------------------------------
+void AnalysisWZ::EventDump()
+{
+  for (int i=0; i<_nlepton; i++)
+    {
+      int index = AnalysisLeptons[i].index;
+
+      txt_event_dump << Form("%u:%d:%f:%f:%f:%d",
+			     event,
+			     AnalysisLeptons[i].flavour,
+			     AnalysisLeptons[i].v.Pt(),
+			     AnalysisLeptons[i].v.Eta(),
+			     AnalysisLeptons[i].iso,
+			     IsTightLepton(index));
+
+      if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
+	{
+	  txt_event_dump << Form(":%f:%.0f:%f:%f:%.0f",
+				 std_vector_electron_scEta->at(index),
+				 std_vector_electron_passConversionVeto->at(index),
+				 std_vector_electron_d0->at(index),
+				 std_vector_electron_dz->at(index),
+				 std_vector_electron_expectedMissingInnerHits->at(index));
+	}
+
+      txt_event_dump << Form("\n");
+    }
 }
