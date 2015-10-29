@@ -34,6 +34,7 @@ enum {linY, logY};
 
 // Settings
 //------------------------------------------------------------------------------
+Bool_t          _debug     = kFALSE;
 Bool_t          _drawratio = kTRUE;
 Bool_t          _savepdf   = kFALSE;
 Bool_t          _savepng   = kTRUE;
@@ -106,8 +107,8 @@ void DrawChannels()
 
     // Common histograms
     //--------------------------------------------------------------------------
-    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, logY);
-    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, linY);
+    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, logY, true, 60, 120);
+    DrawHistogram(GetName("h_m2l",        channel), "m_{#font[12]{ll}}",                        5, 0, "GeV",  _drawratio, linY, true, 60, 120);
     DrawHistogram(GetName("h_counterLum", channel), "yield",                                   -1, 0, "NULL", _drawratio, linY);
     DrawHistogram(GetName("h_pfType1Met", channel), "E_{T}^{miss}",                             5, 0, "GeV",  _drawratio, linY);
     DrawHistogram(GetName("h_ht",         channel), "H_{T}",                                    5, 0, "GeV",  _drawratio, linY);
@@ -279,7 +280,7 @@ void DrawHistogram(TString  hname,
   
   // Compare data and MC yields for m2l > 50 GeV
   //----------------------------------------------------------------------------
-  if (cname.Contains("m2l") && !cname.Contains("jet/"))
+  if (_debug && cname.Contains("m2l") && !cname.Contains("jet/"))
     {
       int firstBin = allmc->FindBin(50.);
       int lastBin  = allmc->GetNbinsX() + 1;

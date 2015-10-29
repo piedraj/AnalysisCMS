@@ -1,102 +1,5 @@
 #define AnalysisWZ_cxx
 #include "AnalysisWZ.h"
-#include "Constants.h"
-
-
-// verbosity = 0 (silent)  doesn't print anything
-// verbosity > 0 (default) prints the input values and "." every <interval> events
-// verbosity > 1 (debug)
-const int verbosity = 1;
-const int interval  = 10000;
-
-
-enum {Loose, Tight, Gen};
-
-struct Lepton
-{
-  int            index;
-  int            type;  // Loose, Tight, Gen
-  int            flavour;
-  float          dxy;   // Tighter IP when requiring fabs(dxy) < 0.02
-  float          dz;    // Tighter IP when requiring fabs(dz)  < 0.10
-  TLorentzVector v;
-};
-
-struct Jet
-{
-  int            index;
-  float          csvv2ivf;
-  TLorentzVector v;
-};
-
-
-//==============================================================================
-//
-// Data members
-//
-//==============================================================================
-std::vector<Jet>    AnalysisJets;
-std::vector<Lepton> AnalysisLeptons;
-std::vector<Lepton> GenLeptons;
-Lepton              WLepton;
-Lepton              ZLepton1;
-Lepton              ZLepton2;
-
-TString             _sample;
-bool                _hasZ;
-bool                _ismc;
-float               _event_weight;
-float               _ht;
-float               _pt2l;
-float               _m2l;
-float               _m3l;
-int                 _channel;
-unsigned int        _nelectron;
-unsigned int        _nlepton;
-unsigned int        _ntight;
-unsigned int        _njet;
-unsigned int        _nbjet;
-unsigned int        _jetbin;
-
-ofstream            txt_summary;
-ofstream            txt_events_eee;
-ofstream            txt_events_eem;
-ofstream            txt_events_emm;
-ofstream            txt_events_mmm;
-TFile*              root_output;
-
-TH1D*               h_gen_mZ;
-TH1D*               h_ntight;
-
-
-// Common histograms
-//------------------------------------------------------------------------------
-TH1D*               h_counterRaw[nchannel][ncut][njetbin+1];
-TH1D*               h_counterLum[nchannel][ncut][njetbin+1];
-TH1D*               h_ht        [nchannel][ncut][njetbin+1];
-TH1D*               h_m2l       [nchannel][ncut][njetbin+1];
-TH1D*               h_njet      [nchannel][ncut][njetbin+1];
-TH1D*               h_nbjet     [nchannel][ncut][njetbin+1];
-TH1D*               h_nvtx      [nchannel][ncut][njetbin+1];
-TH1D*               h_pfType1Met[nchannel][ncut][njetbin+1];
-
-
-// 3-lepton histograms
-//------------------------------------------------------------------------------
-TH1D*               h_m3l[nchannel][ncut][njetbin+1];
-
-
-// WZ histograms
-//------------------------------------------------------------------------------
-TH1D*               h_zl1pt       [nchannel][ncut][njetbin+1];
-TH1D*               h_zl2pt       [nchannel][ncut][njetbin+1];
-TH1D*               h_wlpt        [nchannel][ncut][njetbin+1];
-TH1D*               h_zl1eta      [nchannel][ncut][njetbin+1];
-TH1D*               h_zl2eta      [nchannel][ncut][njetbin+1];
-TH1D*               h_wleta       [nchannel][ncut][njetbin+1];
-TH1D*               h_wlzl1_deltar[nchannel][ncut][njetbin+1];
-TH1D*               h_wlzl2_deltar[nchannel][ncut][njetbin+1];
-TH1D*               h_wlzl_deltar [nchannel][ncut][njetbin+1];
 
 
 //------------------------------------------------------------------------------
@@ -229,13 +132,10 @@ void AnalysisWZ::Loop(TString filename,
 	  float eta = std_vector_leptonGen_eta->at(i);
 	  float phi = std_vector_leptonGen_phi->at(i);
 
-	  Lepton lep;
+	  GenLepton lep;
 
 	  lep.index   = i;
-	  lep.type    = Gen;
 	  lep.flavour = std_vector_leptonGen_pid->at(i);
-	  lep.dxy     = 0;
-	  lep.dz      = 0;
 	  
 	  float mass = -999;
 	  
@@ -737,6 +637,7 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
       h_wlzl2_deltar[ichannel][icut][ijet]->Fill(wlzl2dr,          _event_weight);
       h_wlzl_deltar [ichannel][icut][ijet]->Fill(wlzldr,           _event_weight);
     }
+
 
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
