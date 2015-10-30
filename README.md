@@ -98,5 +98,6 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://piedra.web.cern.ch/piedra/png/
+    https://amanjong.web.cern.ch/amanjong/png/
     https://cprieels.web.cern.ch/cprieels/png/
+    https://piedra.web.cern.ch/piedra/png/

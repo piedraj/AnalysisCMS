@@ -2,8 +2,8 @@
 
 shopt -s expand_aliases
 
- alias grepv='grep latino'
-#alias grepv='grep -v -e QCD -e GluGluH -e HToWW -e WJetsToLNu_HT -e WZJets -e ttH'
+#alias grepv='grep latino'
+alias grepv='grep -v -e ZZTo2L2Nu -e QCD'
 #alias grepv='grep -e WWTo2L2Nu_NLL -e TTJets'
 
 if [ $# -lt 2 ]; then
