@@ -131,12 +131,12 @@ void DrawChannels()
 	DrawHistogram(GetName("h_zl1pt",        channel), "Z leading lepton p_{T}",              5, 0, "GeV",  _drawratio, linY, true, 0, 150);
 	DrawHistogram(GetName("h_zl2pt",        channel), "Z trailing lepton p_{T}",             5, 0, "GeV",  _drawratio, linY, true, 0, 150);
 	DrawHistogram(GetName("h_wlpt",         channel), "W lepton p_{T}",                      5, 0, "GeV",  _drawratio, linY, true, 0, 150);
-	DrawHistogram(GetName("h_zl1eta",       channel), "Z leading lepton #eta",               6, 1, "NULL", _drawratio, linY);
-	DrawHistogram(GetName("h_zl2eta",       channel), "Z trailing lepton #eta",              6, 1, "NULL", _drawratio, linY);
-	DrawHistogram(GetName("h_wleta",        channel), "W lepton #eta",                       6, 1, "NULL", _drawratio, linY);
-	DrawHistogram(GetName("h_wlzl1_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", 6, 1, "NULL", _drawratio, linY);
-	DrawHistogram(GetName("h_wlzl2_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", 6, 1, "NULL", _drawratio, linY);
-	DrawHistogram(GetName("h_wlzl_deltar",  channel), "#DeltaR(W lepton, Z leading lepton)", 6, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_zl1eta",       channel), "Z leading lepton #eta",               5, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_zl2eta",       channel), "Z trailing lepton #eta",              5, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wleta",        channel), "W lepton #eta",                       5, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl1_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", 5, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl2_deltar", channel), "#DeltaR(W lepton, Z leading lepton)", 5, 1, "NULL", _drawratio, linY);
+	DrawHistogram(GetName("h_wlzl_deltar",  channel), "#DeltaR(W lepton, Z leading lepton)", 5, 1, "NULL", _drawratio, linY);
       }
   }
 }
