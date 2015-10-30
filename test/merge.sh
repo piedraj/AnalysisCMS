@@ -16,7 +16,7 @@ if [[ $FOLDER == *"50ns"* ]] ; then
 
     hadd -f -k 01_Data.root      SingleElectron.root SingleMuon.root DoubleEG.root DoubleMuon.root MuonEG.root
     hadd -f -k 02_WZ.root        WZ.root
-    hadd -f -k 03_ZZ.root        ZZ.root ZZTo2L2Nu.root
+    hadd -f -k 03_ZZ.root        ZZ.root
     hadd -f -k 04_Top.root       TTJets.root
     hadd -f -k 05_SingleTop.root ST_t-channel.root ST_tW_antitop.root ST_tW_top.root
     hadd -f -k 06_WW.root        WWTo2L2Nu_NLL.root
