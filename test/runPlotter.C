@@ -1,8 +1,7 @@
 #include "HistogramReader.h"
 
-#ifndef __CINT__
 
-int main()
+void runPlotter(TString cut)
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -19,10 +18,16 @@ int main()
   //  plotter.AddProcess("09_TTW",       " ttW",        kAzure-9);
   //  plotter.AddProcess("10_TTZ",       " ttZ",        kAzure-9);
   
-  plotter.Draw("WW00_Exactly2Leptons/h_m2l_ll",  "m_{#font[12]{ll}}",                      5, 0, "GeV", 0, true, 60, 120);
-  plotter.Draw("WW00_Exactly2Leptons/h_njet_ll", "number of jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL");
+  plotter.Draw(cut + "/h_m2l_ll",  "m_{#font[12]{ll}}",                      5, 0, "GeV", 0, true, 60, 120);
+  plotter.Draw(cut + "/h_njet_ll", "number of jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL");
+}
+
+
+# ifndef __CINT__
+int main(int argc, char ** argv)
+{
+  runPlotter(argv[1]);
 
   return 0;
 }
-
-#endif
+# endif
