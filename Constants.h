@@ -2,6 +2,9 @@
 #define MYLIB_CONSTANTS_H 1
 
 
+#include "TString.h"
+
+
 const float lumi50ns_fb = 0.04003;
 const float lumi25ns_fb = 0.01547;
 
