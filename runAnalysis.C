@@ -1,4 +1,4 @@
-#include "AnalysisWZ.C"
+#include "AnalysisCMS.C"
 
 
 void runAnalysis(TString filename, TString era)
@@ -7,7 +7,7 @@ void runAnalysis(TString filename, TString era)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  AnalysisWZ awz(latino);
+  AnalysisCMS awz(latino);
 
   float luminosity = (era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
 

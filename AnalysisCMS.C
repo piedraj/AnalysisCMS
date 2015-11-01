@@ -34,14 +34,6 @@ void AnalysisCMS::Loop(TString filename,
 
   root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
 
-  if (_sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
-    {
-      txt_events_eee.open("txt/" + era + "/" + _sample + "_eee.txt");
-      txt_events_eem.open("txt/" + era + "/" + _sample + "_eem.txt");
-      txt_events_emm.open("txt/" + era + "/" + _sample + "_emm.txt");
-      txt_events_mmm.open("txt/" + era + "/" + _sample + "_mmm.txt");
-    }
-
   if (_sample.EqualTo("WZ_synchro"))
     {
       txt_event_dump.open("txt/" + era + "/" + _sample + "_event_dump.txt");
@@ -53,6 +45,7 @@ void AnalysisCMS::Loop(TString filename,
   TH1::SetDefaultSumw2();
 
   for (int j=0; j<ncut; j++) {
+
     for (int k=0; k<=njetbin; k++) {
 
       TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
@@ -124,131 +117,12 @@ void AnalysisCMS::Loop(TString filename,
     GetJets();
 
 
-    // Count the number of tight leptons
-    //--------------------------------------------------------------------------
-    _ntight = 0;
-
-    for (int i=0; i<_nlepton; i++)
-      {
-	if (AnalysisLeptons[i].type == Tight) _ntight++;
-      }
-
-
-    // Count the number of electrons
-    //--------------------------------------------------------------------------
-    _nelectron = 0;
-
-    for (int i=0; i<_nlepton; i++)
-      {
-	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
-      }
-
-
-    // Define the channel
-    //--------------------------------------------------------------------------
-    _channel = -1;
-
-    if (_nlepton == 2 && _ntight == 2)
-      {
-	if      (_nelectron == 2) _channel = ee;
-	else if (_nelectron == 1) _channel = em;
-	else if (_nelectron == 0) _channel = mm;
-      }
-    else if (_nlepton == 3 && _ntight == 3)
-      {
-	if      (_nelectron == 3) _channel = eee;
-	else if (_nelectron == 2) _channel = eem;
-	else if (_nelectron == 1) _channel = emm;
-	else if (_nelectron == 0) _channel = mmm;
-      }
-
-
-    // From here we have at least two tight leptons
-    //--------------------------------------------------------------------------
-    if (_channel < 0) continue;
-
-
-    // Make Z and W candidates
-    //--------------------------------------------------------------------------
-    _hasZ = false;
-    
-    if (_channel > ll)
-      {
-	_m2l = -999;
-	_m3l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
-
-	for (UInt_t i=0; i<_nlepton; i++) {
-
-	  for (UInt_t j=i+1; j<_nlepton; j++) {
-      
-	    if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
-
-	    float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
-
-	    if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
-
-	      _hasZ = true;
-
-	      _m2l = inv_mass;
-
-	      ZLepton1 = AnalysisLeptons[i];
-	      ZLepton2 = AnalysisLeptons[j];
-	  
-	      for (UInt_t k=0; k<3; k++) {
-		
-		if (k == i) continue;
-		if (k == j) continue;
-
-		WLepton = AnalysisLeptons[k];
-	      }
-	    }
-	  }
-	}
-      }
-
-    if (_hasZ)
-      {
-	_pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-      }
-    else
-      {
-	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
-	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
-      }
-
-
-    // Count the number of b-jets
-    //--------------------------------------------------------------------------
-    _nbjet = 0;
-
-    for (int i=0; i<_njet; i++)
-      {
-	if (AnalysisJets[i].csvv2ivf > csvv2ivf_mediumWP) _nbjet++;
-      }
-
-
-    // Define the jet bin
-    //--------------------------------------------------------------------------
-    _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
-
-	
     // Compute Ht
     //--------------------------------------------------------------------------
     _ht = pfType1Met;
 
     for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
     for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
-
-
-    // For WZ synchronization
-    //--------------------------------------------------------------------------
-    if (_nlepton == 3 && _sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
-      {
-	if (_channel == eee) txt_events_eee << Form("%u:%u:%u\n", run, lumi, event);
-	if (_channel == eem) txt_events_eem << Form("%u:%u:%u\n", run, lumi, event);
-	if (_channel == emm) txt_events_emm << Form("%u:%u:%u\n", run, lumi, event);
-	if (_channel == mmm) txt_events_mmm << Form("%u:%u:%u\n", run, lumi, event);
-      }
 
 
     // Fill histograms
@@ -260,16 +134,6 @@ void AnalysisCMS::Loop(TString filename,
  
   if (verbosity > 0) printf("\n");
 
-
-  // For synchronization
-  //----------------------------------------------------------------------------
-  if (_nlepton == 3 && _sample.EqualTo("WZTo3LNu") && era.EqualTo("25ns"))
-    {
-      txt_events_eee.close();
-      txt_events_eem.close();
-      txt_events_emm.close();
-      txt_events_mmm.close();
-    }
 
   if (_sample.EqualTo("WZ_synchro")) txt_event_dump.close();
 
@@ -675,6 +539,26 @@ void AnalysisCMS::GetLeptons()
   }
 
   _nlepton = AnalysisLeptons.size();
+
+
+  // Count the number of tight leptons
+  //----------------------------------------------------------------------------
+  _ntight = 0;
+
+  for (int i=0; i<_nlepton; i++)
+    {
+      if (AnalysisLeptons[i].type == Tight) _ntight++;
+    }
+
+
+  // Count the number of electrons
+  //----------------------------------------------------------------------------
+  _nelectron = 0;
+
+  for (int i=0; i<_nlepton; i++)
+    {
+      if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    }
 }
 
 
@@ -720,6 +604,21 @@ void AnalysisCMS::GetJets()
   }
 
   _njet = AnalysisJets.size();
+
+
+  // Count the number of b-jets
+  //----------------------------------------------------------------------------
+  _nbjet = 0;
+
+  for (int i=0; i<_njet; i++)
+    {
+      if (AnalysisJets[i].csvv2ivf > csvv2ivf_mediumWP) _nbjet++;
+    }
+
+
+  // Define the jet bin
+  //----------------------------------------------------------------------------
+  _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 }
 
 
@@ -729,7 +628,18 @@ void AnalysisCMS::GetJets()
 void AnalysisCMS::AnalysisWW()
 {
   if (_nlepton != 2) return;
+  if (_ntight  != 2) return;
 
+  if      (_nelectron == 2) _channel = ee;
+  else if (_nelectron == 1) _channel = em;
+  else if (_nelectron == 0) _channel = mm;
+
+  _m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
+  _pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
+
+
+  // WW selection
+  //----------------------------------------------------------------------------
   bool pass = true;
 
   pass &= (AnalysisLeptons[0].v.Pt() > 20.);
@@ -758,7 +668,63 @@ void AnalysisCMS::AnalysisWW()
 void AnalysisCMS::AnalysisWZ()
 {
   if (_nlepton != 3) return;
+  if (_ntight  != 3) return;
 
+  if      (_nelectron == 3) _channel = eee;
+  else if (_nelectron == 2) _channel = eem;
+  else if (_nelectron == 1) _channel = emm;
+  else if (_nelectron == 0) _channel = mmm;
+
+  _m3l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
+
+
+  // Make Z and W candidates
+  //----------------------------------------------------------------------------
+  _hasZ = false;
+    
+  _m2l = -999;
+
+  for (UInt_t i=0; i<_nlepton; i++) {
+    
+    for (UInt_t j=i+1; j<_nlepton; j++) {
+      
+      if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
+      
+      float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
+      
+      if (fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
+	
+	_hasZ = true;
+
+	_m2l = inv_mass;
+
+	ZLepton1 = AnalysisLeptons[i];
+	ZLepton2 = AnalysisLeptons[j];
+	
+	for (UInt_t k=0; k<3; k++) {
+	  
+	  if (k == i) continue;
+	  if (k == j) continue;
+
+	  WLepton = AnalysisLeptons[k];
+	}
+      }
+    }
+  }
+  
+  if (_hasZ)
+    {
+      _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
+    }
+  else
+    {
+      _m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
+      _pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
+    }
+
+
+  // WZ selection
+  //----------------------------------------------------------------------------
   bool pass = true;
 
   if (_sample.EqualTo("WZ_synchro")) EventDump();

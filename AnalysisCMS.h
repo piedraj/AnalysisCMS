@@ -115,10 +115,6 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _jetbin;
   
   ofstream               txt_summary;     // all samples
-  ofstream               txt_events_eee;  // only WZTo3LNu
-  ofstream               txt_events_eem;  // only WZTo3LNu
-  ofstream               txt_events_emm;  // only WZTo3LNu
-  ofstream               txt_events_mmm;  // only WZTo3LNu
   ofstream               txt_event_dump;  // only WZ_synchro
   TFile*                 root_output;
 
