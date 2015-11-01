@@ -1,0 +1,1 @@
+`root-config --cxx --cflags` -o runPlotter runPlotter.C HistogramReader.C `root-config --glibs`
