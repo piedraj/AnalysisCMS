@@ -3,7 +3,7 @@
 
 
 const TString inputdir  = "../rootfiles/50ns/";
-const TString outputdir = "png/50ns/";
+const TString outputdir = "figures/50ns/";
 
 
 void runPlotter(TString level)
@@ -28,20 +28,23 @@ void runPlotter(TString level)
 
   // Draw
   //----------------------------------------------------------------------------
-  int firstchannel = (level.Contains("WZ")) ? eee : ee;
-  int lastchannel  = (level.Contains("WZ")) ? lll : ll;
+  TString analysis = (level.Contains("WZ")) ? "WZ" : "WW";
+
+  int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
+  int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (lastchannel == lll && j != njetbin) continue;
+      if (analysis.EqualTo("WZ") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
       gSystem->mkdir(outputdir + level + jetbin, kTRUE);
 
+      TString prefix = level + jetbin + "/h_";
+
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
-	  TString prefix = level + jetbin + "/h_";
 	  TString suffix = "_" + schannel[i];
 
 
@@ -59,7 +62,7 @@ void runPlotter(TString level)
 
 	  // 3-lepton histograms
 	  //--------------------------------------------------------------------
-	  if (!level.Contains("WZ")) continue;
+	  if (analysis.EqualTo("WW")) continue;
 
 	  plotter.Draw(prefix + "m3l" + suffix, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 300);
 

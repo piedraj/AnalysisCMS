@@ -6,10 +6,12 @@
 //------------------------------------------------------------------------------
 HistogramReader::HistogramReader(TString const &inputdir,
 				 TString const &outputdir) :
-  _inputdir(inputdir),
-  _outputdir(outputdir),
+  _inputdir     (inputdir),
+  _outputdir    (outputdir),
   _luminosity_fb(0),
-  _drawratio(true)
+  _drawratio    (true),
+  _savepdf      (true),
+  _savepng      (true)
 {
   _mcfile.clear();
   _mccolor.clear();
@@ -134,6 +136,7 @@ void HistogramReader::Draw(TString hname,
 
     _mchist[i]->SetFillColor(_mccolor[i]);
     _mchist[i]->SetLineColor(_mccolor[i]);
+    _mchist[i]->SetLineWidth(0);
     _mchist[i]->SetFillStyle(1001);
 
     hstack->Add(_mchist[i]);
@@ -225,7 +228,7 @@ void HistogramReader::Draw(TString hname,
   Float_t x0     = 0.222;
   Float_t y0     = 0.834;
   Float_t xdelta = 0.0;
-  Float_t ydelta = _yoffset + 0.002;
+  Float_t ydelta = _yoffset + 0.001;
   Int_t   ny     = 0;
 
   DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, Form(" %s (%.0f)", _datalabel.Data(), Yield(_datahist)), "lp"); ny++;
@@ -308,7 +311,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   canvas->cd();
 
-  canvas->SaveAs(_outputdir + cname + ".png");
+  if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
+  if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
 }
 
 

@@ -24,7 +24,7 @@
 #include <vector>
 
 
-const Float_t _yoffset = 0.049;
+const Float_t _yoffset = 0.050;
 
 
 class HistogramReader
@@ -92,6 +92,8 @@ class HistogramReader
  private :
 
   Bool_t                _drawratio;
+  Bool_t                _savepdf;
+  Bool_t                _savepng;
   Float_t               _luminosity_fb;
   TString               _inputdir;
   TString               _outputdir;
