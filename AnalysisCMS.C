@@ -1,13 +1,13 @@
-#define AnalysisWZ_cxx
-#include "AnalysisWZ.h"
+#define AnalysisCMS_cxx
+#include "AnalysisCMS.h"
 
 
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisWZ::Loop(TString filename,
-		      TString era,
-		      float   luminosity)
+void AnalysisCMS::Loop(TString filename,
+		       TString era,
+		       float   luminosity)
 {
   GetSampleName(filename);
 
@@ -226,6 +226,11 @@ void AnalysisWZ::Loop(TString filename,
 	if (AnalysisJets[i].csvv2ivf > csvv2ivf_mediumWP) _nbjet++;
       }
 
+
+    // Define the jet bin
+    //--------------------------------------------------------------------------
+    _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
+
 	
     // Compute Ht
     //--------------------------------------------------------------------------
@@ -248,52 +253,8 @@ void AnalysisWZ::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
-
-    if (_nlepton == 2)
-      {
-	if (AnalysisLeptons[0].v.Pt() < 20.) continue;
-	if (AnalysisLeptons[1].v.Pt() < 20.) continue;
-	if (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour > 0) continue;
-
-	LevelHistograms(WW00_Exactly2Leptons);
-
-	if (pfType1Met < 20.) continue;
-	if (_m2l       < 12.) continue;
-	if (_nelectron != 1 && fabs(_m2l - Z_MASS) < 15.) continue;
-	if (_nelectron != 1 && _pt2l < 45.) continue;
-	if (_nelectron == 1 && _pt2l < 30.) continue;
-
-	LevelHistograms(WW01_ZVeto);
-
-	if (_nbjet > 0) continue;
-
-	LevelHistograms(WW02_BVeto);
-      }
-    else
-      {
-	if (_sample.EqualTo("WZ_synchro")) EventDump();
-
-	LevelHistograms(WZ00_Exactly3Leptons);
-    
-	if (_m2l <  60.) continue;
-	if (_m2l > 120.) continue;
-	if (ZLepton1.v.Pt() < 20.) continue;
-
-	LevelHistograms(WZ01_HasZ);
-
-	if (WLepton.v.DeltaR(ZLepton1.v) <  0.1) continue;
-	if (WLepton.v.DeltaR(ZLepton2.v) <  0.1) continue;
-	if (WLepton.v.Pt()               <  20.) continue;
-	if (pfType1Met                   <  30.) continue;
-	if (_m3l                         < 100.) continue;
-
-	LevelHistograms(WZ02_HasW);
-	
-	if (_nbjet > 0) continue;
-	
-	LevelHistograms(WZ03_BVeto);
-      }
+    AnalysisWW();
+    AnalysisWZ();
   }
    
  
@@ -342,7 +303,7 @@ void AnalysisWZ::Loop(TString filename,
 //------------------------------------------------------------------------------
 // IsFiducialLepton
 //------------------------------------------------------------------------------
-bool AnalysisWZ::IsFiducialLepton(int k)
+bool AnalysisCMS::IsFiducialLepton(int k)
 {
   float pt      = std_vector_lepton_pt     ->at(k);
   float eta     = std_vector_lepton_eta    ->at(k);
@@ -363,7 +324,7 @@ bool AnalysisWZ::IsFiducialLepton(int k)
 // egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V2-standalone-medium
 // egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V2-standalone-medium
 //------------------------------------------------------------------------------
-bool AnalysisWZ::IsTightLepton(int k)
+bool AnalysisCMS::IsTightLepton(int k)
 {
   float flavour = std_vector_lepton_flavour->at(k);
 
@@ -387,7 +348,7 @@ bool AnalysisWZ::IsTightLepton(int k)
 //------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
-float AnalysisWZ::MuonIsolation(int k)
+float AnalysisCMS::MuonIsolation(int k)
 {
   float pt      = std_vector_lepton_pt     ->at(k);
   float flavour = std_vector_lepton_flavour->at(k);
@@ -412,7 +373,7 @@ float AnalysisWZ::MuonIsolation(int k)
 //------------------------------------------------------------------------------
 // ElectronIsolation
 //------------------------------------------------------------------------------
-float AnalysisWZ::ElectronIsolation(int k)
+float AnalysisCMS::ElectronIsolation(int k)
 {
   float pt      = std_vector_lepton_pt     ->at(k);
   float flavour = std_vector_lepton_flavour->at(k);
@@ -437,7 +398,7 @@ float AnalysisWZ::ElectronIsolation(int k)
 //------------------------------------------------------------------------------
 // IsIsolatedLepton
 //------------------------------------------------------------------------------
-bool AnalysisWZ::IsIsolatedLepton(int k)
+bool AnalysisCMS::IsIsolatedLepton(int k)
 {
   float flavour = std_vector_lepton_flavour->at(k);
 
@@ -453,8 +414,11 @@ bool AnalysisWZ::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 // LevelHistograms
 //------------------------------------------------------------------------------
-void AnalysisWZ::LevelHistograms(int icut)
+void AnalysisCMS::LevelHistograms(int  icut,
+				  bool pass)
 {
+  if (!pass) return;
+
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 }
@@ -463,7 +427,7 @@ void AnalysisWZ::LevelHistograms(int icut)
 //------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
-void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
+void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
   // Common histograms
   //----------------------------------------------------------------------------
@@ -513,9 +477,9 @@ void AnalysisWZ::FillHistograms(int ichannel, int icut, int ijet)
 //------------------------------------------------------------------------------
 // Summary
 //------------------------------------------------------------------------------
-void AnalysisWZ::Summary(TString analysis,
-			 TString precision,
-			 TString title)
+void AnalysisCMS::Summary(TString analysis,
+			  TString precision,
+			  TString title)
 {
   int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
@@ -561,7 +525,7 @@ void AnalysisWZ::Summary(TString analysis,
 //------------------------------------------------------------------------------
 // GetSampleName
 //------------------------------------------------------------------------------
-void AnalysisWZ::GetSampleName(TString filename)
+void AnalysisCMS::GetSampleName(TString filename)
 {
   TString tok;
 
@@ -590,9 +554,9 @@ void AnalysisWZ::GetSampleName(TString filename)
 //------------------------------------------------------------------------------
 // ApplyWeights
 //------------------------------------------------------------------------------
-void AnalysisWZ::ApplyWeights(TString sample,
-			      TString era,
-			      float   luminosity)
+void AnalysisCMS::ApplyWeights(TString sample,
+			       TString era,
+			       float   luminosity)
 {
   _event_weight = (_ismc) ? puW * baseW * luminosity : 1.;
 
@@ -632,7 +596,7 @@ void AnalysisWZ::ApplyWeights(TString sample,
 //------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
-void AnalysisWZ::EventDump()
+void AnalysisCMS::EventDump()
 {
   for (int i=0; i<_nlepton; i++)
     {
@@ -664,7 +628,7 @@ void AnalysisWZ::EventDump()
 //------------------------------------------------------------------------------
 // GetLeptons
 //------------------------------------------------------------------------------
-void AnalysisWZ::GetLeptons()
+void AnalysisCMS::GetLeptons()
 {
   AnalysisLeptons.clear();
 
@@ -717,7 +681,7 @@ void AnalysisWZ::GetLeptons()
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
-void AnalysisWZ::GetJets()
+void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
@@ -756,4 +720,65 @@ void AnalysisWZ::GetJets()
   }
 
   _njet = AnalysisJets.size();
+}
+
+
+//------------------------------------------------------------------------------
+// AnalysisWW
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisWW()
+{
+  if (_nlepton != 2) return;
+
+  bool pass = true;
+
+  pass &= (AnalysisLeptons[0].v.Pt() > 20.);
+  pass &= (AnalysisLeptons[1].v.Pt() > 20.);
+  pass &= (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour < 0);
+
+  LevelHistograms(WW00_Exactly2Leptons, pass);
+
+  pass &= (pfType1Met > 20.);
+  pass &= (_m2l       > 12.);
+  pass &= (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
+  pass &= (_nelectron != 1 && _pt2l > 45.);
+  pass &= (_nelectron == 1 && _pt2l > 30.);
+  
+  LevelHistograms(WW01_ZVeto, pass);
+  
+  pass &= (_nbjet == 0);
+
+  LevelHistograms(WW02_BVeto, pass);
+}
+
+
+//------------------------------------------------------------------------------
+// AnalysisWZ
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisWZ()
+{
+  if (_nlepton != 3) return;
+
+  bool pass = true;
+
+  if (_sample.EqualTo("WZ_synchro")) EventDump();
+
+  LevelHistograms(WZ00_Exactly3Leptons, pass);
+    
+  pass &= (_m2l > 60. && _m2l < 120.);
+  pass &= (ZLepton1.v.Pt() > 20.);
+
+  LevelHistograms(WZ01_HasZ, pass);
+
+  pass &= (WLepton.v.DeltaR(ZLepton1.v) >  0.1);
+  pass &= (WLepton.v.DeltaR(ZLepton2.v) >  0.1);
+  pass &= (WLepton.v.Pt()               >  20.);
+  pass &= (pfType1Met                   >  30.);
+  pass &= (_m3l                         > 100.);
+
+  LevelHistograms(WZ02_HasW, pass);
+	
+  pass &= (_nbjet == 0);
+	
+  LevelHistograms(WZ03_BVeto, pass);
 }

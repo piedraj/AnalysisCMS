@@ -1,5 +1,5 @@
-#ifndef AnalysisWZ_h
-#define AnalysisWZ_h
+#ifndef AnalysisCMS_h
+#define AnalysisCMS_h
 
 #include "AnalysisBase.h"
 #include "Constants.h"
@@ -42,11 +42,11 @@ struct Jet
 };
 
 
-class AnalysisWZ : public AnalysisBase
+class AnalysisCMS : public AnalysisBase
 {
  public :
 
- AnalysisWZ(TTree *tree=0) : AnalysisBase(tree) {}
+ AnalysisCMS(TTree *tree=0) : AnalysisBase(tree) {}
 
   float   MuonIsolation    (int     k);
 
@@ -58,7 +58,8 @@ class AnalysisWZ : public AnalysisBase
 
   bool    IsIsolatedLepton (int     k);
 
-  void    LevelHistograms  (int     icut);
+  void    LevelHistograms  (int     icut,
+			    bool    pass);
 
   void    FillHistograms   (int     ichannel,
 			    int     icut,
@@ -83,6 +84,10 @@ class AnalysisWZ : public AnalysisBase
   void    GetLeptons       ();
 
   void    GetJets          ();
+
+  void    AnalysisWW       ();
+
+  void    AnalysisWZ       ();
 
 
   // Data members
