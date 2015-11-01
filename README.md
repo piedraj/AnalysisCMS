@@ -59,14 +59,16 @@ Notice that input files can be accessed directly from eos when working from lxpl
 -->
 
 
-5. Draw
+5. Compile and draw
 ====
 
     cd test
 
     ./merge.sh
 
-    root -l -b -q draw.C++
+    `root-config --cxx --cflags` -o runPlotter runPlotter.C HistogramReader.C `root-config --glibs`
+
+    ./runPlotter
 
 
 6. Create your website

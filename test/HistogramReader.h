@@ -2,9 +2,6 @@
 #define HistogramReader_h
 
 
-#pragma once
-
-
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TFrame.h"
@@ -27,11 +24,15 @@
 #include <vector>
 
 
+const Float_t _yoffset = 0.049;
+
+
 class HistogramReader
 {
  public :
   
-  HistogramReader(TString const &rootfiles);
+  HistogramReader(TString const &inputdir,
+		  TString const &outputdir);
 
   ~HistogramReader() {}
  
@@ -46,35 +47,35 @@ class HistogramReader
 			  TString        units        = "NULL",
 			  Bool_t         setlogy      = false,
 			  Bool_t         moveoverflow = true,
-			  Double_t       xmin         = -999,
-			  Double_t       xmax         = -999,
-			  Double_t       ymin         = -999,
-			  Double_t       ymax         = -999);
+			  Float_t        xmin         = -999,
+			  Float_t        xmax         = -999,
+			  Float_t        ymin         = -999,
+			  Float_t        ymax         = -999);
 
   TLegend* DrawLegend    (Float_t        x1,
 			  Float_t        y1,
-			  TObject*       hist,
+			  TH1*           hist,
 			  TString        label,
 			  TString        option  = "p",
 			  Float_t        tsize   = 0.030,
 			  Float_t        xoffset = 0.200,
-			  Float_t        yoffset = 0.048);
+			  Float_t        yoffset = _yoffset);
 
   void     DrawTLatex    (Font_t         tfont,
-			  Double_t       x,
-			  Double_t       y,
-			  Double_t       tsize,
+			  Float_t        x,
+			  Float_t        y,
+			  Float_t        tsize,
 			  Short_t        align,
 			  const char*    text,
 			  Bool_t         setndc = true);
 
-  Double_t GetMaximum    (TH1*           hist,
-			  Double_t       xmin = -999,
-			  Double_t       xmax = -999);
+  Float_t  GetMaximum    (TH1*           hist,
+			  Float_t        xmin = -999,
+			  Float_t        xmax = -999);
 
   void     MoveOverflows (TH1*           hist,
-			  double         xmin = -999,
-			  double         xmax = -999);
+			  Float_t        xmin = -999,
+			  Float_t        xmax = -999);
  
   void     SetAxis       (TH1*           hist,
 			  TString        xtitle,
@@ -82,16 +83,18 @@ class HistogramReader
 			  Float_t        size,
 			  Float_t        xoffset,
 			  Float_t        yoffset);
+
+  void     SetLuminosity (Float_t        lumi) {_luminosity_fb = lumi;}
   
-  Double_t Yield         (TH1*           hist);
+  Float_t  Yield         (TH1*           hist);
  
 
  private :
 
   Bool_t                _drawratio;
-  Bool_t                _savepdf;
-  Bool_t                _savepng;
-  TString               _rootfiles;
+  Float_t               _luminosity_fb;
+  TString               _inputdir;
+  TString               _outputdir;
 
   TFile*                _datafile;
   TH1*                  _datahist;

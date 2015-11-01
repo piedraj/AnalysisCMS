@@ -4,11 +4,12 @@
 //------------------------------------------------------------------------------
 // HistogramReader
 //------------------------------------------------------------------------------
-HistogramReader::HistogramReader(TString const &rootfiles) :
-  _rootfiles(rootfiles),
-  _drawratio(true),
-  _savepdf  (false),
-  _savepng  (true)
+HistogramReader::HistogramReader(TString const &inputdir,
+				 TString const &outputdir) :
+  _inputdir(inputdir),
+  _outputdir(outputdir),
+  _luminosity_fb(0),
+  _drawratio(true)
 {
   _mcfile.clear();
   _mccolor.clear();
@@ -23,7 +24,7 @@ void HistogramReader::AddProcess(TString const &filename,
 				 TString const &label,
 				 Color_t        color)
 {
-  TFile *file = new TFile(_rootfiles + filename + ".root");
+  TFile *file = new TFile(_inputdir + filename + ".root");
 
   if (filename.Contains("Data"))
     {
@@ -43,17 +44,17 @@ void HistogramReader::AddProcess(TString const &filename,
 //------------------------------------------------------------------------------
 // Draw
 //------------------------------------------------------------------------------
-void HistogramReader::Draw(TString  hname,
-			   TString  xtitle,
-			   Int_t    ngroup,
-			   Int_t    precision,
-			   TString  units,
-			   Bool_t   setlogy,
-			   Bool_t   moveoverflow,
-			   Double_t xmin,
-			   Double_t xmax,
-			   Double_t ymin,
-			   Double_t ymax)
+void HistogramReader::Draw(TString hname,
+			   TString xtitle,
+			   Int_t   ngroup,
+			   Int_t   precision,
+			   TString units,
+			   Bool_t  setlogy,
+			   Bool_t  moveoverflow,
+			   Float_t xmin,
+			   Float_t xmax,
+			   Float_t ymin,
+			   Float_t ymax)
 {
   TString cname = hname;
 
@@ -97,25 +98,29 @@ void HistogramReader::Draw(TString  hname,
 
   TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
-  _datahist = dummy;
+  if (!dummy)
+    {
+      printf("\n [HistogramReader::Draw] %s not found\n\n", hname.Data());
+      return;
+    }
 
-  if (xmin == -999) xmin = _datahist->GetXaxis()->GetXmin();
-  if (xmax == -999) xmax = _datahist->GetXaxis()->GetXmax();
+  _datahist = (TH1D*)dummy->Clone();
 
   _datahist->SetFillColor(_datacolor);
   _datahist->SetLineColor(_datacolor);
   _datahist->SetMarkerStyle(kFullCircle);
   _datahist->SetTitle("");
 
+  if (xmin == -999) xmin = _datahist->GetXaxis()->GetXmin();
+  if (xmax == -999) xmax = _datahist->GetXaxis()->GetXmax();
+
   if (ngroup > 0) _datahist->Rebin(ngroup);
   
   if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
 
-  THStack* hstack = new THStack(hname, hname);
-
-  printf(" _mcfile.size() = %d\n", _mcfile.size());
-
   _mchist.clear();
+
+  THStack* hstack = new THStack(hname, hname);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
@@ -130,6 +135,7 @@ void HistogramReader::Draw(TString  hname,
     _mchist[i]->SetFillColor(_mccolor[i]);
     _mchist[i]->SetLineColor(_mccolor[i]);
     _mchist[i]->SetFillStyle(1001);
+
     hstack->Add(_mchist[i]);
   }
 
@@ -146,14 +152,14 @@ void HistogramReader::Draw(TString  hname,
 
   for (Int_t ibin=0; ibin<=allmc->GetNbinsX()+1; ibin++) {
 
-    Double_t binValue = 0.;
-    Double_t binError = 0.;
+    Float_t binValue = 0.;
+    Float_t binError = 0.;
 
     for (UInt_t i=0; i<_mchist.size(); i++) {
 
-      Double_t binContent   = _mchist[i]->GetBinContent(ibin);
-      Double_t binStatError = _mchist[i]->GetBinError(ibin);
-      Double_t binSystError = 0;  // To be updated
+      Float_t binContent   = _mchist[i]->GetBinContent(ibin);
+      Float_t binStatError = _mchist[i]->GetBinError(ibin);
+      Float_t binSystError = 0;  // To be updated
 
       binValue += binContent;
       binError += (binStatError * binStatError);
@@ -191,9 +197,9 @@ void HistogramReader::Draw(TString  hname,
   //----------------------------------------------------------------------------
   _datahist->GetXaxis()->SetRangeUser(xmin, xmax);
 
-  Double_t theMin   = 0.0;
-  Double_t theMax   = GetMaximum(_datahist, xmin, xmax);
-  Double_t theMaxMC = GetMaximum(allmc,      xmin, xmax);
+  Float_t theMin   = 0.0;
+  Float_t theMax   = GetMaximum(_datahist, xmin, xmax);
+  Float_t theMaxMC = GetMaximum(allmc,      xmin, xmax);
 
   if (theMaxMC > theMax) theMax = theMaxMC;
 
@@ -216,29 +222,35 @@ void HistogramReader::Draw(TString  hname,
 
   // Legend
   //----------------------------------------------------------------------------
-  Double_t x0     = 0.760;
-  Double_t y0     = 0.834;
-  Double_t delta  = 0.048 + 0.001;
-  Double_t ndelta = 0;
-  Double_t xdelta = 0.535;
+  Float_t x0     = 0.222;
+  Float_t y0     = 0.834;
+  Float_t xdelta = 0.0;
+  Float_t ydelta = _yoffset + 0.002;
+  Int_t   ny     = 0;
 
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)_datahist, Form(" %s (%.0f)", _datalabel.Data(), Yield(_datahist)), "lp"); ndelta += delta;
-  DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)allmc,      Form(" all (%.0f)",  Yield(allmc)),      "f");  ndelta += delta;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, Form(" %s (%.0f)", _datalabel.Data(), Yield(_datahist)), "lp"); ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, allmc,     Form(" all (%.0f)",                   Yield(allmc)),     "f");  ny++;
 
   for (int i=0; i<_mchist.size(); i++)
     {
-      DrawLegend(x0 - xdelta, y0 - ndelta, (TObject*)_mchist[i],   Form(" %s (%.0f)", _mclabel[i].Data(),  Yield(_mchist[i])),   "f");  ndelta += delta;
+      if (ny == 3)
+	{
+	  ny = 0;
+	  xdelta += 0.228;
+	}
+
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], Form(" %s (%.0f)", _mclabel[i].Data(), Yield(_mchist[i])), "f");
+      ny++;
     }
 
 
   // Titles
   //----------------------------------------------------------------------------
-  Double_t xprelim = (_drawratio) ? 0.288 : 0.300;
+  Float_t xprelim = (_drawratio) ? 0.288 : 0.300;
 
   DrawTLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
   DrawTLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
-  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", 999.));
-  //  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.2f pb^{-1} (13TeV)", 1e3*_luminosity));
+  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
 
   SetAxis(_datahist, xtitle, ytitle, 0.045, 1.5, 1.7);
 
@@ -255,15 +267,15 @@ void HistogramReader::Draw(TString  hname,
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
-	Double_t mcValue = allmc->GetBinContent(ibin);
-	Double_t mcError = allmc->GetBinError  (ibin);
+	Float_t mcValue = allmc->GetBinContent(ibin);
+	Float_t mcError = allmc->GetBinError  (ibin);
     
-	Double_t dtValue = ratio->GetBinContent(ibin);
-	Double_t dtError = ratio->GetBinError  (ibin);
+	Float_t dtValue = ratio->GetBinContent(ibin);
+	Float_t dtError = ratio->GetBinError  (ibin);
 
-	Double_t ratioVal         = 0.0;
-	Double_t ratioErr         = 1e-9;
-	Double_t uncertaintyError = 1e-9;
+	Float_t ratioVal         = 0.0;
+	Float_t ratioErr         = 1e-9;
+	Float_t uncertaintyError = 1e-9;
 
 	if (mcValue > 0 && dtValue > 0)
 	  {
@@ -295,26 +307,22 @@ void HistogramReader::Draw(TString  hname,
   // Save it
   //----------------------------------------------------------------------------
   canvas->cd();
-  
-  gSystem->mkdir("png/WW00_Exactly2Leptons", kTRUE);
 
-  if (_savepdf) canvas->SaveAs(Form("pdf/%s.pdf", cname.Data()));
-  if (_savepng) canvas->SaveAs(Form("png/%s.png", cname.Data()));
+  canvas->SaveAs(_outputdir + cname + ".png");
 }
-
 
 
 //------------------------------------------------------------------------------
 // DrawLegend
 //------------------------------------------------------------------------------
-TLegend* HistogramReader::DrawLegend(Float_t  x1,
-				     Float_t  y1,
-				     TObject* hist,
-				     TString  label,
-				     TString  option,
-				     Float_t  tsize,
-				     Float_t  xoffset,
-				     Float_t  yoffset)
+TLegend* HistogramReader::DrawLegend(Float_t x1,
+				     Float_t y1,
+				     TH1*    hist,
+				     TString label,
+				     TString option,
+				     Float_t tsize,
+				     Float_t xoffset,
+				     Float_t yoffset)
 {
   TLegend* legend = new TLegend(x1,
 				y1,
@@ -338,9 +346,9 @@ TLegend* HistogramReader::DrawLegend(Float_t  x1,
 // DrawTLatex
 //------------------------------------------------------------------------------
 void HistogramReader::DrawTLatex(Font_t      tfont,
-				 Double_t    x,
-				 Double_t    y,
-				 Double_t    tsize,
+				 Float_t     x,
+				 Float_t     y,
+				 Float_t     tsize,
 				 Short_t     align,
 				 const char* text,
 				 Bool_t      setndc)
@@ -359,9 +367,9 @@ void HistogramReader::DrawTLatex(Font_t      tfont,
 //------------------------------------------------------------------------------
 // GetMaximum
 //------------------------------------------------------------------------------
-Double_t HistogramReader::GetMaximum(TH1*     hist,
-				     Double_t xmin,
-				     Double_t xmax)
+Float_t HistogramReader::GetMaximum(TH1*     hist,
+				     Float_t xmin,
+				     Float_t xmax)
 {
   UInt_t nbins = hist->GetNbinsX();
 
@@ -394,9 +402,9 @@ Double_t HistogramReader::GetMaximum(TH1*     hist,
 //   bin = nbins+1; overflow bin
 //
 //------------------------------------------------------------------------------
-void HistogramReader::MoveOverflows(TH1*     hist,
-				    Double_t xmin,
-				    Double_t xmax)
+void HistogramReader::MoveOverflows(TH1*    hist,
+				    Float_t xmin,
+				    Float_t xmax)
 {
   int nentries = hist->GetEntries();
 
@@ -409,11 +417,11 @@ void HistogramReader::MoveOverflows(TH1*     hist,
   //----------------------------------------------------------------------------
   if (xmin != -999)
     {
-      int    firstBin = -1;
-      double firstVal = 0;
-      double firstErr = 0;
+      Int_t   firstBin = -1;
+      Float_t firstVal = 0;
+      Float_t firstErr = 0;
       
-      for (int i=0; i<=nbins+1; i++)
+      for (Int_t i=0; i<=nbins+1; i++)
 	{
 	  if (xaxis->GetBinLowEdge(i) < xmin)
 	    {
@@ -441,13 +449,13 @@ void HistogramReader::MoveOverflows(TH1*     hist,
   //----------------------------------------------------------------------------
   if (xmax != -999)
     {
-      int    lastBin = -1;
-      double lastVal = 0;
-      double lastErr = 0;
+      Int_t   lastBin = -1;
+      Float_t lastVal = 0;
+      Float_t lastErr = 0;
       
-      for (int i=nbins+1; i>=0; i--)
+      for (Int_t i=nbins+1; i>=0; i--)
 	{
-	  double lowEdge = xaxis->GetBinLowEdge(i);
+	  Float_t lowEdge = xaxis->GetBinLowEdge(i);
       
 	  if (lowEdge >= xmax)
 	    {
@@ -521,7 +529,7 @@ void HistogramReader::SetAxis(TH1*    hist,
 //------------------------------------------------------------------------------
 // Yield
 //------------------------------------------------------------------------------
-Double_t HistogramReader::Yield(TH1* hist)
+Float_t HistogramReader::Yield(TH1* hist)
 {
   if (hist)
     {
