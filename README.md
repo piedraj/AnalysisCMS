@@ -71,7 +71,7 @@ First merge the files produced in the previous step.
 
 Then compile and draw your favorite distributions.
 
-    `root-config --cxx --cflags` -o runPlotter runPlotter.C HistogramReader.C `root-config --glibs`
+    ./make
     ./runPlotter
 
 
