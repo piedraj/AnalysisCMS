@@ -41,13 +41,15 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 4. Compile and run
 ====
 
+Always compile first.
+
     `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
 
-With the following script all jobs will listed or submitted to the gridui batch system.
+With the following script jobs will listed or submitted to the gridui batch system.
 
-    ./submit-jobs.sh
+    ./create-jobs.sh
 
-The following commands show the status of the jobs.
+Show the status of the submitted jobs.
 
     qstat -u piedra
     qstat -j <job-ID.ja-task-ID>
