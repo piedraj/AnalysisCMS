@@ -43,7 +43,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 Always compile first.
 
-    `root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
+    `root-config --cxx --cflags` -o runAnalysis runAnalysis.C AnalysisBase.C `root-config --glibs`
 
 With the following script jobs will listed or submitted to the gridui batch system.
 
@@ -57,7 +57,7 @@ Show the status of the submitted jobs.
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runWZ root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
+    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
 -->
 
 

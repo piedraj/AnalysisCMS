@@ -29,7 +29,7 @@ if [ $# -lt 2 ]; then
 ### echo "  "
     echo "  Synchronization with Oviedo"
     echo "  "
-    echo "  ./runWZ /gpfs/csic_projects/cms/piedra/latino/latino_WZ_synchro.root 25ns"
+    echo "  ./runAnalysis /gpfs/csic_projects/cms/piedra/latino/latino_WZ_synchro.root 25ns"
     echo "  "
     exit -1
 fi
@@ -37,4 +37,4 @@ fi
 export FILEPATH=$1
 export ERA=$2
 
-ls -1 $FILEPATH | grepv | awk '{ print "./runWZ '$FILEPATH'/"$1,"'$ERA'" }'
+ls -1 $FILEPATH | grepv | awk '{ print "./runAnalysis '$FILEPATH'/"$1,"'$ERA'" }'

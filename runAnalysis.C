@@ -1,7 +1,7 @@
 #include "AnalysisWZ.C"
 
 
-void runWZ(TString filename, TString era)
+void runAnalysis(TString filename, TString era)
 {
   TFile* file = TFile::Open(filename);
 
@@ -18,7 +18,7 @@ void runWZ(TString filename, TString era)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  runWZ(argv[1], argv[2]);
+  runAnalysis(argv[1], argv[2]);
 
   return 0;
 }

@@ -6,8 +6,8 @@ if [ $# -lt 2 ]; then
 fi
 
 echo "  "
-echo "  Let's play it safe. Compiling runWZ..."
-`root-config --cxx --cflags` -o runWZ runWZ.C AnalysisBase.C `root-config --glibs`
+echo "  Let's play it safe. Compiling runAnalysis..."
+`root-config --cxx --cflags` -o runAnalysis runAnalysis.C AnalysisBase.C `root-config --glibs`
 
 echo "  "
 echo "  Submitting jobs..."
