@@ -130,17 +130,15 @@ void AnalysisCMS::Loop(TString filename,
     AnalysisWW();
     AnalysisWZ();
   }
-   
- 
-  if (verbosity > 0) printf("\n");
-
-
-  if (_sample.EqualTo("WZ_synchro")) txt_event_dump.close();
 
 
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
+  if (verbosity > 0) printf("\n");
+
+  if (_sample.EqualTo("WZ_synchro")) txt_event_dump.close();
+
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
   txt_summary << "\n";
@@ -723,11 +721,12 @@ void AnalysisCMS::AnalysisWZ()
     }
 
 
+  if (_sample.EqualTo("WZ_synchro")) EventDump();
+
+
   // WZ selection
   //----------------------------------------------------------------------------
   bool pass = true;
-
-  if (_sample.EqualTo("WZ_synchro")) EventDump();
 
   LevelHistograms(WZ00_Exactly3Leptons, pass);
     
