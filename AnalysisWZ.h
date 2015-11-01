@@ -23,13 +23,6 @@ const int interval  = 10000;
 
 enum {Loose, Tight};
 
-struct GenLepton
-{
-  int            index;
-  int            flavour;
-  TLorentzVector v;
-};
-
 struct Lepton
 {
   int            index;
@@ -92,7 +85,6 @@ class AnalysisWZ : public AnalysisBase
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
   std::vector<Lepton>    AnalysisLeptons;
-  std::vector<GenLepton> GenLeptons;
   Lepton                 WLepton;
   Lepton                 ZLepton1;
   Lepton                 ZLepton2;
@@ -120,12 +112,6 @@ class AnalysisWZ : public AnalysisBase
   ofstream               txt_events_mmm;  // only WZTo3LNu
   ofstream               txt_event_dump;  // only WZ_synchro
   TFile*                 root_output;
-  
-
-  // Test histograms
-  //----------------------------------------------------------------------------
-  TH1D*                  h_gen_mZ;
-  TH1D*                  h_ntight;
 
 
   // Common histograms

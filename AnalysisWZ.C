@@ -52,9 +52,6 @@ void AnalysisWZ::Loop(TString filename,
   //----------------------------------------------------------------------------
   TH1::SetDefaultSumw2();
 
-  h_gen_mZ = new TH1D("h_gen_mZ", "", 400, 0, 200);
-  h_ntight = new TH1D("h_ntight", "",  10, 0,  10);
-
   for (int j=0; j<ncut; j++) {
     for (int k=0; k<=njetbin; k++) {
 
@@ -123,68 +120,6 @@ void AnalysisWZ::Loop(TString filename,
     ApplyWeights(_sample, era, luminosity);
 
 
-    // Loop over GEN leptons
-    //--------------------------------------------------------------------------
-    if (std_vector_leptonGen_pt != NULL)
-      {
-	GenLeptons.clear();
-
-	int vector_leptonGen_size = std_vector_leptonGen_pt->size();
-
-	for (int i=0; i<vector_leptonGen_size; i++) {
-
-	  float pt  = std_vector_leptonGen_pt ->at(i);
-	  float eta = std_vector_leptonGen_eta->at(i);
-	  float phi = std_vector_leptonGen_phi->at(i);
-
-	  GenLepton lep;
-
-	  lep.index   = i;
-	  lep.flavour = std_vector_leptonGen_pid->at(i);
-	  
-	  float mass = -999;
-	  
-	  if      (abs(lep.flavour) == ELECTRON_FLAVOUR) mass = ELECTRON_MASS;
-	  else if (abs(lep.flavour) == MUON_FLAVOUR)     mass = MUON_MASS;
-	  else if (abs(lep.flavour) == TAU_FLAVOUR)      mass = TAU_MASS;
-
-	  if (fabs(std_vector_leptonGen_mpid->at(i)) != Z_FLAVOUR) continue;  // Require leptons from Z
-
-	  TLorentzVector tlv;
-	  
-	  tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-
-	  lep.v = tlv;
-
-	  GenLeptons.push_back(lep);
-	}
-	
-	unsigned int ngenlepton = GenLeptons.size();
-
-
-	// Make GEN Z mass
-	//----------------------------------------------------------------------
-	float mZ = -999;
-
-	for (UInt_t i=0; i<ngenlepton; i++) {
-	  
-	  for (UInt_t j=i+1; j<ngenlepton; j++) {
-	    
-	    if (GenLeptons[i].flavour + GenLeptons[j].flavour != 0) continue;
-	    
-	    float inv_mass = (GenLeptons[i].v + GenLeptons[j].v).M();
-	    
-	    if (fabs(inv_mass - Z_MASS) < fabs(mZ - Z_MASS)) {
-
-	      mZ = inv_mass;
-	    }
-	  }
-	}
-
-	if (mZ > 0) h_gen_mZ->Fill(mZ);
-      }
-
-
     // Loop over leptons
     //--------------------------------------------------------------------------
     AnalysisLeptons.clear();
@@ -242,8 +177,6 @@ void AnalysisWZ::Loop(TString filename,
       {
 	if (AnalysisLeptons[i].type == Tight) _ntight++;
       }
-
-    h_ntight->Fill(_ntight);
 
 
     // Count the number of electrons
