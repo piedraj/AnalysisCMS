@@ -96,13 +96,15 @@ Choose the "AFS folder" site type.
 
 Create a soft link to your `figures` folder.
 
-    ssh -Y gridui.ifca.es
-    ln -s /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/AnalysisCMS/test/figures
+    cd figures
+    export FIGURES_DIR=`pwd`
+    cd
+    ln -s $FIGURES_DIR
 
 Copy the distributions to lxplus.
 
     ssh -Y lxplus.cern.ch
-    scp -r piedra@gridui.ifca.es:~/figures www/.
+    scp -r piedra@gridui.ifca.es:figures www/.
 
 And they should appear here,
 
