@@ -80,6 +80,10 @@ class AnalysisWZ : public AnalysisBase
 
   void    EventDump        ();
 
+  void    GetLeptons       ();
+
+  void    GetJets          ();
+
 
   // Data members
   //----------------------------------------------------------------------------

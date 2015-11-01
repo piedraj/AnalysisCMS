@@ -119,54 +119,9 @@ void AnalysisWZ::Loop(TString filename,
 
     ApplyWeights(_sample, era, luminosity);
 
+    GetLeptons();
 
-    // Loop over leptons
-    //--------------------------------------------------------------------------
-    AnalysisLeptons.clear();
-
-    int vector_lepton_size = std_vector_lepton_pt->size();
-
-    for (int i=0; i<vector_lepton_size; i++) {
-
-      if (!IsFiducialLepton(i)) continue;
-
-      float pt  = std_vector_lepton_pt ->at(i);
-      float eta = std_vector_lepton_eta->at(i);
-      float phi = std_vector_lepton_phi->at(i);
-
-      Lepton lep;
-      
-      lep.index   = i;
-      lep.type    = Loose;
-      lep.flavour = std_vector_lepton_flavour     ->at(i);
-      lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
-      lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
-      
-      float mass = -999;
-
-      if (abs(lep.flavour) == ELECTRON_FLAVOUR)
-	{
-	  mass    = ELECTRON_MASS;
-	  lep.iso = ElectronIsolation(i);
-	}
-      else if (abs(lep.flavour) == MUON_FLAVOUR)
-	{
-	  mass    = MUON_MASS;
-	  lep.iso = MuonIsolation(i);
-	}
-
-      if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;
-
-      TLorentzVector tlv;
-
-      tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-      
-      lep.v = tlv;
-
-      AnalysisLeptons.push_back(lep);
-    }
-
-    _nlepton = AnalysisLeptons.size();
+    GetJets();
 
 
     // Count the number of tight leptons
@@ -260,45 +215,6 @@ void AnalysisWZ::Loop(TString filename,
 	_pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
 	_m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
       }
-
-
-    // Loop over jets
-    //--------------------------------------------------------------------------
-    AnalysisJets.clear();
-
-    int vector_jet_size = std_vector_jet_pt->size();
-
-    for (int i=0; i<vector_jet_size; i++) {
-
-      float pt  = std_vector_jet_pt ->at(i);
-      float eta = std_vector_jet_eta->at(i);
-      float phi = std_vector_jet_phi->at(i);
-
-      if (pt < 30. || fabs(eta) < 2.4) continue;
-
-      TLorentzVector tlv;
-
-      tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
-
-      bool is_lepton = false;
-
-      for (int j=0; j<_nlepton; j++)
-	{
-	  if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
-	}
-
-      if (is_lepton) continue;
-
-      Jet goodjet;
-
-      goodjet.index    = i;
-      goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
-      goodjet.v        = tlv;
-
-      AnalysisJets.push_back(goodjet);
-    }
-
-    _njet = AnalysisJets.size();
 
 
     // Count the number of b-jets
@@ -742,4 +658,102 @@ void AnalysisWZ::EventDump()
 
       txt_event_dump << Form("\n");
     }
+}
+
+
+//------------------------------------------------------------------------------
+// GetLeptons
+//------------------------------------------------------------------------------
+void AnalysisWZ::GetLeptons()
+{
+  AnalysisLeptons.clear();
+
+  int vector_lepton_size = std_vector_lepton_pt->size();
+
+  for (int i=0; i<vector_lepton_size; i++) {
+
+    if (!IsFiducialLepton(i)) continue;
+
+    float pt  = std_vector_lepton_pt ->at(i);
+    float eta = std_vector_lepton_eta->at(i);
+    float phi = std_vector_lepton_phi->at(i);
+
+    Lepton lep;
+      
+    lep.index   = i;
+    lep.type    = Loose;
+    lep.flavour = std_vector_lepton_flavour     ->at(i);
+    lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
+    lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
+      
+    float mass = -999;
+
+    if (abs(lep.flavour) == ELECTRON_FLAVOUR)
+      {
+	mass    = ELECTRON_MASS;
+	lep.iso = ElectronIsolation(i);
+      }
+    else if (abs(lep.flavour) == MUON_FLAVOUR)
+      {
+	mass    = MUON_MASS;
+	lep.iso = MuonIsolation(i);
+      }
+
+    if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;
+
+    TLorentzVector tlv;
+    
+    tlv.SetPtEtaPhiM(pt, eta, phi, mass);
+    
+    lep.v = tlv;
+
+    AnalysisLeptons.push_back(lep);
+  }
+
+  _nlepton = AnalysisLeptons.size();
+}
+
+
+//------------------------------------------------------------------------------
+// GetJets
+//------------------------------------------------------------------------------
+void AnalysisWZ::GetJets()
+{
+  AnalysisJets.clear();
+
+  int vector_jet_size = std_vector_jet_pt->size();
+
+  for (int i=0; i<vector_jet_size; i++) {
+
+    float pt  = std_vector_jet_pt ->at(i);
+    float eta = std_vector_jet_eta->at(i);
+    float phi = std_vector_jet_phi->at(i);
+
+    if (pt < 30. || fabs(eta) < 2.4) continue;
+
+    TLorentzVector tlv;
+
+    tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
+
+    bool is_lepton = false;
+
+    for (int j=0; j<_nlepton; j++)
+      {
+	if (AnalysisLeptons[j].type == Loose) continue;
+	
+	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
+      }
+
+    if (is_lepton) continue;
+
+    Jet goodjet;
+
+    goodjet.index    = i;
+    goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+    goodjet.v        = tlv;
+
+    AnalysisJets.push_back(goodjet);
+  }
+
+  _njet = AnalysisJets.size();
 }
