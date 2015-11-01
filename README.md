@@ -26,8 +26,8 @@ Log in to gridui.
 3. Get the material
 ====
 
-    git clone https://github.com/piedraj/WZ13TeV
-    cd WZ13TeV
+    git clone https://github.com/piedraj/AnalysisCMS
+    cd AnalysisCMS
 
 <!---
 The base class should be recreated anytime the latino trees have been updated.
@@ -95,7 +95,7 @@ Choose the "AFS folder" site type.
 Create a soft link to your `figures` folder.
 
     ssh -Y gridui.ifca.es
-    ln -s /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/WZ13TeV/test/figures
+    ln -s /gpfs/csic_projects/cms/piedra/work/CMSSW_7_4_7/src/AnalysisCMS/test/figures
 
 Copy the distributions to lxplus.
 
