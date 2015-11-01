@@ -45,7 +45,7 @@ Always compile first.
 
     `root-config --cxx --cflags` -o runAnalysis runAnalysis.C AnalysisBase.C `root-config --glibs`
 
-With the following script jobs will listed or submitted to the gridui batch system.
+List or submit jobs to the gridui batch system.
 
     ./create-jobs.sh
 
