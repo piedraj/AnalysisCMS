@@ -174,10 +174,6 @@ bool AnalysisCMS::IsFiducialLepton(int k)
 
 //------------------------------------------------------------------------------
 // IsTightLepton
-//
-// https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
-// egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V2-standalone-medium
-// egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V2-standalone-medium
 //------------------------------------------------------------------------------
 bool AnalysisCMS::IsTightLepton(int k)
 {
@@ -185,12 +181,10 @@ bool AnalysisCMS::IsTightLepton(int k)
 
   bool is_tight_lepton = false;
 
-  // Muon tight ID
   if (fabs(flavour) == MUON_FLAVOUR)
     {
       is_tight_lepton = std_vector_lepton_isTightMuon->at(k);
     }
-  // Electron cut based medium ID
   else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
       is_tight_lepton = std_vector_lepton_eleIdMedium->at(k);
@@ -269,8 +263,7 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 // LevelHistograms
 //------------------------------------------------------------------------------
-void AnalysisCMS::LevelHistograms(int  icut,
-				  bool pass)
+void AnalysisCMS::LevelHistograms(int icut, bool pass)
 {
   if (!pass) return;
 
