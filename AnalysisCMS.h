@@ -79,8 +79,6 @@ class AnalysisCMS : public AnalysisBase
 			    TString era,
 			    float   luminosity);
 
-  void    EventDump        ();
-
   void    GetLeptons       ();
 
   void    GetJets          ();
@@ -114,8 +112,7 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _nbjet;
   unsigned int           _jetbin;
   
-  ofstream               txt_summary;     // all samples
-  ofstream               txt_event_dump;  // only WZ_synchro
+  ofstream               txt_summary;
   TFile*                 root_output;
 
 

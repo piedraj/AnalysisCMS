@@ -7,7 +7,7 @@ fi
 
 echo "  "
 echo "  Let's play it safe. Compiling runAnalysis..."
-`root-config --cxx --cflags` -o runAnalysis runAnalysis.C AnalysisBase.C `root-config --glibs`
+./make
 
 echo "  "
 echo "  Submitting jobs..."

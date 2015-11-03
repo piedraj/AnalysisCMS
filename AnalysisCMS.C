@@ -34,11 +34,6 @@ void AnalysisCMS::Loop(TString filename,
 
   root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
 
-  if (_sample.EqualTo("WZ_synchro"))
-    {
-      txt_event_dump.open("txt/" + era + "/" + _sample + "_event_dump.txt");
-    }
-
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -136,8 +131,6 @@ void AnalysisCMS::Loop(TString filename,
   // Summary
   //----------------------------------------------------------------------------
   if (verbosity > 0) printf("\n");
-
-  if (_sample.EqualTo("WZ_synchro")) txt_event_dump.close();
 
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
@@ -456,38 +449,6 @@ void AnalysisCMS::ApplyWeights(TString sample,
 
 
 //------------------------------------------------------------------------------
-// EventDump
-//------------------------------------------------------------------------------
-void AnalysisCMS::EventDump()
-{
-  for (int i=0; i<_nlepton; i++)
-    {
-      int index = AnalysisLeptons[i].index;
-
-      txt_event_dump << Form("%u:%d:%f:%f:%f:%d",
-			     event,
-			     AnalysisLeptons[i].flavour,
-			     AnalysisLeptons[i].v.Pt(),
-			     AnalysisLeptons[i].v.Eta(),
-			     AnalysisLeptons[i].iso,
-			     IsTightLepton(index));
-
-      if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
-	{
-	  txt_event_dump << Form(":%f:%.0f:%f:%f:%.0f",
-				 std_vector_electron_scEta->at(index),
-				 std_vector_electron_passConversionVeto->at(index),
-				 std_vector_electron_d0->at(index),
-				 std_vector_electron_dz->at(index),
-				 std_vector_electron_expectedMissingInnerHits->at(index));
-	}
-
-      txt_event_dump << Form("\n");
-    }
-}
-
-
-//------------------------------------------------------------------------------
 // GetLeptons
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
@@ -719,9 +680,6 @@ void AnalysisCMS::AnalysisWZ()
       _m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
       _pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
     }
-
-
-  if (_sample.EqualTo("WZ_synchro")) EventDump();
 
 
   // WZ selection

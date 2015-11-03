@@ -43,7 +43,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 Always compile first.
 
-    `root-config --cxx --cflags` -o runAnalysis runAnalysis.C AnalysisBase.C `root-config --glibs`
+    ./make
 
 List or submit jobs to the gridui batch system.
 
