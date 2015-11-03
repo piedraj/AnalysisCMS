@@ -389,11 +389,11 @@ void AnalysisCMS::GetSampleName(TString filename)
 
   _ismc = true;
 
-  if (_sample.EqualTo("DoubleEG"))       _ismc = false;
-  if (_sample.EqualTo("DoubleMuon"))     _ismc = false;
-  if (_sample.EqualTo("MuonEG"))         _ismc = false;
-  if (_sample.EqualTo("SingleElectron")) _ismc = false;
-  if (_sample.EqualTo("SingleMuon"))     _ismc = false;
+  if (_sample.Contains("DoubleEG"))       _ismc = false;
+  if (_sample.Contains("DoubleMuon"))     _ismc = false;
+  if (_sample.Contains("MuonEG"))         _ismc = false;
+  if (_sample.Contains("SingleElectron")) _ismc = false;
+  if (_sample.Contains("SingleMuon"))     _ismc = false;
 
   return;
 }
