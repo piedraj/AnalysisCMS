@@ -45,9 +45,9 @@ Always compile first.
 
     ./make
 
-List or submit jobs to the gridui batch system.
+Submit jobs to the gridui batch system.
 
-    ./create-jobs.sh
+    ./submit-jobs.sh samples/files_05Aug_50ns.txt 50ns
 
 Show the status of the submitted jobs.
 
