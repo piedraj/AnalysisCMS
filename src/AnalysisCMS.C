@@ -1,5 +1,5 @@
 #define AnalysisCMS_cxx
-#include "AnalysisCMS.h"
+#include "../include/AnalysisCMS.h"
 
 
 //------------------------------------------------------------------------------
