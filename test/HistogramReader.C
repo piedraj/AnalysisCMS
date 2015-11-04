@@ -276,11 +276,11 @@ void HistogramReader::Draw(TString hname,
 	Float_t dtValue = ratio->GetBinContent(ibin);
 	Float_t dtError = ratio->GetBinError  (ibin);
 
-	Float_t ratioVal         = 0.0;
-	Float_t ratioErr         = 1e-9;
-	Float_t uncertaintyError = 1e-9;
+	Float_t ratioVal         = 999;
+	Float_t ratioErr         = 999;
+	Float_t uncertaintyError = 999;
 
-	if (mcValue > 0 && dtValue > 0)
+	if (mcValue > 0)
 	  {
 	    ratioVal         = dtValue / mcValue - 1.0;
 	    ratioErr         = dtError / mcValue;
