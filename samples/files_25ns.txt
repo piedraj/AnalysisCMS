@@ -1,4 +1,14 @@
 # Data
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_DoubleEG_0.root                # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_DoubleEG_1.root                # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_DoubleMuon_0.root              # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_DoubleMuon_1.root              # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_MuonEG_0.root                  # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_MuonEG_1.root                  # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_SingleElectron_0.root          # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_SingleElectron_1.root          # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_SingleMuon_0.root              # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_05Oct2015_SingleMuon_1.root              # To be updated
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_DoubleEG_0.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_DoubleEG_1.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_DoubleEG_2.root
@@ -15,7 +25,7 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleElectron_1.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleElectron_2.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleElectron_3.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_PromptReco_SingleMuon_0.root             # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleMuon_0.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleMuon_1.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_PromptReco_SingleMuon_2.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns/latino_Run2015D_PromptReco_SingleMuon_3.root             # To be updated
