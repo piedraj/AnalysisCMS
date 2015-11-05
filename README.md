@@ -47,7 +47,7 @@ Always compile first.
 
 Submit jobs to the gridui batch system.
 
-    ./submit-jobs.sh samples/files_05Aug_50ns.txt 50ns
+    ./submit-jobs.sh samples/files_50ns.txt 50ns
 
 Show the status of the submitted jobs.
 
