@@ -2,7 +2,7 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/files_05Aug_50ns.txt 50ns"
+    echo "  ./submit-jobs.sh samples/files_50ns.txt 50ns"
     echo "  "
     exit -1
 fi
