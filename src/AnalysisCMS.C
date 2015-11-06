@@ -600,12 +600,13 @@ void AnalysisCMS::AnalysisWW()
 
   LevelHistograms(WW00_Exactly2Leptons, pass);
 
+  bool pass_sf = (_nelectron != 1 && _pt2l > 45. && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_df = (_nelectron == 1 && _pt2l > 30.);
+
   pass &= (pfType1Met > 20.);
-  pass &= (_m2l       > 12.);
-  pass &= (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
-  pass &= (_nelectron != 1 && _pt2l > 45.);
-  pass &= (_nelectron == 1 && _pt2l > 30.);
-  
+  pass &= (_m2l > 12.);
+  pass &= (pass_sf || pass_df);
+
   LevelHistograms(WW01_ZVeto, pass);
   
   pass &= (_nbjet == 0);
