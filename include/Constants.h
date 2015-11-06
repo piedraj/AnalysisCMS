@@ -5,8 +5,8 @@
 #include "TString.h"
 
 
-const float lumi50ns_fb = 0.04003;
-const float lumi25ns_fb = 0.01547;
+const float lumi50ns_fb = 0.040;
+const float lumi25ns_fb = 1.269;
 
 
 const int ELECTRON_FLAVOUR = 11;
