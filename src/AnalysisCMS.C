@@ -699,3 +699,72 @@ void AnalysisCMS::AnalysisWZ()
 	
   LevelHistograms(WZ03_BVeto, pass);
 }
+
+
+//------------------------------------------------------------------------------
+// AnalysisTop
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisTop()
+{
+  if (_nlepton < 2) return;
+  if (_ntight  < 2) return;
+
+
+  Lepton Lepton1;
+  Lepton Lepton2;
+
+
+  // Pick the opposite-sign lepton-pair with highest _pt2l
+  //----------------------------------------------------------------------------
+  _pt2l = -999;
+
+  for (UInt_t i=0; i<_nlepton; i++) {
+    
+    if (AnalysisLeptons[i].type == Loose) continue;
+
+    for (UInt_t j=i+1; j<_nlepton; j++) {
+      
+      if (AnalysisLeptons[j].type == Loose) continue;
+
+      if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
+
+      float dilepton_pt = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).Pt();
+
+      if (dilepton_pt > _pt2l)
+	{
+	  _pt2l = dilepton_pt;
+	  
+	  Lepton1 = AnalysisLeptons[i];
+	  Lepton2 = AnalysisLeptons[j];
+	}
+    }
+  }
+
+  if (_pt2l < 0) return;
+
+  _m2l = (Lepton1.v + Lepton2.v).M();
+
+  int nelec =0;
+
+  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
+  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
+
+  if      (nelec == 2) _channel = ee;
+  else if (nelec == 1) _channel = em;
+  else if (nelec == 0) _channel = mm;
+
+
+  // Top selection
+  //----------------------------------------------------------------------------
+  bool pass = true;
+
+  LevelHistograms(Top00_Has2Leptons, pass);
+
+  pass &= (_njet > 1);
+
+  LevelHistograms(Top01_Has2Jets, pass);
+
+  pass &= (_nbjet > 0);
+
+  LevelHistograms(Top02_Has1BJet, pass);
+}

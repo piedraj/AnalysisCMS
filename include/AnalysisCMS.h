@@ -83,9 +83,11 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets          ();
 
-  void    AnalysisWW       ();
+  void    AnalysisWW       ();  // Alberto, Nicolo, Alicia
 
-  void    AnalysisWZ       ();
+  void    AnalysisWZ       ();  // Cedric, Jonatan
+
+  void    AnalysisTop      ();  // Barbara, Rocio
 
 
   // Data members

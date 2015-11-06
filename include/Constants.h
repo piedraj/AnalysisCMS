@@ -62,7 +62,7 @@ TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 7;
+const int ncut = 10;
 
 enum {
   WW00_Exactly2Leptons,
@@ -71,7 +71,10 @@ enum {
   WZ00_Exactly3Leptons,
   WZ01_HasZ,
   WZ02_HasW,
-  WZ03_BVeto
+  WZ03_BVeto,
+  Top00_Has2Leptons,
+  Top01_Has2Jets,
+  Top02_Has1BJet
 };
 
 const TString scut[ncut] = {
@@ -81,7 +84,10 @@ const TString scut[ncut] = {
   "WZ00_Exactly3Leptons",
   "WZ01_HasZ",
   "WZ02_HasW",
-  "WZ03_BVeto"
+  "WZ03_BVeto",
+  "Top00_Has2Leptons",
+  "Top01_Has2Jets",
+  "Top02_Has1BJet"
 };
 
 
