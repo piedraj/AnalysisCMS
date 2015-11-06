@@ -48,8 +48,8 @@ void runPlotter(TString level)
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  logY, true, 0, 150);
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  linY, true, 0, 150);
+	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  logY);
+	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  linY);
 	  plotter.Draw(prefix + "counterLum" + suffix, "yield",                                   -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "pfType1Met" + suffix, "E_{T}^{miss}",                             5, 0, "GeV",  linY);
 	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                    5, 0, "GeV",  linY);

@@ -78,16 +78,16 @@ enum {
 };
 
 const TString scut[ncut] = {
-  "WW00_Exactly2Leptons",
-  "WW01_ZVeto",
-  "WW02_BVeto",
-  "WZ00_Exactly3Leptons",
-  "WZ01_HasZ",
-  "WZ02_HasW",
-  "WZ03_BVeto",
-  "Top00_Has2Leptons",
-  "Top01_Has2Jets",
-  "Top02_Has1BJet"
+  "WW/00_Exactly2Leptons",
+  "WW/01_ZVeto",
+  "WW/02_BVeto",
+  "WZ/00_Exactly3Leptons",
+  "WZ/01_HasZ",
+  "WZ/02_HasW",
+  "WZ/03_BVeto",
+  "Top/00_Has2Leptons",
+  "Top/01_Has2Jets",
+  "Top/02_Has1BJet"
 };
 
 

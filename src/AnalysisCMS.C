@@ -565,7 +565,7 @@ void AnalysisCMS::GetJets()
 
   for (int i=0; i<_njet; i++)
     {
-      if (AnalysisJets[i].csvv2ivf > csvv2ivf_mediumWP) _nbjet++;
+      if (AnalysisJets[i].csvv2ivf > csvv2ivf_looseWP) _nbjet++;
     }
 
 
