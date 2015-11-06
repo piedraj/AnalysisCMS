@@ -28,14 +28,12 @@ void runPlotter(TString level)
 
   // Draw
   //----------------------------------------------------------------------------
-  TString analysis = (level.Contains("WZ")) ? "WZ" : "WW";
-
-  int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
-  int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
+  int firstchannel = (level.Contains("WZ")) ? eee : ee;
+  int lastchannel  = (level.Contains("WZ")) ? lll : ll;
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (analysis.EqualTo("WZ") && j != njetbin) continue;
+      if (!level.Contains("WW") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -62,7 +60,7 @@ void runPlotter(TString level)
 
 	  // 3-lepton histograms
 	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("WW")) continue;
+	  if (!level.Contains("WZ")) continue;
 
 	  plotter.Draw(prefix + "m3l" + suffix, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 300);
 
