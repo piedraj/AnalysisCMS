@@ -122,6 +122,7 @@ void AnalysisCMS::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
+    AnalysisTop();
     AnalysisWW();
     AnalysisWZ();
   }
