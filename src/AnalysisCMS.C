@@ -706,8 +706,7 @@ void AnalysisCMS::AnalysisWZ()
 //------------------------------------------------------------------------------
 void AnalysisCMS::AnalysisTop()
 {
-  if (_nlepton < 2) return;
-  if (_ntight  < 2) return;
+  if (_ntight < 2) return;
 
 
   Lepton Lepton1;
