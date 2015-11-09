@@ -8,6 +8,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
 				 TString const &outputdir) :
   _inputdir     (inputdir),
   _outputdir    (outputdir),
+  _stackoption  ("hist,same"),
   _luminosity_fb(0),
   _drawratio    (true),
   _savepdf      (true),
@@ -113,6 +114,11 @@ void HistogramReader::Draw(TString hname,
   _datahist->SetMarkerStyle(kFullCircle);
   _datahist->SetTitle("");
 
+  if (_stackoption.Contains("nostack") && Yield(_datahist) > 0)
+    {
+      _datahist->Scale(1.0/Yield(_datahist));
+    }
+
   if (xmin == -999) xmin = _datahist->GetXaxis()->GetXmin();
   if (xmax == -999) xmax = _datahist->GetXaxis()->GetXmax();
 
@@ -130,14 +136,21 @@ void HistogramReader::Draw(TString hname,
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
-
-    if (moveoverflow) MoveOverflows(_mchist[i], xmin, xmax);
-
     _mchist[i]->SetFillColor(_mccolor[i]);
     _mchist[i]->SetLineColor(_mccolor[i]);
     _mchist[i]->SetLineWidth(0);
     _mchist[i]->SetFillStyle(1001);
+
+    if (_stackoption.Contains("nostack") && Yield(_mchist[i]) > 0)
+      {
+	_mchist[i]->SetFillStyle(0);
+	_mchist[i]->SetLineWidth(2);
+	_mchist[i]->Scale(1.0/Yield(_mchist[i]));
+      }
+
+    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
+
+    if (moveoverflow) MoveOverflows(_mchist[i], xmin, xmax);
 
     hstack->Add(_mchist[i]);
   }
@@ -175,11 +188,16 @@ void HistogramReader::Draw(TString hname,
     allmc->SetBinError  (ibin, binError);
   }
 
+  if (_stackoption.Contains("nostack") && Yield(allmc) > 0)
+    {
+      allmc->Scale(1.0/Yield(allmc));
+    }
+
 
   // Draw
   //----------------------------------------------------------------------------
   _datahist->Draw("ep");
-  hstack   ->Draw("hist,same");
+  hstack   ->Draw(_stackoption);
   allmc    ->Draw("e2,same");
   _datahist->Draw("ep,same");
 
@@ -202,7 +220,16 @@ void HistogramReader::Draw(TString hname,
 
   Float_t theMin   = 0.0;
   Float_t theMax   = GetMaximum(_datahist, xmin, xmax);
-  Float_t theMaxMC = GetMaximum(allmc,      xmin, xmax);
+  Float_t theMaxMC = GetMaximum(allmc,     xmin, xmax);
+
+  if (_stackoption.Contains("nostack"))
+    {
+      for (UInt_t i=0; i<_mcfile.size(); i++)
+	{
+	  Float_t mchist_i_max = GetMaximum(_mchist[i], xmin, xmax);
+	  if (mchist_i_max > theMaxMC) theMaxMC = mchist_i_max;
+	}
+    }
 
   if (theMaxMC > theMax) theMax = theMaxMC;
 
@@ -213,7 +240,7 @@ void HistogramReader::Draw(TString hname,
     }
   else
     {
-      theMax *= 1.45;
+      theMax *= 1.4;
     }
 
   _datahist->SetMinimum(theMin);
@@ -231,8 +258,10 @@ void HistogramReader::Draw(TString hname,
   Float_t ydelta = _yoffset + 0.001;
   Int_t   ny     = 0;
 
+  TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
+
   DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, Form(" %s (%.0f)", _datalabel.Data(), Yield(_datahist)), "lp"); ny++;
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, allmc,     Form(" all (%.0f)",                   Yield(allmc)),     "f");  ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, allmc,     Form(" all (%.0f)",                   Yield(allmc)),     opt);  ny++;
 
   for (int i=0; i<_mchist.size(); i++)
     {
@@ -242,7 +271,7 @@ void HistogramReader::Draw(TString hname,
 	  xdelta += 0.228;
 	}
 
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], Form(" %s (%.0f)", _mclabel[i].Data(), Yield(_mchist[i])), "f");
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], Form(" %s (%.0f)", _mclabel[i].Data(), Yield(_mchist[i])), opt);
       ny++;
     }
 
@@ -372,8 +401,8 @@ void HistogramReader::DrawTLatex(Font_t      tfont,
 // GetMaximum
 //------------------------------------------------------------------------------
 Float_t HistogramReader::GetMaximum(TH1*     hist,
-				     Float_t xmin,
-				     Float_t xmax)
+				    Float_t xmin,
+				    Float_t xmax)
 {
   UInt_t nbins = hist->GetNbinsX();
 
