@@ -25,16 +25,17 @@ if [[ $FOLDER == *"50ns"* ]] ; then
 
 elif [[ $FOLDER == *"25ns"* ]] ; then
 
-    hadd -f -k 01_Data.root      Run2015*.root
+    hadd -f -k 01_Data.root      SingleElectron.root SingleMuon.root DoubleEG.root DoubleMuon.root MuonEG.root
     hadd -f -k 02_WZ.root        WZTo3LNu.root
-    hadd -f -k 03_ZZ.root        ggZZ*.root ZZTo*.root
-    hadd -f -k 04_Top.root       TTJets.root
-    hadd -f -k 05_SingleTop.root ST_t-channel_*.root ST_tW_*.root
+    hadd -f -k 03_ZZ.root        ZZ.root
+    hadd -f -k 04_Top.root       TT.root
+    hadd -f -k 05_SingleTop.root ST_t-channel.root
     hadd -f -k 06_WW.root        WWTo2L2Nu.root
     hadd -f -k 07_ZJets.root     DYJetsToLL_M*.root
     hadd -f -k 08_WJets.root     WJetsToLNu.root
     hadd -f -k 09_TTW.root       TTWJetsToLNu.root
-    hadd -f -k 10_TTZ.root       TTZToLLNuNu_M-10.root
+#   hadd -f -k 10_TTZ.root       TTZToLLNuNu_M-10.root
+    hadd -f -k 11_HWW.root       GluGluHToWWTo2L2Nu_M125.root
 
 fi
 

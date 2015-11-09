@@ -315,7 +315,7 @@ void HistogramReader::Draw(TString hname,
 
 	if (mcValue > 0)
 	  {
-	    ratioVal         = dtValue / mcValue - 1.0;
+	    ratioVal         = dtValue / mcValue;
 	    ratioErr         = dtError / mcValue;
 	    uncertaintyError = ratioVal * mcError / mcValue;
 	  }
@@ -329,13 +329,13 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep");
 
-      ratio->GetYaxis()->SetRangeUser(-2, 2);
+      ratio->GetYaxis()->SetRangeUser(-1, 3);
 
       uncertainty->Draw("e2,same");
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC - 1", 0.105, 1.4, 0.75);
+      SetAxis(ratio, xtitle, "data / MC", 0.105, 1.4, 0.75);
     }
 
 
