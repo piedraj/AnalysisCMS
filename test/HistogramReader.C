@@ -323,7 +323,7 @@ void HistogramReader::Draw(TString hname,
 	ratio->SetBinContent(ibin, ratioVal);
 	ratio->SetBinError  (ibin, ratioErr);
 	
-	uncertainty->SetBinContent(ibin, 0.0);
+	uncertainty->SetBinContent(ibin, 1.);
 	uncertainty->SetBinError  (ibin, uncertaintyError);
       }
 
