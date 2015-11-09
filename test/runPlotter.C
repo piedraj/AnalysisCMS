@@ -15,12 +15,12 @@ void runPlotter(TString level)
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetLuminosity(lumi25ns_fb);
-  //  plotter.SetStackOption("nostack,hist,same");
+  plotter.SetStackOption("hist,same");
 
   plotter.AddProcess("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
-  plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);  // New at 25ns
-  plotter.AddProcess("11_HWW",       "HWW",     kRed);      // New at 25ns
+  plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
+  plotter.AddProcess("11_HWW",       "HWW",     kRed);
   plotter.AddProcess("06_WW",        "WW",      kAzure-7);
   plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
   plotter.AddProcess("04_Top",       "tt+jets", kYellow);
