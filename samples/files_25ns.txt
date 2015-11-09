@@ -1,9 +1,9 @@
 # Data
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_DoubleEG.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_DoubleMuon.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_MuonEG.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_SingleElectron.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_SingleMuon.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_DoubleEG.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_DoubleMuon.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_MuonEG.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_SingleElectron.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/21Oct/25ns_Skim2l/latino_Run2015D_SingleMuon.root
 
 # MC
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/25ns_Skim2l/latino_WJetsToLNu.root

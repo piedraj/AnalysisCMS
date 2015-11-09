@@ -143,8 +143,9 @@ void AnalysisCMS::Loop(TString filename,
   txt_summary << Form("   nentries: %lld\n",      nentries);
   txt_summary << "\n";
 
-  Summary("WW", "11.0", "raw yields");
-  Summary("WZ", "11.0", "raw yields");
+  Summary("WW",  "11.0", "raw yields");
+  Summary("WZ",  "11.0", "raw yields");
+  Summary("Top", "11.0", "raw yields");
   
   txt_summary.close();
 
@@ -332,8 +333,6 @@ void AnalysisCMS::Summary(TString analysis,
 {
   int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
-  int firstCut     = (analysis.EqualTo("WZ")) ? WZ00_Exactly3Leptons : WW00_Exactly2Leptons;
-  int lastCut      = (analysis.EqualTo("WZ")) ? ncut : WZ00_Exactly3Leptons;
 
   txt_summary << Form("\n%30s", title.Data());
 
@@ -342,7 +341,9 @@ void AnalysisCMS::Summary(TString analysis,
 
   txt_summary << Form("\n-------------------------------\n");
 
-  for (int i=firstCut; i<lastCut; i++) {
+  for (int i=0; i<ncut; i++) {
+
+    if (!scut[i].Contains(analysis)) continue;
       
     txt_summary << Form("%30s", scut[i].Data());
 

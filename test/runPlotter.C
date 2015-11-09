@@ -2,8 +2,8 @@
 #include "HistogramReader.h"
 
 
-const TString inputdir  = "../rootfiles/50ns/";
-const TString outputdir = "figures/50ns/";
+const TString inputdir  = "../rootfiles/25ns/";
+const TString outputdir = "figures/25ns/";
 
 
 void runPlotter(TString level)
@@ -14,11 +14,13 @@ void runPlotter(TString level)
 
   HistogramReader plotter(inputdir, outputdir);
 
-  plotter.SetLuminosity(lumi50ns_fb);
+  plotter.SetLuminosity(lumi25ns_fb);
   //  plotter.SetStackOption("nostack,hist,same");
 
   plotter.AddProcess("01_Data",      " data",    kBlack);
   plotter.AddProcess("08_WJets",     " W+jets",  kAzure-9);
+  plotter.AddProcess("09_TTW",       " ttW",     kGreen-6);  // New at 25ns
+  plotter.AddProcess("10_HWW",       " HWW",     kRed);      // New at 25ns
   plotter.AddProcess("06_WW",        " WW",      kAzure-7);
   plotter.AddProcess("05_SingleTop", " top",     kYellow-6);
   plotter.AddProcess("04_Top",       " tt+jets", kYellow);
