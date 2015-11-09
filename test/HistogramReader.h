@@ -70,8 +70,9 @@ class HistogramReader
 			  Bool_t         setndc = true);
 
   Float_t  GetMaximum    (TH1*           hist,
-			  Float_t        xmin = -999,
-			  Float_t        xmax = -999);
+			  Float_t        xmin     = -999,
+			  Float_t        xmax     = -999,
+			  Bool_t         binError = true);
 
   void     MoveOverflows (TH1*           hist,
 			  Float_t        xmin = -999,
@@ -103,8 +104,10 @@ class HistogramReader
 
   TFile*                _datafile;
   TH1*                  _datahist;
+  TH1*                  _allmchist;
   Color_t               _datacolor;
   TString               _datalabel;
+  TString               _allmclabel;
 
   std::vector<TFile*>   _mcfile;
   std::vector<TH1*>     _mchist;

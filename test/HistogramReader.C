@@ -158,15 +158,9 @@ void HistogramReader::Draw(TString hname,
 
   // All MC
   //----------------------------------------------------------------------------
-  TH1D* allmc = (TH1D*)_datahist->Clone("allmc");
-
-  allmc->SetFillColor  (kGray+1);
-  allmc->SetFillStyle  (   3345);
-  allmc->SetLineColor  (kGray+1);
-  allmc->SetMarkerColor(kGray+1);
-  allmc->SetMarkerSize (      0);
-
-  for (Int_t ibin=0; ibin<=allmc->GetNbinsX()+1; ibin++) {
+  _allmchist = (TH1D*)_datahist->Clone("allmchist");
+  
+  for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX()+1; ibin++) {
 
     Float_t binValue = 0.;
     Float_t binError = 0.;
@@ -184,22 +178,31 @@ void HistogramReader::Draw(TString hname,
     
     binError = sqrt(binError);
 
-    allmc->SetBinContent(ibin, binValue);
-    allmc->SetBinError  (ibin, binError);
+    _allmchist->SetBinContent(ibin, binValue);
+    _allmchist->SetBinError  (ibin, binError);
   }
 
-  if (_stackoption.Contains("nostack") && Yield(allmc) > 0)
+  _allmclabel = "all";
+
+  _allmchist->SetFillColor  (kGray+1);
+  _allmchist->SetFillStyle  (   3345);
+  _allmchist->SetLineColor  (kGray+1);
+  _allmchist->SetMarkerColor(kGray+1);
+  _allmchist->SetMarkerSize (      0);
+
+  if (_stackoption.Contains("nostack") && Yield(_allmchist) > 0)
     {
-      allmc->Scale(1.0/Yield(allmc));
+      _allmchist->SetLineWidth(2);
+      _allmchist->Scale(1.0/Yield(_allmchist));
     }
 
 
   // Draw
   //----------------------------------------------------------------------------
-  _datahist->Draw("ep");
-  hstack   ->Draw(_stackoption);
-  allmc    ->Draw("e2,same");
-  _datahist->Draw("ep,same");
+  _datahist ->Draw("ep");
+  hstack    ->Draw(_stackoption);
+  _allmchist->Draw("e2,same");
+  _datahist ->Draw("ep,same");
 
 
   // Set xtitle and ytitle
@@ -219,14 +222,15 @@ void HistogramReader::Draw(TString hname,
   _datahist->GetXaxis()->SetRangeUser(xmin, xmax);
 
   Float_t theMin   = 0.0;
-  Float_t theMax   = GetMaximum(_datahist, xmin, xmax);
-  Float_t theMaxMC = GetMaximum(allmc,     xmin, xmax);
+  Float_t theMax   = GetMaximum(_datahist,  xmin, xmax);
+  Float_t theMaxMC = GetMaximum(_allmchist, xmin, xmax);
 
   if (_stackoption.Contains("nostack"))
     {
       for (UInt_t i=0; i<_mcfile.size(); i++)
 	{
-	  Float_t mchist_i_max = GetMaximum(_mchist[i], xmin, xmax);
+	  Float_t mchist_i_max = GetMaximum(_mchist[i], xmin, xmax, false);
+
 	  if (mchist_i_max > theMaxMC) theMaxMC = mchist_i_max;
 	}
     }
@@ -260,8 +264,8 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, Form(" %s (%.0f)", _datalabel.Data(), Yield(_datahist)), "lp"); ny++;
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, allmc,     Form(" all (%.0f)",                   Yield(allmc)),     opt);  ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist,  Form(" %s (%.0f)", _datalabel.Data(),  Yield(_datahist)), "lp"); ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, Form(" %s (%.0f)", _allmclabel.Data(), Yield(_allmchist)), opt); ny++;
 
   for (int i=0; i<_mchist.size(); i++)
     {
@@ -295,12 +299,12 @@ void HistogramReader::Draw(TString hname,
       pad2->cd();
     
       TH1D* ratio       = (TH1D*)_datahist->Clone("ratio");
-      TH1D* uncertainty = (TH1D*)allmc->Clone("uncertainty");
+      TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
-	Float_t mcValue = allmc->GetBinContent(ibin);
-	Float_t mcError = allmc->GetBinError  (ibin);
+	Float_t mcValue = _allmchist->GetBinContent(ibin);
+	Float_t mcError = _allmchist->GetBinError  (ibin);
     
 	Float_t dtValue = ratio->GetBinContent(ibin);
 	Float_t dtError = ratio->GetBinError  (ibin);
@@ -400,9 +404,10 @@ void HistogramReader::DrawTLatex(Font_t      tfont,
 //------------------------------------------------------------------------------
 // GetMaximum
 //------------------------------------------------------------------------------
-Float_t HistogramReader::GetMaximum(TH1*     hist,
+Float_t HistogramReader::GetMaximum(TH1*    hist,
 				    Float_t xmin,
-				    Float_t xmax)
+				    Float_t xmax,
+				    Bool_t  binError)
 {
   UInt_t nbins = hist->GetNbinsX();
 
@@ -411,16 +416,18 @@ Float_t HistogramReader::GetMaximum(TH1*     hist,
   Int_t firstBin = (xmin != -999) ? axis->FindBin(xmin) : 1;
   Int_t lastBin  = (xmax != -999) ? axis->FindBin(xmax) : nbins;
 
-  Float_t maxWithErrors = 0;
+  Float_t hmax = 0;
 
   for (Int_t i=firstBin; i<=lastBin; i++) {
 
-    Float_t binHeight = hist->GetBinContent(i) + hist->GetBinError(i);
+    Float_t binHeight = hist->GetBinContent(i);
 
-    if (binHeight > maxWithErrors) maxWithErrors = binHeight;
+    if (binError) binHeight += hist->GetBinError(i);
+
+    if (binHeight > hmax) hmax = binHeight;
   }
 
-  return maxWithErrors;
+  return hmax;
 }
 
 
