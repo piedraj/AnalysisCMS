@@ -17,16 +17,16 @@ void runPlotter(TString level)
   plotter.SetLuminosity(lumi25ns_fb);
   //  plotter.SetStackOption("nostack,hist,same");
 
-  plotter.AddProcess("01_Data",      " data",    kBlack);
-  plotter.AddProcess("08_WJets",     " W+jets",  kAzure-9);
-  plotter.AddProcess("09_TTW",       " ttW",     kGreen-6);  // New at 25ns
-  plotter.AddProcess("10_HWW",       " HWW",     kRed);      // New at 25ns
-  plotter.AddProcess("06_WW",        " WW",      kAzure-7);
-  plotter.AddProcess("05_SingleTop", " top",     kYellow-6);
-  plotter.AddProcess("04_Top",       " tt+jets", kYellow);
-  plotter.AddProcess("03_ZZ",        " ZZ",      kRed+3);
-  plotter.AddProcess("07_ZJets",     " Z+jets",  kGreen+2);
-  plotter.AddProcess("02_WZ",        " WZ",      kOrange-2);
+  plotter.AddProcess("01_Data",      "data",    kBlack);
+  plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
+  plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);  // New at 25ns
+  plotter.AddProcess("11_HWW",       "HWW",     kRed);      // New at 25ns
+  plotter.AddProcess("06_WW",        "WW",      kAzure-7);
+  plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
+  plotter.AddProcess("04_Top",       "tt+jets", kYellow);
+  plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
+  plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
+  plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
 
 
   // Draw
@@ -61,20 +61,14 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nbjet"      + suffix, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY);
 
 
-	  // 3-lepton histograms
+	  // WZ histograms
 	  //--------------------------------------------------------------------
 	  if (!level.Contains("WZ")) continue;
 
-	  plotter.Draw(prefix + "m3l" + suffix, "m_{#font[12]{3l}}", 5, 0, "GeV", linY, true, 60, 300);
-
-
-	  // WZ histograms
-	  //--------------------------------------------------------------------
-	  if (!level.Contains("HasZ")) continue;
-
-	  plotter.Draw(prefix + "zl1pt"        + suffix, "Z leading lepton p_{T}",              5, 0, "GeV",  linY, true, 0, 150);
-	  plotter.Draw(prefix + "zl2pt"        + suffix, "Z trailing lepton p_{T}",             5, 0, "GeV",  linY, true, 0, 150);
-	  plotter.Draw(prefix + "wlpt"         + suffix, "W lepton p_{T}",                      5, 0, "GeV",  linY, true, 0, 150);
+	  plotter.Draw(prefix + "m3l"          + suffix, "m_{#font[12]{3l}}",                   5, 0, "GeV",  linY, true, 60, 300);
+	  plotter.Draw(prefix + "zl1pt"        + suffix, "Z leading lepton p_{T}",              5, 0, "GeV",  linY, true,  0, 150);
+	  plotter.Draw(prefix + "zl2pt"        + suffix, "Z trailing lepton p_{T}",             5, 0, "GeV",  linY, true,  0, 150);
+	  plotter.Draw(prefix + "wlpt"         + suffix, "W lepton p_{T}",                      5, 0, "GeV",  linY, true,  0, 150);
 	  plotter.Draw(prefix + "zl1eta"       + suffix, "Z leading lepton #eta",               5, 1, "NULL", linY);
 	  plotter.Draw(prefix + "zl2eta"       + suffix, "Z trailing lepton #eta",              5, 1, "NULL", linY);
 	  plotter.Draw(prefix + "wleta"        + suffix, "W lepton #eta",                       5, 1, "NULL", linY);

@@ -99,7 +99,6 @@ class AnalysisCMS : public AnalysisBase
   Lepton                 ZLepton2;
 
   TString                _sample;
-  bool                   _hasZ;
   bool                   _ismc;
   float                  _event_weight;
   float                  _ht;
@@ -130,13 +129,9 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pfType1Met[nchannel][ncut][njetbin+1];
 
 
-  // 3-lepton histograms
-  //----------------------------------------------------------------------------
-  TH1D*                  h_m3l[nchannel][ncut][njetbin+1];
-
-
   // WZ histograms
   //----------------------------------------------------------------------------
+  TH1D*                  h_m3l         [nchannel][ncut][njetbin+1];
   TH1D*                  h_zl1pt       [nchannel][ncut][njetbin+1];
   TH1D*                  h_zl2pt       [nchannel][ncut][njetbin+1];
   TH1D*                  h_wlpt        [nchannel][ncut][njetbin+1];

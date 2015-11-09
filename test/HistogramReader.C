@@ -240,11 +240,11 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-1;
-      theMax = 2. * TMath::Power(10, TMath::Log10(theMax) + 2);
+      theMax = 3. * TMath::Power(10, TMath::Log10(theMax) + 2);
     }
   else
     {
-      theMax *= 1.4;
+      theMax *= 1.45;
     }
 
   _datahist->SetMinimum(theMin);
@@ -269,7 +269,7 @@ void HistogramReader::Draw(TString hname,
 
   for (int i=0; i<_mchist.size(); i++)
     {
-      if (ny == 3)
+      if (ny == 4)
 	{
 	  ny = 0;
 	  xdelta += 0.228;
