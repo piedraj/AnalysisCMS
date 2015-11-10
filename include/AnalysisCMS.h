@@ -94,9 +94,11 @@ class AnalysisCMS : public AnalysisBase
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
   std::vector<Lepton>    AnalysisLeptons;
-  Lepton                 WLepton;
-  Lepton                 ZLepton1;
-  Lepton                 ZLepton2;
+  Lepton                 Lepton1;   // For WW and Top analyses
+  Lepton                 Lepton2;   // For WW and Top analyses
+  Lepton                 WLepton;   // For WZ analysis
+  Lepton                 ZLepton1;  // For WZ analysis
+  Lepton                 ZLepton2;  // For WZ analysis
 
   TString                _sample;
   bool                   _ismc;

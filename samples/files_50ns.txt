@@ -6,7 +6,7 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/Data13TeV/05Aug/50ns_Skim2l/latino_SingleMuon.root
 
 # MC
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU/latino_DYJetsToLL_M-50.root       # To be updated
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU_Skim2l/latino_DYJetsToLL_M-50.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU_Skim2l/latino_ST_t-channel.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU_Skim2l/latino_ST_tW_antitop.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/50ns_PU_Skim2l/latino_ST_tW_top.root

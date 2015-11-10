@@ -577,17 +577,20 @@ void AnalysisCMS::AnalysisWW()
   else if (_nelectron == 1) _channel = em;
   else if (_nelectron == 0) _channel = mm;
 
-  _m2l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).M();
-  _pt2l = (AnalysisLeptons[0].v + AnalysisLeptons[1].v).Pt();
+  Lepton1 = AnalysisLeptons[0];
+  Lepton2 = AnalysisLeptons[1];
+
+  _m2l  = (Lepton1.v + Lepton2.v).M();
+  _pt2l = (Lepton1.v + Lepton2.v).Pt();
 
 
   // WW selection
   //----------------------------------------------------------------------------
   bool pass = true;
 
-  pass &= (AnalysisLeptons[0].v.Pt() > 20.);
-  pass &= (AnalysisLeptons[1].v.Pt() > 20.);
-  pass &= (AnalysisLeptons[0].flavour * AnalysisLeptons[1].flavour < 0);
+  pass &= (Lepton1.v.Pt() > 20.);
+  pass &= (Lepton2.v.Pt() > 20.);
+  pass &= (Lepton1.flavour * Lepton2.flavour < 0);
 
   LevelHistograms(WW00_Exactly2Leptons, pass);
 
@@ -655,7 +658,7 @@ void AnalysisCMS::AnalysisWZ()
   //----------------------------------------------------------------------------
   if (_m2l < 0) return;
 
-  _m3l  = (AnalysisLeptons[0].v + AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
+  _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
 
   bool pass = true;
@@ -687,10 +690,6 @@ void AnalysisCMS::AnalysisWZ()
 void AnalysisCMS::AnalysisTop()
 {
   if (_ntight < 2) return;
-
-
-  Lepton Lepton1;
-  Lepton Lepton2;
 
 
   // Pick the opposite-sign lepton-pair with highest _pt2l
