@@ -116,3 +116,8 @@ And they should appear here,
     https://cprieels.web.cern.ch/cprieels/figures/
     https://piedra.web.cern.ch/piedra/figures/
 
+A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,
+
+    http://www.hep.uniovi.es/nachos/WZ/
+    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_1280pb/WZstep4/all/
+
