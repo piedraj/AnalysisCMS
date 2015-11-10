@@ -18,6 +18,13 @@ void runAnalysis(TString filename, TString era)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
+  if (argc != 3)
+    {
+      printf("\n ./runAnalysis <filename> <era>\n\n");
+      
+      return -1;
+    }
+
   runAnalysis(argv[1], argv[2]);
 
   return 0;

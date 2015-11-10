@@ -47,6 +47,10 @@ Always compile first.
 
     ./make
 
+It is always good to test the code. You can try the following example, that reads a latino tree and produces the corresponding histograms.
+
+    ./runAnalysis /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/21Oct/25ns/latino_WZTo3LNu.root 25ns
+
 Submit jobs to the gridui batch system.
 
     ./submit-jobs.sh samples/files_25ns.txt 25ns

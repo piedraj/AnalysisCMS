@@ -56,8 +56,8 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  logY, true, m2lmin, m2lmax);
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  linY, true, m2lmin, m2lmax);
+	  plotter.Draw(prefix + "pfType1Met" + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  linY, true,      0,    200);
 	  plotter.Draw(prefix + "counterLum" + suffix, "yield",                                   -1, 0, "NULL", linY);
-	  plotter.Draw(prefix + "pfType1Met" + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  linY);
 	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   10, 0, "GeV",  linY);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "njet"       + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY);

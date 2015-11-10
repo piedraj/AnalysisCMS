@@ -60,14 +60,14 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",   3, 0,   3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",   3, 0,   3);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 400, 0, 400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 400, 0, 200);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",   4, 0,   4);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",   4, 0,   4);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",  40, 0,  40);
-	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "", 200, 0, 200);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
+	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "", 2000, 0, 2000);
 
 
 	// WZ histograms
@@ -630,11 +630,11 @@ void AnalysisCMS::AnalysisWZ()
   for (UInt_t i=0; i<_nlepton; i++) {
     
     for (UInt_t j=i+1; j<_nlepton; j++) {
-      
+
       if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
-      
+
       float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
-      
+
       if (_m2l < 0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
 
 	_m2l = inv_mass;
