@@ -143,8 +143,8 @@ void AnalysisCMS::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    if (_analysis_ttdm) AnalysisTTDM();
     if (_analysis_top)  AnalysisTop();
+    if (_analysis_ttdm) AnalysisTTDM();
     if (_analysis_ww)   AnalysisWW();
     if (_analysis_wz)   AnalysisWZ();
   }
@@ -165,8 +165,8 @@ void AnalysisCMS::Loop(TString filename,
   txt_summary << Form("   nentries: %lld\n",      nentries);
   txt_summary << "\n";
 
-  if (_analysis_ttdm) Summary("TTDM", "11.0", "raw yields");
   if (_analysis_top)  Summary("Top",  "11.0", "raw yields");
+  if (_analysis_ttdm) Summary("TTDM", "11.0", "raw yields");
   if (_analysis_ww)   Summary("WW",   "11.0", "raw yields");
   if (_analysis_wz)   Summary("WZ",   "11.0", "raw yields");
   
@@ -591,33 +591,6 @@ void AnalysisCMS::GetJets()
 
 
 //------------------------------------------------------------------------------
-// AnalysisTTDM
-//------------------------------------------------------------------------------
-void AnalysisCMS::AnalysisTTDM()
-{
-  if (_nlepton != 2) return;
-  if (_ntight  != 2) return;
-
-  if      (_nelectron == 2) _channel = ee;
-  else if (_nelectron == 1) _channel = em;
-  else if (_nelectron == 0) _channel = mm;
-
-  Lepton1 = AnalysisLeptons[0];
-  Lepton2 = AnalysisLeptons[1];
-
-  _m2l  = (Lepton1.v + Lepton2.v).M();
-  _pt2l = (Lepton1.v + Lepton2.v).Pt();
-
-
-  // TTDM selection
-  //----------------------------------------------------------------------------
-  bool pass = true;
-
-  LevelHistograms(TTDM_00_Exactly2Leptons, pass);
-}
-
-
-//------------------------------------------------------------------------------
 // AnalysisTop
 //------------------------------------------------------------------------------
 void AnalysisCMS::AnalysisTop()
@@ -678,6 +651,33 @@ void AnalysisCMS::AnalysisTop()
   pass &= (_nbjet > 0);
 
   LevelHistograms(Top_02_Has1BJet, pass);
+}
+
+
+//------------------------------------------------------------------------------
+// AnalysisTTDM
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisTTDM()
+{
+  if (_nlepton != 2) return;
+  if (_ntight  != 2) return;
+
+  if      (_nelectron == 2) _channel = ee;
+  else if (_nelectron == 1) _channel = em;
+  else if (_nelectron == 0) _channel = mm;
+
+  Lepton1 = AnalysisLeptons[0];
+  Lepton2 = AnalysisLeptons[1];
+
+  _m2l  = (Lepton1.v + Lepton2.v).M();
+  _pt2l = (Lepton1.v + Lepton2.v).Pt();
+
+
+  // TTDM selection
+  //----------------------------------------------------------------------------
+  bool pass = true;
+
+  LevelHistograms(TTDM_00_Exactly2Leptons, pass);
 }
 
 
