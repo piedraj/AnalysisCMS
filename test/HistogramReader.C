@@ -142,7 +142,7 @@ void HistogramReader::Draw(TString hname,
   }
 
 
-  SetData(hname, ngroup, moveoverflow, xmin, xmax);
+  if (SetData(hname, ngroup, moveoverflow, xmin, xmax) < 0) return;
 
 
   // All MC
@@ -558,20 +558,21 @@ void HistogramReader::SetAxis(TH1*    hist,
 //------------------------------------------------------------------------------
 // SetData
 //------------------------------------------------------------------------------
-void HistogramReader::SetData(TString hname,
-			      Int_t   ngroup,
-			      Bool_t  moveoverflow,
-			      Float_t xmin,
-			      Float_t xmax)
+Int_t HistogramReader::SetData(TString hname,
+			       Int_t   ngroup,
+			       Bool_t  moveoverflow,
+			       Float_t xmin,
+			       Float_t xmax)
 {
-  if (!_datafile) return;
+  if (!_datafile) return -1;
 
   TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
   if (!dummy)
     {
-      printf("\n [HistogramReader::SetData] %s not found\n\n", hname.Data());
-      return;
+      printf(" [HistogramReader::SetData] Histogram %s not found\n", hname.Data());
+
+      return -1;
     }
 
   _datahist = (TH1D*)dummy->Clone();
@@ -588,6 +589,8 @@ void HistogramReader::SetData(TString hname,
   if (ngroup > 0) _datahist->Rebin(ngroup);
   
   if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
+
+  return 0;
 }
 
 

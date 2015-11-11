@@ -89,7 +89,7 @@ class HistogramReader
 			  Float_t        xoffset,
 			  Float_t        yoffset);
 
-  void     SetData       (TString        hname,
+  Int_t    SetData       (TString        hname,
 			  Int_t          ngroup,
 			  Bool_t         moveoverflow,
 			  Float_t        xmin,
@@ -99,7 +99,7 @@ class HistogramReader
 
   void     SetStackOption(TString        option) {_stackoption = option;}
   
-  Float_t  Yield          (TH1*           hist);
+  Float_t  Yield         (TH1*           hist);
  
 
  private :

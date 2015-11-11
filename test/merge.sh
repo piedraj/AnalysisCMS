@@ -2,7 +2,6 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh ../rootfiles/50ns"
     echo "  ./merge.sh ../rootfiles/25ns"
     echo "  "
     exit -1
@@ -25,7 +24,7 @@ if [[ $FOLDER == *"50ns"* ]] ; then
 
 elif [[ $FOLDER == *"25ns"* ]] ; then
 
-    hadd -f -k 01_Data.root      SingleElectron.root SingleMuon.root DoubleEG.root DoubleMuon.root MuonEG.root
+    hadd -f -k 01_Data.root      Run2015D*.root
     hadd -f -k 02_WZ.root        WZTo3LNu.root
     hadd -f -k 03_ZZ.root        ZZ.root
     hadd -f -k 04_Top.root       TT.root
