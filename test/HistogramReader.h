@@ -56,6 +56,14 @@ class HistogramReader
 			  Float_t        ymin         = -999,
 			  Float_t        ymax         = -999);
 
+  void     DrawLatex     (Font_t         tfont,
+			  Float_t        x,
+			  Float_t        y,
+			  Float_t        tsize,
+			  Short_t        align,
+			  const char*    text,
+			  Bool_t         setndc = true);
+
   TLegend* DrawLegend    (Float_t        x1,
 			  Float_t        y1,
 			  TH1*           hist,
@@ -64,14 +72,6 @@ class HistogramReader
 			  Float_t        tsize   = 0.030,
 			  Float_t        xoffset = 0.200,
 			  Float_t        yoffset = _yoffset);
-
-  void     DrawTLatex    (Font_t         tfont,
-			  Float_t        x,
-			  Float_t        y,
-			  Float_t        tsize,
-			  Short_t        align,
-			  const char*    text,
-			  Bool_t         setndc = true);
 
   Float_t  GetMaximum    (TH1*           hist,
 			  Float_t        xmin     = -999,
@@ -88,6 +88,12 @@ class HistogramReader
 			  Float_t        size,
 			  Float_t        xoffset,
 			  Float_t        yoffset);
+
+  void     SetData       (TString        hname,
+			  Int_t          ngroup,
+			  Bool_t         moveoverflow,
+			  Float_t        xmin,
+			  Float_t        xmax);
 
   void     SetLuminosity (Float_t        lumi) {_luminosity_fb = lumi;}
 

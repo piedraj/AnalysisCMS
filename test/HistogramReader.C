@@ -109,42 +109,16 @@ void HistogramReader::Draw(TString hname,
   
   pad1->SetLogy(setlogy);
 
-  if (!_datafile) return;  // WORK IN PROGRESS
-
-  TH1D* dummy = (TH1D*)_datafile->Get(hname);
-
-  if (!dummy)
-    {
-      printf("\n [HistogramReader::Draw] %s not found\n\n", hname.Data());
-      return;
-    }
-
-  _datahist = (TH1D*)dummy->Clone();
-
-  _datahist->SetFillColor(_datacolor);
-  _datahist->SetLineColor(_datacolor);
-  _datahist->SetMarkerStyle(kFullCircle);
-  _datahist->SetTitle("");
-
-  if (_stackoption.Contains("nostack") && Yield(_datahist) > 0)
-    {
-      _datahist->Scale(1.0/Yield(_datahist));
-    }
-
-  if (xmin == -999) xmin = _datahist->GetXaxis()->GetXmin();
-  if (xmax == -999) xmax = _datahist->GetXaxis()->GetXmax();
-
-  if (ngroup > 0) _datahist->Rebin(ngroup);
-  
-  if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
-
   _mchist.clear();
 
   THStack* hstack = new THStack(hname, hname);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
-    dummy = (TH1D*)_mcfile[i]->Get(hname);
+    TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+
+    if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
+    if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
@@ -168,9 +142,12 @@ void HistogramReader::Draw(TString hname,
   }
 
 
+  SetData(hname, ngroup, moveoverflow, xmin, xmax);
+
+
   // All MC
   //----------------------------------------------------------------------------
-  _allmchist = (TH1D*)_datahist->Clone("allmchist");
+  _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
   
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX()+1; ibin++) {
 
@@ -221,7 +198,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   TString ytitle = Form("events / %s.%df", "%", precision);
 
-  ytitle = Form(ytitle.Data(), _datahist->GetBinWidth(0));
+  ytitle = Form(ytitle.Data(), _mchist[0]->GetBinWidth(0));
 
   if (!units.Contains("NULL")) {
     xtitle = Form("%s [%s]", xtitle.Data(), units.Data());
@@ -296,9 +273,9 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t xprelim = (_drawratio) ? 0.288 : 0.300;
 
-  DrawTLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
-  DrawTLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
-  DrawTLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+  DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+  DrawLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
 
   SetAxis(_datahist, xtitle, ytitle, 0.045, 1.5, 1.7);
 
@@ -362,6 +339,28 @@ void HistogramReader::Draw(TString hname,
 
 
 //------------------------------------------------------------------------------
+// DrawLatex
+//------------------------------------------------------------------------------
+void HistogramReader::DrawLatex(Font_t      tfont,
+				Float_t     x,
+				Float_t     y,
+				Float_t     tsize,
+				Short_t     align,
+				const char* text,
+				Bool_t      setndc)
+{
+  TLatex* tl = new TLatex(x, y, text);
+
+  tl->SetNDC      (setndc);
+  tl->SetTextAlign( align);
+  tl->SetTextFont ( tfont);
+  tl->SetTextSize ( tsize);
+
+  tl->Draw("same");
+}
+
+
+//------------------------------------------------------------------------------
 // DrawLegend
 //------------------------------------------------------------------------------
 TLegend* HistogramReader::DrawLegend(Float_t x1,
@@ -388,28 +387,6 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   legend->Draw();
 
   return legend;
-}
-
-
-//------------------------------------------------------------------------------
-// DrawTLatex
-//------------------------------------------------------------------------------
-void HistogramReader::DrawTLatex(Font_t      tfont,
-				 Float_t     x,
-				 Float_t     y,
-				 Float_t     tsize,
-				 Short_t     align,
-				 const char* text,
-				 Bool_t      setndc)
-{
-  TLatex* tl = new TLatex(x, y, text);
-
-  tl->SetNDC      (setndc);
-  tl->SetTextAlign( align);
-  tl->SetTextFont ( tfont);
-  tl->SetTextSize ( tsize);
-
-  tl->Draw("same");
 }
 
 
@@ -575,6 +552,42 @@ void HistogramReader::SetAxis(TH1*    hist,
 
   gPad->GetFrame()->DrawClone();
   gPad->RedrawAxis();
+}
+
+
+//------------------------------------------------------------------------------
+// SetData
+//------------------------------------------------------------------------------
+void HistogramReader::SetData(TString hname,
+			      Int_t   ngroup,
+			      Bool_t  moveoverflow,
+			      Float_t xmin,
+			      Float_t xmax)
+{
+  if (!_datafile) return;
+
+  TH1D* dummy = (TH1D*)_datafile->Get(hname);
+
+  if (!dummy)
+    {
+      printf("\n [HistogramReader::SetData] %s not found\n\n", hname.Data());
+      return;
+    }
+
+  _datahist = (TH1D*)dummy->Clone();
+
+  _datahist->SetFillColor  ( _datacolor);
+  _datahist->SetLineColor  ( _datacolor);
+  _datahist->SetMarkerStyle(kFullCircle);
+
+  if (_stackoption.Contains("nostack") && Yield(_datahist) > 0)
+    {
+      _datahist->Scale(1.0/Yield(_datahist));
+    }
+
+  if (ngroup > 0) _datahist->Rebin(ngroup);
+  
+  if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
 }
 
 
