@@ -17,7 +17,9 @@ echo "  Let's play it safe. Compiling runAnalysis..."
 
 echo "  "
 echo "  Removing rootfiles/"$ERA"..."
+echo "  Removing txt/"$ERA"..."
 rm -rf rootfiles/$ERA
+rm -rf txt/$ERA
 
 echo "  "
 echo "  And... submitting jobs"
