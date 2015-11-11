@@ -17,6 +17,25 @@ HistogramReader::HistogramReader(TString const &inputdir,
   _mcfile.clear();
   _mccolor.clear();
   _mclabel.clear();
+
+  _datafile  = NULL;
+  _datahist  = NULL;
+  _allmchist = NULL;
+}
+
+
+//------------------------------------------------------------------------------
+// AddData
+//------------------------------------------------------------------------------
+void HistogramReader::AddData(TString const &filename,
+			      TString const &label,
+			      Color_t        color)
+{
+  TFile *file = new TFile(_inputdir + filename + ".root");
+
+  _datafile  = file;
+  _datalabel = label;
+  _datacolor = color;
 }
 
 
@@ -29,18 +48,9 @@ void HistogramReader::AddProcess(TString const &filename,
 {
   TFile *file = new TFile(_inputdir + filename + ".root");
 
-  if (filename.Contains("Data"))
-    {
-      _datafile  = file;
-      _datalabel = label;
-      _datacolor = color;
-    }
-  else
-    {
-      _mcfile.push_back(file);
-      _mclabel.push_back(label);
-      _mccolor.push_back(color);
-    }
+  _mcfile.push_back(file);
+  _mclabel.push_back(label);
+  _mccolor.push_back(color);
 }
 
 
@@ -98,6 +108,8 @@ void HistogramReader::Draw(TString hname,
   pad1->cd();
   
   pad1->SetLogy(setlogy);
+
+  if (!_datafile) return;  // WORK IN PROGRESS
 
   TH1D* dummy = (TH1D*)_datafile->Get(hname);
 

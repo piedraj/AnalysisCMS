@@ -17,7 +17,7 @@ void runPlotter(TString level)
   plotter.SetLuminosity(lumi25ns_fb);
   plotter.SetStackOption("hist,same");
 
-  plotter.AddProcess("01_Data",      "data",    kBlack);
+  plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
   plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
   plotter.AddProcess("11_HWW",       "HWW",     kRed);

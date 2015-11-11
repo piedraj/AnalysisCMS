@@ -36,6 +36,10 @@ class HistogramReader
 
   ~HistogramReader() {}
  
+  void     AddData       (TString const &filename,
+			  TString const &label,
+			  Color_t        color);
+
   void     AddProcess    (TString const &filename,
 			  TString const &label,
 			  Color_t        color);
