@@ -11,7 +11,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
   _stackoption  ("nostack,hist,same"),
   _luminosity_fb(0),
   _drawratio    (true),
-  _savepdf      (true),
+  _savepdf      (false),
   _savepng      (true)
 {
   _mcfile.clear();
