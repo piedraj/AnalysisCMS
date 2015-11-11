@@ -7,7 +7,22 @@
 //------------------------------------------------------------------------------
 AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 {
-  printf("\n [AnalysisCMS::AnalysisCMS]\n\n");
+  _analysis_top  = false;
+  _analysis_ttdm = false;
+  _analysis_ww   = false;
+  _analysis_wz   = false;
+}
+
+
+//------------------------------------------------------------------------------
+// AddAnalysis
+//------------------------------------------------------------------------------
+void AnalysisCMS::AddAnalysis(TString analysis)
+{
+  if (analysis.Contains("Top"))  _analysis_top  = true;
+  if (analysis.Contains("ttDM")) _analysis_ttdm = true;
+  if (analysis.Contains("WW"))   _analysis_ww   = true;
+  if (analysis.Contains("WZ"))   _analysis_wz   = true;
 }
 
 
@@ -18,8 +33,6 @@ void AnalysisCMS::Loop(TString filename,
 		       TString era,
 		       float   luminosity)
 {
-  printf("\n [AnalysisCMS::Loop]\n\n");
-
   GetSampleName(filename);
 
   if (fChain == 0) return;
@@ -129,9 +142,9 @@ void AnalysisCMS::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    AnalysisTop();
-    AnalysisWW();
-    AnalysisWZ();
+    if (_analysis_top) AnalysisTop();
+    if (_analysis_ww)  AnalysisWW();
+    if (_analysis_wz)  AnalysisWZ();
   }
 
 
@@ -150,9 +163,9 @@ void AnalysisCMS::Loop(TString filename,
   txt_summary << Form("   nentries: %lld\n",      nentries);
   txt_summary << "\n";
 
-  Summary("Top", "11.0", "raw yields");
-  Summary("WW",  "11.0", "raw yields");
-  Summary("WZ",  "11.0", "raw yields");
+  if (_analysis_top) Summary("Top", "11.0", "raw yields");
+  if (_analysis_ww)  Summary("WW",  "11.0", "raw yields");
+  if (_analysis_wz)  Summary("WZ",  "11.0", "raw yields");
   
   txt_summary.close();
 

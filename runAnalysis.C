@@ -9,6 +9,10 @@ void runAnalysis(TString filename, TString era)
 
   AnalysisCMS awz(latino);
 
+  awz.AddAnalysis("Top");
+  awz.AddAnalysis("WW");
+  awz.AddAnalysis("WZ");
+
   float luminosity = (era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
 
   awz.Loop(filename, era, luminosity);

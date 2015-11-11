@@ -48,6 +48,8 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0);
 
+  void    AddAnalysis      (TString analysis);
+
   float   MuonIsolation    (int     k);
 
   float   ElectronIsolation(int     k);
@@ -100,8 +102,13 @@ class AnalysisCMS : public AnalysisBase
   Lepton                 ZLepton1;  // For WZ analysis
   Lepton                 ZLepton2;  // For WZ analysis
 
-  TString                _sample;
+  bool                   _analysis_top;
+  bool                   _analysis_ttdm;
+  bool                   _analysis_ww;
+  bool                   _analysis_wz;
   bool                   _ismc;
+
+  TString                _sample;
   float                  _event_weight;
   float                  _ht;
   float                  _pt2l;
