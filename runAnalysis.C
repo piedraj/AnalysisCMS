@@ -7,16 +7,16 @@ void runAnalysis(TString filename, TString era)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  AnalysisCMS awz(latino);
+  AnalysisCMS acms(latino);
 
-  awz.AddAnalysis("Top");
-  awz.AddAnalysis("TTDM");
-  awz.AddAnalysis("WW");
-  awz.AddAnalysis("WZ");
+  acms.AddAnalysis("Top");
+  acms.AddAnalysis("TTDM");
+  acms.AddAnalysis("WW");
+  acms.AddAnalysis("WZ");
 
   float luminosity = (era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
 
-  awz.Loop(filename, era, luminosity);
+  acms.Loop(filename, era, luminosity);
 }
 
 
