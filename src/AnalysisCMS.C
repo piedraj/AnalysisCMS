@@ -3,12 +3,23 @@
 
 
 //------------------------------------------------------------------------------
+// AnalysisCMS
+//------------------------------------------------------------------------------
+AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
+{
+  printf("\n [AnalysisCMS::AnalysisCMS]\n\n");
+}
+
+
+//------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
 void AnalysisCMS::Loop(TString filename,
 		       TString era,
 		       float   luminosity)
 {
+  printf("\n [AnalysisCMS::Loop]\n\n");
+
   GetSampleName(filename);
 
   if (fChain == 0) return;

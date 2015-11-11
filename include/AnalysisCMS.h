@@ -46,7 +46,8 @@ class AnalysisCMS : public AnalysisBase
 {
  public :
 
- AnalysisCMS(TTree *tree=0) : AnalysisBase(tree) {}
+  // AnalysisCMS(TTree *tree=0) : AnalysisBase(tree) {}
+  AnalysisCMS(TTree* tree=0);
 
   float   MuonIsolation    (int     k);
 
