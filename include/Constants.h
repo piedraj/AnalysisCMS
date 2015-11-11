@@ -62,32 +62,34 @@ TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 10;
+const int ncut = 11;
 
 enum {
-  WW00_Exactly2Leptons,
-  WW01_ZVeto,
-  WW02_BVeto,
-  WZ00_Exactly3Leptons,
-  WZ01_HasZ,
-  WZ02_HasW,
-  WZ03_BVeto,
-  Top00_Has2Leptons,
-  Top01_Has2Jets,
-  Top02_Has1BJet
+  TTDM_00_Exactly2Leptons,
+  Top_00_Has2Leptons,
+  Top_01_Has2Jets,
+  Top_02_Has1BJet,
+  WW_00_Exactly2Leptons,
+  WW_01_ZVeto,
+  WW_02_BVeto,
+  WZ_00_Exactly3Leptons,
+  WZ_01_HasZ,
+  WZ_02_HasW,
+  WZ_03_BVeto
 };
 
 const TString scut[ncut] = {
+  "TTDM/00_Exactly2Leptons",
+  "Top/00_Has2Leptons",
+  "Top/01_Has2Jets",
+  "Top/02_Has1BJet",
   "WW/00_Exactly2Leptons",
   "WW/01_ZVeto",
   "WW/02_BVeto",
   "WZ/00_Exactly3Leptons",
   "WZ/01_HasZ",
   "WZ/02_HasW",
-  "WZ/03_BVeto",
-  "Top/00_Has2Leptons",
-  "Top/01_Has2Jets",
-  "Top/02_Has1BJet"
+  "WZ/03_BVeto"
 };
 
 

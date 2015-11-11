@@ -11,6 +11,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
   _analysis_ttdm = false;
   _analysis_ww   = false;
   _analysis_wz   = false;
+  _ismc          = true;
 }
 
 
@@ -19,10 +20,10 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 //------------------------------------------------------------------------------
 void AnalysisCMS::AddAnalysis(TString analysis)
 {
-  if (analysis.Contains("Top"))  _analysis_top  = true;
-  if (analysis.Contains("ttDM")) _analysis_ttdm = true;
-  if (analysis.Contains("WW"))   _analysis_ww   = true;
-  if (analysis.Contains("WZ"))   _analysis_wz   = true;
+  if (analysis.EqualTo("Top"))  _analysis_top  = true;
+  if (analysis.EqualTo("TTDM")) _analysis_ttdm = true;
+  if (analysis.EqualTo("WW"))   _analysis_ww   = true;
+  if (analysis.EqualTo("WZ"))   _analysis_wz   = true;
 }
 
 
@@ -142,9 +143,10 @@ void AnalysisCMS::Loop(TString filename,
 
     // Fill histograms
     //--------------------------------------------------------------------------
-    if (_analysis_top) AnalysisTop();
-    if (_analysis_ww)  AnalysisWW();
-    if (_analysis_wz)  AnalysisWZ();
+    if (_analysis_ttdm) AnalysisTTDM();
+    if (_analysis_top)  AnalysisTop();
+    if (_analysis_ww)   AnalysisWW();
+    if (_analysis_wz)   AnalysisWZ();
   }
 
 
@@ -163,9 +165,10 @@ void AnalysisCMS::Loop(TString filename,
   txt_summary << Form("   nentries: %lld\n",      nentries);
   txt_summary << "\n";
 
-  if (_analysis_top) Summary("Top", "11.0", "raw yields");
-  if (_analysis_ww)  Summary("WW",  "11.0", "raw yields");
-  if (_analysis_wz)  Summary("WZ",  "11.0", "raw yields");
+  if (_analysis_ttdm) Summary("TTDM", "11.0", "raw yields");
+  if (_analysis_top)  Summary("Top",  "11.0", "raw yields");
+  if (_analysis_ww)   Summary("WW",   "11.0", "raw yields");
+  if (_analysis_wz)   Summary("WZ",   "11.0", "raw yields");
   
   txt_summary.close();
 
@@ -402,8 +405,6 @@ void AnalysisCMS::GetSampleName(TString filename)
     }
   }
 
-  _ismc = true;
-
   if (_sample.Contains("DoubleEG"))       _ismc = false;
   if (_sample.Contains("DoubleMuon"))     _ismc = false;
   if (_sample.Contains("MuonEG"))         _ismc = false;
@@ -590,6 +591,97 @@ void AnalysisCMS::GetJets()
 
 
 //------------------------------------------------------------------------------
+// AnalysisTTDM
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisTTDM()
+{
+  if (_nlepton != 2) return;
+  if (_ntight  != 2) return;
+
+  if      (_nelectron == 2) _channel = ee;
+  else if (_nelectron == 1) _channel = em;
+  else if (_nelectron == 0) _channel = mm;
+
+  Lepton1 = AnalysisLeptons[0];
+  Lepton2 = AnalysisLeptons[1];
+
+  _m2l  = (Lepton1.v + Lepton2.v).M();
+  _pt2l = (Lepton1.v + Lepton2.v).Pt();
+
+
+  // TTDM selection
+  //----------------------------------------------------------------------------
+  bool pass = true;
+
+  LevelHistograms(TTDM_00_Exactly2Leptons, pass);
+}
+
+
+//------------------------------------------------------------------------------
+// AnalysisTop
+//------------------------------------------------------------------------------
+void AnalysisCMS::AnalysisTop()
+{
+  if (_ntight < 2) return;
+
+
+  // Pick the opposite-sign lepton-pair with highest _pt2l
+  //----------------------------------------------------------------------------
+  _pt2l = -999;
+
+  for (UInt_t i=0; i<_nlepton; i++) {
+    
+    if (AnalysisLeptons[i].type == Loose) continue;
+
+    for (UInt_t j=i+1; j<_nlepton; j++) {
+      
+      if (AnalysisLeptons[j].type == Loose) continue;
+
+      if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
+
+      float dilepton_pt = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).Pt();
+
+      if (dilepton_pt > _pt2l)
+	{
+	  _pt2l = dilepton_pt;
+	  
+	  Lepton1 = AnalysisLeptons[i];
+	  Lepton2 = AnalysisLeptons[j];
+	}
+    }
+  }
+
+  if (_pt2l < 0) return;
+
+  _m2l = (Lepton1.v + Lepton2.v).M();
+
+  int nelec =0;
+
+  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
+  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
+
+  if      (nelec == 2) _channel = ee;
+  else if (nelec == 1) _channel = em;
+  else if (nelec == 0) _channel = mm;
+
+
+  // Top selection
+  //----------------------------------------------------------------------------
+  bool pass = true;
+
+  LevelHistograms(Top_00_Has2Leptons, pass);
+
+  pass &= (_njet > 1);
+
+  LevelHistograms(Top_01_Has2Jets, pass);
+
+  pass &= (_nbjet > 0);
+
+  LevelHistograms(Top_02_Has1BJet, pass);
+}
+
+
+//------------------------------------------------------------------------------
 // AnalysisWW
 //------------------------------------------------------------------------------
 void AnalysisCMS::AnalysisWW()
@@ -616,7 +708,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (Lepton2.v.Pt() > 20.);
   pass &= (Lepton1.flavour * Lepton2.flavour < 0);
 
-  LevelHistograms(WW00_Exactly2Leptons, pass);
+  LevelHistograms(WW_00_Exactly2Leptons, pass);
 
   bool pass_sf = (_nelectron != 1 && _pt2l > 45. && fabs(_m2l - Z_MASS) > 15.);
   bool pass_df = (_nelectron == 1 && _pt2l > 30.);
@@ -625,11 +717,11 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_m2l > 12.);
   pass &= (pass_sf || pass_df);
 
-  LevelHistograms(WW01_ZVeto, pass);
+  LevelHistograms(WW_01_ZVeto, pass);
   
   pass &= (_nbjet == 0);
 
-  LevelHistograms(WW02_BVeto, pass);
+  LevelHistograms(WW_02_BVeto, pass);
 }
 
 
@@ -687,12 +779,12 @@ void AnalysisCMS::AnalysisWZ()
 
   bool pass = true;
 
-  LevelHistograms(WZ00_Exactly3Leptons, pass);
+  LevelHistograms(WZ_00_Exactly3Leptons, pass);
     
   pass &= (_m2l > 60. && _m2l < 120.);
   pass &= (ZLepton1.v.Pt() > 20.);
 
-  LevelHistograms(WZ01_HasZ, pass);
+  LevelHistograms(WZ_01_HasZ, pass);
 
   pass &= (WLepton.v.DeltaR(ZLepton1.v) >  0.1);
   pass &= (WLepton.v.DeltaR(ZLepton2.v) >  0.1);
@@ -700,73 +792,9 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (pfType1Met                   >  30.);
   pass &= (_m3l                         > 100.);
 
-  LevelHistograms(WZ02_HasW, pass);
+  LevelHistograms(WZ_02_HasW, pass);
 	
   pass &= (_nbjet == 0);
 	
-  LevelHistograms(WZ03_BVeto, pass);
-}
-
-
-//------------------------------------------------------------------------------
-// AnalysisTop
-//------------------------------------------------------------------------------
-void AnalysisCMS::AnalysisTop()
-{
-  if (_ntight < 2) return;
-
-
-  // Pick the opposite-sign lepton-pair with highest _pt2l
-  //----------------------------------------------------------------------------
-  _pt2l = -999;
-
-  for (UInt_t i=0; i<_nlepton; i++) {
-    
-    if (AnalysisLeptons[i].type == Loose) continue;
-
-    for (UInt_t j=i+1; j<_nlepton; j++) {
-      
-      if (AnalysisLeptons[j].type == Loose) continue;
-
-      if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
-
-      float dilepton_pt = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).Pt();
-
-      if (dilepton_pt > _pt2l)
-	{
-	  _pt2l = dilepton_pt;
-	  
-	  Lepton1 = AnalysisLeptons[i];
-	  Lepton2 = AnalysisLeptons[j];
-	}
-    }
-  }
-
-  if (_pt2l < 0) return;
-
-  _m2l = (Lepton1.v + Lepton2.v).M();
-
-  int nelec =0;
-
-  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
-  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
-
-  if      (nelec == 2) _channel = ee;
-  else if (nelec == 1) _channel = em;
-  else if (nelec == 0) _channel = mm;
-
-
-  // Top selection
-  //----------------------------------------------------------------------------
-  bool pass = true;
-
-  LevelHistograms(Top00_Has2Leptons, pass);
-
-  pass &= (_njet > 1);
-
-  LevelHistograms(Top01_Has2Jets, pass);
-
-  pass &= (_nbjet > 0);
-
-  LevelHistograms(Top02_Has1BJet, pass);
+  LevelHistograms(WZ_03_BVeto, pass);
 }

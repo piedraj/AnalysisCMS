@@ -10,6 +10,7 @@ void runAnalysis(TString filename, TString era)
   AnalysisCMS awz(latino);
 
   awz.AddAnalysis("Top");
+  awz.AddAnalysis("TTDM");
   awz.AddAnalysis("WW");
   awz.AddAnalysis("WZ");
 

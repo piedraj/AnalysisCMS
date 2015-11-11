@@ -85,22 +85,24 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets          ();
 
-  void    AnalysisWW       ();  // Alberto, Nicolo, Alicia
+  void    AnalysisTop      ();
 
-  void    AnalysisWZ       ();  // Cedric, Jonatan
+  void    AnalysisTTDM     ();
 
-  void    AnalysisTop      ();  // Barbara, Rocio
+  void    AnalysisWW       ();
+
+  void    AnalysisWZ       ();
 
 
   // Data members
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
   std::vector<Lepton>    AnalysisLeptons;
-  Lepton                 Lepton1;   // For WW and Top analyses
-  Lepton                 Lepton2;   // For WW and Top analyses
-  Lepton                 WLepton;   // For WZ analysis
-  Lepton                 ZLepton1;  // For WZ analysis
-  Lepton                 ZLepton2;  // For WZ analysis
+  Lepton                 Lepton1;
+  Lepton                 Lepton2;
+  Lepton                 WLepton;
+  Lepton                 ZLepton1;
+  Lepton                 ZLepton2;
 
   bool                   _analysis_top;
   bool                   _analysis_ttdm;
