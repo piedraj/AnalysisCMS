@@ -22,7 +22,7 @@ Set a CMSSW release.
     cd CMSSW_7_5_3/src
     cmsenv
 
-Get the material.
+Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
 
     git clone https://github.com/piedraj/AnalysisCMS
 
@@ -62,6 +62,16 @@ Show the status of the submitted jobs.
 
     qstat -u $USER
     qstat -j <job-ID.ja-task-ID>
+
+Alternatively one can login to a node and run interactively.
+
+    qlogin -P l.gaes
+    source /cvmfs/cms.cern.ch/cmsset_default.sh
+    cd CMSSW_7_5_3/src
+    cmsenv
+    cd AnalysisCMS
+    ./make
+    ./runAnalysis /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/21Oct/25ns/latino_WZTo3LNu.root 25ns
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
@@ -123,4 +133,23 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 
     http://www.hep.uniovi.es/nachos/WZ/
     http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_1280pb/WZstep4/all/
+
+
+7. It is commit time
+====
+
+This framework is intended to be used, and developed, by several people. If you
+want your changes to be shared by others, then it is commit time. First you
+should get the latest modifications in the repository, if any.
+
+    git pull https://github.com/piedraj/AnalysisCMS
+
+And then commit your changes.
+
+    git status
+    git add <filepattern>
+    git commit -m 'Modified'
+    git push origin master
+
+If the changes have been made in a fork of the master, go to https://github.com/piedraj/AnalysisCMS and click **Pull Request**.
 
