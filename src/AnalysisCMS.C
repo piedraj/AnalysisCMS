@@ -66,6 +66,11 @@ void AnalysisCMS::Loop(TString filename,
 
   for (int j=0; j<ncut; j++) {
 
+    if (!_analysis_top  && scut[j].Contains("Top_"))  continue;
+    if (!_analysis_ttdm && scut[j].Contains("TTDM_")) continue;
+    if (!_analysis_ww   && scut[j].Contains("WW_"))   continue;
+    if (!_analysis_wz   && scut[j].Contains("WZ_"))   continue;
+
     for (int k=0; k<=njetbin; k++) {
 
       TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
@@ -678,6 +683,34 @@ void AnalysisCMS::AnalysisTTDM()
   bool pass = true;
 
   LevelHistograms(TTDM_00_Exactly2Leptons, pass);
+
+  bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_df = (_nelectron == 1);
+
+  pass &= (_m2l > 20.);
+  pass &= (pass_sf || pass_df);
+
+  LevelHistograms(TTDM_01_ZVeto, pass);
+
+  pass &= (_njet > 1);
+
+  LevelHistograms(TTDM_02_Has2Jets, pass);
+
+  pass &= (Lepton1.v.Pt() + Lepton2.v.Pt() > 120.);
+
+  LevelHistograms(TTDM_03_LepPtSum, pass);
+  
+  pass &= (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt() < 400.);
+
+  LevelHistograms(TTDM_04_JetPtSum, pass);
+
+  pass &= (Lepton1.v.DeltaPhi(Lepton2.v) < 2.);
+
+  LevelHistograms(TTDM_05_LepDeltaPhi, pass);
+
+  pass &= (pfType1Met > 320.);
+
+  LevelHistograms(TTDM_06_MET, pass);
 }
 
 
