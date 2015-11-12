@@ -7,7 +7,7 @@ These twiki pages contain the CMS synchronization status of the WW and WZ cross 
     https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables
 
 
-1. Everything starts here
+1. First time only
 ====
 
 Log in to gridui.
@@ -15,21 +15,16 @@ Log in to gridui.
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-
-2. Set a CMSSW release
-====
+Set a CMSSW release.
 
     export SCRAM_ARCH=slc6_amd64_gcc491
     cmsrel CMSSW_7_5_3
     cd CMSSW_7_5_3/src
     cmsenv
 
-
-3. Get the material
-====
+Get the material.
 
     git clone https://github.com/piedraj/AnalysisCMS
-    cd AnalysisCMS
 
 <!---
 The base class should be recreated anytime the latino trees have been updated.
@@ -40,14 +35,22 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 -->
 
 
-4. Compile and run
+2. Always do
 ====
 
-Always compile first.
+    ssh -Y gridui.ifca.es -o ServerAliveInterval=240
+    source /cvmfs/cms.cern.ch/cmsset_default.sh
+    cd CMSSW_7_5_3/src
+    cmsenv
+    cd AnalysisCMS
+
+
+3. Compile and run
+====
 
     ./make
 
-It is always good to test the code. The following example reads a latino tree and produces the corresponding histograms.
+It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
 
     ./runAnalysis /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/21Oct/25ns/latino_WZTo3LNu.root 25ns
 
@@ -57,7 +60,7 @@ Submit jobs to the gridui batch system.
 
 Show the status of the submitted jobs.
 
-    qstat -u piedra
+    qstat -u $USER
     qstat -j <job-ID.ja-task-ID>
 
 <!---
@@ -67,7 +70,7 @@ Notice that input files can be accessed directly from eos when working from lxpl
 -->
 
 
-5. Draw
+4. Draw
 ====
 
 First merge the files produced in the previous step.
@@ -81,7 +84,7 @@ Then compile and draw your favorite distributions.
     ./runPlotter
 
 
-6. Create your website
+5. Create your website
 ====
 
 Follow the instructions at [Permissions for your AFS folder](https://espace.cern.ch/webservices-help/websitemanagement/ConfiguringAFSSites/Pages/PermissionsforyourAFSfolder.aspx).
@@ -95,7 +98,7 @@ Go to the CERN Web Services and click on [Create a new website](https://webservi
 Choose the "AFS folder" site type.
 
 
-7. Share on the web
+6. Share on the web
 ====
 
 Create a soft link to your `figures` folder.
