@@ -10,7 +10,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist,same"),
   _luminosity_fb(0),
-  _drawratio    (true),
+  _drawratio    (false),
   _savepdf      (false),
   _savepng      (true)
 {

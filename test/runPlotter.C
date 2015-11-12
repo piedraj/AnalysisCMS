@@ -14,8 +14,9 @@ void runPlotter(TString level)
 
   HistogramReader plotter(inputdir, outputdir);
 
-  plotter.SetLuminosity(lumi25ns_fb);
+  plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist,same");
+  plotter.SetDrawRatio  (true);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);

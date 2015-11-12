@@ -95,6 +95,8 @@ class HistogramReader
 			  Float_t        xmin,
 			  Float_t        xmax);
 
+  void     SetDrawRatio  (Bool_t         drawratio) {_drawratio = drawratio;}
+
   void     SetLuminosity (Float_t        lumi) {_luminosity_fb = lumi;}
 
   void     SetStackOption(TString        option) {_stackoption = option;}
