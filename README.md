@@ -52,7 +52,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
 
-    ./runAnalysis /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/21Oct/25ns/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
 
 Submit jobs to the gridui batch system.
 
@@ -71,7 +71,7 @@ Alternatively one can login to a node and run interactively.
     cmsenv
     cd AnalysisCMS
     ./make
-    ./runAnalysis /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/21Oct/25ns/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
@@ -138,9 +138,7 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 7. It is commit time
 ====
 
-This framework is intended to be used, and developed, by several people. If you
-want your changes to be shared by others, then it is commit time. First you
-should get the latest modifications in the repository, if any.
+This framework is intended to be used, and developed, by several people. If you want your changes to be shared by others, then it is commit time. First you should get the latest modifications in the repository, if any.
 
     git pull https://github.com/piedraj/AnalysisCMS
 
