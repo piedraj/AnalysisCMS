@@ -66,6 +66,11 @@ void AnalysisCMS::Loop(TString filename,
 
   for (int j=0; j<ncut; j++) {
 
+    if (!_analysis_top  && scut[j].Contains("Top/"))  continue;
+    if (!_analysis_ttdm && scut[j].Contains("TTDM/")) continue;
+    if (!_analysis_ww   && scut[j].Contains("WW/"))   continue;
+    if (!_analysis_wz   && scut[j].Contains("WZ/"))   continue;
+
     for (int k=0; k<=njetbin; k++) {
 
       TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
