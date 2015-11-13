@@ -11,6 +11,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
   _analysis_ttdm = false;
   _analysis_ww   = false;
   _analysis_wz   = false;
+  _eventdump     = true;
   _ismc          = true;
 }
 
@@ -58,6 +59,8 @@ void AnalysisCMS::Loop(TString filename,
   gSystem->mkdir(Form("txt/%s",       era.Data()), kTRUE);
 
   root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
+
+  if (_eventdump) txt_eventdump.open("txt/" + era + "/" + _sample + "_eventdump.txt");
 
 
   // Define histograms
@@ -158,6 +161,8 @@ void AnalysisCMS::Loop(TString filename,
   //----------------------------------------------------------------------------
   // Summary
   //----------------------------------------------------------------------------
+  if (_eventdump) txt_eventdump.close();
+
   if (verbosity > 0) printf("\n");
 
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
@@ -435,7 +440,7 @@ void AnalysisCMS::ApplyWeights(TString sample,
 
   if (era.EqualTo("50ns"))
     {
-      if (_sample.EqualTo("WWTo2L2Nu_NLL")) _event_weight *= nllW;
+      //      if (_sample.EqualTo("WWTo2L2Nu_NLL")) _event_weight *= nllW;
 
       if (_sample.EqualTo("WJetsToLNu"))      signed_weight /= 0.683927;
       if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight /= 0.670032;
@@ -805,6 +810,9 @@ void AnalysisCMS::AnalysisWZ()
   }
 
 
+  if (_eventdump && evt > 664878 && evt < 1520466) EventDump();
+
+
   // WZ selection
   //----------------------------------------------------------------------------
   if (_m2l < 0) return;
@@ -832,4 +840,36 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (_nbjet == 0);
 	
   LevelHistograms(WZ_03_BVeto, pass);
+}
+
+
+//------------------------------------------------------------------------------
+// EventDump
+//------------------------------------------------------------------------------
+void AnalysisCMS::EventDump()
+{
+  for (int i=0; i<_nlepton; i++)
+    {
+      int index = AnalysisLeptons[i].index;
+
+      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%d",
+			    evt,
+			    AnalysisLeptons[i].flavour,
+			    AnalysisLeptons[i].v.Pt(),
+			    AnalysisLeptons[i].v.Eta(),
+			    AnalysisLeptons[i].iso,
+			    IsTightLepton(index));
+
+      if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
+	{
+	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
+				std_vector_electron_scEta->at(index),
+				std_vector_electron_passConversionVeto->at(index),
+				std_vector_electron_d0->at(index),
+				std_vector_electron_dz->at(index),
+				std_vector_electron_expectedMissingInnerHits->at(index));
+	}
+      
+      txt_eventdump << Form("\n");
+    }
 }

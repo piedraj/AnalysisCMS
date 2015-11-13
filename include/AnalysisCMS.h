@@ -93,6 +93,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    AnalysisWZ       ();
 
+  void    EventDump        ();
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -108,6 +110,7 @@ class AnalysisCMS : public AnalysisBase
   bool                   _analysis_ttdm;
   bool                   _analysis_ww;
   bool                   _analysis_wz;
+  bool                   _eventdump;
   bool                   _ismc;
 
   TString                _sample;
@@ -125,6 +128,7 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _jetbin;
   
   ofstream               txt_summary;
+  ofstream               txt_eventdump;
   TFile*                 root_output;
 
 
