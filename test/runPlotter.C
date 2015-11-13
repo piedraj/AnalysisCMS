@@ -17,6 +17,7 @@ void runPlotter(TString level)
   plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist,same");
   plotter.SetDrawRatio  (true);
+  plotter.SetDrawYield  (true);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);

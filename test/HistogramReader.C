@@ -11,6 +11,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
   _stackoption  ("nostack,hist,same"),
   _luminosity_fb(0),
   _drawratio    (false),
+  _drawyield    (false),
   _savepdf      (false),
   _savepng      (true)
 {
@@ -253,8 +254,8 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist,  Form(" %s (%.0f)", _datalabel.Data(),  Yield(_datahist)), "lp"); ny++;
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, Form(" %s (%.0f)", _allmclabel.Data(), Yield(_allmchist)), opt); ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist,  _datalabel.Data(), "lp"); ny++;
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt); ny++;
 
   for (int i=0; i<_mchist.size(); i++)
     {
@@ -264,7 +265,7 @@ void HistogramReader::Draw(TString hname,
 	  xdelta += 0.228;
 	}
 
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], Form(" %s (%.0f)", _mclabel[i].Data(), Yield(_mchist[i])), opt);
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
       ny++;
     }
 
@@ -383,7 +384,11 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   legend->SetTextFont  (   42);
   legend->SetTextSize  (tsize);
 
-  legend->AddEntry(hist, label.Data(), option.Data());
+  TString final_label = Form(" %s", label.Data());
+ 
+  if (_drawyield) final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+
+  legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();
 
   return legend;

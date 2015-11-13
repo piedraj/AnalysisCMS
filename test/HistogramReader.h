@@ -97,6 +97,8 @@ class HistogramReader
 
   void     SetDrawRatio  (Bool_t         drawratio) {_drawratio = drawratio;}
 
+  void     SetDrawYield  (Bool_t         drawyield) {_drawyield = drawyield;}
+
   void     SetLuminosity (Float_t        lumi) {_luminosity_fb = lumi;}
 
   void     SetStackOption(TString        option) {_stackoption = option;}
@@ -107,8 +109,10 @@ class HistogramReader
  private :
 
   Bool_t                _drawratio;
+  Bool_t                _drawyield;
   Bool_t                _savepdf;
   Bool_t                _savepng;
+
   Float_t               _luminosity_fb;
   TString               _inputdir;
   TString               _outputdir;
