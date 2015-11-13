@@ -11,7 +11,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
   _analysis_ttdm = false;
   _analysis_ww   = false;
   _analysis_wz   = false;
-  _eventdump     = true;
+  _eventdump     = false;
   _ismc          = true;
 }
 
