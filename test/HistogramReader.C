@@ -8,7 +8,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
 				 TString const &outputdir) :
   _inputdir     (inputdir),
   _outputdir    (outputdir),
-  _stackoption  ("nostack,hist,same"),
+  _stackoption  ("nostack,hist"),
   _luminosity_fb(0),
   _drawratio    (false),
   _drawyield    (false),
@@ -79,7 +79,7 @@ void HistogramReader::Draw(TString hname,
   TPad* pad1 = NULL;
   TPad* pad2 = NULL;
 
-  if (_drawratio)
+  if (_drawratio && _datafile)
     {
       canvas = new TCanvas(cname, cname, 550, 720);
 
@@ -96,9 +96,10 @@ void HistogramReader::Draw(TString hname,
     }
   else
     {
-      canvas = new TCanvas(cname, cname);
+      canvas = new TCanvas(cname, cname, 550, 600);
 
       pad1 = new TPad("pad1", "pad1", 0, 0, 1, 1);
+
       pad1->Draw();
     }
 
@@ -143,7 +144,14 @@ void HistogramReader::Draw(TString hname,
   }
 
 
-  if (SetData(hname, ngroup, moveoverflow, xmin, xmax) < 0) return;
+  SetData(hname, ngroup, moveoverflow, xmin, xmax);
+
+
+  // hfirst will contain the axis settings
+  //----------------------------------------------------------------------------
+  TH1D* hfirst = (TH1D*)_mchist[0]->Clone("hfirst");
+
+  hfirst->Reset();
 
 
   // All MC
@@ -189,17 +197,20 @@ void HistogramReader::Draw(TString hname,
 
   // Draw
   //----------------------------------------------------------------------------
-  _datahist ->Draw("ep");
-  hstack    ->Draw(_stackoption);
+  hfirst->Draw();
+
+  hstack->Draw(_stackoption + ",same");
+
   _allmchist->Draw("e2,same");
-  _datahist ->Draw("ep,same");
+
+  if (_datahist) _datahist->Draw("ep,same");
 
 
   // Set xtitle and ytitle
   //----------------------------------------------------------------------------
   TString ytitle = Form("events / %s.%df", "%", precision);
 
-  ytitle = Form(ytitle.Data(), _mchist[0]->GetBinWidth(0));
+  ytitle = Form(ytitle.Data(), hfirst->GetBinWidth(0));
 
   if (!units.Contains("NULL")) {
     xtitle = Form("%s [%s]", xtitle.Data(), units.Data());
@@ -209,10 +220,12 @@ void HistogramReader::Draw(TString hname,
 
   // Adjust xaxis and yaxis
   //----------------------------------------------------------------------------
-  _datahist->GetXaxis()->SetRangeUser(xmin, xmax);
+  hfirst->GetXaxis()->SetRangeUser(xmin, xmax);
 
-  Float_t theMin   = 0.0;
-  Float_t theMax   = GetMaximum(_datahist,  xmin, xmax);
+  Float_t theMin = 0.0;
+
+  Float_t theMax = (_datahist) ? GetMaximum(_datahist, xmin, xmax) : 0.0;
+
   Float_t theMaxMC = GetMaximum(_allmchist, xmin, xmax);
 
   if (_stackoption.Contains("nostack"))
@@ -230,23 +243,23 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-1;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
+      theMax = 3. * TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
     {
       theMax *= 1.45;
     }
 
-  _datahist->SetMinimum(theMin);
-  _datahist->SetMaximum(theMax);
+  hfirst->SetMinimum(theMin);
+  hfirst->SetMaximum(theMax);
 
-  if (ymin != -999) _datahist->SetMinimum(ymin);
-  if (ymax != -999) _datahist->SetMaximum(ymax);
+  if (ymin != -999) hfirst->SetMinimum(ymin);
+  if (ymax != -999) hfirst->SetMaximum(ymax);
 
 
   // Legend
   //----------------------------------------------------------------------------
-  Float_t x0     = 0.222;
+  Float_t x0     = 0.220;
   Float_t y0     = 0.834;
   Float_t xdelta = 0.0;
   Float_t ydelta = _yoffset + 0.001;
@@ -254,8 +267,14 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist,  _datalabel.Data(), "lp"); ny++;
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt); ny++;
+  if (_datahist)
+    {
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, _datalabel.Data(), "lp");
+      ny++;
+    }
+
+  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+  ny++;
 
   for (int i=0; i<_mchist.size(); i++)
     {
@@ -272,19 +291,19 @@ void HistogramReader::Draw(TString hname,
 
   // Titles
   //----------------------------------------------------------------------------
-  Float_t xprelim = (_drawratio) ? 0.288 : 0.300;
+  Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
 
   DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
   DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
   DrawLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
 
-  SetAxis(_datahist, xtitle, ytitle, 0.045, 1.5, 1.7);
+  SetAxis(hfirst, xtitle, ytitle, 0.045, 1.5, 1.7);
 
 
   //----------------------------------------------------------------------------
   // pad2
   //----------------------------------------------------------------------------
-  if (_drawratio)
+  if (_drawratio && _datafile)
     {
       pad2->cd();
     

@@ -15,7 +15,7 @@ void runPlotter(TString level)
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetLuminosity (lumi25ns_fb);
-  plotter.SetStackOption("hist,same");
+  plotter.SetStackOption("hist");
   plotter.SetDrawRatio  (true);
   plotter.SetDrawYield  (true);
 
