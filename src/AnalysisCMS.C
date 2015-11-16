@@ -100,7 +100,7 @@ void AnalysisCMS::Loop(TString filename,
 	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
 	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
-	h_pfType1Met[i][j][k] = new TH1D("h_pfType1Met" + suffix, "", 2000, 0, 2000);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
 
 
 	// WZ histograms
@@ -140,13 +140,9 @@ void AnalysisCMS::Loop(TString filename,
 
     GetJets();
 
+    GetMET(pfType1Met, pfType1Metphi);
 
-    // Compute Ht
-    //--------------------------------------------------------------------------
-    _ht = pfType1Met;
-
-    for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
-    for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
+    GetHT();
 
 
     // Fill histograms
@@ -315,13 +311,13 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   // Common histograms
   //----------------------------------------------------------------------------
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
-  h_counterLum[ichannel][icut][ijet]->Fill(1,          _event_weight);
-  h_ht        [ichannel][icut][ijet]->Fill(_ht,        _event_weight);
-  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,       _event_weight);
-  h_njet      [ichannel][icut][ijet]->Fill(_njet,      _event_weight);
-  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,     _event_weight);
-  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,       _event_weight);
-  h_pfType1Met[ichannel][icut][ijet]->Fill(pfType1Met, _event_weight);
+  h_counterLum[ichannel][icut][ijet]->Fill(1,        _event_weight);
+  h_ht        [ichannel][icut][ijet]->Fill(_ht,      _event_weight);
+  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,     _event_weight);
+  h_njet      [ichannel][icut][ijet]->Fill(_njet,    _event_weight);
+  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,   _event_weight);
+  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,     _event_weight);
+  h_met       [ichannel][icut][ijet]->Fill(MET.Et(), _event_weight);
 
 
   // WZ histograms
@@ -715,7 +711,7 @@ void AnalysisCMS::AnalysisTTDM()
 
   LevelHistograms(TTDM_05_LepDeltaPhi, pass);
 
-  pass &= (pfType1Met > 320.);
+  pass &= (MET.Et() > 320.);
 
   LevelHistograms(TTDM_06_MET, pass);
 }
@@ -753,7 +749,7 @@ void AnalysisCMS::AnalysisWW()
   bool pass_sf = (_nelectron != 1 && _pt2l > 45. && fabs(_m2l - Z_MASS) > 15.);
   bool pass_df = (_nelectron == 1 && _pt2l > 30.);
 
-  pass &= (pfType1Met > 20.);
+  pass &= (MET.Et() > 20.);
   pass &= (_m2l > 12.);
   pass &= (pass_sf || pass_df);
 
@@ -832,7 +828,7 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (WLepton.v.DeltaR(ZLepton1.v) >  0.1);
   pass &= (WLepton.v.DeltaR(ZLepton2.v) >  0.1);
   pass &= (WLepton.v.Pt()               >  20.);
-  pass &= (pfType1Met                   >  30.);
+  pass &= (MET.Et()                     >  30.);
   pass &= (_m3l                         > 100.);
 
   LevelHistograms(WZ_02_HasW, pass);
@@ -872,4 +868,25 @@ void AnalysisCMS::EventDump()
       
       txt_eventdump << Form("\n");
     }
+}
+
+
+//------------------------------------------------------------------------------
+// GetMET
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetMET(float module, float phi)
+{
+  MET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
+}
+
+
+//------------------------------------------------------------------------------
+// GetHT
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetHT()
+{
+  _ht = MET.Et();
+
+  for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
+  for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
 }

@@ -85,6 +85,11 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets          ();
 
+  void    GetMET           (float   module,
+			    float   phi);
+
+  void    GetHT            ();
+
   void    AnalysisTop      ();
 
   void    AnalysisTTDM     ();
@@ -105,6 +110,7 @@ class AnalysisCMS : public AnalysisBase
   Lepton                 WLepton;
   Lepton                 ZLepton1;
   Lepton                 ZLepton2;
+  TLorentzVector         MET;
 
   bool                   _analysis_top;
   bool                   _analysis_ttdm;
@@ -141,7 +147,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_njet      [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pfType1Met[nchannel][ncut][njetbin+1];
+  TH1D*                  h_met       [nchannel][ncut][njetbin+1];
 
 
   // WZ histograms
