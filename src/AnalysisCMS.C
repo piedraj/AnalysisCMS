@@ -101,6 +101,7 @@ void AnalysisCMS::Loop(TString filename,
 	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
 	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
 
 
 	// WZ histograms
@@ -310,6 +311,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
   // Common histograms
   //----------------------------------------------------------------------------
+  float deltarll = Lepton1.v.DeltaR(Lepton2.v);
+
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
   h_counterLum[ichannel][icut][ijet]->Fill(1,        _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,      _event_weight);
@@ -318,6 +321,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,   _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,     _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(), _event_weight);
+  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll, _event_weight);
 
 
   // WZ histograms
@@ -773,6 +777,9 @@ void AnalysisCMS::AnalysisWZ()
   else if (_nelectron == 2) _channel = eem;
   else if (_nelectron == 1) _channel = emm;
   else if (_nelectron == 0) _channel = mmm;
+
+  Lepton1 = AnalysisLeptons[0];
+  Lepton2 = AnalysisLeptons[1];
 
 
   // Make Z and W candidates

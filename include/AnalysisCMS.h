@@ -148,6 +148,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
 
 
   // WZ histograms
