@@ -106,16 +106,15 @@ void AnalysisCMS::Loop(TString filename,
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l         [i][j][k] = new TH1D("h_m3l"          + suffix, "", 4000,  0, 4000);
-	h_zl1pt       [i][j][k] = new TH1D("h_zl1pt"        + suffix, "",  200,  0,  200);
-	h_zl2pt       [i][j][k] = new TH1D("h_zl2pt"        + suffix, "",  200,  0,  200);
-	h_wlpt        [i][j][k] = new TH1D("h_wlpt"         + suffix, "",  200,  0,  200);
-	h_zl1eta      [i][j][k] = new TH1D("h_zl1eta"       + suffix, "",  120, -3,    3);
-	h_zl2eta      [i][j][k] = new TH1D("h_zl2eta"       + suffix, "",  120, -3,    3);
-	h_wleta       [i][j][k] = new TH1D("h_wleta"        + suffix, "",  120, -3,    3);
-	h_wlzl1_deltar[i][j][k] = new TH1D("h_wlzl1_deltar" + suffix, "",  100,  0,    5);
-	h_wlzl2_deltar[i][j][k] = new TH1D("h_wlzl2_deltar" + suffix, "",  100,  0,    5);
-	h_wlzl_deltar [i][j][k] = new TH1D("h_wlzl_deltar"  + suffix, "",  100,  0,    5);
+	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,  0, 4000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,  0,  200);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,  0,  200);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,  0,  200);
+	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120, -3,    3);
+	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120, -3,    3);
+	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120, -3,    3);
+	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,  0,    5);
+	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,  0,    5);
       }
     }
   }
@@ -328,20 +327,18 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   //----------------------------------------------------------------------------
   if (ichannel > ll)
     {
-      float wlzl1dr = WLepton.v.DeltaR(ZLepton1.v);
-      float wlzl2dr = WLepton.v.DeltaR(ZLepton2.v);
-      float wlzldr  = min(wlzl1dr, wlzl2dr);
+      float wlzl1deltar = WLepton.v.DeltaR(ZLepton1.v);
+      float wlzl2deltar = WLepton.v.DeltaR(ZLepton2.v);
 
-      h_m3l         [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
-      h_zl1pt       [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
-      h_zl2pt       [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
-      h_wlpt        [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
-      h_zl1eta      [ichannel][icut][ijet]->Fill(ZLepton1.v.Eta(), _event_weight);
-      h_zl2eta      [ichannel][icut][ijet]->Fill(ZLepton2.v.Eta(), _event_weight);
-      h_wleta       [ichannel][icut][ijet]->Fill(WLepton.v.Eta(),  _event_weight);
-      h_wlzl1_deltar[ichannel][icut][ijet]->Fill(wlzl1dr,          _event_weight);
-      h_wlzl2_deltar[ichannel][icut][ijet]->Fill(wlzl2dr,          _event_weight);
-      h_wlzl_deltar [ichannel][icut][ijet]->Fill(wlzldr,           _event_weight);
+      h_m3l        [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
+      h_zl1pt      [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
+      h_zl2pt      [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
+      h_wlpt       [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
+      h_zl1eta     [ichannel][icut][ijet]->Fill(ZLepton1.v.Eta(), _event_weight);
+      h_zl2eta     [ichannel][icut][ijet]->Fill(ZLepton2.v.Eta(), _event_weight);
+      h_wleta      [ichannel][icut][ijet]->Fill(WLepton.v.Eta(),  _event_weight);
+      h_wlzl1deltar[ichannel][icut][ijet]->Fill(wlzl1deltar,      _event_weight);
+      h_wlzl2deltar[ichannel][icut][ijet]->Fill(wlzl2deltar,      _event_weight);
     }
 
 

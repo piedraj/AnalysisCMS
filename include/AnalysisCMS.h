@@ -153,16 +153,15 @@ class AnalysisCMS : public AnalysisBase
 
   // WZ histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_m3l         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl1pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl2pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlpt        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl1eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl2eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wleta       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzl1_deltar[nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzl2_deltar[nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzl_deltar [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m3l        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl1pt      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl2pt      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_wlpt       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl1eta     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl2eta     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_wleta      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_wlzl1deltar[nchannel][ncut][njetbin+1];
+  TH1D*                  h_wlzl2deltar[nchannel][ncut][njetbin+1];
 };
 
 #endif
