@@ -307,16 +307,16 @@ void HistogramReader::Draw(TString hname,
     {
       pad2->cd();
     
-      TH1D* ratio       = (TH1D*)_datahist->Clone("ratio");
+      TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
+	Float_t dtValue = _datahist->GetBinContent(ibin);
+	Float_t dtError = _datahist->GetBinError  (ibin);
+
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
 	Float_t mcError = _allmchist->GetBinError  (ibin);
-    
-	Float_t dtValue = ratio->GetBinContent(ibin);
-	Float_t dtError = ratio->GetBinError  (ibin);
 
 	Float_t ratioVal         = 999;
 	Float_t ratioErr         = 999;
@@ -338,6 +338,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep");
 
+      ratio->GetXaxis()->SetRangeUser(xmin, xmax);
       ratio->GetYaxis()->SetRangeUser(-1, 3);
 
       uncertainty->Draw("e2,same");
