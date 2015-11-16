@@ -810,7 +810,7 @@ void AnalysisCMS::AnalysisWZ()
   }
 
 
-  if (_eventdump && evt > 664878 && evt < 1520466) EventDump();
+  if (_eventdump) EventDump();
 
 
   // WZ selection
