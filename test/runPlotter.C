@@ -64,8 +64,8 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "njet"       + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY);
 	  plotter.Draw(prefix + "nbjet"      + suffix, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY);
-	  plotter.Draw(prefix + "deltarll "  + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", linY, true, 0, 4);
-	  plotter.Draw(prefix + "deltarll "  + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", logY, true, 0, 4);
+	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", linY, true, 0, 4);
+	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", logY, true, 0, 4);
 
 
 	  // WZ histograms
