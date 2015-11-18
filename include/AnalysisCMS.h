@@ -125,6 +125,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _m2l;
   float                  _m3l;
+  float                  _Wmt;
   int                    _channel;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
@@ -162,6 +163,13 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_wleta      [nchannel][ncut][njetbin+1];
   TH1D*                  h_wlzl1deltar[nchannel][ncut][njetbin+1];
   TH1D*                  h_wlzl2deltar[nchannel][ncut][njetbin+1];
+  TH1D* 	         h_wldxy      [nchannel][ncut][njetbin+1];
+  TH1D*			 h_wldz       [nchannel][ncut][njetbin+1];
+  TH1D*			 h_zl1dxy     [nchannel][ncut][njetbin+1];
+  TH1D*			 h_zl1dz      [nchannel][ncut][njetbin+1];
+  TH1D*			 h_zl2dxy     [nchannel][ncut][njetbin+1];
+  TH1D*			 h_zl2dz      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_Wmt        [nchannel][ncut][njetbin+1];
 };
 
 #endif

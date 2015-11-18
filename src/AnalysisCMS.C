@@ -845,7 +845,7 @@ void AnalysisCMS::AnalysisWZ()
 
   LevelHistograms(WZ_00_Exactly3Leptons, pass);
     
-  pass &= (_m2l                             >  60    &&   _m2l < 120.);
+  pass &= (_m2 > 60. && _m2l < 120.);
   pass &= (ZLepton1.v.Pt() > 20.);
 
   LevelHistograms(WZ_01_HasZ, pass);
