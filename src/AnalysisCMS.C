@@ -49,7 +49,6 @@ void AnalysisCMS::Loop(TString filename,
       printf("        era: %s\n",        era.Data());
       printf(" luminosity: %.2f pb-1\n", 1e3*luminosity);
       printf("   nentries: %lld\n",      nentries);
-      printf("\n");
     }
 
 
@@ -132,7 +131,24 @@ void AnalysisCMS::Loop(TString filename,
 
     if (!trigger) continue;
 
-    if (verbosity > 0 && jentry%interval == 0) std::cout << "." << std::flush;
+
+    // Print progress
+    //--------------------------------------------------------------------------
+    if (verbosity > 0)
+      {
+        double progress = 1e2 * (jentry+1) / nentries;
+
+	double fractpart, intpart;
+
+	fractpart = modf(progress, &intpart);
+
+	if (fractpart < 1e-3)
+	  {
+	    std::cout << "   progress: " << int(ceil(progress)) << "%\r";
+	    std::cout.flush();
+	  }
+      }
+
 
     ApplyWeights(_sample, era, luminosity);
 
@@ -159,7 +175,7 @@ void AnalysisCMS::Loop(TString filename,
   //----------------------------------------------------------------------------
   if (_eventdump) txt_eventdump.close();
 
-  if (verbosity > 0) printf("\n");
+  if (verbosity > 0) printf("\n\n");
 
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 

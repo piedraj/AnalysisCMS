@@ -15,10 +15,9 @@
 
 
 // verbosity = 0 (silent)  doesn't print anything
-// verbosity > 0 (default) prints the input values and "." every <interval> events
+// verbosity > 0 (default) prints the input values and the progress
 // verbosity > 1 (debug)
 const int verbosity = 1;
-const int interval  = 10000;
 
 
 enum {Loose, Tight};
