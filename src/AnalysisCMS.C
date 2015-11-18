@@ -121,7 +121,7 @@ void AnalysisCMS::Loop(TString filename,
 	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  100,  -0.05,   0.05);
 	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  100,  -0.05,   0.05);
 	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  100,  -0.05,   0.05);
-	h_Wmt        [i][j][k] = new TH1D("h_Wmt" + suffix, "",  100,  0,   200);
+	h_Wmt        [i][j][k] = new TH1D("h_Wmt"         + suffix, "",  100,  0,   200);
       }
     }
   }
@@ -352,7 +352,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
       h_zl1dz      [ichannel][icut][ijet]->Fill(ZLepton1.dz,      _event_weight);
       h_zl2dxy     [ichannel][icut][ijet]->Fill(ZLepton2.dxy,     _event_weight);
       h_zl2dz      [ichannel][icut][ijet]->Fill(ZLepton2.dz,      _event_weight);
-      h_Wmt        [ichannel][icut][ijet]->Fill(_Wmt,              _event_weight);
+      h_Wmt        [ichannel][icut][ijet]->Fill(_Wmt,             _event_weight);
     }
 
 
@@ -835,6 +835,7 @@ void AnalysisCMS::AnalysisWZ()
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
   _Wmt  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
 
+
   float mZ1W = (ZLepton1.v + WLepton.v).M();
   float mZ2W = (ZLepton2.v + WLepton.v).M();
 
@@ -845,7 +846,7 @@ void AnalysisCMS::AnalysisWZ()
 
   LevelHistograms(WZ_00_Exactly3Leptons, pass);
     
-  pass &= (_m2 > 60. && _m2l < 120.);
+  pass &= (_m2l > 60. && _m2l < 120.);
   pass &= (ZLepton1.v.Pt() > 20.);
 
   LevelHistograms(WZ_01_HasZ, pass);
