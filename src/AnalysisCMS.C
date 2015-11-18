@@ -93,35 +93,35 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
-	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw"   + suffix, "",    3,     0,       3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum"   + suffix, "",    3,     0,       3);
+	h_ht        [i][j][k] = new TH1D("h_ht"           + suffix, "",  400,     0,     400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"          + suffix, "",  400,     0,     200);
+	h_njet      [i][j][k] = new TH1D("h_njet"         + suffix, "",    4,     0,       4);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"        + suffix, "",    4,     0,       4);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"         + suffix, "",   40,     0,      40);
+	h_met       [i][j][k] = new TH1D("h_met"          + suffix, "", 2000,     0,    2000);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"     + suffix, "",  100,     0,       5);
 
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,  0, 4000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,  0,  200);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,  0,  200);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,  0,  200);
-	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120, -3,    3);
-	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120, -3,    3);
-	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120, -3,    3);
-	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,  0,    5);
-	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,  0,    5);
+	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,      0,   4000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,      0,    200);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,      0,    200);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,      0,    200);
+	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,     -3,      3);
+	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,     -3,      3);
+	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,     -3,      3);
+	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,      0,      5);
+	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,      0,      5);
 	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  100,  -0.05,   0.05);
 	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  100,  -0.05,   0.05);
 	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  100,  -0.05,   0.05);
 	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  100,  -0.05,   0.05);
 	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  100,  -0.05,   0.05);
 	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  100,  -0.05,   0.05);
-	h_Wmt        [i][j][k] = new TH1D("h_Wmt"         + suffix, "",  100,  0,   200);
+	h_Wmt        [i][j][k] = new TH1D("h_Wmt"         + suffix, "",  100,      0,    200);
       }
     }
   }
@@ -139,7 +139,7 @@ void AnalysisCMS::Loop(TString filename,
 
     if (!trigger) continue;
 
-    if (verbosity > 0 && jentry%interval == 0) std::cout << "." << std::flush;
+    if (verbosity > 0 && jentry%interval == 0) std::cout << jentry << "     "  << std::flush;
 
     ApplyWeights(_sample, era, luminosity);
 
