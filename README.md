@@ -24,7 +24,7 @@ Set a CMSSW release.
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
 
-    git clone https://github.com/piedraj/AnalysisCMS
+    git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
 <!---
 The base class should be recreated anytime the latino trees have been updated.
@@ -149,5 +149,5 @@ And then commit your changes.
     git commit -m 'Modified'
     git push origin master
 
-If the changes have been made in a fork of the master, go to https://github.com/piedraj/AnalysisCMS and click **Pull Request**.
+If the changes have been made in a fork of the master, go to https://github.com/YOUR_USERNAME/AnalysisCMS and click **Pull Request**.
 
