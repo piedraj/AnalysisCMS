@@ -406,7 +406,10 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 
   TString final_label = Form(" %s", label.Data());
  
-  if (_drawyield) final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+  TString hname = hist->GetName();
+
+  if (_drawyield && !hname.Contains("evolution"))
+    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();

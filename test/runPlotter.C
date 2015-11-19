@@ -18,7 +18,7 @@ void runPlotter(TString level)
   plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist");
   plotter.SetDrawRatio  (true);
-  plotter.SetDrawYield  (false);
+  plotter.SetDrawYield  (true);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
@@ -49,7 +49,7 @@ void runPlotter(TString level)
     {
       plotter.LoopEvolution(analysis, "h_counterLum_" + schannel[i]);
       
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", linY);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY);
     }
 
 
