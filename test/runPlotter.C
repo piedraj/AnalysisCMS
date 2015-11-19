@@ -1,4 +1,3 @@
-#include "../include/Constants.h"
 #include "HistogramReader.h"
 
 
@@ -33,6 +32,10 @@ void runPlotter(TString level)
 
   // Draw
   //----------------------------------------------------------------------------
+  //  plotter.TestFunction("WZ");  // Work in progress
+  //  return;
+
+
   int firstchannel = (level.Contains("WZ")) ? eee : ee;
   int lastchannel  = (level.Contains("WZ")) ? lll : ll;
 

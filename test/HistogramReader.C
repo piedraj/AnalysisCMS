@@ -635,3 +635,17 @@ Float_t HistogramReader::Yield(TH1* hist)
       return 0.;
     }
 }
+
+
+//------------------------------------------------------------------------------
+// TestFunction
+//------------------------------------------------------------------------------
+void HistogramReader::TestFunction(TString analysis)
+{
+  for (int i=0; i<ncut; i++)
+    {
+      if (!scut[i].Contains(analysis + "/")) continue;
+
+      printf(" scut[%2d] = %s\n", i, scut[i].Data());
+    }
+}

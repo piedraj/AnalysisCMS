@@ -49,7 +49,7 @@ const TString schannel[nchannel] = {
   "lll"
 };
 
-TString lchannel[nchannel] = {
+const TString lchannel[nchannel] = {
   "ee",
   "e#mu",
   "#mu#mu",
