@@ -32,7 +32,7 @@ You should also add a remote upstream, to be able to modify both your and the ma
 
 Then, do a git remote in order to check if the upstream appears. 
 
-   git remote -v
+    git remote -v
 
 <!---
 The base class should be recreated anytime the latino trees have been updated.
@@ -159,7 +159,7 @@ Correct the possible compatibility errors, a commit your changes.
 
 If there aren't any conflict, you should now do a merge between your code and the main one. 
 
-   git merge upstream/master
+    git merge upstream/master
 
 If the changes have been made in a fork of the master, go to https://github.com/YOUR_USERNAME/AnalysisCMS and click **Pull Request**.
 
