@@ -17,8 +17,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist");
-  plotter.SetDrawRatio  (true);
-  plotter.SetDrawYield  (true);
+  plotter.SetDrawRatio(true);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
@@ -34,6 +33,8 @@ void runPlotter(TString level)
 
   // Draw cut evolution
   //----------------------------------------------------------------------------
+  plotter.SetDrawYield(false);
+
   TString tok;
 
   Ssiz_t from = 0;
@@ -55,6 +56,8 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
+  plotter.SetDrawYield(true);
+
   firstchannel = (level.Contains("WZ")) ? eee : ee;
   lastchannel  = (level.Contains("WZ")) ? lll : ll;
 
