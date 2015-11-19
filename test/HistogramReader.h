@@ -2,6 +2,9 @@
 #define HistogramReader_h
 
 
+#include "../include/Constants.h"
+
+
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TFrame.h"
@@ -104,7 +107,9 @@ class HistogramReader
   void     SetStackOption(TString        option) {_stackoption = option;}
   
   Float_t  Yield         (TH1*           hist);
- 
+
+  void     TestFunction  (TString        analysis);
+
 
  private :
 
