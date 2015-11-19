@@ -449,28 +449,28 @@ void AnalysisCMS::ApplyWeights(TString sample,
 
   if (!_ismc) return;
 
-  float signed_weight = 999.;
+  float signed_weight = -999;
 
   if (era.EqualTo("50ns"))
     {
       //      if (_sample.EqualTo("WWTo2L2Nu_NLL")) _event_weight *= nllW;
 
-      if (_sample.EqualTo("WJetsToLNu"))      signed_weight /= 0.683927;
-      if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight /= 0.670032;
-      if (_sample.EqualTo("ST_t-channel"))    signed_weight /= 0.215131;
-      if (_sample.EqualTo("TTJets"))          signed_weight /= 0.331907;
+      if (_sample.EqualTo("WJetsToLNu"))      signed_weight = 1. / 0.683927;
+      if (_sample.EqualTo("DYJetsToLL_M-50")) signed_weight = 1. / 0.670032;
+      if (_sample.EqualTo("ST_t-channel"))    signed_weight = 1. / 0.215131;
+      if (_sample.EqualTo("TTJets"))          signed_weight = 1. / 0.331907;
     }
   else if (era.EqualTo("25ns"))
     {
-      if (_sample.EqualTo("WJetsToLNu"))          signed_weight /= 0.683938;
-      if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight /= 0.727601;
-      if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight /= 0.66998;
-      if (_sample.EqualTo("ZZTo2L2Q"))            signed_weight /= 0.631351;
-      if (_sample.EqualTo("ST_t-channel"))        signed_weight /= 0.215648;
-      if (_sample.EqualTo("TTJets"))              signed_weight /= 0.331658;
+      if (_sample.EqualTo("WJetsToLNu"))          signed_weight = 1. / 0.683938;
+      if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 1. / 0.727601;
+      if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 1. / 0.66998;
+      if (_sample.EqualTo("ZZTo2L2Q"))            signed_weight = 1. / 0.631351;
+      if (_sample.EqualTo("ST_t-channel"))        signed_weight = 1. / 0.215648;
+      if (_sample.EqualTo("TTJets"))              signed_weight = 1. / 0.331658;
     }
 
-  if (signed_weight > 1.) return;
+  if (signed_weight < 0) return;
 
   if (GEN_weight_SM < 0) signed_weight *= -1.;
 
