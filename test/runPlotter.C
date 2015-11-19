@@ -49,8 +49,10 @@ void runPlotter(TString level)
   for (int i=firstchannel; i<=lastchannel; i++)
     {
       plotter.LoopEvolution(analysis, "h_counterLum_" + schannel[i]);
+
+      bool setlogy = (analysis.EqualTo("WZ")) ? linY : logY;
       
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", setlogy);
     }
 
 
