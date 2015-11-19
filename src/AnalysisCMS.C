@@ -114,13 +114,13 @@ void AnalysisCMS::Loop(TString filename,
 	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,     -3,      3);
 	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,      0,      5);
 	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,      0,      5);
-	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  100,  -0.05,   0.05);
-	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  100,  -0.05,   0.05);
-	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  100,  -0.05,   0.05);
-	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  100,  -0.05,   0.05);
-	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  100,  -0.05,   0.05);
-	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  100,  -0.05,   0.05);
-	h_Wmt        [i][j][k] = new TH1D("h_Wmt"         + suffix, "",  100,      0,    200);
+	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400,  -0.05,   0.05);
+	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400,  -0.05,   0.05);
+	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400,  -0.05,   0.05);
+	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400,  -0.05,   0.05);
+	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400,  -0.05,   0.05);
+	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400,  -0.05,   0.05);
+	h_mtW        [i][j][k] = new TH1D("h_mtW"         + suffix, "",  400,      0,    200);
       }
     }
   }
@@ -159,7 +159,6 @@ void AnalysisCMS::Loop(TString filename,
 	  }
       }
 
->>>>>>> upstream/master
 
     ApplyWeights(_sample, era, luminosity);
 
@@ -372,7 +371,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
       h_zl1dz      [ichannel][icut][ijet]->Fill(ZLepton1.dz,      _event_weight);
       h_zl2dxy     [ichannel][icut][ijet]->Fill(ZLepton2.dxy,     _event_weight);
       h_zl2dz      [ichannel][icut][ijet]->Fill(ZLepton2.dz,      _event_weight);
-      h_Wmt        [ichannel][icut][ijet]->Fill(_Wmt,             _event_weight);
+      h_mtW        [ichannel][icut][ijet]->Fill(_mtW,             _event_weight);
     }
 
 
@@ -853,7 +852,7 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-  _Wmt  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
+  _mtW  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
 
 
   float mZ1W = (ZLepton1.v + WLepton.v).M();
