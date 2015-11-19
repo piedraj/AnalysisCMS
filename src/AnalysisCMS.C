@@ -142,7 +142,7 @@ void AnalysisCMS::Loop(TString filename,
 
 	fractpart = modf(progress, &intpart);
 
-	if (fractpart < 1e-3)
+	if (fractpart < 1e-2)
 	  {
 	    std::cout << "   progress: " << int(ceil(progress)) << "%\r";
 	    std::cout.flush();
