@@ -118,6 +118,7 @@ void HistogramReader::Draw(TString hname,
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+    //    TH1D* dummy = TestFunction(_mcfile[i], "WZ", hname);
 
     if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
@@ -592,6 +593,7 @@ Int_t HistogramReader::SetData(TString hname,
   if (!_datafile) return -1;
 
   TH1D* dummy = (TH1D*)_datafile->Get(hname);
+  //  TH1D* dummy = TestFunction(_datafile, "WZ", hname);
 
   if (!dummy)
     {
@@ -640,12 +642,31 @@ Float_t HistogramReader::Yield(TH1* hist)
 //------------------------------------------------------------------------------
 // TestFunction
 //------------------------------------------------------------------------------
-void HistogramReader::TestFunction(TString analysis)
+TH1D* HistogramReader::TestFunction(TFile*  file,
+				    TString analysis,
+				    TString hname)
 {
-  for (int i=0; i<ncut; i++)
+  Int_t nbins = 0;
+
+  for (Int_t i=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
 
-      printf(" scut[%2d] = %s\n", i, scut[i].Data());
+      nbins++;
     }
+
+  TString fixme_suffix = file->GetName();
+
+  TH1D* hist = new TH1D(hname + fixme_suffix, "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=0, bin=0; i<ncut; i++)
+    {
+      if (!scut[i].Contains(analysis + "/")) continue;
+
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + hname);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+    }
+
+  return hist;
 }

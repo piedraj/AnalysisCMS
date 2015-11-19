@@ -108,7 +108,9 @@ class HistogramReader
   
   Float_t  Yield         (TH1*           hist);
 
-  void     TestFunction  (TString        analysis);
+  TH1D*    TestFunction  (TFile*         file,
+			  TString        analysis,
+			  TString        hname);
 
 
  private :

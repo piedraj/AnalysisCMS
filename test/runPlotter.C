@@ -10,13 +10,14 @@ void runPlotter(TString level)
   enum {linY, logY};
 
   gInterpreter->ExecuteMacro("PaperStyle.C");
+  gSystem->mkdir(outputdir, kTRUE);
 
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist");
   plotter.SetDrawRatio  (true);
-  plotter.SetDrawYield  (true);
+  plotter.SetDrawYield  (false);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
@@ -30,12 +31,34 @@ void runPlotter(TString level)
   plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
 
 
-  // Draw
+  // Draw cut evolution
   //----------------------------------------------------------------------------
-  //  plotter.TestFunction("WZ");  // Work in progress
-  //  return;
+  /*
+  TString analysis = "WZ";
+
+  int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
+  int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
+
+  for (int j=0; j<=njetbin; j++)
+    {
+      if (!level.Contains("WW") && j != njetbin) continue;
+
+      TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
+
+      TString prefix = jetbin + "/h_";
+
+      for (int i=firstchannel; i<=lastchannel; i++)
+	{
+	  TString suffix = "_" + schannel[i];
+	  
+	  plotter.Draw(prefix + "counterLum" + suffix, "yield", -1, 0, "NULL", linY);
+	}
+    }
+  */
 
 
+  // Draw distributions
+  //----------------------------------------------------------------------------
   int firstchannel = (level.Contains("WZ")) ? eee : ee;
   int lastchannel  = (level.Contains("WZ")) ? lll : ll;
 
