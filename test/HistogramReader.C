@@ -32,7 +32,7 @@ void HistogramReader::AddData(TString const &filename,
 			      TString const &label,
 			      Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root");
+  TFile *file = new TFile(_inputdir + filename + ".root", "update");
 
   _datafile  = file;
   _datalabel = label;
@@ -47,7 +47,7 @@ void HistogramReader::AddProcess(TString const &filename,
 				 TString const &label,
 				 Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root");
+  TFile *file = new TFile(_inputdir + filename + ".root", "update");
 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
@@ -118,7 +118,6 @@ void HistogramReader::Draw(TString hname,
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
-    //    TH1D* dummy = TestFunction(_mcfile[i], "WZ", hname);
 
     if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
@@ -593,7 +592,6 @@ Int_t HistogramReader::SetData(TString hname,
   if (!_datafile) return -1;
 
   TH1D* dummy = (TH1D*)_datafile->Get(hname);
-  //  TH1D* dummy = TestFunction(_datafile, "WZ", hname);
 
   if (!dummy)
     {
@@ -640,14 +638,22 @@ Float_t HistogramReader::Yield(TH1* hist)
 
 
 //------------------------------------------------------------------------------
-// TestFunction
+// Evolution
 //------------------------------------------------------------------------------
-TH1D* HistogramReader::TestFunction(TFile*  file,
-				    TString analysis,
-				    TString hname)
+void HistogramReader::Evolution(TFile*  file,
+				TString analysis,
+				TString hname)
 {
-  Int_t nbins = 0;
+  TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
 
+  if (test_hist) return;
+
+  file->cd();
+
+  file->cd(analysis);
+
+  Int_t nbins = 0;
+  
   for (Int_t i=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
@@ -655,18 +661,30 @@ TH1D* HistogramReader::TestFunction(TFile*  file,
       nbins++;
     }
 
-  TString fixme_suffix = file->GetName();
-
-  TH1D* hist = new TH1D(hname + fixme_suffix, "", nbins, -0.5, nbins-0.5);
+  TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
 
   for (Int_t i=0, bin=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
 
-      TH1D* dummy = (TH1D*)file->Get(scut[i] + hname);
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
       hist->SetBinContent(++bin, Yield(dummy));
+
+      // terminate called after throwing an instance of 'std::bad_alloc'
+      // hist->GetXaxis()->SetBinLabel(bin, scut[i].Data());
     }
 
-  return hist;
+  hist->Write();
+}
+
+
+//------------------------------------------------------------------------------
+// LoopEvolution
+//------------------------------------------------------------------------------
+void HistogramReader::LoopEvolution(TString analysis, TString hname)
+{
+  if (_datafile) Evolution(_datafile, analysis, hname);
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) Evolution(_mcfile[i], analysis, hname);
 }
