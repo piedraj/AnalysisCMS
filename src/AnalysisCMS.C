@@ -92,28 +92,35 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    4, 0,    4);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    4, 0,    4);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
-	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw"   + suffix, "",    3,     0,       3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum"   + suffix, "",    3,     0,       3);
+	h_ht        [i][j][k] = new TH1D("h_ht"           + suffix, "",  400,     0,     400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"          + suffix, "",  400,     0,     200);
+	h_njet      [i][j][k] = new TH1D("h_njet"         + suffix, "",    4,     0,       4);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"        + suffix, "",    4,     0,       4);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"         + suffix, "",   40,     0,      40);
+	h_met       [i][j][k] = new TH1D("h_met"          + suffix, "", 2000,     0,    2000);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"     + suffix, "",  100,     0,       5);
 
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,  0, 4000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,  0,  200);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,  0,  200);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,  0,  200);
-	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120, -3,    3);
-	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120, -3,    3);
-	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120, -3,    3);
-	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,  0,    5);
-	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,  0,    5);
+	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,      0,   4000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,      0,    200);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,      0,    200);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,      0,    200);
+	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,     -3,      3);
+	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,     -3,      3);
+	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,     -3,      3);
+	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,      0,      5);
+	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,      0,      5);
+	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400,  -0.05,   0.05);
+	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400,  -0.05,   0.05);
+	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400,  -0.05,   0.05);
+	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400,  -0.05,   0.05);
+	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400,  -0.05,   0.05);
+	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400,  -0.05,   0.05);
+	h_mtW        [i][j][k] = new TH1D("h_mtW"         + suffix, "",  400,      0,    200);
       }
     }
   }
@@ -130,6 +137,9 @@ void AnalysisCMS::Loop(TString filename,
     fChain->GetEntry(jentry);
 
     if (!trigger) continue;
+
+
+
 
 
     // Print progress
@@ -355,6 +365,13 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
       h_wleta      [ichannel][icut][ijet]->Fill(WLepton.v.Eta(),  _event_weight);
       h_wlzl1deltar[ichannel][icut][ijet]->Fill(wlzl1deltar,      _event_weight);
       h_wlzl2deltar[ichannel][icut][ijet]->Fill(wlzl2deltar,      _event_weight);
+      h_wldxy      [ichannel][icut][ijet]->Fill(WLepton.dxy,      _event_weight);
+      h_wldz       [ichannel][icut][ijet]->Fill(WLepton.dz,       _event_weight);
+      h_zl1dxy     [ichannel][icut][ijet]->Fill(ZLepton1.dxy,     _event_weight);
+      h_zl1dz      [ichannel][icut][ijet]->Fill(ZLepton1.dz,      _event_weight);
+      h_zl2dxy     [ichannel][icut][ijet]->Fill(ZLepton2.dxy,     _event_weight);
+      h_zl2dz      [ichannel][icut][ijet]->Fill(ZLepton2.dz,      _event_weight);
+      h_mtW        [ichannel][icut][ijet]->Fill(_mtW,             _event_weight);
     }
 
 
@@ -835,6 +852,14 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
+  _mtW  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
+
+
+  float mZ1W = (ZLepton1.v + WLepton.v).M();
+  float mZ2W = (ZLepton2.v + WLepton.v).M();
+
+  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
+  bool pass_mll = (mZ1W > 4. && mZ2W > 4.);  
 
   bool pass = true;
 
@@ -845,17 +870,16 @@ void AnalysisCMS::AnalysisWZ()
 
   LevelHistograms(WZ_01_HasZ, pass);
 
-  pass &= (WLepton.v.DeltaR(ZLepton1.v) >  0.1);
-  pass &= (WLepton.v.DeltaR(ZLepton2.v) >  0.1);
-  pass &= (WLepton.v.Pt()               >  20.);
-  pass &= (MET.Et()                     >  30.);
-  pass &= (_m3l                         > 100.);
+  pass     &= (WLepton.v.Pt()               >  20.);
+  pass     &= (MET.Et()                     >  30.);
+  pass     &= (_m3l                         > 100.);
 
-  LevelHistograms(WZ_02_HasW, pass);
-	
+  LevelHistograms(WZ_02_HasW,    pass && pass_dr);
+  LevelHistograms(WZ_03_HasWmll, pass && pass_mll);
+
   pass &= (_nbjet == 0);
 	
-  LevelHistograms(WZ_03_BVeto, pass);
+  LevelHistograms(WZ_04_BVeto, pass);
 }
 
 
