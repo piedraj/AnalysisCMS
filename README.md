@@ -26,6 +26,14 @@ Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click *
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
+You should also add a remote upstream, to be able to modify both your and the main Github account.
+
+    git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_DIRECTORY
+
+Then, do a git remote in order to check if the upstream appears. 
+
+    git remote -v
+
 <!---
 The base class should be recreated anytime the latino trees have been updated.
 Read a MC latino tree that contains the `GEN_weight_SM` variable,
@@ -140,14 +148,18 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 
 This framework is intended to be used, and developed, by several people. If you want your changes to be shared by others, then it is commit time. First you should get the latest modifications in the repository, if any.
 
-    git pull https://github.com/piedraj/AnalysisCMS
+    git fetch upstream
 
-And then commit your changes.
+Correct the possible compatibility errors, a commit your changes.
 
     git status
     git add <filepattern>
     git commit -m 'Modified'
-    git push origin master
+    git push
+
+If there aren't any conflict, you should now do a merge between your code and the main one. 
+
+    git merge upstream/master
 
 If the changes have been made in a fork of the master, go to https://github.com/YOUR_USERNAME/AnalysisCMS and click **Pull Request**.
 
