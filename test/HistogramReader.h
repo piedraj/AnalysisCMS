@@ -104,7 +104,7 @@ class HistogramReader
   void     SetStackOption(TString        option) {_stackoption = option;}
   
   Float_t  Yield         (TH1*           hist);
- 
+
 
  private :
 
