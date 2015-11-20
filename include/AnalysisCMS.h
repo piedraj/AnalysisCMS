@@ -138,13 +138,13 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _m2l;
   float                  _m3l;
-  float                  _mpmet;
-  float                  _metvar;
   float                  _mt1;
   float                  _mt2;
   float                  _mc;
   float                  _ptww;
   float                  _mtw;
+  float                  _mpmet;
+  float                  _metvar;
   int                    _channel;
   int                    _dphiv;
   unsigned int           _nelectron;
@@ -182,6 +182,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
   TH1D*                  h_Mc        [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptWW      [nchannel][ncut][njetbin+1];
+
 
   // WZ histograms
   //----------------------------------------------------------------------------
