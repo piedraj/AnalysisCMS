@@ -150,16 +150,18 @@ This framework is intended to be used, and developed, by several people. If you 
 
     git fetch upstream
 
-Correct the possible compatibility errors, a commit your changes.
+After that you should correct the possible compatibility errors, and commit your changes.
 
     git status
     git add <filepattern>
     git commit -m 'Modified'
     git push
 
-If there aren't any conflict, you should now do a merge between your code and the main one. 
+If there isn't any conflict left you should be able to merge with the master repository. 
 
     git merge upstream/master
 
-If the changes have been made in a fork of the master, go to https://github.com/YOUR_USERNAME/AnalysisCMS and click **Pull Request**.
+Finally, go to your repository and click **Pull Request**.
+
+    https://github.com/YOUR_USERNAME/AnalysisCMS
 
