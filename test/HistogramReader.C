@@ -667,12 +667,22 @@ void HistogramReader::Evolution(TFile*  file,
     {
       if (!scut[i].Contains(analysis + "/")) continue;
 
+      TString tok, icut;
+
+      Ssiz_t from = 0;
+
+      while(scut[i].Tokenize(tok, from, "_")) icut = tok;
+
       TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
-      hist->SetBinContent(++bin, Yield(dummy));
+      if (hist && dummy) {
 
-      // terminate called after throwing an instance of 'std::bad_alloc'
-      // hist->GetXaxis()->SetBinLabel(bin, scut[i].Data());
+	hist->SetBinContent(++bin, Yield(dummy));
+
+	if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
+      }
+
+      else std::cout << " [HistogramReader::Evolution] Error: hist or dummy NOT found." << std::endl;
     }
 
   hist->Write();
