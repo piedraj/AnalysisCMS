@@ -9,7 +9,7 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/25ns_Skim2l/latino_WJetsToLNu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns_Skim2l/latino_DYJetsToLL_M-10to50.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns_Skim2l/latino_DYJetsToLL_M-50.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns_Skim2l/latino_TT.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/25ns_Skim2l/latino_TTTo2L2Nu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/05Aug/25ns_Skim2l/latino_ST_t-channel.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns_Skim2l/latino_WWTo2L2Nu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/MC_Spring15/17Sep/25ns_Skim2l/latino_WZTo3LNu.root
