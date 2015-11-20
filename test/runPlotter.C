@@ -103,22 +103,21 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "zl1pt" + suffix, "Z leading lepton p_{T}",   5, 0, "GeV", linY, true,  0, 150);
 	  plotter.Draw(prefix + "zl2pt" + suffix, "Z trailing lepton p_{T}",  5, 0, "GeV", linY, true,  0, 150);
 	  plotter.Draw(prefix + "wlpt"  + suffix, "W lepton p_{T}",           5, 0, "GeV", linY, true,  0, 150);
+  	  plotter.Draw(prefix + "mtW"   + suffix, "W transverse mass",       10, 0, "GeV", linY);
 
 	  if (1) continue;
 
-	  plotter.Draw(prefix + "zl1eta"      + suffix, "Z leading lepton #eta",               6, 1, "NULL", linY);
-	  plotter.Draw(prefix + "zl2eta"      + suffix, "Z trailing lepton #eta",              6, 1, "NULL", linY);
-	  plotter.Draw(prefix + "wleta"       + suffix, "W lepton #eta",                       6, 1, "NULL", linY);
-	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)", 6, 1, "NULL", linY);
-	  plotter.Draw(prefix + "wlzl2deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)", 6, 1, "NULL", linY);
-  	  plotter.Draw(prefix + "wldxy"       + suffix, "dxy of the W lepton",                 20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "wldz"        + suffix, "dz of the W lepton",                  20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl1dxy"      + suffix, "dxy of the Z leading lepton",         20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl1dz"       + suffix, "dz of the Z leading lepton",          20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl2dxy"      + suffix, "dxy of the Z trailing lepton",        20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl2dz"       + suffix, "dz of the Z trailing lepton",         20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "mtW"         + suffix, "Transverse mass of the W",            10, 0, "GeV",  linY);
-
+	  plotter.Draw(prefix + "zl1eta"      + suffix, "Z leading lepton #eta",                6, 1, "NULL", linY);
+	  plotter.Draw(prefix + "zl2eta"      + suffix, "Z trailing lepton #eta",               6, 1, "NULL", linY);
+	  plotter.Draw(prefix + "wleta"       + suffix, "W lepton #eta",                        6, 1, "NULL", linY);
+	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  6, 1, "NULL", linY);
+	  plotter.Draw(prefix + "wlzl2deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  6, 1, "NULL", linY);
+  	  plotter.Draw(prefix + "wldxy"       + suffix, "W lepton dxy",                        20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "wldz"        + suffix, "W lepton dz",                         20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "zl1dxy"      + suffix, "Z leading lepton dxy",                20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "zl1dz"       + suffix, "Z leading lepton dz",                 20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "zl2dxy"      + suffix, "Z trailing lepton dxy",               20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "zl2dz"       + suffix, "Z trailing lepton dz",                20, 0, "cm",   logY);
 	}
     }
 
