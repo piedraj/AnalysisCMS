@@ -27,7 +27,7 @@ elif [[ $FOLDER == *"25ns"* ]] ; then
     hadd -f -k 01_Data.root      Run2015D*.root
     hadd -f -k 02_WZ.root        WZTo3LNu.root
     hadd -f -k 03_ZZ.root        ZZ.root
-    hadd -f -k 04_Top.root       TT.root
+    hadd -f -k 04_Top.root       TTTo2L2Nu.root
     hadd -f -k 05_SingleTop.root ST_t-channel.root
     hadd -f -k 06_WW.root        WWTo2L2Nu.root
     hadd -f -k 07_ZJets.root     DYJetsToLL_M*.root

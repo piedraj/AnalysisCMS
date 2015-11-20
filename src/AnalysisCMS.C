@@ -105,14 +105,14 @@ void AnalysisCMS::Loop(TString filename,
         h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000, 0, 2000);
         h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000, 0, 2000);
         h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000, 0, 2000);
-        h_ptll      [i][j][k] = new TH1D("h_ptll"       + suffix, "", 2000, 0, 2000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000, 0, 2000);
         h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
         h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
         h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
-        h_tkMet     [i][j][k] = new TH1D("h_tkMet"      + suffix, "", 2000, 0, 2000);
-        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "", 2000, 0, 2000);
-        h_Mc        [i][j][k] = new TH1D("h_Mc"         + suffix, "", 2000, 0, 2000);
-        h_ptWW      [i][j][k] = new TH1D("h_ptWW"       + suffix, "", 2000, 0, 2000);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000, 0, 2000);
+        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  400, 0,    4);
 
 
 	// WZ histograms
@@ -358,29 +358,28 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   // Common histograms
   //----------------------------------------------------------------------------
   float deltarll   = Lepton1.v.DeltaR  (Lepton2.v);
-  float deltaphill = Lepton1.v.DeltaPhi(Lepton2.v);
+  float deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
 
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
-  h_counterLum[ichannel][icut][ijet]->Fill(1,        _event_weight);
-  h_ht        [ichannel][icut][ijet]->Fill(_ht,      _event_weight);
-  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,     _event_weight);
-  h_njet      [ichannel][icut][ijet]->Fill(_njet,    _event_weight);
-  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,   _event_weight);
-  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,     _event_weight);
-  h_met       [ichannel][icut][ijet]->Fill(MET.Et(), _event_weight);
-  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll, _event_weight);
-
+  h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
+  h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
+  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
+  h_njet      [ichannel][icut][ijet]->Fill(_njet,          _event_weight);
+  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,         _event_weight);
+  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
+  h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
+  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
   h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
-  h_ptll      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
+  h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
   h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);
   h_mt1       [ichannel][icut][ijet]->Fill(_mt1,           _event_weight);
   h_mt2       [ichannel][icut][ijet]->Fill(_mt2,           _event_weight);
-  h_tkMet     [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
+  h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
   h_deltaphill[ichannel][icut][ijet]->Fill(deltaphill,     _event_weight);
-  h_Mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
-  h_ptWW      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+  h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
+  h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
 
   // WZ histograms
