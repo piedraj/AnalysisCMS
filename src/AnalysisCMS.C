@@ -181,6 +181,8 @@ void AnalysisCMS::Loop(TString filename,
 
     GetHT();
 
+    GetMpMet();
+
     GetMt1();
 
     GetMt2();
