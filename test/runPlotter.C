@@ -103,7 +103,7 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "zl1pt" + suffix, "Z leading lepton p_{T}",   5, 0, "GeV", linY, true,  0, 150);
 	  plotter.Draw(prefix + "zl2pt" + suffix, "Z trailing lepton p_{T}",  5, 0, "GeV", linY, true,  0, 150);
 	  plotter.Draw(prefix + "wlpt"  + suffix, "W lepton p_{T}",           5, 0, "GeV", linY, true,  0, 150);
-  	  plotter.Draw(prefix + "mtW"   + suffix, "W transverse mass",       10, 0, "GeV", linY);
+  	  plotter.Draw(prefix + "mtw"   + suffix, "W transverse mass",       10, 0, "GeV", linY);
 
 	  if (1) continue;
 
