@@ -62,7 +62,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 18;
+const int ncut = 25;
 
 enum {
   Top_00_Has2Leptons,

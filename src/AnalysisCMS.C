@@ -360,6 +360,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   // Common histograms
   //----------------------------------------------------------------------------
   float deltarll = Lepton1.v.DeltaR(Lepton2.v);
+  float deltaphill = Lepton1.v.DeltaPhi(Lepton2.v);
 
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
   h_counterLum[ichannel][icut][ijet]->Fill(1,        _event_weight);

@@ -138,6 +138,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _m2l;
   float                  _m3l;
+  float                  _mpmet;
   float                  _metvar;
   float                  _mt1;
   float                  _mt2;
