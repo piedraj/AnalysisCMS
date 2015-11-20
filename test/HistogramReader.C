@@ -32,7 +32,7 @@ void HistogramReader::AddData(TString const &filename,
 			      TString const &label,
 			      Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root");
+  TFile *file = new TFile(_inputdir + filename + ".root", "update");
 
   _datafile  = file;
   _datalabel = label;
@@ -47,7 +47,7 @@ void HistogramReader::AddProcess(TString const &filename,
 				 TString const &label,
 				 Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root");
+  TFile *file = new TFile(_inputdir + filename + ".root", "update");
 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
@@ -405,7 +405,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   legend->SetTextSize  (tsize);
 
   TString final_label = Form(" %s", label.Data());
- 
+
   if (_drawyield) final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
@@ -638,14 +638,63 @@ Float_t HistogramReader::Yield(TH1* hist)
 
 
 //------------------------------------------------------------------------------
-// TestFunction
+// Evolution
 //------------------------------------------------------------------------------
-void HistogramReader::TestFunction(TString analysis)
+void HistogramReader::Evolution(TFile*  file,
+				TString analysis,
+				TString hname)
 {
-  for (int i=0; i<ncut; i++)
+  TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
+
+  if (test_hist) return;
+
+  file->cd();
+
+  file->cd(analysis);
+
+  Int_t nbins = 0;
+  
+  for (Int_t i=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
 
-      printf(" scut[%2d] = %s\n", i, scut[i].Data());
+      nbins++;
     }
+
+  TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=0, bin=0; i<ncut; i++)
+    {
+      if (!scut[i].Contains(analysis + "/")) continue;
+
+      TString tok, icut;
+
+      Ssiz_t from = 0;
+
+      while(scut[i].Tokenize(tok, from, "_")) icut = tok;
+
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
+
+      if (hist && dummy) {
+
+	hist->SetBinContent(++bin, Yield(dummy));
+
+	if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
+      }
+
+      else std::cout << " [HistogramReader::Evolution] Error: hist or dummy NOT found." << std::endl;
+    }
+
+  hist->Write();
+}
+
+
+//------------------------------------------------------------------------------
+// LoopEvolution
+//------------------------------------------------------------------------------
+void HistogramReader::LoopEvolution(TString analysis, TString hname)
+{
+  if (_datafile) Evolution(_datafile, analysis, hname);
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) Evolution(_mcfile[i], analysis, hname);
 }

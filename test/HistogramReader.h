@@ -108,7 +108,12 @@ class HistogramReader
   
   Float_t  Yield         (TH1*           hist);
 
-  void     TestFunction  (TString        analysis);
+  void     Evolution     (TFile*         file,
+			  TString        analysis,
+			  TString        hname);
+
+  void     LoopEvolution (TString        analysis,
+			  TString        hname);
 
 
  private :
