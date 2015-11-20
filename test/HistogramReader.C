@@ -671,18 +671,16 @@ void HistogramReader::Evolution(TFile*  file,
 
       Ssiz_t from = 0;
 
-      while(scut[i].Tokenize(tok, from, "_")) icut = tok;
+      while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
       TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
-      if (hist && dummy) {
+      if (hist && dummy)
+	{
+	  hist->SetBinContent(++bin, Yield(dummy));
 
-	hist->SetBinContent(++bin, Yield(dummy));
-
-	if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
-      }
-
-      else std::cout << " [HistogramReader::Evolution] Error: hist or dummy NOT found." << std::endl;
+	  if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
+	}
     }
 
   hist->Write();

@@ -121,10 +121,10 @@ const TString scut[ncut] = {
 };
 
 
-// https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
-const float csvv2ivf_looseWP  = 0.423;
-const float csvv2ivf_mediumWP = 0.814;
-const float csvv2ivf_tightWP  = 0.941;
+// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation74X
+const float csvv2ivf_looseWP  = 0.605;
+const float csvv2ivf_mediumWP = 0.89;
+const float csvv2ivf_tightWP  = 0.97;
 
 
 #endif
