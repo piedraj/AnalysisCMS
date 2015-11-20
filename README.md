@@ -26,9 +26,9 @@ Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click *
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
-You should also add a remote upstream, to be able to modify both your and the main Github account.
+You should also add a remote upstream, to be able to modify both your and the master repository.
 
-    git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_DIRECTORY
+    git remote add upstream https://github.com/piedraj/AnalysisCMS
 
 Then, do a git remote in order to check if the upstream appears. 
 
