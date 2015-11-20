@@ -92,46 +92,47 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw"   + suffix, "",    3,     0,       3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum"   + suffix, "",    3,     0,       3);
-	h_ht        [i][j][k] = new TH1D("h_ht"           + suffix, "",  400,     0,     400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"          + suffix, "",  400,     0,     200);
-	h_njet      [i][j][k] = new TH1D("h_njet"         + suffix, "",    4,     0,       4);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"        + suffix, "",    4,     0,       4);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"         + suffix, "",   40,     0,      40);
-	h_met       [i][j][k] = new TH1D("h_met"          + suffix, "", 2000,     0,    2000);
-	h_deltarll  [i][j][k] = new TH1D("h_deltarll"     + suffix, "",  100,     0,       5);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    6, 0,    6);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    6, 0,    6);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
 
-        h_mpmet     [i][j][k] = new TH1D("h_mpmet"        + suffix, "", 2000,     0,    2000);
-        h_pt1       [i][j][k] = new TH1D("h_pt1"          + suffix, "", 2000,     0,    2000);
-        h_pt2       [i][j][k] = new TH1D("h_pt2"          + suffix, "", 2000,     0,    2000);
-        h_ptll      [i][j][k] = new TH1D("h_ptll"         + suffix, "", 2000,     0,    2000);
-        h_mth       [i][j][k] = new TH1D("h_mth"          + suffix, "", 2000,     0,    2000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"          + suffix, "", 2000,     0,    2000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"          + suffix, "", 2000,     0,    2000);
-        h_tkMet     [i][j][k] = new TH1D("h_tkMet"        + suffix, "", 2000,     0,    2000);
-        h_deltaphill[i][j][k] = new TH1D("h_deltaphill"   + suffix, "", 2000,     0,    2000);
-        h_Mc        [i][j][k] = new TH1D("h_Mc"           + suffix, "", 2000,     0,    2000);
-        h_ptWW      [i][j][k] = new TH1D("h_ptWW"         + suffix, "", 2000,     0,    2000);
+        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000, 0, 2000);
+        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000, 0, 2000);
+        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000, 0, 2000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000, 0, 2000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000, 0, 2000);
+        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  400, 0,    4);
+
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,      0,   4000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,      0,    200);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,      0,    200);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,      0,    200);
-	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,     -3,      3);
-	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,     -3,      3);
-	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,     -3,      3);
-	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,      0,      5);
-	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,      0,      5);
-	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400,  -0.05,   0.05);
-	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400,  -0.05,   0.05);
-	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400,  -0.05,   0.05);
-	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400,  -0.05,   0.05);
-	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400,  -0.05,   0.05);
-	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400,  -0.05,   0.05);
-	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "",  400,      0,    200);
+	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,     0,  4000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,     0,   200);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,     0,   200);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,     0,   200);
+	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,    -3,     3);
+	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,    -3,     3);
+	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,    -3,     3);
+	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,     0,     5);
+	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,     0,     5);
+	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400, -0.05,  0.05);
+	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400, -0.05,  0.05);
+	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400, -0.05,  0.05);
+	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400, -0.05,  0.05);
+	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400, -0.05,  0.05);
+	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400, -0.05,  0.05);
+	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "",  400,     0,   200);
       }
     }
   }
@@ -148,9 +149,6 @@ void AnalysisCMS::Loop(TString filename,
     fChain->GetEntry(jentry);
 
     if (!trigger) continue;
-
-
-
 
 
     // Print progress
@@ -336,7 +334,7 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
   bool is_isolated_lepton = false;
 
   if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
-  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k)     < 0.12);
+  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.12);
   
   return is_isolated_lepton;
 }
@@ -361,30 +359,29 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
   // Common histograms
   //----------------------------------------------------------------------------
-  float deltarll = Lepton1.v.DeltaR(Lepton2.v);
-  float deltaphill = Lepton1.v.DeltaPhi(Lepton2.v);
+  float deltarll   = Lepton1.v.DeltaR  (Lepton2.v);
+  float deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
 
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
-  h_counterLum[ichannel][icut][ijet]->Fill(1,        _event_weight);
-  h_ht        [ichannel][icut][ijet]->Fill(_ht,      _event_weight);
-  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,     _event_weight);
-  h_njet      [ichannel][icut][ijet]->Fill(_njet,    _event_weight);
-  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,   _event_weight);
-  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,     _event_weight);
-  h_met       [ichannel][icut][ijet]->Fill(MET.Et(), _event_weight);
-  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll, _event_weight);
-
+  h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
+  h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
+  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
+  h_njet      [ichannel][icut][ijet]->Fill(_njet,          _event_weight);
+  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,         _event_weight);
+  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
+  h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
+  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
   h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
-  h_ptll      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
+  h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
   h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);
   h_mt1       [ichannel][icut][ijet]->Fill(_mt1,           _event_weight);
   h_mt2       [ichannel][icut][ijet]->Fill(_mt2,           _event_weight);
-  h_tkMet     [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
+  h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
   h_deltaphill[ichannel][icut][ijet]->Fill(deltaphill,     _event_weight);
-  h_Mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
-  h_ptWW      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+  h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
+  h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
 
   // WZ histograms
@@ -517,7 +514,7 @@ void AnalysisCMS::ApplyWeights(TString sample,
     }
   else if (era.EqualTo("25ns"))
     {
-      if (_sample.EqualTo("WWTo2L2Nu"))           _event_weight = _event_weight * 12.178  / 10.481;
+      if (_sample.EqualTo("WWTo2L2Nu"))           _event_weight *= 12.178 / 10.481;
       if (_sample.EqualTo("WJetsToLNu"))          signed_weight = 1. / 0.683938;
       if (_sample.EqualTo("DYJetsToLL_M-10to50")) signed_weight = 1. / 0.727601;
       if (_sample.EqualTo("DYJetsToLL_M-50"))     signed_weight = 1. / 0.66998;
@@ -707,7 +704,7 @@ void AnalysisCMS::AnalysisTop()
 
   _m2l = (Lepton1.v + Lepton2.v).M();
 
-  int nelec =0;
+  int nelec = 0;
 
   if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
   if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
@@ -789,79 +786,83 @@ void AnalysisCMS::AnalysisTTDM()
   LevelHistograms(TTDM_06_MET, pass);
 }
 
+
 //------------------------------------------------------------------------------                                                               
 // AnalysisWW                                                                                                                                  
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::AnalysisWW()
 {
-  //if (_nlepton != 2) return;                                                                                                                 
-
-  if      (_nelectron == 2) _channel = ee;
-  else if (_nelectron == 1) _channel = em;
-  else if (_nelectron == 0) _channel = mm;
+  if (_nlepton < 2) return;  // Careful, _nlepton includes LOOSE leptons
 
   Lepton1 = AnalysisLeptons[0];
   Lepton2 = AnalysisLeptons[1];
 
+  int nelec = 0;  // Careful, _nelectron includes LOOSE leptons
+
+  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
+  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
+
+  if      (nelec == 2) _channel = ee;
+  else if (nelec == 1) _channel = em;
+  else if (nelec == 0) _channel = mm;
+
   _m2l  = (Lepton1.v + Lepton2.v).M();
   _pt2l = (Lepton1.v + Lepton2.v).Pt();
 
-  //Opposite Sign                                                                                                                              
-  if (Lepton1.flavour * Lepton2.flavour > 0) return;
 
-  // WW selection                                                                                                                              
+  // WW selection
   //----------------------------------------------------------------------------                                                               
-
   bool pass = true;
 
-  //Two Leptons Level                                                                                                                          
+  // Two leptons Level
+  pass &= (Lepton1.flavour * Lepton2.flavour < 0);
   pass &= (Lepton1.v.Pt() > 20.);
   pass &= (Lepton2.v.Pt() > 20.);
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  //Nextra = 0                                                                                                                                 
-  pass &= (_ntight  == 2);
+  // Nextra = 0
+  pass &= (_ntight == 2);
   LevelHistograms(WW_01_Exactly2Leptons, pass);
 
-  //Mll > 12~GeV                                                                                                                               
+  // m2l > 12 GeV
   pass &= (_m2l > 12.);
   LevelHistograms(WW_02_Mll, pass);
 
-  //PfMet > 20~GeV                                                                                                                            
+  // PfMet > 20 GeV
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_03_PfMet, pass);
 
- //Z-Veto (mll + metvar)                                                                                                                       
+  // Z-Veto (mll + metvar)                                                                                                                       
   bool pass_sf_Z = (_nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
-  bool pass_df_Z = (_nelectron == 1);// && _pt2l > 30.);                                                                                       
+  bool pass_df_Z = (_nelectron == 1);
 
   pass &= (pass_sf_Z || pass_df_Z);
   LevelHistograms(WW_04_ZVeto, pass);
 
-  //MpMet > 20~GeV                                                                                                                            
-  pass &= (_mpmet > 20);
+  // mpmet > 20 GeV                                                                                                                            
+  pass &= (_mpmet > 20.);
   LevelHistograms(WW_05_MpMet, pass);
 
-  //DeltaPhi Veto (only SF)                                                                                                                    
+  // DeltaPhi veto (only SF)                                                                                                                    
   pass &= (_dphiv);
   LevelHistograms(WW_06_DPhiVeto, pass);
 
-  //Ptll > 30~GeV (45~GeV for SF)                                                                                                              
-  bool pass_sf_Ptll = (_nelectron != 1 && _pt2l > 45.);
-  bool pass_df_Ptll = (_nelectron == 1 && _pt2l > 30.);
+  // ptll > 30 GeV (45 GeV for SF)                                                                                                              
+  bool pass_sf_pt2l = (_nelectron != 1 && _pt2l > 45.);
+  bool pass_df_pt2l = (_nelectron == 1 && _pt2l > 30.);
 
-  pass &= (pass_sf_Ptll || pass_df_Ptll);
+  pass &= (pass_sf_pt2l || pass_df_pt2l);
   LevelHistograms(WW_07_Ptll, pass);
 
-  //B-Veto                                                                                                                                     
+  // B veto
   pass &= (_nbjet == 0);
   LevelHistograms(WW_08_BVeto, pass);
 
-  //Ht < 250~GeV                                                                                                                               
-  pass &= (_ht < 250);
+  // Ht < 250 GeV
+  pass &= (_ht < 250.);
   LevelHistograms(WW_09_Ht, pass);
 }
+
 
 //------------------------------------------------------------------------------
 // AnalysisWZ
@@ -1002,56 +1003,57 @@ void AnalysisCMS::GetHT()
   for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
 }
 
+
 //------------------------------------------------------------------------------                                                               
 // GetMpMet (provisional)                                                                                                                      
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphimin = (min(dphilmet1,dphilmet2));
+  Float_t dphimin  = min(dphilmet1, dphilmet2);
   Float_t fullpmet = 0.;
-  Float_t trkpmet = 0.;
+  Float_t trkpmet  = 0.;
+
   _mpmet = 0.;
 
-  if (dphimin < TMath::Pi() / 2)
+  if (dphimin < TMath::Pi() / 2.)
     fullpmet = pfType1Met * sin(dphimin);
   else
     fullpmet = pfType1Met;
 
-  if (dphimin < TMath::Pi() / 2)
+  if (dphimin < TMath::Pi() / 2.)
     trkpmet = trkMet * sin(dphimin);
   else
     trkpmet = trkMet;
 
-  _mpmet = min(trkpmet,fullpmet);
+  _mpmet = min(trkpmet, fullpmet);
 }
+
 
 //------------------------------------------------------------------------------                                                               
 // GetMetVar                                                                                                                                   
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetMetVar()
 {
   _metvar = 0.;
 
-  float met  = MET.Et();
+  float met = MET.Et();
 
-  _metvar = (njet <= 1) ? _mpmet : met;
+  _metvar = (njet <= 1) ? _mpmet : met;  // Careful: use njet or _njet?
 }
+
 
 //------------------------------------------------------------------------------                                                               
 // GetDPhiVeto                                                                                                                                 
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetDPhiVeto()
 {
   _dphiv = (njet <= 1 || (njet > 1 && dphilljetjet < 165.*TMath::DegToRad()));
 }
 
+
 //------------------------------------------------------------------------------                                                               
 // GetMt1                                                                                                                                      
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetMt1()
 {
   _mt1 = 0.;
@@ -1060,15 +1062,13 @@ void AnalysisCMS::GetMt1()
   float pt   = Lepton1.v.Pt();
   float dphi = Lepton1.v.DeltaPhi(MET);
 
-  if(met > 0)
-    if( pt > 0 )
-      _mt1 = sqrt(2*pt*met*(1 - cos(dphi)));
+  if (met > 0 && pt > 0) _mt1 = sqrt(2*pt*met*(1. - cos(dphi)));
 }
+
 
 //------------------------------------------------------------------------------                                                               
 // GetMt2                                                                                                                                      
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetMt2()
 {
   _mt2 = 0.;
@@ -1077,24 +1077,23 @@ void AnalysisCMS::GetMt2()
   float pt   = Lepton2.v.Pt();
   float dphi = Lepton2.v.DeltaPhi(MET);
 
-  if(met > 0)
-    if( pt > 0 )
-      _mt2 = sqrt(2*pt*met*(1 - cos(dphi)));
+  if (met > 0 && pt > 0) _mt2 = sqrt(2*pt*met*(1. - cos(dphi)));
 }
+
 
 //------------------------------------------------------------------------------                                                               
 // GetMc                                                                                                                                       
 //------------------------------------------------------------------------------                                                               
-
 void AnalysisCMS::GetMc()
 {
-
   _mc = 0.;
+
   float met = MET.Et();
 
   if (_pt2l > 0 && _m2l > 0 && met > 0)
-    _mc = sqrt( pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met,2) - pow(_pt2l + met,2) );
+    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met,2) - pow(_pt2l + met,2));
 }
+
 
 //------------------------------------------------------------------------------                                                               
 // GetPtWW                                                                                                                                     
@@ -1103,9 +1102,6 @@ void AnalysisCMS::GetPtWW()
 {
   _ptww = 0.;
 
-  if (Lepton1.v.Pt() > 0)
-    if (Lepton2.v.Pt() > 0)
-      _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
+  if (Lepton1.v.Pt() > 0 && Lepton2.v.Pt() > 0)
+    _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
 }
-
-

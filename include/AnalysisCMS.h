@@ -138,13 +138,13 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _m2l;
   float                  _m3l;
-  float                  _mpmet;
-  float                  _metvar;
   float                  _mt1;
   float                  _mt2;
   float                  _mc;
   float                  _ptww;
   float                  _mtw;
+  float                  _mpmet;
+  float                  _metvar;
   int                    _channel;
   int                    _dphiv;
   unsigned int           _nelectron;
@@ -170,18 +170,18 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
-
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ptll      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_mth       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_tkMet     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
-  TH1D*                  h_Mc        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ptWW      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
+
 
   // WZ histograms
   //----------------------------------------------------------------------------
