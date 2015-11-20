@@ -180,7 +180,7 @@ void HistogramReader::Draw(TString hname,
     _allmchist->SetBinError  (ibin, binError);
   }
 
-  _allmclabel = "all";
+  _allmclabel = "#sigma_{stat}";
 
   _allmchist->SetFillColor  (kGray+1);
   _allmchist->SetFillStyle  (   3345);
