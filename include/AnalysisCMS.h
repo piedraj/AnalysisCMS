@@ -131,22 +131,23 @@ class AnalysisCMS : public AnalysisBase
   bool                   _analysis_wz;
   bool                   _eventdump;
   bool                   _ismc;
+  bool                   _dphiv;
 
   TString                _sample;
   float                  _event_weight;
   float                  _ht;
   float                  _pt2l;
+  float                  _ptww;
   float                  _m2l;
   float                  _m3l;
   float                  _mt1;
   float                  _mt2;
-  float                  _mc;
-  float                  _ptww;
   float                  _mtw;
+  float                  _mc;
   float                  _mpmet;
   float                  _metvar;
+
   int                    _channel;
-  int                    _dphiv;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
   unsigned int           _ntight;
