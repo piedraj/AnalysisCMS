@@ -94,45 +94,44 @@ void AnalysisCMS::Loop(TString filename,
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
 	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    6, 0,    6);
 	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    6, 0,    6);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50, 0,   50);
 	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
-
+        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100, 0,    5);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
         h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000, 0, 2000);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 2000, 0, 2000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 2000, 0, 2000);
         h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000, 0, 2000);
         h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000, 0, 2000);
         h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000, 0, 2000);
-        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
-        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
-        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
         h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000, 0, 2000);
-        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  400, 0,    4);
 
 
 	// WZ histograms
 	//----------------------------------------------------------------------
 	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,     0,  4000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,     0,   200);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,     0,   200);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,     0,   200);
+	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "", 2000,     0,  2000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "", 2000,     0,  2000);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "", 2000,     0,  2000);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "", 2000,     0,  2000);
 	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,    -3,     3);
 	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,    -3,     3);
 	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,    -3,     3);
 	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,     0,     5);
 	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,     0,     5);
-	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400, -0.05,  0.05);
-	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400, -0.05,  0.05);
-	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400, -0.05,  0.05);
-	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400, -0.05,  0.05);
-	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400, -0.05,  0.05);
-	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400, -0.05,  0.05);
-	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "",  400,     0,   200);
+	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  500, -0.05,  0.05);
+	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  500, -0.05,  0.05);
+	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  500, -0.05,  0.05);
+	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  500, -0.05,  0.05);
+	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  500, -0.05,  0.05);
+	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  500, -0.05,  0.05);
       }
     }
   }
@@ -171,11 +170,13 @@ void AnalysisCMS::Loop(TString filename,
 
     ApplyWeights(_sample, era, luminosity);
 
+    GetMET(pfType1Met, pfType1Metphi);
+
+    // Careful, these Get methods should be called inside each AnalysisFunction
+
     GetLeptons();
 
     GetJets();
-
-    GetMET(pfType1Met, pfType1Metphi);
 
     GetHT();
 
@@ -921,13 +922,7 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-  _mtw  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
-
-  float mZ1W = (ZLepton1.v + WLepton.v).M();
-  float mZ2W = (ZLepton2.v + WLepton.v).M();
-
-  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
-  bool pass_mll = (mZ1W > 4. && mZ2W > 4.);  
+  _mtw  = sqrt(2. * WLepton.v.Pt()*MET.Et() * (1-cos(WLepton.v.DeltaPhi(MET))));
 
   bool pass = true;
 
@@ -942,12 +937,18 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (MET.Et()       >  30.);
   pass &= (_m3l           > 100.);
 
+  float mz1w = (ZLepton1.v + WLepton.v).M();
+  float mz2w = (ZLepton2.v + WLepton.v).M();
+
+  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
+  bool pass_mll = (mz1w > 4. && mz2w > 4.);  
+
   LevelHistograms(WZ_02_HasW,    pass && pass_dr);
   LevelHistograms(WZ_03_HasWmll, pass && pass_mll);
 
   pass &= (_nbjet == 0);
 	
-  LevelHistograms(WZ_04_BVeto, pass);
+  LevelHistograms(WZ_04_BVeto, pass && pass_dr);
 }
 
 
@@ -1038,7 +1039,7 @@ void AnalysisCMS::GetMetVar()
 
   float met = MET.Et();
 
-  _metvar = (njet <= 1) ? _mpmet : met;  // Careful: use njet or _njet?
+  _metvar = (njet <= 1) ? _mpmet : met;  // Careful, use njet or _njet?
 }
 
 
@@ -1077,7 +1078,7 @@ void AnalysisCMS::GetMt2()
   float pt   = Lepton2.v.Pt();
   float dphi = Lepton2.v.DeltaPhi(MET);
 
-  if (met > 0 && pt > 0) _mt2 = sqrt(2*pt*met*(1. - cos(dphi)));
+  if (met > 0 && pt > 0) _mt2 = sqrt(2*pt*met*(1.-cos(dphi)));
 }
 
 
@@ -1091,7 +1092,7 @@ void AnalysisCMS::GetMc()
   float met = MET.Et();
 
   if (_pt2l > 0 && _m2l > 0 && met > 0)
-    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met,2) - pow(_pt2l + met,2));
+    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met, 2) - pow(_pt2l + met, 2));
 }
 
 
