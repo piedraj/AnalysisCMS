@@ -119,6 +119,12 @@ void HistogramReader::Draw(TString hname,
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
+    if (!dummy)
+      {
+	printf("\n Error: %s does not exist\n\n", hname.Data());
+	return;
+      }
+
     if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
 
