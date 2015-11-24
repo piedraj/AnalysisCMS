@@ -94,7 +94,7 @@ void runPlotter(TString level)
 	  TString suffix = "_" + schannel[i];
 
 	  float xmin = (level.Contains("WZ")) ?  60 :   0;
-	  float xmax = (level.Contains("WZ")) ? 120 : 500;
+	  float xmax = (level.Contains("WZ")) ? 120 : 300;
 
 
 	  // Common histograms

@@ -837,8 +837,8 @@ void AnalysisCMS::AnalysisWW()
   LevelHistograms(WW_03_PfMet, pass);
 
   // Z-Veto (mll + metvar)                                                                                                                       
-  bool pass_sf_Z = (_nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
-  bool pass_df_Z = (_nelectron == 1);
+  bool pass_sf_Z = (nelec != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_df_Z = (nelec == 1);
 
   pass &= (pass_sf_Z || pass_df_Z);
   LevelHistograms(WW_04_ZVeto, pass);
@@ -852,8 +852,8 @@ void AnalysisCMS::AnalysisWW()
   LevelHistograms(WW_06_DPhiVeto, pass);
 
   // ptll > 30 GeV (45 GeV for SF)                                                                                                              
-  bool pass_sf_pt2l = (_nelectron != 1 && _pt2l > 45.);
-  bool pass_df_pt2l = (_nelectron == 1 && _pt2l > 30.);
+  bool pass_sf_pt2l = (nelec != 1 && _pt2l > 45.);
+  bool pass_df_pt2l = (nelec == 1 && _pt2l > 30.);
 
   pass &= (pass_sf_pt2l || pass_df_pt2l);
   LevelHistograms(WW_07_Ptll, pass);
