@@ -93,15 +93,15 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetMetVar        ();
 
-  void    GetMt1           ();
-
-  void    GetMt2           ();
+  float   GetMt            (Lepton lep);
 
   void    GetMc            ();
 
   void    GetPtWW          ();
 
   void    GetDPhiVeto      ();
+
+  void    GetEventVariables();  // They depend on the chosen lepton pair
 
   void    AnalysisTop      ();
 
@@ -164,29 +164,30 @@ class AnalysisCMS : public AnalysisBase
   //----------------------------------------------------------------------------
   TH1D*                  h_counterRaw[nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum[nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_m2l       [nchannel][ncut][njetbin+1];
   TH1D*                  h_njet      [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m2l       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mth       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht        [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mth       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mt2       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
-  TH1D*                  h_mc        [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
 
 
   // WZ histograms
   //----------------------------------------------------------------------------
   TH1D*                  h_m3l        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw        [nchannel][ncut][njetbin+1];
   TH1D*                  h_zl1pt      [nchannel][ncut][njetbin+1];
   TH1D*                  h_zl2pt      [nchannel][ncut][njetbin+1];
   TH1D*                  h_wlpt       [nchannel][ncut][njetbin+1];
@@ -201,7 +202,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*			 h_zl1dz      [nchannel][ncut][njetbin+1];
   TH1D*			 h_zl2dxy     [nchannel][ncut][njetbin+1];
   TH1D*			 h_zl2dz      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw        [nchannel][ncut][njetbin+1];
 };
 
 #endif

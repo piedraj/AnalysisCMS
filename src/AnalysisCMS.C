@@ -172,27 +172,11 @@ void AnalysisCMS::Loop(TString filename,
 
     GetMET(pfType1Met, pfType1Metphi);
 
-    // Careful, these Get methods should be called inside each AnalysisFunction
-
     GetLeptons();
 
     GetJets();
 
     GetHT();
-
-    GetMpMet();
-
-    GetMt1();
-
-    GetMt2();
-
-    GetMc();
-
-    GetPtWW();
-
-    GetMetVar();
-
-    GetDPhiVeto();
 
 
     // Fill histograms
@@ -703,6 +687,8 @@ void AnalysisCMS::AnalysisTop()
 
   if (_pt2l < 0) return;
 
+  GetEventVariables();
+
   _m2l = (Lepton1.v + Lepton2.v).M();
 
   int nelec = 0;
@@ -745,6 +731,8 @@ void AnalysisCMS::AnalysisTTDM()
 
   Lepton1 = AnalysisLeptons[0];
   Lepton2 = AnalysisLeptons[1];
+
+  GetEventVariables();
 
   _m2l  = (Lepton1.v + Lepton2.v).M();
   _pt2l = (Lepton1.v + Lepton2.v).Pt();
@@ -793,12 +781,32 @@ void AnalysisCMS::AnalysisTTDM()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::AnalysisWW()
 {
-  if (_nlepton < 2) return;  // Careful, _nlepton includes LOOSE leptons
+  if (_nlepton < 2) return;
+  if (_ntight  < 2) return;
 
-  Lepton1 = AnalysisLeptons[0];
-  Lepton2 = AnalysisLeptons[1];
+  bool found_1st_lepton = false;
+  bool found_2nd_lepton = false;
 
-  int nelec = 0;  // Careful, _nelectron includes LOOSE leptons
+  for (UInt_t i=0; i<_nlepton; i++)
+    {
+      if (AnalysisLeptons[i].type == Loose) continue;
+
+      if (!found_1st_lepton)
+	{
+	  found_1st_lepton = true;
+	  Lepton1 = AnalysisLeptons[i];
+	}
+      
+      if (found_1st_lepton && !found_2nd_lepton)
+	{
+	  found_2nd_lepton = true;
+	  Lepton2 = AnalysisLeptons[i];
+	}
+    }
+
+  GetEventVariables();
+
+  int nelec = 0;
 
   if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
   if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
@@ -821,7 +829,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (Lepton2.v.Pt() > 20.);
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  // Nextra = 0
+  // No additional tight leptons
   pass &= (_ntight == 2);
   LevelHistograms(WW_01_Exactly2Leptons, pass);
 
@@ -829,7 +837,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_m2l > 12.);
   LevelHistograms(WW_02_Mll, pass);
 
-  // PfMet > 20 GeV
+  // met > 20 GeV
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_03_PfMet, pass);
 
@@ -881,6 +889,8 @@ void AnalysisCMS::AnalysisWZ()
   Lepton1 = AnalysisLeptons[0];
   Lepton2 = AnalysisLeptons[1];
 
+  GetEventVariables();
+
 
   // Make Z and W candidates
   //----------------------------------------------------------------------------
@@ -922,7 +932,7 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-  _mtw  = sqrt(2. * WLepton.v.Pt()*MET.Et() * (1-cos(WLepton.v.DeltaPhi(MET))));
+  _mtw  = GetMt(WLepton);
 
   bool pass = true;
 
@@ -1000,31 +1010,37 @@ void AnalysisCMS::GetHT()
 {
   _ht = MET.Et();
 
-  for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
-  for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
+  for (int i=0; i<_nlepton; i++)
+    {
+      if (AnalysisLeptons[i].type == Loose) continue;
+
+      _ht += AnalysisLeptons[i].v.Pt();
+    }
+
+  for (int i=0; i<_njet; i++)
+    {
+      _ht += AnalysisJets[i].v.Pt();
+    }
 }
 
 
 //------------------------------------------------------------------------------                                                               
-// GetMpMet (provisional)                                                                                                                      
+// GetMpMet
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphimin  = min(dphilmet1, dphilmet2);
-  Float_t fullpmet = 0.;
-  Float_t trkpmet  = 0.;
+  Float_t dphi1   = Lepton1.v.DeltaPhi(MET);
+  Float_t dphi2   = Lepton2.v.DeltaPhi(MET);
+  Float_t dphimin = min(dphi1, dphi2);
 
-  _mpmet = 0.;
-
-  if (dphimin < TMath::Pi() / 2.)
-    fullpmet = pfType1Met * sin(dphimin);
-  else
-    fullpmet = pfType1Met;
+  Float_t fullpmet = MET.Et();
+  Float_t trkpmet  = trkMet;
 
   if (dphimin < TMath::Pi() / 2.)
-    trkpmet = trkMet * sin(dphimin);
-  else
-    trkpmet = trkMet;
+    {
+      fullpmet *= sin(dphimin);
+      trkpmet  *= sin(dphimin);
+    }
 
   _mpmet = min(trkpmet, fullpmet);
 }
@@ -1035,11 +1051,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = 0.;
-
-  float met = MET.Et();
-
-  _metvar = (njet <= 1) ? _mpmet : met;  // Careful, use njet or _njet?
+  _metvar = (_njet <= 1) ? _mpmet : MET.Et();
 }
 
 
@@ -1048,37 +1060,27 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDPhiVeto()
 {
-  _dphiv = (njet <= 1 || (njet > 1 && dphilljetjet < 165.*TMath::DegToRad()));
+  _dphiv = (_njet <= 1 || (_njet > 1 && dphilljetjet < 165.*TMath::DegToRad()));
 }
 
 
 //------------------------------------------------------------------------------                                                               
-// GetMt1                                                                                                                                      
+// GetMt
 //------------------------------------------------------------------------------                                                               
-void AnalysisCMS::GetMt1()
+float AnalysisCMS::GetMt(Lepton lep)
 {
-  _mt1 = 0.;
+  float transverse_mass = 0;
 
   float met  = MET.Et();
-  float pt   = Lepton1.v.Pt();
-  float dphi = Lepton1.v.DeltaPhi(MET);
+  float pt   = lep.v.Pt();
+  float dphi = lep.v.DeltaPhi(MET);
 
-  if (met > 0 && pt > 0) _mt1 = sqrt(2*pt*met*(1. - cos(dphi)));
-}
+  if (met < 0) return transverse_mass;
+  if (pt  < 0) return transverse_mass;
 
+  transverse_mass = sqrt(2*pt*met*(1. - cos(dphi)));
 
-//------------------------------------------------------------------------------                                                               
-// GetMt2                                                                                                                                      
-//------------------------------------------------------------------------------                                                               
-void AnalysisCMS::GetMt2()
-{
-  _mt2 = 0.;
-
-  float met  = MET.Et();
-  float pt   = Lepton2.v.Pt();
-  float dphi = Lepton2.v.DeltaPhi(MET);
-
-  if (met > 0 && pt > 0) _mt2 = sqrt(2*pt*met*(1.-cos(dphi)));
+  return transverse_mass;
 }
 
 
@@ -1087,7 +1089,7 @@ void AnalysisCMS::GetMt2()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMc()
 {
-  _mc = 0.;
+  _mc = 0;
 
   float met = MET.Et();
 
@@ -1101,8 +1103,24 @@ void AnalysisCMS::GetMc()
 //------------------------------------------------------------------------------                                                                
 void AnalysisCMS::GetPtWW()
 {
-  _ptww = 0.;
+  _ptww = 0;
 
   if (Lepton1.v.Pt() > 0 && Lepton2.v.Pt() > 0)
     _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
+}
+
+
+//------------------------------------------------------------------------------
+// GetEventVariables
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetEventVariables()
+{
+  _mt1 = GetMt(Lepton1);
+  _mt2 = GetMt(Lepton2);
+
+  GetMc();
+  GetPtWW();
+  GetMpMet();
+  GetMetVar();
+  GetDPhiVeto();
 }
