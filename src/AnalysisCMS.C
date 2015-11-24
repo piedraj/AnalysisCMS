@@ -318,7 +318,7 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 
   bool is_isolated_lepton = false;
 
-  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
+  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;
   else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.12);
   
   return is_isolated_lepton;

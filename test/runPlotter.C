@@ -77,8 +77,8 @@ void runPlotter(TString level)
 	{
 	  TString suffix = "_" + schannel[i];
 
-	  float xmin = (level.Contains("WZ")) ?  50. : -999.;
-	  float xmax = (level.Contains("WZ")) ? 130. : -999.;
+	  float xmin = (level.Contains("WZ")) ?  50 :   0;
+	  float xmax = (level.Contains("WZ")) ? 130 : 500;
 
 
 	  // Common histograms
@@ -86,24 +86,22 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "counterLum" + suffix, "yield",                                   -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "njet"       + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY);
 	  plotter.Draw(prefix + "nbjet"      + suffix, "number of b-jets (p_{T}^{jet} > 30 GeV)", -1, 0, "NULL", logY);
-	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", linY);
-	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", linY, true,    0,    4);
+	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", linY, true,    0,   30);
 	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  2, 1, "NULL", logY, true,    0,    4);
-	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",              20, 1, "rad",  logY, true,    0, 3.15);
-	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  linY, true,    0,  150);
-	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  linY, true,    0,  150);
-	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  linY, true,    0,  150);
+	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               2, 1, "rad",  logY, true,    0, 3.15);
+	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  logY, true,    0,  400);
+	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  logY, true,    0,  400);
+	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  logY, true,    0,  400);
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  logY, true, xmin, xmax);
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  linY, true, xmin, xmax);
-	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 10, 0, "GeV",  linY, true,    0,  150);
-	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 10, 0, "GeV",  linY, true,    0,  150);
-	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  logY, true,    0,  150);
-	  plotter.Draw(prefix + "mc"         + suffix, "m_{c}",                                   10, 0, "GeV",  linY, true,    0,  150);
-	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   10, 0, "GeV",  linY, true,    0,  500);
-	  plotter.Draw(prefix + "pt1"        + suffix, "leading lepton p_{T}",                    10, 0, "GeV",  logY, true,    0,  150);
-	  plotter.Draw(prefix + "pt2"        + suffix, "trailing lepton p_{T}",                   10, 0, "GeV",  logY, true,    0,  150);
-	  plotter.Draw(prefix + "pt2l"       + suffix, "p_{T}^{#font[12]{ll}}",                   10, 0, "GeV",  logY, true,    0,  150);
-	  plotter.Draw(prefix + "ptww"       + suffix, "p_{T}^{WW}",                              10, 0, "GeV",  logY, true,    0,  150);
+	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 10, 0, "GeV",  logY, true,    0,  500);
+	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 10, 0, "GeV",  logY, true,    0,  500);
+	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  logY, true,    0,  500);
+	  plotter.Draw(prefix + "mc"         + suffix, "m_{c}",                                   10, 0, "GeV",  logY, true,    0,  500);
+	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   10, 0, "GeV",  logY, true,    0,  500);
+	  plotter.Draw(prefix + "pt1"        + suffix, "leading lepton p_{T}",                    10, 0, "GeV",  logY, true,    0,  300);
+	  plotter.Draw(prefix + "pt2"        + suffix, "trailing lepton p_{T}",                   10, 0, "GeV",  logY, true,    0,  300);
+	  plotter.Draw(prefix + "pt2l"       + suffix, "p_{T}^{#font[12]{ll}}",                   10, 0, "GeV",  logY, true,    0,  300);
+	  plotter.Draw(prefix + "ptww"       + suffix, "p_{T}^{WW}",                              10, 0, "GeV",  logY, true,    0,  300);
 
 
 	  // WZ histograms
@@ -120,12 +118,12 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "wleta"       + suffix, "W lepton #eta",                        6, 1, "NULL", linY);
 	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
 	  plotter.Draw(prefix + "wlzl2deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
-  	  plotter.Draw(prefix + "wldxy"       + suffix, "W lepton dxy",                        20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "wldz"        + suffix, "W lepton dz",                         20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl1dxy"      + suffix, "Z leading lepton dxy",                20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl1dz"       + suffix, "Z leading lepton dz",                 20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl2dxy"      + suffix, "Z trailing lepton dxy",               20, 0, "cm",   logY);
-  	  plotter.Draw(prefix + "zl2dz"       + suffix, "Z trailing lepton dz",                20, 0, "cm",   logY);
+  	  plotter.Draw(prefix + "wldxy"       + suffix, "W lepton dxy",                        20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "wldz"        + suffix, "W lepton dz",                         20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "zl1dxy"      + suffix, "Z leading lepton dxy",                20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "zl1dz"       + suffix, "Z leading lepton dz",                 20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "zl2dxy"      + suffix, "Z trailing lepton dxy",               20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "zl2dz"       + suffix, "Z trailing lepton dz",                20, 3, "cm",   logY);
 	}
     }
 
