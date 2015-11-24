@@ -180,7 +180,7 @@ void HistogramReader::Draw(TString hname,
     _allmchist->SetBinError  (ibin, binError);
   }
 
-  _allmclabel = "#sigma_{stat}";
+  _allmclabel = "stat";
 
   _allmchist->SetFillColor  (kGray+1);
   _allmchist->SetFillStyle  (   3345);
@@ -242,7 +242,7 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-1;
+      theMin = 3e-1;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
