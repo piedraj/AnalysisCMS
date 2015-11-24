@@ -17,18 +17,18 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi25ns_fb);
   plotter.SetStackOption("hist");
-  plotter.SetDrawRatio(true);
+  plotter.SetDrawRatio  (true);
 
   plotter.AddData   ("01_Data",      "data",    kBlack);
+  plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
+  plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
+  plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
   plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
+  plotter.AddProcess("06_WW",        "WW",      kAzure-7);
+  plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
+  plotter.AddProcess("04_Top",       "tt+jets", kYellow);
   plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
   plotter.AddProcess("11_HWW",       "HWW",     kRed);
-  plotter.AddProcess("06_WW",        "WW",      kAzure-7);
-  plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
-  plotter.AddProcess("04_Top",       "tt+jets", kYellow);
-  plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
-  plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
-  plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
 
 
   // Draw cut evolution
@@ -77,8 +77,8 @@ void runPlotter(TString level)
 	{
 	  TString suffix = "_" + schannel[i];
 
-	  float xmin = (level.Contains("WZ")) ?  50 :   0;
-	  float xmax = (level.Contains("WZ")) ? 130 : 500;
+	  float xmin = (level.Contains("WZ")) ?  60 :   0;
+	  float xmax = (level.Contains("WZ")) ? 120 : 500;
 
 
 	  // Common histograms
@@ -92,7 +92,8 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  logY, true,    0,  400);
 	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  logY, true,    0,  400);
 	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  logY, true,    0,  400);
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        5, 0, "GeV",  logY, true, xmin, xmax);
+	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",  logY, true, xmin, xmax);
+	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",  linY, true, xmin, xmax);
 	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 10, 0, "GeV",  logY, true,    0,  500);
 	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 10, 0, "GeV",  logY, true,    0,  500);
 	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  logY, true,    0,  500);

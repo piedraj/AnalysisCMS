@@ -92,26 +92,26 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    6, 0,    6);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    6, 0,    6);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50, 0,   50);
-	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
-        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100, 0,    5);
-        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
-        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000, 0, 2000);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 2000, 0, 2000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
-        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
-        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 2000, 0, 2000);
-        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000, 0, 2000);
-        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000, 0, 2000);
-        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000, 0, 2000);
-        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000, 0, 2000);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    7, -0.5,  6.5);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    7, -0.5,  6.5);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
+        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000,    0, 2000);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000,    0, 2000);
+        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000,    0, 2000);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 2000,    0, 2000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000,    0, 2000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000,    0, 2000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000,    0, 2000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000,    0, 2000);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 2000,    0, 2000);
+        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000,    0, 2000);
+        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000,    0, 2000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000,    0, 2000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000,    0, 2000);
 
 
 	// WZ histograms
