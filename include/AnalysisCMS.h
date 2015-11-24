@@ -151,8 +151,8 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _nelectron;
   unsigned int           _nlepton;
   unsigned int           _ntight;
-  unsigned int           _njet;
-  unsigned int           _nbjet;
+  unsigned int           _njet30;
+  unsigned int           _nbjet20;
   unsigned int           _jetbin;
   
   ofstream               txt_summary;
@@ -164,8 +164,8 @@ class AnalysisCMS : public AnalysisBase
   //----------------------------------------------------------------------------
   TH1D*                  h_counterRaw[nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum[nchannel][ncut][njetbin+1];
-  TH1D*                  h_njet      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet30    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20   [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];

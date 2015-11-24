@@ -94,8 +94,8 @@ void AnalysisCMS::Loop(TString filename,
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
-	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    7, -0.5,  6.5);
-	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    7, -0.5,  6.5);
+	h_njet30    [i][j][k] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
+	h_nbjet20   [i][j][k] = new TH1D("h_nbjet20"    + suffix, "",    7, -0.5,  6.5);
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
 	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
         h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
@@ -351,8 +351,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet      [ichannel][icut][ijet]->Fill(_njet,          _event_weight);
-  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,         _event_weight);
+  h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
+  h_nbjet20   [ichannel][icut][ijet]->Fill(_nbjet20,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
   h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
@@ -598,6 +598,8 @@ void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
+  _nbjet20 = 0;
+
   int vector_jet_size = std_vector_jet_pt->size();
 
   for (int i=0; i<vector_jet_size; i++) {
@@ -606,7 +608,7 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    if (pt < 20. || fabs(eta) < 2.4) continue;
+    if (pt < 20. || fabs(eta) > 2.4) continue;
 
     TLorentzVector tlv;
 
@@ -629,25 +631,19 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
+    if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet20++;
+
+    if (pt < 30.) continue;
+
     AnalysisJets.push_back(goodjet);
   }
 
-  _njet = AnalysisJets.size();
-
-
-  // Count the number of b-jets
-  //----------------------------------------------------------------------------
-  _nbjet = 0;
-
-  for (int i=0; i<_njet; i++)
-    {
-      if (AnalysisJets[i].csvv2ivf > csvv2ivf_looseWP) _nbjet++;
-    }
+  _njet30 = AnalysisJets.size();
 
 
   // Define the jet bin
   //----------------------------------------------------------------------------
-  _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
+  _jetbin = (_njet30 < njetbin) ? _njet30 : njetbin - 1;
 }
 
 
@@ -707,11 +703,11 @@ void AnalysisCMS::AnalysisTop()
 
   LevelHistograms(Top_00_Has2Leptons, pass);
 
-  pass &= (_njet > 1);
+  pass &= (_njet30 > 1);
 
   LevelHistograms(Top_01_Has2Jets, pass);
 
-  pass &= (_nbjet > 0);
+  pass &= (_nbjet20 > 0);
 
   LevelHistograms(Top_02_Has1BJet, pass);
 }
@@ -752,9 +748,9 @@ void AnalysisCMS::AnalysisTTDM()
 
   LevelHistograms(TTDM_01_ZVeto, pass);
 
-  pass &= (_njet > 1);
+  pass &= (_njet30 > 1);
 
-  if (_njet < 2) return;
+  if (_njet30 < 2) return;
 
   LevelHistograms(TTDM_02_Has2Jets, pass);
 
@@ -863,7 +859,7 @@ void AnalysisCMS::AnalysisWW()
   LevelHistograms(WW_07_Ptll, pass);
 
   // B veto
-  pass &= (_nbjet == 0);
+  pass &= (_nbjet20 == 0);
   LevelHistograms(WW_08_BVeto, pass);
 
   // Ht < 250 GeV
@@ -950,7 +946,7 @@ void AnalysisCMS::AnalysisWZ()
 
   LevelHistograms(WZ_02_HasW, pass);
 
-  pass &= (_nbjet == 0);
+  pass &= (_nbjet20 == 0);
 	
   LevelHistograms(WZ_04_BVeto, pass);
 }
@@ -1011,7 +1007,7 @@ void AnalysisCMS::GetHT()
       _ht += AnalysisLeptons[i].v.Pt();
     }
 
-  for (int i=0; i<_njet; i++)
+  for (int i=0; i<_njet30; i++)
     {
       _ht += AnalysisJets[i].v.Pt();
     }
@@ -1045,7 +1041,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (_njet <= 1) ? _mpmet : MET.Et();
+  _metvar = (_njet30 <= 1) ? _mpmet : MET.Et();
 }
 
 
@@ -1054,7 +1050,7 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDPhiVeto()
 {
-  _dphiv = (_njet <= 1 || (_njet > 1 && dphilljetjet < 165.*TMath::DegToRad()));
+  _dphiv = (_njet30 <= 1 || (_njet30 > 1 && dphilljetjet < 165.*TMath::DegToRad()));
 }
 
 
