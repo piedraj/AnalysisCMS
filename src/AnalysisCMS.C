@@ -193,6 +193,7 @@ void AnalysisCMS::Loop(TString filename,
 
     GetDPhiVeto();
 
+    GetSoftMuVeto();
 
     // Fill histograms
     //--------------------------------------------------------------------------
@@ -654,11 +655,13 @@ void AnalysisCMS::GetJets()
   //----------------------------------------------------------------------------
   _nbjet = 0;
 
-  for (int i=0; i<_njet; i++)
-    {
-      if (AnalysisJets[i].csvv2ivf > csvv2ivf_looseWP) _nbjet++;
-    }
-
+  //for (int i=0; i<std_vector_jet_pt->size(); i++)  //| I think we can go down
+      //if (std_vector_jet_pt->at(i) > 20)             //| to 20GeV jets. 
+      for (int i=0; i<_njet; i++)
+      {
+	if (std_vector_jet_csvv2ivf->at(i) > csvv2ivf_looseWP) _nbjet++;
+      }
+  
 
   // Define the jet bin
   //----------------------------------------------------------------------------
@@ -832,7 +835,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_03_PfMet, pass);
 
-  // Z-Veto (mll + metvar)                                                                                                                       
+  // Z-Veto (mll + metvar)  
   bool pass_sf_Z = (_nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
   bool pass_df_Z = (_nelectron == 1);
 
@@ -843,11 +846,11 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_mpmet > 20.);
   LevelHistograms(WW_05_MpMet, pass);
 
-  // DeltaPhi veto (only SF)                                                                                                                    
+  // DeltaPhi veto (only SF)
   pass &= (_dphiv);
   LevelHistograms(WW_06_DPhiVeto, pass);
 
-  // ptll > 30 GeV (45 GeV for SF)                                                                                                              
+  // ptll > 30 GeV (45 GeV for SF)                                                                                                             
   bool pass_sf_pt2l = (_nelectron != 1 && _pt2l > 45.);
   bool pass_df_pt2l = (_nelectron == 1 && _pt2l > 30.);
 
@@ -858,9 +861,13 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_nbjet == 0);
   LevelHistograms(WW_08_BVeto, pass);
 
+  // Soft Muon Veto
+  pass &= (!_bvetomu);
+  LevelHistograms(WW_09_SoftMu, pass);
+
   // Ht < 250 GeV
   pass &= (_ht < 250.);
-  LevelHistograms(WW_09_Ht, pass);
+  LevelHistograms(WW_10_Ht, pass);
 }
 
 
@@ -1104,4 +1111,20 @@ void AnalysisCMS::GetPtWW()
 
   if (Lepton1.v.Pt() > 0 && Lepton2.v.Pt() > 0)
     _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
+}
+
+//------------------------------------------------------------------------------                                                               
+// GetSoftMuVeto (Building a Soft Muon B-Veto (Quite Rudely))
+//------------------------------------------------------------------------------                                                               
+
+void AnalysisCMS::GetSoftMuVeto()
+{
+  _bvetomu = false;
+  
+  for (unsigned int i = 0; i < std_vector_jet_softMuPt->size(); ++i)
+    if (std_vector_jet_pt->at(i) > 10 && std_vector_jet_pt->at(i) < 30)
+      if (std_vector_jet_softMuPt->at(i) > 3){
+	_bvetomu = true;
+	break;
+      }
 }
