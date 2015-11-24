@@ -941,14 +941,16 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (WLepton.v.Pt() >  20.);
   pass &= (MET.Et()       >  30.);
   pass &= (_m3l           > 100.);
-  pass &= ((ZLepton1.v + WLepton.v).M() > 4.);
-  pass &= ((ZLepton2.v + WLepton.v).M() > 4.);
 
-  LevelHistograms(WZ_02_HasW, pass);
+  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
+  bool pass_mll = ((WLepton.v + ZLepton1.v).M() > 4. && (WLepton.v + ZLepton2.v).M() > 4.);
+
+  LevelHistograms(WZ_02_HasWdr,  pass && pass_dr);
+  LevelHistograms(WZ_02_HasWmll, pass && pass_mll);
 
   pass &= (_nbjet20 == 0);
 	
-  LevelHistograms(WZ_04_BVeto, pass);
+  LevelHistograms(WZ_03_BVeto, pass && pass_mll);
 }
 
 
