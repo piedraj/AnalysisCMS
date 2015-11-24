@@ -796,8 +796,7 @@ void AnalysisCMS::AnalysisWW()
 	  found_1st_lepton = true;
 	  Lepton1 = AnalysisLeptons[i];
 	}
-      
-      if (found_1st_lepton && !found_2nd_lepton)
+      else if (!found_2nd_lepton && i != Lepton1.index)
 	{
 	  found_2nd_lepton = true;
 	  Lepton2 = AnalysisLeptons[i];
