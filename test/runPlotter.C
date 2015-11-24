@@ -4,37 +4,11 @@
 const TString inputdir  = "../rootfiles/25ns/";
 const TString outputdir = "figures/25ns/";
 
+enum {linY, logY};
+
 
 void runPlotter(TString level)
 {
-  enum {linY, logY};
-
-  gInterpreter->ExecuteMacro("PaperStyle.C");
-
-  gSystem->mkdir(outputdir + level, kTRUE);
-
-  HistogramReader plotter(inputdir, outputdir);
-
-  plotter.SetLuminosity (lumi25ns_fb);
-  plotter.SetStackOption("hist");
-  plotter.SetDrawRatio  (true);
-
-  plotter.AddData   ("01_Data",      "data",    kBlack);
-  plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
-  plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
-  plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
-  plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
-  plotter.AddProcess("06_WW",        "WW",      kAzure-7);
-  plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
-  plotter.AddProcess("04_Top",       "tt+jets", kYellow);
-  plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
-  plotter.AddProcess("11_HWW",       "HWW",     kRed);
-
-
-  // Draw cut evolution
-  //----------------------------------------------------------------------------
-  plotter.SetDrawYield(false);
-
   TString tok;
 
   Ssiz_t from = 0;
@@ -45,6 +19,51 @@ void runPlotter(TString level)
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
+
+  gInterpreter->ExecuteMacro("PaperStyle.C");
+
+  gSystem->mkdir(outputdir + level, kTRUE);
+
+  HistogramReader plotter(inputdir, outputdir);
+
+  plotter.SetLuminosity(lumi25ns_fb);
+  plotter.SetStackOption("hist");
+  plotter.SetDrawRatio(true);
+
+  plotter.AddData("01_Data", "data", kBlack);
+
+
+  // Stack predicted histograms in different order for different analyses
+  //----------------------------------------------------------------------------
+  if (analysis.EqualTo("WZ"))
+    {
+      plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
+      plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
+      plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
+      plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
+      plotter.AddProcess("06_WW",        "WW",      kAzure-7);
+      plotter.AddProcess("11_HWW",       "HWW",     kRed);
+      plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
+      plotter.AddProcess("04_Top",       "tt+jets", kYellow);
+      plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
+    }
+  else
+    {
+      plotter.AddProcess("06_WW",        "WW",      kAzure-7);
+      plotter.AddProcess("11_HWW",       "HWW",     kRed);
+      plotter.AddProcess("04_Top",       "tt+jets", kYellow);
+      plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
+      plotter.AddProcess("08_WJets",     "W+jets",  kAzure-9);
+      plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
+      plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
+      plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
+      plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
+    }
+
+
+  // Draw cut evolution
+  //----------------------------------------------------------------------------
+  plotter.SetDrawYield(false);
 
   for (int i=firstchannel; i<=lastchannel; i++)
     {
@@ -59,9 +78,6 @@ void runPlotter(TString level)
   // Draw distributions
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(true);
-
-  firstchannel = (level.Contains("WZ")) ? eee : ee;
-  lastchannel  = (level.Contains("WZ")) ? lll : ll;
 
   for (int j=0; j<=njetbin; j++)
     {
@@ -128,6 +144,9 @@ void runPlotter(TString level)
 	}
     }
 
+
+  // Copy index.php in every directory
+  //----------------------------------------------------------------------------
   gSystem->Exec("for dir in $(find ./ -type d); do cp -n ../index.php $dir/; done");
   gSystem->Exec("rm index.php");
 }
