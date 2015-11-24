@@ -644,14 +644,15 @@ void HistogramReader::Evolution(TFile*  file,
 				TString analysis,
 				TString hname)
 {
+  // Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
 
   if (test_hist) return;
 
-  file->cd();
 
+  // Get the number of bins
   file->cd(analysis);
-
+  
   Int_t nbins = 0;
   
   for (Int_t i=0; i<ncut; i++)
@@ -661,7 +662,22 @@ void HistogramReader::Evolution(TFile*  file,
       nbins++;
     }
 
+
+  // Create and fill the evolution histogram
   TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=0, bin=0; i<ncut; i++)
+    {
+      if (!scut[i].Contains(analysis + "/")) continue;
+
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+    }
+
+
+  // Change the evolution histogram x-axis labels
+  TAxis* xaxis = (TAxis*)hist->GetXaxis();
 
   for (Int_t i=0, bin=0; i<ncut; i++)
     {
@@ -673,16 +689,13 @@ void HistogramReader::Evolution(TFile*  file,
 
       while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
-      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
-
-      if (hist && dummy)
-	{
-	  hist->SetBinContent(++bin, Yield(dummy));
-
-	  if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
-	}
+      if (++bin < nbins) xaxis->SetBinLabel(bin, icut);
+      // terminate called after throwing an instance of 'std::bad_alloc'
+      // xaxis->SetBinLabel(bin, icut);
     }
 
+
+  // Write the evolution histogram
   hist->Write();
 }
 
