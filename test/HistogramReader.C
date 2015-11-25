@@ -164,7 +164,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
   
-  for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX()+1; ibin++) {
+  for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
     Float_t binError = 0.;
@@ -695,9 +695,7 @@ void HistogramReader::Evolution(TFile*  file,
 
       while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
-      if (++bin < nbins) xaxis->SetBinLabel(bin, icut);
-      // terminate called after throwing an instance of 'std::bad_alloc'
-      // xaxis->SetBinLabel(bin, icut);
+      xaxis->SetBinLabel(++bin, icut);
     }
 
 
