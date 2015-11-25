@@ -19,6 +19,8 @@ const float MUON_MASS     =  0.106;     // [GeV]
 const float TAU_MASS      =  1.777;     // [GeV]
 const float Z_MASS        = 91.188;     // [GeV]
 
+const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
+
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
@@ -86,10 +88,10 @@ enum {
   WW_08_BVeto,
   WW_09_SoftMu,
   WW_10_Ht,
+  WW_11_DY,
   WZ_00_Exactly3Leptons,
   WZ_01_HasZ,
-  WZ_02_HasWdr,
-  WZ_02_HasWmll,
+  WZ_02_HasW,
   WZ_03_BVeto
 };
 
@@ -115,10 +117,10 @@ const TString scut[ncut] = {
   "WW/08_BVeto",
   "WW/09_SoftMu",
   "WW/10_Ht",
+  "WW/11_DY",
   "WZ/00_Exactly3Leptons",
   "WZ/01_HasZ",
-  "WZ/02_HasWdr",
-  "WZ/02_HasWmll",
+  "WZ/02_HasW",
   "WZ/03_BVeto"
 };
 

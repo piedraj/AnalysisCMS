@@ -90,7 +90,7 @@ void AnalysisCMS::Loop(TString filename,
 	TString suffix = "_" + schannel[i];
 
 
-	// Common histograms
+	// Common TH1 histograms
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
@@ -99,28 +99,33 @@ void AnalysisCMS::Loop(TString filename,
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
 	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
         h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
-        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000,    0, 2000);
 	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000,    0, 2000);
-        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000,    0, 2000);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 2000,    0, 2000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000,    0, 2000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000,    0, 2000);
-        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000,    0, 2000);
-        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000,    0, 2000);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 2000,    0, 2000);
-        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000,    0, 2000);
-        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000,    0, 2000);
-        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000,    0, 2000);
-        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000,    0, 2000);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 1000,    0, 1000);
+        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 1000,    0, 1000);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 1000,    0, 1000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 1000,    0, 1000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 1000,    0, 1000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 1000,    0, 1000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 1000,    0, 1000);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 1000,    0, 1000);
+        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 1000,    0, 1000);
+        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 1000,    0, 1000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 1000,    0, 1000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 1000,    0, 1000);
+
+	
+	// Common TH2 histograms
+	//----------------------------------------------------------------------
+	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 200, 0, 200);
 
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,     0,  4000);
-	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "", 2000,     0,  2000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "", 2000,     0,  2000);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "", 2000,     0,  2000);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "", 2000,     0,  2000);
+	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 2000,     0,  2000);
+	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "", 1000,     0,  1000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "", 1000,     0,  1000);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "", 1000,     0,  1000);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "", 1000,     0,  1000);
 	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,    -3,     3);
 	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,    -3,     3);
 	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,    -3,     3);
@@ -344,7 +349,7 @@ void AnalysisCMS::LevelHistograms(int icut, bool pass)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
-  // Common histograms
+  // Common TH1 histograms
   //----------------------------------------------------------------------------
   float deltarll   = Lepton1.v.DeltaR  (Lepton2.v);
   float deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
@@ -369,6 +374,11 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_deltaphill[ichannel][icut][ijet]->Fill(deltaphill,     _event_weight);
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+
+
+  // Common TH2 histograms
+  //----------------------------------------------------------------------------
+  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
 
 
   // WZ histograms
@@ -820,57 +830,46 @@ void AnalysisCMS::AnalysisWW()
   //----------------------------------------------------------------------------                                                               
   bool pass = true;
 
-  // Two leptons Level
   pass &= (Lepton1.flavour * Lepton2.flavour < 0);
   pass &= (Lepton1.v.Pt() > 20.);
   pass &= (Lepton2.v.Pt() > 20.);
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  // No additional tight leptons
   pass &= (_ntight == 2);
   LevelHistograms(WW_01_Exactly2Leptons, pass);
 
-  // m2l > 12 GeV
   pass &= (_m2l > 12.);
   LevelHistograms(WW_02_Mll, pass);
 
-  // met > 20 GeV
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_03_PfMet, pass);
 
-  // Z-Veto (mll + metvar)                                                                                                                       
-  bool pass_sf_Z = (nelec != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
-  bool pass_df_Z = (nelec == 1);
+  bool pass_zveto = (nelec == 1 || nelec != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
 
-  pass &= (pass_sf_Z || pass_df_Z);
-  LevelHistograms(WW_04_ZVeto, pass);
+  LevelHistograms(WW_04_ZVeto, pass && pass_zveto);
 
-  // mpmet > 20 GeV                                                                                                                            
   pass &= (_mpmet > 20.);
-  LevelHistograms(WW_05_MpMet, pass);
+  LevelHistograms(WW_05_MpMet, pass && pass_zveto);
 
-  // DeltaPhi veto (only SF)                                                                                                                    
   pass &= (_dphiv);
-  LevelHistograms(WW_06_DPhiVeto, pass);
+  LevelHistograms(WW_06_DPhiVeto, pass && pass_zveto);
 
-  // ptll > 30 GeV (45 GeV for SF)                                                                                                              
-  bool pass_sf_pt2l = (nelec != 1 && _pt2l > 45.);
-  bool pass_df_pt2l = (nelec == 1 && _pt2l > 30.);
+  bool pass_pt2l = (nelec == 1 && _pt2l > 30. || nelec != 1 && _pt2l > 45.);
 
-  pass &= (pass_sf_pt2l || pass_df_pt2l);
-  LevelHistograms(WW_07_Ptll, pass);
+  pass &= pass_pt2l;
+  LevelHistograms(WW_07_Ptll, pass && pass_zveto);
 
-  // B veto
   pass &= (_nbjet20 == 0);
-  LevelHistograms(WW_08_BVeto, pass);
+  LevelHistograms(WW_08_BVeto, pass && pass_zveto);
 
-  // Soft muon veto
   pass &= (!_foundsoftmuon);
-  LevelHistograms(WW_09_SoftMu, pass);
+  LevelHistograms(WW_09_SoftMu, pass && pass_zveto);
 
-  // Ht < 250 GeV
   pass &= (_ht < 250.);
-  LevelHistograms(WW_10_Ht, pass);
+  LevelHistograms(WW_10_Ht, pass && pass_zveto);
+
+  // Data-driven DY
+  LevelHistograms(WW_11_DY, pass);
 }
 
 
@@ -948,15 +947,14 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (MET.Et()       >  30.);
   pass &= (_m3l           > 100.);
 
-  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
-  bool pass_mll = ((WLepton.v + ZLepton1.v).M() > 4. && (WLepton.v + ZLepton2.v).M() > 4.);
+  pass &= ((WLepton.v + ZLepton1.v).M() > 4.);
+  pass &= ((WLepton.v + ZLepton2.v).M() > 4.);
 
-  LevelHistograms(WZ_02_HasWdr,  pass && pass_dr);
-  LevelHistograms(WZ_02_HasWmll, pass && pass_mll);
+  LevelHistograms(WZ_02_HasW, pass);
 
   pass &= (_nbjet20 == 0);
 	
-  LevelHistograms(WZ_03_BVeto, pass && pass_mll);
+  LevelHistograms(WZ_03_BVeto, pass);
 }
 
 
