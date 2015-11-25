@@ -92,46 +92,47 @@ void AnalysisCMS::Loop(TString filename,
 
 	// Common histograms
 	//----------------------------------------------------------------------
-	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
-	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
-	h_njet30    [i][j][k] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
-	h_nbjet20   [i][j][k] = new TH1D("h_nbjet20"    + suffix, "",    7, -0.5,  6.5);
-	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
-	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
-        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
-        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000,    0, 2000);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000,    0, 2000);
-        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000,    0, 2000);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 2000,    0, 2000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000,    0, 2000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000,    0, 2000);
-        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000,    0, 2000);
-        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000,    0, 2000);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 2000,    0, 2000);
-        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000,    0, 2000);
-        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000,    0, 2000);
-        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000,    0, 2000);
-        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000,    0, 2000);
+	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3, 0,    3);
+	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3, 0,    3);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "",  400, 0,  400);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "",  400, 0,  200);
+	h_njet      [i][j][k] = new TH1D("h_njet"       + suffix, "",    6, 0,    6);
+	h_nbjet     [i][j][k] = new TH1D("h_nbjet"      + suffix, "",    6, 0,    6);
+	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   40, 0,   40);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000, 0, 2000);
+	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100, 0,    5);
+
+        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 2000, 0, 2000);
+        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 2000, 0, 2000);
+        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 2000, 0, 2000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000, 0, 2000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 2000, 0, 2000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 2000, 0, 2000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 2000, 0, 2000);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 2000, 0, 2000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 2000, 0, 2000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000, 0, 2000);
+        h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  400, 0,    4);
 
 
 	// WZ histograms
 	//----------------------------------------------------------------------
 	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 4000,     0,  4000);
-	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "", 2000,     0,  2000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "", 2000,     0,  2000);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "", 2000,     0,  2000);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "", 2000,     0,  2000);
+	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "",  200,     0,   200);
+	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "",  200,     0,   200);
+	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "",  200,     0,   200);
 	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,    -3,     3);
 	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,    -3,     3);
 	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,    -3,     3);
 	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,     0,     5);
 	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,     0,     5);
-	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  500, -0.05,  0.05);
-	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  500, -0.05,  0.05);
-	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  500, -0.05,  0.05);
-	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  500, -0.05,  0.05);
-	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  500, -0.05,  0.05);
-	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  500, -0.05,  0.05);
+	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  400, -0.05,  0.05);
+	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  400, -0.05,  0.05);
+	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  400, -0.05,  0.05);
+	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  400, -0.05,  0.05);
+	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  400, -0.05,  0.05);
+	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  400, -0.05,  0.05);
+	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "",  400,     0,   200);
       }
     }
   }
@@ -170,14 +171,29 @@ void AnalysisCMS::Loop(TString filename,
 
     ApplyWeights(_sample, era, luminosity);
 
-    GetMET(pfType1Met, pfType1Metphi);
-
     GetLeptons();
 
     GetJets();
 
+    GetMET(pfType1Met, pfType1Metphi);
+
     GetHT();
 
+    GetMpMet();
+
+    GetMt1();
+
+    GetMt2();
+
+    GetMc();
+
+    GetPtWW();
+
+    GetMetVar();
+
+    GetDPhiVeto();
+
+    GetSoftMuVeto();
 
     // Fill histograms
     //--------------------------------------------------------------------------
@@ -318,7 +334,7 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 
   bool is_isolated_lepton = false;
 
-  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;
+  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;  //(ElectronIsolation(k) < 0.15);
   else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.12);
   
   return is_isolated_lepton;
@@ -351,8 +367,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
-  h_nbjet20   [ichannel][icut][ijet]->Fill(_nbjet20,       _event_weight);
+  h_njet      [ichannel][icut][ijet]->Fill(_njet,          _event_weight);
+  h_nbjet     [ichannel][icut][ijet]->Fill(_nbjet,         _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
   h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
@@ -598,8 +614,6 @@ void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
-  _nbjet20 = 0;
-
   int vector_jet_size = std_vector_jet_pt->size();
 
   for (int i=0; i<vector_jet_size; i++) {
@@ -608,7 +622,7 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    if (pt < 20. || fabs(eta) > 2.4) continue;
+    if (pt < 30. || fabs(eta) < 2.4) continue;
 
     TLorentzVector tlv;
 
@@ -631,19 +645,25 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet20++;
-
-    if (pt < 30.) continue;
-
     AnalysisJets.push_back(goodjet);
   }
 
-  _njet30 = AnalysisJets.size();
+  _njet = AnalysisJets.size();
 
+
+  // Count the number of b-jets
+  //----------------------------------------------------------------------------
+  _nbjet = 0;
+
+      for (int i=0; i<_njet; i++)
+      {
+	if (std_vector_jet_csvv2ivf->at(i) > csvv2ivf_looseWP) _nbjet++;
+      }
+  
 
   // Define the jet bin
   //----------------------------------------------------------------------------
-  _jetbin = (_njet30 < njetbin) ? _njet30 : njetbin - 1;
+  _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 }
 
 
@@ -683,8 +703,6 @@ void AnalysisCMS::AnalysisTop()
 
   if (_pt2l < 0) return;
 
-  GetEventVariables();
-
   _m2l = (Lepton1.v + Lepton2.v).M();
 
   int nelec = 0;
@@ -703,11 +721,11 @@ void AnalysisCMS::AnalysisTop()
 
   LevelHistograms(Top_00_Has2Leptons, pass);
 
-  pass &= (_njet30 > 1);
+  pass &= (_njet > 1);
 
   LevelHistograms(Top_01_Has2Jets, pass);
 
-  pass &= (_nbjet20 > 0);
+  pass &= (_nbjet > 0);
 
   LevelHistograms(Top_02_Has1BJet, pass);
 }
@@ -728,8 +746,6 @@ void AnalysisCMS::AnalysisTTDM()
   Lepton1 = AnalysisLeptons[0];
   Lepton2 = AnalysisLeptons[1];
 
-  GetEventVariables();
-
   _m2l  = (Lepton1.v + Lepton2.v).M();
   _pt2l = (Lepton1.v + Lepton2.v).Pt();
 
@@ -748,9 +764,9 @@ void AnalysisCMS::AnalysisTTDM()
 
   LevelHistograms(TTDM_01_ZVeto, pass);
 
-  pass &= (_njet30 > 1);
+  pass &= (_njet > 1);
 
-  if (_njet30 < 2) return;
+  if (_njet < 2) return;
 
   LevelHistograms(TTDM_02_Has2Jets, pass);
 
@@ -777,31 +793,12 @@ void AnalysisCMS::AnalysisTTDM()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::AnalysisWW()
 {
-  if (_nlepton < 2) return;
-  if (_ntight  < 2) return;
+  if (_nlepton < 2) return;  // Careful, _nlepton includes LOOSE leptons
 
-  bool found_1st_lepton = false;
-  bool found_2nd_lepton = false;
+  Lepton1 = AnalysisLeptons[0];
+  Lepton2 = AnalysisLeptons[1];
 
-  for (UInt_t i=0; i<_nlepton; i++)
-    {
-      if (AnalysisLeptons[i].type == Loose) continue;
-
-      if (!found_1st_lepton)
-	{
-	  found_1st_lepton = true;
-	  Lepton1 = AnalysisLeptons[i];
-	}
-      else if (!found_2nd_lepton && i != Lepton1.index)
-	{
-	  found_2nd_lepton = true;
-	  Lepton2 = AnalysisLeptons[i];
-	}
-    }
-
-  GetEventVariables();
-
-  int nelec = 0;
+  int nelec = 0;  // Careful, _nelectron includes LOOSE leptons
 
   if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
   if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
@@ -824,7 +821,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (Lepton2.v.Pt() > 20.);
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  // No additional tight leptons
+  // Nextra = 0
   pass &= (_ntight == 2);
   LevelHistograms(WW_01_Exactly2Leptons, pass);
 
@@ -832,13 +829,13 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_m2l > 12.);
   LevelHistograms(WW_02_Mll, pass);
 
-  // met > 20 GeV
+  // PfMet > 20 GeV
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_03_PfMet, pass);
 
-  // Z-Veto (mll + metvar)                                                                                                                       
-  bool pass_sf_Z = (nelec != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
-  bool pass_df_Z = (nelec == 1);
+  // Z-Veto (mll + metvar)  
+  bool pass_sf_Z = (_nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_df_Z = (_nelectron == 1);
 
   pass &= (pass_sf_Z || pass_df_Z);
   LevelHistograms(WW_04_ZVeto, pass);
@@ -847,24 +844,28 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_mpmet > 20.);
   LevelHistograms(WW_05_MpMet, pass);
 
-  // DeltaPhi veto (only SF)                                                                                                                    
+  // DeltaPhi veto (only SF)
   pass &= (_dphiv);
   LevelHistograms(WW_06_DPhiVeto, pass);
 
-  // ptll > 30 GeV (45 GeV for SF)                                                                                                              
-  bool pass_sf_pt2l = (nelec != 1 && _pt2l > 45.);
-  bool pass_df_pt2l = (nelec == 1 && _pt2l > 30.);
+  // ptll > 30 GeV (45 GeV for SF)                                                                                                             
+  bool pass_sf_pt2l = (_nelectron != 1 && _pt2l > 45.);
+  bool pass_df_pt2l = (_nelectron == 1 && _pt2l > 30.);
 
   pass &= (pass_sf_pt2l || pass_df_pt2l);
   LevelHistograms(WW_07_Ptll, pass);
 
   // B veto
-  pass &= (_nbjet20 == 0);
+  pass &= (_nbjet == 0);
   LevelHistograms(WW_08_BVeto, pass);
+
+  // Soft Muon Veto
+  pass &= (!_bvetomu);
+  LevelHistograms(WW_09_SoftMu, pass);
 
   // Ht < 250 GeV
   pass &= (_ht < 250.);
-  LevelHistograms(WW_09_Ht, pass);
+  LevelHistograms(WW_10_Ht, pass);
 }
 
 
@@ -883,8 +884,6 @@ void AnalysisCMS::AnalysisWZ()
 
   Lepton1 = AnalysisLeptons[0];
   Lepton2 = AnalysisLeptons[1];
-
-  GetEventVariables();
 
 
   // Make Z and W candidates
@@ -927,7 +926,13 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-  _mtw  = GetMt(WLepton);
+  _mtw  = sqrt(2*(WLepton.v.Pt())*MET.Et()*(1-cos(WLepton.v.Phi()-MET.Phi())));
+
+  float mZ1W = (ZLepton1.v + WLepton.v).M();
+  float mZ2W = (ZLepton2.v + WLepton.v).M();
+
+  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
+  bool pass_mll = (mZ1W > 4. && mZ2W > 4.);  
 
   bool pass = true;
 
@@ -942,15 +947,12 @@ void AnalysisCMS::AnalysisWZ()
   pass &= (MET.Et()       >  30.);
   pass &= (_m3l           > 100.);
 
-  bool pass_dr  = (WLepton.v.DeltaR(ZLepton1.v) > 0.1 && WLepton.v.DeltaR(ZLepton2.v) > 0.1);
-  bool pass_mll = ((WLepton.v + ZLepton1.v).M() > 4. && (WLepton.v + ZLepton2.v).M() > 4.);
+  LevelHistograms(WZ_02_HasW,    pass && pass_dr);
+  LevelHistograms(WZ_03_HasWmll, pass && pass_mll);
 
-  LevelHistograms(WZ_02_HasWdr,  pass && pass_dr);
-  LevelHistograms(WZ_02_HasWmll, pass && pass_mll);
-
-  pass &= (_nbjet20 == 0);
+  pass &= (_nbjet == 0);
 	
-  LevelHistograms(WZ_03_BVeto, pass && pass_mll);
+  LevelHistograms(WZ_04_BVeto, pass);
 }
 
 
@@ -1002,37 +1004,31 @@ void AnalysisCMS::GetHT()
 {
   _ht = MET.Et();
 
-  for (int i=0; i<_nlepton; i++)
-    {
-      if (AnalysisLeptons[i].type == Loose) continue;
-
-      _ht += AnalysisLeptons[i].v.Pt();
-    }
-
-  for (int i=0; i<_njet30; i++)
-    {
-      _ht += AnalysisJets[i].v.Pt();
-    }
+  for (int i=0; i<_nlepton; i++) _ht += AnalysisLeptons[i].v.Pt();
+  for (int i=0; i<_njet;    i++) _ht += AnalysisJets[i].v.Pt();
 }
 
 
 //------------------------------------------------------------------------------                                                               
-// GetMpMet
+// GetMpMet (provisional)                                                                                                                      
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphi1   = Lepton1.v.DeltaPhi(MET);
-  Float_t dphi2   = Lepton2.v.DeltaPhi(MET);
-  Float_t dphimin = min(dphi1, dphi2);
+  Float_t dphimin  = min(dphilmet1, dphilmet2);
+  Float_t fullpmet = 0.;
+  Float_t trkpmet  = 0.;
 
-  Float_t fullpmet = MET.Et();
-  Float_t trkpmet  = trkMet;
+  _mpmet = 0.;
 
   if (dphimin < TMath::Pi() / 2.)
-    {
-      fullpmet *= sin(dphimin);
-      trkpmet  *= sin(dphimin);
-    }
+    fullpmet = pfType1Met * sin(dphimin);
+  else
+    fullpmet = pfType1Met;
+
+  if (dphimin < TMath::Pi() / 2.)
+    trkpmet = trkMet * sin(dphimin);
+  else
+    trkpmet = trkMet;
 
   _mpmet = min(trkpmet, fullpmet);
 }
@@ -1043,7 +1039,11 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (_njet30 <= 1) ? _mpmet : MET.Et();
+  _metvar = 0.;
+
+  float met = MET.Et();
+
+  _metvar = (njet <= 1) ? _mpmet : met;  // Careful: use njet or _njet?
 }
 
 
@@ -1052,27 +1052,37 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDPhiVeto()
 {
-  _dphiv = (_njet30 <= 1 || (_njet30 > 1 && dphilljetjet < 165.*TMath::DegToRad()));
+  _dphiv = (njet <= 1 || (njet > 1 && dphilljetjet < 165.*TMath::DegToRad()));
 }
 
 
 //------------------------------------------------------------------------------                                                               
-// GetMt
+// GetMt1                                                                                                                                      
 //------------------------------------------------------------------------------                                                               
-float AnalysisCMS::GetMt(Lepton lep)
+void AnalysisCMS::GetMt1()
 {
-  float transverse_mass = 0;
+  _mt1 = 0.;
 
   float met  = MET.Et();
-  float pt   = lep.v.Pt();
-  float dphi = lep.v.DeltaPhi(MET);
+  float pt   = Lepton1.v.Pt();
+  float dphi = Lepton1.v.DeltaPhi(MET);
 
-  if (met < 0) return transverse_mass;
-  if (pt  < 0) return transverse_mass;
+  if (met > 0 && pt > 0) _mt1 = sqrt(2*pt*met*(1. - cos(dphi)));
+}
 
-  transverse_mass = sqrt(2*pt*met*(1. - cos(dphi)));
 
-  return transverse_mass;
+//------------------------------------------------------------------------------                                                               
+// GetMt2                                                                                                                                      
+//------------------------------------------------------------------------------                                                               
+void AnalysisCMS::GetMt2()
+{
+  _mt2 = 0.;
+
+  float met  = MET.Et();
+  float pt   = Lepton2.v.Pt();
+  float dphi = Lepton2.v.DeltaPhi(MET);
+
+  if (met > 0 && pt > 0) _mt2 = sqrt(2*pt*met*(1. - cos(dphi)));
 }
 
 
@@ -1081,12 +1091,12 @@ float AnalysisCMS::GetMt(Lepton lep)
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMc()
 {
-  _mc = 0;
+  _mc = 0.;
 
   float met = MET.Et();
 
   if (_pt2l > 0 && _m2l > 0 && met > 0)
-    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met, 2) - pow(_pt2l + met, 2));
+    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met,2) - pow(_pt2l + met,2));
 }
 
 
@@ -1095,24 +1105,24 @@ void AnalysisCMS::GetMc()
 //------------------------------------------------------------------------------                                                                
 void AnalysisCMS::GetPtWW()
 {
-  _ptww = 0;
+  _ptww = 0.;
 
   if (Lepton1.v.Pt() > 0 && Lepton2.v.Pt() > 0)
     _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
 }
 
+//------------------------------------------------------------------------------                                                               
+// GetSoftMuVeto (Building a Soft Muon B-Veto (Quite Rudely))
+//------------------------------------------------------------------------------                                                               
 
-//------------------------------------------------------------------------------
-// GetEventVariables
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetEventVariables()
+void AnalysisCMS::GetSoftMuVeto()
 {
-  _mt1 = GetMt(Lepton1);
-  _mt2 = GetMt(Lepton2);
-
-  GetMc();
-  GetPtWW();
-  GetMpMet();
-  GetMetVar();
-  GetDPhiVeto();
+  _bvetomu = false;
+  
+  for (unsigned int i = 0; i < std_vector_jet_softMuPt->size(); ++i)
+    if (std_vector_jet_pt->at(i) > 10 && std_vector_jet_pt->at(i) < 30)
+      if (std_vector_jet_softMuPt->at(i) > 3){
+	_bvetomu = true;
+	break;
+      }
 }
