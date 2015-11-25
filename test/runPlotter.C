@@ -39,7 +39,7 @@ void runPlotter(TString level)
     {
       plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
       plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
-      plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
+      plotter.AddProcess("05_SingleTop", "t+jets",  kYellow-6);
       plotter.AddProcess("08_WJets",     "W+jets",  kGray+1);
       plotter.AddProcess("06_WW",        "WW",      kAzure-9);
       plotter.AddProcess("11_HWW",       "HWW",     kRed);
@@ -53,7 +53,7 @@ void runPlotter(TString level)
       plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
       plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
       plotter.AddProcess("04_Top",       "tt+jets", kYellow);
-      plotter.AddProcess("05_SingleTop", "top",     kYellow-6);
+      plotter.AddProcess("05_SingleTop", "t+jets",  kYellow-6);
       plotter.AddProcess("08_WJets",     "W+jets",  kGray+1);
       plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
       plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);

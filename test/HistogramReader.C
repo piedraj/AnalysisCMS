@@ -679,23 +679,16 @@ void HistogramReader::Evolution(TFile*  file,
       TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
       hist->SetBinContent(++bin, Yield(dummy));
-    }
 
 
-  // Change the evolution histogram x-axis labels
-  TAxis* xaxis = (TAxis*)hist->GetXaxis();
-
-  for (Int_t i=0, bin=0; i<ncut; i++)
-    {
-      if (!scut[i].Contains(analysis + "/")) continue;
-
+      // Change the evolution histogram x-axis labels
       TString tok, icut;
 
       Ssiz_t from = 0;
 
       while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
-      xaxis->SetBinLabel(++bin, icut);
+      hist->GetXaxis()->SetBinLabel(bin, icut);
     }
 
 
