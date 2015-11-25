@@ -87,7 +87,7 @@ class AnalysisCMS : public AnalysisBase
   void    GetMET           (float   module,
 			    float   phi);
 
-  void    GetHT            ();
+  void    GetHt            ();
 
   void    GetMpMet         ();
 
@@ -98,6 +98,8 @@ class AnalysisCMS : public AnalysisBase
   void    GetMc            ();
 
   void    GetPtWW          ();
+
+  void    GetSoftMuon      ();
 
   void    GetDPhiVeto      ();
 
@@ -132,6 +134,7 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _ismc;
   bool                   _dphiv;
+  bool                   _foundsoftmuon;
 
   TString                _sample;
   float                  _event_weight;
