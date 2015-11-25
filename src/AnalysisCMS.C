@@ -655,8 +655,6 @@ void AnalysisCMS::GetJets()
   //----------------------------------------------------------------------------
   _nbjet = 0;
 
-  //for (int i=0; i<std_vector_jet_pt->size(); i++)  //| I think we can go down
-      //if (std_vector_jet_pt->at(i) > 20)             //| to 20GeV jets. 
       for (int i=0; i<_njet; i++)
       {
 	if (std_vector_jet_csvv2ivf->at(i) > csvv2ivf_looseWP) _nbjet++;
