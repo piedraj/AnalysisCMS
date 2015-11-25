@@ -22,6 +22,8 @@ const float Z_MASS        = 91.188;     // [GeV]
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
+const UInt_t numberMetCuts = 5;
+const Int_t MetCut[numberMetCuts] = {20, 25, 30, 45, 1000}; // [GeV]
 
 const int nchannel = 9;
 
@@ -62,7 +64,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 26;
+const int ncut = 35;
 
 enum {
   Top_00_Has2Leptons,
@@ -86,6 +88,15 @@ enum {
   WW_08_BVeto,
   WW_09_SoftMu,
   WW_10_Ht,
+  DY_00_20GeVLoose,
+  DY_01_25GeVLoose,
+  DY_02_30GeVLoose,
+  DY_03_45GeVLoose,
+  DY_04_1000GeVLoose,
+  DY_05_20GeVTight,
+  DY_06_25GeVTight,
+  DY_07_30GeVTight,
+  DY_08_45GeVTight,
   WZ_00_Exactly3Leptons,
   WZ_01_HasZ,
   WZ_02_HasWdr,
@@ -115,6 +126,15 @@ const TString scut[ncut] = {
   "WW/08_BVeto",
   "WW/09_SoftMu",
   "WW/10_Ht",
+  "DY/00_20GeVLoose",
+  "DY/01_25GeVLoose",
+  "DY/02_30GeVLoose",
+  "DY/03_45GeVLoose",
+  "DY/04_1000GeVLoose",
+  "DY/00_20GeVTight",
+  "DY/01_25GeVTight",
+  "DY/02_30GeVTight",
+  "DY/03_45GeVTight",
   "WZ/00_Exactly3Leptons",
   "WZ/01_HasZ",
   "WZ/02_HasWdr",

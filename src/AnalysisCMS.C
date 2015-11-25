@@ -11,6 +11,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
   _analysis_ttdm = false;
   _analysis_ww   = false;
   _analysis_wz   = false;
+  _analysis_dy   = false;
   _eventdump     = false;
   _ismc          = true;
 }
@@ -25,6 +26,7 @@ void AnalysisCMS::AddAnalysis(TString analysis)
   if (analysis.EqualTo("TTDM")) _analysis_ttdm = true;
   if (analysis.EqualTo("WW"))   _analysis_ww   = true;
   if (analysis.EqualTo("WZ"))   _analysis_wz   = true;
+  if (analysis.EqualTo("DY"))   _analysis_dy   = true;
 }
 
 
@@ -72,6 +74,7 @@ void AnalysisCMS::Loop(TString filename,
     if (!_analysis_ttdm && scut[j].Contains("TTDM/")) continue;
     if (!_analysis_ww   && scut[j].Contains("WW/"))   continue;
     if (!_analysis_wz   && scut[j].Contains("WZ/"))   continue;
+    if (!_analysis_dy   && scut[j].Contains("DY/"))   continue;
 
     for (int k=0; k<=njetbin; k++) {
 
@@ -88,7 +91,6 @@ void AnalysisCMS::Loop(TString filename,
       for (int i=0; i<nchannel; i++) {
 
 	TString suffix = "_" + schannel[i];
-
 
 	// Common histograms
 	//----------------------------------------------------------------------
@@ -113,6 +115,13 @@ void AnalysisCMS::Loop(TString filename,
         h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 2000,    0, 2000);
         h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 2000,    0, 2000);
 
+	// DY Data Driven histograms
+	//----------------------------------------------------------------------
+	h_NinZevents     [i][j][k] = new TH1D("h_NinZevents"      + suffix, "", 3,       0,    3);
+	h_NoutZevents    [i][j][k] = new TH1D("h_NoutZevents"     + suffix, "", 3,       0,    3);
+	h_NinLooseZevents[i][j][k] = new TH1D("h_NinLooseZevents" + suffix, "", 3,       0,    3);
+	h_MassInZevents  [i][j][k] = new TH1D("h_MassInZevents"   + suffix, "", 2000,    0, 2000);
+	h_MassOutZevents [i][j][k] = new TH1D("h_MassOutZevents"  + suffix, "", 2000,    0, 2000);
 
 	// WZ histograms
 	//----------------------------------------------------------------------
@@ -187,6 +196,7 @@ void AnalysisCMS::Loop(TString filename,
     if (_analysis_ttdm) AnalysisTTDM();
     if (_analysis_ww)   AnalysisWW();
     if (_analysis_wz)   AnalysisWZ();
+    if (_analysis_dy)   AnalysisDY();
   }
 
 
@@ -211,6 +221,7 @@ void AnalysisCMS::Loop(TString filename,
   if (_analysis_ttdm) Summary("TTDM", "11.0", "raw yields");
   if (_analysis_ww)   Summary("WW",   "11.0", "raw yields");
   if (_analysis_wz)   Summary("WZ",   "11.0", "raw yields");
+  if (_analysis_dy)   Summary("DY",   "11.0", "raw yields");
   
   txt_summary.close();
 
@@ -370,7 +381,24 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
+  // DY histograms (maybe we have to put them in a dedicated filling class?)
+  //----------------------------------------------------------------------
+  _m2l = (Lepton1.v + Lepton2.v).M();
 
+  if (fabs(_m2l - Z_MASS) < 7.5) {
+    h_NinZevents   [_channel][icut][_jetbin]->Fill(1,    _event_weight);
+    h_NinZevents   [_channel][icut][njetbin]->Fill(1,    _event_weight);
+    h_MassInZevents[_channel][icut][_jetbin]->Fill(_m2l, _event_weight);
+    h_MassInZevents[_channel][icut][njetbin]->Fill(_m2l, _event_weight);
+  }    
+
+  else if (fabs(_m2l - Z_MASS) > 15) {  
+    h_NoutZevents   [_channel][icut][_jetbin]->Fill(1,    _event_weight);
+    h_NoutZevents   [_channel][icut][njetbin]->Fill(1,    _event_weight);
+    h_MassOutZevents[_channel][icut][_jetbin]->Fill(_m2l, _event_weight);
+    h_MassOutZevents[_channel][icut][njetbin]->Fill(_m2l, _event_weight);
+  }
+  
   // WZ histograms
   //----------------------------------------------------------------------------
   if (ichannel > ll)
@@ -815,7 +843,6 @@ void AnalysisCMS::AnalysisWW()
   _m2l  = (Lepton1.v + Lepton2.v).M();
   _pt2l = (Lepton1.v + Lepton2.v).Pt();
 
-
   // WW selection
   //----------------------------------------------------------------------------                                                               
   bool pass = true;
@@ -871,6 +898,108 @@ void AnalysisCMS::AnalysisWW()
   // Ht < 250 GeV
   pass &= (_ht < 250.);
   LevelHistograms(WW_10_Ht, pass);
+}
+
+//------------------------------------------------------------------------------                                                               
+// AnalysisDY - Data Driven                                                                                     
+//------------------------------------------------------------------------------                                                               
+void AnalysisCMS::AnalysisDY()
+{
+  if (_nlepton < 2) return;
+  if (_ntight  < 2) return;
+
+  bool found_1st_lepton = false;
+  bool found_2nd_lepton = false;
+
+  for (UInt_t i=0; i<_nlepton; i++)
+    {
+      if (AnalysisLeptons[i].type == Loose) continue;
+
+      if (!found_1st_lepton)
+	{
+	  found_1st_lepton = true;
+	  Lepton1 = AnalysisLeptons[i];
+	}
+      else if (!found_2nd_lepton && i != Lepton1.index)
+	{
+	  found_2nd_lepton = true;
+	  Lepton2 = AnalysisLeptons[i];
+	}
+    }
+
+  GetEventVariables();
+
+  int nelec = 0;
+
+  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
+  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
+
+  if      (nelec == 2) _channel = ee;
+  else if (nelec == 1) _channel = em;
+  else if (nelec == 0) _channel = mm;
+
+  _m2l  = (Lepton1.v + Lepton2.v).M();
+  _pt2l = (Lepton1.v + Lepton2.v).Pt();
+
+  // Data Driven methods - DY
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  bool pass = true;
+
+  // Two leptons Level
+  pass &= (Lepton1.flavour * Lepton2.flavour < 0);
+  pass &= (Lepton1.v.Pt() > 20.);
+  pass &= (Lepton2.v.Pt() > 20.);
+
+  // No additional tight leptons
+  pass &= (_ntight == 2);
+
+  // m2l > 12 GeV
+  pass &= (_m2l > 12.);
+
+  // met > 20 GeV
+  pass &= (MET.Et() > 20.);
+
+  // met > 20 GeV
+  pass &= (_mpmet > 20.);
+
+  // dphiveto
+  pass &= (_dphiv);
+
+  // ptll > 30 GeV
+  pass &= (_pt2l > 30.);
+
+  // b-veto csvv2ivf loose (0.605)
+  pass &= (_nbjet20 == 0);
+
+  // no soft muons
+  pass &= (!_foundsoftmuon);
+  
+  // metvar > 20 GeV
+  LevelHistograms(DY_00_20GeVLoose, pass && _metvar > 20.);
+
+  // metvar > 25 GeV
+  LevelHistograms(DY_01_25GeVLoose, pass && _metvar > 25.);
+
+  // metvar > 30 GeV
+  LevelHistograms(DY_02_30GeVLoose, pass && _metvar > 30.);
+
+  // metvar > 45 GeV
+  LevelHistograms(DY_03_45GeVLoose, pass && _metvar > 45.);
+
+  // metvar > 1000 GeV
+  LevelHistograms(DY_04_1000GeVLoose, pass && _metvar > 1000.);
+
+  // 20 GeV < metvar < 25 GeV
+  LevelHistograms(DY_05_20GeVTight, pass && _metvar >= 20. && _metvar < 25.);
+
+  // 25 GeV < metvar < 30 GeV
+  LevelHistograms(DY_06_25GeVTight, pass && _metvar >= 25. && _metvar < 30.);
+
+  // 30 GeV < metvar < 45 GeV
+  LevelHistograms(DY_07_30GeVTight, pass && _metvar >= 30. && _metvar < 45.);
+
+  // 45 GeV < metvar < 1000 GeV
+  LevelHistograms(DY_08_45GeVTight, pass && _metvar >= 40. && _metvar < 1000.);
 }
 
 
