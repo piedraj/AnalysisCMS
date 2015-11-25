@@ -173,8 +173,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_m2l       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
