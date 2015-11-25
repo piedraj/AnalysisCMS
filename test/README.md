@@ -19,3 +19,4 @@ As an additional option, data points can be compared to the MC distributions.
 When the data points are available, a data / MC ratio can be drawn.
 
     plotter.SetDrawRatio(true);
+

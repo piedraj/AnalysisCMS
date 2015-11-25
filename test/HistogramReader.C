@@ -119,6 +119,12 @@ void HistogramReader::Draw(TString hname,
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
+    if (!dummy)
+      {
+	printf("\n Error: %s does not exist\n\n", hname.Data());
+	return;
+      }
+
     if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
     if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
 
@@ -180,7 +186,7 @@ void HistogramReader::Draw(TString hname,
     _allmchist->SetBinError  (ibin, binError);
   }
 
-  _allmclabel = "#sigma_{stat}";
+  _allmclabel = "stat";
 
   _allmchist->SetFillColor  (kGray+1);
   _allmchist->SetFillStyle  (   3345);
@@ -242,7 +248,7 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-1;
+      theMin = 3e-1;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
@@ -644,14 +650,15 @@ void HistogramReader::Evolution(TFile*  file,
 				TString analysis,
 				TString hname)
 {
+  // Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
 
   if (test_hist) return;
 
-  file->cd();
 
+  // Get the number of bins
   file->cd(analysis);
-
+  
   Int_t nbins = 0;
   
   for (Int_t i=0; i<ncut; i++)
@@ -661,7 +668,22 @@ void HistogramReader::Evolution(TFile*  file,
       nbins++;
     }
 
+
+  // Create and fill the evolution histogram
   TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=0, bin=0; i<ncut; i++)
+    {
+      if (!scut[i].Contains(analysis + "/")) continue;
+
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+    }
+
+
+  // Change the evolution histogram x-axis labels
+  TAxis* xaxis = (TAxis*)hist->GetXaxis();
 
   for (Int_t i=0, bin=0; i<ncut; i++)
     {
@@ -671,20 +693,15 @@ void HistogramReader::Evolution(TFile*  file,
 
       Ssiz_t from = 0;
 
-      while(scut[i].Tokenize(tok, from, "_")) icut = tok;
+      while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
-      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
-
-      if (hist && dummy) {
-
-	hist->SetBinContent(++bin, Yield(dummy));
-
-	if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
-      }
-
-      else std::cout << " [HistogramReader::Evolution] Error: hist or dummy NOT found." << std::endl;
+      if (++bin < nbins) xaxis->SetBinLabel(bin, icut);
+      // terminate called after throwing an instance of 'std::bad_alloc'
+      // xaxis->SetBinLabel(bin, icut);
     }
 
+
+  // Write the evolution histogram
   hist->Write();
 }
 

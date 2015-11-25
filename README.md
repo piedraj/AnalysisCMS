@@ -111,6 +111,7 @@ Follow the instructions at [Permissions for your AFS folder](https://espace.cern
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
+    cp /afs/cern.ch/user/p/piedra/www/.htaccess www/.
 
 Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
 Choose the "AFS folder" site type.
@@ -139,8 +140,7 @@ And they should appear here,
 
 A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,
 
-    http://www.hep.uniovi.es/nachos/WZ/
-    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_1280pb/WZstep4/all/
+    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_v2_2090pb/
 
 
 7. It is commit time

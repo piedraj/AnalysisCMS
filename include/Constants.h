@@ -87,9 +87,9 @@ enum {
   WW_09_Ht,
   WZ_00_Exactly3Leptons,
   WZ_01_HasZ,
-  WZ_02_HasW,
-  WZ_03_HasWmll,
-  WZ_04_BVeto
+  WZ_02_HasWdr,
+  WZ_02_HasWmll,
+  WZ_03_BVeto
 };
 
 const TString scut[ncut] = {
@@ -115,16 +115,16 @@ const TString scut[ncut] = {
   "WW/09_Ht",
   "WZ/00_Exactly3Leptons",
   "WZ/01_HasZ",
-  "WZ/02_HasW",
-  "WZ/03_HasWmll",
-  "WZ/04_BVeto"
+  "WZ/02_HasWdr",
+  "WZ/02_HasWmll",
+  "WZ/03_BVeto"
 };
 
 
-// https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagging#Preliminary_working_or_operating
-const float csvv2ivf_looseWP  = 0.423;
-const float csvv2ivf_mediumWP = 0.814;
-const float csvv2ivf_tightWP  = 0.941;
+// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation74X
+const float csvv2ivf_looseWP  = 0.605;
+const float csvv2ivf_mediumWP = 0.89;
+const float csvv2ivf_tightWP  = 0.97;
 
 
 #endif
