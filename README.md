@@ -148,6 +148,7 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 
 This framework is intended to be used, and developed, by several people. If you want your changes to be shared by others, then it is commit time. First you should get the latest modifications in the repository, if any.
 
+    git pull https://github.com/piedraj/AnalysisCMS
     git fetch upstream
 
 After that you should correct the possible compatibility errors, and commit your changes.
