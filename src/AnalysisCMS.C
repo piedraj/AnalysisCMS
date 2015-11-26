@@ -11,7 +11,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
   _analysis_ttdm = false;
   _analysis_ww   = false;
   _analysis_wz   = false;
-  _analysis_dy   = false;
   _eventdump     = false;
   _ismc          = true;
 }
@@ -90,6 +89,7 @@ void AnalysisCMS::Loop(TString filename,
 
 	TString suffix = "_" + schannel[i];
 
+
 	// Common TH1 histograms
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
@@ -117,6 +117,7 @@ void AnalysisCMS::Loop(TString filename,
 	// Common TH2 histograms
 	//----------------------------------------------------------------------
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 200, 0, 200);
+
 
 	// WZ histograms
 	//----------------------------------------------------------------------
@@ -822,6 +823,7 @@ void AnalysisCMS::AnalysisWW()
   _m2l  = (Lepton1.v + Lepton2.v).M();
   _pt2l = (Lepton1.v + Lepton2.v).Pt();
 
+
   // WW selection
   //----------------------------------------------------------------------------                                                               
   bool pass = true;
@@ -867,6 +869,7 @@ void AnalysisCMS::AnalysisWW()
   // Data-driven DY
   LevelHistograms(WW_11_DY, pass);
 }
+
 
 //------------------------------------------------------------------------------
 // AnalysisWZ
