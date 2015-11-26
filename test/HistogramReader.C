@@ -32,7 +32,7 @@ void HistogramReader::AddData(TString const &filename,
 			      TString const &label,
 			      Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root", "update");
+  TFile* file = new TFile(_inputdir + filename + ".root", "update");
 
   _datafile  = file;
   _datalabel = label;
@@ -47,7 +47,7 @@ void HistogramReader::AddProcess(TString const &filename,
 				 TString const &label,
 				 Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root", "update");
+  TFile* file = new TFile(_inputdir + filename + ".root", "update");
 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
