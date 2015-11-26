@@ -54,12 +54,12 @@ const TString lchannel[nchannel] = {
   "ee",
   "e#mu",
   "#mu#mu",
-  "ll",
+  "all",
   "eee",
   "ee#mu",
   "e#mu#mu",
   "#mu#mu#mu",
-  "lll"
+  "all"
 };
 
 

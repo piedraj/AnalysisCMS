@@ -630,25 +630,20 @@ Int_t HistogramReader::SetData(TString hname,
 //------------------------------------------------------------------------------
 Float_t HistogramReader::Yield(TH1* hist)
 {
-  if (hist)
-    {
-      Int_t nbins = hist->GetNbinsX();
+  if (!hist) return 0;
+
+  Int_t nbins = hist->GetNbinsX();
       
-      return hist->Integral(0, nbins+1);
-    }
-  else
-    {
-      return 0.;
-    }
+  return hist->Integral(0, nbins+1);
 }
 
 
 //------------------------------------------------------------------------------
-// Evolution
+// EventsByCut
 //------------------------------------------------------------------------------
-void HistogramReader::Evolution(TFile*  file,
-				TString analysis,
-				TString hname)
+void HistogramReader::EventsByCut(TFile*  file,
+				  TString analysis,
+				  TString hname)
 {
   // Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
@@ -657,8 +652,6 @@ void HistogramReader::Evolution(TFile*  file,
 
 
   // Get the number of bins
-  file->cd(analysis);
-  
   Int_t nbins = 0;
   
   for (Int_t i=0; i<ncut; i++)
@@ -670,6 +663,8 @@ void HistogramReader::Evolution(TFile*  file,
 
 
   // Create and fill the evolution histogram
+  file->cd(analysis);
+
   TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
 
   for (Int_t i=0, bin=0; i<ncut; i++)
@@ -698,11 +693,63 @@ void HistogramReader::Evolution(TFile*  file,
 
 
 //------------------------------------------------------------------------------
-// LoopEvolution
+// LoopEventsByCut
 //------------------------------------------------------------------------------
-void HistogramReader::LoopEvolution(TString analysis, TString hname)
+void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
 {
-  if (_datafile) Evolution(_datafile, analysis, hname);
+  if (_datafile) EventsByCut(_datafile, analysis, hname);
 
-  for (UInt_t i=0; i<_mcfile.size(); i++) Evolution(_mcfile[i], analysis, hname);
+  for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
+}
+
+
+//------------------------------------------------------------------------------
+// EventsByChannel
+//------------------------------------------------------------------------------
+void HistogramReader::EventsByChannel(TFile*  file,
+				      TString level)
+{
+  // Check if the evolution histogram already exists
+  TH1D* test_hist = (TH1D*)file->Get(level + "/h_counterLum_evolution");
+
+  if (test_hist) return;
+
+
+  // Get the number of bins
+  int firstchannel = (level.Contains("WZ/")) ? eee : ee;
+  int lastchannel  = (level.Contains("WZ/")) ? lll : ll;
+  
+  Int_t nbins = 0;
+  
+  for (Int_t i=firstchannel; i<=lastchannel; i++) nbins++;
+
+
+  // Create and fill the evolution histogram
+  file->cd(level);
+
+  TH1D* hist = new TH1D("h_counterLum_evolution", "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=firstchannel, bin=0; i<=lastchannel; i++)
+    {
+      TH1D* dummy = (TH1D*)file->Get(level + "/h_counterLum_" + schannel[i]);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+
+      hist->GetXaxis()->SetBinLabel(bin, lchannel[i]);
+    }
+
+
+  // Write the evolution histogram
+  hist->Write();
+}
+
+
+//------------------------------------------------------------------------------
+// LoopEventsByChannel
+//------------------------------------------------------------------------------
+void HistogramReader::LoopEventsByChannel(TString level)
+{
+  if (_datafile) EventsByChannel(_datafile, level);
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 }

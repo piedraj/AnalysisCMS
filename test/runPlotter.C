@@ -22,8 +22,6 @@ void runPlotter(TString level)
 
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
-  gSystem->mkdir(outputdir + level, kTRUE);
-
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetLuminosity(lumi25ns_fb);
@@ -61,17 +59,35 @@ void runPlotter(TString level)
     }
 
 
-  // Draw cut evolution
+  // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
 
+  gSystem->mkdir(outputdir + level, kTRUE);
+
   for (int i=firstchannel; i<=lastchannel; i++)
     {
-      plotter.LoopEvolution(analysis, "h_counterLum_" + schannel[i]);
+      plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      bool setlogy = (analysis.EqualTo("WZ")) ? linY : logY;
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY);
+    }
+
+
+  // Draw events by channel
+  //----------------------------------------------------------------------------
+  plotter.SetDrawYield(false);
+
+  for (int j=0; j<=njetbin; j++)
+    {
+      if (!level.Contains("WW") && j != njetbin) continue;
       
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", setlogy);
+      TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
+
+      gSystem->mkdir(outputdir + level + jetbin, kTRUE);
+
+      plotter.LoopEventsByChannel(level + jetbin);
+
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", logY);
     }
 
 
@@ -99,7 +115,6 @@ void runPlotter(TString level)
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "counterLum" + suffix, "yield",                                   -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", logY);
 	  plotter.Draw(prefix + "nbjet20"    + suffix, "number of b-jets (p_{T}^{jet} > 20 GeV)", -1, 0, "NULL", logY);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", linY, true,    0,   30);
