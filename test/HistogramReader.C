@@ -689,6 +689,7 @@ void HistogramReader::EventsByCut(TFile*  file,
 
   // Write the evolution histogram
   hist->Write();
+  file->cd();
 }
 
 
@@ -741,6 +742,7 @@ void HistogramReader::EventsByChannel(TFile*  file,
 
   // Write the evolution histogram
   hist->Write();
+  file->cd();
 }
 
 
