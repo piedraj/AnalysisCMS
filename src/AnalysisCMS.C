@@ -375,9 +375,11 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
+
   // Common TH2 histograms
   //----------------------------------------------------------------------------
   h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+
 
   // WZ histograms
   //----------------------------------------------------------------------------
@@ -825,7 +827,7 @@ void AnalysisCMS::AnalysisWW()
 
 
   // WW selection
-  //----------------------------------------------------------------------------                                                               
+  //----------------------------------------------------------------------------
   bool pass = true;
 
   pass &= (Lepton1.flavour * Lepton2.flavour < 0);
@@ -866,8 +868,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_ht < 250.);
   LevelHistograms(WW_10_Ht, pass && pass_zveto);
 
-  // Data-driven DY
-  LevelHistograms(WW_11_DY, pass);
+  LevelHistograms(WW_11_DY, pass);  // Data-driven DY
 }
 
 
