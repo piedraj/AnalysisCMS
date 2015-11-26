@@ -114,6 +114,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    AnalysisWZ       ();
 
+  void    AnalysisDY       ();
+
   void    EventDump        ();
 
 
@@ -132,6 +134,7 @@ class AnalysisCMS : public AnalysisBase
   bool                   _analysis_ttdm;
   bool                   _analysis_ww;
   bool                   _analysis_wz;
+  bool                   _analysis_dy;
   bool                   _eventdump;
   bool                   _ismc;
   bool                   _dphiv;
@@ -186,7 +189,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
-
 
   // Common TH2 histograms
   //----------------------------------------------------------------------------

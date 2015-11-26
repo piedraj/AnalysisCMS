@@ -24,6 +24,8 @@ const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
+const UInt_t numberMetCuts = 5;
+const Int_t MetCut[numberMetCuts] = {20, 25, 30, 45, 1000}; // [GeV]
 
 const int nchannel = 9;
 
@@ -64,7 +66,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 26;
+const int ncut = 35;
 
 enum {
   Top_00_Has2Leptons,
