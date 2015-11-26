@@ -48,11 +48,11 @@ class HistogramReader
 			       Color_t        color);
   
   void     Draw               (TString        hname,
-			       TString        xtitle,
+			       TString        xtitle       = "",
 			       Int_t          ngroup       = -1,
 			       Int_t          precision    =  0,
 			       TString        units        = "NULL",
-			       Bool_t         setlogy      = false,
+			       Bool_t         setlogy      = true,
 			       Bool_t         moveoverflow = true,
 			       Float_t        xmin         = -999,
 			       Float_t        xmax         = -999,

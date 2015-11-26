@@ -69,7 +69,7 @@ void runPlotter(TString level)
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution");
     }
 
 
@@ -87,7 +87,7 @@ void runPlotter(TString level)
 
       plotter.LoopEventsByChannel(level + jetbin);
 
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", logY);
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution");
     }
 
 
