@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <TH1.h>
+#include <TH2.h>
 #include <TLorentzVector.h>
 #include <TString.h>
 #include <TStyle.h>
@@ -166,7 +167,7 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_output;
 
 
-  // Common histograms
+  // Common TH1 histograms
   //----------------------------------------------------------------------------
   TH1D*                  h_counterRaw[nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum[nchannel][ncut][njetbin+1];
@@ -175,8 +176,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_m2l       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
@@ -189,13 +190,10 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
 
-  // DY Data Driven histograms
+  // Common TH2 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_NinZevents     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_NoutZevents    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_NinLooseZevents[nchannel][ncut][njetbin+1];
-  TH1D*                  h_MassInZevents  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_MassOutZevents [nchannel][ncut][njetbin+1];
+  TH2D*                  h_metvar_m2l[nchannel][ncut][njetbin+1];
+
 
   // WZ histograms
   //----------------------------------------------------------------------------
