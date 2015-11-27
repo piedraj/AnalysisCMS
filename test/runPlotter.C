@@ -9,6 +9,8 @@ enum {linY, logY};
 
 void runPlotter(TString level)
 {
+  gInterpreter->ExecuteMacro("PaperStyle.C");
+
   TString tok;
 
   Ssiz_t from = 0;
@@ -19,8 +21,6 @@ void runPlotter(TString level)
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
-
-  gInterpreter->ExecuteMacro("PaperStyle.C");
 
   HistogramReader plotter(inputdir, outputdir);
 

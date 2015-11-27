@@ -64,7 +64,7 @@ void PaperStyle()
   // Axis
   //----------------------------------------------------------------------------
   PaperStyle->SetLabelFont  (   42, "xyz");
-  PaperStyle->SetLabelOffset(0.015, "xyz");
+  PaperStyle->SetLabelOffset(0.025, "xyz");
   PaperStyle->SetLabelSize  (0.040, "xyz");
   PaperStyle->SetNdivisions (  505, "xyz");
   PaperStyle->SetTitleFont  (   42, "xyz");

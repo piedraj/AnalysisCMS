@@ -558,13 +558,6 @@ void HistogramReader::SetAxis(TH1*    hist,
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
 
-  xaxis->SetLabelFont(42);
-  yaxis->SetLabelFont(42);
-  xaxis->SetTitleFont(42);
-  yaxis->SetTitleFont(42);
-
-  xaxis->SetLabelOffset(0.025);
-  yaxis->SetLabelOffset(0.025);
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
@@ -575,9 +568,6 @@ void HistogramReader::SetAxis(TH1*    hist,
 
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
-
-  xaxis->SetNdivisions(505);
-  yaxis->SetNdivisions(505);
 
   yaxis->CenterTitle();
 
