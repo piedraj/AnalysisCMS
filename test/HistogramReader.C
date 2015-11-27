@@ -312,7 +312,13 @@ void HistogramReader::Draw(TString hname,
   if (_drawratio && _datafile)
     {
       pad2->cd();
-    
+
+      // This approach isn't yet working
+      //      TGraphAsymmErrors* g = new TGraphAsymmErrors();
+      //      g->Divide(_mchist[0], _allmchist, "cl=0.683 b(1,1) mode");
+      //      g->SetMarkerStyle(20);
+      //      g->Draw("ap");
+
       TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 

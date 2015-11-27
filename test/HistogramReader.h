@@ -14,6 +14,7 @@
 #include "TLatex.h"
 #include "TLegend.h"
 #include "TLine.h"
+#include "TGraphAsymmErrors.h"
 #include "TMath.h"
 #include "TPaletteAxis.h"
 #include "TROOT.h"
