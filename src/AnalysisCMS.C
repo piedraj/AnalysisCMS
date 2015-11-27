@@ -851,7 +851,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_mpmet > 20.);
   LevelHistograms(WW_05_MpMet, pass && pass_zveto);
 
-  pass &= (_dphiv);
+  pass &= (_passdphiveto);
   LevelHistograms(WW_06_DPhiVeto, pass && pass_zveto);
 
   bool pass_pt2l = (nelec == 1 && _pt2l > 30. || nelec != 1 && _pt2l > 45.);
@@ -1055,7 +1055,7 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDPhiVeto()
 {
-  _dphiv = (_njet30 <= 1 || (_njet30 > 1 && dphilljetjet < 165.*TMath::DegToRad()));
+  _passdphiveto = (_njet30 < 2 || dphilljetjet < 165.*TMath::DegToRad());
 }
 
 

@@ -9,7 +9,6 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TLorentzVector.h>
-#include <TString.h>
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TTree.h>
@@ -134,8 +133,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _analysis_wz;
   bool                   _eventdump;
   bool                   _ismc;
-  bool                   _dphiv;
   bool                   _foundsoftmuon;
+  bool                   _passdphiveto;
 
   TString                _sample;
   float                  _event_weight;
