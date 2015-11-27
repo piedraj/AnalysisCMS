@@ -127,7 +127,6 @@ class HistogramReader
   Bool_t                _savepng;
 
   Float_t               _luminosity_fb;
-  Float_t               _yoffset;
   TString               _inputdir;
   TString               _outputdir;
   TString               _stackoption;
