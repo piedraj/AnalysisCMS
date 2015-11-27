@@ -28,9 +28,6 @@
 #include <vector>
 
 
-const Float_t _yoffset = 0.050;
-
-
 class HistogramReader
 {
  public :
@@ -75,7 +72,7 @@ class HistogramReader
 			       TString        option  = "p",
 			       Float_t        tsize   = 0.030,
 			       Float_t        xoffset = 0.200,
-			       Float_t        yoffset = _yoffset);
+			       Float_t        yoffset = 0.050);
 
   Float_t  GetMaximum         (TH1*           hist,
 			       Float_t        xmin     = -999,
@@ -130,6 +127,7 @@ class HistogramReader
   Bool_t                _savepng;
 
   Float_t               _luminosity_fb;
+  Float_t               _yoffset;
   TString               _inputdir;
   TString               _outputdir;
   TString               _stackoption;

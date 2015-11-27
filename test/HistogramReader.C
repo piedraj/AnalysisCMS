@@ -267,19 +267,19 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;
   Float_t y0     = 0.834;
-  Float_t xdelta = 0.0;
-  Float_t ydelta = _yoffset + 0.001;
+  Float_t xdelta = 0.000;
+  Float_t ydelta = 0.051;
   Int_t   ny     = 0;
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
   if (_datahist)
     {
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, _datalabel.Data(), "lp");
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
       ny++;
     }
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+  DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
   ny++;
 
   for (int i=0; i<_mchist.size(); i++)
