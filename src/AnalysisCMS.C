@@ -865,10 +865,10 @@ void AnalysisCMS::AnalysisWW()
   pass &= (!_foundsoftmuon);
   LevelHistograms(WW_09_SoftMu, pass && pass_zveto);
 
-  pass &= (_ht < 250.);
-  LevelHistograms(WW_10_Ht, pass && pass_zveto);
+  bool passHt = (_ht < 250.);
+  LevelHistograms(WW_10_Ht, pass && pass_zveto && pass_Ht);
 
-  LevelHistograms(WW_11_DY, pass);  // Data-driven DY
+  LevelHistograms(WW_11_DY, pass && passHt);  // Data-driven DY
 }
 
 
