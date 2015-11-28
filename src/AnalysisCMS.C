@@ -866,9 +866,25 @@ void AnalysisCMS::AnalysisWW()
   LevelHistograms(WW_09_SoftMu, pass && pass_zveto);
 
   bool passHt = (_ht < 250.);
-  LevelHistograms(WW_10_Ht, pass && pass_zveto && pass_Ht);
+  LevelHistograms(WW_10_Ht, pass && pass_zveto && passHt);
 
   LevelHistograms(WW_11_DY, pass && passHt);  // Data-driven DY
+
+  // monoH selection - on top of WW excluding Ht selection
+  //----------------------------------------------------------------------------
+  bool passCR = (Lepton1.v.DeltaR(Lepton2.v) > 1.5) ;
+  LevelHistograms(monoH_80_CR, pass && pass_zveto && passCR);
+
+  bool passmonoH = (pass && pass_zveto);
+
+  passmonoH &= (_mc < 100);
+  LevelHistograms(monoH_00_mc, passmonoH);
+
+  passmonoH &= (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
+  LevelHistograms(monoH_01_drll, passmonoH);
+
+  passmonoH &= (_mpmet > 60);
+  LevelHistograms(monoH_02_mpmet, passmonoH);
 }
 
 
