@@ -3,6 +3,8 @@
 
 void runAnalysis(TString filename, TString era)
 {
+  gInterpreter->ExecuteMacro("test/PaperStyle.C");
+
   TFile* file = TFile::Open(filename);
 
   TTree* latino = (TTree*)file->Get("latino");

@@ -267,19 +267,19 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;
   Float_t y0     = 0.834;
-  Float_t xdelta = 0.0;
-  Float_t ydelta = _yoffset + 0.001;
+  Float_t xdelta = 0.000;
+  Float_t ydelta = 0.051;
   Int_t   ny     = 0;
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
   if (_datahist)
     {
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, _datalabel.Data(), "lp");
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
       ny++;
     }
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+  DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
   ny++;
 
   for (int i=0; i<_mchist.size(); i++)
@@ -312,7 +312,13 @@ void HistogramReader::Draw(TString hname,
   if (_drawratio && _datafile)
     {
       pad2->cd();
-    
+
+      // This approach isn't yet working
+      //      TGraphAsymmErrors* g = new TGraphAsymmErrors();
+      //      g->Divide(_mchist[0], _allmchist, "cl=0.683 b(1,1) mode");
+      //      g->SetMarkerStyle(20);
+      //      g->Draw("ap");
+
       TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 
@@ -558,13 +564,6 @@ void HistogramReader::SetAxis(TH1*    hist,
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
 
-  xaxis->SetLabelFont(42);
-  yaxis->SetLabelFont(42);
-  xaxis->SetTitleFont(42);
-  yaxis->SetTitleFont(42);
-
-  xaxis->SetLabelOffset(0.025);
-  yaxis->SetLabelOffset(0.025);
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
@@ -575,9 +574,6 @@ void HistogramReader::SetAxis(TH1*    hist,
 
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
-
-  xaxis->SetNdivisions(505);
-  yaxis->SetNdivisions(505);
 
   yaxis->CenterTitle();
 

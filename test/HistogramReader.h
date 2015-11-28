@@ -14,6 +14,7 @@
 #include "TLatex.h"
 #include "TLegend.h"
 #include "TLine.h"
+#include "TGraphAsymmErrors.h"
 #include "TMath.h"
 #include "TPaletteAxis.h"
 #include "TROOT.h"
@@ -25,9 +26,6 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
-
-const Float_t _yoffset = 0.050;
 
 
 class HistogramReader
@@ -74,7 +72,7 @@ class HistogramReader
 			       TString        option  = "p",
 			       Float_t        tsize   = 0.030,
 			       Float_t        xoffset = 0.200,
-			       Float_t        yoffset = _yoffset);
+			       Float_t        yoffset = 0.050);
 
   Float_t  GetMaximum         (TH1*           hist,
 			       Float_t        xmin     = -999,
