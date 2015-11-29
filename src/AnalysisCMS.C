@@ -880,13 +880,13 @@ void AnalysisCMS::AnalysisWW()
   LevelHistograms(monoH_80_CR, pass_monoh && !pass_drll);
 
   pass_monoh &= (_mc < 100);
-  LevelHistograms(monoH_00_mc, pass_monoh);
+  LevelHistograms(monoH_00_Mc, pass_monoh);
 
   pass_monoh &= pass_drll;
-  LevelHistograms(monoH_01_drll, pass_monoh);
+  LevelHistograms(monoH_01_DRll, pass_monoh);
 
   pass_monoh &= (_mpmet > 60);
-  LevelHistograms(monoH_02_mpmet, pass_monoh);
+  LevelHistograms(monoH_02_MpMet, pass_monoh);
 }
 
 

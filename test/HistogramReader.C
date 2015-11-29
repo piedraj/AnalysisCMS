@@ -56,6 +56,21 @@ void HistogramReader::AddProcess(TString const &filename,
 
 
 //------------------------------------------------------------------------------
+// AddSignal
+//------------------------------------------------------------------------------
+void HistogramReader::AddSignal(TString const &filename,
+				TString const &label,
+				Color_t        color)
+{
+  TFile* file = new TFile(_inputdir + filename + ".root", "update");
+
+  _signalfile.push_back(file);
+  _signallabel.push_back(label);
+  _signalcolor.push_back(color);
+}
+
+
+//------------------------------------------------------------------------------
 // Draw
 //------------------------------------------------------------------------------
 void HistogramReader::Draw(TString hname,
@@ -119,38 +134,21 @@ void HistogramReader::Draw(TString hname,
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
-    if (!dummy)
-      {
-	printf("\n Error: %s does not exist\n\n", hname.Data());
-	return;
-      }
-
-    if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
-    if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
-
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    _mchist[i]->SetFillColor(_mccolor[i]);
-    _mchist[i]->SetLineColor(_mccolor[i]);
-    _mchist[i]->SetLineWidth(0);
-    _mchist[i]->SetFillStyle(1001);
-
-    if (_stackoption.Contains("nostack") && Yield(_mchist[i]) > 0)
-      {
-	_mchist[i]->SetFillStyle(0);
-	_mchist[i]->SetLineWidth(2);
-	_mchist[i]->Scale(1.0/Yield(_mchist[i]));
-      }
-
-    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
-
-    if (moveoverflow) MoveOverflows(_mchist[i], xmin, xmax);
-
+    SetHistogram(_mchist[i], _mccolor[i], kDot, ngroup, moveoverflow, xmin, xmax);
+    
     hstack->Add(_mchist[i]);
   }
 
+  if (_datafile)
+    {
+      TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
-  SetData(hname, ngroup, moveoverflow, xmin, xmax);
+      _datahist = (TH1D*)dummy->Clone();
+      
+      SetHistogram(_datahist, kBlack, kFullCircle, ngroup, moveoverflow, xmin, xmax);
+    }
 
 
   // hfirst will contain the axis settings
@@ -583,41 +581,50 @@ void HistogramReader::SetAxis(TH1*    hist,
 
 
 //------------------------------------------------------------------------------
-// SetData
+// SetHistogram
 //------------------------------------------------------------------------------
-Int_t HistogramReader::SetData(TString hname,
-			       Int_t   ngroup,
-			       Bool_t  moveoverflow,
-			       Float_t xmin,
-			       Float_t xmax)
+void HistogramReader::SetHistogram(TH1*     hist,
+				   Color_t  color,
+				   Style_t  mstyle,
+				   Int_t    ngroup,
+				   Bool_t   moveoverflow,
+				   Float_t& xmin,
+				   Float_t& xmax)
 {
-  if (!_datafile) return -1;
-
-  TH1D* dummy = (TH1D*)_datafile->Get(hname);
-
-  if (!dummy)
+  if (!hist)
     {
-      printf(" [HistogramReader::SetData] Histogram %s not found\n", hname.Data());
-
-      return -1;
+      printf("\n Error: histogram does not exist\n\n");
+      return;
     }
 
-  _datahist = (TH1D*)dummy->Clone();
+  if (xmin == -999) xmin = hist->GetXaxis()->GetXmin();
+  if (xmax == -999) xmax = hist->GetXaxis()->GetXmax();
 
-  _datahist->SetFillColor  ( _datacolor);
-  _datahist->SetLineColor  ( _datacolor);
-  _datahist->SetMarkerStyle(kFullCircle);
+  hist->SetLineColor  (color);
+  hist->SetMarkerColor(color);
+  hist->SetMarkerStyle(mstyle);
 
-  if (_stackoption.Contains("nostack") && Yield(_datahist) > 0)
+  if (mstyle != kFullCircle)
     {
-      _datahist->Scale(1.0/Yield(_datahist));
+      hist->SetFillColor(color);
+      hist->SetFillStyle(1001);
+      hist->SetLineWidth(0);
+      
+      if (_stackoption.Contains("nostack"))
+	{
+	  hist->SetFillStyle(0);
+	  hist->SetLineWidth(2);
+	}
     }
 
-  if (ngroup > 0) _datahist->Rebin(ngroup);
+  if (_stackoption.Contains("nostack") && Yield(hist) > 0)
+    {
+      hist->Scale(1. / Yield(hist));
+    }
+
+  if (ngroup > 0) hist->Rebin(ngroup);
   
-  if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
-
-  return 0;
+  if (moveoverflow) MoveOverflows(hist, xmin, xmax);
 }
 
 

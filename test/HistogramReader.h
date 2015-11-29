@@ -44,6 +44,10 @@ class HistogramReader
   void     AddProcess         (TString const &filename,
 			       TString const &label,
 			       Color_t        color);
+
+  void     AddSignal          (TString const &filename,
+			       TString const &label,
+			       Color_t        color);
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -90,11 +94,13 @@ class HistogramReader
 			       Float_t        xoffset,
 			       Float_t        yoffset);
 
-  Int_t    SetData            (TString        hname,
+  void     SetHistogram       (TH1*           hist,
+			       Color_t        color,
+			       Style_t        mstyle,
 			       Int_t          ngroup,
 			       Bool_t         moveoverflow,
-			       Float_t        xmin,
-			       Float_t        xmax);
+			       Float_t&       xmin,
+			       Float_t&       xmax);
 
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
 
@@ -142,6 +148,11 @@ class HistogramReader
   std::vector<TH1*>     _mchist;
   std::vector<Color_t>  _mccolor;
   std::vector<TString>  _mclabel;
+
+  std::vector<TFile*>   _signalfile;
+  std::vector<TH1*>     _signalhist;
+  std::vector<Color_t>  _signalcolor;
+  std::vector<TString>  _signallabel;
 };
 
 #endif
