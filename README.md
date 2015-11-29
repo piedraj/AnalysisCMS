@@ -64,7 +64,7 @@ It is recommended to test the code. The following example reads a latino tree an
 
 Submit jobs to the gridui batch system.
 
-    ./submit-jobs.sh samples/files_25ns.txt 25ns
+    ./submit-jobs.sh
 
 Show the status of the submitted jobs.
 

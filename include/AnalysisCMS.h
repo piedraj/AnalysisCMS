@@ -77,7 +77,6 @@ class AnalysisCMS : public AnalysisBase
   void    GetSampleName    (TString filename);
 
   void    ApplyWeights     (TString sample,
-			    TString era,
 			    float   luminosity);
 
   void    GetLeptons       ();
