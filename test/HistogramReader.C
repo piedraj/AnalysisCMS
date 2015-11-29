@@ -301,7 +301,7 @@ void HistogramReader::Draw(TString hname,
   DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
   DrawLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
 
-  SetAxis(hfirst, xtitle, ytitle, 0.045, 1.5, 1.7);
+  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
 
 
   //----------------------------------------------------------------------------
@@ -355,7 +355,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC", 0.105, 1.4, 0.75);
+      SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
     }
 
 
@@ -552,13 +552,20 @@ void HistogramReader::MoveOverflows(TH1*    hist,
 void HistogramReader::SetAxis(TH1*    hist,
 			      TString xtitle,
 			      TString ytitle,
-			      Float_t size,
 			      Float_t xoffset,
 			      Float_t yoffset)
 {
   gPad->cd();
   gPad->Update();
 
+  // See https://root.cern.ch/doc/master/classTAttText.html#T4
+  Float_t padw = gPad->XtoPixel(gPad->GetX2());
+  Float_t padh = gPad->YtoPixel(gPad->GetY1());
+
+  Float_t size = (padw < padh) ? padw : padh;
+
+  size = 22. / size;  // Like this label size is always 22 pixels
+  
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
 
@@ -720,8 +727,8 @@ void HistogramReader::EventsByChannel(TFile*  file,
 
 
   // Get the number of bins
-  int firstchannel = (level.Contains("WZ/")) ? eee : ee;
-  int lastchannel  = (level.Contains("WZ/")) ? lll : ll;
+  Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
+  Int_t lastchannel  = (level.Contains("WZ/")) ? lll : ll;
   
   Int_t nbins = 0;
   
