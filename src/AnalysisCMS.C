@@ -68,10 +68,11 @@ void AnalysisCMS::Loop(TString filename,
 
   for (int j=0; j<ncut; j++) {
 
-    if (!_analysis_top  && scut[j].Contains("Top/"))  continue;
-    if (!_analysis_ttdm && scut[j].Contains("TTDM/")) continue;
-    if (!_analysis_ww   && scut[j].Contains("WW/"))   continue;
-    if (!_analysis_wz   && scut[j].Contains("WZ/"))   continue;
+    if (!_analysis_top  && scut[j].Contains("Top/"))   continue;
+    if (!_analysis_ttdm && scut[j].Contains("TTDM/"))  continue;
+    if (!_analysis_ww   && scut[j].Contains("WW/"))    continue;
+    if (!_analysis_ww   && scut[j].Contains("monoH/")) continue;
+    if (!_analysis_wz   && scut[j].Contains("WZ/"))    continue;
 
     for (int k=0; k<=njetbin; k++) {
 
@@ -865,26 +866,27 @@ void AnalysisCMS::AnalysisWW()
   pass &= (!_foundsoftmuon);
   LevelHistograms(WW_09_SoftMu, pass && pass_zveto);
 
-  bool passHt = (_ht < 250.);
-  LevelHistograms(WW_10_Ht, pass && pass_zveto && passHt);
+  bool pass_ht = (_ht < 250.);
+  LevelHistograms(WW_10_Ht, pass && pass_zveto && pass_ht);
 
-  LevelHistograms(WW_11_DY, pass && passHt);  // Data-driven DY
+  LevelHistograms(WW_11_DY, pass && pass_ht);  // Data-driven DY
+
 
   // monoH selection - on top of WW excluding Ht selection
   //----------------------------------------------------------------------------
-  bool passCR = (Lepton1.v.DeltaR(Lepton2.v) > 1.5) ;
-  LevelHistograms(monoH_80_CR, pass && pass_zveto && passCR);
+  bool pass_monoh = (pass && pass_zveto);
+  bool pass_drll  = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
 
-  bool passmonoH = (pass && pass_zveto);
+  LevelHistograms(monoH_80_CR, pass_monoh && !pass_drll);
 
-  passmonoH &= (_mc < 100);
-  LevelHistograms(monoH_00_mc, passmonoH);
+  pass_monoh &= (_mc < 100);
+  LevelHistograms(monoH_00_mc, pass_monoh);
 
-  passmonoH &= (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
-  LevelHistograms(monoH_01_drll, passmonoH);
+  pass_monoh &= pass_drll;
+  LevelHistograms(monoH_01_drll, pass_monoh);
 
-  passmonoH &= (_mpmet > 60);
-  LevelHistograms(monoH_02_mpmet, passmonoH);
+  pass_monoh &= (_mpmet > 60);
+  LevelHistograms(monoH_02_mpmet, pass_monoh);
 }
 
 
