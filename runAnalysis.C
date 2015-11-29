@@ -11,10 +11,10 @@ void runAnalysis(TString filename, TString era)
 
   AnalysisCMS acms(latino);
 
-  acms.AddAnalysis("Top");
-  acms.AddAnalysis("TTDM");
+  //acms.AddAnalysis("Top");
+  //acms.AddAnalysis("TTDM");
   acms.AddAnalysis("WW");
-  acms.AddAnalysis("WZ");
+  //acms.AddAnalysis("WZ");
 
   float luminosity = (era.EqualTo("50ns")) ? lumi50ns_fb : lumi25ns_fb;
 
