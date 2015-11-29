@@ -201,8 +201,6 @@ void AnalysisCMS::Loop(TString filename,
   //----------------------------------------------------------------------------
   if (_eventdump) txt_eventdump.close();
 
-  if (verbosity > 0) printf("\n\n");
-
   txt_summary.open("txt/" + era + "/" + _sample + ".txt");
 
   txt_summary << "\n";
@@ -218,14 +216,21 @@ void AnalysisCMS::Loop(TString filename,
   if (_analysis_ww)   Summary("WW",    "11.0", "raw yields");
   if (_analysis_ww)   Summary("monoH", "11.0", "raw yields");
   if (_analysis_wz)   Summary("WZ",    "11.0", "raw yields");
-  
+
   txt_summary.close();
 
   root_output->cd();
+ 
+  if (verbosity > 0)
+    {
+      printf("\n\n Writing histograms. This can take a while...\n");
+    }
 
   root_output->Write("", TObject::kOverwrite);
 
   root_output->Close();
+
+  if (verbosity > 0) printf("\n");
 }
 
 
