@@ -313,8 +313,8 @@ void HistogramReader::Draw(TString hname,
 
       // This approach isn't yet working
       //      TGraphAsymmErrors* g = new TGraphAsymmErrors();
-      //      g->Divide(_mchist[0], _allmchist, "cl=0.683 b(1,1) mode");
-      //      g->SetMarkerStyle(20);
+      //      g->Divide(_datahist, _allmchist, "cl=0.683 b(1,1) mode");
+      //      g->SetMarkerStyle(kFullCircle);
       //      g->Draw("ap");
 
       TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
