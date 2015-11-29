@@ -31,32 +31,21 @@ void runPlotter(TString level)
   plotter.AddData("01_Data", "data", kBlack);
 
 
-  // Stack predicted histograms in different order for different analyses
+  // Stack predicted histograms
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ"))
-    {
-      plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
-      plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
-      plotter.AddProcess("05_SingleTop", "t+jets",  kYellow-6);
-      plotter.AddProcess("08_WJets",     "W+jets",  kGray+1);
-      plotter.AddProcess("06_WW",        "WW",      kAzure-9);
-      plotter.AddProcess("11_HWW",       "HWW",     kRed);
-      plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
-      plotter.AddProcess("04_Top",       "tt+jets", kYellow);
-      plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
-    }
-  else
-    {
-      plotter.AddProcess("06_WW",        "WW",      kAzure-9);
-      plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
-      plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
-      plotter.AddProcess("04_Top",       "tt+jets", kYellow);
-      plotter.AddProcess("05_SingleTop", "t+jets",  kYellow-6);
-      plotter.AddProcess("08_WJets",     "W+jets",  kGray+1);
-      plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
-      plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
-      plotter.AddProcess("11_HWW",       "HWW",     kRed);
-    }
+  plotter.AddProcess("02_WZ",        "WZ",      kOrange-2);
+  plotter.AddProcess("07_ZJets",     "Z+jets",  kGreen+2);
+  plotter.AddProcess("05_SingleTop", "t+jets",  kYellow-6);
+  plotter.AddProcess("08_WJets",     "W+jets",  kGray+1);
+  plotter.AddProcess("06_WW",        "WW",      kAzure-9);
+  plotter.AddProcess("11_HWW",       "HWW",     kRed);
+  plotter.AddProcess("12_Wg",        "W#gamma", kGreen-6);  // Merge or change color
+  plotter.AddProcess("03_ZZ",        "ZZ",      kRed+3);
+  plotter.AddProcess("04_Top",       "tt+jets", kYellow);
+  plotter.AddProcess("09_TTW",       "ttW",     kGreen-6);
+  plotter.AddProcess("10_TTZ",       "ttZ",     kGreen-6);  // Merge or change color
+  plotter.AddProcess("13_WWZ",       "WWZ",     kGreen-6);  // Merge or change color
+  plotter.AddProcess("14_WZZ",       "WZZ",     kGreen-6);  // Merge or change color
 
 
   // Draw events by cut
