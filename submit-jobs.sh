@@ -9,7 +9,7 @@ fi
 
 export SAMPLES=$1
 export ERA=$2
-export NJOBS=`cat $SAMPLES | grep latino | wc -l`
+export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
 
 echo "  "
 echo "  Let's play it safe. Compiling runAnalysis..."
