@@ -22,7 +22,7 @@ rm -rf rootfiles/$ERA
 rm -rf txt/$ERA
 
 echo "  "
-echo "  And... submitting jobs"
+echo "  And... submitting" $NJOBS "jobs"
 echo "  "
 qsub -t 1-$NJOBS -v SAMPLES -v ERA settings.sge
 echo "  "

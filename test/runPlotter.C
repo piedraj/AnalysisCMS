@@ -163,7 +163,7 @@ void runPlotter(TString level)
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
   gSystem->Exec("for dir in $(find ./ -type d); do cp -n ../index.php $dir/; done");
-  gSystem->Exec("rm index.php");
+  gSystem->Exec("rm -f index.php");
 }
 
 

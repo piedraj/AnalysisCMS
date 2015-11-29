@@ -230,7 +230,7 @@ void AnalysisCMS::Loop(TString filename,
 
   root_output->Close();
 
-  if (verbosity > 0) printf("\n");
+  if (verbosity > 0) printf("\n Done!\n\n");
 }
 
 
