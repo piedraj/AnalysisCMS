@@ -213,10 +213,11 @@ void AnalysisCMS::Loop(TString filename,
   txt_summary << Form("   nentries: %lld\n",      nentries);
   txt_summary << "\n";
 
-  if (_analysis_top)  Summary("Top",  "11.0", "raw yields");
-  if (_analysis_ttdm) Summary("TTDM", "11.0", "raw yields");
-  if (_analysis_ww)   Summary("WW",   "11.0", "raw yields");
-  if (_analysis_wz)   Summary("WZ",   "11.0", "raw yields");
+  if (_analysis_top)  Summary("Top",   "11.0", "raw yields");
+  if (_analysis_ttdm) Summary("TTDM",  "11.0", "raw yields");
+  if (_analysis_ww)   Summary("WW",    "11.0", "raw yields");
+  if (_analysis_ww)   Summary("monoH", "11.0", "raw yields");
+  if (_analysis_wz)   Summary("WZ",    "11.0", "raw yields");
   
   txt_summary.close();
 
