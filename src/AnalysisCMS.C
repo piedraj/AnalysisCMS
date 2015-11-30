@@ -936,8 +936,8 @@ void AnalysisCMS::GetHt()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphi1   = Lepton1.v.DeltaPhi(MET);
-  Float_t dphi2   = Lepton2.v.DeltaPhi(MET);
+  Float_t dphi1   = fabs(Lepton1.v.DeltaPhi(MET));
+  Float_t dphi2   = fabs(Lepton2.v.DeltaPhi(MET));
   Float_t dphimin = min(dphi1, dphi2);
 
   Float_t fullpmet = MET.Et();
