@@ -272,7 +272,7 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 3e-1;
+      theMin = 3e-2;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
