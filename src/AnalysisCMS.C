@@ -95,9 +95,8 @@ void AnalysisCMS::Loop(TString filename,
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
-	h_njet30diff[i][j][k] = new TH1D("h_njet30diff" + suffix, "",    7, -3.5,  3.5);
 	h_njet30    [i][j][k] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
-	h_nbjet20   [i][j][k] = new TH1D("h_nbjet20"    + suffix, "",    7, -0.5,  6.5);
+	h_nbjet15   [i][j][k] = new TH1D("h_nbjet15"    + suffix, "",    7, -0.5,  6.5);
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
 	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
         h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
@@ -187,13 +186,36 @@ void AnalysisCMS::Loop(TString filename,
 
     GetSoftMuon();
 
+    GetEventVariables();
 
-    // Fill histograms
+
+    // Fill 3 lepton histograms
     //--------------------------------------------------------------------------
+    if (_analysis_wz) AnalysisWZ();
+
+
+    // Fill 2 lepton histograms
+    //--------------------------------------------------------------------------
+    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
+
+    if (Lepton1.v.Pt() < 20.) continue;
+    if (Lepton2.v.Pt() < 20.) continue;
+
+    _nelectron = 0;  // Redefine _nelectron
+
+    if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+
+    if      (_nelectron == 2) _channel = ee;
+    else if (_nelectron == 1) _channel = em;
+    else if (_nelectron == 0) _channel = mm;
+    
+    _m2l  = (Lepton1.v + Lepton2.v).M();
+    _pt2l = (Lepton1.v + Lepton2.v).Pt();
+    
     if (_analysis_top)  AnalysisTop();
     if (_analysis_ttdm) AnalysisTTDM();
     if (_analysis_ww)   AnalysisWW();
-    if (_analysis_wz)   AnalysisWZ();
   }
 
 
@@ -359,16 +381,15 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
   // Common TH1 histograms
   //----------------------------------------------------------------------------
-  float deltarll   = Lepton1.v.DeltaR  (Lepton2.v);
+  float deltarll   = Lepton1.v.DeltaR(Lepton2.v);
   float deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
 
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet30diff[ichannel][icut][ijet]->Fill(_njet30 - njet, _event_weight);
   h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
-  h_nbjet20   [ichannel][icut][ijet]->Fill(_nbjet20,       _event_weight);
+  h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
   h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
@@ -529,7 +550,7 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    if (!IsFiducialLepton(i)) continue;
+    if (i > 1 && !IsFiducialLepton(i)) continue;
 
     float pt  = std_vector_lepton_pt ->at(i);
     float eta = std_vector_lepton_eta->at(i);
@@ -565,6 +586,9 @@ void AnalysisCMS::GetLeptons()
     lep.v = tlv;
 
     AnalysisLeptons.push_back(lep);
+
+    if (i == 0) Lepton1 = lep;
+    if (i == 1) Lepton2 = lep;
   }
 
   _nlepton = AnalysisLeptons.size();
@@ -598,7 +622,7 @@ void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
-  _nbjet20 = 0;
+  _nbjet15 = 0;
 
   int vector_jet_size = std_vector_jet_pt->size();
 
@@ -608,22 +632,22 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    if (pt < 20. || fabs(eta) > 2.4) continue;
+    if (pt < 15. || fabs(eta) > 2.4) continue;
 
     TLorentzVector tlv;
 
     tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
 
-    bool is_lepton = false;
-
-    for (int j=0; j<_nlepton; j++)
-      {
-	if (AnalysisLeptons[j].type == Loose) continue;
-	
-	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
-      }
-
-    if (is_lepton) continue;
+    //    bool is_lepton = false;
+    //
+    //    for (int j=0; j<_nlepton; j++)
+    //      {
+    //	if (AnalysisLeptons[j].type == Loose) continue;
+    //	
+    //	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
+    //      }
+    //
+    //    if (is_lepton) continue;
 
     Jet goodjet;
 
@@ -631,7 +655,7 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet20++;
+    if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15++;
 
     if (pt < 30.) continue;
 
@@ -643,7 +667,7 @@ void AnalysisCMS::GetJets()
 
   // Define the jet bin
   //----------------------------------------------------------------------------
-  _jetbin = (_njet30 < njetbin) ? _njet30 : njetbin - 1;
+  _jetbin = (njet < njetbin) ? njet : njetbin - 1;
 }
 
 
@@ -652,62 +676,15 @@ void AnalysisCMS::GetJets()
 //------------------------------------------------------------------------------
 void AnalysisCMS::AnalysisTop()
 {
-  if (_ntight < 2) return;
-
-
-  // Pick the opposite-sign lepton-pair with highest _pt2l
-  //----------------------------------------------------------------------------
-  _pt2l = -999;
-
-  for (UInt_t i=0; i<_nlepton; i++) {
-    
-    if (AnalysisLeptons[i].type == Loose) continue;
-
-    for (UInt_t j=i+1; j<_nlepton; j++) {
-      
-      if (AnalysisLeptons[j].type == Loose) continue;
-
-      if (AnalysisLeptons[i].flavour * AnalysisLeptons[j].flavour > 0) continue;
-
-      float dilepton_pt = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).Pt();
-
-      if (dilepton_pt > _pt2l)
-	{
-	  _pt2l = dilepton_pt;
-	  
-	  Lepton1 = AnalysisLeptons[i];
-	  Lepton2 = AnalysisLeptons[j];
-	}
-    }
-  }
-
-  if (_pt2l < 0) return;
-
-  GetEventVariables();
-
-  _m2l = (Lepton1.v + Lepton2.v).M();
-
-  int nelec = 0;
-
-  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
-  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
-
-  if      (nelec == 2) _channel = ee;
-  else if (nelec == 1) _channel = em;
-  else if (nelec == 0) _channel = mm;
-
-
-  // Top selection
-  //----------------------------------------------------------------------------
   bool pass = true;
 
   LevelHistograms(Top_00_Has2Leptons, pass);
 
-  pass &= (_njet30 > 1);
+  pass &= (njet > 1);
 
   LevelHistograms(Top_01_Has2Jets, pass);
 
-  pass &= (_nbjet20 > 0);
+  pass &= (_nbjet15 > 0);
 
   LevelHistograms(Top_02_Has1BJet, pass);
 }
@@ -718,27 +695,9 @@ void AnalysisCMS::AnalysisTop()
 //------------------------------------------------------------------------------
 void AnalysisCMS::AnalysisTTDM()
 {
-  if (_nlepton != 2) return;
-  if (_ntight  != 2) return;
-
-  if      (_nelectron == 2) _channel = ee;
-  else if (_nelectron == 1) _channel = em;
-  else if (_nelectron == 0) _channel = mm;
-
-  Lepton1 = AnalysisLeptons[0];
-  Lepton2 = AnalysisLeptons[1];
-
-  GetEventVariables();
-
-  _m2l  = (Lepton1.v + Lepton2.v).M();
-  _pt2l = (Lepton1.v + Lepton2.v).Pt();
-
-
-  // TTDM selection
-  //----------------------------------------------------------------------------
   bool pass = true;
 
-  LevelHistograms(TTDM_00_Exactly2Leptons, pass);
+  LevelHistograms(TTDM_00_Has2Leptons, pass);
 
   bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
   bool pass_df = (_nelectron == 1);
@@ -748,9 +707,9 @@ void AnalysisCMS::AnalysisTTDM()
 
   LevelHistograms(TTDM_01_ZVeto, pass);
 
-  pass &= (_njet30 > 1);
+  pass &= (njet > 1);
 
-  if (_njet30 < 2) return;
+  if (njet < 2) return;
 
   LevelHistograms(TTDM_02_Has2Jets, pass);
 
@@ -777,86 +736,41 @@ void AnalysisCMS::AnalysisTTDM()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::AnalysisWW()
 {
-  if (_nlepton < 2) return;
-  if (_ntight  < 2) return;
-
-  bool found_1st_lepton = false;
-  bool found_2nd_lepton = false;
-
-  for (UInt_t i=0; i<_nlepton; i++)
-    {
-      if (AnalysisLeptons[i].type == Loose) continue;
-
-      if (!found_1st_lepton)
-	{
-	  found_1st_lepton = true;
-	  Lepton1 = AnalysisLeptons[i];
-	}
-      else if (!found_2nd_lepton && i != Lepton1.index)
-	{
-	  found_2nd_lepton = true;
-	  Lepton2 = AnalysisLeptons[i];
-	}
-    }
-
-  GetEventVariables();
-
-  int nelec = 0;
-
-  if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) nelec++;
-  if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) nelec++;
-
-  if      (nelec == 2) _channel = ee;
-  else if (nelec == 1) _channel = em;
-  else if (nelec == 0) _channel = mm;
-
-  _m2l  = (Lepton1.v + Lepton2.v).M();
-  _pt2l = (Lepton1.v + Lepton2.v).Pt();
-
-
-  // WW selection
-  //----------------------------------------------------------------------------
   bool pass = true;
 
-  pass &= (Lepton1.flavour * Lepton2.flavour < 0);
-  pass &= (Lepton1.v.Pt() > 20.);
-  pass &= (Lepton2.v.Pt() > 20.);
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  pass &= (_ntight == 2);
-  LevelHistograms(WW_01_Exactly2Leptons, pass);
-
   pass &= (_m2l > 12.);
-  LevelHistograms(WW_02_Mll, pass);
+  LevelHistograms(WW_01_Mll, pass);
 
   pass &= (MET.Et() > 20.);
-  LevelHistograms(WW_03_PfMet, pass);
+  LevelHistograms(WW_02_PfMet, pass);
 
-  bool pass_zveto = (nelec == 1 || nelec != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_zveto = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
 
-  LevelHistograms(WW_04_ZVeto, pass && pass_zveto);
+  LevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
   pass &= (_mpmet > 20.);
-  LevelHistograms(WW_05_MpMet, pass && pass_zveto);
+  LevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
   pass &= (_passdphiveto);
-  LevelHistograms(WW_06_DPhiVeto, pass && pass_zveto);
+  LevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
 
-  bool pass_pt2l = (nelec == 1 && _pt2l > 30. || nelec != 1 && _pt2l > 45.);
+  bool pass_pt2l = (_nelectron == 1 && _pt2l > 30. || _nelectron != 1 && _pt2l > 45.);
 
   pass &= pass_pt2l;
-  LevelHistograms(WW_07_Ptll, pass && pass_zveto);
+  LevelHistograms(WW_06_Ptll, pass && pass_zveto);
 
-  pass &= (_nbjet20 == 0);
-  LevelHistograms(WW_08_BVeto, pass && pass_zveto);
+  pass &= (_nbjet15 == 0);
+  LevelHistograms(WW_07_BVeto, pass && pass_zveto);
 
   pass &= (!_foundsoftmuon);
-  LevelHistograms(WW_09_SoftMu, pass && pass_zveto);
+  LevelHistograms(WW_08_SoftMu, pass && pass_zveto);
 
   bool pass_ht = (_ht < 250.);
-  LevelHistograms(WW_10_Ht, pass && pass_zveto && pass_ht);
+  LevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
 
-  LevelHistograms(WW_11_DY, pass && pass_ht);  // Data-driven DY
+  LevelHistograms(WW_10_DY, pass && pass_ht);  // Data-driven DY
 
 
   // monoH selection - on top of WW excluding Ht selection
@@ -889,11 +803,6 @@ void AnalysisCMS::AnalysisWZ()
   else if (_nelectron == 2) _channel = eem;
   else if (_nelectron == 1) _channel = emm;
   else if (_nelectron == 0) _channel = mmm;
-
-  Lepton1 = AnalysisLeptons[0];
-  Lepton2 = AnalysisLeptons[1];
-
-  GetEventVariables();
 
 
   // Make Z and W candidates
@@ -956,7 +865,7 @@ void AnalysisCMS::AnalysisWZ()
 
   LevelHistograms(WZ_02_HasW, pass);
 
-  pass &= (_nbjet20 == 0);
+  pass &= (_nbjet15 == 0);
 	
   LevelHistograms(WZ_03_BVeto, pass);
 }
@@ -1010,16 +919,12 @@ void AnalysisCMS::GetHt()
 {
   _ht = MET.Et();
 
-  for (int i=0; i<_nlepton; i++)
-    {
-      if (AnalysisLeptons[i].type == Loose) continue;
+  _ht += std_vector_lepton_pt->at(0);
+  _ht += std_vector_lepton_pt->at(1);
 
-      _ht += AnalysisLeptons[i].v.Pt();
-    }
-
-  for (int i=0; i<_njet30; i++)
+  for (int i=0; i<std_vector_jet_pt->size(); i++)
     {
-      _ht += AnalysisJets[i].v.Pt();
+      _ht += std_vector_jet_pt->at(i);
     }
 }
 
@@ -1051,7 +956,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (_njet30 <= 1) ? _mpmet : MET.Et();
+  _metvar = (njet <= 1) ? _mpmet : MET.Et();
 }
 
 
@@ -1060,7 +965,7 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDPhiVeto()
 {
-  _passdphiveto = (_njet30 < 2 || dphilljetjet < 165.*TMath::DegToRad());
+  _passdphiveto = (njet < 2 || dphilljetjet < 165.*TMath::DegToRad());
 }
 
 
