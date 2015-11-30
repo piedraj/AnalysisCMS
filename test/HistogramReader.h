@@ -95,7 +95,10 @@ class HistogramReader
 
   void     SetHistogram       (TH1*           hist,
 			       Color_t        color,
+			       Style_t        fstyle,
 			       Style_t        mstyle,
+			       Style_t        lstyle,
+			       Width_t        lwidth,
 			       Int_t          ngroup,
 			       Bool_t         moveoverflow,
 			       Float_t&       xmin,

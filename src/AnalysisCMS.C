@@ -503,9 +503,12 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 
   if (!_ismc) return;
 
+  if (sample.Contains("ttDM")) baseW = 1e-2;  // Dummy value
+
   _event_weight *= puW * baseW * luminosity;
 
   if (sample.Contains("ggZZ")) return;
+  if (sample.Contains("ttDM")) return;
 
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 

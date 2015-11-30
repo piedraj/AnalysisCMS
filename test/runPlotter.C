@@ -31,7 +31,7 @@ void runPlotter(TString level)
   plotter.AddData("01_Data", "data", kBlack);
 
 
-  // Stack predicted histograms in different order for different analyses
+  // Add processes
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
@@ -59,6 +59,9 @@ void runPlotter(TString level)
       plotter.AddProcess("09_HWW",   "HWW",     kRed);
       plotter.AddProcess("11_VVV",   "VVV",     kYellow-6);
     }
+
+  if (analysis.EqualTo("TTDM"))
+    plotter.AddSignal("ttDM10scalar10__part0", "m_{#phi}10 m_{#chi}10", kRed);
 
 
   // Draw events by cut
