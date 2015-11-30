@@ -291,7 +291,7 @@ void HistogramReader::Draw(TString hname,
     }
   else
     {
-      theMax *= 1.45;
+      theMax *= 1.5;
     }
 
   hfirst->SetMinimum(theMin);
@@ -707,7 +707,7 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   Int_t nbins = hist->GetNbinsX();
       
-  return hist->Integral(0, nbins+1);
+  return fabs(hist->Integral(0, nbins+1));
 }
 
 
