@@ -84,7 +84,7 @@ void runPlotter(TString level)
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", scale);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution");
     }
 
 
@@ -102,7 +102,7 @@ void runPlotter(TString level)
 
       plotter.LoopEventsByChannel(level + jetbin);
 
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale);
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution");
     }
 
 
@@ -131,7 +131,7 @@ void runPlotter(TString level)
 	  // Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet20"    + suffix, "number of b-jets (p_{T}^{jet} > 20 GeV)", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", scale, true,    0,   30);
 	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
 	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);

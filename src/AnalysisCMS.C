@@ -919,11 +919,13 @@ void AnalysisCMS::GetHt()
 {
   _ht = MET.Et();
 
-  _ht += std_vector_lepton_pt->at(0);
-  _ht += std_vector_lepton_pt->at(1);
+  _ht += Lepton1.v.Pt();
+  _ht += Lepton2.v.Pt();
 
   for (int i=0; i<std_vector_jet_pt->size(); i++)
     {
+      if (std_vector_jet_pt->at(i) < 30.) continue;
+
       _ht += std_vector_jet_pt->at(i);
     }
 }
