@@ -32,21 +32,21 @@ class HistogramReader
 {
  public :
   
-  HistogramReader(TString const &inputdir,
-		  TString const &outputdir);
+  HistogramReader(const TString& inputdir,
+		  const TString& outputdir);
 
   ~HistogramReader() {}
  
-  void     AddData            (TString const &filename,
-			       TString const &label,
+  void     AddData            (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
 
-  void     AddProcess         (TString const &filename,
-			       TString const &label,
+  void     AddProcess         (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
 
-  void     AddSignal          (TString const &filename,
-			       TString const &label,
+  void     AddSignal          (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
   
   void     Draw               (TString        hname,

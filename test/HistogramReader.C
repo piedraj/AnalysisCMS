@@ -4,8 +4,8 @@
 //------------------------------------------------------------------------------
 // HistogramReader
 //------------------------------------------------------------------------------
-HistogramReader::HistogramReader(TString const &inputdir,
-				 TString const &outputdir) :
+HistogramReader::HistogramReader(const TString& inputdir,
+				 const TString& outputdir) :
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
@@ -29,8 +29,8 @@ HistogramReader::HistogramReader(TString const &inputdir,
 //------------------------------------------------------------------------------
 // AddData
 //------------------------------------------------------------------------------
-void HistogramReader::AddData(TString const &filename,
-			      TString const &label,
+void HistogramReader::AddData(const TString& filename,
+			      const TString& label,
 			      Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");
@@ -44,8 +44,8 @@ void HistogramReader::AddData(TString const &filename,
 //------------------------------------------------------------------------------
 // AddProcess
 //------------------------------------------------------------------------------
-void HistogramReader::AddProcess(TString const &filename,
-				 TString const &label,
+void HistogramReader::AddProcess(const TString& filename,
+				 const TString& label,
 				 Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");
@@ -59,8 +59,8 @@ void HistogramReader::AddProcess(TString const &filename,
 //------------------------------------------------------------------------------
 // AddSignal
 //------------------------------------------------------------------------------
-void HistogramReader::AddSignal(TString const &filename,
-				TString const &label,
+void HistogramReader::AddSignal(const TString& filename,
+				const TString& label,
 				Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");

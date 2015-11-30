@@ -210,8 +210,8 @@ void AnalysisCMS::Loop(TString filename,
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l  = (Lepton1.v + Lepton2.v).M();
-    _pt2l = (Lepton1.v + Lepton2.v).Pt();
+    _m2l  = mll;
+    _pt2l = ptll;
     
     if (_analysis_top)  AnalysisTop();
     if (_analysis_ttdm) AnalysisTTDM();
@@ -699,10 +699,10 @@ void AnalysisCMS::AnalysisTTDM()
 
   LevelHistograms(TTDM_00_Has2Leptons, pass);
 
-  bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_sf = (_nelectron != 1 && fabs(mll - Z_MASS) > 15.);
   bool pass_df = (_nelectron == 1);
 
-  pass &= (_m2l > 20.);
+  pass &= (mll > 20.);
   pass &= (pass_sf || pass_df);
 
   LevelHistograms(TTDM_01_ZVeto, pass);
@@ -740,13 +740,13 @@ void AnalysisCMS::AnalysisWW()
 
   LevelHistograms(WW_00_Has2Leptons, pass);
 
-  pass &= (_m2l > 12.);
+  pass &= (mll > 12.);
   LevelHistograms(WW_01_Mll, pass);
 
   pass &= (MET.Et() > 20.);
   LevelHistograms(WW_02_PfMet, pass);
 
-  bool pass_zveto = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(_m2l - Z_MASS) > 15.);
+  bool pass_zveto = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(mll - Z_MASS) > 15.);
 
   LevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
@@ -756,9 +756,9 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_passdphiveto);
   LevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
 
-  bool pass_pt2l = (_nelectron == 1 && _pt2l > 30. || _nelectron != 1 && _pt2l > 45.);
+  bool pass_ptll = (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
 
-  pass &= pass_pt2l;
+  pass &= pass_ptll;
   LevelHistograms(WW_06_Ptll, pass && pass_zveto);
 
   pass &= (_nbjet15 == 0);
@@ -998,8 +998,8 @@ void AnalysisCMS::GetMc()
 
   float met = MET.Et();
 
-  if (_pt2l > 0 && _m2l > 0 && met > 0)
-    _mc = sqrt(pow(sqrt(_pt2l*_pt2l + _m2l*_m2l) + met, 2) - pow(_pt2l + met, 2));
+  if (ptll > 0 && mll > 0 && met > 0)
+    _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));
 }
 
 
@@ -1008,10 +1008,7 @@ void AnalysisCMS::GetMc()
 //------------------------------------------------------------------------------                                                                
 void AnalysisCMS::GetPtWW()
 {
-  _ptww = 0;
-
-  if (Lepton1.v.Pt() > 0 && Lepton2.v.Pt() > 0)
-    _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
+  _ptww = (Lepton1.v + Lepton2.v + MET).Pt();
 }
 
 
