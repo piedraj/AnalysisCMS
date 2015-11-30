@@ -388,7 +388,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
+  h_njet30    [ichannel][icut][ijet]->Fill(njet,           _event_weight);
   h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
