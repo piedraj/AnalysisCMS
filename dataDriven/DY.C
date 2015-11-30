@@ -13,6 +13,8 @@
 #include "TSystem.h"
 #include "TTree.h"
 #include "TLatex.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 const UInt_t numberMetCuts = 5;
 
@@ -62,404 +64,378 @@ Double_t errNinEstNoDibosonFunction(Double_t NinDataSF,
 				    Double_t NinDataOF,
 				    Double_t NinVV);
 
-const char jet[4] = "0123";
-TString Channels[3] = {"EE","MuMu","SF"};
+void DrawTLatex                    (Double_t x, 
+				    Double_t y, 
+				    Double_t tsize, 
+				    const char* text);
 
-//launch the code for all channels, all jetbins
+void doDY                          (Int_t   njet,
+				    Bool_t  useDataDriven,
+				    Int_t   printLevel,
+				    Bool_t  drawR);
+
 void DY(){
-
-  for (int pp = 0; pp < 3; ++pp)
-    for (int qq = 0; qq < 4; ++qq){
-      doDY(jet[qq], Channels[pp]);
+  
+    for (Int_t qq = 0; qq < 4; ++qq){
+      doDY(qq, true, 100, true);
     }
 }
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 // DY
 //
-// channel = SF, MuMu, EE
+// channel = ee,mm,em,ll
+//
+// jetbin = "0jet","1jet","2jet","" (let's start with inclusive jetbin only)
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void doDY(TString jetbin, //={"0jet/","1jet/","2jet/",""}
-	  TString channel,
-	  TString ID = "MediumIDTighterIP",
-	  TString bunch = "50ns",
+void doDY(Int_t   njet,
 	  Bool_t  useDataDriven = true,
 	  Int_t   printLevel = 100,
-	  Bool_t  drawR = true)
-{
-  cout<<"nJet = "<<jetbin<<endl;
-  cout<<"Channel = "<<channel<<endl;
+	  Bool_t  drawR = true){
 
   Double_t yield;                                                                                                                      
   Double_t statError;
   Double_t systError;                                                                                                                    
   Double_t scaleFactor;
+
+  //jetbin
+  const int nJetbin = 4;
+
+  TString jetbin[nJetbin];
+  jetbin[0] = "0jet";
+  jetbin[1] = "1jet";
+  jetbin[2] = "2jet";
+  jetbin[3] = "";
+
+  //lepton channels
+  const int nChannel = 4;
+  enum {iee,imm,iem,ill};
+
+  TString channel[nChannel];
+  channel[iee] = "ee";
+  channel[imm] = "mm";
+  channel[iem] = "em";
+  channel[ill] = "ll";
+
+  // Input files and maps
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //
-  // Input files
-  //
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  TString path   = "../rootFiles/25ns/";
-  //TString pathOF = "../rootFiles/OF/" + ID + "/" + bunch + "/"; 
+  TString path   = "../rootfiles/25ns/";
 
   TFile* inputDY   = new TFile(path + "07_ZJets.root");
   TFile* inputWZ   = new TFile(path + "02_WZ.root");
   TFile* inputZZ   = new TFile(path + "03_ZZ.root");
   TFile* inputData = new TFile(path + "01_Data.root");
-  //TFile* inputDataOF = new TFile(pathOF + "Data2015.root");
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //
-  // Input histograms
-  //
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /*
-  TH1F* hNinDYSee  [numberMetCuts];
-  TH1F* hNinVVSmm  [numberMetCuts];
-  TH1F* hNinVVSem  [numberMetCuts];
-  TH1F* hNinDataee[numberMetCuts];
-  TH1F* hNinDatamm[numberMetCuts];
-  TH1F* hNinDataem[numberMetCuts];
+  TH2D* mDY  [nChannel];
+  TH2D* mWZ  [nChannel];
+  TH2D* mZZ  [nChannel];
+  TH2D* mData[nChannel];
+  TH1F* hExpectedDY[nChannel];
 
-  TH1F* hNoutDYee  [numberMetCuts];
-  TH1F* hNoutVVmm  [numberMetCuts];
-  TH1F* hNoutVVem  [numberMetCuts];
-  TH1F* hNoutDataee[numberMetCuts];
-  TH1F* hNoutDatamm[numberMetCuts];
-  TH1F* hNoutDataem[numberMetCuts];
-  */
-  /*
-  for (UInt_t nC=0; nC<numberMetCuts; nC++) {
-    hNinDYSF  [nC] = (TH1F*)inputDYSF  ->Get(Form("hNinZevents%.i%.c", MetCuts[nC],jetbin));
-    cout<<Form("hNinZevents%.i%.c", MetCuts[nC],jetbin)<<endl;
-    hNinVVSF  [nC] = (TH1F*)inputVVSF  ->Get(Form("hNinZevents%.i%.c", MetCuts[nC],jetbin));
-    hNinDataSF[nC] = (TH1F*)inputDataSF->Get(Form("hNinZevents%.i%.c", MetCuts[nC],jetbin));
-    hNinDataOF[nC] = (TH1F*)inputDataOF->Get(Form("hNinZevents%.i%.c", MetCuts[nC],jetbin));
-
-    hNoutDYSF  [nC] = (TH1F*)inputDYSF  ->Get(Form("hNoutZevents%.i%.c", MetCuts[nC],jetbin));     
-    hNoutVVSF  [nC] = (TH1F*)inputVVSF  ->Get(Form("hNoutZevents%.i%.c", MetCuts[nC],jetbin));     
-    hNoutDataSF[nC] = (TH1F*)inputDataSF->Get(Form("hNoutZevents%.i%.c", MetCuts[nC],jetbin));
-    hNoutDataOF[nC] = (TH1F*)inputDataOF->Get(Form("hNoutZevents%.i%.c", MetCuts[nC],jetbin));
+  for (UInt_t nC = 0; nC < nChannel; ++nC){
+    mDY[nC]   = (TH2D*)inputDY  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
+    mWZ[nC]   = (TH2D*)inputWZ  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
+    mZZ[nC]   = (TH2D*)inputZZ  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
+    mData[nC] = (TH2D*)inputData->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
+    hExpectedDY[nC] = (TH1F*)inputDY -> Get("WW/10_Ht/h_pt1_"  + channel[nC]);
   }
-  */
 
-  // Histogram at analysis level
-  //----------------------------------------
-  //TH1F* hExpectedDYSF = (TH1F*)inputDYSF->Get(Form("hPtLepton1WWLevel%.c", jetbin));//("hWTopTagging");
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //
   // k estimation
-  //
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Double_t NinDYk  [nChannel]; 
+  Double_t NinVVk  [nChannel]; 
+  Double_t NinDatak[nChannel]; 
 
-  //TFile* inputDYmumu = new TFile("../rootFiles/MuMu/" + ID + "/" + bunch + "/DY.root");
-  //TFile* inputDYee   = new TFile("../rootFiles/EE/"   + ID + "/" + bunch + "/DY.root");
-
-  //TH1F* hNinDYmumu = (TH1F*)inputDYmumu->Get(Form("hNinLooseZevents20%.c", jetbin));
-  //TH1F* hNinDYee   = (TH1F*)inputDYee  ->Get(Form("hNinLooseZevents20%.c", jetbin));
-  TH2D* DYee = (TH2D*)inputDY->Get("WW/11_DY/h_metvar_m2l_ee");
-  TH2D* DYmm = (TH2D*)inputDY->Get("WW/11_DY/h_metvar_m2l_mm");
-  TH2D* DYem = (TH2D*)inputDY->Get("WW/11_DY/h_metvar_m2l_ee");
-
-  //Double_t NinDYmumu = hNinDYmumu -> GetBinContent(2);
-  //Double_t NinDYee   = hNinDYee   -> GetBinContent(2);
-  Double_t NinDYee = DYee->Integral(0,4,84,98);
-  Double_t NinDYmm = DYee->Integral(0,4,84,98);
-  Double_t NinDYem = DYmm->Integral(0,4,84,98);
-
-  Double_t k    = 0.5 * (sqrt(NinDYmumu / NinDYee) + sqrt(NinDYee / NinDYmumu));
-  Double_t errk = errkSF(NinDYmumu, NinDYee);
-
-  if (channel == "MuMu") {
-    k    = 0.5 * sqrt(NinDYmumu / NinDYee);
-    errk = errkFunction(NinDYmumu, NinDYee);
-  }
-  else if (channel == "EE") {
-    k    = 0.5 * sqrt(NinDYee / NinDYmumu);
-    errk = errkFunction(NinDYee, NinDYmumu);
+  for (UInt_t nC = 0; nC < nChannel; ++nC){
+    NinDYk[nC]   = mDY[nC]   -> Integral(0,4,84,98);
+    NinVVk[nC]   = mWZ[nC]   -> Integral(0,4,84,98) + mZZ[nC] -> Integral(0,4,84,98);
+    NinDatak[nC] = mData[nC] -> Integral(0,4,84,98);
   }
 
+  Double_t k[nChannel];
+  Double_t errk[nChannel];
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //
+  k[iee]    = 0.5 * sqrt (NinDYk[iee] / NinDYk[imm]);
+  errk[iee] = errkFunction(NinDYk[iee], NinDYk[imm]);
+
+  k[imm]    = 0.5 * sqrt (NinDYk[imm] / NinDYk[iee]);
+  errk[imm] = errkFunction(NinDYk[imm], NinDYk[iee]);
+
+  k[iem]    = 0;
+  errk[iem] = 0;
+
+  k[ill]    = k[iee] + k[imm];
+  errk[ill] = errkSF(NinDYk[imm], NinDYk[iee]);
+
   // Counters
-  //
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Double_t NinDYee  [numberMetCuts];
-  Double_t NinVVmm  [numberMetCuts];
-  Double_t NinVVem  [numberMetCuts];
+  Double_t NinDY   [numberMetCuts][nChannel]; //ee,mm,em,ll
+  Double_t NinVV   [numberMetCuts][nChannel];
+  Double_t NinData [numberMetCuts][nChannel];
 
-  Double_t NinDataee[numberMetCuts];
-  Double_t NinDatamm[numberMetCuts];
-  Double_t NinDataem[numberMetCuts];
+  Double_t NoutDY   [numberMetCuts][nChannel];
+  Double_t NoutVV   [numberMetCuts][nChannel]; 
+  Double_t NoutData [numberMetCuts][nChannel];
 
-  Double_t NoutDYee  [numberMetCuts];
-  Double_t NoutVVmm  [numberMetCuts]; 
-  Double_t NoutVVem  [numberMetCuts];  // Not used for now
-  Double_t NoutDataee[numberMetCuts];
-  Double_t NoutDatamm[numberMetCuts];
-  Double_t NoutDataem[numberMetCuts];
+  Double_t NpeakDY   [numberMetCuts][nChannel];
+  Double_t NpeakVV   [numberMetCuts][nChannel]; 
+  Double_t NpeakData [numberMetCuts][nChannel];
 
-  for (UInt_t nC=0; nC<numberMetCuts-1; nC++) {
-    NinDYSF   [nC] = hNinDYSF   [nC]->GetBinContent(2);
-    NinVVSF   [nC] = hNinVVSF   [nC]->GetBinContent(2);
-    NinDataSF [nC] = hNinDataSF [nC]->GetBinContent(2);    
-    NinDataOF [nC] = hNinDataOF [nC]->GetBinContent(2);
+  for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
+    for (UInt_t nC=0; nC<nChannel; nC++) {
+      NinDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,84,98);
+      NinVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,84,98) + mZZ[nC] -> Integral(nM,nM+1,84,98);
+      NinData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,84,98);
 
-    NoutDYSF  [nC] = hNoutDYSF  [nC]->GetBinContent(2);
-    NoutVVSF  [nC] = hNoutVVSF  [nC]->GetBinContent(2);
-    NoutDataSF[nC] = hNoutDataSF[nC]->GetBinContent(2);    
-    NoutDataOF[nC] = hNoutDataOF[nC]->GetBinContent(2);
+      NpeakDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,76,106);
+      NpeakVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,76,106) + mZZ[nC] -> Integral(nM,nM+1,76,106);
+      NpeakData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,76,106);
+
+      NoutDY   [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,0,200) - NpeakDY[nM][nC];
+      NoutVV   [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,0,200) + mZZ[nC] -> Integral(nM,nM+1,0,200) - NpeakVV[nM][nC];
+      NoutData [nM][nC] = mData[nC] -> Integral(nM,nM+1,0,200) - NpeakData[nM][nC];
+    }
   }
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //
   // R estimation
-  //
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Double_t R       [numberMetCuts];
   Double_t RData   [numberMetCuts];
   Double_t errR    [numberMetCuts];
   Double_t errRData[numberMetCuts];
-
-
-  // Loop over the met cuts
+  
+  // Loop over the SF channels - ee, mm, ll (for now just look 2 rows lower: nC = ill)
   //----------------------------------------------------------------------------
-  for (UInt_t nC=0; nC<numberMetCuts-1; nC++) {
-
-    R   [nC] = NoutDYSF[nC] / NinDYSF[nC]; 
-    errR[nC] = errRFunction(NoutDYSF[nC], NinDYSF[nC]);
-
-    RData   [nC] = RDataFunction   (NoutDataSF[nC], NoutDataOF[nC], NinDataSF[nC], NinDataOF[nC], k);
-    errRData[nC] = errRDataFunction(NoutDataSF[nC], NoutDataOF[nC], NinDataSF[nC], NinDataOF[nC], k, errk);
-
-    if (printLevel > 2) {
-      printf("\n %.0f < mpmet < %.0f GeV\n", MetCuts[nC], MetCuts[nC+1]);
-      printf(" -------------------------------------------------\n");
-      printf("         N^{MC}_{out,SF}   = %6.1f\n", NoutDYSF[nC]);
-      printf("         N^{MC}_{in, SF}   = %6.1f\n", NinDYSF[nC]);
-      printf("         N^{data}_{out,SF} = %4.0f\n", NoutDataSF[nC]);
-      printf("         N^{data}_{out,OF} = %4.0f\n", NoutDataOF[nC]);
-      printf("         N^{data}_{in, SF} = %4.0f\n", NinDataSF[nC]);
-      printf("         N^{data}_{in, OF} = %4.0f\n", NinDataOF[nC]);
-      printf("         k                 = % 5.3f +- %5.3f\n", k,         errk);
-      printf("         R^{MC}            = % 5.3f +- %5.3f\n", R[nC],     errR[nC]);
-      printf("         R^{data}          = % 5.3f +- %5.3f\n", RData[nC], errRData[nC]);
-    }
-  }
-
-  // Estimate the R systematic as the difference between R[2] and R[3]
-  //----------------------------------------------------------------------------
-  Int_t iMaxR = 0; 
-  Int_t iMinR = 0; 
-
-  for (UInt_t nC=0; nC<numberMetCuts-1; nC++) {
-
-    if (R[nC] > 0 && R[nC] > R[iMaxR]) iMaxR = nC;
-    if (R[nC] > 0 && R[nC] < R[iMinR]) iMinR = nC;
-  }
-
-  Int_t theR = 2;
-  Int_t sysR = 3;
-
-  Double_t RelDiffR = (R[theR] > 0) ? fabs(R[theR] - R[sysR]) / R[theR] : -999;
-
-
-  if (printLevel > 0) {
-    printf("\n [%s] R systematic uncertainty\n", channel.Data());
-    printf(" -------------------------------------------------\n");
-    printf("         min R               = %5.3f\n",     R[iMinR]);
-    printf("         max R               = %5.3f\n",     R[iMaxR]);
-    printf("         R[%d]               = %5.3f\n",    theR, R[theR]);
-    printf("         R[%d]               = %5.3f\n",    sysR, R[sysR]);
-    printf("         |R[%d]-R[%d]| / R[%d] = %.1f%s\n", theR, sysR, theR, 1e2*RelDiffR, "%");
-    printf("\n");
-  }
-
-
-  // Estimate Nout
-  //----------------------------------------------------------------------------
-  Double_t NinCountedSFVV   = NinVVSF  [sysR];
-  Double_t NinCountedSFData = NinDataSF[sysR];
-  Double_t NinCountedOFData = NinDataOF[sysR];
-
-  Double_t NinEstSFFinal    = NinCountedSFData - k*NinCountedOFData;
-  Double_t errNinEstSFFinal = errNinEstFunction(NinCountedSFData, NinCountedOFData, k, errk);
-
-  Double_t NestSFFinal    = R[theR] * NinEstSFFinal;
-  Double_t errNestSFFinal = errNestFunction(NestSFFinal, R[theR], errR[theR], NinEstSFFinal, errNinEstSFFinal);
-
-  Double_t NinEstSFNoDibosonFinal    = NinEstSFFinal - NinCountedSFVV;
-  Double_t errNinEstSFNoDibosonFinal = errNinEstNoDibosonFunction(NinCountedSFData, k, errk, NinCountedOFData, NinCountedSFVV);
-
-  Double_t NestSFNoDibosonFinal    = R[theR] * NinEstSFNoDibosonFinal;
-  Double_t errNestSFNoDibosonFinal = errNestFunction(NestSFNoDibosonFinal, R[theR], errR[theR], NinEstSFNoDibosonFinal, errNinEstSFNoDibosonFinal);
-  Double_t totalError              = sqrt(errNestSFNoDibosonFinal*errNestSFNoDibosonFinal + (RelDiffR*NestSFNoDibosonFinal)*(RelDiffR*NestSFNoDibosonFinal));
-
-
-  Double_t SFsf = NestSFNoDibosonFinal / hExpectedDYSF->Integral();
-
-
-  if (printLevel > 1) {
-    printf("\n Analysis results\n");
-    printf(" -------------------------------------------------\n");
-    printf("         N^{data}_{in,SF} = %4.0f\n", NinCountedSFData);
-    printf("         N^{data}_{in,OF} = %4.0f\n", NinCountedOFData);
-    printf("         k                = %5.3f +- %5.3f\n", k, errk);
-    printf("         R[%d]             = %5.3f +- %5.3f\n", theR, R[theR], errR[theR]);
-    printf("         N^{VV}_{in,SF}   = %7.2f +- %6.2f (stat.) +- %6.2f (syst.)\n",
-	   NinCountedSFVV, sqrt(NinCountedSFVV), 0.1*NinCountedSFVV);
-    printf("         N^{est}_{in, SF} = %7.2f +- %6.2f\n", NinEstSFFinal, errNinEstSFFinal);
-    printf("         N^{est}_{out,SF} = %7.2f +- %6.2f (stat.) +- %6.2f (syst.)\n",
-	   NestSFFinal, errNestSFFinal, RelDiffR*NestSFFinal);
-    printf(" -------------------------------------------------\n");
-    printf(" [no VZ] N^{est}_{out,SF} = %7.2f +- %6.2f (stat.) +- %6.2f (syst.) = %7.2f +- %6.2f (stat. + syst.)\n",
-	   NestSFNoDibosonFinal, errNestSFNoDibosonFinal, RelDiffR*NestSFNoDibosonFinal,
-	   NestSFNoDibosonFinal, totalError);
-    printf("         N^{MC}_{out,SF}  = %7.2f +- %6.2f\n",
-	   hExpectedDYSF->Integral(), sqrt(hExpectedDYSF->Integral()));
-    printf("     *** scale factor     = %.3f\n\n", SFsf);
-  }
-
-
-  // Save the result
-  //----------------------------------------------------------------------------
-  yield       = (useDataDriven) ? NestSFNoDibosonFinal : hExpectedDYSF->Integral();
-  statError   = errNestSFNoDibosonFinal;
-  systError   = RelDiffR*NestSFNoDibosonFinal;
-  scaleFactor = yield / hExpectedDYSF->Integral();
-
-
-  // For the note
-  //----------------------------------------------------------------------------
-  if (printLevel > 0) {
-    printf("\n [%s] DY values for the note\n", channel.Data());
-    printf(" -------------------------------------------------\n");
-    printf(" final state   &             R_{MC}  &  N^{control,data}  &     N_{DY}^{data}  &       N_{DY}^{MC}  &  data/MC\n");
-    printf(" same flavour  &  %5.3f $\\pm$ %5.3f  &              %4.0f  &  %5.1f $\\pm$ %4.1f  &  %5.1f $\\pm$ %4.1f  &     %4.1f\n\n",
-	   R[theR],
-	   errR[theR],
-	   NinCountedSFData,
-	   yield,
-	   statError,
-	   hExpectedDYSF->Integral(),
-	   sqrt(hExpectedDYSF->Integral()),
-	   scaleFactor);
-    printf("\n [%s] DY relative systematic uncertainties\n", channel.Data());
-    printf(" -------------------------------------------------\n");
-    printf(" DY normalisation = %.0f (stat.) $\\bigoplus$ %.0f (syst.)\n\n",
-	   1e2*statError/yield, 1e2*systError/yield);
-  }
-
-
-  // Check
-  //----------------------------------------------------------------------------
-  Double_t check = hExpectedDYSF->Integral() - NoutDYSF[sysR];
-  if (check != 0) printf(" WARNING: DY yields do not much by %f\n\n", check);
-
-
-  // Draw histograms
-  //----------------------------------------------------------------------------
-  if (drawR) {
-
-    Double_t absoluteMin = 999;
-
-    TGraphErrors* gR     = new TGraphErrors(numberMetCuts-1);
-    TGraphErrors* gRdata = new TGraphErrors(numberMetCuts-1);
-
-    for (UInt_t i=0; i<numberMetCuts-1; i++) {
-
-      gR->SetPoint     (i, 0.5 * (MetDraw[i+1] + MetDraw[i]),    R[i]);
-      gR->SetPointError(i, 0.5 * (MetDraw[i+1] - MetDraw[i]), errR[i]);
-
-      gRdata->SetPoint     (i, 0.5 * (MetDraw[i+1] + MetDraw[i]),    RData[i]);
-      gRdata->SetPointError(i, 0.5 * (MetDraw[i+1] - MetDraw[i]), errRData[i]);
-
-      if (absoluteMin > (R[i]     - errR[i]))     absoluteMin = R[i]     - errR[i];
-      if (absoluteMin > (RData[i] - errRData[i])) absoluteMin = RData[i] - errRData[i];
+  //  UInt_t nC = ill{
+  for (UInt_t nC = 0; nC < nChannel; ++nC){
+    // Loop over the met cuts
+    //----------------------------------------------------------------------------
+    for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
+      
+      if (nC == iem) continue;
+      
+      R   [nM] = NoutDY[nM][nC] / NinDY[nM][nC]; 
+      errR[nM] = errRFunction(NoutDY[nM][nC], NinDY[nM][nC]);
+      
+      RData   [nM] = RDataFunction   (NoutData[nM][nC], NoutData[nM][iem], NinData[nM][nC], NinData[nM][iem], k[nC]);
+      errRData[nM] = errRDataFunction(NoutData[nM][nC], NoutData[nM][iem], NinData[nM][nC], NinData[nM][iem], k[nC], errk[nC]);
+      
+      if (printLevel > 2) {
+	printf("\n %.0d < mpmet < %.0d GeV\n", MetCuts[nM], MetCuts[nM+1]);
+	printf(" -------------------------------------------------\n");
+	printf("         N^{MC}_{out,"+channel[nC]+"}   = %6.1f\n", NoutDY[nM][nC]);
+	printf("         N^{MC}_{in, "+channel[nC]+"}   = %6.1f\n", NinDY[nM][nC]);
+	printf("         N^{data}_{out,"+channel[nC]+"} = %4.0f\n", NoutData[nM][nC]);
+	printf("         N^{data}_{out,em} = %4.0f\n", NoutData[nM][iem]);
+	printf("         N^{data}_{in, "+channel[nC]+"} = %4.0f\n", NinData[nM][nC]);
+	printf("         N^{data}_{in, em} = %4.0f\n", NinData[nM][iem]);
+	printf("         k                 = % 5.3f +- %5.3f\n", k[nC],         errk[nC]);
+	printf("         R^{MC}            = % 5.3f +- %5.3f\n", R[nM],     errR[nM]);
+	printf("         R^{data}          = % 5.3f +- %5.3f\n", RData[nM], errRData[nM]);
+      }
     }
     
-    if (absoluteMin > 0) absoluteMin = 0;
-
-    // Cosmetics
-    //--------------------------------------------------------------------------
-    gR->SetMarkerSize (0.9);
-    gR->SetMarkerStyle(kFullCircle);
-
-    gRdata->SetLineColor  (kRed+1);
-    gRdata->SetMarkerColor(kRed+1);
-    gRdata->SetMarkerSize (0.9);
-    gRdata->SetMarkerStyle(kFullCircle);
-
-
-    // Draw
-    //--------------------------------------------------------------------------
-    canvas = new TCanvas();
-
-    TMultiGraph *mgR = new TMultiGraph();
-    mgR->Add(gRdata);
-    mgR->Add(gR);
-
-    mgR->Draw("ap");
-
-    mgR->GetYaxis()->SetTitle("R^{out/in}");
-    mgR->GetXaxis()->SetTitle("mpmet (GeV)");
-
-    mgR->SetMinimum(absoluteMin - 0.1);
-    mgR->SetMaximum(1.0);
-
-
-    // Legend
-    //--------------------------------------------------------------------------
-    TLegend* lmgR = new TLegend(0.62, 0.68, 0.86, 0.88);
-
-    lmgR->AddEntry(gR,    " DY MC", "lp");
-    lmgR->AddEntry(gRdata," data",  "lp");
-
-    lmgR->SetFillColor(0);
-    lmgR->SetLineColor(kWhite);
-    lmgR->SetTextAlign(12);
-    lmgR->SetTextFont (42);
-    lmgR->SetTextSize (0.04);
-
-    if      (channel == "SF")   lmgR->SetHeader("ee + #mu#mu");
-    else if (channel == "EE")   lmgR->SetHeader("ee");
-    else if (channel == "MuMu") lmgR->SetHeader("#mu#mu");
-
-    lmgR->Draw();
-
-    // Line at zero
-    //--------------------------------------------------------------------------
-    TLine* zeroLine = new TLine(canvas->GetUxmin(), 0.0, canvas->GetUxmax(), 0.0);
-    zeroLine->SetLineStyle(3);
-    zeroLine->SetLineWidth(2);
-    zeroLine->Draw("same");
-    mgR->Draw("p,same");
-  
-
-    // Save
-    //--------------------------------------------------------------------------
-    lmgR->Draw("same");
-
-    if (jetbin == '3'){
-      DrawTLatex(0.725, 0.65, 0.04,  "Inclusive");
-      canvas->SaveAs("R_" + channel + "_Inclusive.png");
-      canvas->SaveAs("R_" + channel + "_Inclusive.pdf");
+    // Estimate the R systematic as the difference between R[2] and R[3]
+    //----------------------------------------------------------------------------
+    Int_t iMaxR = 0; 
+    Int_t iMinR = 0; 
+    
+    for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
+      
+      cout<<"hola"<<nM<<"!!"<<endl;
+      if (R[nM] > 0 && R[nM] > R[iMaxR]) iMaxR = nM;
+      if (R[nM] > 0 && R[nM] < R[iMinR]) iMinR = nM;
     }
-    else{                                                   //Inclusive 
-      if      (jetbin == '0') DrawTLatex(0.725, 0.65, 0.04,  "0 Jet    ");
-      else if (jetbin == '1') DrawTLatex(0.725, 0.65, 0.04,  "1 Jet    ");
-      else if (jetbin == '2') DrawTLatex(0.725, 0.65, 0.04,  "2+ Jets  ");
-      canvas->SaveAs("R_" + channel + "_" + jetbin + "jet.png");
-      canvas->SaveAs("R_" + channel + "_" + jetbin + "jet.pdf");
+    
+    Int_t theR = 2;
+    Int_t sysR = 3;
+    
+    Double_t RelDiffR = (R[theR] > 0) ? fabs(R[theR] - R[sysR]) / R[theR] : -999;
+    
+    cout<<"aaaaaaaaaaaaaaaaaa"<<endl;
+    
+    if (printLevel > 0) {
+      printf("\n [%s] R systematic uncertainty\n", channel[nC].Data());
+      printf(" -------------------------------------------------\n");
+      printf("         min R               = %5.3f\n",     R[iMinR]);
+      printf("         max R               = %5.3f\n",     R[iMaxR]);
+      printf("         R[%d]               = %5.3f\n",    theR, R[theR]);
+      printf("         R[%d]               = %5.3f\n",    sysR, R[sysR]);
+      printf("         |R[%d]-R[%d]| / R[%d] = %.1f%s\n", theR, sysR, theR, 1e2*RelDiffR, "%");
+      printf("\n");
+    }
+    
+    // Estimate Nout
+    //----------------------------------------------------------------------------
+    Double_t NinCountedSFVV   = NinVV  [sysR][nC];
+    Double_t NinCountedSFData = NinData[sysR][nC];
+    Double_t NinCountedOFData = NinData[sysR][iem];
+    
+    Double_t NinEstSFFinal    = NinCountedSFData - k[nC]*NinCountedOFData;
+    Double_t errNinEstSFFinal = errNinEstFunction(NinCountedSFData, NinCountedOFData, k[nC], errk[nC]);
+    
+    Double_t NestSFFinal    = R[theR] * NinEstSFFinal;
+    Double_t errNestSFFinal = errNestFunction(NestSFFinal, R[theR], errR[theR], NinEstSFFinal, errNinEstSFFinal);
+    
+    Double_t NinEstSFNoDibosonFinal    = NinEstSFFinal - NinCountedSFVV;
+    Double_t errNinEstSFNoDibosonFinal = errNinEstNoDibosonFunction(NinCountedSFData, k[nC], errk[nC], NinCountedOFData, NinCountedSFVV);
+    
+    Double_t NestSFNoDibosonFinal    = R[theR] * NinEstSFNoDibosonFinal;
+    Double_t errNestSFNoDibosonFinal = errNestFunction(NestSFNoDibosonFinal, R[theR], errR[theR], NinEstSFNoDibosonFinal, errNinEstSFNoDibosonFinal);
+    Double_t totalError              = sqrt(errNestSFNoDibosonFinal*errNestSFNoDibosonFinal + (RelDiffR*NestSFNoDibosonFinal)*(RelDiffR*NestSFNoDibosonFinal));
+    
+    
+    Double_t SFsf = NestSFNoDibosonFinal / hExpectedDY[nC]->Integral();
+    
+    if (printLevel > 1) {
+      printf("\n Analysis results\n");
+      printf(" -------------------------------------------------\n");
+      printf("         N^{data}_{in,"+channel[nC]+"} = %4.0f\n", NinCountedSFData);
+      printf("         N^{data}_{in,em} = %4.0f\n", NinCountedOFData);
+      printf("         k                = %5.3f +- %5.3f\n", k[nC], errk[nC]);
+      printf("         R[%d]             = %5.3f +- %5.3f\n", theR, R[theR], errR[theR]);
+      printf("         N^{VV}_{in,"+channel[nC]+"}   = %7.2f +- %6.2f (stat.) +- %6.2f (syst.)\n",
+	     NinCountedSFVV, sqrt(NinCountedSFVV), 0.1*NinCountedSFVV);
+      printf("         N^{est}_{in,"+channel[nC]+"} = %7.2f +- %6.2f\n", NinEstSFFinal, errNinEstSFFinal);
+      printf("         N^{est}_{out,"+channel[nC]+"} = %7.2f +- %6.2f (stat.) +- %6.2f (syst.)\n",
+	     NestSFFinal, errNestSFFinal, RelDiffR*NestSFFinal);
+      printf(" -------------------------------------------------\n");
+      printf(" [no VZ] N^{est}_{out,SF} = %7.2f +- %6.2f (stat.) +- %6.2f (syst.) = %7.2f +- %6.2f (stat. + syst.)\n",
+	     NestSFNoDibosonFinal, errNestSFNoDibosonFinal, RelDiffR*NestSFNoDibosonFinal,
+	     NestSFNoDibosonFinal, totalError);
+      printf("         N^{MC}_{out,"+channel[nC]+"}  = %7.2f +- %6.2f\n",
+	     hExpectedDY[nC]->Integral(), sqrt(hExpectedDY[nC]->Integral()));
+      printf("     *** scale factor     = %.3f\n\n", SFsf);
+    }
+    
+    // Save the result
+    //----------------------------------------------------------------------------
+    yield       = (useDataDriven) ? NestSFNoDibosonFinal : hExpectedDY[nC]->Integral();
+    statError   = errNestSFNoDibosonFinal;
+    systError   = RelDiffR*NestSFNoDibosonFinal;
+    scaleFactor = yield / hExpectedDY[nC]->Integral();
+    
+    // For the note
+    //----------------------------------------------------------------------------
+    if (printLevel > 0) {
+      printf("\n [%s] DY values for the note\n", channel[nC].Data());
+      printf(" -------------------------------------------------\n");
+      printf(" final state   &             R_{MC}  &  N^{control,data}  &     N_{DY}^{data}  &       N_{DY}^{MC}  &  data/MC\n");
+      printf(" same flavour  &  %5.3f $\\pm$ %5.3f  &              %4.0f  &  %5.1f $\\pm$ %4.1f  &  %5.1f $\\pm$ %4.1f  &     %4.1f\n\n",
+	     R[theR],
+	     errR[theR],
+	     NinCountedSFData,
+	     yield,
+	     statError,
+	     hExpectedDY[nC]->Integral(),
+	     sqrt(hExpectedDY[nC]->Integral()),
+	     scaleFactor);
+      printf("\n [%s] DY relative systematic uncertainties\n", channel[nC].Data());
+      printf(" -------------------------------------------------\n");
+      printf(" DY normalisation = %.0f (stat.) $\\bigoplus$ %.0f (syst.)\n\n",
+	     1e2*statError/yield, 1e2*systError/yield);
+    }
+    
+    // Check
+    //----------------------------------------------------------------------------
+    Double_t check = hExpectedDY[nC]->Integral() - NoutDY[sysR][nC];
+    if (check != 0) printf(" WARNING: DY yields do not much by %f\n\n", check);
+    
+    // Draw histograms
+    //----------------------------------------------------------------------------
+    if (drawR) {
+      
+      Double_t absoluteMin = 999;
+      
+      TGraphErrors* gR     = new TGraphErrors(numberMetCuts-1);
+      TGraphErrors* gRdata = new TGraphErrors(numberMetCuts-1);
+      
+      for (UInt_t i=0; i<numberMetCuts-1; i++) {
+	
+	gR->SetPoint     (i, 0.5 * (MetDraw[i+1] + MetDraw[i]),    R[i]);
+	gR->SetPointError(i, 0.5 * (MetDraw[i+1] - MetDraw[i]), errR[i]);
+	
+	gRdata->SetPoint     (i, 0.5 * (MetDraw[i+1] + MetDraw[i]),    RData[i]);
+	gRdata->SetPointError(i, 0.5 * (MetDraw[i+1] - MetDraw[i]), errRData[i]);
+	
+	if (absoluteMin > (R[i]     - errR[i]))     absoluteMin = R[i]     - errR[i];
+	if (absoluteMin > (RData[i] - errRData[i])) absoluteMin = RData[i] - errRData[i];
+      }
+      
+      if (absoluteMin > 0) absoluteMin = 0;
+      
+      // Cosmetics
+      //--------------------------------------------------------------------------
+      gR->SetMarkerSize (0.9);
+      gR->SetMarkerStyle(kFullCircle);
+      gR->GetYaxis()->SetRangeUser(0,1);
+      
+      gRdata->SetLineColor  (kRed+1);
+      gRdata->SetMarkerColor(kRed+1);
+      gRdata->SetMarkerSize (0.9);
+      gRdata->SetMarkerStyle(kFullCircle);
+      gRdata->GetYaxis()->SetRangeUser(0,1);
+      
+      // Draw
+      //--------------------------------------------------------------------------
+      canvas = new TCanvas();
+      
+      TMultiGraph *mgR = new TMultiGraph();
+      mgR->Add(gRdata);
+      mgR->Add(gR);
+      
+      mgR->Draw("ap");
+      
+      mgR->GetYaxis()->SetTitle("R^{out/in}");
+      mgR->GetXaxis()->SetTitle("mpmet (GeV)");
+      
+      mgR->SetMinimum(0.2);//absoluteMin - 0.1);
+      mgR->SetMaximum(1.0);
+      
+      // Legend
+      //--------------------------------------------------------------------------
+      TLegend* lmgR = new TLegend(0.62, 0.68, 0.86, 0.88);
+      
+      lmgR->AddEntry(gR,    " DY MC", "lp");
+      lmgR->AddEntry(gRdata," data",  "lp");
+      
+      lmgR->SetFillColor(0);
+      lmgR->SetLineColor(kWhite);
+      lmgR->SetTextAlign(12);
+      lmgR->SetTextFont (42);
+      lmgR->SetTextSize (0.04);
+      
+      lmgR->SetHeader(channel[nC] + " channel");
+      
+      lmgR->Draw();
+      
+      // Line at zero
+      //--------------------------------------------------------------------------
+      TLine* zeroLine = new TLine(canvas->GetUxmin(), 0.0, canvas->GetUxmax(), 0.0);
+      zeroLine->SetLineStyle(3);
+      zeroLine->SetLineWidth(2);
+      zeroLine->Draw("same");
+      mgR->Draw("p,same");
+      
+      // Save
+      //--------------------------------------------------------------------------
+      lmgR->Draw("same");
+      
+      TString writeJet[nJetbin];
+      writeJet[0] = "0Jet";
+      writeJet[1] = "1Jet";
+      writeJet[2] = "2+Jet";
+      writeJet[3] = "Inclusive";
+      
+      DrawTLatex(0.725, 0.65, 0.04,  writeJet[njet]);
+      canvas->SaveAs("R_" + channel[nC] + "_" + writeJet[njet] + ".png");
+      canvas->SaveAs("R_" + channel[nC] + "_" + writeJet[njet] + ".pdf");
     }
   }
 }
-
 
 //------------------------------------------------------------------------------
 // errkFunction
