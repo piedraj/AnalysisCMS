@@ -166,6 +166,7 @@ class AnalysisCMS : public AnalysisBase
   //----------------------------------------------------------------------------
   TH1D*                  h_counterRaw[nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum[nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet30diff[nchannel][ncut][njetbin+1];
   TH1D*                  h_njet30    [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20   [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];

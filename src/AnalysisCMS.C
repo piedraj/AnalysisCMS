@@ -95,6 +95,7 @@ void AnalysisCMS::Loop(TString filename,
 	//----------------------------------------------------------------------
 	h_counterRaw[i][j][k] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
 	h_counterLum[i][j][k] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
+	h_njet30diff[i][j][k] = new TH1D("h_njet30diff" + suffix, "",    7, -3.5,  3.5);
 	h_njet30    [i][j][k] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
 	h_nbjet20   [i][j][k] = new TH1D("h_nbjet20"    + suffix, "",    7, -0.5,  6.5);
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
@@ -365,6 +366,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
+  h_njet30diff[ichannel][icut][ijet]->Fill(_njet30 - njet, _event_weight);
   h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
   h_nbjet20   [ichannel][icut][ijet]->Fill(_nbjet20,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
