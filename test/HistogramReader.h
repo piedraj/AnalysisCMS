@@ -104,6 +104,8 @@ class HistogramReader
 			       Float_t&       xmin,
 			       Float_t&       xmax);
 
+  void     SetDataNorm        (Bool_t         datanorm) {_datanorm = datanorm;}
+
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
 
   void     SetDrawYield       (Bool_t         drawyield) {_drawyield = drawyield;}
@@ -129,6 +131,7 @@ class HistogramReader
 
  private :
 
+  Bool_t                _datanorm;
   Bool_t                _drawratio;
   Bool_t                _drawyield;
   Bool_t                _savepdf;

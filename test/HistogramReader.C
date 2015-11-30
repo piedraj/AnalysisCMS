@@ -10,6 +10,7 @@ HistogramReader::HistogramReader(TString const &inputdir,
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
   _luminosity_fb(0),
+  _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
   _savepdf      (false),
@@ -175,6 +176,21 @@ void HistogramReader::Draw(TString hname,
     }
 
 
+  // Normalize MC to data
+  //----------------------------------------------------------------------------
+  if (_datahist && _datanorm)
+    {
+      Float_t mcnorm   = Yield((TH1D*)(mcstack->GetStack()->Last()));
+      Float_t datanorm = Yield(_datahist);
+
+      for (UInt_t i=0; i<_mchist.size(); i++)
+	{
+	  _mchist[i]->Scale(datanorm / mcnorm);
+	}
+      mcstack->Modified();
+    }
+
+
   // hfirst will contain the axis settings
   //----------------------------------------------------------------------------
   TH1D* hfirst = (TH1D*)_mchist[0]->Clone("hfirst");
@@ -185,7 +201,10 @@ void HistogramReader::Draw(TString hname,
   // All MC
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
-  
+
+  // Possible modification (how to deal with systematic uncertainties?)
+  //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
+
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
@@ -196,7 +215,7 @@ void HistogramReader::Draw(TString hname,
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
       Float_t binStatError = _mchist[i]->GetBinError(ibin);
       Float_t binSystError = 0;  // To be updated
-
+      
       binValue += binContent;
       binError += (binStatError * binStatError);
       binError += (binSystError * binSystError);
@@ -216,12 +235,6 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerColor(kGray+1);
   _allmchist->SetMarkerSize (      0);
 
-  if (_stackoption.Contains("nostack") && Yield(_allmchist) > 0)
-    {
-      _allmchist->SetLineWidth(2);
-      _allmchist->Scale(1.0/Yield(_allmchist));
-    }
-
 
   // Draw
   //----------------------------------------------------------------------------
@@ -229,7 +242,7 @@ void HistogramReader::Draw(TString hname,
 
   mcstack->Draw(_stackoption + ",same");
 
-  _allmchist->Draw("e2,same");
+  if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
 
   if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
 
@@ -273,7 +286,7 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 3e-2;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
+      theMax = 2. * TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
     {
@@ -290,9 +303,9 @@ void HistogramReader::Draw(TString hname,
   // Legend
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;
-  Float_t y0     = 0.834;
+  Float_t y0     = 0.843;
   Float_t xdelta = 0.000;
-  Float_t ydelta = 0.051;
+  Float_t ydelta = 0.050;
   Int_t   ny     = 0;
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
@@ -307,11 +320,17 @@ void HistogramReader::Draw(TString hname,
     }
 
 
+  // All MC legend
+  //----------------------------------------------------------------------------
+  if (!_stackoption.Contains("nostack"))
+    {
+      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      ny++;
+    }
+
+
   // Standard Model processes legend
   //----------------------------------------------------------------------------
-  DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
-  ny++;
-
   for (int i=0; i<_mchist.size(); i++)
     {
       if (ny == 4)

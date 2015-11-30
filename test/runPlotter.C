@@ -26,8 +26,13 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity(lumi25ns_fb);
   plotter.SetStackOption("hist");
-  plotter.SetDrawRatio(true);
+  plotter.SetDrawRatio(false);
 
+  if (analysis.EqualTo("WW")) plotter.SetDataNorm(true);
+
+
+  // Get the data
+  //----------------------------------------------------------------------------				
   plotter.AddData("01_Data", "data", kBlack);
 
 
@@ -60,6 +65,9 @@ void runPlotter(TString level)
       plotter.AddProcess("11_VVV",   "VVV",     kYellow-6);
     }
 
+
+  // Add signals
+  //----------------------------------------------------------------------------
   if (analysis.EqualTo("TTDM"))
     plotter.AddSignal("ttDM10scalar10__part0", "m_{#phi}10 m_{#chi}10", kRed);
 
@@ -98,7 +106,7 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(true);
+  //  plotter.SetDrawYield(true);
 
   for (int j=0; j<=njetbin; j++)
     {
@@ -147,20 +155,20 @@ void runPlotter(TString level)
 
 	  plotter.Draw(prefix + "m3l"         + suffix, "m_{#font[12]{3l}}",                   10, 0, "GeV",  linY, true, 60, 360);
   	  plotter.Draw(prefix + "mtw"         + suffix, "W transverse mass",                   10, 0, "GeV",  linY, true,  0, 150);
-  //	  plotter.Draw(prefix + "zl1pt"       + suffix, "Z leading lepton p_{T}",              10, 0, "GeV",  linY, true,  0, 150);
-  //	  plotter.Draw(prefix + "zl2pt"       + suffix, "Z trailing lepton p_{T}",             10, 0, "GeV",  linY, true,  0, 150);
-  //	  plotter.Draw(prefix + "wlpt"        + suffix, "W lepton p_{T}",                      10, 0, "GeV",  linY, true,  0, 150);
-  //	  plotter.Draw(prefix + "zl1eta"      + suffix, "Z leading lepton #eta",                6, 1, "NULL", linY);
-  //	  plotter.Draw(prefix + "zl2eta"      + suffix, "Z trailing lepton #eta",               6, 1, "NULL", linY);
-  //	  plotter.Draw(prefix + "wleta"       + suffix, "W lepton #eta",                        6, 1, "NULL", linY);
-  //	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
-  //	  plotter.Draw(prefix + "wlzl2deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
-  //  	  plotter.Draw(prefix + "wldxy"       + suffix, "W lepton dxy",                        20, 3, "cm",   logY);
-  //  	  plotter.Draw(prefix + "wldz"        + suffix, "W lepton dz",                         20, 3, "cm",   logY);
-  //  	  plotter.Draw(prefix + "zl1dxy"      + suffix, "Z leading lepton dxy",                20, 3, "cm",   logY);
-  //  	  plotter.Draw(prefix + "zl1dz"       + suffix, "Z leading lepton dz",                 20, 3, "cm",   logY);
-  //  	  plotter.Draw(prefix + "zl2dxy"      + suffix, "Z trailing lepton dxy",               20, 3, "cm",   logY);
-  //  	  plotter.Draw(prefix + "zl2dz"       + suffix, "Z trailing lepton dz",                20, 3, "cm",   logY);
+  	  plotter.Draw(prefix + "zl1pt"       + suffix, "Z leading lepton p_{T}",              10, 0, "GeV",  linY, true,  0, 150);
+  	  plotter.Draw(prefix + "zl2pt"       + suffix, "Z trailing lepton p_{T}",             10, 0, "GeV",  linY, true,  0, 150);
+  	  plotter.Draw(prefix + "wlpt"        + suffix, "W lepton p_{T}",                      10, 0, "GeV",  linY, true,  0, 150);
+  	  plotter.Draw(prefix + "zl1eta"      + suffix, "Z leading lepton #eta",                6, 1, "NULL", linY);
+  	  plotter.Draw(prefix + "zl2eta"      + suffix, "Z trailing lepton #eta",               6, 1, "NULL", linY);
+  	  plotter.Draw(prefix + "wleta"       + suffix, "W lepton #eta",                        6, 1, "NULL", linY);
+  	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
+  	  plotter.Draw(prefix + "wlzl2deltar" + suffix, "#DeltaR(W lepton, Z leading lepton)",  5, 1, "NULL", linY);
+    	  plotter.Draw(prefix + "wldxy"       + suffix, "W lepton dxy",                        20, 3, "cm",   logY);
+    	  plotter.Draw(prefix + "wldz"        + suffix, "W lepton dz",                         20, 3, "cm",   logY);
+    	  plotter.Draw(prefix + "zl1dxy"      + suffix, "Z leading lepton dxy",                20, 3, "cm",   logY);
+    	  plotter.Draw(prefix + "zl1dz"       + suffix, "Z leading lepton dz",                 20, 3, "cm",   logY);
+    	  plotter.Draw(prefix + "zl2dxy"      + suffix, "Z trailing lepton dxy",               20, 3, "cm",   logY);
+    	  plotter.Draw(prefix + "zl2dz"       + suffix, "Z trailing lepton dz",                20, 3, "cm",   logY);
 	}
     }
 
