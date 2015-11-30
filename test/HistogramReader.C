@@ -187,6 +187,7 @@ void HistogramReader::Draw(TString hname,
 	{
 	  _mchist[i]->Scale(datanorm / mcnorm);
 	}
+
       mcstack->Modified();
     }
 
