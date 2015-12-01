@@ -64,7 +64,7 @@ void PaperStyle()
   // Axis
   //----------------------------------------------------------------------------
   PaperStyle->SetLabelFont  (   42, "xyz");  // 43 for size in absolute pixel number
-  PaperStyle->SetLabelOffset(0.025, "xyz");
+  PaperStyle->SetLabelOffset(0.020, "xyz");
   PaperStyle->SetLabelSize  (0.040, "xyz");  // 22 for size in absolute pixel number
   PaperStyle->SetNdivisions (  505, "xyz");
   PaperStyle->SetTitleFont  (   42, "xyz");

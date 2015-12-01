@@ -4,12 +4,13 @@
 //------------------------------------------------------------------------------
 // HistogramReader
 //------------------------------------------------------------------------------
-HistogramReader::HistogramReader(TString const &inputdir,
-				 TString const &outputdir) :
+HistogramReader::HistogramReader(const TString& inputdir,
+				 const TString& outputdir) :
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
   _luminosity_fb(0),
+  _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
   _savepdf      (false),
@@ -28,8 +29,8 @@ HistogramReader::HistogramReader(TString const &inputdir,
 //------------------------------------------------------------------------------
 // AddData
 //------------------------------------------------------------------------------
-void HistogramReader::AddData(TString const &filename,
-			      TString const &label,
+void HistogramReader::AddData(const TString& filename,
+			      const TString& label,
 			      Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");
@@ -43,8 +44,8 @@ void HistogramReader::AddData(TString const &filename,
 //------------------------------------------------------------------------------
 // AddProcess
 //------------------------------------------------------------------------------
-void HistogramReader::AddProcess(TString const &filename,
-				 TString const &label,
+void HistogramReader::AddProcess(const TString& filename,
+				 const TString& label,
 				 Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");
@@ -58,8 +59,8 @@ void HistogramReader::AddProcess(TString const &filename,
 //------------------------------------------------------------------------------
 // AddSignal
 //------------------------------------------------------------------------------
-void HistogramReader::AddSignal(TString const &filename,
-				TString const &label,
+void HistogramReader::AddSignal(const TString& filename,
+				const TString& label,
 				Color_t        color)
 {
   TFile* file = new TFile(_inputdir + filename + ".root", "update");
@@ -126,9 +127,12 @@ void HistogramReader::Draw(TString hname,
   
   pad1->SetLogy(setlogy);
 
+
+  // Stack processes
+  //----------------------------------------------------------------------------
   _mchist.clear();
 
-  THStack* hstack = new THStack(hname, hname);
+  THStack* mcstack = new THStack(hname + "_mcstack", hname + "_mcstack");
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
@@ -136,18 +140,55 @@ void HistogramReader::Draw(TString hname,
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    SetHistogram(_mchist[i], _mccolor[i], kDot, ngroup, moveoverflow, xmin, xmax);
+    SetHistogram(_mchist[i], _mccolor[i], 1001, kDot, kSolid, 0, ngroup, moveoverflow, xmin, xmax);
     
-    hstack->Add(_mchist[i]);
+    mcstack->Add(_mchist[i]);
   }
 
+
+  // Stack signals
+  //----------------------------------------------------------------------------
+  _signalhist.clear();
+
+  THStack* signalstack = new THStack(hname + "_signalstack", hname + "_signalstack");
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) {
+
+    TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
+
+    _signalhist.push_back((TH1D*)dummy->Clone());
+
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
+    
+    signalstack->Add(_signalhist[i]);
+  }
+
+
+  // Get the data
+  //----------------------------------------------------------------------------
   if (_datafile)
     {
       TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
       _datahist = (TH1D*)dummy->Clone();
       
-      SetHistogram(_datahist, kBlack, kFullCircle, ngroup, moveoverflow, xmin, xmax);
+      SetHistogram(_datahist, kBlack, 0, kFullCircle, kSolid, 1, ngroup, moveoverflow, xmin, xmax);
+    }
+
+
+  // Normalize MC to data
+  //----------------------------------------------------------------------------
+  if (_datahist && _datanorm)
+    {
+      Float_t mcnorm   = Yield((TH1D*)(mcstack->GetStack()->Last()));
+      Float_t datanorm = Yield(_datahist);
+
+      for (UInt_t i=0; i<_mchist.size(); i++)
+	{
+	  _mchist[i]->Scale(datanorm / mcnorm);
+	}
+
+      mcstack->Modified();
     }
 
 
@@ -161,7 +202,10 @@ void HistogramReader::Draw(TString hname,
   // All MC
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
-  
+
+  // Possible modification (how to deal with systematic uncertainties?)
+  //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
+
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
@@ -172,7 +216,7 @@ void HistogramReader::Draw(TString hname,
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
       Float_t binStatError = _mchist[i]->GetBinError(ibin);
       Float_t binSystError = 0;  // To be updated
-
+      
       binValue += binContent;
       binError += (binStatError * binStatError);
       binError += (binSystError * binSystError);
@@ -192,20 +236,16 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerColor(kGray+1);
   _allmchist->SetMarkerSize (      0);
 
-  if (_stackoption.Contains("nostack") && Yield(_allmchist) > 0)
-    {
-      _allmchist->SetLineWidth(2);
-      _allmchist->Scale(1.0/Yield(_allmchist));
-    }
-
 
   // Draw
   //----------------------------------------------------------------------------
   hfirst->Draw();
 
-  hstack->Draw(_stackoption + ",same");
+  mcstack->Draw(_stackoption + ",same");
 
-  _allmchist->Draw("e2,same");
+  if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
+
+  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
 
   if (_datahist) _datahist->Draw("ep,same");
 
@@ -246,12 +286,12 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 3e-1;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
+      theMin = 3e-2;
+      theMax = 5. * TMath::Power(10, TMath::Log10(theMax) + 3);
     }
   else
     {
-      theMax *= 1.45;
+      theMax *= 1.5;
     }
 
   hfirst->SetMinimum(theMin);
@@ -264,22 +304,34 @@ void HistogramReader::Draw(TString hname,
   // Legend
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;
-  Float_t y0     = 0.834;
+  Float_t y0     = 0.843;
   Float_t xdelta = 0.000;
-  Float_t ydelta = 0.051;
+  Float_t ydelta = 0.050;
   Int_t   ny     = 0;
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
+
+  // Data legend
+  //----------------------------------------------------------------------------
   if (_datahist)
     {
       DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
       ny++;
     }
 
-  DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
-  ny++;
 
+  // All MC legend
+  //----------------------------------------------------------------------------
+  if (!_stackoption.Contains("nostack"))
+    {
+      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      ny++;
+    }
+
+
+  // Standard Model processes legend
+  //----------------------------------------------------------------------------
   for (int i=0; i<_mchist.size(); i++)
     {
       if (ny == 4)
@@ -289,6 +341,15 @@ void HistogramReader::Draw(TString hname,
 	}
 
       DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
+      ny++;
+    }
+  
+  
+  // Search signals legend
+  //----------------------------------------------------------------------------
+  for (int i=0; i<_signalhist.size(); i++)
+    {
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
       ny++;
     }
 
@@ -592,7 +653,10 @@ void HistogramReader::SetAxis(TH1*    hist,
 //------------------------------------------------------------------------------
 void HistogramReader::SetHistogram(TH1*     hist,
 				   Color_t  color,
+				   Style_t  fstyle,
 				   Style_t  mstyle,
+				   Style_t  lstyle,
+				   Width_t  lwidth,
 				   Int_t    ngroup,
 				   Bool_t   moveoverflow,
 				   Float_t& xmin,
@@ -607,28 +671,27 @@ void HistogramReader::SetHistogram(TH1*     hist,
   if (xmin == -999) xmin = hist->GetXaxis()->GetXmin();
   if (xmax == -999) xmax = hist->GetXaxis()->GetXmax();
 
-  hist->SetLineColor  (color);
-  hist->SetMarkerColor(color);
-  hist->SetMarkerStyle(mstyle);
+  hist->SetFillColor(color );
+  hist->SetFillStyle(fstyle);
 
-  if (mstyle != kFullCircle)
-    {
-      hist->SetFillColor(color);
-      hist->SetFillStyle(1001);
-      hist->SetLineWidth(0);
-      
-      if (_stackoption.Contains("nostack"))
-	{
-	  hist->SetFillStyle(0);
-	  hist->SetLineWidth(2);
-	}
-    }
+  hist->SetLineColor(color );
+  hist->SetLineStyle(lstyle);
+  hist->SetLineWidth(lwidth);
+
+  hist->SetMarkerColor(color );
+  hist->SetMarkerStyle(mstyle);
 
   if (_stackoption.Contains("nostack") && Yield(hist) > 0)
     {
+      hist->SetFillStyle(0);
+      hist->SetLineWidth(2);
+
       hist->Scale(1. / Yield(hist));
     }
 
+
+  // Rebin and move overflow bins
+  //----------------------------------------------------------------------------
   if (ngroup > 0) hist->Rebin(ngroup);
   
   if (moveoverflow) MoveOverflows(hist, xmin, xmax);
@@ -644,7 +707,7 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   Int_t nbins = hist->GetNbinsX();
       
-  return hist->Integral(0, nbins+1);
+  return fabs(hist->Integral(0, nbins+1));
 }
 
 
@@ -711,6 +774,8 @@ void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
   if (_datafile) EventsByCut(_datafile, analysis, hname);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) EventsByCut(_signalfile[i], analysis, hname);
 }
 
 
@@ -764,4 +829,6 @@ void HistogramReader::LoopEventsByChannel(TString level)
   if (_datafile) EventsByChannel(_datafile, level);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
 }

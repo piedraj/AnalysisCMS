@@ -32,21 +32,21 @@ class HistogramReader
 {
  public :
   
-  HistogramReader(TString const &inputdir,
-		  TString const &outputdir);
+  HistogramReader(const TString& inputdir,
+		  const TString& outputdir);
 
   ~HistogramReader() {}
  
-  void     AddData            (TString const &filename,
-			       TString const &label,
+  void     AddData            (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
 
-  void     AddProcess         (TString const &filename,
-			       TString const &label,
+  void     AddProcess         (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
 
-  void     AddSignal          (TString const &filename,
-			       TString const &label,
+  void     AddSignal          (const TString& filename,
+			       const TString& label,
 			       Color_t        color);
   
   void     Draw               (TString        hname,
@@ -95,11 +95,16 @@ class HistogramReader
 
   void     SetHistogram       (TH1*           hist,
 			       Color_t        color,
+			       Style_t        fstyle,
 			       Style_t        mstyle,
+			       Style_t        lstyle,
+			       Width_t        lwidth,
 			       Int_t          ngroup,
 			       Bool_t         moveoverflow,
 			       Float_t&       xmin,
 			       Float_t&       xmax);
+
+  void     SetDataNorm        (Bool_t         datanorm) {_datanorm = datanorm;}
 
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
 
@@ -126,6 +131,7 @@ class HistogramReader
 
  private :
 
+  Bool_t                _datanorm;
   Bool_t                _drawratio;
   Bool_t                _drawyield;
   Bool_t                _savepdf;
