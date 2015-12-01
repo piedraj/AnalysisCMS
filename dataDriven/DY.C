@@ -123,23 +123,25 @@ void doDY(Int_t   njet,
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   TString path   = "../rootfiles/25ns/";
 
-  TFile* inputDY   = new TFile(path + "07_ZJets.root");
+  TFile* inputDY   = new TFile(path + "06_ZJets.root");
   TFile* inputWZ   = new TFile(path + "02_WZ.root");
   TFile* inputZZ   = new TFile(path + "03_ZZ.root");
   TFile* inputData = new TFile(path + "01_Data.root");
 
-  TH2D* mDY  [nChannel];
-  TH2D* mWZ  [nChannel];
-  TH2D* mZZ  [nChannel];
-  TH2D* mData[nChannel];
+  TH2D* mDY        [nChannel];
+  TH2D* mWZ        [nChannel];
+  TH2D* mZZ        [nChannel];
+  TH2D* mData      [nChannel];
   TH1F* hExpectedDY[nChannel];
 
+  cout<<"hola"<<endl;
+
   for (UInt_t nC = 0; nC < nChannel; ++nC){
-    mDY[nC]   = (TH2D*)inputDY  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
-    mWZ[nC]   = (TH2D*)inputWZ  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
-    mZZ[nC]   = (TH2D*)inputZZ  ->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
-    mData[nC] = (TH2D*)inputData->Get("WW/11_DY/h_metvar_m2l_" + channel[nC]);
-    hExpectedDY[nC] = (TH1F*)inputDY -> Get("WW/10_Ht/h_pt1_"  + channel[nC]);
+    mDY[nC]   = (TH2D*)inputDY  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
+    mWZ[nC]   = (TH2D*)inputWZ  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
+    mZZ[nC]   = (TH2D*)inputZZ  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
+    mData[nC] = (TH2D*)inputData->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
+    hExpectedDY[nC] = (TH1F*)inputDY -> Get("WW/09_Ht/h_pt1_"  + channel[nC]);
   }
 
 
