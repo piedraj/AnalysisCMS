@@ -530,6 +530,8 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 
   _event_weight *= puW * baseW * luminosity;
 
+  if (sample == "WWTo2L2Nu") _event_weight =  _event_weight * 12.178 / 10.481; 
+
   if (sample.Contains("ggZZ")) return;
   if (sample.Contains("ttDM")) return;
 
