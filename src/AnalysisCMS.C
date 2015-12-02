@@ -774,6 +774,7 @@ void AnalysisCMS::AnalysisWW()
 
   LevelHistograms(WW_10_DY, pass && pass_ht);  // Data-driven DY
 
+  LevelHistograms(WW_11_ZWindow, pass && pass_ht && !pass_zveto);  // Just plot the Z-peak (at WW level)
 
   // monoH selection - on top of WW excluding Ht selection
   //----------------------------------------------------------------------------
