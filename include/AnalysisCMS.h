@@ -89,6 +89,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetHT            ();
 
+  void    GenStudy         ();
+
   void    AnalysisTop      ();
 
   void    AnalysisTTDM     ();
