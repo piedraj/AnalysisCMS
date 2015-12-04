@@ -16,6 +16,8 @@
 #include "TH1D.h"
 #include "TH2D.h"
 
+std::ofstream inFile("scaleFactors.txt",std::ios::out);
+
 const UInt_t numberMetCuts = 5;
 
 Int_t MetCuts[numberMetCuts] = {20, 25, 30, 45, 1000};
@@ -76,9 +78,10 @@ void doDY                          (Int_t   njet,
 
 void DY(){
   
-    for (Int_t qq = 0; qq < 4; ++qq){
-      doDY(qq, true, 100, true);
-    }
+  for (Int_t qq = 0; qq < 4; ++qq){
+    doDY(qq, true, 100, true);
+  } 
+  inFile.close();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,7 +112,12 @@ void doDY(Int_t   njet,
   jetbin[2] = "2jet";
   jetbin[3] = "";
 
-  //lepton channels
+  TString writeJet[nJetbin];
+  writeJet[0] = "0Jet";
+  writeJet[1] = "1Jet";
+  writeJet[2] = "2+Jet";
+  writeJet[3] = "Inclusive";
+      
   const int nChannel = 4;
   enum {iee,imm,iem,ill};
 
@@ -134,16 +142,13 @@ void doDY(Int_t   njet,
   TH2D* mData      [nChannel];
   TH1F* hExpectedDY[nChannel];
 
-  cout<<"hola"<<endl;
-
   for (UInt_t nC = 0; nC < nChannel; ++nC){
-    mDY[nC]   = (TH2D*)inputDY  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
-    mWZ[nC]   = (TH2D*)inputWZ  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
-    mZZ[nC]   = (TH2D*)inputZZ  ->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
-    mData[nC] = (TH2D*)inputData->Get("WW/10_DY/h_metvar_m2l_" + channel[nC]);
-    hExpectedDY[nC] = (TH1F*)inputDY -> Get("WW/09_Ht/h_pt1_"  + channel[nC]);
+    mDY[nC]   = (TH2D*)inputDY  ->Get("WW/10_DY/" + jetbin[njet] + "/h_metvar_m2l_" + channel[nC]);
+    mWZ[nC]   = (TH2D*)inputWZ  ->Get("WW/10_DY/" + jetbin[njet] + "/h_metvar_m2l_" + channel[nC]);
+    mZZ[nC]   = (TH2D*)inputZZ  ->Get("WW/10_DY/" + jetbin[njet] + "/h_metvar_m2l_" + channel[nC]);
+    mData[nC] = (TH2D*)inputData->Get("WW/10_DY/" + jetbin[njet] + "/h_metvar_m2l_" + channel[nC]);
+    hExpectedDY[nC] = (TH1F*)inputDY -> Get("WW/09_Ht/" + jetbin[njet] + "/h_pt1_"  + channel[nC]);
   }
-
 
   // k estimation
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,9 +157,9 @@ void doDY(Int_t   njet,
   Double_t NinDatak[nChannel]; 
 
   for (UInt_t nC = 0; nC < nChannel; ++nC){
-    NinDYk[nC]   = mDY[nC]   -> Integral(0,4,84,98);
-    NinVVk[nC]   = mWZ[nC]   -> Integral(0,4,84,98) + mZZ[nC] -> Integral(0,4,84,98);
-    NinDatak[nC] = mData[nC] -> Integral(0,4,84,98);
+    NinDYk[nC]   = mDY[nC]   -> Integral(0,4,835,985);                                     //
+    NinVVk[nC]   = mWZ[nC]   -> Integral(0,4,835,985) + mZZ[nC] -> Integral(0,4,835,985);  // inclusive in MetVar
+    NinDatak[nC] = mData[nC] -> Integral(0,4,835,985);                                     //
   }
 
   Double_t k[nChannel];
@@ -174,31 +179,31 @@ void doDY(Int_t   njet,
 
   // Counters
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Double_t NinDY   [numberMetCuts][nChannel]; //ee,mm,em,ll
-  Double_t NinVV   [numberMetCuts][nChannel];
+  Double_t NinDY   [numberMetCuts][nChannel]; 
+  Double_t NinVV   [numberMetCuts][nChannel]; //In = |mll - mZ| < 7
   Double_t NinData [numberMetCuts][nChannel];
 
   Double_t NoutDY   [numberMetCuts][nChannel];
-  Double_t NoutVV   [numberMetCuts][nChannel]; 
+  Double_t NoutVV   [numberMetCuts][nChannel]; //Out = |mll -mZ| > 15
   Double_t NoutData [numberMetCuts][nChannel];
 
   Double_t NpeakDY   [numberMetCuts][nChannel];
-  Double_t NpeakVV   [numberMetCuts][nChannel]; 
+  Double_t NpeakVV   [numberMetCuts][nChannel]; //Peak = |mll - mZ| < 15 -> used just to calculate Nout
   Double_t NpeakData [numberMetCuts][nChannel];
 
   for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
     for (UInt_t nC=0; nC<nChannel; nC++) {
-      NinDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,84,98);
-      NinVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,84,98) + mZZ[nC] -> Integral(nM,nM+1,84,98);
-      NinData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,84,98);
+      NinDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,835,985);
+      NinVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,835,985) + mZZ[nC] -> Integral(nM,nM+1,835,985);
+      NinData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,835,985);
 
-      NpeakDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,76,106);
-      NpeakVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,76,106) + mZZ[nC] -> Integral(nM,nM+1,76,106);
-      NpeakData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,76,106);
+      NpeakDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,760,1060);
+      NpeakVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,760,1060) + mZZ[nC] -> Integral(nM,nM+1,760,1060);
+      NpeakData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,760,1060);
 
-      NoutDY   [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,0,200) - NpeakDY[nM][nC];
-      NoutVV   [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,0,200) + mZZ[nC] -> Integral(nM,nM+1,0,200) - NpeakVV[nM][nC];
-      NoutData [nM][nC] = mData[nC] -> Integral(nM,nM+1,0,200) - NpeakData[nM][nC];
+      NoutDY   [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,0,2000) - NpeakDY[nM][nC];
+      NoutVV   [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,0,2000) + mZZ[nC] -> Integral(nM,nM+1,0,2000) - NpeakVV[nM][nC];
+      NoutData [nM][nC] = mData[nC] -> Integral(nM,nM+1,0,2000) - NpeakData[nM][nC];
     }
   }
 
@@ -209,19 +214,25 @@ void doDY(Int_t   njet,
   Double_t errR    [numberMetCuts];
   Double_t errRData[numberMetCuts];
   
-  // Loop over the SF channels - ee, mm, ll (for now just look 2 rows lower: nC = ill)
+  // Loop over the SF channels - ee, mm, ll 
   //----------------------------------------------------------------------------
-  //  UInt_t nC = ill{
   for (UInt_t nC = 0; nC < nChannel; ++nC){
+    
+    if (nC == iem) continue;
+      
+    cout<<""<<endl;
+    cout<<"-----------------------------------------------------------------------------------------------------"<<endl; 
+    cout<<"Calculating Data Driven DY Correction for "<<writeJet[njet]<<" bin, "<<channel[nC]<<" flavour channel"<<endl;
+    cout<<"-----------------------------------------------------------------------------------------------------"<<endl; 
+
     // Loop over the met cuts
     //----------------------------------------------------------------------------
     for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
       
-      if (nC == iem) continue;
-      
       R   [nM] = NoutDY[nM][nC] / NinDY[nM][nC]; 
       errR[nM] = errRFunction(NoutDY[nM][nC], NinDY[nM][nC]);
       
+      // need to add the contibution from ZV MC samples in the Z peak
       RData   [nM] = RDataFunction   (NoutData[nM][nC], NoutData[nM][iem], NinData[nM][nC], NinData[nM][iem], k[nC]);
       errRData[nM] = errRDataFunction(NoutData[nM][nC], NoutData[nM][iem], NinData[nM][nC], NinData[nM][iem], k[nC], errk[nC]);
       
@@ -247,7 +258,6 @@ void doDY(Int_t   njet,
     
     for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
       
-      cout<<"hola"<<nM<<"!!"<<endl;
       if (R[nM] > 0 && R[nM] > R[iMaxR]) iMaxR = nM;
       if (R[nM] > 0 && R[nM] < R[iMinR]) iMinR = nM;
     }
@@ -256,8 +266,6 @@ void doDY(Int_t   njet,
     Int_t sysR = 3;
     
     Double_t RelDiffR = (R[theR] > 0) ? fabs(R[theR] - R[sysR]) / R[theR] : -999;
-    
-    cout<<"aaaaaaaaaaaaaaaaaa"<<endl;
     
     if (printLevel > 0) {
       printf("\n [%s] R systematic uncertainty\n", channel[nC].Data());
@@ -272,9 +280,9 @@ void doDY(Int_t   njet,
     
     // Estimate Nout
     //----------------------------------------------------------------------------
-    Double_t NinCountedSFVV   = NinVV  [sysR][nC];
-    Double_t NinCountedSFData = NinData[sysR][nC];
-    Double_t NinCountedOFData = NinData[sysR][iem];
+    Double_t NinCountedSFVV   = NinVV  [theR][nC];
+    Double_t NinCountedSFData = NinData[theR][nC];
+    Double_t NinCountedOFData = NinData[theR][iem];
     
     Double_t NinEstSFFinal    = NinCountedSFData - k[nC]*NinCountedOFData;
     Double_t errNinEstSFFinal = errNinEstFunction(NinCountedSFData, NinCountedOFData, k[nC], errk[nC]);
@@ -290,7 +298,7 @@ void doDY(Int_t   njet,
     Double_t totalError              = sqrt(errNestSFNoDibosonFinal*errNestSFNoDibosonFinal + (RelDiffR*NestSFNoDibosonFinal)*(RelDiffR*NestSFNoDibosonFinal));
     
     
-    Double_t SFsf = NestSFNoDibosonFinal / hExpectedDY[nC]->Integral();
+    Double_t SFsf = NestSFNoDibosonFinal / NoutDY   [theR][nC];//hExpectedDY[nC]->Integral();
     
     if (printLevel > 1) {
       printf("\n Analysis results\n");
@@ -309,16 +317,18 @@ void doDY(Int_t   njet,
 	     NestSFNoDibosonFinal, errNestSFNoDibosonFinal, RelDiffR*NestSFNoDibosonFinal,
 	     NestSFNoDibosonFinal, totalError);
       printf("         N^{MC}_{out,"+channel[nC]+"}  = %7.2f +- %6.2f\n",
-	     hExpectedDY[nC]->Integral(), sqrt(hExpectedDY[nC]->Integral()));
+	     NoutDY   [theR][nC], sqrt(NoutDY   [theR][nC]));
+	     //hExpectedDY[nC]->Integral(), sqrt(hExpectedDY[nC]->Integral()));
       printf("     *** scale factor     = %.3f\n\n", SFsf);
+      inFile<<"jetbin: "<<writeJet[njet]<<", channel: "<<channel[nC]<<" -> scale factor = "<<SFsf<<endl;
     }
     
     // Save the result
     //----------------------------------------------------------------------------
-    yield       = (useDataDriven) ? NestSFNoDibosonFinal : hExpectedDY[nC]->Integral();
+    yield       = (useDataDriven) ? NestSFNoDibosonFinal : NoutDY   [theR][nC];//hExpectedDY[nC]->Integral();
     statError   = errNestSFNoDibosonFinal;
     systError   = RelDiffR*NestSFNoDibosonFinal;
-    scaleFactor = yield / hExpectedDY[nC]->Integral();
+    scaleFactor = yield / NoutDY   [theR][nC];//hExpectedDY[nC]->Integral();
     
     // For the note
     //----------------------------------------------------------------------------
@@ -394,7 +404,7 @@ void doDY(Int_t   njet,
       mgR->GetYaxis()->SetTitle("R^{out/in}");
       mgR->GetXaxis()->SetTitle("mpmet (GeV)");
       
-      mgR->SetMinimum(0.2);//absoluteMin - 0.1);
+      mgR->SetMinimum(0.0);//absoluteMin - 0.1);
       mgR->SetMaximum(1.0);
       
       // Legend
@@ -425,12 +435,6 @@ void doDY(Int_t   njet,
       // Save
       //--------------------------------------------------------------------------
       lmgR->Draw("same");
-      
-      TString writeJet[nJetbin];
-      writeJet[0] = "0Jet";
-      writeJet[1] = "1Jet";
-      writeJet[2] = "2+Jet";
-      writeJet[3] = "Inclusive";
       
       DrawTLatex(0.725, 0.65, 0.04,  writeJet[njet]);
       canvas->SaveAs("R_" + channel[nC] + "_" + writeJet[njet] + ".png");
