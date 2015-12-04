@@ -9,7 +9,7 @@ enum {linY, logY};
 
 void runPlotter(TString level)
 {
-  Bool_t scale = linY;
+  Bool_t scale = logY;
 
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
