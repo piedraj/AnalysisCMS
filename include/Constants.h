@@ -121,7 +121,7 @@ const TString scut[ncut] = {
   "WW/08_SoftMu",
   "WW/09_Ht",
   "WW/10_DY",
-  "WW/10_ZWindow",
+  "WW/11_ZWindow",  // Is this needed?
   "monoH/00_Mc",
   "monoH/01_DRll",
   "monoH/02_MpMet",
