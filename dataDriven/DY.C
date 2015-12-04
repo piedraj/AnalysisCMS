@@ -180,30 +180,30 @@ void doDY(Int_t   njet,
   // Counters
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Double_t NinDY   [numberMetCuts][nChannel]; 
-  Double_t NinVV   [numberMetCuts][nChannel]; //In = |mll - mZ| < 7
+  Double_t NinVV   [numberMetCuts][nChannel]; //In = |mll - mZ| < 15
   Double_t NinData [numberMetCuts][nChannel];
+
+  //Double_t NpeakDY   [numberMetCuts][nChannel];
+  //Double_t NpeakVV   [numberMetCuts][nChannel]; //Peak = |mll - mZ| < 7.5 -> used just to calculate Nout
+  //Double_t NpeakData [numberMetCuts][nChannel];
 
   Double_t NoutDY   [numberMetCuts][nChannel];
   Double_t NoutVV   [numberMetCuts][nChannel]; //Out = |mll -mZ| > 15
   Double_t NoutData [numberMetCuts][nChannel];
 
-  Double_t NpeakDY   [numberMetCuts][nChannel];
-  Double_t NpeakVV   [numberMetCuts][nChannel]; //Peak = |mll - mZ| < 15 -> used just to calculate Nout
-  Double_t NpeakData [numberMetCuts][nChannel];
-
   for (UInt_t nM=0; nM<numberMetCuts-1; nM++) {
     for (UInt_t nC=0; nC<nChannel; nC++) {
-      NinDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,835,985);
-      NinVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,835,985) + mZZ[nC] -> Integral(nM,nM+1,835,985);
-      NinData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,835,985);
+      NinDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,912 - 150,912 + 150);
+      NinVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,912 - 150,912 + 150) + mZZ[nC] -> Integral(nM,nM+1,912 - 150,912 + 150);
+      NinData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,912 - 150,912 + 150);
 
-      NpeakDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,760,1060);
-      NpeakVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,760,1060) + mZZ[nC] -> Integral(nM,nM+1,760,1060);
-      NpeakData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,760,1060);
+      //NpeakDY    [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,912 - 75,912 + 75);
+      //NpeakVV    [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,912 - 75,912 + 75) + mZZ[nC] -> Integral(nM,nM+1,912 - 75,912 + 75);
+      //NpeakData  [nM][nC] = mData[nC] -> Integral(nM,nM+1,912 - 75,912 + 75);
 
-      NoutDY   [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,0,2000) - NpeakDY[nM][nC];
-      NoutVV   [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,0,2000) + mZZ[nC] -> Integral(nM,nM+1,0,2000) - NpeakVV[nM][nC];
-      NoutData [nM][nC] = mData[nC] -> Integral(nM,nM+1,0,2000) - NpeakData[nM][nC];
+      NoutDY   [nM][nC] = mDY[nC]   -> Integral(nM,nM+1,0,2000) - NinDY[nM][nC];
+      NoutVV   [nM][nC] = mWZ[nC]   -> Integral(nM,nM+1,0,2000) + mZZ[nC] -> Integral(nM,nM+1,0,2000) - NinVV[nM][nC];
+      NoutData [nM][nC] = mData[nC] -> Integral(nM,nM+1,0,2000) - NinData[nM][nC];
     }
   }
 
