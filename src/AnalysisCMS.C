@@ -523,7 +523,7 @@ void AnalysisCMS::GetSampleName(TString filename)
 void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 {
   _event_weight = 1.;
-
+  
   if (!_ismc) return;
 
   if (sample.Contains("ttDM")) baseW = 1e-2;  // Dummy value
@@ -532,8 +532,7 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 
   if (sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
 
-  if (sample.Contains("ggZZ")) return;
-  if (sample.Contains("ttDM")) return;
+  if (!GEN_weight_SM) return;
 
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
@@ -772,9 +771,9 @@ void AnalysisCMS::AnalysisWW()
   bool pass_ht = (_ht < 250.);
   LevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
 
-  LevelHistograms(WW_10_DY, pass);                            // Data-driven DY
+  LevelHistograms(WW_10_DY, pass);  // Data-driven DY
 
-  bool passZwindow = (fabs(mll - Z_MASS) < 15.);              // Z window at 2 leptons level
+  bool passZwindow = (fabs(mll - Z_MASS) < 15.);  // Z window at 2 leptons level
   LevelHistograms(WW_11_ZWindow, passZwindow);
 
   passZwindow &= (MET.Et() > 20.);
@@ -792,7 +791,8 @@ void AnalysisCMS::AnalysisWW()
   passZwindow &= (!_foundsoftmuon);
   LevelHistograms(WW_16_ZWindowSoftMu, passZwindow);
 
-  LevelHistograms(WW_17_ZCR, pass && pass_ht && passZwindow); // Z control region - orthogonal to WW one
+  LevelHistograms(WW_17_ZCR, pass && pass_ht && passZwindow);  // Z control region - orthogonal to WW one
+
 
   // monoH selection - on top of WW excluding Ht selection
   //----------------------------------------------------------------------------
