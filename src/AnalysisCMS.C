@@ -530,7 +530,7 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 
   _event_weight *= puW * baseW * luminosity;
 
-  if (sample.Contains("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
+  if (sample == "WWTo2L2Nu") _event_weight =  _event_weight * 12.178 / 10.481; 
 
   if (sample.Contains("ggZZ")) return;
   if (sample.Contains("ttDM")) return;
@@ -774,6 +774,7 @@ void AnalysisCMS::AnalysisWW()
 
   LevelHistograms(WW_10_DY, pass && pass_ht);  // Data-driven DY
 
+  LevelHistograms(WW_11_ZWindow, pass && pass_ht && !pass_zveto);  // Just plot the Z-peak (at WW level)
 
   // monoH selection - on top of WW excluding Ht selection
   //----------------------------------------------------------------------------
