@@ -64,7 +64,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 30;
+const int ncut = 36;
 
 enum {
   Top_00_Has2Leptons,
@@ -89,6 +89,12 @@ enum {
   WW_09_Ht,
   WW_10_DY,
   WW_11_ZWindow,
+  WW_12_ZWindowPfMet,
+  WW_13_ZWindowMpMet,
+  WW_14_ZWindowPtll,
+  WW_15_ZWindowBVeto,
+  WW_16_ZWindowSoftMu,
+  WW_17_ZCR,
   monoH_00_Mc,
   monoH_01_DRll,
   monoH_02_MpMet,
@@ -122,6 +128,12 @@ const TString scut[ncut] = {
   "WW/09_Ht",
   "WW/10_DY",
   "WW/11_ZWindow",  // Is this needed?
+  "WW/12_ZWindowPfMet",
+  "WW/13_ZWindowMpMet",
+  "WW/14_ZWindowPtll",
+  "WW/15_ZWindowBVeto",
+  "WW/16_ZWindowSoftMu",
+  "WW/17_ZCR",
   "monoH/00_Mc",
   "monoH/01_DRll",
   "monoH/02_MpMet",
