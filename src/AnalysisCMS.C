@@ -100,24 +100,24 @@ void AnalysisCMS::Loop(TString filename,
 	h_nvtx      [i][j][k] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
 	h_deltarll  [i][j][k] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
         h_deltaphill[i][j][k] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
-	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 2000,    0, 2000);
-        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 1000,    0, 1000);
-        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 1000,    0, 1000);
-	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 1000,    0, 1000);
-        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 1000,    0, 1000);
-        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 1000,    0, 1000);
-        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 1000,    0, 1000);
-        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 1000,    0, 1000);
-	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 1000,    0, 1000);
-        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 1000,    0, 1000);
-        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 1000,    0, 1000);
-        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 1000,    0, 1000);
-        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 1000,    0, 1000);
+	h_met       [i][j][k] = new TH1D("h_met"        + suffix, "", 3000,    0, 3000);
+        h_trkmet    [i][j][k] = new TH1D("h_trkmet"     + suffix, "", 3000,    0, 3000);
+        h_mpmet     [i][j][k] = new TH1D("h_mpmet"      + suffix, "", 3000,    0, 3000);
+	h_m2l       [i][j][k] = new TH1D("h_m2l"        + suffix, "", 3000,    0, 3000);
+        h_mt1       [i][j][k] = new TH1D("h_mt1"        + suffix, "", 3000,    0, 3000);
+        h_mt2       [i][j][k] = new TH1D("h_mt2"        + suffix, "", 3000,    0, 3000);
+        h_mth       [i][j][k] = new TH1D("h_mth"        + suffix, "", 3000,    0, 3000);
+        h_mc        [i][j][k] = new TH1D("h_mc"         + suffix, "", 3000,    0, 3000);
+	h_ht        [i][j][k] = new TH1D("h_ht"         + suffix, "", 3000,    0, 3000);
+        h_pt1       [i][j][k] = new TH1D("h_pt1"        + suffix, "", 3000,    0, 3000);
+        h_pt2       [i][j][k] = new TH1D("h_pt2"        + suffix, "", 3000,    0, 3000);
+        h_pt2l      [i][j][k] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
+        h_ptww      [i][j][k] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
 
 	
 	// Common TH2 histograms
 	//----------------------------------------------------------------------
-	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 200, 0, 200);
+	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
 
 
 	// WZ histograms
@@ -530,7 +530,7 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
 
   _event_weight *= puW * baseW * luminosity;
 
-  if (sample == "WWTo2L2Nu") _event_weight =  _event_weight * 12.178 / 10.481; 
+  if (sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
 
   if (sample.Contains("ggZZ")) return;
   if (sample.Contains("ttDM")) return;
@@ -755,7 +755,7 @@ void AnalysisCMS::AnalysisWW()
   pass &= (_mpmet > 20.);
   LevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
-  pass &= (_passdphiveto);
+  //pass &= (_passdphiveto);
   LevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
 
   bool pass_ptll = (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
@@ -772,9 +772,27 @@ void AnalysisCMS::AnalysisWW()
   bool pass_ht = (_ht < 250.);
   LevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
 
-  LevelHistograms(WW_10_DY, pass && pass_ht);  // Data-driven DY
+  LevelHistograms(WW_10_DY, pass);                            // Data-driven DY
 
-  LevelHistograms(WW_11_ZWindow, pass && pass_ht && !pass_zveto);  // Just plot the Z-peak (at WW level)
+  bool passZwindow = (fabs(mll - Z_MASS) < 15.);              // Z window at 2 leptons level
+  LevelHistograms(WW_11_ZWindow, passZwindow);
+
+  passZwindow &= (MET.Et() > 20.);
+  LevelHistograms(WW_12_ZWindowPfMet, passZwindow);
+
+  passZwindow &= (_mpmet > 20.);
+  LevelHistograms(WW_13_ZWindowMpMet, passZwindow);
+
+  passZwindow &= (pass_ptll);
+  LevelHistograms(WW_14_ZWindowPtll, passZwindow);
+
+  passZwindow &= (_nbjet15 == 0);
+  LevelHistograms(WW_15_ZWindowBVeto, passZwindow);
+
+  passZwindow &= (!_foundsoftmuon);
+  LevelHistograms(WW_16_ZWindowSoftMu, passZwindow);
+
+  LevelHistograms(WW_17_ZCR, pass && pass_ht && passZwindow); // Z control region - orthogonal to WW one
 
   // monoH selection - on top of WW excluding Ht selection
   //----------------------------------------------------------------------------
