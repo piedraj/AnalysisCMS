@@ -28,7 +28,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity(lumi25ns_fb);
   plotter.SetStackOption("hist");
-  plotter.SetDrawRatio(false);
+  plotter.SetDrawRatio(true);
 
   if (analysis.EqualTo("WW")) plotter.SetDataNorm(true);
 
@@ -73,13 +73,13 @@ void runPlotter(TString level)
   if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM1scalar20__part0",    "m_{#phi}1 m_{#chi}20",    kRed-4);
-      plotter.AddSignal("ttDM1scalar50__part0",    "m_{#phi}1 m_{#chi}50",    kRed-3);
-      plotter.AddSignal("ttDM1scalar500__part0",   "m_{#phi}1 m_{#chi}500",   kRed-2);
-      plotter.AddSignal("ttDM10scalar10__part0",   "m_{#phi}10 m_{#chi}10",   kRed-1);
-      plotter.AddSignal("ttDM50scalar50__part0",   "m_{#phi}50 m_{#chi}50",   kRed);
-      plotter.AddSignal("ttDM50scalar200__part0",  "m_{#phi}50 m_{#chi}200",  kRed+1);
-      plotter.AddSignal("ttDM50scalar300__part0",  "m_{#phi}50 m_{#chi}300",  kRed+2);
-      plotter.AddSignal("ttDM150scalar200__part0", "m_{#phi}150 m_{#chi}200", kRed+3);
+      //      plotter.AddSignal("ttDM1scalar50__part0",    "m_{#phi}1 m_{#chi}50",    kRed-3);
+      //      plotter.AddSignal("ttDM1scalar500__part0",   "m_{#phi}1 m_{#chi}500",   kRed-2);
+      //      plotter.AddSignal("ttDM10scalar10__part0",   "m_{#phi}10 m_{#chi}10",   kRed-1);
+      //      plotter.AddSignal("ttDM50scalar50__part0",   "m_{#phi}50 m_{#chi}50",   kRed);
+      //      plotter.AddSignal("ttDM50scalar200__part0",  "m_{#phi}50 m_{#chi}200",  kRed+1);
+      //      plotter.AddSignal("ttDM50scalar300__part0",  "m_{#phi}50 m_{#chi}300",  kRed+2);
+      //      plotter.AddSignal("ttDM150scalar200__part0", "m_{#phi}150 m_{#chi}200", kRed+3);
     }
 
 
@@ -117,7 +117,7 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(true);
+  plotter.SetDrawYield(false);
 
   for (int j=0; j<=njetbin; j++)
     {
@@ -147,12 +147,12 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                       10, 0, "GeV",  scale, false,  50,  200);  // xmin, xmax
-	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 20, 0, "GeV",  scale, true,    0,  600);
-	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 20, 0, "GeV",  scale, true,    0,  600);
-	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  scale, false,  50,  200);
-	  plotter.Draw(prefix + "mc"         + suffix, "m_{c}",                                   20, 0, "GeV",  scale, true,    0,  600);
-	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   20, 0, "GeV",  scale, true,    0,  600);
+	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                       10, 0, "GeV",  scale, true, xmin, xmax);
+	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 20, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 20, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "mc"         + suffix, "m_{c}",                                   20, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "pt1"        + suffix, "leading lepton p_{T}",                    10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "pt2"        + suffix, "trailing lepton p_{T}",                   10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "pt2l"       + suffix, "p_{T}^{#font[12]{ll}}",                   10, 0, "GeV",  scale, true,    0,  300);

@@ -286,8 +286,8 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 3e-2;
-      theMax = 5. * TMath::Power(10, TMath::Log10(theMax) + 3);
+      theMin = 1e-3;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
     }
   else
     {
