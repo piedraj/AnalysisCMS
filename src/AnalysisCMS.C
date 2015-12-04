@@ -526,7 +526,15 @@ void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
   
   if (!_ismc) return;
 
-  if (sample.Contains("ttDM")) baseW = 1e-2;  // Dummy value
+  // Temporary plug
+  if (sample.Contains("ttDM1scalar20"))    baseW = 2.08e-4;
+  if (sample.Contains("ttDM1scalar50"))    baseW = 5.77e-5;
+  if (sample.Contains("ttDM1scalar500"))   baseW = 9.96e-8;
+  if (sample.Contains("ttDM10scalar10"))   baseW = 1.89e-6;
+  if (sample.Contains("ttDM50scalar50"))   baseW = 4.06e-8;
+  if (sample.Contains("ttDM50scalar200"))  baseW = 1.79e-6;
+  if (sample.Contains("ttDM50scalar300"))  baseW = 5.69e-7;
+  if (sample.Contains("ttDM150scalar200")) baseW = 2.71e-8;
 
   _event_weight *= puW * baseW * luminosity;
 
