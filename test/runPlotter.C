@@ -168,12 +168,12 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  if (!level.Contains("WZ")) continue;
 
-	  plotter.Draw(prefix + "m3l"         + suffix, "m_{#font[12]{3l}}",                10, 0, "GeV",  scale, true, 60, 360);
-  	  plotter.Draw(prefix + "mtw"         + suffix, "W transverse mass",                10, 0, "GeV",  scale, true,  0, 150);
-  	  plotter.Draw(prefix + "zl1pt"       + suffix, "Z leading lepton p_{T}",           10, 0, "GeV",  scale, true,  0, 150);
-  	  plotter.Draw(prefix + "zl2pt"       + suffix, "Z trailing lepton p_{T}",          10, 0, "GeV",  scale, true,  0, 150);
-  	  plotter.Draw(prefix + "wlpt"        + suffix, "W lepton p_{T}",                   10, 0, "GeV",  scale, true,  0, 150);
-  	  plotter.Draw(prefix + "wlzl1deltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
+	  plotter.Draw(prefix + "m3l"        + suffix, "m_{#font[12]{3l}}",                10, 0, "GeV",  scale, true, 60, 360);
+  	  plotter.Draw(prefix + "mtw"        + suffix, "W transverse mass",                10, 0, "GeV",  scale, true,  0, 150);
+  	  plotter.Draw(prefix + "zl1pt"      + suffix, "Z leading lepton p_{T}",           10, 0, "GeV",  scale, true,  0, 150);
+  	  plotter.Draw(prefix + "zl2pt"      + suffix, "Z trailing lepton p_{T}",          10, 0, "GeV",  scale, true,  0, 150);
+  	  plotter.Draw(prefix + "wlpt"       + suffix, "W lepton p_{T}",                   10, 0, "GeV",  scale, true,  0, 150);
+  	  plotter.Draw(prefix + "wlzldeltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
 	}
     }
 
