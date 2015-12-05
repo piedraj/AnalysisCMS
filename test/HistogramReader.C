@@ -634,7 +634,7 @@ void HistogramReader::SetAxis(TH1*    hist,
 
   Float_t size = (padw < padh) ? padw : padh;
 
-  size = 22. / size;  // Like this label size is always 22 pixels
+  size = 20. / size;  // Like this label size is always 20 pixels
   
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
