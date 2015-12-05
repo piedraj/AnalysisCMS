@@ -54,7 +54,7 @@ class HistogramReader
 			       Int_t          ngroup       = -1,
 			       Int_t          precision    =  0,
 			       TString        units        = "NULL",
-			       Bool_t         setlogy      = true,
+			       Bool_t         setlogy      = false,
 			       Bool_t         moveoverflow = true,
 			       Float_t        xmin         = -999,
 			       Float_t        xmax         = -999,

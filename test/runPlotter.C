@@ -9,8 +9,6 @@ enum {linY, logY};
 
 void runPlotter(TString level)
 {
-  Bool_t scale = logY;
-
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
   TString tok;
@@ -21,6 +19,8 @@ void runPlotter(TString level)
 
   if (analysis.EqualTo("NONE")) return;
 
+  Bool_t scale = (analysis.EqualTo("WZ")) ? linY : logY;
+
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
@@ -29,8 +29,6 @@ void runPlotter(TString level)
   plotter.SetLuminosity(lumi25ns_fb);
   plotter.SetStackOption("hist");
   plotter.SetDrawRatio(true);
-
-  if (analysis.EqualTo("WW")) plotter.SetDataNorm(true);
 
 
   // Get the data
@@ -93,7 +91,7 @@ void runPlotter(TString level)
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution");
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", scale);
     }
 
 
@@ -111,7 +109,7 @@ void runPlotter(TString level)
 
       plotter.LoopEventsByChannel(level + jetbin);
 
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution");
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale);
     }
 
 
@@ -143,8 +141,8 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  plotter.SetTitle(title);
 
-	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL",  logY);
+	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL",  logY);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
 	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);
@@ -152,7 +150,6 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",  scale, true, xmin, xmax);
-	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",   linY, true, xmin, xmax);
 	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  scale, true,    0,  500);
