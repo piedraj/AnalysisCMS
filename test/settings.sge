@@ -1,0 +1,15 @@
+#!/bin/sh
+#$ -P l.gaes
+#$ -S /bin/bash
+#$ -cwd
+#$ -t 1-1
+#$ -N hadd
+#$ -o job_$JOB_ID-$TASK_ID.out
+#$ -j y
+
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+eval `scramv1 runtime -sh`
+
+pushd $FOLDER
+`cat ../../test/merge.sh | grep hadd | awk -v line=$SGE_TASK_ID '{ if (NR==line) print }'`
+popd

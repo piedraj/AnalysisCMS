@@ -91,10 +91,10 @@ Notice that input files can be accessed directly from eos when working from lxpl
 4. Draw
 ====
 
-First merge the files produced in the previous step.
+First `hadd` the files produced in the previous step.
 
     cd test
-    ./merge.sh
+    ./submit-hadd.sh
 
 Then compile and draw your favorite distributions.
 
