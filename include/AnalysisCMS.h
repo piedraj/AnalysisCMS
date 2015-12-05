@@ -28,8 +28,6 @@ struct Lepton
   int            type;  // Loose, Tight
   int            flavour;
   float          iso;
-  float          dxy;   // Tighter IP when requiring fabs(dxy) < 0.02
-  float          dz;    // Tighter IP when requiring fabs(dz)  < 0.10
   TLorentzVector v;
 };
 
@@ -193,22 +191,12 @@ class AnalysisCMS : public AnalysisBase
 
   // WZ histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_m3l        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl1pt      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl2pt      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlpt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl1eta     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl2eta     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wleta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzl1deltar[nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzl2deltar[nchannel][ncut][njetbin+1];
-  TH1D* 	         h_wldxy      [nchannel][ncut][njetbin+1];
-  TH1D*			 h_wldz       [nchannel][ncut][njetbin+1];
-  TH1D*			 h_zl1dxy     [nchannel][ncut][njetbin+1];
-  TH1D*			 h_zl1dz      [nchannel][ncut][njetbin+1];
-  TH1D*			 h_zl2dxy     [nchannel][ncut][njetbin+1];
-  TH1D*			 h_zl2dz      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m3l       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl1pt     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_zl2pt     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_wlpt      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_wlzldeltar[nchannel][ncut][njetbin+1];
 };
 
 #endif

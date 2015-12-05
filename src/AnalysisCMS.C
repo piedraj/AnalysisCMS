@@ -122,22 +122,12 @@ void AnalysisCMS::Loop(TString filename,
 
 	// WZ histograms
 	//----------------------------------------------------------------------
-	h_m3l        [i][j][k] = new TH1D("h_m3l"         + suffix, "", 2000,     0,  2000);
-	h_mtw        [i][j][k] = new TH1D("h_mtw"         + suffix, "", 1000,     0,  1000);
-	h_zl1pt      [i][j][k] = new TH1D("h_zl1pt"       + suffix, "", 1000,     0,  1000);
-	h_zl2pt      [i][j][k] = new TH1D("h_zl2pt"       + suffix, "", 1000,     0,  1000);
-	h_wlpt       [i][j][k] = new TH1D("h_wlpt"        + suffix, "", 1000,     0,  1000);
-	h_zl1eta     [i][j][k] = new TH1D("h_zl1eta"      + suffix, "",  120,    -3,     3);
-	h_zl2eta     [i][j][k] = new TH1D("h_zl2eta"      + suffix, "",  120,    -3,     3);
-	h_wleta      [i][j][k] = new TH1D("h_wleta"       + suffix, "",  120,    -3,     3);
-	h_wlzl1deltar[i][j][k] = new TH1D("h_wlzl1deltar" + suffix, "",  100,     0,     5);
-	h_wlzl2deltar[i][j][k] = new TH1D("h_wlzl2deltar" + suffix, "",  100,     0,     5);
-	h_wldxy      [i][j][k] = new TH1D("h_wldxy"       + suffix, "",  500, -0.05,  0.05);
-	h_wldz       [i][j][k] = new TH1D("h_wldz"        + suffix, "",  500, -0.05,  0.05);
-	h_zl1dxy     [i][j][k] = new TH1D("h_zl1dxy"      + suffix, "",  500, -0.05,  0.05);
-	h_zl1dz      [i][j][k] = new TH1D("h_zl1dz"       + suffix, "",  500, -0.05,  0.05);
-	h_zl2dxy     [i][j][k] = new TH1D("h_zl2dxy"      + suffix, "",  500, -0.05,  0.05);
-	h_zl2dz      [i][j][k] = new TH1D("h_zl2dz"       + suffix, "",  500, -0.05,  0.05);
+	h_m3l       [i][j][k] = new TH1D("h_m3l"        + suffix, "", 2000, 0, 2000);
+	h_mtw       [i][j][k] = new TH1D("h_mtw"        + suffix, "", 1000, 0, 1000);
+	h_zl1pt     [i][j][k] = new TH1D("h_zl1pt"      + suffix, "", 1000, 0, 1000);
+	h_zl2pt     [i][j][k] = new TH1D("h_zl2pt"      + suffix, "", 1000, 0, 1000);
+	h_wlpt      [i][j][k] = new TH1D("h_wlpt"       + suffix, "", 1000, 0, 1000);
+	h_wlzldeltar[i][j][k] = new TH1D("h_wlzldeltar" + suffix, "",  100, 0,    5);
       }
     }
   }
@@ -417,23 +407,14 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
     {
       float wlzl1deltar = WLepton.v.DeltaR(ZLepton1.v);
       float wlzl2deltar = WLepton.v.DeltaR(ZLepton2.v);
+      float wlzldeltar  = min(wlzl1deltar, wlzl2deltar);
 
-      h_m3l        [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
-      h_mtw        [ichannel][icut][ijet]->Fill(_mtw,             _event_weight);
-      h_zl1pt      [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
-      h_zl2pt      [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
-      h_wlpt       [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
-      h_zl1eta     [ichannel][icut][ijet]->Fill(ZLepton1.v.Eta(), _event_weight);
-      h_zl2eta     [ichannel][icut][ijet]->Fill(ZLepton2.v.Eta(), _event_weight);
-      h_wleta      [ichannel][icut][ijet]->Fill(WLepton.v.Eta(),  _event_weight);
-      h_wlzl1deltar[ichannel][icut][ijet]->Fill(wlzl1deltar,      _event_weight);
-      h_wlzl2deltar[ichannel][icut][ijet]->Fill(wlzl2deltar,      _event_weight);
-      h_wldxy      [ichannel][icut][ijet]->Fill(WLepton.dxy,      _event_weight);
-      h_wldz       [ichannel][icut][ijet]->Fill(WLepton.dz,       _event_weight);
-      h_zl1dxy     [ichannel][icut][ijet]->Fill(ZLepton1.dxy,     _event_weight);
-      h_zl1dz      [ichannel][icut][ijet]->Fill(ZLepton1.dz,      _event_weight);
-      h_zl2dxy     [ichannel][icut][ijet]->Fill(ZLepton2.dxy,     _event_weight);
-      h_zl2dz      [ichannel][icut][ijet]->Fill(ZLepton2.dz,      _event_weight);
+      h_m3l       [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
+      h_mtw       [ichannel][icut][ijet]->Fill(_mtw,             _event_weight);
+      h_zl1pt     [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
+      h_zl2pt     [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
+      h_wlpt      [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
+      h_wlzldeltar[ichannel][icut][ijet]->Fill(wlzldeltar,       _event_weight);
     }
 
 
@@ -559,9 +540,7 @@ void AnalysisCMS::GetLeptons()
       
     lep.index   = i;
     lep.type    = Loose;
-    lep.flavour = std_vector_lepton_flavour     ->at(i);
-    lep.dxy     = std_vector_lepton_BestTrackdxy->at(i);
-    lep.dz      = std_vector_lepton_BestTrackdz ->at(i);
+    lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
 
