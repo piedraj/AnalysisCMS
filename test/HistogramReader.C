@@ -9,6 +9,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
+  _title        ("cms"),
   _luminosity_fb(0),
   _datanorm     (false),
   _drawratio    (false),
@@ -358,9 +359,17 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
 
-  DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
-  DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
-  DrawLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  if (_title.EqualTo("cms"))
+    {
+      DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+      DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+    }
+  else
+    {
+      DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+    }
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
 
   SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
 

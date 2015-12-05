@@ -133,12 +133,16 @@ void runPlotter(TString level)
 	{
 	  TString suffix = "_" + schannel[i];
 
+	  TString title = (i < lastchannel) ? lchannel[i] : "cms";
+
 	  float xmin = (level.Contains("WZ")) ?  60 :   0;
 	  float xmax = (level.Contains("WZ")) ? 120 : 300;
 
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
+	  plotter.SetTitle(title);
+
 	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL", scale, true,    0,   30);

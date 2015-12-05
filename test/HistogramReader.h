@@ -113,6 +113,8 @@ class HistogramReader
   void     SetLuminosity      (Float_t        lumi) {_luminosity_fb = lumi;}
 
   void     SetStackOption     (TString        option) {_stackoption = option;}
+
+  void     SetTitle           (TString        title) {_title = title;}
   
   Float_t  Yield              (TH1*           hist);
 
@@ -141,6 +143,7 @@ class HistogramReader
   TString               _inputdir;
   TString               _outputdir;
   TString               _stackoption;
+  TString               _title;
 
   TFile*                _datafile;
   TH1*                  _datahist;
