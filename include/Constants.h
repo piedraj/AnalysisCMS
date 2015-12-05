@@ -64,7 +64,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 36;
+const int ncut = 47;
 
 enum {
   Top_00_Has2Leptons,
@@ -95,6 +95,17 @@ enum {
   WW_15_ZWindowBVeto,
   WW_16_ZWindowSoftMu,
   WW_17_ZCR,
+  WW_18_ZWindow25,
+  WW_19_ZWindow26,
+  WW_20_ZWindow27,
+  WW_21_ZWindow28,
+  WW_22_ZWindow29,
+  WW_23_ZWindow30,
+  WW_24_ZWindow31,
+  WW_25_ZWindow32,
+  WW_26_ZWindow33,
+  WW_27_ZWindow34,
+  WW_28_ZWindow35,
   monoH_00_Mc,
   monoH_01_DRll,
   monoH_02_MpMet,
@@ -134,6 +145,17 @@ const TString scut[ncut] = {
   "WW/15_ZWindowBVeto",
   "WW/16_ZWindowSoftMu",
   "WW/17_ZCR",
+  "WW/18_ZWindow25",
+  "WW/19_ZWindow26",
+  "WW/20_ZWindow27",
+  "WW/21_ZWindow28",
+  "WW/22_ZWindow29",
+  "WW/23_ZWindow30",
+  "WW/24_ZWindow31",
+  "WW/25_ZWindow32",
+  "WW/26_ZWindow33",
+  "WW/27_ZWindow34",
+  "WW/28_ZWindow35",  
   "monoH/00_Mc",
   "monoH/01_DRll",
   "monoH/02_MpMet",

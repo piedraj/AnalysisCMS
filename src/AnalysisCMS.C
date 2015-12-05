@@ -753,6 +753,13 @@ void AnalysisCMS::AnalysisWW()
   bool passZwindow = (fabs(mll - Z_MASS) < 15.);  // Z window at 2 leptons level
   LevelHistograms(WW_11_ZWindow, passZwindow);
 
+  bool Jet[10];
+
+  for (UInt_t j = 0; j < 10; ++j ){
+    Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
+    LevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
+  }
+
   passZwindow &= (MET.Et() > 20.);
   LevelHistograms(WW_12_ZWindowPfMet, passZwindow);
 
