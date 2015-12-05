@@ -181,7 +181,7 @@ void AnalysisCMS::Loop(TString filename,
 
     // Fill 3 lepton histograms
     //--------------------------------------------------------------------------
-    if (_analysi_wz) AnalysisWZ();
+    if (_analysis_wz) AnalysisWZ();
 
 
     // Fill 2 lepton histograms
