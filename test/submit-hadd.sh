@@ -2,7 +2,7 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-hadd.sh ../rootfiles/25ns"
+    echo "  ./submit-hadd.sh ../rootfiles"
     echo "  "
     exit -1
 fi

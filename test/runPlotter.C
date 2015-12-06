@@ -1,8 +1,8 @@
 #include "HistogramReader.h"
 
 
-const TString inputdir  = "../rootfiles/25ns/";
-const TString outputdir = "figures/25ns/";
+const TString inputdir  = "../rootfiles/";
+const TString outputdir = "figures/";
 
 enum {linY, logY};
 

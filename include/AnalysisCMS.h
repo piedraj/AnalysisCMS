@@ -14,12 +14,6 @@
 #include <TTree.h>
 
 
-// verbosity = 0 (silent)  doesn't print anything
-// verbosity > 0 (default) prints the input values and the progress
-// verbosity > 1 (debug)
-const int verbosity = 1;
-
-
 enum {Loose, Tight};
 
 struct Lepton
@@ -45,44 +39,43 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0);
 
-  void    AddAnalysis      (TString analysis);
+  void    AddAnalysis      (TString  analysis);
 
-  float   MuonIsolation    (int     k);
+  float   MuonIsolation    (int      k);
 
-  float   ElectronIsolation(int     k);
+  float   ElectronIsolation(int      k);
 
-  bool    IsFiducialLepton (int     k);
+  bool    IsFiducialLepton (int      k);
 
-  bool    IsTightLepton    (int     k);
+  bool    IsTightLepton    (int      k);
 
-  bool    IsIsolatedLepton (int     k);
+  bool    IsIsolatedLepton (int      k);
 
-  void    LevelHistograms  (int     icut,
-			    bool    pass);
+  void    LevelHistograms  (int      icut,
+			    bool     pass);
 
-  void    FillHistograms   (int     ichannel,
-			    int     icut,
-			    int     ijet);
+  void    FillHistograms   (int      ichannel,
+			    int      icut,
+			    int      ijet);
 
-  void    Loop             (TString sample,
-			    TString era,
-			    float   luminosity);
+  void    Loop             (TString  filename,
+			    float    luminosity);
 
-  void    Summary          (TString analysis,
-			    TString precision,
-			    TString title);
+  void    Summary          (TString  analysis,
+			    TString  precision,
+			    TString  title);
 
-  void    GetSampleName    (TString filename);
+  void    Setup            (TString  filename,
+			    float    luminosity);
 
-  void    ApplyWeights     (TString sample,
-			    float   luminosity);
+  void    ApplyWeights     ();
 
   void    GetLeptons       ();
 
   void    GetJets          ();
 
-  void    GetMET           (float   module,
-			    float   phi);
+  void    GetMET           (float    module,
+			    float    phi);
 
   void    GetHt            ();
 
@@ -90,7 +83,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetMetVar        ();
 
-  float   GetMt            (Lepton lep);
+  void    GetMt            (Lepton   lep,
+			    float&   transverse_mass);
 
   void    GetMc            ();
 
@@ -100,7 +94,9 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetDPhiVeto      ();
 
-  void    GetEventVariables();
+  void    EndJob           ();
+
+  void    EventSetup       ();
 
   void    AnalysisTop      ();
 
@@ -111,6 +107,9 @@ class AnalysisCMS : public AnalysisBase
   void    AnalysisWZ       ();
 
   void    EventDump        ();
+
+  void    PrintProgress    (Long64_t counter,
+			    Long64_t total);
 
 
   // Data members
@@ -133,7 +132,9 @@ class AnalysisCMS : public AnalysisBase
   bool                   _foundsoftmuon;
   bool                   _passdphiveto;
 
+  TString                _filename;
   TString                _sample;
+  float                  _luminosity;
   float                  _event_weight;
   float                  _ht;
   float                  _pt2l;
@@ -146,6 +147,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _mc;
   float                  _mpmet;
   float                  _metvar;
+
+  Long64_t               _nentries;
 
   int                    _channel;
   unsigned int           _nelectron;

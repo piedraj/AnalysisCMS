@@ -2,7 +2,7 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh ../rootfiles/25ns"
+    echo "  ./merge.sh ../rootfiles"
     echo "  "
     exit -1
 fi

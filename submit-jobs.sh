@@ -1,16 +1,15 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then
+if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_MC.txt             25ns"
-    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_05Oct2015.txt  25ns"
-    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_PromptReco.txt 25ns"
+    echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_MC.txt"
+    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_05Oct2015.txt"
+    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_PromptReco.txt"
     echo "  "
     exit -1
 fi
 
 export SAMPLES=$1
-export ERA=$2
 export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
 
 echo "  "
@@ -18,13 +17,13 @@ echo "  Let's play it safe. Compiling runAnalysis..."
 ./make
 
 echo "  "
-echo "  Removing rootfiles/"$ERA"..."
-echo "  Removing txt/"$ERA"..."
-rm -rf rootfiles/$ERA
-rm -rf txt/$ERA
+echo "  Removing rootfiles folder"
+echo "  Removing txt folder"
+rm -rf rootfiles
+rm -rf txt
 
 echo "  "
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
-qsub -t 1-$NJOBS -v SAMPLES -v ERA settings.sge
+qsub -t 1-$NJOBS -v SAMPLES settings.sge
 echo "  "

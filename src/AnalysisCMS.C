@@ -31,35 +31,11 @@ void AnalysisCMS::AddAnalysis(TString analysis)
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisCMS::Loop(TString filename,
-		       TString era,
-		       float   luminosity)
+void AnalysisCMS::Loop(TString filename, float luminosity)
 {
-  GetSampleName(filename);
-
   if (fChain == 0) return;
 
-  Long64_t nentries = fChain->GetEntries();
-  
-  if (verbosity > 0)
-    {
-      printf("\n");
-      printf("   filename: %s\n",        filename.Data());
-      printf("     sample: %s\n",        _sample.Data());
-      printf("        era: %s\n",        era.Data());
-      printf(" luminosity: %.2f pb-1\n", 1e3*luminosity);
-      printf("   nentries: %lld\n",      nentries);
-    }
-
-
-  // Additional settings
-  //----------------------------------------------------------------------------
-  gSystem->mkdir(Form("rootfiles/%s", era.Data()), kTRUE);
-  gSystem->mkdir(Form("txt/%s",       era.Data()), kTRUE);
-
-  root_output = new TFile("rootfiles/" + era + "/" + _sample + ".root", "recreate");
-
-  if (_eventdump) txt_eventdump.open("txt/" + era + "/" + _sample + "_eventdump.txt");
+  Setup(filename, luminosity);
 
 
   // Define histograms
@@ -135,7 +111,7 @@ void AnalysisCMS::Loop(TString filename,
 
   // Loop over events
   //----------------------------------------------------------------------------
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
 
@@ -143,43 +119,17 @@ void AnalysisCMS::Loop(TString filename,
 
     fChain->GetEntry(jentry);
 
+    PrintProgress(jentry, _nentries);
+
+    EventSetup();
+
+    
+    // Analysis
+    //--------------------------------------------------------------------------
     if (!trigger) continue;
 
 
-    // Print progress
-    //--------------------------------------------------------------------------
-    if (verbosity > 0)
-      {
-        double progress = 1e2 * (jentry+1) / nentries;
-
-	double fractpart, intpart;
-
-	fractpart = modf(progress, &intpart);
-
-	if (fractpart < 1e-2)
-	  {
-	    std::cout << "   progress: " << int(ceil(progress)) << "%\r";
-	    std::cout.flush();
-	  }
-      }
-
-
-    ApplyWeights(_sample, luminosity);
-
-    GetMET(pfType1Met, pfType1Metphi);
-
-    GetLeptons();
-
-    GetJets();
-
-    GetHt();
-
-    GetSoftMuon();
-
-    GetEventVariables();
-
-
-    // Fill 3 lepton histograms
+    // Fill WZ histograms
     //--------------------------------------------------------------------------
     if (_analysis_wz) AnalysisWZ();
 
@@ -209,41 +159,7 @@ void AnalysisCMS::Loop(TString filename,
   }
 
 
-  //----------------------------------------------------------------------------
-  // Summary
-  //----------------------------------------------------------------------------
-  if (_eventdump) txt_eventdump.close();
-
-  txt_summary.open("txt/" + era + "/" + _sample + ".txt");
-
-  txt_summary << "\n";
-  txt_summary << Form("   filename: %s\n",        filename.Data());
-  txt_summary << Form("     sample: %s\n",        _sample.Data());
-  txt_summary << Form("        era: %s\n",        era.Data());
-  txt_summary << Form(" luminosity: %.2f pb-1\n", 1e3*luminosity);
-  txt_summary << Form("   nentries: %lld\n",      nentries);
-  txt_summary << "\n";
-
-  if (_analysis_top)  Summary("Top",   "11.0", "raw yields");
-  if (_analysis_ttdm) Summary("TTDM",  "11.0", "raw yields");
-  if (_analysis_ww)   Summary("WW",    "11.0", "raw yields");
-  if (_analysis_ww)   Summary("monoH", "11.0", "raw yields");
-  if (_analysis_wz)   Summary("WZ",    "11.0", "raw yields");
-
-  txt_summary.close();
-
-  root_output->cd();
- 
-  if (verbosity > 0)
-    {
-      printf("\n\n Writing histograms. This can take a while...\n");
-    }
-
-  root_output->Write("", TObject::kOverwrite);
-
-  root_output->Close();
-
-  if (verbosity > 0) printf("\n Done!\n\n");
+  EndJob();
 }
 
 
@@ -472,15 +388,19 @@ void AnalysisCMS::Summary(TString analysis,
 
 
 //------------------------------------------------------------------------------
-// GetSampleName
+// Setup
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetSampleName(TString filename)
+void AnalysisCMS::Setup(TString filename, float luminosity)
 {
+  _filename   = filename;
+  _luminosity = luminosity;
+  _nentries   = fChain->GetEntries();
+  
   TString tok;
 
   Ssiz_t from = 0;
 
-  while (filename.Tokenize(tok, from, "latino_")) {
+  while (_filename.Tokenize(tok, from, "latino_")) {
 
     if (tok.Contains(".root")) {
 
@@ -488,11 +408,24 @@ void AnalysisCMS::GetSampleName(TString filename)
     }
   }
 
+  printf("\n");
+  printf("   filename: %s\n",        _filename.Data());
+  printf("     sample: %s\n",        _sample.Data());
+  printf(" luminosity: %.3f fb-1\n", _luminosity);
+  printf("   nentries: %lld\n",      _nentries);
+
   if (_sample.Contains("DoubleEG"))       _ismc = false;
   if (_sample.Contains("DoubleMuon"))     _ismc = false;
   if (_sample.Contains("MuonEG"))         _ismc = false;
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
+  
+  gSystem->mkdir("rootfiles");
+  gSystem->mkdir("txt");
+
+  root_output = new TFile("rootfiles/" + _sample + ".root", "recreate");
+
+  if (_eventdump) txt_eventdump.open("txt/" + _sample + "_eventdump.txt");
 
   return;
 }
@@ -501,15 +434,15 @@ void AnalysisCMS::GetSampleName(TString filename)
 //------------------------------------------------------------------------------
 // ApplyWeights
 //------------------------------------------------------------------------------
-void AnalysisCMS::ApplyWeights(TString sample, float luminosity)
+void AnalysisCMS::ApplyWeights()
 {
   _event_weight = 1.;
-  
+
   if (!_ismc) return;
 
-  _event_weight *= puW * baseW * luminosity;
+  _event_weight *= puW * baseW * _luminosity;
 
-  if (sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
+  if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
 
   if (!GEN_weight_SM) return;
 
@@ -851,7 +784,8 @@ void AnalysisCMS::AnalysisWZ()
 
   _m3l  = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
   _pt2l = (ZLepton1.v + ZLepton2.v).Pt();
-  _mtw  = GetMt(WLepton);
+  
+  GetMt(WLepton, _mtw);
 
   bool pass = true;
 
@@ -979,21 +913,21 @@ void AnalysisCMS::GetDPhiVeto()
 
 //------------------------------------------------------------------------------                                                               
 // GetMt
-//------------------------------------------------------------------------------                                                               
-float AnalysisCMS::GetMt(Lepton lep)
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetMt(Lepton lep, float& transverse_mass)
 {
-  float transverse_mass = 0;
+  transverse_mass = 0;
 
   float met  = MET.Et();
   float pt   = lep.v.Pt();
   float dphi = lep.v.DeltaPhi(MET);
 
-  if (met < 0) return transverse_mass;
-  if (pt  < 0) return transverse_mass;
+  if (met < 0) return;
+  if (pt  < 0) return;
 
   transverse_mass = sqrt(2*pt*met*(1. - cos(dphi)));
 
-  return transverse_mass;
+  return;
 }
 
 
@@ -1041,16 +975,88 @@ void AnalysisCMS::GetSoftMuon()
 
 
 //------------------------------------------------------------------------------
-// GetEventVariables
+// EventSetup
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetEventVariables()
+void AnalysisCMS::EventSetup()
 {
-  _mt1 = GetMt(Lepton1);
-  _mt2 = GetMt(Lepton2);
+  ApplyWeights();
+  
+  GetMET(pfType1Met, pfType1Metphi);
+  
+  GetLeptons();
+
+  GetJets();
+
+  GetHt();
+
+  GetSoftMuon();
+
+  GetMt(Lepton1, _mt1);
+
+  GetMt(Lepton2, _mt2);
 
   GetMc();
+  
   GetPtWW();
+
   GetMpMet();
+
   GetMetVar();
+
   GetDPhiVeto();
+}
+
+
+//------------------------------------------------------------------------------
+// PrintProgress
+//------------------------------------------------------------------------------
+void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
+{
+  double progress = 1e2 * (counter+1) / total;
+
+  double fractpart, intpart;
+
+  fractpart = modf(progress, &intpart);
+
+  if (fractpart < 1e-2)
+    {
+      std::cout << "   progress: " << int(ceil(progress)) << "%\r";
+      std::cout.flush();
+    }
+}
+
+
+//------------------------------------------------------------------------------
+// EndJob
+//------------------------------------------------------------------------------
+void AnalysisCMS::EndJob()
+{
+  if (_eventdump) txt_eventdump.close();
+
+  txt_summary.open("txt/" + _sample + ".txt");
+
+  txt_summary << "\n";
+  txt_summary << Form("   filename: %s\n",        _filename.Data());
+  txt_summary << Form("     sample: %s\n",        _sample.Data());
+  txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
+  txt_summary << Form("   nentries: %lld\n",      _nentries);
+  txt_summary << "\n";
+
+  if (_analysis_top)  Summary("Top",   "11.0", "raw yields");
+  if (_analysis_ttdm) Summary("TTDM",  "11.0", "raw yields");
+  if (_analysis_ww)   Summary("WW",    "11.0", "raw yields");
+  if (_analysis_ww)   Summary("monoH", "11.0", "raw yields");
+  if (_analysis_wz)   Summary("WZ",    "11.0", "raw yields");
+
+  txt_summary.close();
+
+  root_output->cd();
+ 
+  printf("\n\n Writing histograms. This can take a while...\n");
+
+  root_output->Write("", TObject::kOverwrite);
+  
+  root_output->Close();
+  
+  printf("\n Done!\n\n");
 }

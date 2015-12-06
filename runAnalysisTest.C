@@ -1,7 +1,7 @@
-#include "src/AnalysisCMS.C"
+#include "src/AnalysisTest.C"
 
 
-void runAnalysis(TString filename)
+void runAnalysisTest(TString filename)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -9,12 +9,9 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  AnalysisCMS analysis(latino);
+  AnalysisTest analysis(latino);
 
   analysis.AddAnalysis("Top");
-  analysis.AddAnalysis("TTDM");
-  analysis.AddAnalysis("WW");
-  analysis.AddAnalysis("WZ");
 
   analysis.Loop(filename, lumi25ns_fb);
 }
@@ -25,12 +22,12 @@ int main(int argc, char ** argv)
 {
   if (argc != 2)
     {
-      printf("\n ./runAnalysis <filename>\n\n");
+      printf("\n ./runAnalysisTest <filename>\n\n");
       
       return -1;
     }
 
-  runAnalysis(argv[1]);
+  runAnalysisTest(argv[1]);
 
   return 0;
 }
