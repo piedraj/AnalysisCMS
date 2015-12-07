@@ -20,11 +20,6 @@ class AnalysisTTDM : public AnalysisCMS
   void Loop                  (TString analysis,
 			      TString sample,
 			      float   luminosity);
-
-
-  // Analysis histograms
-  //----------------------------------------------------------------------------
-  TH1D*                  h_test[nchannel][ncut][njetbin+1];
 };
 
 #endif

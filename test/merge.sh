@@ -20,8 +20,8 @@ hadd -f -k 06_ZJets.root DYJetsToLL_M*.root
 hadd -f -k 07_WJets.root WJetsToLNu__part*.root
 hadd -f -k 08_TTV.root   TTWJetsToLNu.root TTZToLLNuNu_M-10.root
 hadd -f -k 09_HWW.root   GluGluHToWWTo2L2Nu_M125.root
-hadd -f -k 10_Wg.root    Wg.root
-hadd -f -k 11_VVV.root   WWZ.root WZZ.root
+hadd -f -k 10_Vg.root    Wg.root Zg__part*.root
+hadd -f -k 11_VVV.root   WWZ.root WZZ.root ZZZ.root
 
 popd
 

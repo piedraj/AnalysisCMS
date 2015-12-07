@@ -122,9 +122,6 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
-  float deltarll   = Lepton1.v.DeltaR(Lepton2.v);
-  float deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
-
   h_counterRaw[ichannel][icut][ijet]->Fill(1);
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
@@ -133,16 +130,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
-  h_deltarll  [ichannel][icut][ijet]->Fill(deltarll,       _event_weight);
+  h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
   h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
   h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
   h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);
-  h_mt1       [ichannel][icut][ijet]->Fill(_mt1,           _event_weight);
-  h_mt2       [ichannel][icut][ijet]->Fill(_mt2,           _event_weight);
+  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);
+  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);
   h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
-  h_deltaphill[ichannel][icut][ijet]->Fill(deltaphill,     _event_weight);
+  h_deltaphill[ichannel][icut][ijet]->Fill(_deltaphill,    _event_weight);
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
@@ -256,7 +253,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight *= puW * baseW * _luminosity;
+  _event_weight = puW * baseW * _luminosity;
 
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
 
@@ -463,9 +460,7 @@ void AnalysisCMS::GetHt()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphi1   = fabs(Lepton1.v.DeltaPhi(MET));
-  Float_t dphi2   = fabs(Lepton2.v.DeltaPhi(MET));
-  Float_t dphimin = min(dphi1, dphi2);
+  Float_t dphimin = min(dphilmet1, dphilmet2);
 
   Float_t fullpmet = MET.Et();
   Float_t trkpmet  = trkMet;
@@ -490,9 +485,9 @@ void AnalysisCMS::GetMetVar()
 
 
 //------------------------------------------------------------------------------                                                               
-// GetDPhiVeto                                                                                                                                 
+// GetDeltaPhiVeto                                                                                                                                 
 //------------------------------------------------------------------------------                                                               
-void AnalysisCMS::GetDPhiVeto()
+void AnalysisCMS::GetDeltaPhiVeto()
 {
   _passdphiveto = (njet < 2 || dphilljetjet < 165.*TMath::DegToRad());
 }
@@ -578,10 +573,6 @@ void AnalysisCMS::EventSetup()
 
   GetSoftMuon();
 
-  GetMt(Lepton1, _mt1);
-
-  GetMt(Lepton2, _mt2);
-
   GetMc();
   
   GetPtWW();
@@ -590,7 +581,9 @@ void AnalysisCMS::EventSetup()
 
   GetMetVar();
 
-  GetDPhiVeto();
+  GetDeltaPhill();
+
+  GetDeltaPhiVeto();
 }
 
 
@@ -661,14 +654,14 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_njet30    [ichannel][icut][ijet] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
   h_nbjet15   [ichannel][icut][ijet] = new TH1D("h_nbjet15"    + suffix, "",    7, -0.5,  6.5);
   h_nvtx      [ichannel][icut][ijet] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
-  h_deltarll  [ichannel][icut][ijet] = new TH1D("h_deltarll"   + suffix, "",  100,    0,    5);
+  h_drll      [ichannel][icut][ijet] = new TH1D("h_drll"       + suffix, "",  100,    0,    5);
   h_deltaphill[ichannel][icut][ijet] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
   h_met       [ichannel][icut][ijet] = new TH1D("h_met"        + suffix, "", 3000,    0, 3000);
   h_trkmet    [ichannel][icut][ijet] = new TH1D("h_trkmet"     + suffix, "", 3000,    0, 3000);
   h_mpmet     [ichannel][icut][ijet] = new TH1D("h_mpmet"      + suffix, "", 3000,    0, 3000);
   h_m2l       [ichannel][icut][ijet] = new TH1D("h_m2l"        + suffix, "", 3000,    0, 3000);
-  h_mt1       [ichannel][icut][ijet] = new TH1D("h_mt1"        + suffix, "", 3000,    0, 3000);
-  h_mt2       [ichannel][icut][ijet] = new TH1D("h_mt2"        + suffix, "", 3000,    0, 3000);
+  h_mtw1      [ichannel][icut][ijet] = new TH1D("h_mtw1"       + suffix, "", 3000,    0, 3000);
+  h_mtw2      [ichannel][icut][ijet] = new TH1D("h_mtw2"       + suffix, "", 3000,    0, 3000);
   h_mth       [ichannel][icut][ijet] = new TH1D("h_mth"        + suffix, "", 3000,    0, 3000);
   h_mc        [ichannel][icut][ijet] = new TH1D("h_mc"         + suffix, "", 3000,    0, 3000);
   h_ht        [ichannel][icut][ijet] = new TH1D("h_ht"         + suffix, "", 3000,    0, 3000);
@@ -676,4 +669,13 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_pt2       [ichannel][icut][ijet] = new TH1D("h_pt2"        + suffix, "", 3000,    0, 3000);
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
+}
+
+
+//------------------------------------------------------------------------------
+// GetDeltaPhill
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetDeltaPhill()
+{
+  _deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
 }

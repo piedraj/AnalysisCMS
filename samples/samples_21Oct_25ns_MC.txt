@@ -143,7 +143,6 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WZTo3LNu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WZZ.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Wg.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Wg500.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZTo4L__part0.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZTo4L__part1.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZTo4L__part2.root
@@ -153,6 +152,11 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZTo4L__part6.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZTo4L__part7.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ZZZ.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Zg__part1.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Zg__part2.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Zg__part3.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Zg__part4.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_Zg__part5.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ggZZ2e2m.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ggZZ2e2t__part0.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ggZZ2m2t.root

@@ -46,8 +46,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	TString suffix = "_" + schannel[i];
 
 	DefineHistograms(i, j, k, suffix);
-
-	h_test[i][j][k] = new TH1D("h_test" + suffix, "", 300, 0, 300);
       }
     }
   }
@@ -140,8 +138,6 @@ void AnalysisTTDM::FillAnalysisHistograms(int ichannel,
 					  int icut,
 					  int ijet)
 {
-  h_test[ichannel][icut][ijet]->Fill(_m2l, _event_weight);
-
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
 
@@ -157,6 +153,6 @@ void AnalysisTTDM::FillLevelHistograms(int  icut,
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
-  FillAnalysisHistograms(_channel, icut, _jetbin);
-  FillAnalysisHistograms(_channel, icut, njetbin);
+  //  FillAnalysisHistograms(_channel, icut, _jetbin);
+  //  FillAnalysisHistograms(_channel, icut, njetbin);
 }

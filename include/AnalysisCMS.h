@@ -58,7 +58,9 @@ class AnalysisCMS : public AnalysisBase
 			    int      icut,
 			    int      ijet);
 
-  void    GetDPhiVeto      ();
+  void    GetDeltaPhill    ();
+
+  void    GetDeltaPhiVeto  ();
 
   void    GetHt            ();
 
@@ -111,39 +113,39 @@ class AnalysisCMS : public AnalysisBase
   TLorentzVector         MET;
 
   bool                   _eventdump;
-  bool                   _ismc;
   bool                   _foundsoftmuon;
+  bool                   _ismc;
   bool                   _passdphiveto;
 
+  TString                _analysis;
   TString                _filename;
   TString                _sample;
-  TString                _analysis;
-  float                  _luminosity;
+
+  float                  _deltaphill;
   float                  _event_weight;
   float                  _ht;
-  float                  _pt2l;
-  float                  _ptww;
+  float                  _luminosity;
+  float                  _mc;
+  float                  _metvar;
+  float                  _mpmet;
+  float                  _mtw;
   float                  _m2l;
   float                  _m3l;
-  float                  _mt1;
-  float                  _mt2;
-  float                  _mtw;
-  float                  _mc;
-  float                  _mpmet;
-  float                  _metvar;
+  float                  _ptww;
+  float                  _pt2l;
 
   Long64_t               _nentries;
 
   int                    _channel;
+  unsigned int           _jetbin;
+  unsigned int           _nbjet15;
   unsigned int           _nelectron;
+  unsigned int           _njet30;
   unsigned int           _nlepton;
   unsigned int           _ntight;
-  unsigned int           _njet30;
-  unsigned int           _nbjet15;
-  unsigned int           _jetbin;
   
-  ofstream               txt_summary;
   ofstream               txt_eventdump;
+  ofstream               txt_summary;
   TFile*                 root_output;
 
 
@@ -154,14 +156,14 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_njet30    [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15   [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_deltarll  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_drll      [nchannel][ncut][njetbin+1];
   TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
   TH1D*                  h_m2l       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mt1       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mt2       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw1      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw2      [nchannel][ncut][njetbin+1];
   TH1D*                  h_mth       [nchannel][ncut][njetbin+1];
   TH1D*                  h_mc        [nchannel][ncut][njetbin+1];
   TH1D*                  h_ht        [nchannel][ncut][njetbin+1];

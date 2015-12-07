@@ -1,7 +1,7 @@
 #include "HistogramReader.h"
 
 
-const TString inputdir  = "../rootfiles/TTDM/";
+const TString inputdir  = "../rootfiles/";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -24,7 +24,7 @@ void runPlotter(TString level)
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
-  HistogramReader plotter(inputdir, outputdir);
+  HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetLuminosity(lumi25ns_fb);
   plotter.SetStackOption("hist");
@@ -45,7 +45,7 @@ void runPlotter(TString level)
       plotter.AddProcess("07_WJets", "W+jets",  kGray+1);
       plotter.AddProcess("05_WW",    "WW",      kAzure-9);
       plotter.AddProcess("09_HWW",   "HWW",     kRed);
-      plotter.AddProcess("10_Wg",    "W#gamma", kBlue);
+      plotter.AddProcess("10_Vg",    "V#gamma", kBlue);
       plotter.AddProcess("03_ZZ",    "ZZ",      kRed+3);
       plotter.AddProcess("04_Top",   "top",     kYellow);
       plotter.AddProcess("08_TTV",   "ttV",     kGreen-6);
@@ -144,14 +144,14 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "njet30"     + suffix, "number of jets (p_{T}^{jet} > 30 GeV)",   -1, 0, "NULL",  logY);
 	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL",  logY);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL",  linY, true,    0,   30);
-	  plotter.Draw(prefix + "deltarll"   + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
+	  plotter.Draw(prefix + "drll"       + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
 	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);
 	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",  scale, true, xmin, xmax);
-	  plotter.Draw(prefix + "mt1"        + suffix, "m_{T,1}",                                 20, 0, "GeV",  scale, true,    0,  500);
-	  plotter.Draw(prefix + "mt2"        + suffix, "m_{T,2}",                                 20, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "mtw1"       + suffix, "m_{T}^{W,1}",                             20, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "mtw2"       + suffix, "m_{T}^{W,2}",                             20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "mth"        + suffix, "m_{T}^{H}",                               10, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "mc"         + suffix, "m_{c}",                                   20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   20, 0, "GeV",  scale, true,    0,  500);
