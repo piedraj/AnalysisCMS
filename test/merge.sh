@@ -14,7 +14,7 @@ pushd $FOLDER
 hadd -f -k 01_Data.root  Run2015D*.root
 hadd -f -k 02_WZ.root    WZTo3LNu.root
 hadd -f -k 03_ZZ.root    ZZTo4L__part*.root ggZZ*.root
-hadd -f -k 04_Top.root   TT__part*.root ST_s-channel.root ST_t-channel*.root ST_tW_*.root
+hadd -f -k 04_Top.root   TTJets__part*.root ST_s-channel.root ST_t-channel*.root ST_tW_*.root
 hadd -f -k 05_WW.root    WWTo2L2Nu.root
 hadd -f -k 06_ZJets.root DYJetsToLL_M*.root
 hadd -f -k 07_WJets.root WJetsToLNu__part*.root

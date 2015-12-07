@@ -68,17 +68,17 @@ void runPlotter(TString level)
 
   // Add signals
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("TTDM"))
-    {
-      plotter.AddSignal("ttDM1scalar20__part0",    "m_{#phi}1 m_{#chi}20",    kRed-4);
-      //      plotter.AddSignal("ttDM1scalar50__part0",    "m_{#phi}1 m_{#chi}50",    kRed-3);
-      //      plotter.AddSignal("ttDM1scalar500__part0",   "m_{#phi}1 m_{#chi}500",   kRed-2);
-      //      plotter.AddSignal("ttDM10scalar10__part0",   "m_{#phi}10 m_{#chi}10",   kRed-1);
-      //      plotter.AddSignal("ttDM50scalar50__part0",   "m_{#phi}50 m_{#chi}50",   kRed);
-      //      plotter.AddSignal("ttDM50scalar200__part0",  "m_{#phi}50 m_{#chi}200",  kRed+1);
-      //      plotter.AddSignal("ttDM50scalar300__part0",  "m_{#phi}50 m_{#chi}300",  kRed+2);
-      //      plotter.AddSignal("ttDM150scalar200__part0", "m_{#phi}150 m_{#chi}200", kRed+3);
-    }
+  //  if (analysis.EqualTo("TTDM"))
+  //    {
+  //      plotter.AddSignal("ttDM1scalar20__part0",    "m_{#phi}1 m_{#chi}20",    kRed-4);
+  //      plotter.AddSignal("ttDM1scalar50__part0",    "m_{#phi}1 m_{#chi}50",    kRed-3);
+  //      plotter.AddSignal("ttDM1scalar500__part0",   "m_{#phi}1 m_{#chi}500",   kRed-2);
+  //      plotter.AddSignal("ttDM10scalar10__part0",   "m_{#phi}10 m_{#chi}10",   kRed-1);
+  //      plotter.AddSignal("ttDM50scalar50__part0",   "m_{#phi}50 m_{#chi}50",   kRed);
+  //      plotter.AddSignal("ttDM50scalar200__part0",  "m_{#phi}50 m_{#chi}200",  kRed+1);
+  //      plotter.AddSignal("ttDM50scalar300__part0",  "m_{#phi}50 m_{#chi}300",  kRed+2);
+  //      plotter.AddSignal("ttDM150scalar200__part0", "m_{#phi}150 m_{#chi}200", kRed+3);
+  //    }
 
 
   // Draw events by cut
@@ -115,7 +115,7 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(false);
+  plotter.SetDrawYield(true);
 
   for (int j=0; j<=njetbin; j++)
     {
