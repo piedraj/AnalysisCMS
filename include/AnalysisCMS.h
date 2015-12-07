@@ -19,7 +19,7 @@ enum {Loose, Tight};
 struct Lepton
 {
   int            index;
-  int            type;  // Loose, Tight
+  int            type;
   int            flavour;
   float          iso;
   TLorentzVector v;
@@ -39,77 +39,66 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0);
 
-  void    AddAnalysis      (TString  analysis);
+  void    ApplyWeights     ();
 
-  float   MuonIsolation    (int      k);
+  void    DefineHistograms (int      ichannel,
+			    int      icut,
+			    int      ijet,
+			    TString  suffix);
 
   float   ElectronIsolation(int      k);
 
-  bool    IsFiducialLepton (int      k);
+  void    EndJob           (TString  analysis);
 
-  bool    IsTightLepton    (int      k);
+  void    EventDump        ();
 
-  bool    IsIsolatedLepton (int      k);
-
-  void    LevelHistograms  (int      icut,
-			    bool     pass);
+  void    EventSetup       ();
 
   void    FillHistograms   (int      ichannel,
 			    int      icut,
 			    int      ijet);
 
-  void    Loop             (TString  filename,
-			    float    luminosity);
+  void    GetDPhiVeto      ();
 
-  void    Summary          (TString  analysis,
-			    TString  precision,
-			    TString  title);
+  void    GetHt            ();
 
-  void    Setup            (TString  filename,
-			    float    luminosity);
-
-  void    ApplyWeights     ();
+  void    GetJets          ();
 
   void    GetLeptons       ();
 
-  void    GetJets          ();
+  void    GetMc            ();
 
   void    GetMET           (float    module,
 			    float    phi);
 
-  void    GetHt            ();
+  void    GetMetVar        ();
 
   void    GetMpMet         ();
 
-  void    GetMetVar        ();
-
   void    GetMt            (Lepton   lep,
 			    float&   transverse_mass);
-
-  void    GetMc            ();
 
   void    GetPtWW          ();
 
   void    GetSoftMuon      ();
 
-  void    GetDPhiVeto      ();
+  bool    IsFiducialLepton (int      k);
 
-  void    EndJob           ();
+  bool    IsIsolatedLepton (int      k);
 
-  void    EventSetup       ();
-
-  void    AnalysisTop      ();
-
-  void    AnalysisTTDM     ();
-
-  void    AnalysisWW       ();
-
-  void    AnalysisWZ       ();
-
-  void    EventDump        ();
+  bool    IsTightLepton    (int      k);
+  
+  float   MuonIsolation    (int      k);
 
   void    PrintProgress    (Long64_t counter,
 			    Long64_t total);
+
+  void    Setup            (TString  filename,
+			    float    luminosity);
+
+  void    Summary          (TString  analysis,
+			    TString  precision,
+			    TString  title);
 
 
   // Data members
@@ -118,15 +107,8 @@ class AnalysisCMS : public AnalysisBase
   std::vector<Lepton>    AnalysisLeptons;
   Lepton                 Lepton1;
   Lepton                 Lepton2;
-  Lepton                 WLepton;
-  Lepton                 ZLepton1;
-  Lepton                 ZLepton2;
   TLorentzVector         MET;
 
-  bool                   _analysis_top;
-  bool                   _analysis_ttdm;
-  bool                   _analysis_ww;
-  bool                   _analysis_wz;
   bool                   _eventdump;
   bool                   _ismc;
   bool                   _foundsoftmuon;
@@ -185,21 +167,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
-
-
-  // Common TH2 histograms
-  //----------------------------------------------------------------------------
-  TH2D*                  h_metvar_m2l[nchannel][ncut][njetbin+1];
-
-
-  // WZ histograms
-  //----------------------------------------------------------------------------
-  TH1D*                  h_m3l       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl1pt     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_zl2pt     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlpt      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_wlzldeltar[nchannel][ncut][njetbin+1];
 };
 
 #endif

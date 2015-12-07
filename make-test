@@ -1,1 +1,0 @@
-`root-config --cxx --cflags` -o runAnalysisTest runAnalysisTest.C src/AnalysisCMS.C src/AnalysisBase.C `root-config --glibs`

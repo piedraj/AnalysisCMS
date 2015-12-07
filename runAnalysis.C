@@ -1,4 +1,6 @@
-#include "src/AnalysisCMS.C"
+#include "src/AnalysisTop.C"
+#include "src/AnalysisWW.C"
+#include "src/AnalysisWZ.C"
 
 
 void runAnalysis(TString filename)
@@ -9,12 +11,9 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  AnalysisCMS analysis(latino);
-
-  analysis.AddAnalysis("Top");
-  analysis.AddAnalysis("TTDM");
-  analysis.AddAnalysis("WW");
-  analysis.AddAnalysis("WZ");
+  //  AnalysisTop analysis(latino);
+  AnalysisWW analysis(latino);
+  //  AnalysisWZ analysis(latino);
 
   analysis.Loop(filename, lumi25ns_fb);
 }
