@@ -11,11 +11,11 @@ AnalysisWW::AnalysisWW(TTree* tree) : AnalysisCMS(tree) {}
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisWW::Loop(TString filename, float luminosity)
+void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
-  Setup(filename, luminosity);
+  Setup(analysis, filename, luminosity);
 
 
   // Define histograms
@@ -40,7 +40,7 @@ void AnalysisWW::Loop(TString filename, float luminosity)
 
       root_output->cd(directory);
 
-      for (int i=ee; i<eee; i++) {
+      for (int i=ee; i<=ll; i++) {
 
 	TString suffix = "_" + schannel[i];
 
@@ -175,7 +175,7 @@ void AnalysisWW::Loop(TString filename, float luminosity)
   }
 
 
-  EndJob("WW");
+  EndJob();
 }
 
 

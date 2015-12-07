@@ -1,7 +1,7 @@
 #include "HistogramReader.h"
 
 
-const TString inputdir  = "../rootfiles/";
+const TString inputdir  = "../rootfiles/TTDM/";
 const TString outputdir = "figures/";
 
 enum {linY, logY};

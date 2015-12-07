@@ -48,7 +48,7 @@ class AnalysisCMS : public AnalysisBase
 
   float   ElectronIsolation(int      k);
 
-  void    EndJob           (TString  analysis);
+  void    EndJob           ();
 
   void    EventDump        ();
 
@@ -93,7 +93,8 @@ class AnalysisCMS : public AnalysisBase
   void    PrintProgress    (Long64_t counter,
 			    Long64_t total);
 
-  void    Setup            (TString  filename,
+  void    Setup            (TString  analysis,
+			    TString  filename,
 			    float    luminosity);
 
   void    Summary          (TString  analysis,
@@ -116,6 +117,7 @@ class AnalysisCMS : public AnalysisBase
 
   TString                _filename;
   TString                _sample;
+  TString                _analysis;
   float                  _luminosity;
   float                  _event_weight;
   float                  _ht;

@@ -17,7 +17,8 @@ class AnalysisTop : public AnalysisCMS
   void FillLevelHistograms   (int     icut,
 			      bool    pass);
 
-  void Loop                  (TString sample,
+  void Loop                  (TString analysis,
+			      TString sample,
 			      float   luminosity);
 
 

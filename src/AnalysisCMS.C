@@ -118,18 +118,6 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 
 
 //------------------------------------------------------------------------------
-// LevelHistograms
-//------------------------------------------------------------------------------
-//void AnalysisCMS::LevelHistograms(int icut, bool pass)
-//{
-//  if (!pass) return;
-//
-//  FillHistograms(_channel, icut, _jetbin);
-//  FillHistograms(_channel, icut, njetbin);
-//}
-
-
-//------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
@@ -214,8 +202,11 @@ void AnalysisCMS::Summary(TString analysis,
 //------------------------------------------------------------------------------
 // Setup
 //------------------------------------------------------------------------------
-void AnalysisCMS::Setup(TString filename, float luminosity)
+void AnalysisCMS::Setup(TString analysis,
+			TString filename,
+			float   luminosity)
 {
+  _analysis   = analysis;
   _filename   = filename;
   _luminosity = luminosity;
   _nentries   = fChain->GetEntries();
@@ -233,6 +224,7 @@ void AnalysisCMS::Setup(TString filename, float luminosity)
   }
 
   printf("\n");
+  printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
   printf("     sample: %s\n",        _sample.Data());
   printf(" luminosity: %.3f fb-1\n", _luminosity);
@@ -244,12 +236,12 @@ void AnalysisCMS::Setup(TString filename, float luminosity)
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   
-  gSystem->mkdir("rootfiles");
-  gSystem->mkdir("txt");
+  gSystem->mkdir("rootfiles/" + _analysis, kTRUE);
+  gSystem->mkdir("txt/"       + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _sample + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
 
   return;
 }
@@ -624,20 +616,23 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 //------------------------------------------------------------------------------
 // EndJob
 //------------------------------------------------------------------------------
-void AnalysisCMS::EndJob(TString analysis)
+void AnalysisCMS::EndJob()
 {
   if (_eventdump) txt_eventdump.close();
 
-  txt_summary.open("txt/" + _sample + ".txt");
+  txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
 
   txt_summary << "\n";
+  txt_summary << Form("   analysis: %s\n",        _analysis.Data());
   txt_summary << Form("   filename: %s\n",        _filename.Data());
   txt_summary << Form("     sample: %s\n",        _sample.Data());
   txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
   txt_summary << Form("   nentries: %lld\n",      _nentries);
   txt_summary << "\n";
 
-  Summary(analysis, "11.0", "raw yields");
+  Summary(_analysis, "11.0", "raw yields");
+
+  if (_analysis.EqualTo("WW")) Summary("monoH", "11.0", "raw yields");
 
   txt_summary.close();
 

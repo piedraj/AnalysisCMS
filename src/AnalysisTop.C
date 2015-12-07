@@ -11,11 +11,11 @@ AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree) {}
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisTop::Loop(TString filename, float luminosity)
+void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
-  Setup(filename, luminosity);
+  Setup(analysis, filename, luminosity);
 
 
   // Define histograms
@@ -41,7 +41,7 @@ void AnalysisTop::Loop(TString filename, float luminosity)
 
       root_output->cd(directory);
 
-      for (int i=ee; i<eee; i++) {
+      for (int i=ee; i<=ll; i++) {
 
 	TString suffix = "_" + schannel[i];
 
@@ -107,7 +107,7 @@ void AnalysisTop::Loop(TString filename, float luminosity)
   }
 
 
-  EndJob("Top");
+  EndJob();
 }
 
 

@@ -12,12 +12,10 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  //  AnalysisTop  analysis(latino);
-  AnalysisTTDM analysis(latino);
-  //  AnalysisWW   analysis(latino);
-  //  AnalysisWZ   analysis(latino);
-
-  analysis.Loop(filename, lumi25ns_fb);
+  //  AnalysisTop  tt(latino); tt.Loop("Top",  filename, lumi25ns_fb);
+  AnalysisTTDM dm(latino); dm.Loop("TTDM", filename, lumi25ns_fb);
+  //  AnalysisWW   ww(latino); ww.Loop("WW",   filename, lumi25ns_fb);
+  //  AnalysisWZ   wz(latino); wz.Loop("WZ",   filename, lumi25ns_fb);
 }
 
 

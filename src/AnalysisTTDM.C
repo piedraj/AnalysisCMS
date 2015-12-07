@@ -11,11 +11,11 @@ AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree) {}
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisTTDM::Loop(TString filename, float luminosity)
+void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
-  Setup(filename, luminosity);
+  Setup(analysis, filename, luminosity);
 
 
   // Define histograms
@@ -41,7 +41,7 @@ void AnalysisTTDM::Loop(TString filename, float luminosity)
 
       root_output->cd(directory);
 
-      for (int i=ee; i<eee; i++) {
+      for (int i=ee; i<=ll; i++) {
 
 	TString suffix = "_" + schannel[i];
 
@@ -129,7 +129,7 @@ void AnalysisTTDM::Loop(TString filename, float luminosity)
   }
 
 
-  EndJob("TTDM");
+  EndJob();
 }
 
 
