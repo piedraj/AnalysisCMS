@@ -407,49 +407,6 @@ void AnalysisCMS::GetJets()
 
 
 //------------------------------------------------------------------------------
-// AnalysisTTDM
-//------------------------------------------------------------------------------
-/*
-void AnalysisCMS::AnalysisTTDM()
-{
-  bool pass = true;
-
-  LevelHistograms(TTDM_00_Has2Leptons, pass);
-
-  bool pass_sf = (_nelectron != 1 && fabs(mll - Z_MASS) > 15.);
-  bool pass_df = (_nelectron == 1);
-
-  pass &= (mll > 20.);
-  pass &= (pass_sf || pass_df);
-
-  LevelHistograms(TTDM_01_ZVeto, pass);
-
-  pass &= (njet > 1);
-
-  if (njet < 2) return;
-
-  LevelHistograms(TTDM_02_Has2Jets, pass);
-
-  pass &= (Lepton1.v.Pt() + Lepton2.v.Pt() > 120.);
-
-  LevelHistograms(TTDM_03_LepPtSum, pass);
-
-  pass &= (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt() < 400.);
-
-  LevelHistograms(TTDM_04_JetPtSum, pass);
-
-  pass &= (Lepton1.v.DeltaPhi(Lepton2.v) < 2.);
-
-  LevelHistograms(TTDM_05_LepDeltaPhi, pass);
-
-  pass &= (MET.Et() > 320.);
-
-  LevelHistograms(TTDM_06_MET, pass);
-}
-*/
-
-
-//------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventDump()

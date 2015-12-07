@@ -1,4 +1,5 @@
 #include "src/AnalysisTop.C"
+#include "src/AnalysisTTDM.C"
 #include "src/AnalysisWW.C"
 #include "src/AnalysisWZ.C"
 
@@ -11,9 +12,10 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  //  AnalysisTop analysis(latino);
-  AnalysisWW analysis(latino);
-  //  AnalysisWZ analysis(latino);
+  //  AnalysisTop  analysis(latino);
+  AnalysisTTDM analysis(latino);
+  //  AnalysisWW   analysis(latino);
+  //  AnalysisWZ   analysis(latino);
 
   analysis.Loop(filename, lumi25ns_fb);
 }
