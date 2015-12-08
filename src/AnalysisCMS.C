@@ -356,22 +356,24 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    if (pt < 15.) continue;
-    //    if (fabs(eta) > 2.4) continue;
+    bool pass = (pt > 15.);
+    //    bool pass = (pt > 15. && fabs(eta) < 4.7);
+
+    if (!pass) continue;
 
     TLorentzVector tlv;
 
     tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
 
-    //    bool is_lepton = false;
-    //
-    //    for (int j=0; j<_nlepton; j++)
-    //      {
-    //	if (AnalysisLeptons[j].type == Loose) continue;
-    //	
-    //	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.4) is_lepton = true;
-    //      }
-    //
+    bool is_lepton = false;
+    
+    for (int j=0; j<_nlepton; j++)
+      {
+    	if (AnalysisLeptons[j].type == Loose) continue;
+    	
+    	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.3) is_lepton = true;
+      }
+    
     //    if (is_lepton) continue;
 
     Jet goodjet;
@@ -382,9 +384,7 @@ void AnalysisCMS::GetJets()
 
     if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15++;
 
-    if (pt < 30.) continue;
-
-    AnalysisJets.push_back(goodjet);
+    if (pt > 30.) AnalysisJets.push_back(goodjet);
   }
 
   _njet30 = AnalysisJets.size();
