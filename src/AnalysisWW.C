@@ -131,14 +131,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     bool passZwindow = (fabs(mll - Z_MASS) < 15.);  // Z window at 2 leptons level
     FillLevelHistograms(WW_11_ZWindow, passZwindow);
 
-    bool Jet[10];
-    
-    for (UInt_t j=0; j<10; ++j)
-      {
-	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
-	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
-      }
-
     passZwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_12_ZWindowPfMet, passZwindow);
 
@@ -147,6 +139,14 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     passZwindow &= (pass_ptll);
     FillLevelHistograms(WW_14_ZWindowPtll, passZwindow);
+
+    bool Jet[12];
+    
+    for (UInt_t j=0; j<12; ++j)
+      {
+	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
+	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
+      }
 
     passZwindow &= (_nbjet15 == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, passZwindow);
