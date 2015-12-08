@@ -356,7 +356,8 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    if (pt < 15. || fabs(eta) > 2.4) continue;
+    if (pt < 15.) continue;
+    //    if (fabs(eta) > 2.4) continue;
 
     TLorentzVector tlv;
 

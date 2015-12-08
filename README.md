@@ -64,6 +64,9 @@ It is recommended to test the code. The following example reads a latino tree an
 
 Submit jobs to the gridui batch system.
 
+    rm -rf rootfiles
+    rm -rf txt
+
     ./submit-jobs.sh
 
 Show the status of the submitted jobs.
