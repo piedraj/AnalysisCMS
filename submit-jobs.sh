@@ -17,12 +17,6 @@ echo "  Let's play it safe. Compiling runAnalysis..."
 ./make
 
 echo "  "
-echo "  Removing rootfiles folder"
-echo "  Removing txt folder"
-rm -rf rootfiles
-rm -rf txt
-
-echo "  "
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
 qsub -t 1-$NJOBS -v SAMPLES settings.sge

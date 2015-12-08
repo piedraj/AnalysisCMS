@@ -122,16 +122,6 @@
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_ST_tW_top.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TTWJetsToLNu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TTZToLLNuNu_M-10.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part0.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part1.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part16.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part18.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part2.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part20.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part22.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part3.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part4.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_TT__part9.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WJetsToLNu__part0.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WJetsToLNu__part1.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WJetsToLNu__part2.root
