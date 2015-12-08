@@ -356,8 +356,7 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    bool pass = (pt > 15.);
-    //    bool pass = (pt > 15. && fabs(eta) < 4.7);
+    bool pass = (pt > 15. && fabs(eta) < 4.7);
 
     if (!pass) continue;
 
