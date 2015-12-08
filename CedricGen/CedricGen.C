@@ -1,6 +1,6 @@
 #define CedricGen_cxx
 #include "CedricGen.h"
-#include "include/Constants.h"
+#include "../include/Constants.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <iostream>
@@ -19,6 +19,7 @@ struct Lepton
   TLorentzVector     v;
 };
 
+
 std::vector<Lepton>  AnalysisLeptons;
 std::vector<Lepton>  AnalysisLeptonsGen;
 
@@ -36,6 +37,16 @@ float                inv_massGen;
 float                _m2lGen;
 float                inv_mass;
 float                _m2l;
+
+TH1D* h_GEN_m2l              = new TH1D("h_GEN_m2l","",          100, 0, 150);
+TH1D* h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR","",   100, 0, 150);
+TH1D* h_RECO_m2l             = new TH1D("h_RECO_m2l","",         100, 0, 150);
+TH1D* h_Lepton1DeltaR        = new TH1D("h_Lepton1DeltaR","",    50, 0,   5);
+TH1D* h_Lepton2DeltaR        = new TH1D("h_Lepton2DeltaR","",    50, 0,   5);
+
+TFile* root_output           = new TFile("output.root", "recreate");
+
+
 
 void CedricGen::Loop()
 {
@@ -56,13 +67,6 @@ void CedricGen::Loop()
 //  Note that the argument to GetEntry must be:
 //    jentry for TChain::GetEntry
 //    ientry for TTree::GetEntry and TBranch::GetEntry
-
-  TFile* root_output           = new TFile("output.root", "recreate");
-
-  TH1D* h_GEN_m2l              = new TH1D("h_GEN_m2l","",         50, 0, 200);
-  TH1D* h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR","",  50, 0, 200);
-  TH1D* h_GEN_m2l_Pt           = new TH1D("h_GEN_m2l_Pt","",      50, 0, 200);
-  TH1D* h_RECO_m2l             = new TH1D("h_RECO_m2l","",        50, 0, 200);
 
 
    if (fChain == 0) return;
@@ -90,63 +94,25 @@ void CedricGen::Loop()
        std::cout.flush();
      }
 
-     for (int i=0;i<_nleptonGen;i++){
-       
-   	for (int j=i+1;j<_nleptonGen;j++){
 
-   	  if (AnalysisLeptonsGen[i].flavour + AnalysisLeptonsGen[j].flavour !=0) continue; 
+   ZSelection();
 
-	  _m2lGen=-999;
-   	  inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
+   h_Lepton1DeltaR->Fill(ZLepton1.v.DeltaR(ZLeptonGen1.v));
+   //   h_Lepton1DeltaR->Draw();
+   h_Lepton2DeltaR->Fill(ZLepton2.v.DeltaR(ZLeptonGen2.v));
+   //   h_Lepton2DeltaR->Draw("same");
 
-   	  if (_m2lGen<0 || fabs(inv_massGen - Z_MASS) < fabs(_m2lGen - Z_MASS)) {
 
-   	    _m2lGen=inv_massGen;
-   	    ZLeptonGen1=AnalysisLeptonsGen[i];
-   	    ZLeptonGen2=AnalysisLeptonsGen[j];
+   /*   if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) <0.1){
+     h_GEN_m2l_DeltaR->Fill(_m2lGen);
+     }*/
 
-	    h_GEN_m2l->Fill(_m2lGen);
-
-	    // Now I consider the Reco leptons
-
-	    for (int k=0;k<_nlepton;k++){
-
-	      for (int l=k+1; l<_nlepton;l++){
-
-		if (AnalysisLeptons[k].flavour + AnalysisLeptons[l].flavour !=0) continue;
-
-		_m2l=-999;
-		inv_mass= (AnalysisLeptons[k].v + AnalysisLeptons[l].v).M();
-
-		if (_m2l<0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
-
-		  _m2l=inv_mass;
-		  ZLepton1=AnalysisLeptons[k];
-		  ZLepton2=AnalysisLeptons[l];
-
-		  h_RECO_m2l->Fill(_m2l);
-		  
-		  // Draw the diagrams with the desired cuts
-
-		  if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) <0.1){
-		    h_GEN_m2l_DeltaR->Fill(_m2lGen);
-		  }
-
-		  if(ZLepton1.v.Pt()-ZLeptonGen1.v.Pt() < 20 && ZLepton2.v.Pt()-ZLeptonGen2.v.Pt() < 20){
-		    h_GEN_m2l_Pt->Fill(_m2lGen);
-		  }
-
-		}
-	      }
-	    }
-	  }
-	}
-     }
    }
 
-     root_output->Write("");
-     root_output->Close();
+   root_output->Write("",TObject::kOverwrite);
+   root_output->Close();
 }
+
 
 
 
@@ -167,12 +133,11 @@ void CedricGen::GetLeptonsGen()
    float etaGen = std_vector_leptonGen_eta -> at(i);
    float phiGen = std_vector_leptonGen_phi -> at(i);
 
-
    Lepton lepGen;
         
 	lepGen.index   = i;
-	lepGen.flavour = std_vector_leptonGen_pid -> at(i);
-	
+	lepGen.flavour = std_vector_leptonGen_pid  -> at(i);
+
         float massGen = -999;
 
 	if(abs(lepGen.flavour) == ELECTRON_FLAVOUR)
@@ -246,11 +211,64 @@ void CedricGen::GetLeptons()
 
 
 
+// ===========================================================
+// Z Selection
+// ===========================================================
+
+void CedricGen::ZSelection(){
 
 
+     for (int i=0;i<_nleptonGen;i++){
 
+       for (int j=i+1;j<_nleptonGen;j++){
 
+	 /*	  if (AnalysisLeptonsGen[i].flavour + AnalysisLeptonsGen[j].flavour !=0) continue; 
 
- 
+	  _m2lGen=-999;
+   	  inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
 
- 
+	  if (_m2lGen<0 || fabs(inv_massGen - Z_MASS) < fabs(_m2lGen - Z_MASS)) {
+
+	    _m2lGen=inv_massGen;
+	 */
+
+	 float Lepton1_mpid = std_vector_leptonGen_mpid -> at(i);
+	 float Lepton2_mpid = std_vector_leptonGen_mpid -> at(j);
+
+	 if (Lepton1_mpid == 23 && Lepton2_mpid  == 23){
+
+	  _m2lGen=-999;
+   	  inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
+
+	  if (_m2lGen<0 || fabs(inv_massGen - Z_MASS) < fabs(_m2lGen - Z_MASS)) {
+	    _m2lGen=inv_massGen;
+	  }	   
+
+	    ZLeptonGen1=AnalysisLeptonsGen[i];
+	    ZLeptonGen2=AnalysisLeptonsGen[j];
+
+	    h_GEN_m2l->Fill(_m2lGen);
+
+	    for (int k=0;k<_nlepton;k++){
+
+	       for (int l=k+1; l<_nlepton;l++){
+
+		 if (AnalysisLeptons[k].flavour + AnalysisLeptons[l].flavour !=0) continue;
+
+		 _m2l=-999;
+		 inv_mass= (AnalysisLeptons[k].v + AnalysisLeptons[l].v).M();
+
+		 if (_m2l<0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
+
+		   _m2l=inv_mass;
+		   ZLepton1=AnalysisLeptons[k];
+		   ZLepton2=AnalysisLeptons[l];
+
+		 }
+	       }
+	    }
+	  }
+       }
+     }
+}
+
