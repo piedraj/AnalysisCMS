@@ -47,10 +47,11 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 	DefineHistograms(i, j, k, suffix);
 
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
+	h_jetpt1[i][j][k]     = new TH1D("h_jetpt1"     + suffix, "", 1000, 0., 1000.);
       }
     }
   }
-
+  
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -186,7 +187,8 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
 					int icut,
 					int ijet)
 {
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l,            _event_weight);
+  h_jetpt1[ichannel][icut][ijet]    ->Fill(std_vector_jet_pt->at(0), _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
