@@ -34,7 +34,15 @@ void HistogramReader::AddData(const TString& filename,
 			      const TString& label,
 			      Color_t        color)
 {
-  TFile* file = new TFile(_inputdir + "/" + filename + ".root", "update");
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddData] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
 
   _datafile  = file;
   _datalabel = label;
@@ -49,7 +57,15 @@ void HistogramReader::AddProcess(const TString& filename,
 				 const TString& label,
 				 Color_t        color)
 {
-  TFile* file = new TFile(_inputdir + "/" + filename + ".root", "update");
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
@@ -64,7 +80,15 @@ void HistogramReader::AddSignal(const TString& filename,
 				const TString& label,
 				Color_t        color)
 {
-  TFile* file = new TFile(_inputdir + "/" + filename + ".root", "update");
+  TString fullname = _inputdir + "/" + filename + ".root";
+  
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddSignal] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
 
   _signalfile.push_back(file);
   _signallabel.push_back(label);

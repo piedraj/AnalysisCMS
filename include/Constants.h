@@ -64,8 +64,6 @@ const TString lchannel[nchannel] = {
 };
 
 
-const int ncut = 47;
-
 enum {
   Top_00_Has2Leptons,
   Top_01_Has2Jets,
@@ -113,7 +111,8 @@ enum {
   WZ_00_Exactly3Leptons,
   WZ_01_HasZ,
   WZ_02_HasW,
-  WZ_03_BVeto
+  WZ_03_BVeto,
+  ncut  // This line should be always last
 };
 
 const TString scut[ncut] = {
