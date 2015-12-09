@@ -149,19 +149,19 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 7. It is commit time
 ====
 
-This framework is intended to be used, and developed, by several people. If you want your changes to be shared by others, then it is commit time. First you should get the latest modifications in the repository, if any.
+This framework is intended to be used and developed by several people. If you want your changes to be shared by others, you should first get the latest modifications from the upstream repository, if any.
 
     git pull https://github.com/piedraj/AnalysisCMS
     git fetch upstream
 
-After that you should correct the possible compatibility errors, and commit your changes.
+Now you can commit any change (both from upstream/master and master) in your repository.
 
     git status
     git add <filepattern>
     git commit -m 'Modified'
     git push
 
-If there isn't any conflict left you should be able to merge with the master repository. 
+If there isn't any conflict left you should be able to merge with the upstream/master repository. 
 
     git merge upstream/master
 
