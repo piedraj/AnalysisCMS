@@ -3,11 +3,13 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -t 1-1
-#$ -N AnalysisCMS
+#$ -N hadd
 #$ -o job_$JOB_ID-$TASK_ID.out
 #$ -j y
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scramv1 runtime -sh`
 
-`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID '{ if (NR==line) print "./runAnalysis "$1 }'`
+pushd $FOLDER
+`cat ../../test/merge.sh | grep hadd | awk -v line=$SGE_TASK_ID '{ if (NR==line) print }'`
+popd

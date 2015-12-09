@@ -4,12 +4,14 @@
 //------------------------------------------------------------------------------
 // HistogramReader
 //------------------------------------------------------------------------------
-HistogramReader::HistogramReader(TString const &inputdir,
-				 TString const &outputdir) :
+HistogramReader::HistogramReader(const TString& inputdir,
+				 const TString& outputdir) :
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
+  _title        ("cms"),
   _luminosity_fb(0),
+  _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
   _savepdf      (false),
@@ -28,11 +30,19 @@ HistogramReader::HistogramReader(TString const &inputdir,
 //------------------------------------------------------------------------------
 // AddData
 //------------------------------------------------------------------------------
-void HistogramReader::AddData(TString const &filename,
-			      TString const &label,
+void HistogramReader::AddData(const TString& filename,
+			      const TString& label,
 			      Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root", "update");
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddData] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
 
   _datafile  = file;
   _datalabel = label;
@@ -43,15 +53,46 @@ void HistogramReader::AddData(TString const &filename,
 //------------------------------------------------------------------------------
 // AddProcess
 //------------------------------------------------------------------------------
-void HistogramReader::AddProcess(TString const &filename,
-				 TString const &label,
+void HistogramReader::AddProcess(const TString& filename,
+				 const TString& label,
 				 Color_t        color)
 {
-  TFile *file = new TFile(_inputdir + filename + ".root", "update");
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
   _mccolor.push_back(color);
+}
+
+
+//------------------------------------------------------------------------------
+// AddSignal
+//------------------------------------------------------------------------------
+void HistogramReader::AddSignal(const TString& filename,
+				const TString& label,
+				Color_t        color)
+{
+  TString fullname = _inputdir + "/" + filename + ".root";
+  
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddSignal] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
+
+  _signalfile.push_back(file);
+  _signallabel.push_back(label);
+  _signalcolor.push_back(color);
 }
 
 
@@ -111,40 +152,69 @@ void HistogramReader::Draw(TString hname,
   
   pad1->SetLogy(setlogy);
 
+
+  // Stack processes
+  //----------------------------------------------------------------------------
   _mchist.clear();
 
-  THStack* hstack = new THStack(hname, hname);
+  THStack* mcstack = new THStack(hname + "_mcstack", hname + "_mcstack");
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
-    if (xmin == -999) xmin = dummy->GetXaxis()->GetXmin();
-    if (xmax == -999) xmax = dummy->GetXaxis()->GetXmax();
-
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    _mchist[i]->SetFillColor(_mccolor[i]);
-    _mchist[i]->SetLineColor(_mccolor[i]);
-    _mchist[i]->SetLineWidth(0);
-    _mchist[i]->SetFillStyle(1001);
-
-    if (_stackoption.Contains("nostack") && Yield(_mchist[i]) > 0)
-      {
-	_mchist[i]->SetFillStyle(0);
-	_mchist[i]->SetLineWidth(2);
-	_mchist[i]->Scale(1.0/Yield(_mchist[i]));
-      }
-
-    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
-
-    if (moveoverflow) MoveOverflows(_mchist[i], xmin, xmax);
-
-    hstack->Add(_mchist[i]);
+    SetHistogram(_mchist[i], _mccolor[i], 1001, kDot, kSolid, 0, ngroup, moveoverflow, xmin, xmax);
+    
+    mcstack->Add(_mchist[i]);
   }
 
 
-  SetData(hname, ngroup, moveoverflow, xmin, xmax);
+  // Stack signals
+  //----------------------------------------------------------------------------
+  _signalhist.clear();
+
+  THStack* signalstack = new THStack(hname + "_signalstack", hname + "_signalstack");
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) {
+
+    TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
+
+    _signalhist.push_back((TH1D*)dummy->Clone());
+
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
+    
+    signalstack->Add(_signalhist[i]);
+  }
+
+
+  // Get the data
+  //----------------------------------------------------------------------------
+  if (_datafile)
+    {
+      TH1D* dummy = (TH1D*)_datafile->Get(hname);
+
+      _datahist = (TH1D*)dummy->Clone();
+      
+      SetHistogram(_datahist, kBlack, 0, kFullCircle, kSolid, 1, ngroup, moveoverflow, xmin, xmax);
+    }
+
+
+  // Normalize MC to data
+  //----------------------------------------------------------------------------
+  if (_datahist && _datanorm)
+    {
+      Float_t mcnorm   = Yield((TH1D*)(mcstack->GetStack()->Last()));
+      Float_t datanorm = Yield(_datahist);
+
+      for (UInt_t i=0; i<_mchist.size(); i++)
+	{
+	  _mchist[i]->Scale(datanorm / mcnorm);
+	}
+
+      mcstack->Modified();
+    }
 
 
   // hfirst will contain the axis settings
@@ -157,8 +227,11 @@ void HistogramReader::Draw(TString hname,
   // All MC
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
-  
-  for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX()+1; ibin++) {
+
+  // Possible modification (how to deal with systematic uncertainties?)
+  //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
+
+  for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
     Float_t binError = 0.;
@@ -168,7 +241,7 @@ void HistogramReader::Draw(TString hname,
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
       Float_t binStatError = _mchist[i]->GetBinError(ibin);
       Float_t binSystError = 0;  // To be updated
-
+      
       binValue += binContent;
       binError += (binStatError * binStatError);
       binError += (binSystError * binSystError);
@@ -180,7 +253,7 @@ void HistogramReader::Draw(TString hname,
     _allmchist->SetBinError  (ibin, binError);
   }
 
-  _allmclabel = "all";
+  _allmclabel = "stat";
 
   _allmchist->SetFillColor  (kGray+1);
   _allmchist->SetFillStyle  (   3345);
@@ -188,20 +261,16 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerColor(kGray+1);
   _allmchist->SetMarkerSize (      0);
 
-  if (_stackoption.Contains("nostack") && Yield(_allmchist) > 0)
-    {
-      _allmchist->SetLineWidth(2);
-      _allmchist->Scale(1.0/Yield(_allmchist));
-    }
-
 
   // Draw
   //----------------------------------------------------------------------------
   hfirst->Draw();
 
-  hstack->Draw(_stackoption + ",same");
+  mcstack->Draw(_stackoption + ",same");
 
-  _allmchist->Draw("e2,same");
+  if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
+
+  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
 
   if (_datahist) _datahist->Draw("ep,same");
 
@@ -243,11 +312,11 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-1;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 3);
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
     }
   else
     {
-      theMax *= 1.45;
+      theMax *= 1.5;
     }
 
   hfirst->SetMinimum(theMin);
@@ -260,22 +329,34 @@ void HistogramReader::Draw(TString hname,
   // Legend
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;
-  Float_t y0     = 0.834;
-  Float_t xdelta = 0.0;
-  Float_t ydelta = _yoffset + 0.001;
+  Float_t y0     = 0.843;
+  Float_t xdelta = 0.000;
+  Float_t ydelta = 0.050;
   Int_t   ny     = 0;
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
+
+  // Data legend
+  //----------------------------------------------------------------------------
   if (_datahist)
     {
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _datahist, _datalabel.Data(), "lp");
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
       ny++;
     }
 
-  DrawLegend(x0 + xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
-  ny++;
 
+  // All MC legend
+  //----------------------------------------------------------------------------
+  if (!_stackoption.Contains("nostack"))
+    {
+      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      ny++;
+    }
+
+
+  // Standard Model processes legend
+  //----------------------------------------------------------------------------
   for (int i=0; i<_mchist.size(); i++)
     {
       if (ny == 4)
@@ -287,17 +368,34 @@ void HistogramReader::Draw(TString hname,
       DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
       ny++;
     }
+  
+  
+  // Search signals legend
+  //----------------------------------------------------------------------------
+  for (int i=0; i<_signalhist.size(); i++)
+    {
+      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
+      ny++;
+    }
 
 
   // Titles
   //----------------------------------------------------------------------------
   Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
 
-  DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
-  DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
-  DrawLatex(42, 0.940,   0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  if (_title.EqualTo("cms"))
+    {
+      DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+      DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+    }
+  else
+    {
+      DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+    }
 
-  SetAxis(hfirst, xtitle, ytitle, 0.045, 1.5, 1.7);
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+
+  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
 
 
   //----------------------------------------------------------------------------
@@ -306,7 +404,13 @@ void HistogramReader::Draw(TString hname,
   if (_drawratio && _datafile)
     {
       pad2->cd();
-    
+
+      // This approach isn't yet working
+      //      TGraphAsymmErrors* g = new TGraphAsymmErrors();
+      //      g->Divide(_datahist, _allmchist, "cl=0.683 b(1,1) mode");
+      //      g->SetMarkerStyle(kFullCircle);
+      //      g->Draw("ap");
+
       TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 
@@ -339,13 +443,13 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(-1, 3);
+      ratio->GetYaxis()->SetRangeUser(0, 2);
 
       uncertainty->Draw("e2,same");
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC", 0.105, 1.4, 0.75);
+      SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
     }
 
 
@@ -542,23 +646,23 @@ void HistogramReader::MoveOverflows(TH1*    hist,
 void HistogramReader::SetAxis(TH1*    hist,
 			      TString xtitle,
 			      TString ytitle,
-			      Float_t size,
 			      Float_t xoffset,
 			      Float_t yoffset)
 {
   gPad->cd();
   gPad->Update();
 
+  // See https://root.cern.ch/doc/master/classTAttText.html#T4
+  Float_t padw = gPad->XtoPixel(gPad->GetX2());
+  Float_t padh = gPad->YtoPixel(gPad->GetY1());
+
+  Float_t size = (padw < padh) ? padw : padh;
+
+  size = 20. / size;  // Like this label size is always 20 pixels
+  
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
 
-  xaxis->SetLabelFont(42);
-  yaxis->SetLabelFont(42);
-  xaxis->SetTitleFont(42);
-  yaxis->SetTitleFont(42);
-
-  xaxis->SetLabelOffset(0.025);
-  yaxis->SetLabelOffset(0.025);
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
@@ -570,9 +674,6 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
 
-  xaxis->SetNdivisions(505);
-  yaxis->SetNdivisions(505);
-
   yaxis->CenterTitle();
 
   gPad->GetFrame()->DrawClone();
@@ -581,41 +682,52 @@ void HistogramReader::SetAxis(TH1*    hist,
 
 
 //------------------------------------------------------------------------------
-// SetData
+// SetHistogram
 //------------------------------------------------------------------------------
-Int_t HistogramReader::SetData(TString hname,
-			       Int_t   ngroup,
-			       Bool_t  moveoverflow,
-			       Float_t xmin,
-			       Float_t xmax)
+void HistogramReader::SetHistogram(TH1*     hist,
+				   Color_t  color,
+				   Style_t  fstyle,
+				   Style_t  mstyle,
+				   Style_t  lstyle,
+				   Width_t  lwidth,
+				   Int_t    ngroup,
+				   Bool_t   moveoverflow,
+				   Float_t& xmin,
+				   Float_t& xmax)
 {
-  if (!_datafile) return -1;
-
-  TH1D* dummy = (TH1D*)_datafile->Get(hname);
-
-  if (!dummy)
+  if (!hist)
     {
-      printf(" [HistogramReader::SetData] Histogram %s not found\n", hname.Data());
-
-      return -1;
+      printf("\n Error: histogram does not exist\n\n");
+      return;
     }
 
-  _datahist = (TH1D*)dummy->Clone();
+  if (xmin == -999) xmin = hist->GetXaxis()->GetXmin();
+  if (xmax == -999) xmax = hist->GetXaxis()->GetXmax();
 
-  _datahist->SetFillColor  ( _datacolor);
-  _datahist->SetLineColor  ( _datacolor);
-  _datahist->SetMarkerStyle(kFullCircle);
+  hist->SetFillColor(color );
+  hist->SetFillStyle(fstyle);
 
-  if (_stackoption.Contains("nostack") && Yield(_datahist) > 0)
+  hist->SetLineColor(color );
+  hist->SetLineStyle(lstyle);
+  hist->SetLineWidth(lwidth);
+
+  hist->SetMarkerColor(color );
+  hist->SetMarkerStyle(mstyle);
+
+  if (_stackoption.Contains("nostack") && Yield(hist) > 0)
     {
-      _datahist->Scale(1.0/Yield(_datahist));
+      hist->SetFillStyle(0);
+      hist->SetLineWidth(2);
+
+      hist->Scale(1. / Yield(hist));
     }
 
-  if (ngroup > 0) _datahist->Rebin(ngroup);
+
+  // Rebin and move overflow bins
+  //----------------------------------------------------------------------------
+  if (ngroup > 0) hist->Rebin(ngroup);
   
-  if (moveoverflow) MoveOverflows(_datahist, xmin, xmax);
-
-  return 0;
+  if (moveoverflow) MoveOverflows(hist, xmin, xmax);
 }
 
 
@@ -624,34 +736,28 @@ Int_t HistogramReader::SetData(TString hname,
 //------------------------------------------------------------------------------
 Float_t HistogramReader::Yield(TH1* hist)
 {
-  if (hist)
-    {
-      Int_t nbins = hist->GetNbinsX();
+  if (!hist) return 0;
+
+  Int_t nbins = hist->GetNbinsX();
       
-      return hist->Integral(0, nbins+1);
-    }
-  else
-    {
-      return 0.;
-    }
+  return fabs(hist->Integral(0, nbins+1));
 }
 
 
 //------------------------------------------------------------------------------
-// Evolution
+// EventsByCut
 //------------------------------------------------------------------------------
-void HistogramReader::Evolution(TFile*  file,
-				TString analysis,
-				TString hname)
+void HistogramReader::EventsByCut(TFile*  file,
+				  TString analysis,
+				  TString hname)
 {
+  // Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
 
   if (test_hist) return;
 
-  file->cd();
 
-  file->cd(analysis);
-
+  // Get the number of bins
   Int_t nbins = 0;
   
   for (Int_t i=0; i<ncut; i++)
@@ -661,40 +767,101 @@ void HistogramReader::Evolution(TFile*  file,
       nbins++;
     }
 
+
+  // Create and fill the evolution histogram
+  file->cd(analysis);
+
   TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
 
   for (Int_t i=0, bin=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
 
+      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+
+
+      // Change the evolution histogram x-axis labels
       TString tok, icut;
 
       Ssiz_t from = 0;
 
-      while(scut[i].Tokenize(tok, from, "_")) icut = tok;
+      while (scut[i].Tokenize(tok, from, "_")) icut = tok;
 
-      TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
-
-      if (hist && dummy) {
-
-	hist->SetBinContent(++bin, Yield(dummy));
-
-	if (bin < nbins) hist->GetXaxis()->SetBinLabel(bin, icut);
-      }
-
-      else std::cout << " [HistogramReader::Evolution] Error: hist or dummy NOT found." << std::endl;
+      hist->GetXaxis()->SetBinLabel(bin, icut);
     }
 
+
+  // Write the evolution histogram
   hist->Write();
+  file->cd();
 }
 
 
 //------------------------------------------------------------------------------
-// LoopEvolution
+// LoopEventsByCut
 //------------------------------------------------------------------------------
-void HistogramReader::LoopEvolution(TString analysis, TString hname)
+void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
 {
-  if (_datafile) Evolution(_datafile, analysis, hname);
+  if (_datafile) EventsByCut(_datafile, analysis, hname);
 
-  for (UInt_t i=0; i<_mcfile.size(); i++) Evolution(_mcfile[i], analysis, hname);
+  for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) EventsByCut(_signalfile[i], analysis, hname);
+}
+
+
+//------------------------------------------------------------------------------
+// EventsByChannel
+//------------------------------------------------------------------------------
+void HistogramReader::EventsByChannel(TFile*  file,
+				      TString level)
+{
+  // Check if the evolution histogram already exists
+  TH1D* test_hist = (TH1D*)file->Get(level + "/h_counterLum_evolution");
+
+  if (test_hist) return;
+
+
+  // Get the number of bins
+  Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
+  Int_t lastchannel  = (level.Contains("WZ/")) ? lll : ll;
+  
+  Int_t nbins = 0;
+  
+  for (Int_t i=firstchannel; i<=lastchannel; i++) nbins++;
+
+
+  // Create and fill the evolution histogram
+  file->cd(level);
+
+  TH1D* hist = new TH1D("h_counterLum_evolution", "", nbins, -0.5, nbins-0.5);
+
+  for (Int_t i=firstchannel, bin=0; i<=lastchannel; i++)
+    {
+      TH1D* dummy = (TH1D*)file->Get(level + "/h_counterLum_" + schannel[i]);
+
+      hist->SetBinContent(++bin, Yield(dummy));
+
+      hist->GetXaxis()->SetBinLabel(bin, lchannel[i]);
+    }
+
+
+  // Write the evolution histogram
+  hist->Write();
+  file->cd();
+}
+
+
+//------------------------------------------------------------------------------
+// LoopEventsByChannel
+//------------------------------------------------------------------------------
+void HistogramReader::LoopEventsByChannel(TString level)
+{
+  if (_datafile) EventsByChannel(_datafile, level);
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
 }

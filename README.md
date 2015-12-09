@@ -26,9 +26,9 @@ Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click *
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
-You should also add a remote upstream, to be able to modify both your and the main Github account.
+You should also add a remote upstream, to be able to modify both your and the master repository.
 
-    git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_DIRECTORY
+    git remote add upstream https://github.com/piedraj/AnalysisCMS
 
 Then, do a git remote in order to check if the upstream appears. 
 
@@ -64,7 +64,10 @@ It is recommended to test the code. The following example reads a latino tree an
 
 Submit jobs to the gridui batch system.
 
-    ./submit-jobs.sh samples/files_25ns.txt 25ns
+    rm -rf rootfiles
+    rm -rf txt
+
+    ./submit-jobs.sh
 
 Show the status of the submitted jobs.
 
@@ -91,10 +94,10 @@ Notice that input files can be accessed directly from eos when working from lxpl
 4. Draw
 ====
 
-First merge the files produced in the previous step.
+First `hadd` the files produced in the previous step.
 
     cd test
-    ./merge.sh
+    ./submit-hadd.sh
 
 Then compile and draw your favorite distributions.
 
@@ -111,6 +114,7 @@ Follow the instructions at [Permissions for your AFS folder](https://espace.cern
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
+    cp /afs/cern.ch/user/p/piedra/www/.htaccess www/.
 
 Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
 Choose the "AFS folder" site type.
@@ -139,8 +143,7 @@ And they should appear here,
 
 A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,
 
-    http://www.hep.uniovi.es/nachos/WZ/
-    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_1280pb/WZstep4/all/
+    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_v2_2090pb/
 
 
 7. It is commit time
@@ -148,18 +151,21 @@ A parallel WZ study is being performed at Oviedo, reading heppy trees. The corre
 
 This framework is intended to be used, and developed, by several people. If you want your changes to be shared by others, then it is commit time. First you should get the latest modifications in the repository, if any.
 
+    git pull https://github.com/piedraj/AnalysisCMS
     git fetch upstream
 
-Correct the possible compatibility errors, a commit your changes.
+After that you should correct the possible compatibility errors, and commit your changes.
 
     git status
     git add <filepattern>
     git commit -m 'Modified'
     git push
 
-If there aren't any conflict, you should now do a merge between your code and the main one. 
+If there isn't any conflict left you should be able to merge with the master repository. 
 
     git merge upstream/master
 
-If the changes have been made in a fork of the master, go to https://github.com/YOUR_USERNAME/AnalysisCMS and click **Pull Request**.
+Finally, go to your repository and click **Pull Request**.
+
+    https://github.com/YOUR_USERNAME/AnalysisCMS
 
