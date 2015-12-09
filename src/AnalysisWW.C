@@ -47,10 +47,11 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 	DefineHistograms(i, j, k, suffix);
 
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
+	h_jetpt1[i][j][k]     = new TH1D("h_jetpt1"     + suffix, "", 1000, 0., 1000.);
       }
     }
   }
-
+  
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -131,14 +132,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     bool passZwindow = (fabs(mll - Z_MASS) < 15.);  // Z window at 2 leptons level
     FillLevelHistograms(WW_11_ZWindow, passZwindow);
 
-    bool Jet[10];
-    
-    for (UInt_t j=0; j<10; ++j)
-      {
-	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
-	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
-      }
-
     passZwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_12_ZWindowPfMet, passZwindow);
 
@@ -147,6 +140,14 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     passZwindow &= (pass_ptll);
     FillLevelHistograms(WW_14_ZWindowPtll, passZwindow);
+
+    bool Jet[12];
+    
+    for (UInt_t j=0; j<12; ++j)
+      {
+	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
+	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
+      }
 
     passZwindow &= (_nbjet15 == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, passZwindow);
@@ -186,7 +187,8 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
 					int icut,
 					int ijet)
 {
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l,            _event_weight);
+  h_jetpt1[ichannel][icut][ijet]    ->Fill(std_vector_jet_pt->at(0), _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
