@@ -13,7 +13,6 @@ AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree) {}
 //------------------------------------------------------------------------------
 void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 {
-  printf(" test: %d %d %d\n", Top_00_Has2Leptons, WZ_03_BVeto, ncut);
   if (fChain == 0) return;
 
   Setup(analysis, filename, luminosity);
