@@ -460,18 +460,21 @@ void AnalysisCMS::GetHt()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  Float_t dphimin = min(dphilmet1, dphilmet2);
+  _dphilmet1 = fabs(Lepton1.v.DeltaPhi(MET));
+  _dphilmet2 = fabs(Lepton2.v.DeltaPhi(MET));
 
-  Float_t fullpmet = MET.Et();
-  Float_t trkpmet  = trkMet;
+  Float_t dphimin = min(fabs(Lepton1.v.DeltaPhi(MET)),fabs(Lepton1.v.DeltaPhi(MET)));
+
+  _fullpmet = MET.Et();
+  _trkpmet  = trkMet;
 
   if (dphimin < TMath::Pi() / 2.)
     {
-      fullpmet *= sin(dphimin);
-      trkpmet  *= sin(dphimin);
+      _fullpmet *= sin(dphimin);
+      _trkpmet  *= sin(dphimin);
     }
 
-  _mpmet = min(trkpmet, fullpmet);
+  _mpmet = min(_trkpmet, _fullpmet);
 }
 
 
