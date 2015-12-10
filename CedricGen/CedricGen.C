@@ -38,19 +38,29 @@ float                _m2lGen;
 float                inv_mass;
 float                _m2l;
 
-TH1D* h_GEN_m2l              = new TH1D("h_GEN_m2l","",          100, 0, 150);
-TH1D* h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR","",   100, 0, 150);
-TH1D* h_RECO_m2l             = new TH1D("h_RECO_m2l","",         100, 0, 150);
-TH1D* h_Lepton1DeltaR        = new TH1D("h_Lepton1DeltaR","",    50, 0,   5);
-TH1D* h_Lepton2DeltaR        = new TH1D("h_Lepton2DeltaR","",    50, 0,   5);
+TH1D* h_GEN_m2l;
+TH1D* h_GEN_m2l_DeltaR;
+TH1D* h_RECO_m2l;
+//TH1D* h_Lepton1DeltaR;
+//TH1D* h_Lepton2DeltaR;
 
-TFile* root_output           = new TFile("output.root", "recreate");
+TH2D* h_ptCut_determination;
+
+TFile* root_output;
 
 
 
 void CedricGen::Loop()
 {
+ root_output            = new TFile("output.root", "recreate");
 
+ h_GEN_m2l              = new TH1D("h_GEN_m2l","",             100, 0, 150);
+ h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR","",      100, 0, 150);
+ h_RECO_m2l             = new TH1D("h_RECO_m2l","",            100, 0, 150);
+ // h_Lepton1DeltaR        = new TH1D("h_Lepton1DeltaR","",       50, 0, 0.5);
+ // h_Lepton2DeltaR        = new TH1D("h_Lepton2DeltaR","",       50, 0, 0.5);
+
+ h_ptCut_determination  = new TH2D("h_ptCut_determination","",  50, 0, 150, 50, 0, 150);
   
 //   In a ROOT session, you can do:
 //      root> .L CedricGen.C
@@ -97,18 +107,18 @@ void CedricGen::Loop()
 
    ZSelection();
 
-   h_Lepton1DeltaR->Fill(ZLepton1.v.DeltaR(ZLeptonGen1.v));
-   //   h_Lepton1DeltaR->Draw();
-   h_Lepton2DeltaR->Fill(ZLepton2.v.DeltaR(ZLeptonGen2.v));
-   //   h_Lepton2DeltaR->Draw("same");
+   //   h_Lepton1DeltaR->Fill(ZLepton1.v.DeltaR(ZLeptonGen1.v));
+   //   h_Lepton2DeltaR->Fill(ZLepton2.v.DeltaR(ZLeptonGen2.v));
 
+   h_ptCut_determination->Fill(ZLeptonGen1.v.Pt(), ZLeptonGen2.v.Pt());
 
-   /*   if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) <0.1){
+   if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) <0.1){
      h_GEN_m2l_DeltaR->Fill(_m2lGen);
-     }*/
+   }
 
    }
 
+   root_output->cd();
    root_output->Write("",TObject::kOverwrite);
    root_output->Close();
 }
@@ -263,6 +273,8 @@ void CedricGen::ZSelection(){
 		   _m2l=inv_mass;
 		   ZLepton1=AnalysisLeptons[k];
 		   ZLepton2=AnalysisLeptons[l];
+
+		   h_RECO_m2l->Fill(_m2l);
 
 		 }
 	       }
