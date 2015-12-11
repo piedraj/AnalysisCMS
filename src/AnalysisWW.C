@@ -24,10 +24,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
   for (int j=0; j<ncut; j++) {
 
-    if (scut[j].Contains("Top/"))  continue;
-    if (scut[j].Contains("TTDM/")) continue;
-    if (scut[j].Contains("WZ/"))   continue;
-
     for (int k=0; k<=njetbin; k++) {
 
       TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
