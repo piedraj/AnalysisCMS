@@ -1,7 +1,6 @@
 #if !defined(MYLIB_CUTSTTDM_H)
 #define MYLIB_CUTSTTDM_H 1
 
-
 #include "TString.h"
 
 
@@ -25,6 +24,5 @@ const TString scut[ncut] = {
   "TTDM/05_LepDeltaPhi",
   "TTDM/06_MET"
 };
-
 
 #endif

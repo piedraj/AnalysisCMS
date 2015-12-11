@@ -1,7 +1,6 @@
 #if !defined(MYLIB_CUTSWZ_H)
 #define MYLIB_CUTSWZ_H 1
 
-
 #include "TString.h"
 
 
@@ -19,6 +18,5 @@ const TString scut[ncut] = {
   "WZ/02_HasW",
   "WZ/03_BVeto"
 };
-
 
 #endif

@@ -1,7 +1,6 @@
 #if !defined(MYLIB_CUTSTOP_H)
 #define MYLIB_CUTSTOP_H 1
 
-
 #include "TString.h"
 
 
@@ -17,6 +16,5 @@ const TString scut[ncut] = {
   "Top/01_Has2Jets",
   "Top/02_Has1BJet"
 };
-
 
 #endif

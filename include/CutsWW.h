@@ -1,7 +1,6 @@
 #if !defined(MYLIB_CUTSWW_H)
 #define MYLIB_CUTSWW_H 1
 
-
 #include "TString.h"
 
 
@@ -37,10 +36,6 @@ enum {
   WW_28_ZWindow35,
   WW_29_ZWindow36,
   WW_30_ZWindow37,
-  monoH_00_Mc,
-  monoH_01_DRll,
-  monoH_02_MpMet,
-  monoH_80_CR,
   ncut  // This line should be always last
 };
 
@@ -75,12 +70,7 @@ const TString scut[ncut] = {
   "WW/27_ZWindow34",
   "WW/28_ZWindow35",  
   "WW/29_ZWindow36",  
-  "WW/30_ZWindow37",  
-  "monoH/00_Mc",
-  "monoH/01_DRll",
-  "monoH/02_MpMet",
-  "monoH/80_CR"
+  "WW/30_ZWindow37"
 };
-
 
 #endif

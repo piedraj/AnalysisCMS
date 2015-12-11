@@ -628,8 +628,6 @@ void AnalysisCMS::EndJob()
 
   Summary(_analysis, "11.0", "raw yields");
 
-  if (_analysis.EqualTo("WW")) Summary("monoH", "11.0", "raw yields");
-
   txt_summary.close();
 
   root_output->cd();

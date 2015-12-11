@@ -158,26 +158,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     // Z control region - orthogonal to WW one
     passZwindow &= (_mpmet > 20);
-    FillLevelHistograms(WW_17_ZCR, passZwindow);  
-
-
-    // monoH selection - on top of WW (excluding Ht selection)
-    //----------------------------------------------------------------------------
-    /*
-    bool pass_monoh = (pass && pass_zveto);
-    bool pass_drll  = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
-
-    FillLevelHistograms(monoH_80_CR, pass_monoh && !pass_drll);
-    
-    pass_monoh &= (_mc < 100);
-    FillLevelHistograms(monoH_00_Mc, pass_monoh);
-    
-    pass_monoh &= pass_drll;
-    FillLevelHistograms(monoH_01_DRll, pass_monoh);
-    
-    pass_monoh &= (_mpmet > 60);
-    FillLevelHistograms(monoH_02_MpMet, pass_monoh);
-    */
+    FillLevelHistograms(WW_17_ZCR, passZwindow);
   }
 
 
