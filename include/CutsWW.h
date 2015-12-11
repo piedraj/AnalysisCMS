@@ -36,6 +36,10 @@ enum {
   WW_28_ZWindow35,
   WW_29_ZWindow36,
   WW_30_ZWindow37,
+  WW_100_MonoH_Mc,
+  WW_101_MonoH_DRll,
+  WW_102_MonoH_MpMet,
+  WW_103_MonoH_CR,
   ncut  // This line should be always last
 };
 
@@ -71,6 +75,10 @@ const TString scut[ncut] = {
   "WW/28_ZWindow35",  
   "WW/29_ZWindow36",  
   "WW/30_ZWindow37"
+  "WW/100_MonoH_Mc",
+  "WW/101_MonoH_DRll",
+  "WW/102_MonoH_MpMet",
+  "WW/103_MonoH_CR"
 };
 
 #endif
