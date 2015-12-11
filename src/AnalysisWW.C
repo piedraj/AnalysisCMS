@@ -47,7 +47,11 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 	DefineHistograms(i, j, k, suffix);
 
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
-	h_jetpt1[i][j][k]     = new TH1D("h_jetpt1"     + suffix, "", 1000, 0., 1000.);
+	h_dphilmet1[i][j][k]  = new TH1D("h_dphilmet1"  + suffix, "", 1000, 0., 10.0);
+	h_dphilmet2[i][j][k]  = new TH1D("h_dphilmet2"  + suffix, "", 1000, 0., 10.0);
+	h_fullpmet[i][j][k]   = new TH1D("h_fullpmet"   + suffix, "", 1000, 0., 1000);
+	h_trkpmet[i][j][k]    = new TH1D("h_trkpmet"    + suffix, "", 1000, 0., 1000);
+	h_jetpt1[i][j][k]     = new TH1D("h_jetpt1"     + suffix, "", 1000, 0., 1000);
       }
     }
   }
@@ -94,7 +98,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
-
+    /*
     FillLevelHistograms(WW_00_Has2Leptons, pass);
 
     pass &= (mll > 12.);
@@ -104,14 +108,13 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(WW_02_PfMet, pass);
 
     bool pass_zveto = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(mll - Z_MASS) > 15.);
-
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
     pass &= (_mpmet > 20.);
     FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
     //pass &= (_passdphiveto);
-    FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
+    //FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
 
     bool pass_ptll = (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
 
@@ -124,42 +127,47 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= (!_foundsoftmuon);
     FillLevelHistograms(WW_08_SoftMu, pass && pass_zveto);
 
-    bool pass_ht = (_ht < 250.);
-    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
+    //bool pass_ht = (_ht < 250.);
+    //FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
     
     FillLevelHistograms(WW_10_DY, pass);  // Data-driven DY
-
-    bool passZwindow = (fabs(mll - Z_MASS) < 15.);  // Z window at 2 leptons level
+    */
+    //DY Control Region
+    //----------------------------------------------------------------- 
+    bool passZwindow = (fabs(mll - Z_MASS) < 15.);  
     FillLevelHistograms(WW_11_ZWindow, passZwindow);
 
-    passZwindow &= (MET.Et() > 20.);
-    FillLevelHistograms(WW_12_ZWindowPfMet, passZwindow);
-
-    passZwindow &= (_mpmet > 20.);
-    FillLevelHistograms(WW_13_ZWindowMpMet, passZwindow);
-
-    passZwindow &= (pass_ptll);
+    passZwindow &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
     FillLevelHistograms(WW_14_ZWindowPtll, passZwindow);
 
     bool Jet[12];
     
     for (UInt_t j=0; j<12; ++j)
       {
-	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j);
-	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && pass_ptll && Jet[j]);
+	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j && fabs(std_vector_jet_eta->at(0)) < 4.7);
+	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && Jet[j]);
       }
+
+    //passZwindow &= (_mpmet > 20.);
+    //FillLevelHistograms(WW_13_ZWindowMpMet, passZwindow);
+
+    passZwindow &= (pfType1Met > 20.);
+    FillLevelHistograms(WW_12_ZWindowPfMet, passZwindow);
 
     passZwindow &= (_nbjet15 == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, passZwindow);
 
     passZwindow &= (!_foundsoftmuon);
     FillLevelHistograms(WW_16_ZWindowSoftMu, passZwindow);
-    
-    FillLevelHistograms(WW_17_ZCR, pass && pass_ht && passZwindow);  // Z control region - orthogonal to WW one
+
+    // Z control region - orthogonal to WW one
+    passZwindow &= (_mpmet > 20);
+    FillLevelHistograms(WW_17_ZCR, passZwindow);  
 
 
-    // monoH selection - on top of WW excluding Ht selection
+    // monoH selection - on top of WW (excluding Ht selection)
     //----------------------------------------------------------------------------
+    /*
     bool pass_monoh = (pass && pass_zveto);
     bool pass_drll  = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
 
@@ -173,6 +181,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     
     pass_monoh &= (_mpmet > 60);
     FillLevelHistograms(monoH_02_MpMet, pass_monoh);
+    */
   }
 
 
@@ -187,8 +196,12 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
 					int icut,
 					int ijet)
 {
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l,            _event_weight);
-  h_jetpt1[ichannel][icut][ijet]    ->Fill(std_vector_jet_pt->at(0), _event_weight);
+  h_metvar_m2l[ichannel][icut][ijet] ->Fill(_metvar, _m2l,            _event_weight);
+  h_dphilmet1[ichannel][icut][ijet]  ->Fill(_dphilmet1, _event_weight);
+  h_dphilmet2[ichannel][icut][ijet]  ->Fill(_dphilmet2, _event_weight);
+  h_fullpmet[ichannel][icut][ijet]   ->Fill(_fullpmet, _event_weight);
+  h_trkpmet[ichannel][icut][ijet]    ->Fill(_trkpmet, _event_weight);
+  h_jetpt1[ichannel][icut][ijet]     ->Fill(std_vector_jet_pt->at(0), _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
