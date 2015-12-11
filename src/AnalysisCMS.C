@@ -463,7 +463,7 @@ void AnalysisCMS::GetMpMet()
   _dphilmet1 = fabs(Lepton1.v.DeltaPhi(MET));
   _dphilmet2 = fabs(Lepton2.v.DeltaPhi(MET));
 
-  Float_t dphimin = min(_dphilmet1, dphilmet2);
+  Float_t dphimin = min(_dphilmet1, _dphilmet2);
 
   _fullpmet = MET.Et();
   _trkpmet  = trkMet;
