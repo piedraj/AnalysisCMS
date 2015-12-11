@@ -10,4 +10,6 @@
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scramv1 runtime -sh`
 
+stat ./runAnalysis
+
 `cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID '{ if (NR==line) print "./runAnalysis "$1 }'`
