@@ -2,6 +2,7 @@
 #include "CedricGen.h"
 #include "../include/Constants.h"
 #include <TH2.h>
+#include <TH3.h>
 #include <TStyle.h>
 #include <iostream>
 #include <TCanvas.h>
@@ -23,8 +24,10 @@ struct Lepton
 std::vector<Lepton>  AnalysisLeptons;
 std::vector<Lepton>  AnalysisLeptonsGen;
 
+Lepton               WLeptonGen;
 Lepton               ZLeptonGen1;
 Lepton               ZLeptonGen2;
+Lepton               WLepton;
 Lepton               ZLepton1; 
 Lepton               ZLepton2;
 
@@ -37,16 +40,26 @@ float                inv_massGen;
 float                _m2lGen;
 float                inv_mass;
 float                _m2l;
+float                _m3l;
+float                _m3lGen;
 
-TH1D* h_GEN_m2l;
-TH1D* h_GEN_m2l_DeltaR;
-TH1D* h_RECO_m2l;
-//TH1D* h_Lepton1DeltaR;
-//TH1D* h_Lepton2DeltaR;
+TH1D*               h_GEN_m2l;
+TH1D*               h_GEN_m2l_DeltaR;
+TH1D*               h_RECO_m2l;
+TH1D*               h_GEN_wlzl1deltar;
+TH1D*               h_GEN_wlzl2deltar;
+TH1D*               h_GEN_zl1zl2deltar;
+TH1D*               h_GEN_zl1pt;
+TH1D*               h_GEN_zl2pt;
+TH1D*               h_GEN_wlpt;
+TH1D*               h_GEN_met;
+TH1D*               h_RECO_met;
+TH1D*               h_met_comparison;
+TH1D*               h_GEN_m3l;
+TH1D*               h_RECO_m3l;
+TH1D*               h_GEN_m3l_DeltaR;
 
-TH2D* h_ptCut_determination;
-
-TFile* root_output;
+TFile*              root_output;
 
 
 
@@ -54,15 +67,27 @@ void CedricGen::Loop()
 {
  root_output            = new TFile("output.root", "recreate");
 
- h_GEN_m2l              = new TH1D("h_GEN_m2l","",             100, 0, 150);
- h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR","",      100, 0, 150);
- h_RECO_m2l             = new TH1D("h_RECO_m2l","",            100, 0, 150);
- // h_Lepton1DeltaR        = new TH1D("h_Lepton1DeltaR","",       50, 0, 0.5);
- // h_Lepton2DeltaR        = new TH1D("h_Lepton2DeltaR","",       50, 0, 0.5);
+ h_GEN_m2l              = new TH1D("h_GEN_m2l",         "m2l of the Gen Z leptons",                                             100, 0, 150);
+ h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR",  "m2l of the Gen Z leptons with #Delta R matching",                      100, 0, 150);
+ h_RECO_m2l             = new TH1D("h_RECO_m2l",        "m2l of the Reco Z leptons",                                            100, 0, 150);
+ h_GEN_m3l              = new TH1D("h_GEN_m3l",         "m3l of the Gen Z and W leptons",                                       100, 0, 300);
+ h_RECO_m3l             = new TH1D("h_RECO_m3l",        "m3l of the Reco Z and W leptons",                                      100, 0, 300);
+ h_GEN_m3l_DeltaR       = new TH1D("h_GEN_m3l_DeltaR",  "m3l of the Gen Z and W leptons with #Delta R matching",                100, 0, 300);
 
- h_ptCut_determination  = new TH2D("h_ptCut_determination","",  50, 0, 150, 50, 0, 150);
+ h_GEN_zl1pt            = new TH1D("h_GEN_zl1pt","Pt of the leading Z Gen lepton",                                               75, 0, 100);
+ h_GEN_zl2pt            = new TH1D("h_GEN_zl2pt","Pt of the trailing Z Gen lepton",                                              75, 0, 100);
+ h_GEN_wlpt             = new TH1D("h_GEN_wlpt", "Pt of the W Gen lepton",                                                       75, 0, 100);
+
+ h_GEN_met              = new TH1D("h_GEN_met",         "Met of the gen leptons",                                                50, 0,  80);
+ h_RECO_met             = new TH1D("h_RECO_met",        "Met of the reco leptons",                                               50, 0,  80);
+ h_met_comparison       = new TH1D("h_met_comparison",  "Met of the reco leptons - met of the gen leptons",                      50, 0,  80);
   
-//   In a ROOT session, you can do:
+ h_GEN_wlzl1deltar      = new TH1D("h_GEN_wlzl1deltar",   "#Delta R between the W Gen and the trailing lepton of the Z Gen",    100, 0,   5);
+ h_GEN_wlzl2deltar      = new TH1D("h_GEN_wlzl2deltar",   "#Delta R between the W Gen and the leading lepton of the Z Gen",     100, 0,   5);
+ h_GEN_zl1zl2deltar     = new TH1D("h_GEN_zl1zl2deltar",  "#Delta R between both Z Gen leptons",                                100, 0,   5);
+ 
+
+//   In A ROOT session, you can do:
 //      root> .L CedricGen.C
 //      root> CedricGen t
 //      root> t.GetEntry(12); // Fill t data members with entry number 12
@@ -82,7 +107,6 @@ void CedricGen::Loop()
    if (fChain == 0) return;
 
    Long64_t nentries = fChain->GetEntriesFast();
-
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -104,20 +128,43 @@ void CedricGen::Loop()
        std::cout.flush();
      }
 
+   WZSelection();
 
-   ZSelection();
+   //Fill the m2l histograms
 
-   //   h_Lepton1DeltaR->Fill(ZLepton1.v.DeltaR(ZLeptonGen1.v));
-   //   h_Lepton2DeltaR->Fill(ZLepton2.v.DeltaR(ZLeptonGen2.v));
+   h_GEN_m2l                      ->    Fill(_m2lGen);
+   h_RECO_m2l                     ->    Fill(_m2l);
 
-   h_ptCut_determination->Fill(ZLeptonGen1.v.Pt(), ZLeptonGen2.v.Pt());
-
-   if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) <0.1){
-     h_GEN_m2l_DeltaR->Fill(_m2lGen);
+   if (ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) < 0.1){
+     h_GEN_m2l_DeltaR             ->    Fill(_m2lGen);
    }
 
+   //Fill the m3l histograms
+
+   h_GEN_m3l                      ->    Fill(_m3lGen) ;
+   h_RECO_m3l                     ->    Fill(_m3l) ;
+
+   if(ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) < 0.1){
+     h_GEN_m3l_DeltaR             ->    Fill(_m3lGen) ;
    }
 
+   //Fill the pt histograms
+
+   h_GEN_zl1pt                    ->    Fill(ZLeptonGen1.v.Pt());
+   h_GEN_zl2pt                    ->    Fill(ZLeptonGen2.v.Pt());
+   h_GEN_wlpt                     ->    Fill(WLeptonGen.v.Pt());
+
+
+   //Fill the met histograms
+   
+   h_GEN_met                      ->    Fill(metGenpt);
+   h_RECO_met                     ->    Fill(pfType1Met);
+   h_met_comparison               ->    Fill(metGenpt-pfType1Met);
+
+   //Fill the DeltaR histograms
+}
+   
+   
    root_output->cd();
    root_output->Write("",TObject::kOverwrite);
    root_output->Close();
@@ -222,42 +269,41 @@ void CedricGen::GetLeptons()
 
 
 // ===========================================================
-// Z Selection
+// WZ Selection
 // ===========================================================
 
-void CedricGen::ZSelection(){
+void CedricGen::WZSelection(){
 
+  _m2lGen=-999;
+  _m2l=-999;
 
      for (int i=0;i<_nleptonGen;i++){
 
        for (int j=i+1;j<_nleptonGen;j++){
 
-	 /*	  if (AnalysisLeptonsGen[i].flavour + AnalysisLeptonsGen[j].flavour !=0) continue; 
-
-	  _m2lGen=-999;
-   	  inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
-
-	  if (_m2lGen<0 || fabs(inv_massGen - Z_MASS) < fabs(_m2lGen - Z_MASS)) {
-
-	    _m2lGen=inv_massGen;
-	 */
-
 	 float Lepton1_mpid = std_vector_leptonGen_mpid -> at(i);
 	 float Lepton2_mpid = std_vector_leptonGen_mpid -> at(j);
 
-	 if (Lepton1_mpid == 23 && Lepton2_mpid  == 23){
+	 if(fabs(Lepton1_mpid) == 24){
+	   WLeptonGen=AnalysisLeptonsGen[i];
+	 }
 
-	  _m2lGen=-999;
-   	  inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
+	 else if(fabs(Lepton2_mpid) == 24){
+	   WLeptonGen=AnalysisLeptonsGen[j];
+	 }
+
+	 if (Lepton1_mpid == 23 && Lepton2_mpid  == 23){
+	   inv_massGen = (AnalysisLeptonsGen[i].v + AnalysisLeptonsGen[j].v).M();
 
 	  if (_m2lGen<0 || fabs(inv_massGen - Z_MASS) < fabs(_m2lGen - Z_MASS)) {
-	    _m2lGen=inv_massGen;
-	  }	   
+	    _m2lGen=inv_massGen;	   
+	  }
 
 	    ZLeptonGen1=AnalysisLeptonsGen[i];
 	    ZLeptonGen2=AnalysisLeptonsGen[j];
 
-	    h_GEN_m2l->Fill(_m2lGen);
+	    float _m3lGen = (ZLeptonGen1.v + ZLeptonGen2.v + WLeptonGen.v).M();
+	  
 
 	    for (int k=0;k<_nlepton;k++){
 
@@ -265,7 +311,6 @@ void CedricGen::ZSelection(){
 
 		 if (AnalysisLeptons[k].flavour + AnalysisLeptons[l].flavour !=0) continue;
 
-		 _m2l=-999;
 		 inv_mass= (AnalysisLeptons[k].v + AnalysisLeptons[l].v).M();
 
 		 if (_m2l<0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
@@ -274,13 +319,23 @@ void CedricGen::ZSelection(){
 		   ZLepton1=AnalysisLeptons[k];
 		   ZLepton2=AnalysisLeptons[l];
 
-		   h_RECO_m2l->Fill(_m2l);
-
+		   for (int z=0; z<3; z++){
+		     if (z==k) continue;
+		     if (z==l) continue;
+		     WLepton=AnalysisLeptons[z];
+		   }
+		 
+		   float _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
+		   
 		 }
 	       }
 	    }
-	  }
+	 }
        }
      }
 }
+
+
+
+
 

@@ -1,0 +1,59 @@
+#include "TString.h"
+
+void Draw() {
+
+  TFile*      f = new TFile ("output.root","read");
+
+  // Draw the m2l related histograms
+
+  TH1D*       h_GEN_m2l         =   (TH1D*)f   ->   Get("h_GEN_m2l");
+  TH1D*       h_RECO_m2l        =   (TH1D*)f   ->   Get("h_RECO_m2l");
+  TH1D*       h_GEN_m2l_DeltaR  =   (TH1D*)f   ->   Get("h_GEN_m2l_DeltaR");
+
+  TCanvas*    canvas1 = new TCanvas("Mass of the two Z generated leptons","Mass of the two Z generated leptons");
+
+
+  h_GEN_m2l->Draw();
+  h_GEN_m2l->SetLineWidth(2);  
+  h_GEN_m2l->SetTitle("Mass of the two Z leptons in different scenarios");
+
+  h_GEN_m2l_DeltaR->Draw("same");
+  h_GEN_m2l_DeltaR->SetLineWidth(2);
+  h_GEN_m2l_DeltaR->SetLineColor(2);
+
+  h_RECO_m2l->Draw("same");
+  h_RECO_m2l->SetLineWidth(2);
+  h_RECO_m2l->SetLineColor(8);
+
+  // Draw the m3l related histograms
+
+
+
+  // Draw the pt related histograms
+
+TH1D* h_GEN_zl1pt = (TH1D*)f ->Get("h_GEN_zl1pt");
+TH1D* h_GEN_zl2pt = (TH1D*)f ->Get("h_GEN_zl2pt");
+TH1D* h_GEN_wlpt = (TH1D*)f ->Get("h_GEN_wlpt");
+
+  TCanvas*     canvas2 = new TCanvas("Pt of the 3 generated leptons", "Pt of the 3 generated leptons");
+
+  h_GEN_zl2pt->Draw();
+  h_GEN_zl2pt->SetTitle("Pf of the 3 generated leptons");
+  h_GEN_zl2pt->SetLineWidth(2);
+  h_GEN_zl1pt->Draw("same");
+  h_GEN_zl1pt->SetLineWidth(2);  
+  h_GEN_zl1pt->SetLineColor(2);    
+  h_GEN_wlpt->Draw("same");
+  h_GEN_wlpt->SetLineWidth(2);  
+  h_GEN_wlpt->SetLineColor(8);
+
+
+}
+
+
+
+
+
+
+
+
