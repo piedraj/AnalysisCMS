@@ -186,3 +186,19 @@ The following instructions have been extracted from the [CMS TWiki](https://twik
     cd notes/AN-16-010/trunk
     tdr --style=an b AN-16-010
 
+Get the latest modifications from the note repository. Always do this first.
+
+    svn update
+
+If you want to add new files.
+
+    svn add file1 file2 ... fileN
+
+If you want to know which files you have added and/or modified.
+
+    svn status
+
+Commit your changes.
+
+    svn commit -m 'Modified'
+
