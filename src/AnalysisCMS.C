@@ -34,17 +34,23 @@ bool AnalysisCMS::IsFiducialLepton(int k)
 //------------------------------------------------------------------------------
 bool AnalysisCMS::IsTightLepton(int k)
 {
+  float pt      = std_vector_lepton_pt     ->at(k);
   float flavour = std_vector_lepton_flavour->at(k);
 
   bool is_tight_lepton = false;
 
   if (fabs(flavour) == MUON_FLAVOUR)
     {
-      is_tight_lepton = std_vector_lepton_isTightMuon->at(k);
+      is_tight_lepton = std_vector_lepton_isMediumMuon->at(k);
+
+      float dxy = (pt > 20.) ? 0.02 : 0.01;
+
+      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);
+      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);
     }
   else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
-      is_tight_lepton = std_vector_lepton_eleIdMedium->at(k);
+      is_tight_lepton = std_vector_lepton_eleIdTight->at(k);
     }
 
   return is_tight_lepton;
@@ -111,7 +117,7 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
   bool is_isolated_lepton = false;
 
   if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;
-  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.12);
+  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.15);
   
   return is_isolated_lepton;
 }
@@ -126,7 +132,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet30    [ichannel][icut][ijet]->Fill(njet,           _event_weight);
+  h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
   h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
@@ -373,7 +379,7 @@ void AnalysisCMS::GetJets()
     	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.3) is_lepton = true;
       }
     
-    //    if (is_lepton) continue;
+    if (is_lepton) continue;
 
     Jet goodjet;
 

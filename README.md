@@ -177,8 +177,8 @@ Finally, go to your repository and click **Pull Request**.
 The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note number used below corresponds to the IFCA/Oviedo WZ analysis at 13 TeV.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
-    svn co -N svn+ssh://svn.cern.ch/reps/tdr2 myDir
-    cd myDir
+    svn co -N svn+ssh://svn.cern.ch/reps/tdr2 svn
+    cd svn
     svn update utils
     svn update -N notes
     svn update notes/AN-16-010
