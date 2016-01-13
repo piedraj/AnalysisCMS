@@ -202,3 +202,4 @@ Commit your changes.
 
     svn commit -m 'Modified'
 
+A detailed example of a CMS Note written in LaTeX using the *cms-tdr* document class can be found in the [svn-instructions.pdf](https://github.com/piedraj/AnalysisCMS/raw/master/svn-instructions.pdf) file.
