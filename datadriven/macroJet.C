@@ -88,7 +88,7 @@ void domacroJet(TString channel, Int_t loop){
   hData -> GetXaxis() -> SetRangeUser(0.,100.);
   hData -> SetLineWidth(2);
   hData -> SetLineColor(kBlack);
-  hData -> GetYaxis() -> SetRangeUser(0.1, 2 * hData -> GetMaximum());
+  hData -> GetYaxis() -> SetRangeUser(0.1, 200.);//hData -> GetMaximum());
   hData -> GetXaxis() -> SetTitle("pfMET [GeV]");
   hData -> GetYaxis() -> SetTitle("entries / 2GeV");
   hData -> GetXaxis() -> SetTitleOffset(1.4);
@@ -101,8 +101,8 @@ void domacroJet(TString channel, Int_t loop){
   
   THStack* hstack = new THStack(title,title);
   
-  float max = 10000.;
-  //  if (channel == "mm") max = 1400.;
+  float max = 800.;
+    if (channel == "mm") max = 1400.;
 
   hstack -> SetMinimum(0.1);
   hstack -> SetMaximum(max);
@@ -119,13 +119,13 @@ void domacroJet(TString channel, Int_t loop){
   pad1->Draw();
   pad1->cd();
   
-  pad1->SetLogy();
+  //pad1->SetLogy();
 
   hstack -> Draw("hist"); 
   hstack -> GetXaxis() -> SetRangeUser(0.,100.);
-  hData  -> Draw("ep,same");
+  hData  -> Draw("p,same");
   hstack -> Draw("hist,same"); 
-  hData  -> Draw("ep,same");
+  hData  -> Draw("p,same");
   
   TLegend* leg = new TLegend(0.6,0.6,0.89,0.8);
   leg -> SetNColumns(2);
@@ -137,7 +137,7 @@ void domacroJet(TString channel, Int_t loop){
   leg -> Draw();
   
   DrawTLatex(0.89, 0.88, 0.03, "ptll > 45GeV \n, |mll - mZ| < 15GeV");
-  DrawTLatex(0.89, 0.84, 0.03, "mpmet > 20GeV\n, pfmet > 20GeV");
+  //DrawTLatex(0.89, 0.84, 0.03, "mpmet > 20GeV\n, pfmet > 20GeV");
 
   c -> Update();
   c -> cd();

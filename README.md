@@ -17,9 +17,9 @@ Log in to gridui.
 
 Set a CMSSW release.
 
-    export SCRAM_ARCH=slc6_amd64_gcc491
-    cmsrel CMSSW_7_5_3
-    cd CMSSW_7_5_3/src
+    export SCRAM_ARCH=slc6_amd64_gcc493
+    cmsrel CMSSW_7_6_3
+    cd CMSSW_7_6_3/src
     cmsenv
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
@@ -48,7 +48,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_5_3/src
+    cd CMSSW_7_6_3/src
     cmsenv
     cd AnalysisCMS
 
@@ -78,7 +78,7 @@ Alternatively one can login to a node and run interactively.
 
     qlogin -P l.gaes
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_5_3/src
+    cd CMSSW_7_6_3/src
     cmsenv
     cd AnalysisCMS
     ./make
@@ -139,6 +139,7 @@ And they should appear here,
 
     https://amanjong.web.cern.ch/amanjong/figures/
     https://cprieels.web.cern.ch/cprieels/figures/
+    https://ntrevisa.web.cern.ch/ntrevisa/
     https://piedra.web.cern.ch/piedra/figures/
 
 A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,
@@ -169,3 +170,36 @@ Finally, go to your repository and click **Pull Request**.
 
     https://github.com/YOUR_USERNAME/AnalysisCMS
 
+
+8. Edit a CMS Analysis Note
+====
+
+The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note number used below corresponds to the IFCA/Oviedo WZ analysis at 13 TeV.
+
+    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    svn co -N svn+ssh://svn.cern.ch/reps/tdr2 svn
+    cd svn
+    svn update utils
+    svn update -N notes
+    svn update notes/AN-16-010
+    eval `notes/tdr runtime -csh`
+    cd notes/AN-16-010/trunk
+    tdr --style=an b AN-16-010
+
+Get the latest modifications from the note repository. Always do this first.
+
+    svn update
+
+If you want to add new files.
+
+    svn add file1 file2 ... fileN
+
+If you want to know which files you have added and/or modified.
+
+    svn status
+
+Commit your changes.
+
+    svn commit -m 'Modified'
+
+A detailed example of a CMS Note written in LaTeX using the *cms-tdr* document class can be found in the [svn-instructions.pdf](https://github.com/piedraj/AnalysisCMS/raw/master/svn-instructions.pdf) file.

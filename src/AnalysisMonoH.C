@@ -1,17 +1,17 @@
-#define AnalysisTTDM_cxx
-#include "../include/AnalysisTTDM.h"
+#define AnalysisMonoH_cxx
+#include "../include/AnalysisMonoH.h"
 
 
 //------------------------------------------------------------------------------
-// AnalysisTTDM
+// AnalysisMonoH
 //------------------------------------------------------------------------------
-AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree) {}
 
 
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
+void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
@@ -41,10 +41,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	TString suffix = "_" + schannel[i];
 
 	DefineHistograms(i, j, k, suffix);
+
+	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
       }
     }
   }
-
+  
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -88,37 +90,26 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     bool pass = true;
 
-    FillLevelHistograms(TTDM_00_Has2Leptons, pass);
+    pass &= (mll > 12.);
+    pass &= (MET.Et() > 20.);
+    pass &= (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(mll - Z_MASS) > 15.);
+    pass &= (_mpmet > 20.);
+    pass &= (_passdphiveto);
+    pass &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
+    pass &= (_nbjet15 == 0);
+    pass &= (!_foundsoftmuon);
 
-    bool pass_sf = (_nelectron != 1 && fabs(mll - Z_MASS) > 15.);
-    bool pass_df = (_nelectron == 1);
-
-    pass &= (mll > 20.);
-    pass &= (pass_sf || pass_df);
-
-    FillLevelHistograms(TTDM_01_ZVeto, pass);
-
-    pass &= (njet > 1);
-
-    if (njet < 2) continue;
-
-    FillLevelHistograms(TTDM_02_Has2Jets, pass);
-
-    pass &= (Lepton1.v.Pt() + Lepton2.v.Pt() > 120.);
-
-    FillLevelHistograms(TTDM_03_LepPtSum, pass);
-
-    pass &= (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt() < 400.);
-
-    FillLevelHistograms(TTDM_04_JetPtSum, pass);
-
-    pass &= (Lepton1.v.DeltaPhi(Lepton2.v) < 2.);
-
-    FillLevelHistograms(TTDM_05_LepDeltaPhi, pass);
-
-    pass &= (MET.Et() > 320.);
-
-    FillLevelHistograms(TTDM_06_MET, pass);
+    bool pass_drll = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
+    FillLevelHistograms(MonoH_103_CR, pass && !pass_drll);
+    
+    pass &= (_mc < 100.);
+    FillLevelHistograms(MonoH_100_Mc, pass);
+    
+    pass &= pass_drll;
+    FillLevelHistograms(MonoH_101_DRll, pass);
+    
+    pass &= (_mpmet > 60.);
+    FillLevelHistograms(MonoH_102_MpMet, pass);
   }
 
 
@@ -129,10 +120,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //------------------------------------------------------------------------------
 // FillAnalysisHistograms
 //------------------------------------------------------------------------------
-void AnalysisTTDM::FillAnalysisHistograms(int ichannel,
-					  int icut,
-					  int ijet)
+void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
+					   int icut,
+					   int ijet)
 {
+  h_metvar_m2l[ichannel][icut][ijet] ->Fill(_metvar, _m2l, _event_weight);
+
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
 
@@ -140,14 +133,14 @@ void AnalysisTTDM::FillAnalysisHistograms(int ichannel,
 //------------------------------------------------------------------------------
 // FillLevelHistograms
 //------------------------------------------------------------------------------
-void AnalysisTTDM::FillLevelHistograms(int  icut,
-				       bool pass)
+void AnalysisMonoH::FillLevelHistograms(int  icut,
+					bool pass)
 {
   if (!pass) return;
 
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
-  //  FillAnalysisHistograms(_channel, icut, _jetbin);
-  //  FillAnalysisHistograms(_channel, icut, njetbin);
+  FillAnalysisHistograms(_channel, icut, _jetbin);
+  FillAnalysisHistograms(_channel, icut, njetbin);
 }

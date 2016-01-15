@@ -21,6 +21,8 @@ void runPlotter(TString level)
 
   Bool_t scale = (analysis.EqualTo("WZ")) ? linY : logY;
 
+  if (analysis.EqualTo("WW")) scale = linY;
+
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
@@ -70,14 +72,14 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   //  if (analysis.EqualTo("TTDM"))
   //    {
-  //      plotter.AddSignal("ttDM1scalar20__part0",    "m_{#phi}1 m_{#chi}20",    kRed-4);
-  //      plotter.AddSignal("ttDM1scalar50__part0",    "m_{#phi}1 m_{#chi}50",    kRed-3);
-  //      plotter.AddSignal("ttDM1scalar500__part0",   "m_{#phi}1 m_{#chi}500",   kRed-2);
-  //      plotter.AddSignal("ttDM10scalar10__part0",   "m_{#phi}10 m_{#chi}10",   kRed-1);
-  //      plotter.AddSignal("ttDM50scalar50__part0",   "m_{#phi}50 m_{#chi}50",   kRed);
-  //      plotter.AddSignal("ttDM50scalar200__part0",  "m_{#phi}50 m_{#chi}200",  kRed+1);
-  //      plotter.AddSignal("ttDM50scalar300__part0",  "m_{#phi}50 m_{#chi}300",  kRed+2);
-  //      plotter.AddSignal("ttDM150scalar200__part0", "m_{#phi}150 m_{#chi}200", kRed+3);
+  //      plotter.AddSignal("ttDM1scalar20",    "m_{#phi}1 m_{#chi}20",    kRed-4);
+  //      plotter.AddSignal("ttDM1scalar50",    "m_{#phi}1 m_{#chi}50",    kRed-3);
+  //      plotter.AddSignal("ttDM1scalar500",   "m_{#phi}1 m_{#chi}500",   kRed-2);
+  //      plotter.AddSignal("ttDM10scalar10",   "m_{#phi}10 m_{#chi}10",   kRed-1);
+  //      plotter.AddSignal("ttDM50scalar50",   "m_{#phi}50 m_{#chi}50",   kRed);
+  //      plotter.AddSignal("ttDM50scalar200",  "m_{#phi}50 m_{#chi}200",  kRed+1);
+  //      plotter.AddSignal("ttDM50scalar300",  "m_{#phi}50 m_{#chi}300",  kRed+2);
+  //      plotter.AddSignal("ttDM150scalar200", "m_{#phi}150 m_{#chi}200", kRed+3);
   //    }
 
 
@@ -146,9 +148,9 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"       + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
 	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);
-	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  300);
+	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  scale, true,    0,  400);
+	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  400);
+	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "m2l"        + suffix, "m_{#font[12]{ll}}",                        2, 0, "GeV",  scale, true, xmin, xmax);
 	  plotter.Draw(prefix + "mtw1"       + suffix, "m_{T}^{W,1}",                             20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "mtw2"       + suffix, "m_{T}^{W,2}",                             20, 0, "GeV",  scale, true,    0,  500);
@@ -161,6 +163,17 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "ptww"       + suffix, "p_{T}^{WW}",                              10, 0, "GeV",  scale, true,    0,  300);
 
 
+	  // WW histograms
+	  //--------------------------------------------------------------------
+	  if (!level.Contains("WW")) continue;
+
+	  plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",              2, 0, "GeV", linY, false, 0, 100);
+	  plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
+	  plotter.Draw(prefix + "dphilmet2" + suffix, "#Delta#phi(lep2,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
+	  plotter.Draw(prefix + "fullpmet"  + suffix, "projected E_{T}^{miss}",        10, 0, "GeV", linY, false, 0, 3.2);
+	  plotter.Draw(prefix + "trkpmet"   + suffix, "projected track E_{T}^{miss}",   2, 0, "GeV", linY, false, 0, 100);
+
+	  
 	  // WZ histograms
 	  //--------------------------------------------------------------------
 	  if (!level.Contains("WZ")) continue;

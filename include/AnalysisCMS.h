@@ -122,12 +122,16 @@ class AnalysisCMS : public AnalysisBase
   TString                _sample;
 
   float                  _deltaphill;
+  float                  _dphilmet1;
+  float                  _dphilmet2;
   float                  _event_weight;
   float                  _ht;
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
   float                  _mpmet;
+  float                  _fullpmet;
+  float                  _trkpmet;
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;

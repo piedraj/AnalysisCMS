@@ -2,9 +2,10 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_MC.txt"
-    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_05Oct2015.txt"
-    echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_PromptReco.txt"
+    echo "  ./submit-jobs.sh samples/samples_Run2015D_PromptReco.txt"
+    echo "  ./submit-jobs.sh samples/samples_Run2015D_05Oct2015.txt"
+    echo "  ./submit-jobs.sh samples/samples_MC.txt"
+    echo "  ./submit-jobs.sh samples/samples_ttDM.txt"
     echo "  "
     exit -1
 fi

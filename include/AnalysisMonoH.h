@@ -1,14 +1,14 @@
-#ifndef AnalysisWW_h
-#define AnalysisWW_h
+#ifndef AnalysisMonoH_h
+#define AnalysisMonoH_h
 
 #include "AnalysisCMS.h"
 
 
-class AnalysisWW : public AnalysisCMS
+class AnalysisMonoH : public AnalysisCMS
 {
  public :
 
-  AnalysisWW(TTree* tree = 0);
+  AnalysisMonoH(TTree* tree = 0);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,
@@ -25,11 +25,6 @@ class AnalysisWW : public AnalysisCMS
   // Analysis histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metvar_m2l[nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilmet1[nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilmet2[nchannel][ncut][njetbin+1];
-  TH1D*                  h_fullpmet[nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkpmet[nchannel][ncut][njetbin+1];
-  TH1D*                  h_jetpt1[nchannel][ncut][njetbin+1];
 };
 
 #endif
