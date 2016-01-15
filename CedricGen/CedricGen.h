@@ -675,7 +675,7 @@ public :
    // Cedric's functions
    void GetLeptonsGen();
    void GetLeptons();
-   void ZSelection();
+   void WZSelection();
 
 };
 

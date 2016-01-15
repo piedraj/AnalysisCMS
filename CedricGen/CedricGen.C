@@ -40,8 +40,6 @@ float                inv_massGen;
 float                _m2lGen;
 float                inv_mass;
 float                _m2l;
-float                _m3l;
-float                _m3lGen;
 
 TH1D*               h_GEN_m2l;
 TH1D*               h_GEN_m2l_DeltaR;
@@ -70,9 +68,6 @@ void CedricGen::Loop()
  h_GEN_m2l              = new TH1D("h_GEN_m2l",         "m2l of the Gen Z leptons",                                             100, 0, 150);
  h_GEN_m2l_DeltaR       = new TH1D("h_GEN_m2l_DeltaR",  "m2l of the Gen Z leptons with #Delta R matching",                      100, 0, 150);
  h_RECO_m2l             = new TH1D("h_RECO_m2l",        "m2l of the Reco Z leptons",                                            100, 0, 150);
- h_GEN_m3l              = new TH1D("h_GEN_m3l",         "m3l of the Gen Z and W leptons",                                       100, 0, 300);
- h_RECO_m3l             = new TH1D("h_RECO_m3l",        "m3l of the Reco Z and W leptons",                                      100, 0, 300);
- h_GEN_m3l_DeltaR       = new TH1D("h_GEN_m3l_DeltaR",  "m3l of the Gen Z and W leptons with #Delta R matching",                100, 0, 300);
 
  h_GEN_zl1pt            = new TH1D("h_GEN_zl1pt","Pt of the leading Z Gen lepton",                                               75, 0, 100);
  h_GEN_zl2pt            = new TH1D("h_GEN_zl2pt","Pt of the trailing Z Gen lepton",                                              75, 0, 100);
@@ -139,15 +134,6 @@ void CedricGen::Loop()
      h_GEN_m2l_DeltaR             ->    Fill(_m2lGen);
    }
 
-   //Fill the m3l histograms
-
-   h_GEN_m3l                      ->    Fill(_m3lGen) ;
-   h_RECO_m3l                     ->    Fill(_m3l) ;
-
-   if(ZLepton1.v.DeltaR(ZLeptonGen1.v) < 0.1 && ZLepton2.v.DeltaR(ZLeptonGen2.v) < 0.1){
-     h_GEN_m3l_DeltaR             ->    Fill(_m3lGen) ;
-   }
-
    //Fill the pt histograms
 
    h_GEN_zl1pt                    ->    Fill(ZLeptonGen1.v.Pt());
@@ -156,12 +142,11 @@ void CedricGen::Loop()
 
 
    //Fill the met histograms
-   
+
    h_GEN_met                      ->    Fill(metGenpt);
    h_RECO_met                     ->    Fill(pfType1Met);
    h_met_comparison               ->    Fill(metGenpt-pfType1Met);
 
-   //Fill the DeltaR histograms
 }
    
    
@@ -302,9 +287,6 @@ void CedricGen::WZSelection(){
 	    ZLeptonGen1=AnalysisLeptonsGen[i];
 	    ZLeptonGen2=AnalysisLeptonsGen[j];
 
-	    float _m3lGen = (ZLeptonGen1.v + ZLeptonGen2.v + WLeptonGen.v).M();
-	  
-
 	    for (int k=0;k<_nlepton;k++){
 
 	       for (int l=k+1; l<_nlepton;l++){
@@ -324,9 +306,7 @@ void CedricGen::WZSelection(){
 		     if (z==l) continue;
 		     WLepton=AnalysisLeptons[z];
 		   }
-		 
-		   float _m3l = (ZLepton1.v + ZLepton2.v + WLepton.v).M();
-		   
+
 		 }
 	       }
 	    }
