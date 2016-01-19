@@ -45,6 +45,27 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     }
   }
 
+  root_output->cd();
+
+
+  // MET filters histograms
+  //----------------------------------------------------------------------------
+  met_Flag_none                               = new TH1D("met_Flag_none",                               "", 3000, 0, 3000);
+  met_Flag_all                                = new TH1D("met_Flag_all",                                "", 3000, 0, 3000);
+  met_Flag_trackingFailureFilter              = new TH1D("met_Flag_trackingFailureFilter",              "", 3000, 0, 3000);
+  met_Flag_goodVertices                       = new TH1D("met_Flag_goodVertices",                       "", 3000, 0, 3000);
+  met_Flag_CSCTightHaloFilter                 = new TH1D("met_Flag_CSCTightHaloFilter",                 "", 3000, 0, 3000);
+  met_Flag_trkPOGFilters                      = new TH1D("met_Flag_trkPOGFilters",                      "", 3000, 0, 3000);
+  met_Flag_trkPOG_logErrorTooManyClusters     = new TH1D("met_Flag_trkPOG_logErrorTooManyClusters",     "", 3000, 0, 3000);
+  met_Flag_EcalDeadCellTriggerPrimitiveFilter = new TH1D("met_Flag_EcalDeadCellTriggerPrimitiveFilter", "", 3000, 0, 3000);
+  met_Flag_ecalLaserCorrFilter                = new TH1D("met_Flag_ecalLaserCorrFilter",                "", 3000, 0, 3000);
+  met_Flag_trkPOG_manystripclus53X            = new TH1D("met_Flag_trkPOG_manystripclus53X",            "", 3000, 0, 3000);
+  met_Flag_eeBadScFilter                      = new TH1D("met_Flag_eeBadScFilter",                      "", 3000, 0, 3000);
+  met_Flag_METFilters                         = new TH1D("met_Flag_METFilters",                         "", 3000, 0, 3000);
+  met_Flag_HBHENoiseFilter                    = new TH1D("met_Flag_HBHENoiseFilter",                    "", 3000, 0, 3000);
+  met_Flag_trkPOG_toomanystripclus53X         = new TH1D("met_Flag_trkPOG_toomanystripclus53X",         "", 3000, 0, 3000);
+  met_Flag_hcalLaserEventFilter               = new TH1D("met_Flag_hcalLaserEventFilter",               "", 3000, 0, 3000);
+
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -59,6 +80,27 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup();
+
+
+    // MET filters histograms
+    //--------------------------------------------------------------------------
+    met_Flag_none->Fill(MET.Et());
+
+    if (std_vector_trigger_special->at(0)  > 0) met_Flag_trackingFailureFilter             ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(1)  > 0) met_Flag_goodVertices                      ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(2)  > 0) met_Flag_CSCTightHaloFilter                ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(3)  > 0) met_Flag_trkPOGFilters                     ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(4)  > 0) met_Flag_trkPOG_logErrorTooManyClusters    ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(5)  > 0) met_Flag_EcalDeadCellTriggerPrimitiveFilter->Fill(MET.Et());
+    if (std_vector_trigger_special->at(6)  > 0) met_Flag_ecalLaserCorrFilter               ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(7)  > 0) met_Flag_trkPOG_manystripclus53X           ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(8)  > 0) met_Flag_eeBadScFilter                     ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(9)  > 0) met_Flag_METFilters                        ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(10) > 0) met_Flag_HBHENoiseFilter                   ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(11) > 0) met_Flag_trkPOG_toomanystripclus53X        ->Fill(MET.Et());
+    if (std_vector_trigger_special->at(12) > 0) met_Flag_hcalLaserEventFilter              ->Fill(MET.Et());
+
+    met_Flag_all->Fill(MET.Et());
 
 
     // Analysis

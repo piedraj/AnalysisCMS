@@ -51,6 +51,8 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
       }
     }
   }
+
+  root_output->cd();
   
 
   // Loop over events
@@ -147,7 +149,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     //passZwindow &= (_mpmet > 20.);
     //FillLevelHistograms(WW_13_ZWindowMpMet, passZwindow);
 
-    passZwindow &= (pfType1Met > 20.);
+    passZwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_12_ZWindowPfMet, passZwindow);
 
     passZwindow &= (_nbjet15 == 0);

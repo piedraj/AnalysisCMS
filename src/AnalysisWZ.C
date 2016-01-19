@@ -52,6 +52,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     }
   }
 
+  root_output->cd();
+
 
   // Loop over events
   //----------------------------------------------------------------------------
