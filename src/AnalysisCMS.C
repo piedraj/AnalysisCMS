@@ -45,8 +45,10 @@ bool AnalysisCMS::IsTightLepton(int k)
 
       float dxy = (pt > 20.) ? 0.02 : 0.01;
 
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);
+      //      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);  // 74X
+      //      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);  // 74X
+      is_tight_lepton &= (fabs(std_vector_lepton_d0->at(k)) < dxy);  // 76X
+      is_tight_lepton &= (fabs(std_vector_lepton_dz->at(k)) < 0.1);  // 76X
     }
   else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
@@ -136,15 +138,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
-  h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);
+  //  h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // [Work in progress] Needs l2sel
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
   h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
   h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);
-  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);
-  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);
-  h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);
+  //  h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // [Work in progress] Needs l2sel
+  //  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // [Work in progress] Needs l2sel
+  //  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // [Work in progress] Needs l2sel
+  //  h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
+  h_trkmet    [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
   h_deltaphill[ichannel][icut][ijet]->Fill(_deltaphill,    _event_weight);
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
@@ -263,9 +266,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
 
-  if (!GEN_weight_SM) return;
+  //  if (!GEN_weight_SM) return;  // [Work in progress] Using AnalysisBase from data
 
-  _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
+  //  _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);  // [Work in progress] Using AnalysisBase from data
 
   return;
 }
@@ -423,8 +426,8 @@ void AnalysisCMS::EventDump()
 	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
 				std_vector_electron_scEta->at(index),
 				std_vector_electron_passConversionVeto->at(index),
-				std_vector_electron_d0->at(index),
-				std_vector_electron_dz->at(index),
+				std_vector_lepton_d0->at(index),
+				std_vector_lepton_dz->at(index),
 				std_vector_electron_expectedMissingInnerHits->at(index));
 	}
       
@@ -472,7 +475,8 @@ void AnalysisCMS::GetMpMet()
   Float_t dphimin = min(_dphilmet1, _dphilmet2);
 
   _fullpmet = MET.Et();
-  _trkpmet  = trkMet;
+  //  _trkpmet  = trkMet;  // 74X
+  _trkpmet  = metTtrk;  // 76X
 
   if (dphimin < TMath::Pi() / 2.)
     {
@@ -498,7 +502,8 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDeltaPhiVeto()
 {
-  _passdphiveto = (njet < 2 || dphilljetjet < 165.*TMath::DegToRad());
+  //  _passdphiveto = (njet < 2 || dphilljetjet < 165.*TMath::DegToRad());  // [Work in progress] Needs l2sel
+  _passdphiveto = true;
 }
 
 
@@ -531,8 +536,8 @@ void AnalysisCMS::GetMc()
 
   float met = MET.Et();
 
-  if (ptll > 0 && mll > 0 && met > 0)
-    _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));
+  //  if (ptll > 0 && mll > 0 && met > 0)                                        // [Work in progress] Needs l2sel
+  //  _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));  // [Work in progress] Needs l2sel
 }
 
 
@@ -572,7 +577,8 @@ void AnalysisCMS::EventSetup()
 {
   ApplyWeights();
   
-  GetMET(pfType1Met, pfType1Metphi);
+  //  GetMET(pfType1Met, pfType1Metphi);  // 74X
+  GetMET(metPfType1, metPfType1Phi);  // 76X
   
   GetLeptons();
 
