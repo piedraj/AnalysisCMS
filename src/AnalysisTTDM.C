@@ -100,7 +100,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (std_vector_trigger_special->at(11) > 0) met_Flag_trkPOG_toomanystripclus53X        ->Fill(MET.Et());
     if (std_vector_trigger_special->at(12) > 0) met_Flag_hcalLaserEventFilter              ->Fill(MET.Et());
 
-    met_Flag_all->Fill(MET.Et());
+    bool pass_all_met_filters = true;
+    
+    for (int k=1; k<std_vector_trigger_special->size(); k++)
+      if (std_vector_trigger_special->at(k) <= 0) pass_all_met_filters = false;
+
+    if (pass_all_met_filters) met_Flag_all->Fill(MET.Et());
 
 
     // Analysis
