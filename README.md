@@ -114,7 +114,8 @@ Follow the instructions at [Permissions for your AFS folder](https://espace.cern
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
-    cp /afs/cern.ch/user/p/piedra/www/.htaccess www/.
+    cd www
+    wget https://raw.githubusercontent.com/piedraj/AnalysisCMS/master/test/.htaccess
 
 Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
 Choose the "AFS folder" site type.
