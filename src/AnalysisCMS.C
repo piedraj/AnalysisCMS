@@ -139,16 +139,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
   h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2sel
+  h_dphill    [ichannel][icut][ijet]->Fill(dphill,         _event_weight);  // Needs l2sel
+  h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2sel
+  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2sel
+  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2sel
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
   h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
   h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2sel
-  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2sel
-  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2sel
   h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
   //  h_trkmet    [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
-  h_deltaphill[ichannel][icut][ijet]->Fill(_deltaphill,    _event_weight);
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
@@ -471,19 +471,14 @@ void AnalysisCMS::GetHt()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMpMet()
 {
-  _dphilmet1 = fabs(Lepton1.v.DeltaPhi(MET));
-  _dphilmet2 = fabs(Lepton2.v.DeltaPhi(MET));
-
-  Float_t dphimin = min(_dphilmet1, _dphilmet2);
-
   _fullpmet = MET.Et();
   _trkpmet  = trkMet;  // 74X
   //  _trkpmet  = metTtrk;  // 76X
 
-  if (dphimin < TMath::Pi() / 2.)
+  if (dphilmet < TMath::Pi() / 2.)
     {
-      _fullpmet *= sin(dphimin);
-      _trkpmet  *= sin(dphimin);
+      _fullpmet *= sin(dphilmet);
+      _trkpmet  *= sin(dphilmet);
     }
 
   _mpmet = min(_trkpmet, _fullpmet);
@@ -597,8 +592,6 @@ void AnalysisCMS::EventSetup()
 
   GetMetVar();
 
-  GetDeltaPhill();
-
   GetDeltaPhiVeto();
 }
 
@@ -669,7 +662,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet15   [ichannel][icut][ijet] = new TH1D("h_nbjet15"    + suffix, "",    7, -0.5,  6.5);
   h_nvtx      [ichannel][icut][ijet] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
   h_drll      [ichannel][icut][ijet] = new TH1D("h_drll"       + suffix, "",  100,    0,    5);
-  h_deltaphill[ichannel][icut][ijet] = new TH1D("h_deltaphill" + suffix, "",  100,    0,    5);
+  h_dphill    [ichannel][icut][ijet] = new TH1D("h_dphill"     + suffix, "",  100,    0,    5);
   h_met       [ichannel][icut][ijet] = new TH1D("h_met"        + suffix, "", 3000,    0, 3000);
   h_trkmet    [ichannel][icut][ijet] = new TH1D("h_trkmet"     + suffix, "", 3000,    0, 3000);
   h_mpmet     [ichannel][icut][ijet] = new TH1D("h_mpmet"      + suffix, "", 3000,    0, 3000);
@@ -683,13 +676,4 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_pt2       [ichannel][icut][ijet] = new TH1D("h_pt2"        + suffix, "", 3000,    0, 3000);
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
-}
-
-
-//------------------------------------------------------------------------------
-// GetDeltaPhill
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetDeltaPhill()
-{
-  _deltaphill = fabs(Lepton1.v.DeltaPhi(Lepton2.v));
 }

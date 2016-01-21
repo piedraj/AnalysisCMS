@@ -58,8 +58,6 @@ class AnalysisCMS : public AnalysisBase
 			    int      icut,
 			    int      ijet);
 
-  void    GetDeltaPhill    ();
-
   void    GetDeltaPhiVeto  ();
 
   void    GetHt            ();
@@ -121,9 +119,6 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
 
-  float                  _deltaphill;
-  float                  _dphilmet1;
-  float                  _dphilmet2;
   float                  _event_weight;
   float                  _ht;
   float                  _luminosity;
@@ -161,7 +156,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet15   [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphill    [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];

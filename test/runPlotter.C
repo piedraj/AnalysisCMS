@@ -147,7 +147,7 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nbjet15"    + suffix, "number of b-jets (p_{T}^{jet} > 15 GeV)", -1, 0, "NULL",  logY);
 	  plotter.Draw(prefix + "nvtx"       + suffix, "number of vertices",                      -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"       + suffix, "#DeltaR_{#font[12]{ll}}",                  5, 1, "NULL", scale, true,    0,    4);
-	  plotter.Draw(prefix + "deltaphill" + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);
+	  plotter.Draw(prefix + "dphill"     + suffix, "#Delta#phi_{#font[12]{ll}}",               5, 1, "rad",  scale, true,    0, 3.15);
 	  plotter.Draw(prefix + "met"        + suffix, "E_{T}^{miss}",                            10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "trkmet"     + suffix, "track E_{T}^{miss}",                      10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "mpmet"      + suffix, "min projected E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  400);
