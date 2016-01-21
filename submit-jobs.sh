@@ -2,8 +2,8 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
+#   echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_ttDM__l2sel__hadd.txt"
     echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_MC__l2sel__hadd.txt"
-    echo "  ./submit-jobs.sh samples/samples_21Oct_25ns_ttDM__l2sel__hadd.txt"
     echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_05Oct2015__l2sel__hadd.txt"
     echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_PromptReco__l2sel__hadd.txt"
     echo "  "
