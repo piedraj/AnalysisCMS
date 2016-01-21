@@ -60,7 +60,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
 
-    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root
 
 Submit jobs to the gridui batch system.
 
@@ -82,12 +82,12 @@ Alternatively one can login to a node and run interactively.
     cmsenv
     cd AnalysisCMS
     ./make
-    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
+    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root
 -->
 
 
