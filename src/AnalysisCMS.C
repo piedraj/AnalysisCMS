@@ -139,7 +139,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
   h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2sel
-  h_dphill    [ichannel][icut][ijet]->Fill(dphill,         _event_weight);  // Needs l2sel
+  h_dphill    [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2sel
   h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2sel
   h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2sel
   h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2sel

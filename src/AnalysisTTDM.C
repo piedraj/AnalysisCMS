@@ -137,7 +137,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_04_JetPtSum, pass);
 
-    pass &= (Lepton1.v.DeltaPhi(Lepton2.v) < 2.);
+    pass &= (fabs(dphill) < 2.);
 
     FillLevelHistograms(TTDM_05_LepDeltaPhi, pass);
 
