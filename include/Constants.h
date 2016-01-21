@@ -75,4 +75,34 @@ const float csvv2ivf_mediumWP = 0.89;
 const float csvv2ivf_tightWP  = 0.97;
 
 
+// MET filters
+//------------------------------------------------------------------------------
+enum {
+  HBHENoiseFilter,
+  HBHENoiseIsoFilter,
+  CSCTightHalo2015Filter,
+  EcalDeadCellTriggerPrimitiveFilter,
+  goodVertices,
+  eeBadScFilter,
+  chargedHadronTrackResolutionFilter,
+  muonBadTrackFilter,
+  noFilter,
+  allFilter,
+  nfilter
+};
+
+const TString sfilter[nfilter] = {
+  "HBHENoiseFilter",
+  "HBHENoiseIsoFilter",
+  "CSCTightHalo2015Filter",
+  "EcalDeadCellTriggerPrimitiveFilter",
+  "goodVertices",
+  "eeBadScFilter",
+  "chargedHadronTrackResolutionFilter",
+  "muonBadTrackFilter",
+  "noFilter",
+  "allFilter"
+};
+
+
 #endif
