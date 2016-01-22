@@ -8,7 +8,7 @@ if [ $# -lt 1 ]; then
 #   echo "  ./submit-jobs.sh samples/samples_21Oct_Run2015D_PromptReco__l2sel__hadd.txt"
     echo "  ./submit-jobs.sh samples/samples_21OctBis_Run2015D_05Oct2015_0553pb__l2sel__hadd.txt"
     echo "  ./submit-jobs.sh samples/samples_21OctBis_Run2015D_PromptReco_0716pb__l2sel__hadd.txt"
-#   echo "  ./submit-jobs.sh samples/samples_21OctBis_Run2015D_PromptReco_0851pb__l2sel__hadd.txt"
+    echo "  ./submit-jobs.sh samples/samples_21OctBis_Run2015D_PromptReco_0851pb__l2sel__hadd.txt"
     echo "  "
     exit -1
 fi
