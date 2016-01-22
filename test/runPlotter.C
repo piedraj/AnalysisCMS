@@ -159,13 +159,15 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "pt1"        + suffix, "leading lepton p_{T}",                    10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "pt2"        + suffix, "trailing lepton p_{T}",                   10, 0, "GeV",  scale, true,    0,  300);
+	  plotter.Draw(prefix + "sumpt12"    + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",             10, 0, "GeV",  scale, true,    0,  300);
+	  plotter.Draw(prefix + "sumjpt12"   + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",             10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "pt2l"       + suffix, "p_{T}^{#font[12]{ll}}",                   10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "ptww"       + suffix, "p_{T}^{WW}",                              10, 0, "GeV",  scale, true,    0,  300);
 
 
 	  // WW histograms
 	  //--------------------------------------------------------------------
-	  if (level.Contains("WW"))
+	  if (analysis.EqualTo("WW"))
 	    {
 	      plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",              2, 0, "GeV", linY, false, 0, 100);
 	      plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
@@ -177,7 +179,7 @@ void runPlotter(TString level)
 	  
 	  // WZ histograms
 	  //--------------------------------------------------------------------
-	  if (level.Contains("WZ"))
+	  if (analysis.EqualTo("WZ"))
 	    {
 	      plotter.Draw(prefix + "m3l"        + suffix, "m_{#font[12]{3l}}",                10, 0, "GeV",  scale, true, 60, 360);
 	      plotter.Draw(prefix + "mtw"        + suffix, "W transverse mass",                10, 0, "GeV",  scale, true,  0, 150);

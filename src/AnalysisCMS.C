@@ -143,9 +143,11 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2sel
   h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2sel
   h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2sel
+  h_pt1       [ichannel][icut][ijet]->Fill(pt1,            _event_weight);  // Needs l2sel
+  h_pt2       [ichannel][icut][ijet]->Fill(pt2,            _event_weight);  // Needs l2sel
+  h_sumpt12   [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2sel
+  h_sumjpt12  [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
   h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
-  h_pt1       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(), _event_weight);
-  h_pt2       [ichannel][icut][ijet]->Fill(Lepton2.v.Pt(), _event_weight);
   h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
   h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
   //  h_trkmet    [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
@@ -405,6 +407,18 @@ void AnalysisCMS::GetJets()
 
 
 //------------------------------------------------------------------------------
+// GetJetPtSum
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetJetPtSum()
+{
+  if (_njet30 < 2)
+    _sumjpt12 = -999;
+  else
+    _sumjpt12 = AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
+}
+
+
+//------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventDump()
@@ -580,6 +594,8 @@ void AnalysisCMS::EventSetup()
 
   GetJets();
 
+  GetJetPtSum();
+
   GetHt();
 
   GetSoftMuon();
@@ -674,6 +690,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_ht        [ichannel][icut][ijet] = new TH1D("h_ht"         + suffix, "", 3000,    0, 3000);
   h_pt1       [ichannel][icut][ijet] = new TH1D("h_pt1"        + suffix, "", 3000,    0, 3000);
   h_pt2       [ichannel][icut][ijet] = new TH1D("h_pt2"        + suffix, "", 3000,    0, 3000);
+  h_sumpt12   [ichannel][icut][ijet] = new TH1D("h_sumpt12"    + suffix, "", 3000,    0, 3000);
+  h_sumjpt12  [ichannel][icut][ijet] = new TH1D("h_sumjpt12"   + suffix, "", 3000,    0, 3000);
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
 }

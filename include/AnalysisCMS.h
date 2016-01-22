@@ -64,6 +64,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets          ();
 
+  void    GetJetPtSum      ();
+
   void    GetLeptons       ();
 
   void    GetMc            ();
@@ -132,6 +134,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _m3l;
   float                  _ptww;
   float                  _pt2l;
+  float                  _sumjpt12;
 
   Long64_t               _nentries;
 
@@ -168,6 +171,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_ht        [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumpt12   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumjpt12  [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
 };
