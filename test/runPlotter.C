@@ -66,7 +66,7 @@ void runPlotter(TString level)
 	plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV",   "m_{Z'} 1700",  kViolet+2);
 	plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV",   "m_{Z'} 2000",  kViolet+3);
 	plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV",   "m_{Z'} 2500",  kViolet+4);
-	plotter.AddProcess("12_ZH",    "ZH",      kBlue);
+	plotter.AddProcess("13_ZH",    "ZH",      kBlue);
       }
       plotter.AddProcess("05_WW",    "WW",      kAzure-9);
       plotter.AddProcess("02_WZ",    "WZ",      kOrange-2);
