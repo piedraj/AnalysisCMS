@@ -26,7 +26,7 @@ Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click *
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
-Initialize your git folder, to be able to get in touch with the upstream (Jonatan's repository)
+Create an empty Git repository or reinitialize an existing one.
 
     git init
 

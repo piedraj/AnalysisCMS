@@ -359,7 +359,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   for (int i=0; i<_mchist.size(); i++)
     {
-      if (ny == 4)
+      if (ny == 5)
 	{
 	  ny = 0;
 	  xdelta += 0.228;
