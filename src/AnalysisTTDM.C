@@ -129,11 +129,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_02_Has2Jets, pass);
 
-    pass &= (Lepton1.v.Pt() + Lepton2.v.Pt() > 120.);
+    pass &= (pt1 + pt2 > 120.);
 
     FillLevelHistograms(TTDM_03_LepPtSum, pass);
 
-    pass &= (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt() < 400.);
+    pass &= (_sumjpt12 < 400.);
 
     FillLevelHistograms(TTDM_04_JetPtSum, pass);
 

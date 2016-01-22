@@ -159,8 +159,8 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "ht"         + suffix, "H_{T}",                                   20, 0, "GeV",  scale, true,    0,  500);
 	  plotter.Draw(prefix + "pt1"        + suffix, "leading lepton p_{T}",                    10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "pt2"        + suffix, "trailing lepton p_{T}",                   10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "sumpt12"    + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",             10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "sumjpt12"   + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",             10, 0, "GeV",  scale, true,    0,  300);
+	  plotter.Draw(prefix + "sumpt12"    + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",             10, 0, "GeV",  scale, true,    0,  600);
+	  plotter.Draw(prefix + "sumjpt12"   + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",             10, 0, "GeV",  scale, true,    0,  600);
 	  plotter.Draw(prefix + "pt2l"       + suffix, "p_{T}^{#font[12]{ll}}",                   10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "ptww"       + suffix, "p_{T}^{WW}",                              10, 0, "GeV",  scale, true,    0,  300);
 
