@@ -2,7 +2,7 @@
 #define AnalysisWW_h
 
 #include "AnalysisCMS.h"
-
+#include "CutsWW.h"
 
 class AnalysisWW : public AnalysisCMS
 {
@@ -30,6 +30,11 @@ class AnalysisWW : public AnalysisCMS
   TH1D*                  h_fullpmet[nchannel][ncut][njetbin+1];
   TH1D*                  h_trkpmet[nchannel][ncut][njetbin+1];
   TH1D*                  h_jetpt1[nchannel][ncut][njetbin+1];
+  TH1D*                  h_metphi[nchannel][ncut][njetbin+1];
+  TH1D*                  h_lepphi1[nchannel][ncut][njetbin+1];
+  TH1D*                  h_lepphi2[nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt1_pdfUp[nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt1_pdfDown[nchannel][ncut][njetbin+1];
 };
 
 #endif
