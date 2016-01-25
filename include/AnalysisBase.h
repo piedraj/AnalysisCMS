@@ -57,6 +57,10 @@ public :
    Float_t         fakeAW;
    Float_t         fakeBW;
    Float_t         fakeW;
+   Float_t         fakeW2l0j;
+   Float_t         fakeW2l1j;
+   Float_t         fakeW2l2j;
+   Float_t         fakeW3l;
    Float_t         gammaMRStar;
    Float_t         hardbjpb;
    Float_t         hardcmva;
@@ -378,6 +382,10 @@ public :
    TBranch        *b_fakeAW;   //!
    TBranch        *b_fakeBW;   //!
    TBranch        *b_fakeW;   //!
+   TBranch        *b_fakeW2l0j;   //!
+   TBranch        *b_fakeW2l1j;   //!
+   TBranch        *b_fakeW2l2j;   //!
+   TBranch        *b_fakeW3l;   //!
    TBranch        *b_gammaMRStar;   //!
    TBranch        *b_hardbjpb;   //!
    TBranch        *b_hardcmva;   //!
@@ -886,6 +894,10 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("fakeAW", &fakeAW, &b_fakeAW);
    fChain->SetBranchAddress("fakeBW", &fakeBW, &b_fakeBW);
    fChain->SetBranchAddress("fakeW", &fakeW, &b_fakeW);
+   fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);
+   fChain->SetBranchAddress("fakeW2l1j", &fakeW2l1j, &b_fakeW2l1j);
+   fChain->SetBranchAddress("fakeW2l2j", &fakeW2l2j, &b_fakeW2l2j);
+   fChain->SetBranchAddress("fakeW3l", &fakeW3l, &b_fakeW3l);
    fChain->SetBranchAddress("gammaMRStar", &gammaMRStar, &b_gammaMRStar);
    fChain->SetBranchAddress("hardbjpb", &hardbjpb, &b_hardbjpb);
    fChain->SetBranchAddress("hardcmva", &hardcmva, &b_hardcmva);
