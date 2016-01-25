@@ -75,7 +75,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (!trigger) continue;
 
     if (_nlepton != 3) continue;
-    if (_ntight  != 3) continue;
+
+    if (_ntight != 3 && !_sample.Contains("DD_")) continue;
 
     if      (_nelectron == 3) _channel = eee;
     else if (_nelectron == 2) _channel = eem;
