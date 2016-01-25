@@ -28,4 +28,3 @@ hadd -f -k 11_Zg.root       Zg.root
 hadd -f -k 12_VVV.root      WWZ.root WZZ.root ZZZ.root
 
 popd
-
