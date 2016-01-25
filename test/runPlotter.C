@@ -60,8 +60,8 @@ void runPlotter(TString level)
 	}
       else
 	{
-	  plotter.AddProcess("04_Top_MC", "top",    kYellow);
-	  plotter.AddProcess("06_ZJets",  "Z+jets", kGreen+2);
+	  plotter.AddProcess("06_ZJets", "Z+jets", kGreen+2);
+	  plotter.AddProcess("04_Top",   "top",    kYellow);
 	}
     }
   else
@@ -83,8 +83,8 @@ void runPlotter(TString level)
 	}
       else
 	{
-	  plotter.AddProcess("04_Top_MC", "top",    kYellow);
-	  plotter.AddProcess("07_WJets",  "W+jets", kGray+1);
+	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	  plotter.AddProcess("04_Top",   "top",    kYellow);
 	}
     }
 
