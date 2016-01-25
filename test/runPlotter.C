@@ -1,6 +1,8 @@
 #include "HistogramReader.h"
 
 
+Bool_t datadriven = true;
+
 const TString inputdir  = "../rootfiles/";
 const TString outputdir = "figures/";
 
@@ -42,34 +44,48 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
-      plotter.AddProcess("02_WZTo3LNu", "WZ",          kOrange-2);
-      //      plotter.AddProcess("06_ZJets",    "Z+jets",      kGreen+2);  // Don't use with data-driven
-      plotter.AddProcess("07_WJets",    "W+jets",      kGray+1);
-      plotter.AddProcess("05_WW",       "WW",          kAzure-9);
-      plotter.AddProcess("09_HWW",      "HWW",         kRed);
-      plotter.AddProcess("10_Wg",       "W#gamma",     kBlue);
-      plotter.AddProcess("11_Zg",       "Z#gamma",     kTeal);
-      plotter.AddProcess("03_ZZ",       "ZZ",          kRed+3);
-      //      plotter.AddProcess("04_Top_MC",   "top",         kYellow);  // Don't use with data-driven
-      plotter.AddProcess("08_TTV",      "ttV",         kGreen-6);
-      plotter.AddProcess("12_VVV",      "VVV",         kYellow-6);
-      plotter.AddProcess("00_Fakes",    "data-driven", kGreen+2);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
+      plotter.AddProcess("07_WJets",    "W+jets",  kGray+1);
+      plotter.AddProcess("05_WW",       "WW",      kAzure-9);
+      plotter.AddProcess("09_HWW",      "HWW",     kRed);
+      plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
+      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
+      plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
+      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
+
+      if (datadriven)
+	{
+	  plotter.AddProcess("00_Fakes", "data-driven", kGreen+2);
+	  plotter.AddProcess("11_Zg",    "Z#gamma",     kTeal);
+	}
+      else
+	{
+	  plotter.AddProcess("04_Top_MC", "top",    kYellow);
+	  plotter.AddProcess("06_ZJets",  "Z+jets", kGreen+2);
+	}
     }
   else
     {
-      plotter.AddProcess("05_WW",     "WW",          kAzure-9);
-      plotter.AddProcess("02_WZ",     "WZ",          kOrange-2);
-      plotter.AddProcess("03_ZZ",     "ZZ",          kRed+3);
-      plotter.AddProcess("04_Top_MC", "top",         kYellow);  // Don't use with data-driven
-      plotter.AddProcess("04_Top_DD", "top",         kYellow);
-      plotter.AddProcess("10_Wg",     "W#gamma",     kBlue);
-      plotter.AddProcess("11_Zg",     "Z#gamma",     kTeal);
-      plotter.AddProcess("07_WJets",  "W+jets",      kGray+1);  // Don't use with data-driven
-      plotter.AddProcess("06_ZJets",  "Z+jets",      kGreen+2);
-      plotter.AddProcess("08_TTV",    "ttV",         kGreen-6);
-      plotter.AddProcess("09_HWW",    "HWW",         kRed);
-      plotter.AddProcess("12_VVV",    "VVV",         kYellow-6);
-      plotter.AddProcess("00_Fakes",  "data-driven", kGreen+2);
+      plotter.AddProcess("05_WW",    "WW",      kAzure-9);
+      plotter.AddProcess("02_WZ",    "WZ",      kOrange-2);
+      plotter.AddProcess("03_ZZ",    "ZZ",      kRed+3);
+      plotter.AddProcess("10_Wg",    "W#gamma", kBlue);
+      plotter.AddProcess("11_Zg",    "Z#gamma", kTeal);
+      plotter.AddProcess("06_ZJets", "Z+jets",  kGreen+2);
+      plotter.AddProcess("08_TTV",   "ttV",     kGreen-6);
+      plotter.AddProcess("09_HWW",   "HWW",     kRed);
+      plotter.AddProcess("12_VVV",   "VVV",     kYellow-6);
+
+      if (datadriven)
+	{
+	  plotter.AddProcess("00_Fakes",  "data-driven", kGreen+2);
+	  plotter.AddProcess("04_Top_DD", "top",         kYellow);
+	}
+      else
+	{
+	  plotter.AddProcess("04_Top_MC", "top",    kYellow);
+	  plotter.AddProcess("07_WJets",  "W+jets", kGray+1);
+	}
     }
 
 
