@@ -20,9 +20,9 @@ hadd -f -k 04_Top_MC.root   TTJets.root ST_s-channel.root ST_t-channel.root ST_t
 hadd -f -k 04_Top_DD.root   TTTo2L2Nu.root ST_tW_antitop.root ST_tW_top.root
 hadd -f -k 05_WW.root       WWTo2L2Nu.root GluGluWWTo2L2Nu_MCFM.root
 hadd -f -k 06_ZJets.root    DYJetsToLL_M-10to50.root DYJetsToLL_M-50.root
-hadd -f -k 07_WJets.root    WJetsToLNu.root                                                                                                                      
+hadd -f -k 07_WJets.root    WJetsToLNu.root
 hadd -f -k 08_TTV.root      TTWJetsToLNu.root TTZToLLNuNu_M-10.root
-hadd -f -k 09_HWW.root      GluGluHToWWTo2L2Nu_M125.root VBFHToWWTo2L2Nu_M125.root ttHJetToNonbb_M125.root 
+hadd -f -k 09_HWW.root      GluGluHToWWTo2L2Nu_M125.root VBFHToWWTo2L2Nu_M125.root ttHJetToNonbb_M125.root
 hadd -f -k 10_Wg.root       Wg.root
 hadd -f -k 11_Zg.root       Zg.root
 hadd -f -k 12_VVV.root      WWZ.root WZZ.root ZZZ.root
