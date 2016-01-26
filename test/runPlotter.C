@@ -1,6 +1,8 @@
 #include "HistogramReader.h"
 
 
+const Bool_t datadriven = true;
+
 const TString inputdir  = "../rootfiles/";
 const TString outputdir = "figures/";
 
@@ -43,17 +45,25 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
-      plotter.AddProcess("02_WZ",    "WZ",      kOrange-2);
-      plotter.AddProcess("06_ZJets", "Z+jets",  kGreen+2);
-      plotter.AddProcess("07_WJets", "W+jets",  kGray+1);
-      plotter.AddProcess("05_WW",    "WW",      kAzure-9);
-      plotter.AddProcess("09_HWW",   "HWW",     kRed);
-      plotter.AddProcess("10_Wg",    "W#gamma", kBlue);
-      plotter.AddProcess("11_Zg",    "Z#gamma", kTeal);
-      plotter.AddProcess("03_ZZ",    "ZZ",      kRed+3);
-      plotter.AddProcess("04_Top",   "top",     kYellow);
-      plotter.AddProcess("08_TTV",   "ttV",     kGreen-6);
-      plotter.AddProcess("12_VVV",   "VVV",     kYellow-6);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
+      plotter.AddProcess("07_WJets",    "W+jets",  kGray+1);
+      plotter.AddProcess("05_WW",       "WW",      kAzure-9);
+      plotter.AddProcess("09_HWW",      "HWW",     kRed);
+      plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
+      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
+      plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
+      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
+
+      if (datadriven)
+	{
+	  plotter.AddProcess("00_Fakes", "data-driven", kGreen+2);
+	  plotter.AddProcess("11_Zg",    "Z#gamma",     kTeal);
+	}
+      else
+	{
+	  plotter.AddProcess("06_ZJets", "Z+jets", kGreen+2);
+	  plotter.AddProcess("04_Top",   "top",    kYellow);
+	}
     }
   else
     {
@@ -71,14 +81,23 @@ void runPlotter(TString level)
       plotter.AddProcess("05_WW",    "WW",      kAzure-9);
       plotter.AddProcess("02_WZ",    "WZ",      kOrange-2);
       plotter.AddProcess("03_ZZ",    "ZZ",      kRed+3);
-      plotter.AddProcess("04_Top",   "top",     kYellow);
       plotter.AddProcess("10_Wg",    "W#gamma", kBlue);
       plotter.AddProcess("11_Zg",    "Z#gamma", kTeal);
-      plotter.AddProcess("07_WJets", "W+jets",  kGray+1);
       plotter.AddProcess("06_ZJets", "Z+jets",  kGreen+2);
       plotter.AddProcess("08_TTV",   "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",   "HWW",     kRed);
       plotter.AddProcess("12_VVV",   "VVV",     kYellow-6);
+
+      if (datadriven)
+	{
+	  plotter.AddProcess("00_Fakes",  "data-driven", kGreen+2);
+	  plotter.AddProcess("04_Top_DD", "top",         kYellow);
+	}
+      else
+	{
+	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	  plotter.AddProcess("04_Top",   "top",    kYellow);
+	}
     }
 
 
@@ -86,14 +105,14 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   //  if (analysis.EqualTo("TTDM"))
   //    {
-  //      plotter.AddSignal("ttDM1scalar20",    "m_{#phi}1 m_{#chi}20",    kRed-4);
-  //      plotter.AddSignal("ttDM1scalar50",    "m_{#phi}1 m_{#chi}50",    kRed-3);
-  //      plotter.AddSignal("ttDM1scalar500",   "m_{#phi}1 m_{#chi}500",   kRed-2);
-  //      plotter.AddSignal("ttDM10scalar10",   "m_{#phi}10 m_{#chi}10",   kRed-1);
-  //      plotter.AddSignal("ttDM50scalar50",   "m_{#phi}50 m_{#chi}50",   kRed);
-  //      plotter.AddSignal("ttDM50scalar200",  "m_{#phi}50 m_{#chi}200",  kRed+1);
-  //      plotter.AddSignal("ttDM50scalar300",  "m_{#phi}50 m_{#chi}300",  kRed+2);
-  //      plotter.AddSignal("ttDM150scalar200", "m_{#phi}150 m_{#chi}200", kRed+3);
+  //      plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
+  //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
+  //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
+  //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
+  //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
+  //      plotter.AddSignal("ttDM50scalar200",  "m_{#chi}50 m_{#phi}200",  kRed+1);
+  //      plotter.AddSignal("ttDM50scalar300",  "m_{#chi}50 m_{#phi}300",  kRed+2);
+  //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
   //    }
 
 

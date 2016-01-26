@@ -262,11 +262,25 @@ void AnalysisCMS::ApplyWeights()
 {
   _event_weight = 1.;
 
+  if (!_ismc && _sample.Contains("DD_"))
+    {
+      if (_analysis.EqualTo("WZ"))
+	{
+	  _event_weight = fakeW3l;
+	}
+      else
+	{
+	  if      (njet == 0) _event_weight = fakeW2l0j;
+	  else if (njet == 1) _event_weight = fakeW2l1j;
+	  else                _event_weight = fakeW2l2j;
+	}
+    }
+
   if (!_ismc) return;
 
   _event_weight = puW * baseW * _luminosity;
 
-  if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= 12.178 / 10.481;
+  if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
   if (!GEN_weight_SM) return;
 
