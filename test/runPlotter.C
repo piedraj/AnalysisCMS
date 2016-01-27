@@ -78,7 +78,7 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes",  "data-driven", kGreen+2);
+	  plotter.AddProcess("00_Fakes",  "data-driven", kGray+1);
 	  plotter.AddProcess("04_Top_DD", "top",         kYellow);
 	}
       else
@@ -91,17 +91,17 @@ void runPlotter(TString level)
 
   // Add signals
   //----------------------------------------------------------------------------
-  //  if (analysis.EqualTo("TTDM"))
-  //    {
-  //      plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
-  //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
+  if (analysis.EqualTo("TTDM"))
+    {
+      plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
+      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
   //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
   //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
   //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
   //      plotter.AddSignal("ttDM50scalar200",  "m_{#chi}50 m_{#phi}200",  kRed+1);
   //      plotter.AddSignal("ttDM50scalar300",  "m_{#chi}50 m_{#phi}300",  kRed+2);
   //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
-  //    }
+    }
 
 
   // Draw events by cut
