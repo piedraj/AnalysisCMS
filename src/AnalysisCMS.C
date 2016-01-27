@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 {
-  _eventdump = false;
+  _eventdump = true;
   _ismc      = true;
 }
 
