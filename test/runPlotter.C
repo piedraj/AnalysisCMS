@@ -94,7 +94,7 @@ void runPlotter(TString level)
   if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
-      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
+  //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
   //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
   //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
   //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
