@@ -130,7 +130,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet15 > 0);
 
     FillLevelHistograms(TTDM_03_Has1BJet, pass);
-    
+
     float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
 
     pass &= (fabs(_dphillmet) > 0.6);
