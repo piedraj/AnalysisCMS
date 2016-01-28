@@ -187,7 +187,7 @@ The following instructions have been extracted from the [CMS TWiki](https://twik
     svn update utils
     svn update -N notes
     svn update notes/AN-16-010
-    eval `notes/tdr runtime -csh`
+    eval `notes/tdr runtime -sh`
     cd notes/AN-16-010/trunk
     tdr --style=an b AN-16-010
 
