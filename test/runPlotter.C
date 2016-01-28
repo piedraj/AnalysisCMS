@@ -54,7 +54,6 @@ void runPlotter(TString level)
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
       plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
-      plotter.AddProcess("13_HZ",       "HZ",      kBlue+2);
 
       if (datadriven)
 	{
@@ -78,7 +77,6 @@ void runPlotter(TString level)
       plotter.AddProcess("08_TTV",   "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",   "HWW",     kRed);
       plotter.AddProcess("12_VVV",   "VVV",     kYellow-6);
-      plotter.AddProcess("13_HZ",    "HZ",      kBlue+2);
 
       if (datadriven)
 	{
