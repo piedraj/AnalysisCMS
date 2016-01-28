@@ -24,6 +24,7 @@
 
 # ZZ
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd/latino_ZZ.root
+/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd/latino_ZZTo4L.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd/latino_ZZTo2L2Q.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd/latino_ggZZ2e2m.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd/latino_ggZZ2e2t.root
