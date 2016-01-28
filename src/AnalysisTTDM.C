@@ -92,8 +92,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
-    if (Lepton1.v.Pt() < 20.) continue;
-    if (Lepton2.v.Pt() < 20.) continue;
+    if (Lepton1.v.Pt() < 30.) continue;
+    if (Lepton2.v.Pt() < 10.) continue;
 
     _nlepton   = 2;  // Redefine _nlepton
     _nelectron = 0;  // Redefine _nelectron
@@ -125,25 +125,21 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (njet > 1);
 
-    if (njet < 2) continue;
-
     FillLevelHistograms(TTDM_02_Has2Jets, pass);
 
-    pass &= (pt1 + pt2 > 120.);
+    pass &= (_nbjet15 > 0);
 
-    FillLevelHistograms(TTDM_03_LepPtSum, pass);
+    FillLevelHistograms(TTDM_03_Has1BJet, pass);
+    
+    float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
 
-    pass &= (_sumjpt12 < 400.);
+    pass &= (fabs(_dphillmet) > 0.6);
 
-    FillLevelHistograms(TTDM_04_JetPtSum, pass);
+    FillLevelHistograms(TTDM_04_DeltaPhi, pass);
 
-    pass &= (fabs(dphill) < 2.);
+    pass &= (MET.Et() > 120.);
 
-    FillLevelHistograms(TTDM_05_LepDeltaPhi, pass);
-
-    pass &= (MET.Et() > 320.);
-
-    FillLevelHistograms(TTDM_06_MET, pass);
+    FillLevelHistograms(TTDM_05_MET, pass);
   }
 
 
