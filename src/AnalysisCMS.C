@@ -301,7 +301,7 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    if (i > 1 && !IsFiducialLepton(i)) continue;
+    if (!IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
 
     float pt  = std_vector_lepton_pt ->at(i);
     float eta = std_vector_lepton_eta->at(i);
@@ -310,7 +310,7 @@ void AnalysisCMS::GetLeptons()
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = Loose;
+    lep.type    = Tight;  // All leptons are tight after l2Sel
     lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
@@ -326,7 +326,7 @@ void AnalysisCMS::GetLeptons()
 	lep.iso = MuonIsolation(i);
       }
 
-    if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;
+    if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;  // All leptons are tight after l2Sel
 
     TLorentzVector tlv;
     
