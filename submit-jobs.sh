@@ -10,6 +10,7 @@ if [ $# -lt 1 ]; then
     echo "  "
     echo "  Analysis specific samples"
     echo "----------------------------"
+    echo "  ./submit-jobs.sh samples/samples_metfilters.txt"
     echo "  ./submit-jobs.sh samples/samples_monoh.txt"
     echo "  ./submit-jobs.sh samples/samples_ttdm.txt"
     echo "  "
