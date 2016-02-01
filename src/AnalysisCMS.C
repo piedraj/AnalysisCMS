@@ -278,7 +278,12 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight = puW * baseW * _luminosity;
+  float lepton_scale_factor =
+    std_vector_lepton_idisoW->at(0) *
+    std_vector_lepton_idisoW->at(1) *
+    (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
+
+  _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
@@ -560,7 +565,7 @@ void AnalysisCMS::GetMc()
   _mc = 0;
 
   float met = MET.Et();
-  
+
   if (ptll > 0 && mll > 0 && met > 0)                                          // Needs l2Sel
     _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));  // Needs l2Sel
 }
