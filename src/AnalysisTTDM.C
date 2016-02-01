@@ -105,8 +105,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l  = mll;   // Needs l2sel
-    _pt2l = ptll;  // Needs l2sel
+    _m2l  = mll;   // Needs l2Sel
+    _pt2l = ptll;  // Needs l2Sel
 
 
     // Fill histograms
