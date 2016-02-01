@@ -4,6 +4,7 @@ if [ $# -lt 1 ]; then
     echo "  "
     echo "  ./submit-jobs.sh samples/samples_mc.txt"
     echo "  ./submit-jobs.sh samples/samples_data.txt"
+    echo "  ./submit-jobs.sh samples/samples_monoh.txt"
     echo "  ./submit-jobs.sh samples/samples_datadriven.txt"
     echo "  "
     exit -1
