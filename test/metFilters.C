@@ -4,11 +4,11 @@
 TH1D* met_Flag[nfilter];
 
 
-void metFilters()
+void metFilters(TString sample = "Run2015D_16Dec2015_MET_0000__part0")
 {
   // Read
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("../rootfiles/TTDM/stepB_data_numEvent200.root");
+  TFile* file = new TFile("../rootfiles/TTDM/" + sample + ".root");
 
   for (int i=0; i<nfilter; i++)
     met_Flag[i] = (TH1D*)file->Get(Form("met_Flag_%s", sfilter[i].Data()));
@@ -20,6 +20,8 @@ void metFilters()
 
   printf("\n");
   printf(" MET filters efficiencies\n");
+  printf("   sample: %s\n",   sample.Data());
+  printf(" nentries: %.0f\n", total);
   printf("--------------------------\n");
 
   for (int i=0; i<nfilter; i++) {
