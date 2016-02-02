@@ -2,10 +2,17 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/samples_Run2015D_PromptReco.txt"
-    echo "  ./submit-jobs.sh samples/samples_Run2015D_05Oct2015.txt"
-    echo "  ./submit-jobs.sh samples/samples_MC.txt"
-    echo "  ./submit-jobs.sh samples/samples_ttDM.txt"
+    echo "  Common samples"
+    echo "-----------------"
+    echo "  ./submit-jobs.sh samples/samples_data.txt"
+    echo "  ./submit-jobs.sh samples/samples_datadriven.txt"
+    echo "  ./submit-jobs.sh samples/samples_mc.txt"
+    echo "  "
+    echo "  Analysis specific samples"
+    echo "----------------------------"
+    echo "  ./submit-jobs.sh samples/samples_metfilters.txt"
+    echo "  ./submit-jobs.sh samples/samples_monoh.txt"
+    echo "  ./submit-jobs.sh samples/samples_ttdm.txt"
     echo "  "
     exit -1
 fi

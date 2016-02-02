@@ -359,7 +359,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   for (int i=0; i<_mchist.size(); i++)
     {
-      if (ny == 4)
+      if (ny == 5)
 	{
 	  ny = 0;
 	  xdelta += 0.228;
@@ -443,7 +443,7 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0, 2);
+      ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
 
       uncertainty->Draw("e2,same");
 

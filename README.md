@@ -26,6 +26,10 @@ Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click *
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
 
+Create an empty Git repository or reinitialize an existing one.
+
+    git init
+
 You should also add a remote upstream, to be able to modify both your and the master repository.
 
     git remote add upstream https://github.com/piedraj/AnalysisCMS
@@ -60,7 +64,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
 
-    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root
 
 Submit jobs to the gridui batch system.
 
@@ -82,12 +86,12 @@ Alternatively one can login to a node and run interactively.
     cmsenv
     cd AnalysisCMS
     ./make
-    ./runAnalysis /full/path/latino_WZTo3LNu.root 25ns
+    ./runAnalysis /full/path/latino_WZTo3LNu.root
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root 25ns
+    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root
 -->
 
 
@@ -114,7 +118,8 @@ Follow the instructions at [Permissions for your AFS folder](https://espace.cern
     mkdir www
     fs setacl www webserver:afs read
     afind www -t d -e "fs setacl -dir {} -acl webserver:afs read"
-    cp /afs/cern.ch/user/p/piedra/www/.htaccess www/.
+    cd www
+    wget https://raw.githubusercontent.com/piedraj/AnalysisCMS/master/test/.htaccess
 
 Go to the CERN Web Services and click on [Create a new website](https://webservices.web.cern.ch/webservices/Services/CreateNewSite/Default.aspx).
 Choose the "AFS folder" site type.
@@ -182,7 +187,7 @@ The following instructions have been extracted from the [CMS TWiki](https://twik
     svn update utils
     svn update -N notes
     svn update notes/AN-16-010
-    eval `notes/tdr runtime -csh`
+    eval `notes/tdr runtime -sh`
     cd notes/AN-16-010/trunk
     tdr --style=an b AN-16-010
 

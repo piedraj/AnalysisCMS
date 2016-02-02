@@ -58,13 +58,13 @@ class AnalysisCMS : public AnalysisBase
 			    int      icut,
 			    int      ijet);
 
-  void    GetDeltaPhill    ();
-
   void    GetDeltaPhiVeto  ();
 
   void    GetHt            ();
 
   void    GetJets          ();
+
+  void    GetJetPtSum      ();
 
   void    GetLeptons       ();
 
@@ -121,9 +121,6 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
 
-  float                  _deltaphill;
-  float                  _dphilmet1;
-  float                  _dphilmet2;
   float                  _event_weight;
   float                  _ht;
   float                  _luminosity;
@@ -137,6 +134,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _m3l;
   float                  _ptww;
   float                  _pt2l;
+  float                  _sumjpt12;
 
   Long64_t               _nentries;
 
@@ -161,7 +159,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet15   [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx      [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_deltaphill[nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphill    [nchannel][ncut][njetbin+1];
   TH1D*                  h_met       [nchannel][ncut][njetbin+1];
   TH1D*                  h_trkmet    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet     [nchannel][ncut][njetbin+1];
@@ -173,6 +171,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_ht        [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1       [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumpt12   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumjpt12  [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
 };

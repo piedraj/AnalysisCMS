@@ -9,8 +9,8 @@
 //#include "CutsWZ.h"
 
 
-const float lumi50ns_fb = 0.040;
-const float lumi25ns_fb = 1.269;
+//const float lumi25ns_fb = 1.269;
+const float lumi25ns_fb = 2.120;
 
 
 const int ELECTRON_FLAVOUR = 11;
@@ -73,6 +73,36 @@ const TString lchannel[nchannel] = {
 const float csvv2ivf_looseWP  = 0.605;
 const float csvv2ivf_mediumWP = 0.89;
 const float csvv2ivf_tightWP  = 0.97;
+
+
+// MET filters
+//------------------------------------------------------------------------------
+enum {
+  HBHENoiseFilter,
+  HBHENoiseIsoFilter,
+  CSCTightHalo2015Filter,
+  EcalDeadCellTriggerPrimitiveFilter,
+  goodVertices,
+  eeBadScFilter,
+  chargedHadronTrackResolutionFilter,
+  muonBadTrackFilter,
+  noFilter,
+  allFilter,
+  nfilter
+};
+
+const TString sfilter[nfilter] = {
+  "HBHENoiseFilter",
+  "HBHENoiseIsoFilter",
+  "CSCTightHalo2015Filter",
+  "EcalDeadCellTriggerPrimitiveFilter",
+  "goodVertices",
+  "eeBadScFilter",
+  "chargedHadronTrackResolutionFilter",
+  "muonBadTrackFilter",
+  "noFilter",
+  "allFilter"
+};
 
 
 #endif

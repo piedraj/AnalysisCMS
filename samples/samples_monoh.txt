@@ -1,0 +1,8 @@
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV.root
+/gpfs/csic_projects/cms/trevisanin/CMSSW_7_6_2/src/LatinoAnalysis/Gardener/test/latino_Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV.root

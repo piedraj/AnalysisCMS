@@ -52,6 +52,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     }
   }
 
+  root_output->cd();
+
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -73,7 +75,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (!trigger) continue;
 
     if (_nlepton != 3) continue;
-    if (_ntight  != 3) continue;
+
+    if (_ntight != 3 && !_sample.Contains("DD_")) continue;
 
     if      (_nelectron == 3) _channel = eee;
     else if (_nelectron == 2) _channel = eem;
@@ -112,9 +115,6 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     }
 
 
-    if (_eventdump) EventDump();
-
-
     // WZ selection
     //--------------------------------------------------------------------------
     if (_m2l < 0) continue;
@@ -141,6 +141,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     pass &= ((WLepton.v + ZLepton2.v).M() > 4.);
 
     FillLevelHistograms(WZ_02_HasW, pass);
+
+    if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
 
     pass &= (_nbjet15 == 0);
 	

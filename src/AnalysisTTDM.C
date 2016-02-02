@@ -45,6 +45,16 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     }
   }
 
+  root_output->cd();
+
+
+  // MET filters histograms
+  //----------------------------------------------------------------------------
+  for (int j=0; j<nfilter; j++) {
+
+    met_Flag[j] = new TH1D(Form("met_Flag_%s", sfilter[j].Data()), "", 3000, 0, 3000);
+  }
+
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -61,14 +71,29 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     EventSetup();
 
 
+    // MET filters histograms
+    //--------------------------------------------------------------------------
+    met_Flag[noFilter]->Fill(MET.Et());
+
+    bool pass_all_met_filters = true;
+
+    for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
+
+      if (std_vector_trigger_special->at(j) > 0) met_Flag[j]->Fill(MET.Et());
+      else pass_all_met_filters = false;
+    }
+    
+    if (pass_all_met_filters) met_Flag[allFilter]->Fill(MET.Et());
+
+
     // Analysis
     //--------------------------------------------------------------------------
     if (!trigger) continue;
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
-    if (Lepton1.v.Pt() < 20.) continue;
-    if (Lepton2.v.Pt() < 20.) continue;
+    if (Lepton1.v.Pt() < 30.) continue;
+    if (Lepton2.v.Pt() < 10.) continue;
 
     _nlepton   = 2;  // Redefine _nlepton
     _nelectron = 0;  // Redefine _nelectron
@@ -80,8 +105,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l  = mll;
-    _pt2l = ptll;
+    _m2l  = mll;   // Needs l2Sel
+    _pt2l = ptll;  // Needs l2Sel
 
 
     // Fill histograms
@@ -90,35 +115,31 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
-    bool pass_sf = (_nelectron != 1 && fabs(mll - Z_MASS) > 15.);
+    bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
     bool pass_df = (_nelectron == 1);
 
-    pass &= (mll > 20.);
+    pass &= (_m2l > 20.);
     pass &= (pass_sf || pass_df);
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
     pass &= (njet > 1);
 
-    if (njet < 2) continue;
-
     FillLevelHistograms(TTDM_02_Has2Jets, pass);
 
-    pass &= (Lepton1.v.Pt() + Lepton2.v.Pt() > 120.);
+    pass &= (_nbjet15 > 0);
 
-    FillLevelHistograms(TTDM_03_LepPtSum, pass);
+    FillLevelHistograms(TTDM_03_Has1BJet, pass);
 
-    pass &= (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt() < 400.);
+    float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
 
-    FillLevelHistograms(TTDM_04_JetPtSum, pass);
+    pass &= (fabs(_dphillmet) > 0.6);
 
-    pass &= (Lepton1.v.DeltaPhi(Lepton2.v) < 2.);
+    FillLevelHistograms(TTDM_04_DeltaPhi, pass);
 
-    FillLevelHistograms(TTDM_05_LepDeltaPhi, pass);
+    pass &= (MET.Et() > 120.);
 
-    pass &= (MET.Et() > 320.);
-
-    FillLevelHistograms(TTDM_06_MET, pass);
+    FillLevelHistograms(TTDM_05_MET, pass);
   }
 
 
