@@ -58,6 +58,10 @@ class AnalysisCMS : public AnalysisBase
 			    int      icut,
 			    int      ijet);
 
+  void    FillAnalysisHistogramsForFakes(int     ichannel,
+                                         int     icut,
+                                         int     ijet);
+
   void    GetDeltaPhiVeto  ();
 
   void    GetHt            ();
@@ -175,6 +179,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_sumjpt12  [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakes     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakesError[nchannel][ncut][njetbin+1];
 };
 
 #endif
