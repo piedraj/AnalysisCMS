@@ -110,6 +110,8 @@ class HistogramReader
 
   void     SetDrawYield       (Bool_t         drawyield) {_drawyield = drawyield;}
 
+  void     SetPublicStyle     (Bool_t         publicstyle) {_publicstyle = publicstyle;}
+
   void     SetLuminosity      (Float_t        lumi) {_luminosity_fb = lumi;}
 
   void     SetStackOption     (TString        option) {_stackoption = option;}
@@ -136,6 +138,7 @@ class HistogramReader
   Bool_t                _datanorm;
   Bool_t                _drawratio;
   Bool_t                _drawyield;
+  Bool_t                _publicstyle;
   Bool_t                _savepdf;
   Bool_t                _savepng;
 

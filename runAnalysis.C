@@ -12,12 +12,12 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
+  //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi_fb);
+  //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
+  //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);
+  //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi_fb);
+  AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
 
-  //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi25ns_fb);
-  //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi25ns_fb);
-  //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi25ns_fb);
-  //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi25ns_fb);
-    AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi25ns_fb);
 }
 
 
