@@ -189,4 +189,7 @@ void AnalysisWZ::FillLevelHistograms(int  icut,
 
   FillAnalysisHistograms(_channel, icut, _jetbin);
   FillAnalysisHistograms(_channel, icut, njetbin);
+
+  FillAnalysisHistogramsForFakes(_channel, icut, _jetbin);
+  FillAnalysisHistogramsForFakes(_channel, icut, njetbin);
 }

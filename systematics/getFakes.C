@@ -6,22 +6,18 @@ void PrintFakes(TString analysis,
                 TString scut);
 
 void getFakes(){
-
+  
   TString analysis="WZ";
-
+  
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
-  //  if(analysis.EqualTo("WZ")){
-  // int firstcut = ncut[0];
-  // int lastcut  = ncut[4];
-  // }
-
-  //for (int i=firstcut; i<=lastcut; i++){
+  for (int i=0; i<ncut; i++){
+    if (!scut[i].Contains(analysis)) continue;
     for (int j=firstchannel; j<=lastchannel; j++){
-      PrintFakes(analysis, "WZ/02_HasW", schannel[j]);
+      PrintFakes(analysis, scut[i], schannel[j]);
     }
-    //}
+  }
 }
 
 
@@ -45,8 +41,9 @@ void PrintFakes(TString analysis,
   TH1D*   h_fakes       =   (TH1D*)f   ->  Get(Form("%s/h_fakes_%s", scut.Data(), schannel.Data()));
   TH1D*   h_fakesError  =   (TH1D*)f   ->  Get(Form("%s/h_fakesError_%s", scut.Data(), schannel.Data()));
 
- printf("========================================== \n");
+ printf("=============================================================================================== \n");
  printf("CANAL : %s \n", schannel.Data());
+ printf("CORTE : %s \n", scut.Data());
 
  nominal    =   h_fakes -> GetBinContent(1);
  up         =   h_fakes -> GetBinContent(2);

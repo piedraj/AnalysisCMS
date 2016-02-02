@@ -183,7 +183,7 @@ void AnalysisCMS::FillAnalysisHistogramsForFakes(int ichannel,
     _event_weight_statup = fakeW2l1jstatUp;
   } else  {
     _event_weight_up = fakeW2l2jUp;
-    _event_weight_up = fakeW2l2jstatUp;
+    _event_weight_statup = fakeW2l2jstatUp;
   }
 
 
@@ -223,8 +223,8 @@ void AnalysisCMS::FillAnalysisHistogramsForFakes(int ichannel,
   h_fakesError[ichannel][icut][ijet]->Fill( 3.,  (_event_weight_statup*_event_weight_statup));
   h_fakesError[ichannel][icut][ijet]->Fill( 4.,  (_event_weight_statdown*_event_weight_statdown));
   
-  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
-  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
+  if (_nlepton == 2 && ichannel != ll)  FillAnalysisHistogramsForFakes(ll,  icut, ijet);
+  if (_nlepton == 3 && ichannel != lll) FillAnalysisHistogramsForFakes(lll, icut, ijet);
  }
 
 
@@ -347,16 +347,12 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight = _luminosity * baseW * puW;  // Default weights
-
-
-  // TO BE FIXED -- std_vector_lepton_idisoW->at(2) is always 1
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
     (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
 
-  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+  _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
