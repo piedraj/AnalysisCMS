@@ -278,12 +278,16 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
+  _event_weight = _luminosity * baseW * puW;  // Default weights
+
+
+  // TO BE FIXED -- std_vector_lepton_idisoW->at(2) is always 1
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
     (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
 
-  _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
+  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 

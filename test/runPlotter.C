@@ -32,9 +32,10 @@ void runPlotter(TString level)
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
-  plotter.SetLuminosity(lumi25ns_fb);
-  plotter.SetStackOption("hist");
-  plotter.SetDrawRatio(true);
+  plotter.SetLuminosity (lumi_fb);
+  plotter.SetStackOption( "hist");
+  plotter.SetDrawRatio  (   true);
+  plotter.SetPublicStyle(  false);
 
 
   // Get the data

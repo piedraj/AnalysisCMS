@@ -14,6 +14,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
+  _publicstyle  (false),
   _savepdf      (false),
   _savepng      (true)
 {
@@ -328,11 +329,12 @@ void HistogramReader::Draw(TString hname,
 
   // Legend
   //----------------------------------------------------------------------------
-  Float_t x0     = 0.220;
-  Float_t y0     = 0.843;
-  Float_t xdelta = 0.000;
-  Float_t ydelta = 0.050;
-  Int_t   ny     = 0;
+  Float_t x0     = 0.220;  // x position of the data on the top left
+  Float_t y0     = 0.843;  // y position of the data on the top left
+  Float_t xdelta = 0.228;  // x width between columns
+  Float_t ydelta = 0.050;  // y width between rows
+  Int_t   nx     = 0;      // column number
+  Int_t   ny     = 0;      // row    number
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
@@ -362,10 +364,10 @@ void HistogramReader::Draw(TString hname,
       if (ny == 5)
 	{
 	  ny = 0;
-	  xdelta += 0.228;
+	  nx++;
 	}
 
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
       ny++;
     }
   
@@ -374,7 +376,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   for (int i=0; i<_signalhist.size(); i++)
     {
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
       ny++;
     }
 
@@ -510,7 +512,8 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 
   TString final_label = Form(" %s", label.Data());
 
-  if (_drawyield) final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+  if (_drawyield && !_publicstyle)
+    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();

@@ -9,8 +9,8 @@
 #include "CutsWZ.h"
 
 
-//const float lumi25ns_fb = 1.269;
-const float lumi25ns_fb = 2.120;
+//const float lumi_fb = 1.269;
+const float lumi_fb = 2.120;
 
 
 const int ELECTRON_FLAVOUR = 11;
