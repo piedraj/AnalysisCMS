@@ -20,7 +20,7 @@
 # WZ
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_WZTo3LNu.root
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_WZJets.root
-/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_WZTo2L2Q.root
+#/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_WZTo2L2Q.root  # WZTo2L2Q not available
 
 # ZZ
 /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_ZZ.root
