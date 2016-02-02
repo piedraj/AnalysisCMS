@@ -15,13 +15,13 @@ void getFakes(){
   //  if(analysis.EqualTo("WZ")){
   // int firstcut = ncut[0];
   // int lastcut  = ncut[4];
-  //    }
+  // }
 
-//  for (int i=firstcut; i<=lastcut; i++){
+  //for (int i=firstcut; i<=lastcut; i++){
     for (int j=firstchannel; j<=lastchannel; j++){
       PrintFakes(analysis, "WZ/02_HasW", schannel[j]);
     }
-//}
+    //}
 }
 
 

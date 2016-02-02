@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Feb  1 15:42:29 2016 by ROOT version 6.02/13
+// Sun Nov 29 17:25:29 2015 by ROOT version 6.02/10
 // from TTree latino/probe_tree
-// found on file: /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_TTJets.root
+// found on file: /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WWTo2L2Nu.root
 //////////////////////////////////////////////////////////
 
 #ifndef AnalysisBase_h
@@ -41,7 +41,13 @@ public :
    Float_t         cjetpt1;
    Float_t         cjetpt2;
    Float_t         dataset;
+   Float_t         dphilljet;
+   Float_t         dphilljetjet;
    Float_t         dphillmet;
+   Float_t         dphilmet;
+   Float_t         dphilmet1;
+   Float_t         dphilmet2;
+   Float_t         drll;
    Float_t         dymva0;
    Float_t         dymva1;
    Float_t         effAW;
@@ -51,10 +57,26 @@ public :
    Float_t         fakeAW;
    Float_t         fakeBW;
    Float_t         fakeW;
-   Float_t         fakeW2l0j;  // Alicia
-   Float_t         fakeW2l1j;  // Alicia
-   Float_t         fakeW2l2j;  // Alicia
-   Float_t         fakeW3l;    // Alicia
+   Float_t         fakeW2l0j;
+   Float_t         fakeW2l1j;
+   Float_t         fakeW2l2j;
+   Float_t         fakeW2l0jUp;
+   Float_t         fakeW2l0jDown;
+   Float_t         fakeW2l0jstatUp;
+   Float_t         fakeW2l0jstatDown;
+   Float_t         fakeW2l1jUp;
+   Float_t         fakeW2l1jDown;
+   Float_t         fakeW2l1jstatUp;
+   Float_t         fakeW2l1jstatDown;
+   Float_t         fakeW2l2jUp;
+   Float_t         fakeW2l2jDown;
+   Float_t         fakeW2l2jstatUp;
+   Float_t         fakeW2l2jstatDown;
+   Float_t         fakeW3l;
+   Float_t         fakeW3lUp;
+   Float_t         fakeW3lDown;
+   Float_t         fakeW3lstatUp;
+   Float_t         fakeW3lstatDown;
    Float_t         gammaMRStar;
    Float_t         hardbjpb;
    Float_t         hardcmva;
@@ -123,6 +145,8 @@ public :
    Float_t         mllg;
    Float_t         mllgid;
    Float_t         mpmet;
+   Float_t         mtw1;
+   Float_t         mtw2;
    Float_t         nPhos;
    Float_t         nbjet;
    Float_t         nbjettche;
@@ -318,6 +342,17 @@ public :
    vector<float>   *std_vector_jet_QGRMScand;
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_jet_mass;
+   Float_t         detajj;
+   Float_t         ptll;
+   Float_t         mll;
+   Float_t         mth;
+   Float_t         channel;
+   Float_t         mjj;
+   Float_t         yll;
+   Float_t         dphill;
+   Float_t         pt2;
+   Float_t         pt1;
+   Float_t         njet;
    Float_t         jetpt1;
    Float_t         jetpt2;
    Float_t         jeteta1;
@@ -328,57 +363,7 @@ public :
    Float_t         jetmass2;
    Float_t         jettche1;
    Float_t         jettche2;
-   vector<float>   *std_vector_looseLepton_pt;
-   vector<float>   *std_vector_looseLepton_eta;
-   vector<float>   *std_vector_looseLepton_phi;
-   vector<float>   *std_vector_looseLepton_flavour;
    Float_t         puW;
-   Float_t         bPogSF;
-   Float_t         bPogSFUp;
-   Float_t         bPogSFDown;
-   Float_t         bTPSF;
-   Float_t         bTPSFUp;
-   Float_t         bTPSFDown;
-   Float_t         bPogSF1Jet;
-   Float_t         bPogSF1JetUp;
-   Float_t         bPogSF1JetDown;
-   Float_t         bTPSF1Jet;
-   Float_t         bTPSF1JetUp;
-   Float_t         bTPSF1JetDown;
-   Float_t         bPogSF2Jet;
-   Float_t         bPogSF2JetUp;
-   Float_t         bPogSF2JetDown;
-   Float_t         bTPSF2Jet;
-   Float_t         bTPSF2JetUp;
-   Float_t         bTPSF2JetDown;
-   Float_t         effTrigW_Down;
-   Float_t         effTrigW_Up;
-   Float_t         effTrigW;
-   vector<float>   *std_vector_lepton_idisoW;
-   vector<float>   *std_vector_lepton_idisoW_Up;
-   vector<float>   *std_vector_lepton_idisoW_Down;
-   Float_t         mcoll;
-   Float_t         drll;
-   Float_t         mjj;
-   Float_t         mllThird;
-   Float_t         dphilljetjet;
-   Float_t         channel;
-   Float_t         njet;
-   Float_t         dphilljet;
-   Float_t         dphilmet1;
-   Float_t         dphilmet2;
-   Float_t         projpfmet;
-   Float_t         dphill;
-   Float_t         pt2;
-   Float_t         pt1;
-   Float_t         detajj;
-   Float_t         ptll;
-   Float_t         mll;
-   Float_t         dphilmet;
-   Float_t         mth;
-   Float_t         yll;
-   Float_t         mtw2;
-   Float_t         mtw1;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -397,7 +382,13 @@ public :
    TBranch        *b_cjetpt1;   //!
    TBranch        *b_cjetpt2;   //!
    TBranch        *b_dataset;   //!
+   TBranch        *b_dphilljet;   //!
+   TBranch        *b_dphilljetjet;   //!
    TBranch        *b_dphillmet;   //!
+   TBranch        *b_dphilmet;   //!
+   TBranch        *b_dphilmet1;   //!
+   TBranch        *b_dphilmet2;   //!
+   TBranch        *b_drll;   //!
    TBranch        *b_dymva0;   //!
    TBranch        *b_dymva1;   //!
    TBranch        *b_effAW;   //!
@@ -409,8 +400,24 @@ public :
    TBranch        *b_fakeW;   //!
    TBranch        *b_fakeW2l0j;   //!
    TBranch        *b_fakeW2l1j;   //!
-   TBranch        *b_fakeW2l2j;   //!
-   TBranch        *b_fakeW3l;   //!
+   TBranch        *b_fakeW2l2j;
+   TBranch        *b_fakeW2l0jUp;
+   TBranch        *b_fakeW2l0jDown;
+   TBranch        *b_fakeW2l0jstatUp;
+   TBranch        *b_fakeW2l0jstatDown;
+   TBranch        *b_fakeW2l1jUp;
+   TBranch        *b_fakeW2l1jDown;
+   TBranch        *b_fakeW2l1jstatUp;
+   TBranch        *b_fakeW2l1jstatDown;
+   TBranch        *b_fakeW2l2jUp;
+   TBranch        *b_fakeW2l2jDown;
+   TBranch        *b_fakeW2l2jstatUp;
+   TBranch        *b_fakeW2l2jstatDown;
+   TBranch        *b_fakeW3l;
+   TBranch        *b_fakeW3lUp;
+   TBranch        *b_fakeW3lDown;
+   TBranch        *b_fakeW3lstatUp;
+   TBranch        *b_fakeW3lstatDown;
    TBranch        *b_gammaMRStar;   //!
    TBranch        *b_hardbjpb;   //!
    TBranch        *b_hardcmva;   //!
@@ -479,6 +486,8 @@ public :
    TBranch        *b_mllg;   //!
    TBranch        *b_mllgid;   //!
    TBranch        *b_mpmet;   //!
+   TBranch        *b_mtw1;   //!
+   TBranch        *b_mtw2;   //!
    TBranch        *b_nPhos;   //!
    TBranch        *b_nbjet;   //!
    TBranch        *b_nbjettche;   //!
@@ -674,6 +683,17 @@ public :
    TBranch        *b_std_vector_jet_QGRMScand;   //!
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_jet_mass;   //!
+   TBranch        *b_detajj;   //!
+   TBranch        *b_ptll;   //!
+   TBranch        *b_mll;   //!
+   TBranch        *b_mth;   //!
+   TBranch        *b_channel;   //!
+   TBranch        *b_mjj;   //!
+   TBranch        *b_yll;   //!
+   TBranch        *b_dphill;   //!
+   TBranch        *b_pt2;   //!
+   TBranch        *b_pt1;   //!
+   TBranch        *b_njet;   //!
    TBranch        *b_jetpt1;   //!
    TBranch        *b_jetpt2;   //!
    TBranch        *b_jeteta1;   //!
@@ -684,57 +704,7 @@ public :
    TBranch        *b_jetmass2;   //!
    TBranch        *b_jettche1;   //!
    TBranch        *b_jettche2;   //!
-   TBranch        *b_std_vector_looseLepton_pt;   //!
-   TBranch        *b_std_vector_looseLepton_eta;   //!
-   TBranch        *b_std_vector_looseLepton_phi;   //!
-   TBranch        *b_std_vector_looseLepton_flavour;   //!
    TBranch        *b_puW;   //!
-   TBranch        *b_bPogSF;   //!
-   TBranch        *b_bPogSFUp;   //!
-   TBranch        *b_bPogSFDown;   //!
-   TBranch        *b_bTPSF;   //!
-   TBranch        *b_bTPSFUp;   //!
-   TBranch        *b_bTPSFDown;   //!
-   TBranch        *b_bPogSF1Jet;   //!
-   TBranch        *b_bPogSF1JetUp;   //!
-   TBranch        *b_bPogSF1JetDown;   //!
-   TBranch        *b_bTPSF1Jet;   //!
-   TBranch        *b_bTPSF1JetUp;   //!
-   TBranch        *b_bTPSF1JetDown;   //!
-   TBranch        *b_bPogSF2Jet;   //!
-   TBranch        *b_bPogSF2JetUp;   //!
-   TBranch        *b_bPogSF2JetDown;   //!
-   TBranch        *b_bTPSF2Jet;   //!
-   TBranch        *b_bTPSF2JetUp;   //!
-   TBranch        *b_bTPSF2JetDown;   //!
-   TBranch        *b_effTrigW_Down;   //!
-   TBranch        *b_effTrigW_Up;   //!
-   TBranch        *b_effTrigW;   //!
-   TBranch        *b_std_vector_lepton_idisoW;   //!
-   TBranch        *b_std_vector_lepton_idisoW_Up;   //!
-   TBranch        *b_std_vector_lepton_idisoW_Down;   //!
-   TBranch        *b_mcoll;   //!
-   TBranch        *b_drll;   //!
-   TBranch        *b_mjj;   //!
-   TBranch        *b_mllThird;   //!
-   TBranch        *b_dphilljetjet;   //!
-   TBranch        *b_channel;   //!
-   TBranch        *b_njet;   //!
-   TBranch        *b_dphilljet;   //!
-   TBranch        *b_dphilmet1;   //!
-   TBranch        *b_dphilmet2;   //!
-   TBranch        *b_projpfmet;   //!
-   TBranch        *b_dphill;   //!
-   TBranch        *b_pt2;   //!
-   TBranch        *b_pt1;   //!
-   TBranch        *b_detajj;   //!
-   TBranch        *b_ptll;   //!
-   TBranch        *b_mll;   //!
-   TBranch        *b_dphilmet;   //!
-   TBranch        *b_mth;   //!
-   TBranch        *b_yll;   //!
-   TBranch        *b_mtw2;   //!
-   TBranch        *b_mtw1;   //!
 
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
@@ -755,9 +725,9 @@ AnalysisBase::AnalysisBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_TTJets.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WWTo2L2Nu.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC__l2selFix__hadd__bSFL2Eff/latino_TTJets.root");
+         f = new TFile("/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/21Oct_25ns_MC/latino_WWTo2L2Nu.root");
       }
       f->GetObject("latino",tree);
 
@@ -918,13 +888,6 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_jet_QGRMScand = 0;
    std_vector_lepton_d0 = 0;
    std_vector_jet_mass = 0;
-   std_vector_looseLepton_pt = 0;
-   std_vector_looseLepton_eta = 0;
-   std_vector_looseLepton_phi = 0;
-   std_vector_looseLepton_flavour = 0;
-   std_vector_lepton_idisoW = 0;
-   std_vector_lepton_idisoW_Up = 0;
-   std_vector_lepton_idisoW_Down = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -947,7 +910,13 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("cjetpt1", &cjetpt1, &b_cjetpt1);
    fChain->SetBranchAddress("cjetpt2", &cjetpt2, &b_cjetpt2);
    fChain->SetBranchAddress("dataset", &dataset, &b_dataset);
+   fChain->SetBranchAddress("dphilljet", &dphilljet, &b_dphilljet);
+   fChain->SetBranchAddress("dphilljetjet", &dphilljetjet, &b_dphilljetjet);
    fChain->SetBranchAddress("dphillmet", &dphillmet, &b_dphillmet);
+   fChain->SetBranchAddress("dphilmet", &dphilmet, &b_dphilmet);
+   fChain->SetBranchAddress("dphilmet1", &dphilmet1, &b_dphilmet1);
+   fChain->SetBranchAddress("dphilmet2", &dphilmet2, &b_dphilmet2);
+   fChain->SetBranchAddress("drll", &drll, &b_drll);
    fChain->SetBranchAddress("dymva0", &dymva0, &b_dymva0);
    fChain->SetBranchAddress("dymva1", &dymva1, &b_dymva1);
    fChain->SetBranchAddress("effAW", &effAW, &b_effAW);
@@ -957,10 +926,26 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("fakeAW", &fakeAW, &b_fakeAW);
    fChain->SetBranchAddress("fakeBW", &fakeBW, &b_fakeBW);
    fChain->SetBranchAddress("fakeW", &fakeW, &b_fakeW);
-   fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);  // Alicia
-   fChain->SetBranchAddress("fakeW2l1j", &fakeW2l1j, &b_fakeW2l1j);  // Alicia
-   fChain->SetBranchAddress("fakeW2l2j", &fakeW2l2j, &b_fakeW2l2j);  // Alicia
-   fChain->SetBranchAddress("fakeW3l", &fakeW3l, &b_fakeW3l);        // Alicia
+   fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);
+   fChain->SetBranchAddress("fakeW2l1j", &fakeW2l1j, &b_fakeW2l1j);
+   fChain->SetBranchAddress("fakeW2l2j", &fakeW2l2j, &b_fakeW2l2j);
+   fChain->SetBranchAddress("fakeW2lOjDown", &fakeW2l0jDown, &b_fakeW2l0jDown);
+   fChain->SetBranchAddress("fakeW2l0jUp", &fakeW2l0jUp, &b_fakeW2l0jUp);
+   fChain->SetBranchAddress("fakeW2lOjstatDown", &fakeW2l0jstatDown, &b_fakeW2l0jstatDown);
+   fChain->SetBranchAddress("fakeW2l0jstatUp", &fakeW2l0jstatUp, &b_fakeW2l0jstatUp);
+   fChain->SetBranchAddress("fakeW2l1jDown", &fakeW2l1jDown, &b_fakeW2l1jDown);
+   fChain->SetBranchAddress("fakeW2l1jUp", &fakeW2l1jUp, &b_fakeW2l1jUp);
+   fChain->SetBranchAddress("fakeW2l1jstatDown", &fakeW2l1jstatDown, &b_fakeW2l1jstatDown);
+   fChain->SetBranchAddress("fakeW2l1jstatUp", &fakeW2l1jstatUp, &b_fakeW2l1jstatUp);
+   fChain->SetBranchAddress("fakeW2l2jDown", &fakeW2l2jDown, &b_fakeW2l2jDown);
+   fChain->SetBranchAddress("fakeW2l2jUp", &fakeW2l2jUp, &b_fakeW2l2jUp);
+   fChain->SetBranchAddress("fakeW2l2jstatDown", &fakeW2l2jstatDown, &b_fakeW2l2jstatDown);
+   fChain->SetBranchAddress("fakeW2l2jstatUp", &fakeW2l2jstatUp, &b_fakeW2l2jstatUp);
+   fChain->SetBranchAddress("fakeW3l", &fakeW3l, &b_fakeW3l);
+   fChain->SetBranchAddress("fakeW3lDown", &fakeW3lDown, &b_fakeW3lDown);
+   fChain->SetBranchAddress("fakeW3lUp", &fakeW3lUp, &b_fakeW3lUp);
+   fChain->SetBranchAddress("fakeW3lstatDown", &fakeW3lstatDown, &b_fakeW3lstatDown);
+   fChain->SetBranchAddress("fakeW3lstatUp", &fakeW3lstatUp, &b_fakeW3lstatUp);
    fChain->SetBranchAddress("gammaMRStar", &gammaMRStar, &b_gammaMRStar);
    fChain->SetBranchAddress("hardbjpb", &hardbjpb, &b_hardbjpb);
    fChain->SetBranchAddress("hardcmva", &hardcmva, &b_hardcmva);
@@ -1029,6 +1014,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("mllg", &mllg, &b_mllg);
    fChain->SetBranchAddress("mllgid", &mllgid, &b_mllgid);
    fChain->SetBranchAddress("mpmet", &mpmet, &b_mpmet);
+   fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
+   fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
    fChain->SetBranchAddress("nPhos", &nPhos, &b_nPhos);
    fChain->SetBranchAddress("nbjet", &nbjet, &b_nbjet);
    fChain->SetBranchAddress("nbjettche", &nbjettche, &b_nbjettche);
@@ -1224,6 +1211,17 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jet_QGRMScand", &std_vector_jet_QGRMScand, &b_std_vector_jet_QGRMScand);
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_jet_mass", &std_vector_jet_mass, &b_std_vector_jet_mass);
+   fChain->SetBranchAddress("detajj", &detajj, &b_detajj);
+   fChain->SetBranchAddress("ptll", &ptll, &b_ptll);
+   fChain->SetBranchAddress("mll", &mll, &b_mll);
+   fChain->SetBranchAddress("mth", &mth, &b_mth);
+   fChain->SetBranchAddress("channel", &channel, &b_channel);
+   fChain->SetBranchAddress("mjj", &mjj, &b_mjj);
+   fChain->SetBranchAddress("yll", &yll, &b_yll);
+   fChain->SetBranchAddress("dphill", &dphill, &b_dphill);
+   fChain->SetBranchAddress("pt2", &pt2, &b_pt2);
+   fChain->SetBranchAddress("pt1", &pt1, &b_pt1);
+   fChain->SetBranchAddress("njet", &njet, &b_njet);
    fChain->SetBranchAddress("jetpt1", &jetpt1, &b_jetpt1);
    fChain->SetBranchAddress("jetpt2", &jetpt2, &b_jetpt2);
    fChain->SetBranchAddress("jeteta1", &jeteta1, &b_jeteta1);
@@ -1234,57 +1232,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("jetmass2", &jetmass2, &b_jetmass2);
    fChain->SetBranchAddress("jettche1", &jettche1, &b_jettche1);
    fChain->SetBranchAddress("jettche2", &jettche2, &b_jettche2);
-   fChain->SetBranchAddress("std_vector_looseLepton_pt", &std_vector_looseLepton_pt, &b_std_vector_looseLepton_pt);
-   fChain->SetBranchAddress("std_vector_looseLepton_eta", &std_vector_looseLepton_eta, &b_std_vector_looseLepton_eta);
-   fChain->SetBranchAddress("std_vector_looseLepton_phi", &std_vector_looseLepton_phi, &b_std_vector_looseLepton_phi);
-   fChain->SetBranchAddress("std_vector_looseLepton_flavour", &std_vector_looseLepton_flavour, &b_std_vector_looseLepton_flavour);
    fChain->SetBranchAddress("puW", &puW, &b_puW);
-   fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);
-   fChain->SetBranchAddress("bPogSFUp", &bPogSFUp, &b_bPogSFUp);
-   fChain->SetBranchAddress("bPogSFDown", &bPogSFDown, &b_bPogSFDown);
-   fChain->SetBranchAddress("bTPSF", &bTPSF, &b_bTPSF);
-   fChain->SetBranchAddress("bTPSFUp", &bTPSFUp, &b_bTPSFUp);
-   fChain->SetBranchAddress("bTPSFDown", &bTPSFDown, &b_bTPSFDown);
-   fChain->SetBranchAddress("bPogSF1Jet", &bPogSF1Jet, &b_bPogSF1Jet);
-   fChain->SetBranchAddress("bPogSF1JetUp", &bPogSF1JetUp, &b_bPogSF1JetUp);
-   fChain->SetBranchAddress("bPogSF1JetDown", &bPogSF1JetDown, &b_bPogSF1JetDown);
-   fChain->SetBranchAddress("bTPSF1Jet", &bTPSF1Jet, &b_bTPSF1Jet);
-   fChain->SetBranchAddress("bTPSF1JetUp", &bTPSF1JetUp, &b_bTPSF1JetUp);
-   fChain->SetBranchAddress("bTPSF1JetDown", &bTPSF1JetDown, &b_bTPSF1JetDown);
-   fChain->SetBranchAddress("bPogSF2Jet", &bPogSF2Jet, &b_bPogSF2Jet);
-   fChain->SetBranchAddress("bPogSF2JetUp", &bPogSF2JetUp, &b_bPogSF2JetUp);
-   fChain->SetBranchAddress("bPogSF2JetDown", &bPogSF2JetDown, &b_bPogSF2JetDown);
-   fChain->SetBranchAddress("bTPSF2Jet", &bTPSF2Jet, &b_bTPSF2Jet);
-   fChain->SetBranchAddress("bTPSF2JetUp", &bTPSF2JetUp, &b_bTPSF2JetUp);
-   fChain->SetBranchAddress("bTPSF2JetDown", &bTPSF2JetDown, &b_bTPSF2JetDown);
-   fChain->SetBranchAddress("effTrigW_Down", &effTrigW_Down, &b_effTrigW_Down);
-   fChain->SetBranchAddress("effTrigW_Up", &effTrigW_Up, &b_effTrigW_Up);
-   fChain->SetBranchAddress("effTrigW", &effTrigW, &b_effTrigW);
-   fChain->SetBranchAddress("std_vector_lepton_idisoW", &std_vector_lepton_idisoW, &b_std_vector_lepton_idisoW);
-   fChain->SetBranchAddress("std_vector_lepton_idisoW_Up", &std_vector_lepton_idisoW_Up, &b_std_vector_lepton_idisoW_Up);
-   fChain->SetBranchAddress("std_vector_lepton_idisoW_Down", &std_vector_lepton_idisoW_Down, &b_std_vector_lepton_idisoW_Down);
-   fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
-   fChain->SetBranchAddress("drll", &drll, &b_drll);
-   fChain->SetBranchAddress("mjj", &mjj, &b_mjj);
-   fChain->SetBranchAddress("mllThird", &mllThird, &b_mllThird);
-   fChain->SetBranchAddress("dphilljetjet", &dphilljetjet, &b_dphilljetjet);
-   fChain->SetBranchAddress("channel", &channel, &b_channel);
-   fChain->SetBranchAddress("njet", &njet, &b_njet);
-   fChain->SetBranchAddress("dphilljet", &dphilljet, &b_dphilljet);
-   fChain->SetBranchAddress("dphilmet1", &dphilmet1, &b_dphilmet1);
-   fChain->SetBranchAddress("dphilmet2", &dphilmet2, &b_dphilmet2);
-   fChain->SetBranchAddress("projpfmet", &projpfmet, &b_projpfmet);
-   fChain->SetBranchAddress("dphill", &dphill, &b_dphill);
-   fChain->SetBranchAddress("pt2", &pt2, &b_pt2);
-   fChain->SetBranchAddress("pt1", &pt1, &b_pt1);
-   fChain->SetBranchAddress("detajj", &detajj, &b_detajj);
-   fChain->SetBranchAddress("ptll", &ptll, &b_ptll);
-   fChain->SetBranchAddress("mll", &mll, &b_mll);
-   fChain->SetBranchAddress("dphilmet", &dphilmet, &b_dphilmet);
-   fChain->SetBranchAddress("mth", &mth, &b_mth);
-   fChain->SetBranchAddress("yll", &yll, &b_yll);
-   fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
-   fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
    Notify();
 }
 
