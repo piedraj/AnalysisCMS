@@ -1,8 +1,11 @@
 #include "../include/Constants.h"
 
 
-const Bool_t savepdf = false;
-const Bool_t savepng = true;
+const Bool_t  _print   = false;
+const Bool_t  _savepdf = false;
+const Bool_t  _savepng = true;
+const Float_t _xoffset = 0.184;
+const Float_t _yoffset = 0.043;
 
 
 void     DrawLatex (Font_t      tfont,
@@ -18,9 +21,9 @@ TLegend* DrawLegend(Float_t     x1,
 		    TH1*        hist,
 		    TString     label,
 		    TString     option  = "p",
-		    Float_t     tsize   = 0.027,
-		    Float_t     xoffset = 0.200,
-		    Float_t     yoffset = 0.047);
+		    Float_t     tsize   = 0.025,
+		    Float_t     xoffset = _xoffset,
+		    Float_t     yoffset = _yoffset);
 
 
 Color_t cfilter[nfilter];
@@ -80,28 +83,31 @@ void metFilters(TString sample = "NONE",
     met_Flag[i]->Rebin(50);
   }
 
+  float total = met_Flag[noFilter]->GetEntries();
+
 
   // Print
   //----------------------------------------------------------------------------
-  float total = met_Flag[noFilter]->GetEntries();
+  if (_print)
+    {
+      printf("\n");
+      printf(" MET filters efficiencies\n");
+      printf("   sample: %s\n",   sample.Data());
+      printf("      cut: %s\n",   cut.Data());
+      printf(" nentries: %.0f\n", total);
+      printf("--------------------------\n");
 
-  printf("\n");
-  printf(" MET filters efficiencies\n");
-  printf("   sample: %s\n",   sample.Data());
-  printf("      cut: %s\n",   cut.Data());
-  printf(" nentries: %.0f\n", total);
-  printf("--------------------------\n");
+      for (int i=0; i<nfilter; i++) {
 
-  for (int i=0; i<nfilter; i++) {
+	if (i == noFilter) continue;
 
-    if (i == noFilter) continue;
+	float efficiency = 1e2 * met_Flag[i]->GetEntries() / total;
 
-    float efficiency = 1e2 * met_Flag[i]->GetEntries() / total;
+	printf(" %7.3f%s  %-35s\n", efficiency, "%", sfilter[i].Data());
+      }
 
-    printf(" %7.3f%s  %-35s\n", efficiency, "%", sfilter[i].Data());
-  }
-
-  printf("\n");
+      printf("\n");
+    }
 
 
   // Draw
@@ -110,10 +116,9 @@ void metFilters(TString sample = "NONE",
 
   c1->SetLogy();
 
-  Float_t x0     = 0.362;
-  Float_t y0     = 0.850;
+  Float_t x0     = 0.410;
+  Float_t y0     = 0.845;
   Float_t xdelta = 0.000;
-  Float_t ydelta = 0.047;
   Int_t   ny     = 0;
 
   met_Flag[noFilter]->Draw("hist");
@@ -163,9 +168,9 @@ void metFilters(TString sample = "NONE",
     float efficiency = 1e2 * met_Flag[i]->GetEntries() / total;
 
     if (met_Flag[i]->GetEntries() == total)
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, met_Flag[i], Form("(%.0f%s) %s", efficiency, "%", sfilter[i].Data()), lstyle);
+      DrawLegend(x0 + xdelta, y0 - ny*_yoffset, met_Flag[i], Form("(%.0f%s) %s", efficiency, "%", sfilter[i].Data()), lstyle);
     else
-      DrawLegend(x0 + xdelta, y0 - ny*ydelta, met_Flag[i], Form("(%.3f%s) %s", efficiency, "%", sfilter[i].Data()), lstyle);
+      DrawLegend(x0 + xdelta, y0 - ny*_yoffset, met_Flag[i], Form("(%.2f%s) %s", efficiency, "%", sfilter[i].Data()), lstyle);
     ny++;
   }
 
@@ -174,10 +179,10 @@ void metFilters(TString sample = "NONE",
   //----------------------------------------------------------------------------
   c1->GetFrame()->DrawClone();
 
-  if (savepdf || savepng) gSystem->mkdir("met-filters-figures", kTRUE);
+  if (_savepdf || _savepng) gSystem->mkdir("met-filters-figures", kTRUE);
 
-  if (savepdf) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".pdf");
-  if (savepng) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".png");
+  if (_savepdf) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".pdf");
+  if (_savepng) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".png");
 }
 
 

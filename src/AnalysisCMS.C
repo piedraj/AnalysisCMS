@@ -347,10 +347,12 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
+  _event_weight = _luminosity * baseW * puW;  // Default weights
+
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
-    (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
+    std_vector_lepton_idisoW->at(2);
 
   _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
 
