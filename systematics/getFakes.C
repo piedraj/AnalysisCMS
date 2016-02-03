@@ -1,23 +1,29 @@
 #include"../include/Constants.h"
-#include"../include/CutsWZ.h"
 
 void PrintFakes(TString analysis,
                 TString schannel,
                 TString scut);
 
-void getFakes(){
-  
+void getFakes(TString cut = "NONE"){
+
+  if (cut.EqualTo("NONE")) {
+    printf("\n");
+    for (int i=0; i<ncut; i++)
+      printf(" root -l -b -q \"getFakes.C(\\\"%s\\\")\"\n", scut[i].Data());
+    printf("\n");
+
+    return;
+  }
+
   TString analysis="WZ";
   
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
-  for (int i=0; i<ncut; i++){
-    if (!scut[i].Contains(analysis)) continue;
-    for (int j=firstchannel; j<=lastchannel; j++){
-      PrintFakes(analysis, scut[i], schannel[j]);
-    }
+  for (int j=firstchannel; j<=lastchannel; j++){
+    PrintFakes(analysis, cut, schannel[j]);
   }
+  
 }
 
 
@@ -41,9 +47,10 @@ void PrintFakes(TString analysis,
   TH1D*   h_fakes       =   (TH1D*)f   ->  Get(Form("%s/h_fakes_%s", scut.Data(), schannel.Data()));
   TH1D*   h_fakesError  =   (TH1D*)f   ->  Get(Form("%s/h_fakesError_%s", scut.Data(), schannel.Data()));
 
- printf("=============================================================================================== \n");
+
  printf("CANAL : %s \n", schannel.Data());
  printf("CORTE : %s \n", scut.Data());
+ printf("--------------------- \n");
 
  nominal    =   h_fakes -> GetBinContent(1);
  up         =   h_fakes -> GetBinContent(2);
@@ -56,16 +63,15 @@ void PrintFakes(TString analysis,
  downError       = sqrt(h_fakesError -> GetBinContent(3));
  statUpError     = sqrt(h_fakesError -> GetBinContent(4));
  statDownError   = sqrt(h_fakesError -> GetBinContent(5));
+ 
+ printf("Value of nominal :        (%.3f +/- %.3f) \n", nominal, nominalError);
+ printf("Value of Up :             (%.3f +/- %.3f) \n", up, upError);
+ printf("Value of Down :           (%.3f +/- %.3f) \n", down, downError);
+ printf("Value of Stat Up :        (%.3f +/- %.3f) \n", statUp, statUpError);
+ printf("Value of Stat Down :      (%.3f +/- %.3f) \n", statDown, statDownError);
 
- printf("Valor nominal :   (%f +/- %f) \n", nominal, nominalError);
- printf("Valor Up :        (%f +/- %f) \n", up, upError);
- printf("Valor Down :      (%f +/- %f) \n", down, downError);
- printf("Valor Stat Up :   (%f +/- %f) \n", statUp, statUpError);
- printf("Valor Stat Down : (%f +/- %f) \n", statDown, statDownError);
-
- delta = sqrt( pow((up-down),2) + pow((statUp-statDown),2));
+ delta = sqrt(pow((up-down),2) + pow((statUp-statDown),2));   // This error might be too large
  systematic = 100*(delta)/nominal;
 
- printf("The systematic error asociated with the fakes for this canal %s is... %f % \n ", schannel.Data(), systematic); 
-
+ printf("The systematic error associated with the fakes for this canal %s is... %.3f %% \n \n", schannel.Data(), systematic); 
 }
