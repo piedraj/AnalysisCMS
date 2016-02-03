@@ -159,6 +159,75 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 }
 
 
+//------------------------------------------------------------------------------                                                                           
+// Fill Histograms For Fakes                                                                                                                              
+//------------------------------------------------------------------------------      
+
+
+void AnalysisCMS::FillAnalysisHistogramsForFakes(int ichannel,
+						 int icut,
+						 int ijet)
+{
+
+  Double_t  _event_weight_up = 0.0,  _event_weight_down = 0.0;
+  Double_t  _event_weight_statup = 0.0,  _event_weight_statdown = 0.0;
+
+  if (!_analysis.EqualTo("WZ")){
+
+  // up variation                                                                                                                                         
+  if (njet == 0) {
+    _event_weight_up = fakeW2l0jUp;
+    _event_weight_statup = fakeW2l0jstatUp;
+  } else if (njet == 1) {
+    _event_weight_up = fakeW2l1jUp;
+    _event_weight_statup = fakeW2l1jstatUp;
+  } else  {
+    _event_weight_up = fakeW2l2jUp;
+    _event_weight_statup = fakeW2l2jstatUp;
+  }
+
+
+  // down variation                                                                                                                                       
+  if (njet == 0) {
+    _event_weight_down = fakeW2l0jDown;
+    _event_weight_statdown = fakeW2l0jstatDown;
+  } else if (njet == 1) {
+    _event_weight_down = fakeW2l1jDown;
+    _event_weight_statdown = fakeW2l1jstatDown;
+  } else   {
+    _event_weight_down = fakeW2l2jDown;
+    _event_weight_statdown = fakeW2l2jstatDown;
+  }
+  }
+
+  else {
+  // up variation                                                                                                      
+    _event_weight_up     = fakeW3lUp;
+    _event_weight_statup = fakeW3lstatUp;
+
+  // down variation                                                                                                                                           
+    _event_weight_down     = fakeW3lDown;
+    _event_weight_statdown = fakeW3lstatDown;
+  }
+
+ 
+  h_fakes[ichannel][icut][ijet]->Fill( 0. ,  _event_weight);
+  h_fakes[ichannel][icut][ijet]->Fill( 1. ,  _event_weight_up);
+  h_fakes[ichannel][icut][ijet]->Fill( 2. ,  _event_weight_down);
+  h_fakes[ichannel][icut][ijet]->Fill( 3. ,  _event_weight_statup);
+  h_fakes[ichannel][icut][ijet]->Fill( 4. ,  _event_weight_statdown);
+
+  h_fakesError[ichannel][icut][ijet]->Fill( 0.,  (_event_weight*_event_weight));
+  h_fakesError[ichannel][icut][ijet]->Fill( 1.,  (_event_weight_up*_event_weight_up));
+  h_fakesError[ichannel][icut][ijet]->Fill( 2.,  (_event_weight_down*_event_weight_down));
+  h_fakesError[ichannel][icut][ijet]->Fill( 3.,  (_event_weight_statup*_event_weight_statup));
+  h_fakesError[ichannel][icut][ijet]->Fill( 4.,  (_event_weight_statdown*_event_weight_statdown));
+  
+  if (_nlepton == 2 && ichannel != ll)  FillAnalysisHistogramsForFakes(ll,  icut, ijet);
+  if (_nlepton == 3 && ichannel != lll) FillAnalysisHistogramsForFakes(lll, icut, ijet);
+ }
+
+
 //------------------------------------------------------------------------------
 // Summary
 //------------------------------------------------------------------------------
@@ -278,16 +347,12 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight = _luminosity * baseW * puW;  // Default weights
-
-
-  // TO BE FIXED -- std_vector_lepton_idisoW->at(2) is always 1
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
     (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
 
-  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+  _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
@@ -511,8 +576,8 @@ void AnalysisCMS::GetMpMet()
   _fullpmet = MET.Et();
   _trkpmet  = trkMet;  // 74X
   //  _trkpmet  = metTtrk;  // 76X
-
   //  Needs l2Sel
+
   if (dphilmet < TMath::Pi() / 2.)
     {
       _fullpmet *= sin(dphilmet);
@@ -718,4 +783,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_sumjpt12  [ichannel][icut][ijet] = new TH1D("h_sumjpt12"   + suffix, "", 3000,    0, 3000);
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
+  h_fakes     [ichannel][icut][ijet] = new TH1D("h_fakes"      + suffix, "",    5,    0,    5);
+  h_fakesError[ichannel][icut][ijet] = new TH1D("h_fakesError" + suffix, "",    5,    0,    5);
 }

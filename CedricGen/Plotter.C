@@ -1,0 +1,26 @@
+#include "HistogramReader.h"
+
+
+void Plotter(){
+
+  HistogramReader p;
+
+  TString title = "h_GEN_m2l";
+
+  p.Draw(title);
+
+
+} 
+
+
+//------------------------------------------------------------------------------
+// main
+//------------------------------------------------------------------------------
+# ifndef __CINT__
+int main(int argc, char ** argv)
+{
+  Plotter();
+
+  return 0;
+}
+# endif
