@@ -1,6 +1,10 @@
 #include "../include/Constants.h"
 
 
+const Bool_t savepdf = false;
+const Bool_t savepng = true;
+
+
 void     DrawLatex (Font_t      tfont,
 		    Float_t     x,
 		    Float_t     y,
@@ -29,16 +33,23 @@ TH1D* met_Flag[nfilter];
 // metFilters
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void metFilters(TString sample = "NONE")
+void metFilters(TString sample = "NONE",
+		TString cut    = "met300")
 {
   if (!sample.Contains("Run2015D"))
     {
       printf("\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",   \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",     \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",       \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\", \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",          \\\"nocut\\\")\"\n");
+      printf("\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",   \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",     \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",       \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\", \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",          \\\"met300\\\")\"\n");
       printf("\n");
 
       return;
@@ -64,7 +75,7 @@ void metFilters(TString sample = "NONE")
 
   for (int i=0; i<nfilter; i++) {
 
-    met_Flag[i] = (TH1D*)file->Get(Form("met_Flag_%s", sfilter[i].Data()));
+    met_Flag[i] = (TH1D*)file->Get(Form("met_Flag_%s_%s", cut.Data(), sfilter[i].Data()));
 
     met_Flag[i]->Rebin(50);
   }
@@ -77,6 +88,7 @@ void metFilters(TString sample = "NONE")
   printf("\n");
   printf(" MET filters efficiencies\n");
   printf("   sample: %s\n",   sample.Data());
+  printf("      cut: %s\n",   cut.Data());
   printf(" nentries: %.0f\n", total);
   printf("--------------------------\n");
 
@@ -157,10 +169,15 @@ void metFilters(TString sample = "NONE")
     ny++;
   }
 
+
+  // Save the money
+  //----------------------------------------------------------------------------
   c1->GetFrame()->DrawClone();
 
-  //  c1->SaveAs(sample + ".pdf");
-  //  c1->SaveAs(sample + ".png");
+  if (savepdf || savepng) gSystem->mkdir("met-filters-figures", kTRUE);
+
+  if (savepdf) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".pdf");
+  if (savepng) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".png");
 }
 
 
