@@ -183,7 +183,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_fakesError[nchannel][ncut][njetbin+1];
 };
 
 #endif

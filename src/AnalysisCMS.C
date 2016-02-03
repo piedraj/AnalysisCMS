@@ -162,7 +162,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
- }
+}
 
 
 //------------------------------------------------------------------------------
@@ -279,7 +279,7 @@ void AnalysisCMS::ApplyWeights()
     std_vector_lepton_idisoW->at(1) *
     std_vector_lepton_idisoW->at(2);
 
-  _event_weight = _luminosity * puW * baseW * bPogSF * bTPSF * effTrigW * lepton_scale_factor;
+  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
@@ -503,8 +503,8 @@ void AnalysisCMS::GetMpMet()
   _fullpmet = MET.Et();
   _trkpmet  = trkMet;  // 74X
   //  _trkpmet  = metTtrk;  // 76X
-  //  Needs l2Sel
 
+  //  Needs l2Sel
   if (dphilmet < TMath::Pi() / 2.)
     {
       _fullpmet *= sin(dphilmet);
@@ -599,62 +599,54 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 // GetFakeWeights
 //------------------------------------------------------------------------------
-
 void AnalysisCMS::GetFakeWeights()
 {
   if (!_sample.Contains("DD_"))
     {
-      _fake_weight          = 1;
-      _fake_weight_up       = 1;
-      _fake_weight_down     = 1;
-      _fake_weight_statUp   = 1;
-      _fake_weight_statDown = 1;
+      _fake_weight          = 1.;
+      _fake_weight_up       = 1.;
+      _fake_weight_down     = 1.;
+      _fake_weight_statUp   = 1.;
+      _fake_weight_statDown = 1.;
 
       return;
     }
 
-    if (_analysis.EqualTo("WZ")) {
+  if (_analysis.EqualTo("WZ"))
+    {
+      _fake_weight          = fakeW3l;
+      _fake_weight_up       = fakeW3lUp;
+      _fake_weight_down     = fakeW3lDown;
+      _fake_weight_statUp   = fakeW3lstatUp;
+      _fake_weight_statDown = fakeW3lstatDown;
 
-    _fake_weight = fakeW3l;
-
-    // up variation                                                                                                      
-    _fake_weight_up     = fakeW3lUp;
-    _fake_weight_statUp = fakeW3lstatUp;
-
-    // down variation                                                                                                                                           
-    _fake_weight_down     = fakeW3lDown;
-    _fake_weight_statDown = fakeW3lstatDown;
-  }
-    else {
-
-    // up variation                                                                                                                                         
-    if (njet == 0) {
-      _fake_weight_up = fakeW2l0jUp;
-      _fake_weight_statUp = fakeW2l0jstatUp;
-    } else if (njet == 1) {
-      _fake_weight_up = fakeW2l1jUp;
-      _fake_weight_statUp = fakeW2l1jstatUp;
-    } else  {
-      _fake_weight_up = fakeW2l2jUp;
-      _fake_weight_statUp = fakeW2l2jstatUp;
+      return;
     }
 
-
-    // down variation                                                                                                                                       
-    if (njet == 0) {
-      _fake_weight_down = fakeW2l0jDown;
+  if (njet == 0)
+    {
+      _fake_weight          = fakeW2l0j;
+      _fake_weight_up       = fakeW2l0jUp;
+      _fake_weight_down     = fakeW2l0jDown;
+      _fake_weight_statUp   = fakeW2l0jstatUp;
       _fake_weight_statDown = fakeW2l0jstatDown;
-    } else if (njet == 1) {
-      _fake_weight_down = fakeW2l1jDown;
+    }
+  else if (njet == 1)
+    {
+      _fake_weight          = fakeW2l1j;
+      _fake_weight_down     = fakeW2l1jDown;
+      _fake_weight_up       = fakeW2l1jUp;
+      _fake_weight_statUp   = fakeW2l1jstatUp;
       _fake_weight_statDown = fakeW2l1jstatDown;
-    } else   {
-      _fake_weight_down = fakeW2l2jDown;
+    }
+  else
+    {
+      _fake_weight          = fakeW2l2j;
+      _fake_weight_up       = fakeW2l2jUp;
+      _fake_weight_down     = fakeW2l2jDown;
+      _fake_weight_statUp   = fakeW2l2jstatUp;
       _fake_weight_statDown = fakeW2l2jstatDown;
     }
-    }
-
-  
-
 }
 
 
@@ -775,5 +767,4 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
   h_fakes     [ichannel][icut][ijet] = new TH1D("h_fakes"      + suffix, "",    5,    0,    5);
-  h_fakesError[ichannel][icut][ijet] = new TH1D("h_fakesError" + suffix, "",    5,    0,    5);
 }
