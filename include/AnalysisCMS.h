@@ -84,6 +84,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetSoftMuon      ();
 
+  void    GetFakeWeights   ();
+
   bool    IsFiducialLepton (int      k);
 
   bool    IsIsolatedLepton (int      k);
@@ -122,6 +124,11 @@ class AnalysisCMS : public AnalysisBase
   TString                _sample;
 
   float                  _event_weight;
+  float                  _fake_weight;
+  float                  _fake_weight_down;
+  float                  _fake_weight_up;
+  float                  _fake_weight_statUp;
+  float                  _fake_weight_statDown;
   float                  _ht;
   float                  _luminosity;
   float                  _mc;
@@ -175,6 +182,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_sumjpt12  [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l      [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakes     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakesError[nchannel][ncut][njetbin+1];
 };
 
 #endif
