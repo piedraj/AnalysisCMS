@@ -58,10 +58,6 @@ class AnalysisCMS : public AnalysisBase
 			    int      icut,
 			    int      ijet);
 
-  void    FillAnalysisHistogramsForFakes(int     ichannel,
-                                         int     icut,
-                                         int     ijet);
-
   void    GetDeltaPhiVeto  ();
 
   void    GetHt            ();
@@ -87,6 +83,8 @@ class AnalysisCMS : public AnalysisBase
   void    GetPtWW          ();
 
   void    GetSoftMuon      ();
+
+  void    GetFakeWeights   ();
 
   bool    IsFiducialLepton (int      k);
 
@@ -126,6 +124,11 @@ class AnalysisCMS : public AnalysisBase
   TString                _sample;
 
   float                  _event_weight;
+  float                  _fake_weight;
+  float                  _fake_weight_down;
+  float                  _fake_weight_up;
+  float                  _fake_weight_statUp;
+  float                  _fake_weight_statDown;
   float                  _ht;
   float                  _luminosity;
   float                  _mc;

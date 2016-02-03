@@ -154,77 +154,14 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
+  h_fakes[ichannel][icut][ijet]->Fill( 0., _fake_weight);
+  h_fakes[ichannel][icut][ijet]->Fill( 1., _fake_weight_up);
+  h_fakes[ichannel][icut][ijet]->Fill( 2., _fake_weight_down);
+  h_fakes[ichannel][icut][ijet]->Fill( 3., _fake_weight_statUp);
+  h_fakes[ichannel][icut][ijet]->Fill( 4., _fake_weight_statDown);
+  
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
-}
-
-
-//------------------------------------------------------------------------------                                                                           
-// Fill Histograms For Fakes                                                                                                                              
-//------------------------------------------------------------------------------      
-
-
-void AnalysisCMS::FillAnalysisHistogramsForFakes(int ichannel,
-						 int icut,
-						 int ijet)
-{
-
-  Double_t  _event_weight_up = 0.0,  _event_weight_down = 0.0;
-  Double_t  _event_weight_statup = 0.0,  _event_weight_statdown = 0.0;
-
-  if (!_analysis.EqualTo("WZ")){
-
-  // up variation                                                                                                                                         
-  if (njet == 0) {
-    _event_weight_up = fakeW2l0jUp;
-    _event_weight_statup = fakeW2l0jstatUp;
-  } else if (njet == 1) {
-    _event_weight_up = fakeW2l1jUp;
-    _event_weight_statup = fakeW2l1jstatUp;
-  } else  {
-    _event_weight_up = fakeW2l2jUp;
-    _event_weight_statup = fakeW2l2jstatUp;
-  }
-
-
-  // down variation                                                                                                                                       
-  if (njet == 0) {
-    _event_weight_down = fakeW2l0jDown;
-    _event_weight_statdown = fakeW2l0jstatDown;
-  } else if (njet == 1) {
-    _event_weight_down = fakeW2l1jDown;
-    _event_weight_statdown = fakeW2l1jstatDown;
-  } else   {
-    _event_weight_down = fakeW2l2jDown;
-    _event_weight_statdown = fakeW2l2jstatDown;
-  }
-  }
-
-  else {
-  // up variation                                                                                                      
-    _event_weight_up     = fakeW3lUp;
-    _event_weight_statup = fakeW3lstatUp;
-
-  // down variation                                                                                                                                           
-    _event_weight_down     = fakeW3lDown;
-    _event_weight_statdown = fakeW3lstatDown;
-  }
-
- 
-  h_fakes[ichannel][icut][ijet]->Fill( 0. ,  _event_weight);
-  h_fakes[ichannel][icut][ijet]->Fill( 1. ,  _event_weight_up);
-  h_fakes[ichannel][icut][ijet]->Fill( 2. ,  _event_weight_down);
-  h_fakes[ichannel][icut][ijet]->Fill( 3. ,  _event_weight_statup);
-  h_fakes[ichannel][icut][ijet]->Fill( 4. ,  _event_weight_statdown);
-
-  h_fakesError[ichannel][icut][ijet]->Fill( 0.,  (_event_weight*_event_weight));
-  h_fakesError[ichannel][icut][ijet]->Fill( 1.,  (_event_weight_up*_event_weight_up));
-  h_fakesError[ichannel][icut][ijet]->Fill( 2.,  (_event_weight_down*_event_weight_down));
-  h_fakesError[ichannel][icut][ijet]->Fill( 3.,  (_event_weight_statup*_event_weight_statup));
-  h_fakesError[ichannel][icut][ijet]->Fill( 4.,  (_event_weight_statdown*_event_weight_statdown));
-  
-  if (_nlepton == 2 && ichannel != ll)  FillAnalysisHistogramsForFakes(ll,  icut, ijet);
-  if (_nlepton == 3 && ichannel != lll) FillAnalysisHistogramsForFakes(lll, icut, ijet);
  }
 
 
@@ -331,20 +268,8 @@ void AnalysisCMS::ApplyWeights()
 {
   _event_weight = 1.;
 
-  if (!_ismc && _sample.Contains("DD_"))
-    {
-      if (_analysis.EqualTo("WZ"))
-	{
-	  _event_weight = fakeW3l;
-	}
-      else
-	{
-	  if      (njet == 0) _event_weight = fakeW2l0j;
-	  else if (njet == 1) _event_weight = fakeW2l1j;
-	  else                _event_weight = fakeW2l2j;
-	}
-    }
-
+  if (!_ismc && _sample.Contains("DD_")) _event_weight = _fake_weight;
+    
   if (!_ismc) return;
 
   _event_weight = _luminosity * baseW * puW;  // Default weights
@@ -672,10 +597,74 @@ void AnalysisCMS::GetSoftMuon()
 
 
 //------------------------------------------------------------------------------
+// GetFakeWeights
+//------------------------------------------------------------------------------
+
+void AnalysisCMS::GetFakeWeights()
+{
+  if (!_sample.Contains("DD_"))
+    {
+      _fake_weight          = 1;
+      _fake_weight_up       = 1;
+      _fake_weight_down     = 1;
+      _fake_weight_statUp   = 1;
+      _fake_weight_statDown = 1;
+
+      return;
+    }
+
+    if (_analysis.EqualTo("WZ")) {
+
+    _fake_weight = fakeW3l;
+
+    // up variation                                                                                                      
+    _fake_weight_up     = fakeW3lUp;
+    _fake_weight_statUp = fakeW3lstatUp;
+
+    // down variation                                                                                                                                           
+    _fake_weight_down     = fakeW3lDown;
+    _fake_weight_statDown = fakeW3lstatDown;
+  }
+    else {
+
+    // up variation                                                                                                                                         
+    if (njet == 0) {
+      _fake_weight_up = fakeW2l0jUp;
+      _fake_weight_statUp = fakeW2l0jstatUp;
+    } else if (njet == 1) {
+      _fake_weight_up = fakeW2l1jUp;
+      _fake_weight_statUp = fakeW2l1jstatUp;
+    } else  {
+      _fake_weight_up = fakeW2l2jUp;
+      _fake_weight_statUp = fakeW2l2jstatUp;
+    }
+
+
+    // down variation                                                                                                                                       
+    if (njet == 0) {
+      _fake_weight_down = fakeW2l0jDown;
+      _fake_weight_statDown = fakeW2l0jstatDown;
+    } else if (njet == 1) {
+      _fake_weight_down = fakeW2l1jDown;
+      _fake_weight_statDown = fakeW2l1jstatDown;
+    } else   {
+      _fake_weight_down = fakeW2l2jDown;
+      _fake_weight_statDown = fakeW2l2jstatDown;
+    }
+    }
+
+  
+
+}
+
+
+//------------------------------------------------------------------------------
 // EventSetup
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup()
 {
+  GetFakeWeights();
+
   ApplyWeights();
   
   GetMET(pfType1Met, pfType1Metphi);  // 74X
