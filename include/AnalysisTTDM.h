@@ -24,7 +24,8 @@ class AnalysisTTDM : public AnalysisCMS
 
   // MET filters histograms
   //----------------------------------------------------------------------------
-  TH1D*                  met_Flag[nfilter];
+  TH1D*                  met_Flag_nocut [nfilter];
+  TH1D*                  met_Flag_met300[nfilter];
 };
 
 #endif

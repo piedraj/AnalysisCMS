@@ -280,12 +280,10 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = _luminosity * baseW * puW;  // Default weights
 
-
-  // TO BE FIXED -- std_vector_lepton_idisoW->at(2) is always 1
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
-    (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
+    std_vector_lepton_idisoW->at(2);
 
   _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
 
@@ -512,7 +510,7 @@ void AnalysisCMS::GetMpMet()
   _trkpmet  = trkMet;  // 74X
   //  _trkpmet  = metTtrk;  // 76X
 
-  //  Needs l2Sel
+  // Needs l2Sel
   if (dphilmet < TMath::Pi() / 2.)
     {
       _fullpmet *= sin(dphilmet);

@@ -52,7 +52,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   //----------------------------------------------------------------------------
   for (int j=0; j<nfilter; j++) {
 
-    met_Flag[j] = new TH1D(Form("met_Flag_%s", sfilter[j].Data()), "", 3000, 0, 3000);
+    met_Flag_nocut [j] = new TH1D(Form("met_Flag_nocut_%s",  sfilter[j].Data()), "", 3000, 0, 3000);
+    met_Flag_met300[j] = new TH1D(Form("met_Flag_met300_%s", sfilter[j].Data()), "", 3000, 0, 3000);
   }
 
 
@@ -73,17 +74,42 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // MET filters histograms
     //--------------------------------------------------------------------------
-    met_Flag[noFilter]->Fill(MET.Et());
+    float truncated_met = (MET.Et() > 2999.5) ? 2999.5 : MET.Et();
 
-    bool pass_all_met_filters = true;
+    bool pass_all_met_filters;
+
+
+    // MET filters histograms :: No cut
+    //--------------------------------------------------------------------------
+    pass_all_met_filters = true;
+
+    met_Flag_nocut[noFilter]->Fill(truncated_met);
 
     for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
 
-      if (std_vector_trigger_special->at(j) > 0) met_Flag[j]->Fill(MET.Et());
+      if (std_vector_trigger_special->at(j) > 0) met_Flag_nocut[j]->Fill(truncated_met);
       else pass_all_met_filters = false;
     }
     
-    if (pass_all_met_filters) met_Flag[allFilter]->Fill(MET.Et());
+    if (pass_all_met_filters) met_Flag_nocut[allFilter]->Fill(truncated_met);
+
+
+    // MET filters histograms :: MET > 300 GeV
+    //--------------------------------------------------------------------------
+    if (truncated_met > 300.)
+      {
+	pass_all_met_filters = true;
+
+	met_Flag_met300[noFilter]->Fill(truncated_met);
+
+	for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
+
+	  if (std_vector_trigger_special->at(j) > 0) met_Flag_met300[j]->Fill(truncated_met);
+	  else pass_all_met_filters = false;
+	}
+    
+	if (pass_all_met_filters) met_Flag_met300[allFilter]->Fill(truncated_met);
+      }
 
 
     // Analysis
@@ -105,8 +131,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l  = mll;   // Needs l2Sel
-    _pt2l = ptll;  // Needs l2Sel
+    //    _m2l  = mll;   // Needs l2Sel
+    //    _pt2l = ptll;  // Needs l2Sel
+    _m2l  = -999;
+    _pt2l = -999;
 
 
     // Fill histograms
