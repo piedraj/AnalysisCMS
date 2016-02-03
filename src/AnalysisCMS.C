@@ -308,7 +308,7 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    if (!IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
+    if (i > 1 && !IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
 
     float pt  = std_vector_lepton_pt ->at(i);
     float eta = std_vector_lepton_eta->at(i);

@@ -42,16 +42,16 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_dphilmet1  [i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0., 10.0);
-	h_dphilmet2  [i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0., 10.0);
-	h_fullpmet   [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 1000, 0., 1000);
-	h_trkpmet    [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 1000, 0., 1000);
-	h_jetpt1     [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0., 1000);
-	h_metphi     [i][j][k] = new TH1D("h_metphi"      + suffix, "", 1000, 0., 10.0);
-	h_lepphi1    [i][j][k] = new TH1D("h_lepphi1"     + suffix, "", 1000, 0., 10.0);
-	h_lepphi2    [i][j][k] = new TH1D("h_lepphi2"     + suffix, "", 1000, 0., 10.0);
-	h_pt1_pdfUp  [i][j][k] = new TH1D("h_pt1_pdfUp"   + suffix, "", 1000, 0., 1000);
-	h_pt1_pdfDown[i][j][k] = new TH1D("h_pt1_pdfDown" + suffix, "", 1000, 0., 1000);
+	h_dphilmet1  [i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0,   10);
+	h_dphilmet2  [i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0,   10);
+	h_metphi     [i][j][k] = new TH1D("h_metphi"      + suffix, "", 1000, 0,   10);
+	h_lepphi1    [i][j][k] = new TH1D("h_lepphi1"     + suffix, "", 1000, 0,   10);
+	h_lepphi2    [i][j][k] = new TH1D("h_lepphi2"     + suffix, "", 1000, 0,   10);
+	h_fullpmet   [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 1000, 0, 1000);
+	h_trkpmet    [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 1000, 0, 1000);
+	h_jetpt1     [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
+	h_pt1_pdfUp  [i][j][k] = new TH1D("h_pt1_pdfUp"   + suffix, "", 1000, 0, 1000);
+	h_pt1_pdfDown[i][j][k] = new TH1D("h_pt1_pdfDown" + suffix, "", 1000, 0, 1000);
 
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
       }
@@ -102,7 +102,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
-
     FillLevelHistograms(WW_00_Has2Leptons, pass);
 
     pass &= (mll > 12.);
@@ -131,6 +130,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= (!_foundsoftmuon);
     FillLevelHistograms(WW_08_SoftMu, pass && pass_zveto);
 
+    /*
     //    bool pass_ht = (_ht < 250.);
     //    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
     
@@ -145,13 +145,14 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     passZwindow &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
     FillLevelHistograms(WW_14_ZWindowPtll, passZwindow);
 
-    bool Jet[12];
-    
-    for (UInt_t j=0; j<12; ++j)
-      {
-	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j && fabs(std_vector_jet_eta->at(0)) < 4.7);
-	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && Jet[j]);
-      }
+    // BUGGY -- Always using WW_18_ZWindow25
+    //    bool Jet[12];
+    //    
+    //    for (UInt_t j=0; j<12; ++j)
+    //      {
+    //	Jet[j] = (std_vector_jet_pt->at(0) < 25 + j && fabs(std_vector_jet_eta->at(0)) < 4.7);
+    //	FillLevelHistograms(WW_18_ZWindow25 + j, passZwindow && Jet[j]);
+    //      }
 
     //    passZwindow &= (_mpmet > 20.);
     //    FillLevelHistograms(WW_13_ZWindowMpMet, passZwindow);
@@ -168,6 +169,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     // Z control region - orthogonal to WW one
     passZwindow &= (_mpmet > 20);
     FillLevelHistograms(WW_17_ZCR, passZwindow);
+    */
 
 
     // monoH selection - on top of WW (excluding Ht selection)
