@@ -38,6 +38,19 @@ Then, do a git remote in order to check if the upstream appears.
 
     git remote -v
 
+*Do this only if you want to create a tag.*
+
+    pushd AnalysisCMS
+    git tag -a 20160204_neutrino -m 'First AnalysisCMS tag'
+    git push origin 20160204_neutrino
+    popd
+
+*Do this only if you want to use a tag.*
+
+    pushd AnalysisCMS
+    git checkout tags/20160204_neutrino
+    popd
+
 <!---
 The base class should be recreated anytime the latino trees have been updated.
 Read a MC latino tree that contains the `GEN_weight_SM` variable,
