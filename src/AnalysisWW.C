@@ -114,8 +114,8 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
-    pass &= (_mpmet > 20.);
-    FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
+    //    pass &= (_mpmet > 20.);
+    //    FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
     //    pass &= (_passdphiveto);
     //    FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
@@ -131,10 +131,10 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= (!_foundsoftmuon);
     FillLevelHistograms(WW_08_SoftMu, pass && pass_zveto);
 
-    bool pass_ht = (_ht < 250.);
-    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
+    //    bool pass_ht = (_ht < 250.);
+    //    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
     
-    FillLevelHistograms(WW_10_DY, pass);  // Data-driven DY
+    //    FillLevelHistograms(WW_10_DY, pass);  // Data-driven DY
 
 
     // DY control region
