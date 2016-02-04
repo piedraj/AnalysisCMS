@@ -154,6 +154,12 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
+  h_fakes[ichannel][icut][ijet]->Fill( 0., _fake_weight);
+  h_fakes[ichannel][icut][ijet]->Fill( 1., _fake_weight_up);
+  h_fakes[ichannel][icut][ijet]->Fill( 2., _fake_weight_down);
+  h_fakes[ichannel][icut][ijet]->Fill( 3., _fake_weight_statUp);
+  h_fakes[ichannel][icut][ijet]->Fill( 4., _fake_weight_statDown);
+  
   if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
   if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
 }
@@ -262,30 +268,16 @@ void AnalysisCMS::ApplyWeights()
 {
   _event_weight = 1.;
 
-  if (!_ismc && _sample.Contains("DD_"))
-    {
-      if (_analysis.EqualTo("WZ"))
-	{
-	  _event_weight = fakeW3l;
-	}
-      else
-	{
-	  if      (njet == 0) _event_weight = fakeW2l0j;
-	  else if (njet == 1) _event_weight = fakeW2l1j;
-	  else                _event_weight = fakeW2l2j;
-	}
-    }
-
+  if (!_ismc && _sample.Contains("DD_")) _event_weight = _fake_weight;
+    
   if (!_ismc) return;
 
   _event_weight = _luminosity * baseW * puW;  // Default weights
 
-
-  // TO BE FIXED -- std_vector_lepton_idisoW->at(2) is always 1
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
-    (std_vector_lepton_idisoW->at(2) * (std_vector_lepton_pt->at(2) > 0.) + (std_vector_lepton_pt->at(2) < 0.));
+    std_vector_lepton_idisoW->at(2);
 
   _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
 
@@ -310,7 +302,7 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    if (!IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
+    if (i > 1 && !IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
 
     float pt  = std_vector_lepton_pt ->at(i);
     float eta = std_vector_lepton_eta->at(i);
@@ -605,10 +597,66 @@ void AnalysisCMS::GetSoftMuon()
 
 
 //------------------------------------------------------------------------------
+// GetFakeWeights
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetFakeWeights()
+{
+  if (!_sample.Contains("DD_"))
+    {
+      _fake_weight          = 1.;
+      _fake_weight_up       = 1.;
+      _fake_weight_down     = 1.;
+      _fake_weight_statUp   = 1.;
+      _fake_weight_statDown = 1.;
+
+      return;
+    }
+
+  if (_analysis.EqualTo("WZ"))
+    {
+      _fake_weight          = fakeW3l;
+      _fake_weight_up       = fakeW3lUp;
+      _fake_weight_down     = fakeW3lDown;
+      _fake_weight_statUp   = fakeW3lstatUp;
+      _fake_weight_statDown = fakeW3lstatDown;
+
+      return;
+    }
+
+  if (njet == 0)
+    {
+      _fake_weight          = fakeW2l0j;
+      _fake_weight_up       = fakeW2l0jUp;
+      _fake_weight_down     = fakeW2l0jDown;
+      _fake_weight_statUp   = fakeW2l0jstatUp;
+      _fake_weight_statDown = fakeW2l0jstatDown;
+    }
+  else if (njet == 1)
+    {
+      _fake_weight          = fakeW2l1j;
+      _fake_weight_down     = fakeW2l1jDown;
+      _fake_weight_up       = fakeW2l1jUp;
+      _fake_weight_statUp   = fakeW2l1jstatUp;
+      _fake_weight_statDown = fakeW2l1jstatDown;
+    }
+  else
+    {
+      _fake_weight          = fakeW2l2j;
+      _fake_weight_up       = fakeW2l2jUp;
+      _fake_weight_down     = fakeW2l2jDown;
+      _fake_weight_statUp   = fakeW2l2jstatUp;
+      _fake_weight_statDown = fakeW2l2jstatDown;
+    }
+}
+
+
+//------------------------------------------------------------------------------
 // EventSetup
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup()
 {
+  GetFakeWeights();
+
   ApplyWeights();
   
   GetMET(pfType1Met, pfType1Metphi);  // 74X
@@ -718,4 +766,5 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_sumjpt12  [ichannel][icut][ijet] = new TH1D("h_sumjpt12"   + suffix, "", 3000,    0, 3000);
   h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
   h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
+  h_fakes     [ichannel][icut][ijet] = new TH1D("h_fakes"      + suffix, "",    5,    0,    5);
 }
