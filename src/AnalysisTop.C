@@ -92,7 +92,13 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     bool pass = true;
 
+    pass &= fabs(mll - Z_MASS) < 15.;
+
     FillLevelHistograms(Top_00_Has2Leptons, pass);
+
+    pass &= (MET.Et() > 20.);
+
+    FillLevelHistograms(Top_00_Has2Leptons_MET, pass); 
 
     pass &= (njet > 1);
 

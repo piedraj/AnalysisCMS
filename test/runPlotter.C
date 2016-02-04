@@ -121,7 +121,7 @@ void runPlotter(TString level)
 
   // Draw events by cut
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(false);
+  plotter.SetDrawYield(true);
 
   gSystem->mkdir(outputdir + level, kTRUE);
 
@@ -139,7 +139,8 @@ void runPlotter(TString level)
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("WW") && j != njetbin) continue;
+      //if (!level.Contains("WW") && j != njetbin) continue;
+      if (!level.Contains("Top") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -157,8 +158,9 @@ void runPlotter(TString level)
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("WW") && j != njetbin) continue;
-      
+      //if (!level.Contains("WW") && j != njetbin) continue;
+      if (!level.Contains("Top") && j != njetbin) continue;   
+         
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
       gSystem->mkdir(outputdir + level + jetbin, kTRUE);
