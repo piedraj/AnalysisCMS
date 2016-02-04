@@ -122,7 +122,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 10.) continue;
 
     _nlepton   = 2;  // Redefine _nlepton
-    _nelectron = 0;  // Redefine _nelectron
+    _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
     if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -155,7 +155,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_02_Has2Jets, pass);
 
-    pass &= (_nbjet15 > 0);
+    pass &= (_nbjet15loose > 0);
 
     FillLevelHistograms(TTDM_03_Has1BJet, pass);
 

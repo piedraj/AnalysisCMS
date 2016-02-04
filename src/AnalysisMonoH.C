@@ -85,7 +85,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 20.) continue;
 
     _nlepton   = 2;  // Redefine _nlepton
-    _nelectron = 0;  // Redefine _nelectron
+    _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
     if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -108,7 +108,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_mpmet > 20.);
     pass &= (_passdphiveto);
     pass &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
-    pass &= (_nbjet15 == 0);
+    pass &= (_nbjet15loose == 0);
     pass &= (!_foundsoftmuon);
 
     bool pass_drll = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);

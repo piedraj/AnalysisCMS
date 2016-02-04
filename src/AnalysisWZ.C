@@ -74,9 +74,20 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     if (!trigger) continue;
 
-    if (_nlepton != 3) continue;
+    if (_nlepton < 3) continue;
 
-    if (_ntight != 3 && !_sample.Contains("DD_")) continue;
+    if (AnalysisLeptons[0].v.Pt() < 10.) continue;
+    if (AnalysisLeptons[1].v.Pt() < 10.) continue;
+    if (AnalysisLeptons[2].v.Pt() < 10.) continue;
+
+    if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
+
+    _nelectron = 0;
+
+    for (int i=0; i<3; i++)
+      {
+	if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
+      }
 
     if      (_nelectron == 3) _channel = eee;
     else if (_nelectron == 2) _channel = eem;
@@ -88,9 +99,9 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     _m2l = -999;
 
-    for (UInt_t i=0; i<_nlepton; i++) {
+    for (UInt_t i=0; i<3; i++) {
     
-      for (UInt_t j=i+1; j<_nlepton; j++) {
+      for (UInt_t j=i+1; j<3; j++) {
 
 	if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
 
@@ -144,7 +155,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
 
-    pass &= (_nbjet15 == 0);
+    pass &= (_nbjet30tight == 0);
 	
     FillLevelHistograms(WZ_03_BVeto, pass);
   }
