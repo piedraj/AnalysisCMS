@@ -130,29 +130,30 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
-  h_counterRaw[ichannel][icut][ijet]->Fill(1);
-  h_counterLum[ichannel][icut][ijet]->Fill(1,              _event_weight);
-  h_ht        [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
-  h_m2l       [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_njet30    [ichannel][icut][ijet]->Fill(_njet30,        _event_weight);
-  h_nbjet15   [ichannel][icut][ijet]->Fill(_nbjet15,       _event_weight);
-  h_nvtx      [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
-  h_met       [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
-  h_drll      [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
-  h_dphill    [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2Sel
-  h_mth       [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2Sel
-  h_mtw1      [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2Sel
-  h_mtw2      [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2Sel
-  h_pt1       [ichannel][icut][ijet]->Fill(pt1,            _event_weight);  // Needs l2Sel
-  h_pt2       [ichannel][icut][ijet]->Fill(pt2,            _event_weight);  // Needs l2Sel
-  h_sumpt12   [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
-  h_sumjpt12  [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
-  h_mpmet     [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
-  h_pt2l      [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_trkmet    [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
-  //  h_trkmet    [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
-  h_mc        [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
-  h_ptww      [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+  h_counterRaw  [ichannel][icut][ijet]->Fill(1);
+  h_counterLum  [ichannel][icut][ijet]->Fill(1,              _event_weight);
+  h_ht          [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
+  h_m2l         [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
+  h_nbjet15loose[ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
+  h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
+  h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
+  h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
+  h_njet        [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
+  h_drll        [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
+  h_dphill      [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2Sel
+  h_mth         [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2Sel
+  h_mtw1        [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2Sel
+  h_mtw2        [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2Sel
+  h_pt1         [ichannel][icut][ijet]->Fill(pt1,            _event_weight);  // Needs l2Sel
+  h_pt2         [ichannel][icut][ijet]->Fill(pt2,            _event_weight);  // Needs l2Sel
+  h_sumpt12     [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
+  h_sumjpt12    [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
+  h_mpmet       [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
+  h_pt2l        [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
+  h_trkmet      [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
+  //  h_trkmet      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
+  h_mc          [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
+  h_ptww        [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
   h_fakes[ichannel][icut][ijet]->Fill( 0., _fake_weight);
   h_fakes[ichannel][icut][ijet]->Fill( 1., _fake_weight_up);
@@ -293,6 +294,10 @@ void AnalysisCMS::ApplyWeights()
 
 //------------------------------------------------------------------------------
 // GetLeptons
+//
+// Leptons have pt >= 8 GeV after l2Sel
+// Leptons are tight after l2Sel
+//
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
@@ -302,16 +307,16 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    if (i > 1 && !IsFiducialLepton(i)) continue;  // Leptons have pt >= 8 GeV after l2Sel
-
     float pt  = std_vector_lepton_pt ->at(i);
     float eta = std_vector_lepton_eta->at(i);
     float phi = std_vector_lepton_phi->at(i);
 
+    if (i > 1 && pt < 0.) continue;
+
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = Tight;  // All leptons are tight after l2Sel
+    lep.type    = Tight;
     lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
@@ -327,8 +332,6 @@ void AnalysisCMS::GetLeptons()
 	lep.iso = MuonIsolation(i);
       }
 
-    if (IsTightLepton(i) && IsIsolatedLepton(i)) lep.type = Tight;  // All leptons are tight after l2Sel
-
     TLorentzVector tlv;
     
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
@@ -342,26 +345,6 @@ void AnalysisCMS::GetLeptons()
   }
 
   _nlepton = AnalysisLeptons.size();
-
-
-  // Count the number of tight leptons
-  //----------------------------------------------------------------------------
-  _ntight = 0;
-
-  for (int i=0; i<_nlepton; i++)
-    {
-      if (AnalysisLeptons[i].type == Tight) _ntight++;
-    }
-
-
-  // Count the number of electrons
-  //----------------------------------------------------------------------------
-  _nelectron = 0;
-
-  for (int i=0; i<_nlepton; i++)
-    {
-      if (abs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR) _nelectron++;
-    }
 }
 
 
@@ -372,7 +355,8 @@ void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
-  _nbjet15 = 0;
+  _nbjet15loose = 0;
+  _nbjet30tight = 0;
 
   int vector_jet_size = std_vector_jet_pt->size();
 
@@ -382,24 +366,9 @@ void AnalysisCMS::GetJets()
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
 
-    bool pass = (pt > 15. && fabs(eta) < 4.7);
-
-    if (!pass) continue;
-
     TLorentzVector tlv;
 
     tlv.SetPtEtaPhiM(pt, eta, phi, 0.0);
-
-    bool is_lepton = false;
-    
-    for (int j=0; j<_nlepton; j++)
-      {
-    	if (AnalysisLeptons[j].type == Loose) continue;
-    	
-    	if (tlv.DeltaR(AnalysisLeptons[j].v) < 0.3) is_lepton = true;
-      }
-    
-    if (is_lepton) continue;
 
     Jet goodjet;
 
@@ -407,12 +376,14 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15++;
+    if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15loose++;
 
-    if (pt > 30.) AnalysisJets.push_back(goodjet);
+    if (pt < 30.) continue;
+
+    if (goodjet.csvv2ivf > csvv2ivf_tightWP) _nbjet30tight++;
+
+    AnalysisJets.push_back(goodjet);
   }
-
-  _njet30 = AnalysisJets.size();
 
 
   // Define the jet bin
@@ -426,7 +397,7 @@ void AnalysisCMS::GetJets()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJetPtSum()
 {
-  if (_njet30 < 2)
+  if (njet < 2)
     _sumjpt12 = -999;
   else
     _sumjpt12 = AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
@@ -744,27 +715,28 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 				   int     ijet,
 				   TString suffix)
 {
-  h_counterRaw[ichannel][icut][ijet] = new TH1D("h_counterRaw" + suffix, "",    3,    0,    3);
-  h_counterLum[ichannel][icut][ijet] = new TH1D("h_counterLum" + suffix, "",    3,    0,    3);
-  h_njet30    [ichannel][icut][ijet] = new TH1D("h_njet30"     + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15   [ichannel][icut][ijet] = new TH1D("h_nbjet15"    + suffix, "",    7, -0.5,  6.5);
-  h_nvtx      [ichannel][icut][ijet] = new TH1D("h_nvtx"       + suffix, "",   50,    0,   50);
-  h_drll      [ichannel][icut][ijet] = new TH1D("h_drll"       + suffix, "",  100,    0,    5);
-  h_dphill    [ichannel][icut][ijet] = new TH1D("h_dphill"     + suffix, "",  100,    0,    5);
-  h_met       [ichannel][icut][ijet] = new TH1D("h_met"        + suffix, "", 3000,    0, 3000);
-  h_trkmet    [ichannel][icut][ijet] = new TH1D("h_trkmet"     + suffix, "", 3000,    0, 3000);
-  h_mpmet     [ichannel][icut][ijet] = new TH1D("h_mpmet"      + suffix, "", 3000,    0, 3000);
-  h_m2l       [ichannel][icut][ijet] = new TH1D("h_m2l"        + suffix, "", 3000,    0, 3000);
-  h_mtw1      [ichannel][icut][ijet] = new TH1D("h_mtw1"       + suffix, "", 3000,    0, 3000);
-  h_mtw2      [ichannel][icut][ijet] = new TH1D("h_mtw2"       + suffix, "", 3000,    0, 3000);
-  h_mth       [ichannel][icut][ijet] = new TH1D("h_mth"        + suffix, "", 3000,    0, 3000);
-  h_mc        [ichannel][icut][ijet] = new TH1D("h_mc"         + suffix, "", 3000,    0, 3000);
-  h_ht        [ichannel][icut][ijet] = new TH1D("h_ht"         + suffix, "", 3000,    0, 3000);
-  h_pt1       [ichannel][icut][ijet] = new TH1D("h_pt1"        + suffix, "", 3000,    0, 3000);
-  h_pt2       [ichannel][icut][ijet] = new TH1D("h_pt2"        + suffix, "", 3000,    0, 3000);
-  h_sumpt12   [ichannel][icut][ijet] = new TH1D("h_sumpt12"    + suffix, "", 3000,    0, 3000);
-  h_sumjpt12  [ichannel][icut][ijet] = new TH1D("h_sumjpt12"   + suffix, "", 3000,    0, 3000);
-  h_pt2l      [ichannel][icut][ijet] = new TH1D("h_pt2l"       + suffix, "", 3000,    0, 3000);
-  h_ptww      [ichannel][icut][ijet] = new TH1D("h_ptww"       + suffix, "", 3000,    0, 3000);
-  h_fakes     [ichannel][icut][ijet] = new TH1D("h_fakes"      + suffix, "",    5,    0,    5);
+  h_counterRaw  [ichannel][icut][ijet] = new TH1D("h_counterRaw"   + suffix, "",    3,    0,    3);
+  h_counterLum  [ichannel][icut][ijet] = new TH1D("h_counterLum"   + suffix, "",    3,    0,    3);
+  h_njet        [ichannel][icut][ijet] = new TH1D("h_njet"         + suffix, "",    7, -0.5,  6.5);
+  h_nbjet15loose[ichannel][icut][ijet] = new TH1D("h_nbjet15loose" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30tight[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
+  h_nvtx        [ichannel][icut][ijet] = new TH1D("h_nvtx"         + suffix, "",   50,    0,   50);
+  h_drll        [ichannel][icut][ijet] = new TH1D("h_drll"         + suffix, "",  100,    0,    5);
+  h_dphill      [ichannel][icut][ijet] = new TH1D("h_dphill"       + suffix, "",  100,    0,    5);
+  h_met         [ichannel][icut][ijet] = new TH1D("h_met"          + suffix, "", 3000,    0, 3000);
+  h_trkmet      [ichannel][icut][ijet] = new TH1D("h_trkmet"       + suffix, "", 3000,    0, 3000);
+  h_mpmet       [ichannel][icut][ijet] = new TH1D("h_mpmet"        + suffix, "", 3000,    0, 3000);
+  h_m2l         [ichannel][icut][ijet] = new TH1D("h_m2l"          + suffix, "", 3000,    0, 3000);
+  h_mtw1        [ichannel][icut][ijet] = new TH1D("h_mtw1"         + suffix, "", 3000,    0, 3000);
+  h_mtw2        [ichannel][icut][ijet] = new TH1D("h_mtw2"         + suffix, "", 3000,    0, 3000);
+  h_mth         [ichannel][icut][ijet] = new TH1D("h_mth"          + suffix, "", 3000,    0, 3000);
+  h_mc          [ichannel][icut][ijet] = new TH1D("h_mc"           + suffix, "", 3000,    0, 3000);
+  h_ht          [ichannel][icut][ijet] = new TH1D("h_ht"           + suffix, "", 3000,    0, 3000);
+  h_pt1         [ichannel][icut][ijet] = new TH1D("h_pt1"          + suffix, "", 3000,    0, 3000);
+  h_pt2         [ichannel][icut][ijet] = new TH1D("h_pt2"          + suffix, "", 3000,    0, 3000);
+  h_sumpt12     [ichannel][icut][ijet] = new TH1D("h_sumpt12"      + suffix, "", 3000,    0, 3000);
+  h_sumjpt12    [ichannel][icut][ijet] = new TH1D("h_sumjpt12"     + suffix, "", 3000,    0, 3000);
+  h_pt2l        [ichannel][icut][ijet] = new TH1D("h_pt2l"         + suffix, "", 3000,    0, 3000);
+  h_ptww        [ichannel][icut][ijet] = new TH1D("h_ptww"         + suffix, "", 3000,    0, 3000);
+  h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    5,    0,    5);
 }

@@ -84,7 +84,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 20.) continue;
 
     _nlepton   = 2;  // Redefine _nlepton
-    _nelectron = 0;  // Redefine _nelectron
+    _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
     if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -114,8 +114,8 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
-    pass &= (_mpmet > 20.);
-    FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
+    //    pass &= (_mpmet > 20.);
+    //    FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
     //    pass &= (_passdphiveto);
     //    FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
@@ -125,16 +125,16 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= pass_ptll;
     FillLevelHistograms(WW_06_Ptll, pass && pass_zveto);
 
-    pass &= (_nbjet15 == 0);
+    pass &= (_nbjet15loose == 0);
     FillLevelHistograms(WW_07_BVeto, pass && pass_zveto);
 
     pass &= (!_foundsoftmuon);
     FillLevelHistograms(WW_08_SoftMu, pass && pass_zveto);
 
-    bool pass_ht = (_ht < 250.);
-    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
+    //    bool pass_ht = (_ht < 250.);
+    //    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
     
-    FillLevelHistograms(WW_10_DY, pass);  // Data-driven DY
+    //    FillLevelHistograms(WW_10_DY, pass);  // Data-driven DY
 
 
     // DY control region
@@ -158,7 +158,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass_zwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_14_ZWindowPfMet, pass_zwindow);
 
-    pass_zwindow &= (_nbjet15 == 0);
+    pass_zwindow &= (_nbjet15loose == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, pass_zwindow);
 
     pass_zwindow &= (!_foundsoftmuon);

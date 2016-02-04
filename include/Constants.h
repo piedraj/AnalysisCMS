@@ -74,9 +74,10 @@ const TString lchannel[nchannel] = {
 
 
 // https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation74X
-const float csvv2ivf_looseWP  = 0.605;
-const float csvv2ivf_mediumWP = 0.89;
-const float csvv2ivf_tightWP  = 0.97;
+// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation76X
+const float csvv2ivf_looseWP  = 0.605;  // 0.460 for 76X
+const float csvv2ivf_mediumWP = 0.89;   // 0.800 for 76X
+const float csvv2ivf_tightWP  = 0.97;   // 0.935 for 76X
 
 
 // MET filters
