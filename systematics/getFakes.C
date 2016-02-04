@@ -71,10 +71,10 @@ void PrintFakes(TString scut, TString schannel)
 
   printf("\n %s (%s)\n", scut.Data(), schannel.Data());
   printf("-----------------------------\n");
-  printf("    nominal yield: %.2f +/- %.2f\n", nominal,  nominalError);
-  printf("      jet pt   up: %.2f +/- %.2f\n", up,       upError);
-  printf("      jet pt down: %.2f +/- %.2f\n", down,     downError);
-  printf("        stat   up: %.2f +/- %.2f\n", statUp,   statUpError);
-  printf("        stat down: %.2f +/- %.2f\n", statDown, statDownError);
+  printf("    nominal yield: %.2f +- %.2f\n", nominal,  nominalError);
+  printf("      jet pt   up: %.2f +- %.2f\n", up,       upError);
+  printf("      jet pt down: %.2f +- %.2f\n", down,     downError);
+  printf("        stat   up: %.2f +- %.2f\n", statUp,   statUpError);
+  printf("        stat down: %.2f +- %.2f\n", statDown, statDownError);
   printf(" systematic error: %.2f%%\n", systematic); 
 }
