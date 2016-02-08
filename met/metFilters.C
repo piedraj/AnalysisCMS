@@ -1,7 +1,7 @@
 #include "../include/Constants.h"
 
 
-const Bool_t  _print   = false;
+const Bool_t  _print   = true;
 const Bool_t  _savepdf = false;
 const Bool_t  _savepng = true;
 const Float_t _xoffset = 0.184;
@@ -58,7 +58,7 @@ void metFilters(TString sample = "NONE",
       return;
     }
 
-  gInterpreter->ExecuteMacro("PaperStyle.C");
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   cfilter[HBHENoiseFilter]                    = kAzure;
   cfilter[HBHENoiseIsoFilter]                 = kAzure-2;
@@ -179,10 +179,10 @@ void metFilters(TString sample = "NONE",
   //----------------------------------------------------------------------------
   c1->GetFrame()->DrawClone();
 
-  if (_savepdf || _savepng) gSystem->mkdir("met-filters-figures", kTRUE);
+  if (_savepdf || _savepng) gSystem->mkdir("figures", kTRUE);
 
-  if (_savepdf) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".pdf");
-  if (_savepng) c1->SaveAs("met-filters-figures/" + sample + "_" + cut + ".png");
+  if (_savepdf) c1->SaveAs("figures/" + sample + "_" + cut + ".pdf");
+  if (_savepng) c1->SaveAs("figures/" + sample + "_" + cut + ".png");
 }
 
 
