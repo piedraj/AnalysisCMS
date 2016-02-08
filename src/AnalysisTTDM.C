@@ -140,10 +140,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    //    _m2l  = mll;   // Needs l2Sel
-    //    _pt2l = ptll;  // Needs l2Sel
-    _m2l  = -999;
-    _pt2l = -999;
+    _m2l  = mll;   // Needs l2Sel
+    _pt2l = ptll;  // Needs l2Sel
 
 
     // Fill histograms
@@ -160,23 +158,27 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
+    bool preselection = pass && (njet > 0) && (MET.Et() > 80.);
+
+    FillLevelHistograms(TTDM_02_Preselection, preselection);
+
     pass &= (njet > 1);
 
-    FillLevelHistograms(TTDM_02_Has2Jets, pass);
+    FillLevelHistograms(TTDM_03_Has2Jets, pass);
 
     pass &= (_nbjet15loose > 0);
 
-    FillLevelHistograms(TTDM_03_Has1BJet, pass);
+    FillLevelHistograms(TTDM_04_Has1BJet, pass);
 
     float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
 
     pass &= (fabs(_dphillmet) > 0.6);
 
-    FillLevelHistograms(TTDM_04_DeltaPhi, pass);
+    FillLevelHistograms(TTDM_05_DeltaPhi, pass);
 
     pass &= (MET.Et() > 120.);
 
-    FillLevelHistograms(TTDM_05_MET, pass);
+    FillLevelHistograms(TTDM_06_MET, pass);
   }
 
 
