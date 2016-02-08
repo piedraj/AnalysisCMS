@@ -42,17 +42,19 @@ void metFilters(TString sample = "NONE",
   if (!sample.Contains("Run2015D"))
     {
       printf("\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",   \\\"nocut\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",     \\\"nocut\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",       \\\"nocut\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\", \\\"nocut\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",          \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",     \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",       \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",         \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SingleElectron\\\", \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\",   \\\"nocut\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",            \\\"nocut\\\")\"\n");
       printf("\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",   \\\"met300\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",     \\\"met300\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",       \\\"met300\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\", \\\"met300\\\")\"\n");
-      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",          \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleMuon\\\",     \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_DoubleEG\\\",       \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MuonEG\\\",         \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SingleElectron\\\", \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_SinglePhoton\\\",   \\\"met300\\\")\"\n");
+      printf(" root -l -b -q \"metFilters.C(\\\"Run2015D_16Dec2015_MET\\\",            \\\"met300\\\")\"\n");
       printf("\n");
 
       return;
@@ -74,7 +76,7 @@ void metFilters(TString sample = "NONE",
 
   // Read
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("../met-filters-rootfiles/" + sample + ".root");
+  TFile* file = new TFile("../rootfiles/TTDM/" + sample + ".root");
 
   for (int i=0; i<nfilter; i++) {
 

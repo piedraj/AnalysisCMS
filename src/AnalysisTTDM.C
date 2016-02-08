@@ -48,8 +48,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   root_output->cd();
 
 
-  // MET filters histograms
+  // MET filters histograms and output file
   //----------------------------------------------------------------------------
+  ofstream txt_metfilters;
+
+  txt_metfilters.open("txt/" + _analysis + "/" + _sample + "_metfilters.txt");
+
   for (int j=0; j<nfilter; j++) {
 
     met_Flag_nocut [j] = new TH1D(Form("met_Flag_nocut_%s",  sfilter[j].Data()), "", 3000, 0, 3000);
@@ -105,7 +109,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
 
 	  if (std_vector_trigger_special->at(j) > 0) met_Flag_met300[j]->Fill(truncated_met);
-	  else pass_all_met_filters = false;
+	  else
+	    {
+	      pass_all_met_filters = false;
+
+	      txt_metfilters << Form("%.0f:%.0f:%.0f:%s\n", run, lumi, evt, sfilter[j].Data());
+	    }
 	}
     
 	if (pass_all_met_filters) met_Flag_met300[allFilter]->Fill(truncated_met);
@@ -172,6 +181,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
 
   EndJob();
+
+  txt_metfilters.close();
 }
 
 
