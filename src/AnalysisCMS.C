@@ -161,8 +161,14 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_fakes[ichannel][icut][ijet]->Fill( 3., _fake_weight_statUp);
   h_fakes[ichannel][icut][ijet]->Fill( 4., _fake_weight_statDown);
   
-  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
-  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
+  if (_analysis.EqualTo("WZ"))
+    {
+      if (ichannel != lll) FillHistograms(lll, icut, ijet);
+    }
+  else
+    {
+      if (ichannel != ll)  FillHistograms(ll, icut, ijet);
+    }
 }
 
 

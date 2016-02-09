@@ -83,7 +83,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 20.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
 
-    _nlepton   = 2;  // Redefine _nlepton
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
