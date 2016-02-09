@@ -17,7 +17,7 @@ void runAnalysis(TString filename)
   //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
   //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);
   //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi_fb);
-    AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
+  AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
 }
 
 
