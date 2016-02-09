@@ -81,7 +81,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (AnalysisLeptons[2].v.Pt() < 10.) continue;
 
     if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
-
+    
     _nelectron = 0;
 
     for (int i=0; i<3; i++)
@@ -138,26 +138,51 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     bool pass = true;
 
     FillLevelHistograms(WZ_00_Exactly3Leptons, pass);
+
+    bool pass_m3l         = (_m3l > 100.);
+    bool pass_mtw         = (_mtw < 50.);
+    bool pass_nbjet_loose = (_nbjet15loose == 0);
+    bool pass_antiZ       = (_m2l < 88. || _m2l > 94.);
+    bool pass_met         = (MET.Et() < 60.);
+    bool pass_mllz1w      = ((WLepton.v  + ZLepton1.v).M() > 4.);
+    bool pass_mllz2w      = ((WLepton.v  + ZLepton2.v).M() > 4.);
+    bool pass_mllz1z2     = ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    FillLevelHistograms(WZ_04_ZRegion, pass && pass_m3l && pass_mtw && pass_met && pass_mllz1w && pass_mllz2w && pass_mllz1z2);
+    FillLevelHistograms(WZ_05_TopRegion, pass && pass_m3l && !pass_nbjet_loose && pass_antiZ && pass_mllz1w && pass_mllz2w && pass_mllz1z2);
     
-    pass &= (_m2l > 60. && _m2l < 120.);
+/* 
+    Pass &= (_m2l > 60. && _m2l < 120.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
     FillLevelHistograms(WZ_01_HasZ, pass);
 
     pass &= (WLepton.v.Pt() >  20.);
-    pass &= (MET.Et()       >  30.);
-    pass &= (_m3l           > 100.);
+
+    bool pass_met        = (MET.Et() > 30.);
+    bool pass_bjet_tight = (_nbjet30tight == 0);
+    bool pass_bjet_loose = (_nbjet15loose == 0);
+    bool pass_mtw        = (_mtw < 50.);
+    bool pass_4l         = (_nlepton == 3);
+    bool pass_njet       = (njet > 0);
+    bool pass_NoZ        = (_m2l < 88. || _m2l > 94.);
+    bool pass_HasZ       = (_m2l > 60. && _m2l < 120.);
+
+    pass &= (_m3l > 100.);
     
     pass &= ((WLepton.v + ZLepton1.v).M() > 4.);
     pass &= ((WLepton.v + ZLepton2.v).M() > 4.);
 
-    FillLevelHistograms(WZ_02_HasW, pass);
+    FillLevelHistograms(WZ_02_HasW, pass && pass_met && pass_HasZ);
 
-    if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
+    FillLevelHistograms(WZ_03_BVeto, pass && pass_met && pass_bjet_tight && pass_HasZ);
 
-    pass &= (_nbjet30tight == 0);
-	
-    FillLevelHistograms(WZ_03_BVeto, pass);
+    FillLevelHistograms(WZ_04_ZRegion, pass && !pass_met && pass_mtw && pass_4l && pass_njet && pass_HasZ);
+
+    FillLevelHistograms(WZ_05_TopRegion, pass && pass_met && !pass_bjet_loose && pass_njet && pass_NoZ);
+    */
+
+
   }
 
 
