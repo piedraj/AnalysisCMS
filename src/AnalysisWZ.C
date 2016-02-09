@@ -80,6 +80,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (AnalysisLeptons[1].v.Pt() < 10.) continue;
     if (AnalysisLeptons[2].v.Pt() < 10.) continue;
 
+    // This requirement should be applied on a loose lepton
     if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
 
     _nelectron = 0;
@@ -139,7 +140,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WZ_00_Exactly3Leptons, pass);
     
-    pass &= (_m2l > 60. && _m2l < 120.);
+    pass &= (_m2l > 76. && _m2l < 106.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
     FillLevelHistograms(WZ_01_HasZ, pass);
@@ -155,7 +156,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
 
-    pass &= (_nbjet30tight == 0);
+    pass &= (_nbjet15tight == 0);
 	
     FillLevelHistograms(WZ_03_BVeto, pass);
   }

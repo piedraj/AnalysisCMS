@@ -135,6 +135,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_ht          [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l         [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
   h_nbjet15loose[ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
+  h_nbjet15tight[ichannel][icut][ijet]->Fill(_nbjet15tight,  _event_weight);
   h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
@@ -362,6 +363,7 @@ void AnalysisCMS::GetJets()
   AnalysisJets.clear();
 
   _nbjet15loose = 0;
+  _nbjet15tight = 0;
   _nbjet30tight = 0;
 
   int vector_jet_size = std_vector_jet_pt->size();
@@ -383,6 +385,7 @@ void AnalysisCMS::GetJets()
     goodjet.v        = tlv;
 
     if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15loose++;
+    if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_tightWP) _nbjet15tight++;
 
     if (pt < 30.) continue;
 
@@ -725,6 +728,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_counterLum  [ichannel][icut][ijet] = new TH1D("h_counterLum"   + suffix, "",    3,    0,    3);
   h_njet        [ichannel][icut][ijet] = new TH1D("h_njet"         + suffix, "",    7, -0.5,  6.5);
   h_nbjet15loose[ichannel][icut][ijet] = new TH1D("h_nbjet15loose" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet15tight[ichannel][icut][ijet] = new TH1D("h_nbjet15tight" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
   h_nvtx        [ichannel][icut][ijet] = new TH1D("h_nvtx"         + suffix, "",   50,    0,   50);
   h_drll        [ichannel][icut][ijet] = new TH1D("h_drll"         + suffix, "",  100,    0,    5);
