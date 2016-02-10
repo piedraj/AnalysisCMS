@@ -203,12 +203,12 @@ void AnalysisWZ::FillAnalysisHistograms(int ichannel,
   float wlzl2deltar = WLepton.v.DeltaR(ZLepton2.v);
   float wlzldeltar  = min(wlzl1deltar, wlzl2deltar);
 
-  h_m3l       [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
-  h_mtw       [ichannel][icut][ijet]->Fill(_mtw,             _event_weight);
-  h_zl1pt     [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
-  h_zl2pt     [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
-  h_wlpt      [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
-  h_wlzldeltar[ichannel][icut][ijet]->Fill(wlzldeltar,       _event_weight);
+  h_m3l       [ichannel][icut][ijet]->Fill(_m3l,            _event_weight);
+  h_mtw       [ichannel][icut][ijet]->Fill(_mtw,            _event_weight);
+  h_zl1pt     [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(), _event_weight);
+  h_zl2pt     [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(), _event_weight);
+  h_wlpt      [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),  _event_weight);
+  h_wlzldeltar[ichannel][icut][ijet]->Fill(wlzldeltar,      _event_weight);
 
   if (ichannel != lll) FillAnalysisHistograms(lll, icut, ijet);
 }
