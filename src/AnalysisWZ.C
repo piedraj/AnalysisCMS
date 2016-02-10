@@ -136,56 +136,54 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
   
     GetMt(WLepton, _mtw);
 
-    bool pass = true;
+    bool pass                = true;
+    bool pass_ZRegion        = true;
+    bool pass_TopRegion      = true;
+    bool pass_TopRegionLoose = true;
+    bool pass_TopRegionTight = true;
 
     FillLevelHistograms(WZ_00_Exactly3Leptons, pass);
 
-    bool pass_m3l         = (_m3l > 100.);
-    bool pass_mtw         = (_mtw < 50.);
-    bool pass_nbjet_loose = (_nbjet15tight == 0);
-    bool pass_antiZ       = (_m2l < 88. || _m2l > 94.);
-    bool pass_met         = (MET.Et() < 60.);
-    bool pass_mllz1w      = ((WLepton.v  + ZLepton1.v).M() > 4.);
-    bool pass_mllz2w      = ((WLepton.v  + ZLepton2.v).M() > 4.);
-    bool pass_mllz1z2     = ((ZLepton1.v + ZLepton2.v).M() > 4.);
-
-    FillLevelHistograms(WZ_04_ZRegion, pass && pass_m3l && pass_mtw && pass_met && pass_mllz1w && pass_mllz2w && pass_mllz1z2);
-    FillLevelHistograms(WZ_05_TopRegion, pass && pass_m3l && !pass_nbjet_loose && pass_antiZ && pass_mllz1w && pass_mllz2w && pass_mllz1z2);
-    
-/* 
     pass &= (_m2l > 76. && _m2l < 106.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
     FillLevelHistograms(WZ_01_HasZ, pass);
 
     pass &= (WLepton.v.Pt() >  20.);
-
-    bool pass_met        = (MET.Et() > 30.);
-    bool pass_bjet_tight = (_nbjet30tight == 0);
-    bool pass_bjet_loose = (_nbjet15loose == 0);
-    bool pass_mtw        = (_mtw < 50.);
-    bool pass_4l         = (_nlepton == 3);
-    bool pass_njet       = (njet > 0);
-    bool pass_NoZ        = (_m2l < 88. || _m2l > 94.);
-    bool pass_HasZ       = (_m2l > 60. && _m2l < 120.);
-
-    pass &= (_m3l > 100.);
+    pass &= (MET.Et()       >  30.);
+    pass &= (_m3l           > 100.);
     
     pass &= ((WLepton.v + ZLepton1.v).M() > 4.);
     pass &= ((WLepton.v + ZLepton2.v).M() > 4.);
 
-    FillLevelHistograms(WZ_02_HasW, pass && pass_met && pass_HasZ);
-
-    FillLevelHistograms(WZ_03_BVeto, pass && pass_met && pass_bjet_tight && pass_HasZ);
-
-    FillLevelHistograms(WZ_04_ZRegion, pass && !pass_met && pass_mtw && pass_4l && pass_njet && pass_HasZ);
-
-    FillLevelHistograms(WZ_05_TopRegion, pass && pass_met && !pass_bjet_loose && pass_njet && pass_NoZ);
+    FillLevelHistograms(WZ_02_HasW, pass);
 
     pass &= (_nbjet15tight == 0);
-	
+    
     FillLevelHistograms(WZ_03_BVeto, pass);
-*/
+
+    pass_ZRegion &= (_m3l > 100.);
+    pass_ZRegion &= (_mtw <  50.);
+    pass_ZRegion &= (MET.Et() < 60.);
+    pass_ZRegion &= ((WLepton.v   + ZLepton1.v).M() > 4.);
+    pass_ZRegion &= ((WLepton.v   + ZLepton2.v).M() > 4.);
+    pass_ZRegion &= ((ZLepton1.v  + ZLepton2.v).M() > 4.);
+
+    FillLevelHistograms(WZ_04_ZRegion, pass_ZRegion);
+
+    pass_TopRegion &= (_m3l > 100.);
+    pass_TopRegion &= (_m2l < 88. || _m2l > 94.);
+    pass_TopRegion &= ((WLepton.v   + ZLepton1.v).M() > 4.);
+    pass_TopRegion &= ((WLepton.v   + ZLepton2.v).M() > 4.);
+    pass_TopRegion &= ((ZLepton1.v  + ZLepton2.v).M() > 4.);
+
+    pass_TopRegionLoose &= (_nbjet15loose > 0.);
+
+    FillLevelHistograms(WZ_05_TopRegionLoose, pass_TopRegion && pass_TopRegionLoose);
+
+    pass_TopRegionTight &= (_nbjet15tight > 0.);
+
+    FillLevelHistograms(WZ_06_TopRegionTight, pass_TopRegion && pass_TopRegionTight);
   }
 
 
