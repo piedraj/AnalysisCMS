@@ -82,7 +82,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     // This requirement should be applied on a loose lepton
     if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
-
+    
     _nelectron = 0;
 
     for (int i=0; i<3; i++)
@@ -136,10 +136,12 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
   
     GetMt(WLepton, _mtw);
 
-    bool pass = true;
+    bool pass           = true;
+    bool pass_ZRegion   = true;
+    bool pass_TopRegion = true;
 
     FillLevelHistograms(WZ_00_Exactly3Leptons, pass);
-    
+
     pass &= (_m2l > 76. && _m2l < 106.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
@@ -154,11 +156,27 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WZ_02_HasW, pass);
 
-    if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
-
     pass &= (_nbjet15tight == 0);
-	
+    
     FillLevelHistograms(WZ_03_BVeto, pass);
+
+    pass_ZRegion &= (_m3l > 100.);
+    pass_ZRegion &= (_mtw <  50.);
+    pass_ZRegion &= (MET.Et() < 60.);
+    pass_ZRegion &= ((WLepton.v  + ZLepton1.v).M() > 4.);
+    pass_ZRegion &= ((WLepton.v  + ZLepton2.v).M() > 4.);
+    pass_ZRegion &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    FillLevelHistograms(WZ_04_ZRegion, pass_ZRegion);
+
+    pass_TopRegion &= (_m3l > 100.);
+    pass_TopRegion &= (_m2l < 88. || _m2l > 94.);
+    pass_TopRegion &= ((WLepton.v  + ZLepton1.v).M() > 4.);
+    pass_TopRegion &= ((WLepton.v  + ZLepton2.v).M() > 4.);
+    pass_TopRegion &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+    pass_TopRegion &= (_nbjet15loose > 0.);
+
+    FillLevelHistograms(WZ_05_TopRegion, pass_TopRegion);
   }
 
 
