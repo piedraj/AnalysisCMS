@@ -19,9 +19,11 @@ const TString svalue[nvalue] = {
 };
 
 
-float _value[nchannel][nvalue];
-float _error[nchannel][nvalue];
-float _syst [nchannel];
+float _value   [nchannel][nvalue];
+float _error   [nchannel][nvalue];
+float _jetSyst [nchannel];
+float _statSyst[nchannel];
+float _fakeSyst[nchannel];
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,12 +71,11 @@ void getFakes(TString level = "NONE")
 	  _error[i][j] = sqrt(h_fakes->GetSumw2()->At(j+1));
 	}
 
-      float delta = 0;
+      _jetSyst[i] = 1e2 * fabs(_value[i][jetUp] - _value[i][jetDown]) / _value[i][nominal];
 
-      delta += pow((_value[i][jetUp]  - _value[i][jetDown]),  2);
-      delta += pow((_value[i][statUp] - _value[i][statDown]), 2);
-      
-      _syst[i] = 1e2 * sqrt(delta) / _value[i][nominal];
+      _statSyst[i] = 1e2 * fabs(_value[i][statUp] - _value[i][statDown]) / _value[i][nominal];
+
+      _fakeSyst[i] = sqrt(_jetSyst[i]*_jetSyst[i] + _statSyst[i]*_statSyst[i]);
     }
 
 
@@ -97,14 +98,10 @@ void getFakes(TString level = "NONE")
 
   // Print systematic uncertainties
   //----------------------------------------------------------------------------
-  printf(" %13s", "systematic");
-
-  for (int i=firstchannel; i<lastchannel; i++)
-    {
-      printf(" & %16.0f\\%%", _syst[i]);
-    }
-
-  printf(" \\\\\n");
+  printf("\\hline\n");
+  printf(" %13s", "jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _jetSyst[i]);  printf(" \\\\\n");
+  printf(" %13s", "stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _statSyst[i]); printf(" \\\\\n");
+  printf(" %13s", "total syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _fakeSyst[i]); printf(" \\\\\n");
 
   printf("\n");
 }
