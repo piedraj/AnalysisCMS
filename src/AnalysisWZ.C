@@ -80,6 +80,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (AnalysisLeptons[1].v.Pt() < 10.) continue;
     if (AnalysisLeptons[2].v.Pt() < 10.) continue;
 
+    // This requirement should be applied on a loose lepton
     if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
     
     _nelectron = 0;
@@ -141,7 +142,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     bool pass_m3l         = (_m3l > 100.);
     bool pass_mtw         = (_mtw < 50.);
-    bool pass_nbjet_loose = (_nbjet15loose == 0);
+    bool pass_nbjet_loose = (_nbjet15tight == 0);
     bool pass_antiZ       = (_m2l < 88. || _m2l > 94.);
     bool pass_met         = (MET.Et() < 60.);
     bool pass_mllz1w      = ((WLepton.v  + ZLepton1.v).M() > 4.);
@@ -152,7 +153,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(WZ_05_TopRegion, pass && pass_m3l && !pass_nbjet_loose && pass_antiZ && pass_mllz1w && pass_mllz2w && pass_mllz1z2);
     
 /* 
-    Pass &= (_m2l > 60. && _m2l < 120.);
+    pass &= (_m2l > 76. && _m2l < 106.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
     FillLevelHistograms(WZ_01_HasZ, pass);
@@ -180,9 +181,11 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(WZ_04_ZRegion, pass && !pass_met && pass_mtw && pass_4l && pass_njet && pass_HasZ);
 
     FillLevelHistograms(WZ_05_TopRegion, pass && pass_met && !pass_bjet_loose && pass_njet && pass_NoZ);
-    */
 
-
+    pass &= (_nbjet15tight == 0);
+	
+    FillLevelHistograms(WZ_03_BVeto, pass);
+*/
   }
 
 
