@@ -34,7 +34,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (   true);
+  plotter.SetDrawRatio  (  false);  // true
   plotter.SetPublicStyle(  false);
 
 
@@ -56,7 +56,7 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
+	  plotter.AddProcess("00_Fakes", "non-prompt", kGreen+2);
 	  plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
 	}
       else

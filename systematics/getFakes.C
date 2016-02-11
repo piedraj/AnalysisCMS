@@ -71,9 +71,9 @@ void getFakes(TString level = "NONE")
 	  _error[i][j] = sqrt(h_fakes->GetSumw2()->At(j+1));
 	}
 
-      _jetSyst[i] = 1e2 * fabs(_value[i][jetUp] - _value[i][jetDown]) / _value[i][nominal];
+      _jetSyst[i] = 1e2 * fabs(_value[i][jetUp] - _value[i][jetDown]) / (2. * _value[i][nominal]);
 
-      _statSyst[i] = 1e2 * fabs(_value[i][statUp] - _value[i][statDown]) / _value[i][nominal];
+      _statSyst[i] = 1e2 * fabs(_value[i][statUp] - _value[i][statDown]) / (2. * _value[i][nominal]);
 
       _fakeSyst[i] = sqrt(_jetSyst[i]*_jetSyst[i] + _statSyst[i]*_statSyst[i]);
     }
