@@ -48,9 +48,7 @@ void runPlotter(TString level)
   if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("07_WJets",    "W+jets",  kGray+1);
       plotter.AddProcess("05_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("09_HWW",      "HWW",     kRed);
       plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
@@ -58,8 +56,8 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "data-driven", kGreen+2);
-	  plotter.AddProcess("11_Zg",    "Z#gamma",     kTeal);
+	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
+	  plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
 	}
       else
 	{
@@ -80,8 +78,8 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes",  "data-driven", kGray+1);
-	  plotter.AddProcess("04_Top_DD", "top",         kYellow);
+	  plotter.AddProcess("00_Fakes",  "non-prompt", kGray+1);
+	  plotter.AddProcess("04_Top_DD", "top",        kYellow);
 	}
       else
 	{

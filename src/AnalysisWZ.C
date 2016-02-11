@@ -161,27 +161,27 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     // Z+jets enriched region
     //--------------------------------------------------------------------------
-    pass = true;
+    pass = (_m3l > 100.);
 
-    pass &= (_m3l > 100.);
-    pass &= (_mtw <  50.);
-    pass &= (MET.Et() < 60.);
     pass &= ((WLepton.v  + ZLepton1.v).M() > 4.);
     pass &= ((WLepton.v  + ZLepton2.v).M() > 4.);
     pass &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    pass &= (_mtw < 50.);
+    pass &= (MET.Et() < 30.);
 
     FillLevelHistograms(WZ_04_ZRegion, pass);
 
 
     // Top enriched region
     //--------------------------------------------------------------------------
-    pass = true;
+    pass = (_m3l > 100.);
 
-    pass &= (_m3l > 100.);
-    pass &= (_m2l < 88. || _m2l > 94.);
     pass &= ((WLepton.v  + ZLepton1.v).M() > 4.);
     pass &= ((WLepton.v  + ZLepton2.v).M() > 4.);
     pass &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    pass &= (_m2l < 89. || _m2l > 93.);
     pass &= (_nbjet15loose > 0.);
 
     FillLevelHistograms(WZ_05_TopRegion, pass);
