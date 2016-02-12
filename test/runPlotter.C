@@ -34,7 +34,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (  false);
+  plotter.SetDrawRatio  (   true);
   plotter.SetPublicStyle(  false);
 
 
