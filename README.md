@@ -3,8 +3,9 @@
 
 These twiki pages contain the CMS synchronization status of the WW and WZ cross section analyses at 13 TeV. There we can find the datasets used in each analysis, trigger bits, lepton selections and analysis cuts.
 
-    https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
     https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables
+    https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
+    https://twiki.cern.ch/twiki/bin/view/CMS/ReviewSMP16002
 
 
 1. First time only
