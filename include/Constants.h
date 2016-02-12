@@ -11,7 +11,7 @@
 
 //const float lumi_fb = 1.269;
 //const float lumi_fb = 1.324;  // Used in the ttdm synchronization
-const float lumi_fb = 2.120;
+const float lumi_fb = 2.198;
 
 
 const int ELECTRON_FLAVOUR = 11;

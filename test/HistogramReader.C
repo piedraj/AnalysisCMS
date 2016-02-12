@@ -359,9 +359,11 @@ void HistogramReader::Draw(TString hname,
 
   // Standard Model processes legend
   //----------------------------------------------------------------------------
+  Int_t nrow = (_mchist.size() > 10) ? 5 : 4;
+
   for (int i=0; i<_mchist.size(); i++)
     {
-      if (ny == 5)
+      if (ny == nrow)
 	{
 	  ny = 0;
 	  nx++;

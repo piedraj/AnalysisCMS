@@ -125,10 +125,14 @@ class AnalysisCMS : public AnalysisBase
 
   float                  _event_weight;
   float                  _fake_weight;
-  float                  _fake_weight_down;
-  float                  _fake_weight_up;
-  float                  _fake_weight_statUp;
-  float                  _fake_weight_statDown;
+  float                  _fake_weight_elUp;
+  float                  _fake_weight_elDown;
+  float                  _fake_weight_elStatUp;
+  float                  _fake_weight_elStatDown;
+  float                  _fake_weight_muUp;
+  float                  _fake_weight_muDown;
+  float                  _fake_weight_muStatUp;
+  float                  _fake_weight_muStatDown;
   float                  _ht;
   float                  _luminosity;
   float                  _mc;
