@@ -66,11 +66,19 @@ public :
    Float_t         fakeW2l2jDown;
    Float_t         fakeW2l2jstatUp;
    Float_t         fakeW2l2jstatDown;
+   //   Float_t         fakeW3lUp;
+   //   Float_t         fakeW3lDown;
+   //   Float_t         fakeW3lstatUp;
+   //   Float_t         fakeW3lstatDown;
    Float_t         fakeW3l;
-   Float_t         fakeW3lUp;
-   Float_t         fakeW3lDown;
-   Float_t         fakeW3lstatUp;
-   Float_t         fakeW3lstatDown;
+   Float_t         fakeW3lElUp;
+   Float_t         fakeW3lElDown;
+   Float_t         fakeW3lstatElUp;
+   Float_t         fakeW3lstatElDown;
+   Float_t         fakeW3lMuUp;
+   Float_t         fakeW3lMuDown;
+   Float_t         fakeW3lstatMuUp;
+   Float_t         fakeW3lstatMuDown;
    Float_t         gammaMRStar;
    Float_t         hardbjpb;
    Float_t         hardcmva;
@@ -438,11 +446,19 @@ public :
    TBranch        *b_fakeW2l2jDown;
    TBranch        *b_fakeW2l2jstatUp;
    TBranch        *b_fakeW2l2jstatDown;
-   TBranch        *b_fakeW3l;
-   TBranch        *b_fakeW3lUp;
-   TBranch        *b_fakeW3lDown;
-   TBranch        *b_fakeW3lstatUp;
-   TBranch        *b_fakeW3lstatDown;
+   //   TBranch        *b_fakeW3lUp;
+   //   TBranch        *b_fakeW3lDown;
+   //   TBranch        *b_fakeW3lstatUp;
+   //   TBranch        *b_fakeW3lstatDown;
+   TBranch        *b_fakeW3l;   //!
+   TBranch        *b_fakeW3lElUp;   //!
+   TBranch        *b_fakeW3lElDown;   //!
+   TBranch        *b_fakeW3lstatElUp;   //!
+   TBranch        *b_fakeW3lstatElDown;   //!
+   TBranch        *b_fakeW3lMuUp;   //!
+   TBranch        *b_fakeW3lMuDown;   //!
+   TBranch        *b_fakeW3lstatMuUp;   //!
+   TBranch        *b_fakeW3lstatMuDown;   //!
    TBranch        *b_gammaMRStar;   //!
    TBranch        *b_hardbjpb;   //!
    TBranch        *b_hardcmva;   //!
@@ -1004,11 +1020,19 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("fakeW2l2jUp", &fakeW2l2jUp, &b_fakeW2l2jUp);
    fChain->SetBranchAddress("fakeW2l2jstatDown", &fakeW2l2jstatDown, &b_fakeW2l2jstatDown);
    fChain->SetBranchAddress("fakeW2l2jstatUp", &fakeW2l2jstatUp, &b_fakeW2l2jstatUp);
+   //   fChain->SetBranchAddress("fakeW3lDown", &fakeW3lDown, &b_fakeW3lDown);
+   //   fChain->SetBranchAddress("fakeW3lUp", &fakeW3lUp, &b_fakeW3lUp);
+   //   fChain->SetBranchAddress("fakeW3lstatDown", &fakeW3lstatDown, &b_fakeW3lstatDown);
+   //   fChain->SetBranchAddress("fakeW3lstatUp", &fakeW3lstatUp, &b_fakeW3lstatUp);
    fChain->SetBranchAddress("fakeW3l", &fakeW3l, &b_fakeW3l);
-   fChain->SetBranchAddress("fakeW3lDown", &fakeW3lDown, &b_fakeW3lDown);
-   fChain->SetBranchAddress("fakeW3lUp", &fakeW3lUp, &b_fakeW3lUp);
-   fChain->SetBranchAddress("fakeW3lstatDown", &fakeW3lstatDown, &b_fakeW3lstatDown);
-   fChain->SetBranchAddress("fakeW3lstatUp", &fakeW3lstatUp, &b_fakeW3lstatUp);
+   fChain->SetBranchAddress("fakeW3lElUp", &fakeW3lElUp, &b_fakeW3lElUp);
+   fChain->SetBranchAddress("fakeW3lElDown", &fakeW3lElDown, &b_fakeW3lElDown);
+   fChain->SetBranchAddress("fakeW3lstatElUp", &fakeW3lstatElUp, &b_fakeW3lstatElUp);
+   fChain->SetBranchAddress("fakeW3lstatElDown", &fakeW3lstatElDown, &b_fakeW3lstatElDown);
+   fChain->SetBranchAddress("fakeW3lMuUp", &fakeW3lMuUp, &b_fakeW3lMuUp);
+   fChain->SetBranchAddress("fakeW3lMuDown", &fakeW3lMuDown, &b_fakeW3lMuDown);
+   fChain->SetBranchAddress("fakeW3lstatMuUp", &fakeW3lstatMuUp, &b_fakeW3lstatMuUp);
+   fChain->SetBranchAddress("fakeW3lstatMuDown", &fakeW3lstatMuDown, &b_fakeW3lstatMuDown);
    fChain->SetBranchAddress("gammaMRStar", &gammaMRStar, &b_gammaMRStar);
    fChain->SetBranchAddress("hardbjpb", &hardbjpb, &b_hardbjpb);
    fChain->SetBranchAddress("hardcmva", &hardcmva, &b_hardcmva);

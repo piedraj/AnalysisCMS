@@ -156,11 +156,18 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mc          [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww        [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
-  h_fakes[ichannel][icut][ijet]->Fill( 0., _fake_weight);
-  h_fakes[ichannel][icut][ijet]->Fill( 1., _fake_weight_up);
-  h_fakes[ichannel][icut][ijet]->Fill( 2., _fake_weight_down);
-  h_fakes[ichannel][icut][ijet]->Fill( 3., _fake_weight_statUp);
-  h_fakes[ichannel][icut][ijet]->Fill( 4., _fake_weight_statDown);
+
+  // Non-prompt systematic uncertainties
+  //----------------------------------------------------------------------------
+  h_fakes[ichannel][icut][ijet]->Fill(0., _fake_weight);
+  h_fakes[ichannel][icut][ijet]->Fill(1., _fake_weight_elUp);
+  h_fakes[ichannel][icut][ijet]->Fill(2., _fake_weight_elDown);
+  h_fakes[ichannel][icut][ijet]->Fill(3., _fake_weight_elStatUp);
+  h_fakes[ichannel][icut][ijet]->Fill(4., _fake_weight_elStatDown);
+  h_fakes[ichannel][icut][ijet]->Fill(5., _fake_weight_muUp);
+  h_fakes[ichannel][icut][ijet]->Fill(6., _fake_weight_muDown);
+  h_fakes[ichannel][icut][ijet]->Fill(7., _fake_weight_muStatUp);
+  h_fakes[ichannel][icut][ijet]->Fill(8., _fake_weight_muStatDown);
   
   if (_analysis.EqualTo("WZ"))
     {
@@ -583,49 +590,69 @@ void AnalysisCMS::GetFakeWeights()
 {
   if (!_sample.Contains("DD_"))
     {
-      _fake_weight          = 1.;
-      _fake_weight_up       = 1.;
-      _fake_weight_down     = 1.;
-      _fake_weight_statUp   = 1.;
-      _fake_weight_statDown = 1.;
+      _fake_weight            = 1.;
+      _fake_weight_elUp       = 1.;
+      _fake_weight_elDown     = 1.;
+      _fake_weight_elStatUp   = 1.;
+      _fake_weight_elStatDown = 1.;
+      _fake_weight_muUp       = 1.;
+      _fake_weight_muDown     = 1.;
+      _fake_weight_muStatUp   = 1.;
+      _fake_weight_muStatDown = 1.;
 
       return;
     }
 
   if (_analysis.EqualTo("WZ"))
     {
-      _fake_weight          = fakeW3l;
-      _fake_weight_up       = fakeW3lUp;
-      _fake_weight_down     = fakeW3lDown;
-      _fake_weight_statUp   = fakeW3lstatUp;
-      _fake_weight_statDown = fakeW3lstatDown;
+      _fake_weight            = fakeW3l;
+      _fake_weight_elUp       = fakeW3lElUp;
+      _fake_weight_elDown     = fakeW3lElDown;
+      _fake_weight_elStatUp   = fakeW3lstatElUp;
+      _fake_weight_elStatDown = fakeW3lstatElDown;
+      _fake_weight_muUp       = fakeW3lMuUp;
+      _fake_weight_muDown     = fakeW3lMuDown;
+      _fake_weight_muStatUp   = fakeW3lstatMuUp;
+      _fake_weight_muStatDown = fakeW3lstatMuDown;
 
       return;
     }
 
   if (njet == 0)
     {
-      _fake_weight          = fakeW2l0j;
-      _fake_weight_up       = fakeW2l0jUp;
-      _fake_weight_down     = fakeW2l0jDown;
-      _fake_weight_statUp   = fakeW2l0jstatUp;
-      _fake_weight_statDown = fakeW2l0jstatDown;
+      _fake_weight            = fakeW2l0j;
+      _fake_weight_elUp       = fakeW2l0jUp;
+      _fake_weight_elDown     = fakeW2l0jDown;
+      _fake_weight_elStatUp   = fakeW2l0jstatUp;
+      _fake_weight_elStatDown = fakeW2l0jstatDown;
+      _fake_weight_muUp       = fakeW2l0jUp;
+      _fake_weight_muDown     = fakeW2l0jDown;
+      _fake_weight_muStatUp   = fakeW2l0jstatUp;
+      _fake_weight_muStatDown = fakeW2l0jstatDown;
     }
   else if (njet == 1)
     {
-      _fake_weight          = fakeW2l1j;
-      _fake_weight_down     = fakeW2l1jDown;
-      _fake_weight_up       = fakeW2l1jUp;
-      _fake_weight_statUp   = fakeW2l1jstatUp;
-      _fake_weight_statDown = fakeW2l1jstatDown;
+      _fake_weight            = fakeW2l1j;
+      _fake_weight_elUp       = fakeW2l1jUp;
+      _fake_weight_elDown     = fakeW2l1jDown;
+      _fake_weight_elStatUp   = fakeW2l1jstatUp;
+      _fake_weight_elStatDown = fakeW2l1jstatDown;
+      _fake_weight_muUp       = fakeW2l1jUp;
+      _fake_weight_muDown     = fakeW2l1jDown;
+      _fake_weight_muStatUp   = fakeW2l1jstatUp;
+      _fake_weight_muStatDown = fakeW2l1jstatDown;
     }
   else
     {
-      _fake_weight          = fakeW2l2j;
-      _fake_weight_up       = fakeW2l2jUp;
-      _fake_weight_down     = fakeW2l2jDown;
-      _fake_weight_statUp   = fakeW2l2jstatUp;
-      _fake_weight_statDown = fakeW2l2jstatDown;
+      _fake_weight            = fakeW2l2j;
+      _fake_weight_elUp       = fakeW2l2jUp;
+      _fake_weight_elDown     = fakeW2l2jDown;
+      _fake_weight_elStatUp   = fakeW2l2jstatUp;
+      _fake_weight_elStatDown = fakeW2l2jstatDown;
+      _fake_weight_muUp       = fakeW2l2jUp;
+      _fake_weight_muDown     = fakeW2l2jDown;
+      _fake_weight_muStatUp   = fakeW2l2jstatUp;
+      _fake_weight_muStatDown = fakeW2l2jstatDown;
     }
 }
 
@@ -748,5 +775,5 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_sumjpt12    [ichannel][icut][ijet] = new TH1D("h_sumjpt12"     + suffix, "", 3000,    0, 3000);
   h_pt2l        [ichannel][icut][ijet] = new TH1D("h_pt2l"         + suffix, "", 3000,    0, 3000);
   h_ptww        [ichannel][icut][ijet] = new TH1D("h_ptww"         + suffix, "", 3000,    0, 3000);
-  h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    5,    0,    5);
+  h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    9,    0,    9);
 }

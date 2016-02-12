@@ -3,27 +3,36 @@
 
 enum {
   nominal,
-  jetUp,
-  jetDown,
-  statUp,
-  statDown,
+  elUp,
+  elDown,
+  elStatUp,
+  elStatDown,
+  muUp,
+  muDown,
+  muStatUp,
+  muStatDown,
   nvalue
 };
 
 const TString svalue[nvalue] = {
   "nominal yield",
-  "jet \\pt up",
-  "jet \\pt down",
-  "stat. up",
-  "stat. down"
+  "electron jet \\pt up",
+  "electron jet \\pt down",
+  "electron stat. up",
+  "electron stat. down",
+  "muon jet \\pt up",
+  "muon jet \\pt down",
+  "muon stat. up",
+  "muon stat. down"
 };
 
 
-float _value   [nchannel][nvalue];
-float _error   [nchannel][nvalue];
-float _jetSyst [nchannel];
-float _statSyst[nchannel];
-float _fakeSyst[nchannel];
+float _value     [nchannel][nvalue];
+float _error     [nchannel][nvalue];
+float _elSyst    [nchannel];
+float _muSyst    [nchannel];
+float _elStatSyst[nchannel];
+float _muStatSyst[nchannel];
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,11 +80,11 @@ void getFakes(TString level = "NONE")
 	  _error[i][j] = sqrt(h_fakes->GetSumw2()->At(j+1));
 	}
 
-      _jetSyst[i] = 1e2 * fabs(_value[i][jetUp] - _value[i][jetDown]) / (2. * _value[i][nominal]);
+      _elSyst[i] = 1e2 * fabs(_value[i][elUp] - _value[i][elDown]) / (2. * _value[i][nominal]);
+      _muSyst[i] = 1e2 * fabs(_value[i][muUp] - _value[i][muDown]) / (2. * _value[i][nominal]);
 
-      _statSyst[i] = 1e2 * fabs(_value[i][statUp] - _value[i][statDown]) / (2. * _value[i][nominal]);
-
-      _fakeSyst[i] = sqrt(_jetSyst[i]*_jetSyst[i] + _statSyst[i]*_statSyst[i]);
+      _elStatSyst[i] = 1e2 * fabs(_value[i][elStatUp] - _value[i][elStatDown]) / (2. * _value[i][nominal]);
+      _muStatSyst[i] = 1e2 * fabs(_value[i][muStatUp] - _value[i][muStatDown]) / (2. * _value[i][nominal]);
     }
 
 
@@ -85,7 +94,7 @@ void getFakes(TString level = "NONE")
   
   for (int j=0; j<nvalue; j++)
     {
-      printf(" %13s", svalue[j].Data());
+      printf(" %22s", svalue[j].Data());
       
       for (int i=firstchannel; i<lastchannel; i++)
 	{
@@ -99,9 +108,10 @@ void getFakes(TString level = "NONE")
   // Print systematic uncertainties
   //----------------------------------------------------------------------------
   printf("\\hline\n");
-  printf(" %13s", "jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _jetSyst[i]);  printf(" \\\\\n");
-  printf(" %13s", "stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _statSyst[i]); printf(" \\\\\n");
-  printf(" %13s", "total syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _fakeSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
 
   printf("\n");
 }
