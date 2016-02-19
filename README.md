@@ -3,8 +3,9 @@
 
 These twiki pages contain the CMS synchronization status of the WW and WZ cross section analyses at 13 TeV. There we can find the datasets used in each analysis, trigger bits, lepton selections and analysis cuts.
 
-    https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
     https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables
+    https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
+    https://twiki.cern.ch/twiki/bin/view/CMS/ReviewSMP16002
 
 
 1. First time only
@@ -156,8 +157,9 @@ Copy the distributions to lxplus.
 And they should appear here,
 
     https://amanjong.web.cern.ch/amanjong/figures/
+    https://bchazinq.web.cern.ch/bchazinq/figures/
     https://cprieels.web.cern.ch/cprieels/figures/
-    https://ntrevisa.web.cern.ch/ntrevisa/
+    https://ntrevisa.web.cern.ch/ntrevisa/figures/
     https://piedra.web.cern.ch/piedra/figures/
 
 A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,

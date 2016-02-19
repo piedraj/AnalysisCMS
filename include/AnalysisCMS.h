@@ -125,10 +125,14 @@ class AnalysisCMS : public AnalysisBase
 
   float                  _event_weight;
   float                  _fake_weight;
-  float                  _fake_weight_down;
-  float                  _fake_weight_up;
-  float                  _fake_weight_statUp;
-  float                  _fake_weight_statDown;
+  float                  _fake_weight_elUp;
+  float                  _fake_weight_elDown;
+  float                  _fake_weight_elStatUp;
+  float                  _fake_weight_elStatDown;
+  float                  _fake_weight_muUp;
+  float                  _fake_weight_muDown;
+  float                  _fake_weight_muStatUp;
+  float                  _fake_weight_muStatDown;
   float                  _ht;
   float                  _luminosity;
   float                  _mc;
@@ -149,6 +153,7 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _jetbin;
   unsigned int           _nbjet15loose;
   unsigned int           _nbjet30medium;
+  unsigned int           _nbjet15tight;
   unsigned int           _nbjet30tight;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
@@ -164,6 +169,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_counterLum  [nchannel][ncut][njetbin+1];
   TH1D*                  h_njet        [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15loose[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15tight[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30tight[nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx        [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll        [nchannel][ncut][njetbin+1];

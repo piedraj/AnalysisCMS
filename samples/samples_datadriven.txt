@@ -13,4 +13,3 @@
 /gpfs/csic_projects/cms/calderon/output11Feb/Run2015D_PromptReco_0851pb/latino_DD_Run2915D_PromptReco_MuonEG_0851pb.root
 /gpfs/csic_projects/cms/calderon/output11Feb/Run2015D_PromptReco_0851pb/latino_DD_Run2915D_PromptReco_SingleElectron_0851pb.root
 /gpfs/csic_projects/cms/calderon/output11Feb/Run2015D_PromptReco_0851pb/latino_DD_Run2915D_PromptReco_SingleMuon_0851pb.root
-

@@ -6,6 +6,8 @@
 
 
 //#include "src/AnalysisWZ.C"
+//#include "src/AnalysisWW.C"
+//#include "src/AnalysisWZ.C"
 
 
 void runAnalysis(TString filename)

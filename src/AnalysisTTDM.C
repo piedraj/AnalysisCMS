@@ -48,8 +48,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   root_output->cd();
 
 
-  // MET filters histograms
+  // MET filters histograms and output file
   //----------------------------------------------------------------------------
+  ofstream txt_metfilters;
+
+  txt_metfilters.open("txt/" + _analysis + "/" + _sample + "_metfilters.txt");
+
   for (int j=0; j<nfilter; j++) {
 
     met_Flag_nocut [j] = new TH1D(Form("met_Flag_nocut_%s",  sfilter[j].Data()), "", 3000, 0, 3000);
@@ -105,7 +109,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
 
 	  if (std_vector_trigger_special->at(j) > 0) met_Flag_met300[j]->Fill(truncated_met);
-	  else pass_all_met_filters = false;
+	  else
+	    {
+	      pass_all_met_filters = false;
+
+	      txt_metfilters << Form("%.0f:%.0f:%.0f:%s\n", run, lumi, evt, sfilter[j].Data());
+	    }
 	}
     
 	if (pass_all_met_filters) met_Flag_met300[allFilter]->Fill(truncated_met);
@@ -121,7 +130,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
-    _nlepton   = 2;  // Redefine _nlepton
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -131,10 +139,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    //    _m2l  = mll;   // Needs l2Sel
-    //    _pt2l = ptll;  // Needs l2Sel
-    _m2l  = -999;
-    _pt2l = -999;
+    _m2l  = mll;   // Needs l2Sel
+    _pt2l = ptll;  // Needs l2Sel
 
 
     // Fill histograms
@@ -151,27 +157,33 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
+    bool preselection = pass && (njet > 0) && (MET.Et() > 80.);
+
+    FillLevelHistograms(TTDM_02_Preselection, preselection);
+
     pass &= (njet > 1);
 
-    FillLevelHistograms(TTDM_02_Has2Jets, pass);
+    FillLevelHistograms(TTDM_03_Has2Jets, pass);
 
     pass &= (_nbjet15loose > 0);
 
-    FillLevelHistograms(TTDM_03_Has1BJet, pass);
+    FillLevelHistograms(TTDM_04_Has1BJet, pass);
 
     float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
 
     pass &= (fabs(_dphillmet) > 0.6);
 
-    FillLevelHistograms(TTDM_04_DeltaPhi, pass);
+    FillLevelHistograms(TTDM_05_DeltaPhi, pass);
 
     pass &= (MET.Et() > 120.);
 
-    FillLevelHistograms(TTDM_05_MET, pass);
+    FillLevelHistograms(TTDM_06_MET, pass);
   }
 
 
   EndJob();
+
+  txt_metfilters.close();
 }
 
 

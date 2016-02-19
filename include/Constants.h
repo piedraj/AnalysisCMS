@@ -3,17 +3,17 @@
 
 
 //#include "CutsMonoH.h"
+//
 #include "CutsTop.h"
-//#include "CutsTTDM.h"
 
-//#include "CutsWW.h"
+//#include "CutsTTDM.h"
 
 //#include "CutsWW.h"
 
 //#include "CutsWZ.h"
 
-
 //const float lumi_fb = 1.269;
+//const float lumi_fb = 1.324;  // Used in the ttdm synchronization
 const float lumi_fb = 2.198;
 
 
@@ -78,6 +78,10 @@ const TString lchannel[nchannel] = {
 const float csvv2ivf_looseWP  = 0.605;  // 0.460 for 76X
 const float csvv2ivf_mediumWP = 0.89;   // 0.800 for 76X
 const float csvv2ivf_tightWP  = 0.97;   // 0.935 for 76X
+
+// To be used in 76X
+// -0.715 is the loose working point of the cMVAv2 algorithm
+// A jet j is b-tagged if (std_vector_jet_cmvav2[j] > -0.715)
 
 
 // MET filters

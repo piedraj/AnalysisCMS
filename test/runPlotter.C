@@ -34,7 +34,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (   true);
+  plotter.SetDrawRatio  (  false);  // true
   plotter.SetPublicStyle(  false);
 
 
@@ -48,9 +48,7 @@ void runPlotter(TString level)
   if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("07_WJets",    "W+jets",  kGray+1);
       plotter.AddProcess("05_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("09_HWW",      "HWW",     kRed);
       plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
@@ -58,8 +56,8 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "data-driven", kGreen+2);
-	  plotter.AddProcess("11_Zg",    "Z#gamma",     kTeal);
+	  plotter.AddProcess("00_Fakes", "non-prompt", kGreen+2);
+	  plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
 	}
       else
 	{
@@ -80,8 +78,8 @@ void runPlotter(TString level)
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes",  "data-driven", kGray+1);
-	  plotter.AddProcess("04_Top_DD", "top",         kYellow);
+	  plotter.AddProcess("00_Fakes",  "non-prompt", kGray+1);
+	  plotter.AddProcess("04_Top_DD", "top",        kYellow);
 	}
       else
 	{
@@ -182,9 +180,10 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  plotter.SetTitle(title);
 
-	  plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL",  logY);
-	  plotter.Draw(prefix + "nbjet15loose" + suffix, "number of (15 GeV) loose b-jets", -1, 0, "NULL",  logY);
-	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL",  logY);
+	  plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet15loose" + suffix, "number of (15 GeV) loose b-jets", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet15tight" + suffix, "number of (15 GeV) tight b-jets", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", scale, true,    0,    4);
 	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  scale, true,    0, 3.15);

@@ -45,10 +45,10 @@ bool AnalysisCMS::IsTightLepton(int k)
 
       float dxy = (pt > 20.) ? 0.02 : 0.01;
 
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);  // 74X
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);  // 74X
-      //      is_tight_lepton &= (fabs(std_vector_lepton_d0->at(k)) < dxy);  // 76X
-      //      is_tight_lepton &= (fabs(std_vector_lepton_dz->at(k)) < 0.1);  // 76X
+      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);  // 74x
+      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);  // 74x
+      //      is_tight_lepton &= (fabs(std_vector_lepton_d0->at(k)) < dxy);  // 76x
+      //      is_tight_lepton &= (fabs(std_vector_lepton_dz->at(k)) < 0.1);  // 76x
     }
   else if (fabs(flavour) == ELECTRON_FLAVOUR)
     {
@@ -135,6 +135,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_ht          [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l         [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
   h_nbjet15loose[ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
+  h_nbjet15tight[ichannel][icut][ijet]->Fill(_nbjet15tight,  _event_weight);
   h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
@@ -150,19 +151,32 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_sumjpt12    [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
   h_mpmet       [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt2l        [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_trkmet      [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74X
-  //  h_trkmet      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76X
+  h_trkmet      [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74x
+  //  h_trkmet      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76x
   h_mc          [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww        [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
-  h_fakes[ichannel][icut][ijet]->Fill( 0., _fake_weight);
-  h_fakes[ichannel][icut][ijet]->Fill( 1., _fake_weight_up);
-  h_fakes[ichannel][icut][ijet]->Fill( 2., _fake_weight_down);
-  h_fakes[ichannel][icut][ijet]->Fill( 3., _fake_weight_statUp);
-  h_fakes[ichannel][icut][ijet]->Fill( 4., _fake_weight_statDown);
+
+  // Non-prompt systematic uncertainties
+  //----------------------------------------------------------------------------
+  h_fakes[ichannel][icut][ijet]->Fill(0., _fake_weight);
+  h_fakes[ichannel][icut][ijet]->Fill(1., _fake_weight_elUp);
+  h_fakes[ichannel][icut][ijet]->Fill(2., _fake_weight_elDown);
+  h_fakes[ichannel][icut][ijet]->Fill(3., _fake_weight_elStatUp);
+  h_fakes[ichannel][icut][ijet]->Fill(4., _fake_weight_elStatDown);
+  h_fakes[ichannel][icut][ijet]->Fill(5., _fake_weight_muUp);
+  h_fakes[ichannel][icut][ijet]->Fill(6., _fake_weight_muDown);
+  h_fakes[ichannel][icut][ijet]->Fill(7., _fake_weight_muStatUp);
+  h_fakes[ichannel][icut][ijet]->Fill(8., _fake_weight_muStatDown);
   
-  if (_nlepton == 2 && ichannel != ll)  FillHistograms(ll,  icut, ijet);
-  if (_nlepton == 3 && ichannel != lll) FillHistograms(lll, icut, ijet);
+  if (_analysis.EqualTo("WZ"))
+    {
+      if (ichannel != lll) FillHistograms(lll, icut, ijet);
+    }
+  else
+    {
+      if (ichannel != ll)  FillHistograms(ll, icut, ijet);
+    }
 }
 
 
@@ -279,14 +293,19 @@ void AnalysisCMS::ApplyWeights()
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
     std_vector_lepton_idisoW->at(2);
+<<<<<<< HEAD
 
   //  _event_weight *= effTrigW * lepton_scale_factor;  // Scale factor without b_tag SF
     _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+=======
+  
+  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+>>>>>>> c2461ebbaa1d486457bcd753bb05e570c4f7ab5a
 
-  if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
+  if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);  // 74x
 
   if (!GEN_weight_SM) return;
-
+  
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
   return;
@@ -358,6 +377,7 @@ void AnalysisCMS::GetJets()
 
   _nbjet15loose = 0;
   _nbjet30medium = 0;
+  _nbjet15tight = 0;
   _nbjet30tight = 0;
   
 
@@ -380,6 +400,7 @@ void AnalysisCMS::GetJets()
     goodjet.v        = tlv;
 
     if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15loose++;
+    if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_tightWP) _nbjet15tight++;
 
     if (pt < 30.) continue;
 
@@ -428,10 +449,10 @@ void AnalysisCMS::EventDump()
 	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
 				std_vector_electron_scEta->at(index),
 				std_vector_electron_passConversionVeto->at(index),
-				std_vector_electron_d0->at(index),  // 74X
-				std_vector_electron_dz->at(index),  // 74X
-				//std_vector_lepton_d0->at(index),  // 76X
-				//std_vector_lepton_dz->at(index),  // 76X
+				std_vector_electron_d0->at(index),  // 74x
+				std_vector_electron_dz->at(index),  // 74x
+				//std_vector_lepton_d0->at(index),  // 76x
+				//std_vector_lepton_dz->at(index),  // 76x
 				std_vector_electron_expectedMissingInnerHits->at(index));
 	}
       
@@ -474,8 +495,8 @@ void AnalysisCMS::GetHt()
 void AnalysisCMS::GetMpMet()
 {
   _fullpmet = MET.Et();
-  _trkpmet  = trkMet;  // 74X
-  //  _trkpmet  = metTtrk;  // 76X
+  _trkpmet  = trkMet;  // 74x
+  //  _trkpmet  = metTtrk;  // 76x
 
   //  Needs l2Sel
   if (dphilmet < TMath::Pi() / 2.)
@@ -576,49 +597,68 @@ void AnalysisCMS::GetFakeWeights()
 {
   if (!_sample.Contains("DD_"))
     {
-      _fake_weight          = 1.;
-      _fake_weight_up       = 1.;
-      _fake_weight_down     = 1.;
-      _fake_weight_statUp   = 1.;
-      _fake_weight_statDown = 1.;
+      _fake_weight_elUp       = 1.;
+      _fake_weight_elDown     = 1.;
+      _fake_weight_elStatUp   = 1.;
+      _fake_weight_elStatDown = 1.;
+      _fake_weight_muUp       = 1.;
+      _fake_weight_muDown     = 1.;
+      _fake_weight_muStatUp   = 1.;
+      _fake_weight_muStatDown = 1.;
 
       return;
     }
 
   if (_analysis.EqualTo("WZ"))
     {
-      _fake_weight          = fakeW3l;
-      _fake_weight_up       = fakeW3lUp;
-      _fake_weight_down     = fakeW3lDown;
-      _fake_weight_statUp   = fakeW3lstatUp;
-      _fake_weight_statDown = fakeW3lstatDown;
+      _fake_weight            = fakeW3l;
+      _fake_weight_elUp       = fakeW3lElUp;
+      _fake_weight_elDown     = fakeW3lElDown;
+      _fake_weight_elStatUp   = fakeW3lstatElUp;
+      _fake_weight_elStatDown = fakeW3lstatElDown;
+      _fake_weight_muUp       = fakeW3lMuUp;
+      _fake_weight_muDown     = fakeW3lMuDown;
+      _fake_weight_muStatUp   = fakeW3lstatMuUp;
+      _fake_weight_muStatDown = fakeW3lstatMuDown;
 
       return;
     }
 
   if (njet == 0)
     {
-      _fake_weight          = fakeW2l0j;
-      _fake_weight_up       = fakeW2l0jUp;
-      _fake_weight_down     = fakeW2l0jDown;
-      _fake_weight_statUp   = fakeW2l0jstatUp;
-      _fake_weight_statDown = fakeW2l0jstatDown;
+      _fake_weight            = fakeW2l0j;
+      _fake_weight_elUp       = fakeW2l0jUp;
+      _fake_weight_elDown     = fakeW2l0jDown;
+      _fake_weight_elStatUp   = fakeW2l0jstatUp;
+      _fake_weight_elStatDown = fakeW2l0jstatDown;
+      _fake_weight_muUp       = fakeW2l0jUp;
+      _fake_weight_muDown     = fakeW2l0jDown;
+      _fake_weight_muStatUp   = fakeW2l0jstatUp;
+      _fake_weight_muStatDown = fakeW2l0jstatDown;
     }
   else if (njet == 1)
     {
-      _fake_weight          = fakeW2l1j;
-      _fake_weight_down     = fakeW2l1jDown;
-      _fake_weight_up       = fakeW2l1jUp;
-      _fake_weight_statUp   = fakeW2l1jstatUp;
-      _fake_weight_statDown = fakeW2l1jstatDown;
+      _fake_weight            = fakeW2l1j;
+      _fake_weight_elUp       = fakeW2l1jUp;
+      _fake_weight_elDown     = fakeW2l1jDown;
+      _fake_weight_elStatUp   = fakeW2l1jstatUp;
+      _fake_weight_elStatDown = fakeW2l1jstatDown;
+      _fake_weight_muUp       = fakeW2l1jUp;
+      _fake_weight_muDown     = fakeW2l1jDown;
+      _fake_weight_muStatUp   = fakeW2l1jstatUp;
+      _fake_weight_muStatDown = fakeW2l1jstatDown;
     }
   else
     {
-      _fake_weight          = fakeW2l2j;
-      _fake_weight_up       = fakeW2l2jUp;
-      _fake_weight_down     = fakeW2l2jDown;
-      _fake_weight_statUp   = fakeW2l2jstatUp;
-      _fake_weight_statDown = fakeW2l2jstatDown;
+      _fake_weight            = fakeW2l2j;
+      _fake_weight_elUp       = fakeW2l2jUp;
+      _fake_weight_elDown     = fakeW2l2jDown;
+      _fake_weight_elStatUp   = fakeW2l2jstatUp;
+      _fake_weight_elStatDown = fakeW2l2jstatDown;
+      _fake_weight_muUp       = fakeW2l2jUp;
+      _fake_weight_muDown     = fakeW2l2jDown;
+      _fake_weight_muStatUp   = fakeW2l2jstatUp;
+      _fake_weight_muStatDown = fakeW2l2jstatDown;
     }
 }
 
@@ -632,8 +672,8 @@ void AnalysisCMS::EventSetup()
 
   ApplyWeights();
   
-  GetMET(pfType1Met, pfType1Metphi);  // 74X
-  //  GetMET(metPfType1, metPfType1Phi);  // 76X
+  GetMET(pfType1Met, pfType1Metphi);  // 74x
+  //  GetMET(metPfType1, metPfType1Phi);  // 76x
   
   GetLeptons();
 
@@ -721,6 +761,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_counterLum  [ichannel][icut][ijet] = new TH1D("h_counterLum"   + suffix, "",    3,    0,    3);
   h_njet        [ichannel][icut][ijet] = new TH1D("h_njet"         + suffix, "",    7, -0.5,  6.5);
   h_nbjet15loose[ichannel][icut][ijet] = new TH1D("h_nbjet15loose" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet15tight[ichannel][icut][ijet] = new TH1D("h_nbjet15tight" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
   h_nvtx        [ichannel][icut][ijet] = new TH1D("h_nvtx"         + suffix, "",   50,    0,   50);
   h_drll        [ichannel][icut][ijet] = new TH1D("h_drll"         + suffix, "",  100,    0,    5);
@@ -740,5 +781,5 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_sumjpt12    [ichannel][icut][ijet] = new TH1D("h_sumjpt12"     + suffix, "", 3000,    0, 3000);
   h_pt2l        [ichannel][icut][ijet] = new TH1D("h_pt2l"         + suffix, "", 3000,    0, 3000);
   h_ptww        [ichannel][icut][ijet] = new TH1D("h_ptww"         + suffix, "", 3000,    0, 3000);
-  h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    5,    0,    5);
+  h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    9,    0,    9);
 }

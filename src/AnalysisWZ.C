@@ -80,6 +80,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     if (AnalysisLeptons[1].v.Pt() < 10.) continue;
     if (AnalysisLeptons[2].v.Pt() < 10.) continue;
 
+    // This requirement should be applied on a loose lepton
     if (_nlepton > 3 && AnalysisLeptons[3].v.Pt() > 10.) continue;
 
     _nelectron = 0;
@@ -138,8 +139,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     bool pass = true;
 
     FillLevelHistograms(WZ_00_Exactly3Leptons, pass);
-    
-    pass &= (_m2l > 60. && _m2l < 120.);
+
+    pass &= (_m2l > 76. && _m2l < 106.);
     pass &= (ZLepton1.v.Pt() > 20.);
 
     FillLevelHistograms(WZ_01_HasZ, pass);
@@ -153,11 +154,37 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WZ_02_HasW, pass);
 
-    if (_sample.EqualTo("WZTo3LNu") && _eventdump && pass && evt < 80000) EventDump();
-
-    pass &= (_nbjet30tight == 0);
-	
+    pass &= (_nbjet15tight == 0);
+    
     FillLevelHistograms(WZ_03_BVeto, pass);
+
+
+    // Z+jets enriched region
+    //--------------------------------------------------------------------------
+    pass = (_m3l > 100.);
+
+    pass &= ((WLepton.v  + ZLepton1.v).M() > 4.);
+    pass &= ((WLepton.v  + ZLepton2.v).M() > 4.);
+    pass &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    pass &= (_mtw < 50.);
+    pass &= (MET.Et() < 30.);
+
+    FillLevelHistograms(WZ_04_ZRegion, pass);
+
+
+    // Top enriched region
+    //--------------------------------------------------------------------------
+    pass = (_m3l > 100.);
+
+    pass &= ((WLepton.v  + ZLepton1.v).M() > 4.);
+    pass &= ((WLepton.v  + ZLepton2.v).M() > 4.);
+    pass &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
+
+    pass &= (_m2l < 89. || _m2l > 93.);
+    pass &= (_nbjet15loose > 0.);
+
+    FillLevelHistograms(WZ_05_TopRegion, pass);
   }
 
 
@@ -176,12 +203,12 @@ void AnalysisWZ::FillAnalysisHistograms(int ichannel,
   float wlzl2deltar = WLepton.v.DeltaR(ZLepton2.v);
   float wlzldeltar  = min(wlzl1deltar, wlzl2deltar);
 
-  h_m3l       [ichannel][icut][ijet]->Fill(_m3l,             _event_weight);
-  h_mtw       [ichannel][icut][ijet]->Fill(_mtw,             _event_weight);
-  h_zl1pt     [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(),  _event_weight);
-  h_zl2pt     [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(),  _event_weight);
-  h_wlpt      [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),   _event_weight);
-  h_wlzldeltar[ichannel][icut][ijet]->Fill(wlzldeltar,       _event_weight);
+  h_m3l       [ichannel][icut][ijet]->Fill(_m3l,            _event_weight);
+  h_mtw       [ichannel][icut][ijet]->Fill(_mtw,            _event_weight);
+  h_zl1pt     [ichannel][icut][ijet]->Fill(ZLepton1.v.Pt(), _event_weight);
+  h_zl2pt     [ichannel][icut][ijet]->Fill(ZLepton2.v.Pt(), _event_weight);
+  h_wlpt      [ichannel][icut][ijet]->Fill(WLepton.v.Pt(),  _event_weight);
+  h_wlzldeltar[ichannel][icut][ijet]->Fill(wlzldeltar,      _event_weight);
 
   if (ichannel != lll) FillAnalysisHistograms(lll, icut, ijet);
 }
