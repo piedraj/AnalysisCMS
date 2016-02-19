@@ -148,6 +148,7 @@ class AnalysisCMS : public AnalysisBase
   int                    _channel;
   unsigned int           _jetbin;
   unsigned int           _nbjet15loose;
+  unsigned int           _nbjet30medium;
   unsigned int           _nbjet30tight;
   unsigned int           _nelectron;
   unsigned int           _nlepton;

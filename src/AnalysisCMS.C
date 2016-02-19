@@ -280,7 +280,8 @@ void AnalysisCMS::ApplyWeights()
     std_vector_lepton_idisoW->at(1) *
     std_vector_lepton_idisoW->at(2);
 
-  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+  //  _event_weight *= effTrigW * lepton_scale_factor;  // Scale factor without b_tag SF
+    _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);
 
@@ -356,7 +357,9 @@ void AnalysisCMS::GetJets()
   AnalysisJets.clear();
 
   _nbjet15loose = 0;
+  _nbjet30medium = 0;
   _nbjet30tight = 0;
+  
 
   int vector_jet_size = std_vector_jet_pt->size();
 
@@ -381,7 +384,7 @@ void AnalysisCMS::GetJets()
     if (pt < 30.) continue;
 
     if (goodjet.csvv2ivf > csvv2ivf_tightWP) _nbjet30tight++;
-
+    if (goodjet.csvv2ivf > csvv2ivf_mediumWP) _nbjet30medium++;
     AnalysisJets.push_back(goodjet);
   }
 
@@ -389,7 +392,6 @@ void AnalysisCMS::GetJets()
   // Define the jet bin
   //----------------------------------------------------------------------------
   _jetbin = (njet < njetbin) ? njet : njetbin - 1;
-}
 
 
 //------------------------------------------------------------------------------

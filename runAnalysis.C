@@ -1,10 +1,10 @@
 //#include "src/AnalysisMonoH.C"
 #include "src/AnalysisTop.C"
 //#include "src/AnalysisTTDM.C"
-<<<<<<< HEAD
+
 //#include "src/AnalysisWW.C"
-=======
->>>> upstream/master
+
+
 //#include "src/AnalysisWZ.C"
 
 
@@ -19,11 +19,10 @@ void runAnalysis(TString filename)
   //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi_fb);
       AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
   //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);
-<<<<<<< HEAD
+
   //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi_fb);
-=======
  
->>>>>>> upstream/master
+
   //  AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
 }
 

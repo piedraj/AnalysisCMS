@@ -5,16 +5,16 @@
 //#include "CutsMonoH.h"
 #include "CutsTop.h"
 //#include "CutsTTDM.h"
-<<<<<<< HEAD
+
 //#include "CutsWW.h"
-=======
+
 //#include "CutsWW.h"
->>>>>>> upstream/master
+
 //#include "CutsWZ.h"
 
 
 //const float lumi_fb = 1.269;
-const float lumi_fb = 2.120;
+const float lumi_fb = 2.198;
 
 
 const int ELECTRON_FLAVOUR = 11;

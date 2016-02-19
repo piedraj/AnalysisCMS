@@ -69,14 +69,14 @@ void runPlotter(TString level)
     }
   else
     {
+     
       plotter.AddProcess("05_WW",       "WW",      kAzure-9);
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
       plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",      "HWW",     kRed);
-      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6); 
 
       if (datadriven)
 	{
@@ -88,6 +88,8 @@ void runPlotter(TString level)
 	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
 	  plotter.AddProcess("04_Top",   "top",    kYellow);
 	}
+
+      plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
     }
 
 
@@ -189,7 +191,7 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "met"          + suffix, "E_{T}^{miss}",                    10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "trkmet"       + suffix, "track E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",      10, 0, "GeV",  scale, true,    0,  400);
-	  plotter.Draw(prefix + "m2l"          + suffix, "m_{#font[12]{ll}}",                5, 0, "GeV",  scale, true, xmin, xmax);
+	  plotter.Draw(prefix + "m2l"          + suffix, "m_{#font[12]{ll}}",                2, 0, "GeV",  scale, true, 0, 300);
 	  plotter.Draw(prefix + "mtw1"         + suffix, "m_{T}^{W,1}",                     10, 0, "GeV",  scale, true,    0,  300);  // WW
 	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                     10, 0, "GeV",  scale, true,    0,  300);  // WW
 	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true,    0,  300);
