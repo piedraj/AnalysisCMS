@@ -2,7 +2,6 @@
 
 
 const Bool_t datadriven = true;
-
 const TString inputdir  = "../rootfiles/";
 const TString outputdir = "figures/";
 
@@ -115,7 +114,7 @@ void runPlotter(TString level)
   //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
     }
 
-
+  /*
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -228,7 +227,18 @@ void runPlotter(TString level)
 	    }
 	}
     }
+  */
 
+  // Cross Section
+  //----------------------------------------------------------------------------
+
+  printf("========================================================================== \n");
+  plotter.CrossSection(level,"eee","WZ");
+  plotter.CrossSection(level,"eem","WZ");
+  plotter.CrossSection(level,"emm","WZ");
+  plotter.CrossSection(level,"mmm","WZ");
+  plotter.CrossSection(level,"lll","WZ");
+  printf("========================================================================= \n");
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
