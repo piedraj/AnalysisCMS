@@ -34,7 +34,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (  false);  // true
+  plotter.SetDrawRatio  (  true);  // true
   plotter.SetPublicStyle(  false);
 
 
@@ -79,16 +79,25 @@ void runPlotter(TString level)
       if (datadriven)
 	{
 	  plotter.AddProcess("00_Fakes",  "non-prompt", kGray+1);
-	  plotter.AddProcess("04_Top_DD", "top",        kYellow);
+
+	  if (analysis.EqualTo("Top"))
+	    {
+	     plotter.AddProcess("04_TTbar","TTbar", kYellow);
+	     plotter.AddProcess("04_ST_tw","tw", kYellow+4);
+            }
+	  else
+	    {
+	     plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+             plotter.AddProcess("04_Top", "top",        kYellow);
+            } 
 	}
       else
 	{
-	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
-	  plotter.AddProcess("04_Top",   "top",    kYellow);
-	}
-
+	     plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	     plotter.AddProcess("04_Top",   "top",    kYellow);
+        }
       plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
-    }
+     }
 
 
   // Add signals
@@ -120,7 +129,7 @@ void runPlotter(TString level)
 
   // Draw events by cut
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(true);
+  plotter.SetDrawYield(false);
 
   gSystem->mkdir(outputdir + level, kTRUE);
 

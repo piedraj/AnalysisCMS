@@ -293,14 +293,10 @@ void AnalysisCMS::ApplyWeights()
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
     std_vector_lepton_idisoW->at(2);
-<<<<<<< HEAD
 
   //  _event_weight *= effTrigW * lepton_scale_factor;  // Scale factor without b_tag SF
-    _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
-=======
   
   _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
->>>>>>> c2461ebbaa1d486457bcd753bb05e570c4f7ab5a
 
   if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);  // 74x
 
@@ -413,7 +409,7 @@ void AnalysisCMS::GetJets()
   // Define the jet bin
   //----------------------------------------------------------------------------
   _jetbin = (njet < njetbin) ? njet : njetbin - 1;
-
+}
 
 //------------------------------------------------------------------------------
 // GetJetPtSum

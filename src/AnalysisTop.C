@@ -100,35 +100,35 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
    // pass &= (MET.Et() > 40.); 
    
    
-      FillLevelHistograms(Top_00_Has2Leptons, pass);
+     FillLevelHistograms(Top_00_Has2Leptons, pass);
     
-      pass &= mll>20.;
+//      pass &= mll>20.;
 
-      FillLevelHistograms(Top_00_mll20Has2Leptons, pass);
+//      FillLevelHistograms(Top_00_mll20Has2Leptons, pass);
 
-      pass &= fabs(mll - Z_MASS) > 15.;
+//      pass &= fabs(mll - Z_MASS) > 15.;
 
-      FillLevelHistograms(Top_00_ZVETOHas2Leptons, pass);
+//      FillLevelHistograms(Top_00_ZVETOHas2Leptons, pass);
 
     //pass &= _ht > 250;
 
     //FillLevelHistograms(Top_00_ht250Has2Leptons, pass);
 
-      pass &= (MET.Et() > 40.);
+//      pass &= (MET.Et() > 40.);
 
-      FillLevelHistograms(Top_00_MET40Has2Leptons, pass);
+//      FillLevelHistograms(Top_00_MET40Has2Leptons, pass);
 
     //pass &= (MET.Et() > 50.);
 
     //FillLevelHistograms(Top_00_MET50Has2Leptons, pass);
     
-    pass &= (njet > 1);
+      pass &= (njet > 1);
 
-    FillLevelHistograms(Top_01_Has2Jets, pass);
+      FillLevelHistograms(Top_01_Has2Jets, pass);
 
-    pass &= (_nbjet30medium > 0);
+      pass &= (_nbjet30medium > 0);
 
-    FillLevelHistograms(Top_02_Has1BJet, pass);
+      FillLevelHistograms(Top_02_Has1BJet, pass);
   }
 
 
