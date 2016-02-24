@@ -212,7 +212,14 @@ void runPlotter(TString level)
 	      plotter.Draw(prefix + "metphi"    + suffix, "E_{T}^{miss} #phi",             10, 0, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "lepphi1"   + suffix, "leading lep #phi",              10, 0, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",             10, 0, "rad", linY, false, 0, 3.2);
-	    }
+	      // Puesto por Alberto Manjon
+	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR_{#font[12]{l1met}}",             2, 1, "NULL", logY, false,   0,    4);
+	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR_{#font[12]{l2met}}",             2, 1, "NULL", logY, false,   0,    4);
+	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR_{#font[12]{llmet}}",             2, 1, "NULL", logY, false,   0,    4);
+	      plotter.Draw(prefix + "deltaphil1met" + suffix, "#Delta#phi_{#font[12]{l1met}}",          2, 1, "rad",  logY, false,   0,  3.2);
+	      plotter.Draw(prefix + "deltaphil2met" + suffix, "#Delta#phi_{#font[12]{l2met}}",          2, 1, "rad",  logY, false,   0,  3.2);
+	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi_{#font[12]{llmet}}",          2, 1, "rad",  logY, false,   0,  3.2);                  
+            }
 
 	  
 	  // WZ histograms
