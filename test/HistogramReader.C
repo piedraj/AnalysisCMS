@@ -507,10 +507,10 @@ void HistogramReader::CrossSection(TString level,
   // CrossSection calculation
   //----------------------------------------------------------------------------  
 
-  float counterBkg = 0.;
+  float counterBkg       = 0.;
 
-  float	counterData = Yield(_datahist);
-  float	counterSignal = Yield(signal);
+  float	counterData      = Yield(_datahist);
+  float	counterSignal    = Yield(signal);
   float	counterSignalLum = Yield(signalLum);
 
   for (UInt_t i=0; i<_mchist.size(); i++) {  
@@ -518,8 +518,8 @@ void HistogramReader::CrossSection(TString level,
   }
   
   float efficiency = counterSignal/1980800.;
-  //  float CrossSection = (counterData - counterBkg)/ (1000.*(lumi_fb*efficiency*WZ23lnu));
-  float CrossSection = counterSignalLum / (1000.*(lumi_fb*efficiency));
+  float CrossSection = (counterData - counterBkg)/ (1000. * lumi_fb * efficiency * WZ23lnu);
+  
   printf("xs = (ndata:%.0f - nbkg:%.0f) / (1000.*(lumi:%f * eff:%f * BR:%f)) = %f pb \n", 
   	 counterData,
   	 counterBkg,
@@ -531,16 +531,14 @@ void HistogramReader::CrossSection(TString level,
   // Luminosity error
   //----------------------------------------------------------------------------  
 
-  float xsErrorLumi = CrossSection/100 * 4.6;
+  float xsErrorLumi = CrossSection * lumi_error_percent;
 
   printf("xs = %f +/- %.1f (error luminosity) \n", CrossSection, xsErrorLumi);
-
 
   // Statistical error
   //----------------------------------------------------------------------------  
 
-  float errorStatData = sqrt(counterData);
-  float xsErrorStat   = (errorStatData) / (lumi_fb * 1000. * efficiency * WZ23lnu);
+  float xsErrorStat   = sqrt(counterData) / (lumi_fb * 1000. * efficiency * WZ23lnu);
 
   printf("xs = %f +/- %.1f (error stat) \n", CrossSection, xsErrorStat);
 

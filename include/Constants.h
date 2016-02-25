@@ -12,7 +12,7 @@
 //const float lumi_fb = 1.269;
 //const float lumi_fb = 1.324;  // Used in the ttdm synchronization
 const float lumi_fb = 2.198;
-
+const float lumi_error_percent = 0.027;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -121,5 +121,5 @@ const Double_t W2e     = 0.1075;
 const Double_t W2m     = 0.1057;
 const Double_t W2tau   = 0.1125;
 const Double_t Z2ll    = 0.033658;
-//const Double_t WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
-const Double_t WZ23lnu = 2 * Z2ll * (W2e + W2m);
+const Double_t WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
+
