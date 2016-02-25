@@ -75,6 +75,7 @@ void runPlotter(TString level)
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",      "HWW",     kRed);
       plotter.AddProcess("12_VVV",      "VVV",     kYellow-6); 
+      plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
 
       if (datadriven)
 	{
@@ -82,19 +83,28 @@ void runPlotter(TString level)
 
 	  if (analysis.EqualTo("Top"))
 	    {
-	     plotter.AddProcess("04_TTbar","TTbar", kYellow);
-	     plotter.AddProcess("04_ST_tw","tw", kYellow+4);
+	     plotter.AddProcess("04_ST_tw_DD","tw", kYellow+4);
+	     plotter.AddProcess("04_TTbar_DD","TTbar", kYellow);	
             }
 	  else
 	    {
-	     plotter.AddProcess("07_WJets", "W+jets", kGray+1);
-             plotter.AddProcess("04_Top", "top",        kYellow);
+             plotter.AddProcess("04_Top_DD", "top", kYellow);
             } 
 	}
       else
 	{
-	     plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	  if (analysis.EqualTo("Top"))
+            }
+             plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+             plotter.AddProcess("04_TTJets","TTJets",kYellow);
+	     plotter.AddProcess("04_ST","St",kYellow+4);
+
+            {
+          else
+	    {          
+             plotter.AddProcess("07_WJets", "W+jets", kGray+1);
 	     plotter.AddProcess("04_Top",   "top",    kYellow);
+	    }	
         }
       plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
      }
@@ -199,7 +209,7 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "met"          + suffix, "E_{T}^{miss}",                    10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "trkmet"       + suffix, "track E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  400);
 	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",      10, 0, "GeV",  scale, true,    0,  400);
-	  plotter.Draw(prefix + "m2l"          + suffix, "m_{#font[12]{ll}}",                2, 0, "GeV",  scale, true, 0, 300);
+          plotter.Draw(prefix + "m2l"          + suffix, "m_{#font[12]{ll}}",                2, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "mtw1"         + suffix, "m_{T}^{W,1}",                     10, 0, "GeV",  scale, true,    0,  300);  // WW
 	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                     10, 0, "GeV",  scale, true,    0,  300);  // WW
 	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true,    0,  300);
