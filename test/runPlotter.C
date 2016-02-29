@@ -1,7 +1,7 @@
 #include "HistogramReader.h"
 
 
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 
 const TString inputdir  = "../rootfiles/";
 const TString outputdir = "figures/";
