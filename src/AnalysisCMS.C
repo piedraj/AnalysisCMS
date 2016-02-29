@@ -13,53 +13,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 
 
 //------------------------------------------------------------------------------
-// IsFiducialLepton
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsFiducialLepton(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float eta     = std_vector_lepton_eta    ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  float etamax = (fabs(flavour) == MUON_FLAVOUR) ? 2.4 : 2.5;
-
-  bool is_fiducial_lepton = (pt > 10. && fabs(eta) < etamax);
-
-  return is_fiducial_lepton;
-}
-
-
-//------------------------------------------------------------------------------
-// IsTightLepton
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsTightLepton(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  bool is_tight_lepton = false;
-
-  if (fabs(flavour) == MUON_FLAVOUR)
-    {
-      is_tight_lepton = std_vector_lepton_isMediumMuon->at(k);
-
-      float dxy = (pt > 20.) ? 0.02 : 0.01;
-
-      //      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);  // 74x
-      //      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);  // 74x
-      is_tight_lepton &= (fabs(std_vector_lepton_d0->at(k)) < dxy);  // 76x
-      is_tight_lepton &= (fabs(std_vector_lepton_dz->at(k)) < 0.1);  // 76x
-    }
-  else if (fabs(flavour) == ELECTRON_FLAVOUR)
-    {
-      is_tight_lepton = std_vector_lepton_eleIdTight->at(k);
-    }
-
-  return is_tight_lepton;
-}
-
-
-//------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
 float AnalysisCMS::MuonIsolation(int k)
@@ -432,13 +385,13 @@ void AnalysisCMS::EventDump()
     {
       int index = AnalysisLeptons[i].index;
 
-      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%d",
+      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%.0f",
 			    evt,
 			    AnalysisLeptons[i].flavour,
 			    AnalysisLeptons[i].v.Pt(),
 			    AnalysisLeptons[i].v.Eta(),
 			    AnalysisLeptons[i].iso,
-			    IsTightLepton(index));
+			    std_vector_lepton_isTightLepton->at(index));
 
       if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
 	{
