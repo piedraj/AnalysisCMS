@@ -289,14 +289,17 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = _luminosity * baseW * puW;  // Default weights
 
-  float lepton_scale_factor =
-    std_vector_lepton_idisoW->at(0) *
-    std_vector_lepton_idisoW->at(1) *
-    std_vector_lepton_idisoW->at(2);
+  float lepton_scale_factor = 1.0;
+
+  if (!_sample.Contains("Higgs_Zp2HDM"))
+    {
+      lepton_scale_factor =
+	std_vector_lepton_idisoW->at(0) *
+	std_vector_lepton_idisoW->at(1) *
+	std_vector_lepton_idisoW->at(2);
+    }
   
   _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
-
-  if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);  // 74x
 
   if (!GEN_weight_SM) return;
   
