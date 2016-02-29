@@ -94,12 +94,12 @@ void runPlotter(TString level)
       else
 	{
 	  if (analysis.EqualTo("Top"))
-            }
+            {
              plotter.AddProcess("07_WJets", "W+jets", kGray+1);
              plotter.AddProcess("04_TTJets","TTJets",kYellow);
 	     plotter.AddProcess("04_ST","St",kYellow+4);
 
-            {
+            }
           else
 	    {          
              plotter.AddProcess("07_WJets", "W+jets", kGray+1);

@@ -130,7 +130,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
     bool pass_met40 =  MET.Et() > 40.;
     
-    bool pass2 = pass & pass_met40;
+    bool pass2 = pass && pass_met40;
 
     FillLevelHistograms(Top_00_MET40Has2Leptons, pass2);
 
