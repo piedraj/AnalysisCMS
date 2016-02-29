@@ -291,7 +291,7 @@ void AnalysisCMS::ApplyWeights()
 
   float lepton_scale_factor = 1.0;
 
-  if (!_sample.Contains("Higgs_Zp2HDM"))
+  if (!_sample.Contains("2HDM"))
     {
       lepton_scale_factor =
 	std_vector_lepton_idisoW->at(0) *

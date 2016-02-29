@@ -200,7 +200,7 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",     10, 0, "GeV",  scale, true,    0,  600);
 
 
-	  // WW histograms
+	  // WW and MonoH histograms
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
@@ -214,7 +214,20 @@ void runPlotter(TString level)
 	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",             10, 0, "rad", linY, false, 0, 3.2);
 	    }
 
-	  
+
+	  // MonoH histograms
+	  //--------------------------------------------------------------------
+	  if (analysis.EqualTo("MonoH"))
+	    {
+	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",    2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",    2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",      2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltaphil1met" + suffix, "#Delta#phi(lep1,E_{T}^{miss})", 2, 1, "rad",  logY, false, 0, 3.2);
+	      plotter.Draw(prefix + "deltaphil2met" + suffix, "#Delta#phi(lep2,E_{T}^{miss})", 2, 1, "rad",  logY, false, 0, 3.2);
+	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",   2, 1, "rad",  logY, false, 0, 3.2);                  
+	    }
+
+
 	  // WZ histograms
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WZ"))
