@@ -107,49 +107,56 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
 
-    bool pass1 = _ht > 260;   
+//    bool pass1 = _ht > 260.;   
+//    bool pass1_1 = _ht > 300.;   
 
-    FillLevelHistograms(Top_00_ht260Has2Leptons, pass && pass1);
+//    FillLevelHistograms(Top_00_ht260Has2Leptons, pass && pass1);
+//    FillLevelHistograms(Top_00_ht300Has2Leptons, pass && pass1_1);
 
     //------------------------------------------------------------------------
     // Basics + _ht > 260 + met > 40 + Has2Leptons
 
-    pass1 &= MET.Et() > 40.;
+//    pass1 &= MET.Et() > 40.;
+//    pass1_1 &= MET.Et() > 40.;
 
-    FillLevelHistograms(Top_00_ht260Met40Has2Leptons, pass && pass1); 
+//    FillLevelHistograms(Top_00_ht260Met40Has2Leptons, pass && pass1); 
+//    FillLevelHistograms(Top_00_ht300Met40Has2Leptons, pass && pass1_1); 
 
     //--------------------------------------------------------------------------
     // Basics + _ht > 260 + met > 50 + Has2Leptons
      
-    pass1 &= MET.Et() > 50.;    
+//    pass1 &= MET.Et() > 50.;    
+//    pass1_1 &= MET.Et() > 50.;    
   
-    FillLevelHistograms(Top_00_ht260Met50Has2Leptons, pass && pass1);
+//    FillLevelHistograms(Top_00_ht260Met50Has2Leptons, pass && pass1);
+//    FillLevelHistograms(Top_00_ht300Met50Has2Leptons, pass && pass1_1);
 
     //-------------------------------------------------------------------------
     // Basics + met > 40 + Has1BJet
 
-    bool pass_met40 =  MET.Et() > 40.;
+//    bool pass_met40 =  MET.Et() > 40.;
     
-    bool pass2 = pass && pass_met40;
+//    bool pass2 = pass && pass_met40;
+    	
 
-    FillLevelHistograms(Top_00_MET40Has2Leptons, pass2);
+    FillLevelHistograms(Top_00_Has2Leptons, pass);
 
-    pass2 &= (njet > 1);
+    pass &= (njet > 1);
 
-    FillLevelHistograms(Top_01_Has2Jets, pass2);
+    FillLevelHistograms(Top_01_Has2Jets, pass);
 
-    pass2 &= (_nbjet30medium > 0);
+    pass &= (_nbjet30medium > 0);
 
-    FillLevelHistograms(Top_02_Has1BJet, pass2);
+    FillLevelHistograms(Top_02_Has1BJet, pass);
     
     //--------------------------------------------------------------------------
     // Basics + met > 50 + Has2Leptons
 
-    bool pass_met50 = MET.Et() > 50.;
+//    bool pass_met50 = MET.Et() > 50.;
 
-    bool pass3 = pass && pass_met50;
+//    bool pass3 = pass && pass_met50;
 
-    FillLevelHistograms(Top_00_MET50Has2Leptons, pass3);
+//    FillLevelHistograms(Top_00_MET50Has2Leptons, pass3);
 
     //--------------------------------------------------------------------------
   }
