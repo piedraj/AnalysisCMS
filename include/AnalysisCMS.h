@@ -86,12 +86,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetFakeWeights   ();
 
-  bool    IsFiducialLepton (int      k);
-
   bool    IsIsolatedLepton (int      k);
 
-  bool    IsTightLepton    (int      k);
-  
   float   MuonIsolation    (int      k);
 
   void    PrintProgress    (Long64_t counter,
