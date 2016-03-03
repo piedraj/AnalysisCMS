@@ -30,6 +30,7 @@ class AnalysisTop : public AnalysisCMS
   // Analysis histograms
   //----------------------------------------------------------------------------
   TH1D*                  h_test[nchannel][ncut][njetbin+1];
+  TH1D*                  h_htJets[nchannel][ncut][njetbin+1];
   TH2F*                  h_2ht [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet1 [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet2 [nchannel][ncut][njetbin+1];

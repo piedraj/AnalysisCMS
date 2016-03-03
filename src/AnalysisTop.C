@@ -42,12 +42,13 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_test[i][j][k] = new TH1D("h_test" + suffix, "", 300, 0, 300);
-	h_2ht [i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800,300,0,800);
-        h_dphilmet1[i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0,   10);
-	h_dphilmet2[i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0,   10);        
-        h_jetpt1   [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
-        h_jetpt2   [i][j][k] = new TH1D("h_jetpt2"      + suffix, "", 1000, 0, 1000);
+	h_test		[i][j][k] = new TH1D("h_test" + suffix, "", 300, 0, 300);
+        h_htJets	[i][j][k] = new TH1D("h_htJets" + suffix, "", 300, 0, 800);
+	h_2ht 		[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800,300,0,800);
+        h_dphilmet1	[i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0,   10);
+	h_dphilmet2	[i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0,   10);        
+        h_jetpt1   	[i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
+        h_jetpt2   	[i][j][k] = new TH1D("h_jetpt2"      + suffix, "", 1000, 0, 1000);
 	
       }
     }
@@ -100,69 +101,73 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
+
+    FillLevelHistograms(Top_00_Has2Leptons, pass);    
    
     //-------------------------------------------------------------------------
     // Basics Top
 
-//    pass &= mll>20.;
+    pass &= mll>20.;
+   
+    FillLevelHistograms(Top_00_mll20, pass);
 
-//    pass &= fabs(mll - Z_MASS) > 15.;
+    pass &= fabs(mll - Z_MASS) > 15.;
 
-//    pass &= (MET.Et() > 30.); 
+    FillLevelHistograms(Top_00_Zveto, pass);
+
+    pass &= (MET.Et() > 40.);
+
+    FillLevelHistograms(Top_00_Met40, pass); 
    
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
 
-//    bool pass1 = _ht > 260.;   
-//    bool pass1_1 = _ht > 300.;   
+    bool pass1 = _ht > 260.;
+	// bool pass1_jet = _htJets > 260.;   
+    bool pass1_1 = _ht > 300.;   
+	//bool pass1_1_jet = _htJets > 300.;
+    FillLevelHistograms(Top_00_ht260, pass && pass1);
+    FillLevelHistograms(Top_00_ht300, pass && pass1_1);
+    	//FillLevelHistograms( Top_00_htJets260, pass && pass1_jet);
+    	//FillLevelHistograms( Top_00_htJets300, pass && pass1_1_jet);
 
-//    FillLevelHistograms(Top_00_ht260Has2Leptons, pass && pass1);
-//    FillLevelHistograms(Top_00_ht300Has2Leptons, pass && pass1_1);
-
-    //------------------------------------------------------------------------
-    // Basics + _ht > 260 + met > 40 + Has2Leptons
-
-//    pass1 &= MET.Et() > 40.;
-//    pass1_1 &= MET.Et() > 40.;
-
-//    FillLevelHistograms(Top_00_ht260Met40Has2Leptons, pass && pass1); 
-//    FillLevelHistograms(Top_00_ht300Met40Has2Leptons, pass && pass1_1); 
 
     //--------------------------------------------------------------------------
     // Basics + _ht > 260 + met > 50 + Has2Leptons
      
-//    pass1 &= MET.Et() > 50.;    
-//    pass1_1 &= MET.Et() > 50.;    
+    pass1 &= MET.Et() > 50.;    
+    pass1_1 &= MET.Et() > 50.;    	
+	// pass1_jet &= MET.Et() > 50.;
+	// pass1_1_jet &= MET.Et() > 50.;
   
-//    FillLevelHistograms(Top_00_ht260Met50Has2Leptons, pass && pass1);
-//    FillLevelHistograms(Top_00_ht300Met50Has2Leptons, pass && pass1_1);
+    FillLevelHistograms(Top_00_ht260Met50, pass && pass1);
+    FillLevelHistograms(Top_00_ht300Met50, pass && pass1_1);
+	//FillLevelHistograms( Top_00_htJets260Met50, pass && pass1_jet);
+	//FillLevelHistograms( Top_00_htJets300Met50, pass && pass1_1_jet);
+	 
+
 
     //-------------------------------------------------------------------------
-    // Basics + met > 40 + Has1BJet
+    // Basics + Has1BJet
+   
+    bool pass2 = pass && (njet > 1);
 
-//    bool pass_met40 =  MET.Et() > 40.;
-    
-//    bool pass2 = pass && pass_met40;
-    	
+    //pass &= (njet > 1);
 
-    FillLevelHistograms(Top_00_Has2Leptons, pass);
+    FillLevelHistograms(Top_01_Has2Jets, pass2);
 
-    pass &= (njet > 1);
+    pass2 &= (_nbjet30medium > 0);
 
-    FillLevelHistograms(Top_01_Has2Jets, pass);
-
-    pass &= (_nbjet30medium > 0);
-
-    FillLevelHistograms(Top_02_Has1BJet, pass);
+    FillLevelHistograms(Top_02_Has1BJet, pass2);
     
     //--------------------------------------------------------------------------
     // Basics + met > 50 + Has2Leptons
 
-//    bool pass_met50 = MET.Et() > 50.;
+    bool pass_met50 = MET.Et() > 50.;
 
-//    bool pass3 = pass && pass_met50;
+    bool pass3 = pass && pass_met50;
 
-//    FillLevelHistograms(Top_00_MET50Has2Leptons, pass3);
+    FillLevelHistograms(Top_00_Met50, pass3);
 
     //--------------------------------------------------------------------------
   }
@@ -179,12 +184,13 @@ void AnalysisTop::FillAnalysisHistograms(int ichannel,
 					 int icut,
 					 int ijet)
 {
-  h_test[ichannel][icut][ijet]->Fill(_m2l, _event_weight);
-  h_2ht [ichannel][icut][ijet]->Fill(_ht, _htJets, _event_weight);
-  h_dphilmet1[ichannel][icut][ijet]->Fill(dphilmet1,                    _event_weight);
-  h_dphilmet2[ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);  
-  h_jetpt1   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
-  h_jetpt2   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(1),     _event_weight);
+  h_test	[ichannel][icut][ijet]->Fill(_m2l, _event_weight);
+  h_htJets	[ichannel][icut][ijet]->Fill(_htJets, _event_weight);
+  h_2ht 	[ichannel][icut][ijet]->Fill(_ht, _htJets, _event_weight);
+  h_dphilmet1	[ichannel][icut][ijet]->Fill(dphilmet1,                    _event_weight);
+  h_dphilmet2	[ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);  
+  h_jetpt1   	[ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
+  h_jetpt2   	[ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(1),     _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }

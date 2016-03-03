@@ -214,17 +214,18 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                     10, 0, "GeV",  scale, true,    0,  300);  // WW
 	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true,    0,  300);
 	  plotter.Draw(prefix + "mc"           + suffix, "m_{c}",                           10, 0, "GeV",  scale, true,    0,  500);
-	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                           10, 0, "GeV",  scale, true,    0,  500);
+	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                           10, 0, "GeV",  scale, true,    0,  800);
           plotter.Draw(prefix + "pt1"          + suffix, "leading lepton p_{T}",             2, 0, "GeV",  scale, true,    0,  200);
 	  plotter.Draw(prefix + "pt2"          + suffix, "trailing lepton p_{T}",            2, 0, "GeV",  scale, true,    0,  200);
 	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",            2, 0, "GeV",  scale, true,    0,  200);
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                       2, 0, "GeV",  scale, true,    0,  200);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",     10, 0, "GeV",  scale, true,    0,  600);
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",     10, 0, "GeV",  scale, true,    0,  600);
-          plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",              2, 0, "GeV", linY, false, 0, 100);
-          plotter.Draw(prefix + "jetpt2"    + suffix, "trailing jet p_{T}",              2, 0, "GeV", linY, false, 0, 100);
-          plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
-          plotter.Draw(prefix + "dphilmet2" + suffix, "#Delta#phi(lep2,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
+          plotter.Draw(prefix + "jetpt1"         + suffix, "leading jet p_{T}",                2, 0, "GeV",  scale, true,    0,  100);
+          plotter.Draw(prefix + "jetpt2"  	 + suffix, "trailing jet p_{T}",               2, 0, "GeV",  scale, true,    0,  100);
+          plotter.Draw(prefix + "dphilmet1" 	 + suffix, "#Delta#phi(lep1,E_{T}^{miss})",   10, 1, "rad",  scale, true,    0,  3.2);
+          plotter.Draw(prefix + "dphilmet2" 	 + suffix, "#Delta#phi(lep2,E_{T}^{miss})",   10, 1, "rad",  scale, true,    0,  3.2);
+	  plotter.Draw(prefix + "htJets"         + suffix,"H_{T}",                            10, 0, "GeV",  scale, true,    0,  800);  
 
 	  // WW histograms
 	  //--------------------------------------------------------------------
