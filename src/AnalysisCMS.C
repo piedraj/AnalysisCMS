@@ -424,6 +424,8 @@ void AnalysisCMS::GetMET(float module, float phi)
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetHt()
 {
+  _htjets = 0;
+
   _ht = MET.Et();
 
   _ht += Lepton1.v.Pt();
@@ -433,7 +435,8 @@ void AnalysisCMS::GetHt()
     {
       if (std_vector_jet_pt->at(i) < 30.) continue;
 
-      _ht += std_vector_jet_pt->at(i);
+      _ht     += std_vector_jet_pt->at(i);
+      _htjets += std_vector_jet_pt->at(i);
     }
 }
 

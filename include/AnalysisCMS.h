@@ -130,6 +130,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
   float                  _ht;
+  float                  _htjets;
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
