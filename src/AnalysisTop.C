@@ -43,6 +43,12 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 	DefineHistograms(i, j, k, suffix);
 
 	h_test[i][j][k] = new TH1D("h_test" + suffix, "", 300, 0, 300);
+	h_2ht [i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800,300,0,800);
+        h_dphilmet1[i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0,   10);
+	h_dphilmet2[i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0,   10);        
+        h_jetpt1   [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
+        h_jetpt2   [i][j][k] = new TH1D("h_jetpt2"      + suffix, "", 1000, 0, 1000);
+	
       }
     }
   }
@@ -98,11 +104,11 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //-------------------------------------------------------------------------
     // Basics Top
 
-    pass &= mll>20.;
+//    pass &= mll>20.;
 
-    pass &= fabs(mll - Z_MASS) > 15.;
+//    pass &= fabs(mll - Z_MASS) > 15.;
 
-    pass &= (MET.Et() > 30.); 
+//    pass &= (MET.Et() > 30.); 
    
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
@@ -174,6 +180,11 @@ void AnalysisTop::FillAnalysisHistograms(int ichannel,
 					 int ijet)
 {
   h_test[ichannel][icut][ijet]->Fill(_m2l, _event_weight);
+  h_2ht [ichannel][icut][ijet]->Fill(_ht, _htJets, _event_weight);
+  h_dphilmet1[ichannel][icut][ijet]->Fill(dphilmet1,                    _event_weight);
+  h_dphilmet2[ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);  
+  h_jetpt1   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
+  h_jetpt2   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(1),     _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
