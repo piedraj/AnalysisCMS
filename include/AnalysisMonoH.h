@@ -4,6 +4,7 @@
 #include "AnalysisCMS.h"
 #include "CutsMonoH.h"
 
+
 class AnalysisMonoH : public AnalysisCMS
 {
  public :
@@ -21,7 +22,10 @@ class AnalysisMonoH : public AnalysisCMS
 			      TString sample,
 			      float   luminosity);
 
+  // Data members
+  //----------------------------------------------------------------------------
 
+  
   // Analysis histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metvar_m2l[nchannel][ncut][njetbin+1];
@@ -35,6 +39,23 @@ class AnalysisMonoH : public AnalysisCMS
   TH1D*                  h_lepphi2[nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1_pdfUp[nchannel][ncut][njetbin+1];
   TH1D*                  h_pt1_pdfDown[nchannel][ncut][njetbin+1];
+
+  // Puesto por Alberto Manjon
+  // TH1D*                  h_njet           [nchannel][ncut][njetbin+1];
+  // TH1D*                  h_nbjet          [nchannel][ncut][njetbin+1];
+  // TH1D*                  h_pfType1Met     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltarl1met    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltarl2met    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltarllmet    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltaphill     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltaphil1met  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltaphil2met  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_deltaphillmet  [nchannel][ncut][njetbin+1];
+  // TH1D*                  h_deltaR_jet_met [nchannel][ncut][njetbin+1];
+  // TH2D*                  h_met_deltaphill[nchannel][ncut][njetbin+1];
+  // TH2D*                  h_met_m2l[nchannel][ncut][njetbin+1];
+  // Razor Variable                                                                                                                  
+  TH1D*                  h_mr[nchannel][ncut][njetbin+1];
 };
 
 #endif
