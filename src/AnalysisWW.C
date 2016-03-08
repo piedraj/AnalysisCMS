@@ -127,7 +127,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= pass_ptll;
     FillLevelHistograms(WW_06_Ptll, pass && pass_zveto);
 
-    pass &= (_nbjet15loose == 0);
+    pass &= (_nbjet20loose == 0);
     FillLevelHistograms(WW_07_BVeto, pass && pass_zveto);
 
     pass &= (!_foundsoftmuon);
@@ -160,7 +160,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass_zwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_14_ZWindowPfMet, pass_zwindow);
 
-    pass_zwindow &= (_nbjet15loose == 0);
+    pass_zwindow &= (_nbjet20loose == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, pass_zwindow);
 
     pass_zwindow &= (!_foundsoftmuon);
