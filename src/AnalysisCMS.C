@@ -253,7 +253,7 @@ void AnalysisCMS::ApplyWeights()
 	std_vector_lepton_idisoW->at(2);
     }
   
-  _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+  _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
 
   if (!GEN_weight_SM) return;
   
