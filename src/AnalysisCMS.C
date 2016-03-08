@@ -177,7 +177,8 @@ void AnalysisCMS::Summary(TString analysis,
   
   txt_summary << "\n";
 
-  if (title.Contains("raw") && _ismc) Summary(analysis, "11.2", "predicted yields");
+  if (title.Contains("raw") && (_ismc || _sample.Contains("DD_")))
+    Summary(analysis, "11.2", "predicted yields");
 }
 
 
