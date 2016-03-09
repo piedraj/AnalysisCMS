@@ -176,8 +176,8 @@ void runPlotter(TString level)
 	  plotter.SetTitle(title);
 
 	  plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet15loose" + suffix, "number of (15 GeV) loose b-jets", -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet15tight" + suffix, "number of (15 GeV) tight b-jets", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", scale, true,    0,    4);

@@ -97,7 +97,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Top_01_Has2Jets, pass);
 
-    pass &= (_nbjet15loose > 0);
+    pass &= (_nbjet20loose > 0);
 
     FillLevelHistograms(Top_02_Has1BJet, pass);
   }

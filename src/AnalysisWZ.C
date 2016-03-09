@@ -154,7 +154,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WZ_02_HasW, pass);
 
-    pass &= (_nbjet15tight == 0);
+    pass &= (_nbjet20tight == 0);
     
     FillLevelHistograms(WZ_03_BVeto, pass);
 
@@ -182,7 +182,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     pass &= ((ZLepton1.v + ZLepton2.v).M() > 4.);
 
     pass &= (_m2l < 89. || _m2l > 93.);
-    pass &= (_nbjet15loose > 0.);
+    pass &= (_nbjet20loose > 0.);
 
     FillLevelHistograms(WZ_05_TopRegion, pass);
   }
