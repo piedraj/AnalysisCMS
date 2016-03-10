@@ -13,53 +13,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 
 
 //------------------------------------------------------------------------------
-// IsFiducialLepton
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsFiducialLepton(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float eta     = std_vector_lepton_eta    ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  float etamax = (fabs(flavour) == MUON_FLAVOUR) ? 2.4 : 2.5;
-
-  bool is_fiducial_lepton = (pt > 10. && fabs(eta) < etamax);
-
-  return is_fiducial_lepton;
-}
-
-
-//------------------------------------------------------------------------------
-// IsTightLepton
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsTightLepton(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  bool is_tight_lepton = false;
-
-  if (fabs(flavour) == MUON_FLAVOUR)
-    {
-      is_tight_lepton = std_vector_lepton_isMediumMuon->at(k);
-
-      float dxy = (pt > 20.) ? 0.02 : 0.01;
-
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdxy->at(k)) < dxy);  // 74x
-      is_tight_lepton &= (fabs(std_vector_lepton_BestTrackdz ->at(k)) < 0.1);  // 74x
-      //      is_tight_lepton &= (fabs(std_vector_lepton_d0->at(k)) < dxy);  // 76x
-      //      is_tight_lepton &= (fabs(std_vector_lepton_dz->at(k)) < 0.1);  // 76x
-    }
-  else if (fabs(flavour) == ELECTRON_FLAVOUR)
-    {
-      is_tight_lepton = std_vector_lepton_eleIdTight->at(k);
-    }
-
-  return is_tight_lepton;
-}
-
-
-//------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
 float AnalysisCMS::MuonIsolation(int k)
@@ -134,11 +87,12 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_counterLum  [ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht          [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_m2l         [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_nbjet15loose[ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
-  h_nbjet15tight[ichannel][icut][ijet]->Fill(_nbjet15tight,  _event_weight);
+  h_nbjet20loose[ichannel][icut][ijet]->Fill(_nbjet20loose,  _event_weight);
+  h_nbjet20tight[ichannel][icut][ijet]->Fill(_nbjet20tight,  _event_weight);
   h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
+  h_mpmet       [ichannel][icut][ijet]->Fill(mpmet,          _event_weight);  // Needs l2Sel
   h_njet        [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
   h_drll        [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
   h_dphill      [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2Sel
@@ -149,10 +103,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_pt2         [ichannel][icut][ijet]->Fill(pt2,            _event_weight);  // Needs l2Sel
   h_sumpt12     [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
   h_sumjpt12    [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
-  h_mpmet       [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_pt2l        [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_trkmet      [ichannel][icut][ijet]->Fill(trkMet,         _event_weight);  // 74x
-  //  h_trkmet      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);  // 76x
+  h_trkmet      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);
   h_mc          [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww        [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
@@ -224,7 +176,8 @@ void AnalysisCMS::Summary(TString analysis,
   
   txt_summary << "\n";
 
-  if (title.Contains("raw") && _ismc) Summary(analysis, "11.2", "predicted yields");
+  if (title.Contains("raw") && (_ismc || _sample.Contains("DD_")))
+    Summary(analysis, "11.2", "predicted yields");
 }
 
 
@@ -289,6 +242,7 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = _luminosity * baseW * puW;  // Default weights
 
+<<<<<<< HEAD
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
     std_vector_lepton_idisoW->at(1) *
@@ -297,8 +251,19 @@ void AnalysisCMS::ApplyWeights()
   //  _event_weight *= effTrigW * lepton_scale_factor;  // Scale factor without b_tag SF
   
   _event_weight *= bPogSF * bTPSF * effTrigW * lepton_scale_factor;  // Scale factors
+=======
+  float lepton_scale_factor = 1.0;
+>>>>>>> upstream/master
 
-  if (_sample.Contains("GluGluWWTo2L2Nu")) _event_weight *= (0.1086 * 0.1086 * 9.);  // 74x
+  if (!_sample.Contains("2HDM"))
+    {
+      lepton_scale_factor =
+	std_vector_lepton_idisoW->at(0) *
+	std_vector_lepton_idisoW->at(1) *
+	std_vector_lepton_idisoW->at(2);
+    }
+  
+  _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
 
   if (!GEN_weight_SM) return;
   
@@ -371,9 +336,14 @@ void AnalysisCMS::GetJets()
 {
   AnalysisJets.clear();
 
+<<<<<<< HEAD
   _nbjet15loose = 0;
   _nbjet30medium = 0;
   _nbjet15tight = 0;
+=======
+  _nbjet20loose = 0;
+  _nbjet20tight = 0;
+>>>>>>> upstream/master
   _nbjet30tight = 0;
   
 
@@ -392,16 +362,22 @@ void AnalysisCMS::GetJets()
     Jet goodjet;
 
     goodjet.index    = i;
+    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_looseWP) _nbjet15loose++;
-    if (pt > 15. && goodjet.csvv2ivf > csvv2ivf_tightWP) _nbjet15tight++;
+    if (pt > 20. && goodjet.cmvav2 > CSVv2L) _nbjet20loose++;
+    if (pt > 20. && goodjet.cmvav2 > CSVv2T) _nbjet20tight++;
 
     if (pt < 30.) continue;
 
+<<<<<<< HEAD
     if (goodjet.csvv2ivf > csvv2ivf_tightWP)   _nbjet30tight++;
     if (goodjet.csvv2ivf > csvv2ivf_mediumWP)  _nbjet30medium++;
+=======
+    if (goodjet.cmvav2 > CSVv2T) _nbjet30tight++;
+
+>>>>>>> upstream/master
     AnalysisJets.push_back(goodjet);
   }
 
@@ -432,23 +408,21 @@ void AnalysisCMS::EventDump()
     {
       int index = AnalysisLeptons[i].index;
 
-      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%d",
+      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%.0f",
 			    evt,
 			    AnalysisLeptons[i].flavour,
 			    AnalysisLeptons[i].v.Pt(),
 			    AnalysisLeptons[i].v.Eta(),
 			    AnalysisLeptons[i].iso,
-			    IsTightLepton(index));
+			    std_vector_lepton_isTightLepton->at(index));
 
       if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
 	{
 	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
 				std_vector_electron_scEta->at(index),
 				std_vector_electron_passConversionVeto->at(index),
-				std_vector_electron_d0->at(index),  // 74x
-				std_vector_electron_dz->at(index),  // 74x
-				//std_vector_lepton_d0->at(index),  // 76x
-				//std_vector_lepton_dz->at(index),  // 76x
+				std_vector_lepton_d0->at(index),
+				std_vector_lepton_dz->at(index),
 				std_vector_electron_expectedMissingInnerHits->at(index));
 	}
       
@@ -471,7 +445,12 @@ void AnalysisCMS::GetMET(float module, float phi)
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetHt()
 {
+<<<<<<< HEAD
   _htJets = 0.;
+=======
+  _htjets = 0;
+
+>>>>>>> upstream/master
   _ht = MET.Et();
 
   _ht += Lepton1.v.Pt();
@@ -483,27 +462,8 @@ void AnalysisCMS::GetHt()
 
       _ht += std_vector_jet_pt->at(i);
       _htJets += std_vector_jet_pt->at(i);	
+//      _ht     += std_vector_jet_pt->at(i);
     }
-}
-
-
-//------------------------------------------------------------------------------                                                               
-// GetMpMet
-//------------------------------------------------------------------------------                                                               
-void AnalysisCMS::GetMpMet()
-{
-  _fullpmet = MET.Et();
-  _trkpmet  = trkMet;  // 74x
-  //  _trkpmet  = metTtrk;  // 76x
-
-  //  Needs l2Sel
-  if (dphilmet < TMath::Pi() / 2.)
-    {
-      _fullpmet *= sin(dphilmet);
-      _trkpmet  *= sin(dphilmet);
-    }
-
-  _mpmet = min(_trkpmet, _fullpmet);
 }
 
 
@@ -512,7 +472,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (njet <= 1) ? _mpmet : MET.Et();
+  _metvar = (njet <= 1) ? mpmet : MET.Et();
 }
 
 
@@ -670,8 +630,7 @@ void AnalysisCMS::EventSetup()
 
   ApplyWeights();
   
-  GetMET(pfType1Met, pfType1Metphi);  // 74x
-  //  GetMET(metPfType1, metPfType1Phi);  // 76x
+  GetMET(metPfType1, metPfType1Phi);
   
   GetLeptons();
 
@@ -686,8 +645,6 @@ void AnalysisCMS::EventSetup()
   GetMc();
   
   GetPtWW();
-
-  GetMpMet();
 
   GetMetVar();
 
@@ -758,8 +715,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_counterRaw  [ichannel][icut][ijet] = new TH1D("h_counterRaw"   + suffix, "",    3,    0,    3);
   h_counterLum  [ichannel][icut][ijet] = new TH1D("h_counterLum"   + suffix, "",    3,    0,    3);
   h_njet        [ichannel][icut][ijet] = new TH1D("h_njet"         + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15loose[ichannel][icut][ijet] = new TH1D("h_nbjet15loose" + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15tight[ichannel][icut][ijet] = new TH1D("h_nbjet15tight" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet20loose[ichannel][icut][ijet] = new TH1D("h_nbjet20loose" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet20tight[ichannel][icut][ijet] = new TH1D("h_nbjet20tight" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
   h_nvtx        [ichannel][icut][ijet] = new TH1D("h_nvtx"         + suffix, "",   50,    0,   50);
   h_drll        [ichannel][icut][ijet] = new TH1D("h_drll"         + suffix, "",  100,    0,    5);

@@ -34,7 +34,11 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
+<<<<<<< HEAD
   plotter.SetDrawRatio  (  true);  // true
+=======
+  plotter.SetDrawRatio  (   true);
+>>>>>>> upstream/master
   plotter.SetPublicStyle(  false);
 
 
@@ -74,6 +78,7 @@ void runPlotter(TString level)
       plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",      "HWW",     kRed);
+<<<<<<< HEAD
       plotter.AddProcess("12_VVV",      "VVV",     kYellow-6); 
       plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
 
@@ -108,6 +113,20 @@ void runPlotter(TString level)
         }
       plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
      }
+=======
+      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("04_Top",      "top",     kYellow);
+
+      if (datadriven)
+	{
+	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
+	}
+      else
+	{
+	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	}
+    }
+>>>>>>> upstream/master
 
 
   // Add signals
@@ -127,13 +146,13 @@ void runPlotter(TString level)
   if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
-  //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
-  //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
-  //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
-  //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
-  //      plotter.AddSignal("ttDM50scalar200",  "m_{#chi}50 m_{#phi}200",  kRed+1);
-  //      plotter.AddSignal("ttDM50scalar300",  "m_{#chi}50 m_{#phi}300",  kRed+2);
-  //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
+      //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
+      //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
+      //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
+      //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
+      //      plotter.AddSignal("ttDM50scalar200",  "m_{#chi}50 m_{#phi}200",  kRed+1);
+      //      plotter.AddSignal("ttDM50scalar300",  "m_{#chi}50 m_{#phi}300",  kRed+2);
+      //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
     }
 
 
@@ -203,6 +222,10 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nbjet15loose" + suffix, "number of (15 GeV) loose b-jets", -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "nbjet15tight" + suffix, "number of (15 GeV) tight b-jets", -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", linY);
+	 // plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", scale);
+	 // plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", scale);
+	 // plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", scale);
+	 // plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", linY, true,    0,    4);
 	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  linY, true,    0, 3.15);
@@ -227,7 +250,7 @@ void runPlotter(TString level)
           plotter.Draw(prefix + "dphilmet2" 	 + suffix, "#Delta#phi(lep2,E_{T}^{miss})",   10, 1, "rad",  linY, true,    0,  3.2);
 	  plotter.Draw(prefix + "htJets"         + suffix,"H_{T}",                            10, 0, "GeV",  linY, true,    0,  800);  
 
-	  // WW histograms
+	  // WW and MonoH histograms
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
@@ -241,7 +264,21 @@ void runPlotter(TString level)
 	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",             10, 0, "rad", linY, false, 0, 3.2);
 	    }
 
-	  
+
+	  // MonoH histograms
+	  //--------------------------------------------------------------------
+	  if (analysis.EqualTo("MonoH"))
+	    {
+	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",     2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",     2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",       2, 1, "NULL", logY, false, 0,   4);
+	      plotter.Draw(prefix + "deltaphil1met" + suffix, "#Delta#phi(lep1,E_{T}^{miss})",  2, 1, "rad",  logY, false, 0, 3.2);
+	      plotter.Draw(prefix + "deltaphil2met" + suffix, "#Delta#phi(lep2,E_{T}^{miss})",  2, 1, "rad",  logY, false, 0, 3.2);
+	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",    2, 1, "rad",  logY, false, 0, 3.2);
+	      plotter.Draw(prefix + "m_r"           + suffix, "M_{R}",                         10, 0, "GeV",  logY, false, 0, 300);
+	    }
+
+
 	  // WZ histograms
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WZ"))

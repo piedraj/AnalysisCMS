@@ -165,7 +165,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_03_Has2Jets, pass);
 
-    pass &= (_nbjet15loose > 0);
+    pass &= (_nbjet20loose > 0);
 
     FillLevelHistograms(TTDM_04_Has1BJet, pass);
 

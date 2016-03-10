@@ -28,6 +28,7 @@ struct Lepton
 struct Jet
 {
   int            index;
+  float          cmvav2;
   float          csvv2ivf;
   TLorentzVector v;
 };
@@ -75,8 +76,6 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetMetVar        ();
 
-  void    GetMpMet         ();
-
   void    GetMt            (Lepton   lep,
 			    float&   transverse_mass);
 
@@ -86,12 +85,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetFakeWeights   ();
 
-  bool    IsFiducialLepton (int      k);
-
   bool    IsIsolatedLepton (int      k);
 
-  bool    IsTightLepton    (int      k);
-  
   float   MuonIsolation    (int      k);
 
   void    PrintProgress    (Long64_t counter,
@@ -138,7 +133,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
-  float                  _mpmet;
   float                  _fullpmet;
   float                  _trkpmet;
   float                  _mtw;
@@ -155,6 +149,8 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _nbjet15loose;
   unsigned int           _nbjet30medium;
   unsigned int           _nbjet15tight;
+  unsigned int           _nbjet20loose;
+  unsigned int           _nbjet20tight;
   unsigned int           _nbjet30tight;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
@@ -169,8 +165,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_counterRaw  [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum  [nchannel][ncut][njetbin+1];
   TH1D*                  h_njet        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet15loose[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet15tight[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20loose[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20tight[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30tight[nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx        [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll        [nchannel][ncut][njetbin+1];
