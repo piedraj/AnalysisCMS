@@ -123,13 +123,13 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     // Basics + _ht > 260 + Has2Leptons    
 
     bool pass1 = _ht > 260.;
-	// bool pass1_jet = _htJets > 260.;   
+//    bool pass1_jet = _htJets > 100.;   
     bool pass1_1 = _ht > 300.;   
-	//bool pass1_1_jet = _htJets > 300.;
+//    bool pass1_1_jet = _htJets > 125.;
     FillLevelHistograms(Top_00_ht260, pass && pass1);
     FillLevelHistograms(Top_00_ht300, pass && pass1_1);
-    	//FillLevelHistograms( Top_00_htJets260, pass && pass1_jet);
-    	//FillLevelHistograms( Top_00_htJets300, pass && pass1_1_jet);
+//    FillLevelHistograms( Top_00_htJets100, pass && pass1_jet);
+//    FillLevelHistograms( Top_00_htJets125, pass && pass1_1_jet);
 
 
     //--------------------------------------------------------------------------
@@ -137,13 +137,13 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
      
     pass1 &= MET.Et() > 50.;    
     pass1_1 &= MET.Et() > 50.;    	
-	// pass1_jet &= MET.Et() > 50.;
-	// pass1_1_jet &= MET.Et() > 50.;
+//      pass1_jet &= MET.Et() > 50.;
+//      pass1_1_jet &= MET.Et() > 50.;
   
     FillLevelHistograms(Top_00_ht260Met50, pass && pass1);
     FillLevelHistograms(Top_00_ht300Met50, pass && pass1_1);
-	//FillLevelHistograms( Top_00_htJets260Met50, pass && pass1_jet);
-	//FillLevelHistograms( Top_00_htJets300Met50, pass && pass1_1_jet);
+//      FillLevelHistograms( Top_00_htJets100Met50, pass && pass1_jet);
+//      FillLevelHistograms( Top_00_htJets125Met50, pass && pass1_1_jet);
 	 
 
 
