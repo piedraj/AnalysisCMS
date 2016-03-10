@@ -25,4 +25,8 @@ hadd -f -k 10_Wg.root       Wg500.root
 hadd -f -k 11_Zg.root       Zg.root
 hadd -f -k 12_VVV.root      WZZ.root
 
+#special hadd for monoH
+hadd -f -k 13_HWW_monoH.root      GluGluHToWWTo2L2Nu_M124.root VBFHToWWTo2L2Nu_M124.root ttHJetToNonbb_M125.root
+hadd -f -k 14_ZH.root             HZJ_HToWW_M125.root
+
 popd
