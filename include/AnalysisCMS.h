@@ -76,8 +76,6 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetMetVar        ();
 
-  void    GetMpMet         ();
-
   void    GetMt            (Lepton   lep,
 			    float&   transverse_mass);
 
@@ -135,7 +133,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
-  float                  _mpmet;
   float                  _fullpmet;
   float                  _trkpmet;
   float                  _mtw;
