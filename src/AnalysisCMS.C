@@ -250,10 +250,10 @@ void AnalysisCMS::ApplyWeights()
 	std_vector_lepton_idisoW->at(0) *
 	std_vector_lepton_idisoW->at(1) *
 	std_vector_lepton_idisoW->at(2);
+      
+      _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
     }
   
-  _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
-
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
@@ -348,12 +348,12 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (pt > 20. && goodjet.cmvav2 > CSVv2L) _nbjet20loose++;
-    if (pt > 20. && goodjet.cmvav2 > CSVv2T) _nbjet20tight++;
+    if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
+    if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
 
     if (pt < 30.) continue;
 
-    if (goodjet.cmvav2 > CSVv2T) _nbjet30tight++;
+    if (goodjet.cmvav2 > cMVAv2T) _nbjet30tight++;
 
     AnalysisJets.push_back(goodjet);
   }
