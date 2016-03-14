@@ -92,7 +92,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
-  h_mpmet       [ichannel][icut][ijet]->Fill(mpmet,          _event_weight);  // Needs l2Sel
+  h_mpmet       [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);  // Needs l2Sel
   h_njet        [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
   h_drll        [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
   h_dphill      [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2Sel
@@ -412,9 +412,18 @@ void AnalysisCMS::EventDump()
 //------------------------------------------------------------------------------
 // GetMET
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetMET(float module, float phi)
-{
+void AnalysisCMS::GetMET(float module, float phi){
+
   MET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
+}
+
+
+//------------------------------------------------------------------------------
+// GetTrkMET
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTrkMET(float module, float phi){
+
+  trkMET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
 }
 
 
@@ -424,11 +433,14 @@ void AnalysisCMS::GetMET(float module, float phi)
 void AnalysisCMS::GetHt()
 {
   _htjets = 0;
+  _htnojets = 0;
 
   _ht = MET.Et();
 
   _ht += Lepton1.v.Pt();
   _ht += Lepton2.v.Pt();
+
+  _htnojets = _ht;
 
   for (int i=0; i<std_vector_jet_pt->size(); i++)
     {
@@ -440,12 +452,38 @@ void AnalysisCMS::GetHt()
 }
 
 
+
+//------------------------------------------------------------------------------  
+// GetMpMet
+//------------------------------------------------------------------------------     
+
+void AnalysisCMS::GetMpMet()
+{
+  _fullpmet = MET.Et();
+  _trkpmet  = trkMET.Et();
+
+  float dphil1trkmet = fabs(Lepton1.v.DeltaPhi(trkMET));
+  float dphil2trkmet = fabs(Lepton2.v.DeltaPhi(trkMET));
+
+  float dphiltrkmet = min(dphil1trkmet, dphil2trkmet);
+
+  //  Needs l2Sel
+  if (dphilmet < TMath::Pi() / 2.)
+    {
+      _fullpmet *= sin(dphilmet);
+      _trkpmet  *= sin(dphiltrkmet);
+    }
+
+  _mpmet = min(_trkpmet, _fullpmet);
+}
+
+
 //------------------------------------------------------------------------------                                                               
 // GetMetVar                                                                                                                                   
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (njet <= 1) ? mpmet : MET.Et();
+  _metvar = (njet <= 1) ? _mpmet : MET.Et();
 }
 
 
@@ -606,6 +644,8 @@ void AnalysisCMS::EventSetup()
   
   GetMET(metPfType1, metPfType1Phi);
   
+  GetTrkMET(metTtrk,    metTtrkPhi);
+  
   GetLeptons();
 
   GetJets();
@@ -613,6 +653,8 @@ void AnalysisCMS::EventSetup()
   GetJetPtSum();
 
   GetHt();
+
+  GetMpMet();
 
   GetSoftMuon();
 
