@@ -29,7 +29,6 @@ struct Jet
 {
   int            index;
   float          cmvav2;
-  float          csvv2ivf;
   TLorentzVector v;
 };
 
