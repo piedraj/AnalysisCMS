@@ -112,6 +112,8 @@ void HistogramReader::Draw(TString hname,
 			   Float_t ymin,
 			   Float_t ymax)
 {
+  _printlabels = true;
+
   TString cname = hname;
 
   if (setlogy) cname += "_log";
@@ -519,6 +521,41 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();
+
+
+  //----------------------------------------------------------------------------
+  // Print yields
+  //----------------------------------------------------------------------------
+  TString hname = hist->GetName();
+
+  if (hname.Contains("counterLum") && hname.Contains("evolution"))
+    {
+      if (_printlabels)
+	{
+	  _printlabels = false;
+
+	  printf("\n %22s", " ");
+	  
+	  for (int i=1; i<=hist->GetNbinsX(); i++) {
+
+	    TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
+	    
+	    printf(" & %16s", binlabel.Data());
+	  }
+
+	  printf(" \\\\\n");
+	}
+
+      printf(" %22s", label.Data());
+
+      for (int i=1; i<=hist->GetNbinsX(); i++) {
+
+	printf(" & %16.0f", hist->GetBinContent(i));
+      }
+
+      printf(" \\\\\n");
+    }
+
 
   return legend;
 }
