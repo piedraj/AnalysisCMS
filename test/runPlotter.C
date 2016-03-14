@@ -126,7 +126,7 @@ void runPlotter(TString level)
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", scale);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", scale, false);
     }
 
 
@@ -144,7 +144,7 @@ void runPlotter(TString level)
 
       plotter.LoopEventsByChannel(level + jetbin);
 
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale);
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale, false);
     }
 
 
@@ -176,6 +176,7 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  plotter.SetTitle(title);
 
+	  plotter.Draw(prefix + "counterLum"   + suffix, "yield",         -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", scale);
