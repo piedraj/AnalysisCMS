@@ -271,22 +271,40 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
+  bool found_third_tight_lepton = false;
+
   AnalysisLeptons.clear();
 
   int vector_lepton_size = std_vector_lepton_pt->size();
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    float pt  = std_vector_lepton_pt ->at(i);
-    float eta = std_vector_lepton_eta->at(i);
-    float phi = std_vector_lepton_phi->at(i);
+    float pt   = std_vector_lepton_pt->at(i);
+    float eta  = std_vector_lepton_eta->at(i);
+    float phi  = std_vector_lepton_phi->at(i);
+    float type = std_vector_lepton_isTightLepton->at(i);
 
-    if (i > 1 && pt < 0.) continue;
+    if (pt < 0.) continue;
+
+    bool reject_lepton = false;
+    
+    if (i > 1 && !_sample.Contains("DD_") && _analysis.EqualTo("WZ"))
+      {
+	if (!found_third_tight_lepton)
+	  {
+	    if (type < 1.)
+	      reject_lepton = true;
+	    else
+	      found_third_tight_lepton = true;
+	  }
+      }
+
+    if (reject_lepton) continue;
 
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = Tight;
+    lep.type    = (type > 0) ? Tight : Loose;
     lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
