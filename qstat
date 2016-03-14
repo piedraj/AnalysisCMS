@@ -1,0 +1,2 @@
+qstat -u prieels
+cat job* | grep "Done" | wc

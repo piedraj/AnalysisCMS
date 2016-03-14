@@ -1,0 +1,39 @@
+~/CMSSW_7_5_3/src/AnalysisCMS/rootfiles/WZ ~/CMSSW_7_5_3/src/AnalysisCMS/test
+hadd Target file: 01_Data.root
+hadd Source file 1: Run2015C_16Dec2015_DoubleEG.root
+hadd Source file 2: Run2015C_16Dec2015_DoubleMuon.root
+hadd Source file 3: Run2015C_16Dec2015_MuonEG.root
+hadd Source file 4: Run2015C_16Dec2015_SingleElectron.root
+hadd Source file 5: Run2015C_16Dec2015_SingleMuon.root
+hadd Source file 6: Run2015D_16Dec2015_DoubleEG.root
+hadd Source file 7: Run2015D_16Dec2015_DoubleMuon.root
+hadd Source file 8: Run2015D_16Dec2015_MuonEG.root
+hadd Source file 9: Run2015D_16Dec2015_SingleElectron.root
+hadd Source file 10: Run2015D_16Dec2015_SingleMuon.root
+hadd Target path: 01_Data.root:/
+hadd Target path: 01_Data.root:/WZ
+hadd Target path: 01_Data.root:/WZ/00_Exactly3Leptons
+hadd Target path: 01_Data.root:/WZ/00_Exactly3Leptons/0jet
+hadd Target path: 01_Data.root:/WZ/00_Exactly3Leptons/1jet
+hadd Target path: 01_Data.root:/WZ/00_Exactly3Leptons/2jet
+hadd Target path: 01_Data.root:/WZ/01_HasZ
+hadd Target path: 01_Data.root:/WZ/01_HasZ/0jet
+hadd Target path: 01_Data.root:/WZ/01_HasZ/1jet
+hadd Target path: 01_Data.root:/WZ/01_HasZ/2jet
+hadd Target path: 01_Data.root:/WZ/02_HasW
+hadd Target path: 01_Data.root:/WZ/02_HasW/0jet
+hadd Target path: 01_Data.root:/WZ/02_HasW/1jet
+hadd Target path: 01_Data.root:/WZ/02_HasW/2jet
+hadd Target path: 01_Data.root:/WZ/03_BVeto
+hadd Target path: 01_Data.root:/WZ/03_BVeto/0jet
+hadd Target path: 01_Data.root:/WZ/03_BVeto/1jet
+hadd Target path: 01_Data.root:/WZ/03_BVeto/2jet
+hadd Target path: 01_Data.root:/WZ/04_ZRegion
+hadd Target path: 01_Data.root:/WZ/04_ZRegion/0jet
+hadd Target path: 01_Data.root:/WZ/04_ZRegion/1jet
+hadd Target path: 01_Data.root:/WZ/04_ZRegion/2jet
+hadd Target path: 01_Data.root:/WZ/05_TopRegion
+hadd Target path: 01_Data.root:/WZ/05_TopRegion/0jet
+hadd Target path: 01_Data.root:/WZ/05_TopRegion/1jet
+hadd Target path: 01_Data.root:/WZ/05_TopRegion/2jet
+~/CMSSW_7_5_3/src/AnalysisCMS/test

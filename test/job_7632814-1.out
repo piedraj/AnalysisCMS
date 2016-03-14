@@ -1,0 +1,39 @@
+~/CMSSW_7_5_3/src/AnalysisCMS/rootfiles/WZ ~/CMSSW_7_5_3/src/AnalysisCMS/test
+hadd Target file: 00_Fakes.root
+hadd Source file 1: DD_Run2015C_16Dec2015_DoubleEG.root
+hadd Source file 2: DD_Run2015C_16Dec2015_DoubleMuon.root
+hadd Source file 3: DD_Run2015C_16Dec2015_MuonEG.root
+hadd Source file 4: DD_Run2015C_16Dec2015_SingleElectron.root
+hadd Source file 5: DD_Run2015C_16Dec2015_SingleMuon.root
+hadd Source file 6: DD_Run2015D_16Dec2015_DoubleEG.root
+hadd Source file 7: DD_Run2015D_16Dec2015_DoubleMuon.root
+hadd Source file 8: DD_Run2015D_16Dec2015_MuonEG.root
+hadd Source file 9: DD_Run2015D_16Dec2015_SingleElectron.root
+hadd Source file 10: DD_Run2015D_16Dec2015_SingleMuon.root
+hadd Target path: 00_Fakes.root:/
+hadd Target path: 00_Fakes.root:/WZ
+hadd Target path: 00_Fakes.root:/WZ/00_Exactly3Leptons
+hadd Target path: 00_Fakes.root:/WZ/00_Exactly3Leptons/0jet
+hadd Target path: 00_Fakes.root:/WZ/00_Exactly3Leptons/1jet
+hadd Target path: 00_Fakes.root:/WZ/00_Exactly3Leptons/2jet
+hadd Target path: 00_Fakes.root:/WZ/01_HasZ
+hadd Target path: 00_Fakes.root:/WZ/01_HasZ/0jet
+hadd Target path: 00_Fakes.root:/WZ/01_HasZ/1jet
+hadd Target path: 00_Fakes.root:/WZ/01_HasZ/2jet
+hadd Target path: 00_Fakes.root:/WZ/02_HasW
+hadd Target path: 00_Fakes.root:/WZ/02_HasW/0jet
+hadd Target path: 00_Fakes.root:/WZ/02_HasW/1jet
+hadd Target path: 00_Fakes.root:/WZ/02_HasW/2jet
+hadd Target path: 00_Fakes.root:/WZ/03_BVeto
+hadd Target path: 00_Fakes.root:/WZ/03_BVeto/0jet
+hadd Target path: 00_Fakes.root:/WZ/03_BVeto/1jet
+hadd Target path: 00_Fakes.root:/WZ/03_BVeto/2jet
+hadd Target path: 00_Fakes.root:/WZ/04_ZRegion
+hadd Target path: 00_Fakes.root:/WZ/04_ZRegion/0jet
+hadd Target path: 00_Fakes.root:/WZ/04_ZRegion/1jet
+hadd Target path: 00_Fakes.root:/WZ/04_ZRegion/2jet
+hadd Target path: 00_Fakes.root:/WZ/05_TopRegion
+hadd Target path: 00_Fakes.root:/WZ/05_TopRegion/0jet
+hadd Target path: 00_Fakes.root:/WZ/05_TopRegion/1jet
+hadd Target path: 00_Fakes.root:/WZ/05_TopRegion/2jet
+~/CMSSW_7_5_3/src/AnalysisCMS/test
