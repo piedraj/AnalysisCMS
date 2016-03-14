@@ -412,8 +412,8 @@ void AnalysisCMS::EventDump()
 //------------------------------------------------------------------------------
 // GetMET
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetMET(float module, float phi){
-
+void AnalysisCMS::GetMET(float module, float phi)
+{
   MET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
 }
 
@@ -421,8 +421,8 @@ void AnalysisCMS::GetMET(float module, float phi){
 //------------------------------------------------------------------------------
 // GetTrkMET
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetTrkMET(float module, float phi){
-
+void AnalysisCMS::GetTrkMET(float module, float phi)
+{
   trkMET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
 }
 
@@ -467,12 +467,8 @@ void AnalysisCMS::GetMpMet()
 
   float dphiltrkmet = min(dphil1trkmet, dphil2trkmet);
 
-  //  Needs l2Sel
-  if (dphilmet < TMath::Pi() / 2.)
-    {
-      _fullpmet *= sin(dphilmet);
-      _trkpmet  *= sin(dphiltrkmet);
-    }
+  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);  // Needs l2Sel
+  if (dphiltrkmet < TMath::Pi() / 2.) _trkpmet  *= sin(dphiltrkmet);
 
   _mpmet = min(_trkpmet, _fullpmet);
 }
