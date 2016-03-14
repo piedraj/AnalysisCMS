@@ -205,6 +205,9 @@ void runPlotter(TString level)
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
 	      plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",              2, 0, "GeV", linY, false, 0, 100);
+	      plotter.Draw(prefix + "htjets"    + suffix, "#sum _{jet} p_{T}",             10, 0, "GeV", logY, false, 0, 300);
+	      plotter.Draw(prefix + "htjets"    + suffix, "#sum _{jet} p_{T}",             10, 0, "GeV", linY, false, 0, 300);
+	      plotter.Draw(prefix + "htnojets"  + suffix, "p_{T}^{1} + p_{T}^{2} +MET",    10, 0, "GeV", linY, false, 0, 300);
 	      plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "dphilmet2" + suffix, "#Delta#phi(lep2,E_{T}^{miss})", 10, 1, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "fullpmet"  + suffix, "projected E_{T}^{miss}",        10, 0, "GeV", linY, false, 0, 3.2);

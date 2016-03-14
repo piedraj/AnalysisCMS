@@ -74,6 +74,11 @@ class AnalysisCMS : public AnalysisBase
   void    GetMET           (float    module,
 			    float    phi);
 
+  void    GetTrkMET        (float    module,
+			    float    phi);
+
+  void    GetMpMet         ();
+
   void    GetMetVar        ();
 
   void    GetMt            (Lepton   lep,
@@ -108,6 +113,7 @@ class AnalysisCMS : public AnalysisBase
   Lepton                 Lepton1;
   Lepton                 Lepton2;
   TLorentzVector         MET;
+  TLorentzVector         trkMET;
 
   bool                   _eventdump;
   bool                   _foundsoftmuon;
@@ -130,8 +136,10 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muStatDown;
   float                  _ht;
   float                  _htjets;
+  float                  _htnojets;
   float                  _luminosity;
   float                  _mc;
+  float                  _mpmet;
   float                  _metvar;
   float                  _fullpmet;
   float                  _trkpmet;

@@ -47,9 +47,11 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 	h_metphi   [i][j][k] = new TH1D("h_metphi"      + suffix, "", 1000, 0,   10);
 	h_lepphi1  [i][j][k] = new TH1D("h_lepphi1"     + suffix, "", 1000, 0,   10);
 	h_lepphi2  [i][j][k] = new TH1D("h_lepphi2"     + suffix, "", 1000, 0,   10);
-	h_fullpmet [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 1000, 0, 1000);
-	h_trkpmet  [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 1000, 0, 1000);
-	h_jetpt1   [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
+	h_fullpmet [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 3000, 0, 3000);
+	h_jetpt1   [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 3000, 0, 3000);
+	h_trkpmet  [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 3000, 0, 3000);
+	h_htjets   [i][j][k] = new TH1D("h_htjets"      + suffix, "", 3000, 0, 3000);
+	h_htnojets [i][j][k] = new TH1D("h_htnojets"    + suffix, "", 3000, 0, 3000);
 
 	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
       }
@@ -116,7 +118,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zveto);
 
-    pass &= (mpmet > 20.);
+    pass &= (_mpmet > 20); 
     FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
 
     pass &= (_passdphiveto);
@@ -215,6 +217,9 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
   h_fullpmet [ichannel][icut][ijet]->Fill(_fullpmet,                    _event_weight);
   h_trkpmet  [ichannel][icut][ijet]->Fill(_trkpmet,                     _event_weight);
   h_jetpt1   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
+  //  if(_htjets > 30)
+  h_htjets   [ichannel][icut][ijet]->Fill(_htjets,                      _event_weight);
+  h_htnojets [ichannel][icut][ijet]->Fill(_htnojets,                    _event_weight);
   h_lepphi1  [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(0), _event_weight);
   h_lepphi2  [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(1), _event_weight);
 
