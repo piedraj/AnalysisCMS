@@ -215,9 +215,8 @@ void runPlotter(TString level)
 	      plotter.Draw(prefix + "metphi"    + suffix, "E_{T}^{miss} #phi",                 10, 0, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "lepphi1"   + suffix, "leading lep #phi",                  10, 0, "rad", linY, false, 0, 3.2);
 	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",                 10, 0, "rad", linY, false, 0, 3.2);
-
 	      plotter.Draw(prefix + "mllstar"   + suffix, "m2l^{*}",                           10, 0, "GeV", linY, false, 0, 300);
-	      plotter.Draw(prefix + "dphillstar"+ suffix, "#Delta #phi_{ll}^{*}",              10, 0, "rad", linY, false, 0, 3.2);
+	      plotter.Draw(prefix + "dphillstar"+ suffix, "#Delta#phi_{ll}^{*}",               10, 0, "rad", linY, false, 0, 3.2);
 	    }
 
 
