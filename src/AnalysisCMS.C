@@ -453,15 +453,10 @@ void AnalysisCMS::GetTrkMET(float module, float phi)
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStarVar()
 {
-  float HiggsMass = 125.0;
- 
-  _dphillStar = 0;
-  _mllStar = 0;
-  
-  float met = MET.Et();
+  float met    = MET.Et();
   float metphi = MET.Phi();
   
-  float beta = sqrt(met*met / (met*met + HiggsMass*HiggsMass));
+  float beta = sqrt(met*met / (met*met + H_MASS*H_MASS));
   
   TVector3 BL(beta * cos(metphi), beta * sin(metphi), 0);
   
@@ -472,7 +467,7 @@ void AnalysisCMS::GetStarVar()
   L2Star.Boost(BL);
   
   _dphillStar = L1Star.DeltaPhi(L2Star);
-  _mllStar = (L1Star + L2Star).M();
+  _mllStar    = (L1Star + L2Star).M();
 }
 
 
@@ -482,14 +477,10 @@ void AnalysisCMS::GetStarVar()
 void AnalysisCMS::GetHt()
 {
   _htjets = 0;
-  _htnojets = 0;
 
-  _ht = MET.Et();
+  _htnojets = MET.Et() + Lepton1.v.Pt() + Lepton2.v.Pt();
 
-  _ht += Lepton1.v.Pt();
-  _ht += Lepton2.v.Pt();
-
-  _htnojets = _ht;
+  _ht = _htnojets;
 
   for (int i=0; i<std_vector_jet_pt->size(); i++)
     {
@@ -501,24 +492,21 @@ void AnalysisCMS::GetHt()
 }
 
 
-
 //------------------------------------------------------------------------------  
 // GetMpMet
 //------------------------------------------------------------------------------     
-
 void AnalysisCMS::GetMpMet()
 {
   _fullpmet = MET.Et();
   _trkpmet  = trkMET.Et();
-  
+
   float dphil1trkmet = fabs(Lepton1.v.DeltaPhi(trkMET));
   float dphil2trkmet = fabs(Lepton2.v.DeltaPhi(trkMET));
-  
-  float dphiltrkmet = min(dphil1trkmet, dphil2trkmet);
-  
-  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);
+  float dphiltrkmet  = min(dphil1trkmet, dphil2trkmet);
+
+  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);  // Needs l2Sel
   if (dphiltrkmet < TMath::Pi() / 2.) _trkpmet  *= sin(dphiltrkmet);
-  
+
   _mpmet = min(_trkpmet, _fullpmet);
 }
 
