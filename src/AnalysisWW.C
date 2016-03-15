@@ -115,16 +115,16 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 20.);
     FillLevelHistograms(WW_02_PfMet, pass);
 
-    bool pass_zwindow = (fabs(mll - Z_MASS) > 15.);
+    bool pass_zwindow = (_nelectron == 1 || fabs(mll - Z_MASS) > 15.);
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zwindow);
 
-    pass &= ((_nelectron == 1 && _metvar > 20) || (_nelectron != 1 && _metvar > 45.));
+    pass &= ((_nelectron == 1 && _metvar > 20) || (_nelectron != 1 && _metvar > 45));
     FillLevelHistograms(WW_04_MpMet, pass && pass_zwindow);
 
     pass &= (_passdphiveto);
     FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zwindow);
 
-    bool pass_ptll = (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
+    bool pass_ptll = ((_nelectron == 1 && ptll > 30) || (_nelectron != 1 && ptll > 45));
 
     pass &= pass_ptll;
     FillLevelHistograms(WW_06_Ptll, pass && pass_zwindow);
