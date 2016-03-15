@@ -292,7 +292,7 @@ void AnalysisCMS::GetLeptons()
       {
 	if (!found_third_tight_lepton)
 	  {
-	    if (type < 1.)
+	    if (type != Tight)
 	      reject_lepton = true;
 	    else
 	      found_third_tight_lepton = true;
@@ -304,7 +304,7 @@ void AnalysisCMS::GetLeptons()
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = (type > 0) ? Tight : Loose;
+    lep.type    = type;
     lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
