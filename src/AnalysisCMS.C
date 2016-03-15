@@ -254,9 +254,9 @@ void AnalysisCMS::ApplyWeights()
       _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
     }
   
-  if (_sample.Contains("WWTo2L2Nu"))
+  if (_sample==("WWTo2L2Nu"))
     _event_weight *= nllW;
-
+  
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
