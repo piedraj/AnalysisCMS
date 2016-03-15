@@ -274,22 +274,40 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
+  bool found_third_tight_lepton = false;
+
   AnalysisLeptons.clear();
 
   int vector_lepton_size = std_vector_lepton_pt->size();
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    float pt  = std_vector_lepton_pt ->at(i);
-    float eta = std_vector_lepton_eta->at(i);
-    float phi = std_vector_lepton_phi->at(i);
+    float pt   = std_vector_lepton_pt->at(i);
+    float eta  = std_vector_lepton_eta->at(i);
+    float phi  = std_vector_lepton_phi->at(i);
+    float type = std_vector_lepton_isTightLepton->at(i);
 
-    if (i > 1 && pt < 0.) continue;
+    if (pt < 0.) continue;
+
+    bool reject_lepton = false;
+    
+    if (i > 1 && !_sample.Contains("DD_") && _analysis.EqualTo("WZ"))
+      {
+	if (!found_third_tight_lepton)
+	  {
+	    if (type != Tight)
+	      reject_lepton = true;
+	    else
+	      found_third_tight_lepton = true;
+	  }
+      }
+
+    if (reject_lepton) continue;
 
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = Tight;
+    lep.type    = type;
     lep.flavour = std_vector_lepton_flavour->at(i);
       
     float mass = -999;
@@ -346,10 +364,9 @@ void AnalysisCMS::GetJets()
 
     Jet goodjet;
 
-    goodjet.index    = i;
-    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
-    goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
-    goodjet.v        = tlv;
+    goodjet.index  = i;
+    goodjet.cmvav2 = std_vector_jet_cmvav2->at(i);
+    goodjet.v      = tlv;
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
@@ -625,38 +642,38 @@ void AnalysisCMS::GetFakeWeights()
   if (njet == 0)
     {
       _fake_weight            = fakeW2l0j;
-      _fake_weight_elUp       = fakeW2l0jUp;
-      _fake_weight_elDown     = fakeW2l0jDown;
-      _fake_weight_elStatUp   = fakeW2l0jstatUp;
-      _fake_weight_elStatDown = fakeW2l0jstatDown;
-      _fake_weight_muUp       = fakeW2l0jUp;
-      _fake_weight_muDown     = fakeW2l0jDown;
-      _fake_weight_muStatUp   = fakeW2l0jstatUp;
-      _fake_weight_muStatDown = fakeW2l0jstatDown;
+      _fake_weight_elUp       = fakeW2l0jElUp;
+      _fake_weight_elDown     = fakeW2l0jElDown;
+      _fake_weight_elStatUp   = fakeW2l0jstatElUp;
+      _fake_weight_elStatDown = fakeW2l0jstatElDown;
+      _fake_weight_muUp       = fakeW2l0jMuUp;
+      _fake_weight_muDown     = fakeW2l0jMuDown;
+      _fake_weight_muStatUp   = fakeW2l0jstatMuUp;
+      _fake_weight_muStatDown = fakeW2l0jstatMuDown;
     }
   else if (njet == 1)
     {
       _fake_weight            = fakeW2l1j;
-      _fake_weight_elUp       = fakeW2l1jUp;
-      _fake_weight_elDown     = fakeW2l1jDown;
-      _fake_weight_elStatUp   = fakeW2l1jstatUp;
-      _fake_weight_elStatDown = fakeW2l1jstatDown;
-      _fake_weight_muUp       = fakeW2l1jUp;
-      _fake_weight_muDown     = fakeW2l1jDown;
-      _fake_weight_muStatUp   = fakeW2l1jstatUp;
-      _fake_weight_muStatDown = fakeW2l1jstatDown;
+      _fake_weight_elUp       = fakeW2l1jElUp;
+      _fake_weight_elDown     = fakeW2l1jElDown;
+      _fake_weight_elStatUp   = fakeW2l1jstatElUp;
+      _fake_weight_elStatDown = fakeW2l1jstatElDown;
+      _fake_weight_muUp       = fakeW2l1jMuUp;
+      _fake_weight_muDown     = fakeW2l1jMuDown;
+      _fake_weight_muStatUp   = fakeW2l1jstatMuUp;
+      _fake_weight_muStatDown = fakeW2l1jstatMuDown;
     }
   else
     {
       _fake_weight            = fakeW2l2j;
-      _fake_weight_elUp       = fakeW2l2jUp;
-      _fake_weight_elDown     = fakeW2l2jDown;
-      _fake_weight_elStatUp   = fakeW2l2jstatUp;
-      _fake_weight_elStatDown = fakeW2l2jstatDown;
-      _fake_weight_muUp       = fakeW2l2jUp;
-      _fake_weight_muDown     = fakeW2l2jDown;
-      _fake_weight_muStatUp   = fakeW2l2jstatUp;
-      _fake_weight_muStatDown = fakeW2l2jstatDown;
+      _fake_weight_elUp       = fakeW2l2jElUp;
+      _fake_weight_elDown     = fakeW2l2jElDown;
+      _fake_weight_elStatUp   = fakeW2l2jstatElUp;
+      _fake_weight_elStatDown = fakeW2l2jstatElDown;
+      _fake_weight_muUp       = fakeW2l2jMuUp;
+      _fake_weight_muDown     = fakeW2l2jMuDown;
+      _fake_weight_muStatUp   = fakeW2l2jstatMuUp;
+      _fake_weight_muStatDown = fakeW2l2jstatMuDown;
     }
 }
 
