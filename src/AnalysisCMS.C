@@ -254,6 +254,9 @@ void AnalysisCMS::ApplyWeights()
       _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
     }
   
+  if (_sample.Contains("WWTo2L2Nu"))
+    _event_weight *= nllW;
+
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
@@ -444,6 +447,35 @@ void AnalysisCMS::GetTrkMET(float module, float phi)
 }
 
 
+
+//------------------------------------------------------------------------------
+// GetStarVar
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetStarVar()
+{
+  float HiggsMass = 125.0;
+ 
+  _dphillStar = 0;
+  _mllStar = 0;
+  
+  float met = MET.Et();
+  float metphi = MET.Phi();
+  
+  float beta = sqrt(met*met / (met*met + HiggsMass*HiggsMass));
+  
+  TVector3 BL(beta * cos(metphi), beta * sin(metphi), 0);
+  
+  TLorentzVector L1Star = Lepton1.v;
+  TLorentzVector L2Star = Lepton2.v;
+  
+  L1Star.Boost(BL);
+  L2Star.Boost(BL);
+  
+  _dphillStar = L1Star.DeltaPhi(L2Star);
+  _mllStar = (L1Star + L2Star).M();
+}
+
+
 //------------------------------------------------------------------------------
 // GetHt
 //------------------------------------------------------------------------------
@@ -478,15 +510,15 @@ void AnalysisCMS::GetMpMet()
 {
   _fullpmet = MET.Et();
   _trkpmet  = trkMET.Et();
-
+  
   float dphil1trkmet = fabs(Lepton1.v.DeltaPhi(trkMET));
   float dphil2trkmet = fabs(Lepton2.v.DeltaPhi(trkMET));
-
+  
   float dphiltrkmet = min(dphil1trkmet, dphil2trkmet);
-
-  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);  // Needs l2Sel
+  
+  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);
   if (dphiltrkmet < TMath::Pi() / 2.) _trkpmet  *= sin(dphiltrkmet);
-
+  
   _mpmet = min(_trkpmet, _fullpmet);
 }
 
@@ -666,6 +698,8 @@ void AnalysisCMS::EventSetup()
   GetJetPtSum();
 
   GetHt();
+
+  GetStarVar();
 
   GetMpMet();
 

@@ -104,6 +104,7 @@ class AnalysisCMS : public AnalysisBase
 			    TString  precision,
 			    TString  title);
 
+  void GetStarVar          ();
 
   // Data members
   //----------------------------------------------------------------------------
@@ -148,6 +149,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
+  float                  _dphillStar;
+  float                  _mllStar;
 
   Long64_t               _nentries;
 
