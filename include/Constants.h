@@ -19,10 +19,11 @@ const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;
 const int Z_FLAVOUR        = 23;
 
-const float ELECTRON_MASS =  0.000511;  // [GeV]
-const float MUON_MASS     =  0.106;     // [GeV]
-const float TAU_MASS      =  1.777;     // [GeV]
-const float Z_MASS        = 91.188;     // [GeV]
+const float ELECTRON_MASS =   0.000511;  // [GeV]
+const float MUON_MASS     =   0.106;     // [GeV]
+const float TAU_MASS      =   1.777;     // [GeV]
+const float Z_MASS        =  91.188;     // [GeV]
+const float H_MASS        = 125.0;       // [GeV]
 
 
 const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]

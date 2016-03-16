@@ -254,6 +254,8 @@ void AnalysisCMS::ApplyWeights()
       _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
     }
   
+  if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
+
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
@@ -444,20 +446,40 @@ void AnalysisCMS::GetTrkMET(float module, float phi)
 }
 
 
+
+//------------------------------------------------------------------------------
+// GetStarVar
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetStarVar()
+{
+  float met    = MET.Et();
+  float metphi = MET.Phi();
+  
+  float beta = sqrt(met*met / (met*met + H_MASS*H_MASS));
+  
+  TVector3 BL(beta * cos(metphi), beta * sin(metphi), 0);
+  
+  TLorentzVector L1Star = Lepton1.v;
+  TLorentzVector L2Star = Lepton2.v;
+  
+  L1Star.Boost(BL);
+  L2Star.Boost(BL);
+  
+  _dphillStar = L1Star.DeltaPhi(L2Star);
+  _mllStar    = (L1Star + L2Star).M();
+}
+
+
 //------------------------------------------------------------------------------
 // GetHt
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetHt()
 {
   _htjets = 0;
-  _htnojets = 0;
 
-  _ht = MET.Et();
+  _htnojets = MET.Et() + Lepton1.v.Pt() + Lepton2.v.Pt();
 
-  _ht += Lepton1.v.Pt();
-  _ht += Lepton2.v.Pt();
-
-  _htnojets = _ht;
+  _ht = _htnojets;
 
   for (int i=0; i<std_vector_jet_pt->size(); i++)
     {
@@ -469,11 +491,9 @@ void AnalysisCMS::GetHt()
 }
 
 
-
 //------------------------------------------------------------------------------  
 // GetMpMet
 //------------------------------------------------------------------------------     
-
 void AnalysisCMS::GetMpMet()
 {
   _fullpmet = MET.Et();
@@ -481,8 +501,7 @@ void AnalysisCMS::GetMpMet()
 
   float dphil1trkmet = fabs(Lepton1.v.DeltaPhi(trkMET));
   float dphil2trkmet = fabs(Lepton2.v.DeltaPhi(trkMET));
-
-  float dphiltrkmet = min(dphil1trkmet, dphil2trkmet);
+  float dphiltrkmet  = min(dphil1trkmet, dphil2trkmet);
 
   if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);  // Needs l2Sel
   if (dphiltrkmet < TMath::Pi() / 2.) _trkpmet  *= sin(dphiltrkmet);
@@ -666,6 +685,8 @@ void AnalysisCMS::EventSetup()
   GetJetPtSum();
 
   GetHt();
+
+  GetStarVar();
 
   GetMpMet();
 
