@@ -818,7 +818,8 @@ void AnalysisCMS::OpenMinitree()
   minitree = new TTree("latino", "minitree");
 
 
-  // These are the minitree variables
+  // The variables created in AnalysisCMS have the "_" prefix
+  // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
   minitree->Branch("baseW",      &baseW,      "baseW/F");
   minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
@@ -829,7 +830,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mtw2",       &mtw2,       "mtw2/F");
   minitree->Branch("mth",        &mth,        "mth/F");
   minitree->Branch("mll",        &mll,        "mll/F");
-  minitree->Branch("_mc",        &_mc,        "_mc/F");
-  minitree->Branch("_mpmet",     &_mpmet,     "_mpmet/F");
   minitree->Branch("drll",       &drll,       "drll/F");
+  minitree->Branch("mc",         &_mc,        "mc/F");
+  minitree->Branch("mpmet",      &_mpmet,     "mpmet/F");
 }
