@@ -821,16 +821,18 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("baseW",      &baseW,      "baseW/F");
-  minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
-  minitree->Branch("metTtrk",    &metTtrk,    "metTtrk/F");
-  minitree->Branch("dphilmet1",  &dphilmet1,  "dphilmet1/F");
-  minitree->Branch("dphilmet2",  &dphilmet2,  "dphilmet2/F");
-  minitree->Branch("mtw1",       &mtw1,       "mtw1/F");
-  minitree->Branch("mtw2",       &mtw2,       "mtw2/F");
-  minitree->Branch("mth",        &mth,        "mth/F");
-  minitree->Branch("mll",        &mll,        "mll/F");
-  minitree->Branch("drll",       &drll,       "drll/F");
-  minitree->Branch("mc",         &_mc,        "mc/F");
-  minitree->Branch("mpmet",      &_mpmet,     "mpmet/F");
+  minitree->Branch("baseW",         &baseW,         "baseW/F");
+  minitree->Branch("metPfType1",    &metPfType1,    "metPfType1/F");
+  minitree->Branch("metPfType1Phi", &metPfType1Phi, "metPfType1Phi/F");
+  minitree->Branch("metTtrk",       &metTtrk,       "metTtrk/F");
+  minitree->Branch("metTtrkPhi",    &metTtrkPhi,    "metTtrkPhi/F");
+  minitree->Branch("dphilmet1",     &dphilmet1,     "dphilmet1/F");
+  minitree->Branch("dphilmet2",     &dphilmet2,     "dphilmet2/F");
+  minitree->Branch("mtw1",          &mtw1,          "mtw1/F");
+  minitree->Branch("mtw2",          &mtw2,          "mtw2/F");
+  minitree->Branch("mth",           &mth,           "mth/F");
+  minitree->Branch("mll",           &mll,           "mll/F");
+  minitree->Branch("drll",          &drll,          "drll/F");
+  minitree->Branch("mc",            &_mc,           "mc/F");
+  minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
 }
