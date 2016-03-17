@@ -7,8 +7,9 @@
 //------------------------------------------------------------------------------
 AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 {
-  _eventdump = false;
-  _ismc      = true;
+  _saveminitree = false;
+  _eventdump    = false;
+  _ismc         = true;
 }
 
 
@@ -224,6 +225,20 @@ void AnalysisCMS::Setup(TString analysis,
   root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
 
   if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
+
+
+  // Save variables of interest in a minitree
+  //----------------------------------------------------------------------------
+  if (_saveminitree)
+    {
+      gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+
+      root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+
+      minitree = new TTree("latino", "minitree");
+
+      minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
+    }
 
   return;
 }
@@ -727,6 +742,17 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 void AnalysisCMS::EndJob()
 {
   if (_eventdump) txt_eventdump.close();
+
+  if (_saveminitree)
+    {
+      root_minitree->cd();
+
+      printf("\n\n Writing minitree. This can take a while...\n");
+
+      root_minitree->Write("", TObject::kOverwrite);
+  
+      root_minitree->Close();
+    }
 
   txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
 
