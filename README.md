@@ -249,11 +249,11 @@ Do not forget unmounting eos once everything has been copied.
     eosuserumount eos
     rmdir eos
 
-The input folder MC has be copied at the following gridui path.
+Check that the input folder has be copied at the following gridui path.
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
 
-Finally, go to gridui and rename the folder MC to a more meaningful name.
+Finally, go to gridui and rename the folder to a more meaningful name.
 
     cd /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
     mv MC 22Jan_25ns_mAODv2_MC
