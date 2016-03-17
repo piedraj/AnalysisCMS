@@ -9,9 +9,7 @@
 #include "CutsWZ.h"
 
 
-//const float lumi_fb = 1.269;
-//const float lumi_fb = 1.324;  // Used in the ttdm synchronization
-const float lumi_fb = 2.318;
+const float lumi_fb = 2.263;
 
 
 const int ELECTRON_FLAVOUR = 11;
