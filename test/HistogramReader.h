@@ -141,6 +141,7 @@ class HistogramReader
   Bool_t                _publicstyle;
   Bool_t                _savepdf;
   Bool_t                _savepng;
+  Bool_t                _printlabels;
 
   Float_t               _luminosity_fb;
   TString               _inputdir;

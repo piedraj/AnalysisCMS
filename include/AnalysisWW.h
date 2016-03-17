@@ -30,9 +30,13 @@ class AnalysisWW : public AnalysisCMS
   TH1D*                  h_fullpmet  [nchannel][ncut][njetbin+1];
   TH1D*                  h_trkpmet   [nchannel][ncut][njetbin+1];
   TH1D*                  h_jetpt1    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htjets    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htnojets  [nchannel][ncut][njetbin+1];
   TH1D*                  h_metphi    [nchannel][ncut][njetbin+1];
   TH1D*                  h_lepphi1   [nchannel][ncut][njetbin+1];
   TH1D*                  h_lepphi2   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mllstar   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphillstar[nchannel][ncut][njetbin+1];
 };
 
 #endif

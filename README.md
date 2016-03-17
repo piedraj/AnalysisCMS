@@ -6,6 +6,7 @@ These twiki pages contain the CMS synchronization status of the WW and WZ cross 
     https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables
     https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
     https://twiki.cern.ch/twiki/bin/view/CMS/ReviewSMP16002
+    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_v2_2090pb/
 
 
 1. First time only
@@ -162,10 +163,6 @@ And they should appear here,
     https://ntrevisa.web.cern.ch/ntrevisa/figures/
     https://piedra.web.cern.ch/piedra/figures/
 
-A parallel WZ study is being performed at Oviedo, reading heppy trees. The corresponding plots can be found here,
-
-    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_v2_2090pb/
-
 
 7. It is commit time
 ====
@@ -223,3 +220,40 @@ Commit your changes.
     svn commit -m 'Modified'
 
 A detailed example of a CMS Note written in LaTeX using the *cms-tdr* document class can be found in the [svn-instructions.pdf](https://github.com/piedraj/AnalysisCMS/raw/master/svn-instructions.pdf) file.
+
+
+9. Copy latino trees from cernbox to gridui
+====
+
+First of all add your lxplus pub key in [ipa](https://ipa.ifca.es/).
+
+    cat $HOME/.ssh/id_rsa.pub
+
+Then log in to lxplus, mount eos and choose the input folder.
+
+    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    bash -l
+    cd CMSSW_7_6_3/src
+    cmsenv
+    scram b -j 8
+    cd /tmp/$USER
+
+    alias eosusermount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount'
+    eosusermount eos
+
+    rsync -avzH /tmp/$USER/eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
+
+Do not forget unmounting eos once everything has been copied.
+
+    alias eosuserumount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount'
+    eosuserumount eos
+    rmdir eos
+
+In this example, the folder **MC** will be copied at the following gridui path.
+
+    /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
+
+Once everything has been copied, go to gridui and rename the folder to a more meaningful name.
+
+    cd /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
+    mv MC 22Jan_25ns_mAODv2_MC

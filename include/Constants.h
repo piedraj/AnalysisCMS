@@ -3,18 +3,20 @@
 
 
 //#include "CutsMonoH.h"
+<<<<<<< HEAD
 #include "CutsTop.h"
 
+=======
+//#include "CutsTop.h"
+>>>>>>> upstream/master
 //#include "CutsTTDM.h"
 
 //#include "CutsWW.h"
-//#include "CutsWZ.h"
+#include "CutsWZ.h"
 
 //#include "CutsWZ.h"
 
-//const float lumi_fb = 1.269;
-//const float lumi_fb = 1.324;  // Used in the ttdm synchronization
-const float lumi_fb = 2.318;
+const float lumi_fb = 2.263;
 
 
 const int ELECTRON_FLAVOUR = 11;
@@ -22,10 +24,11 @@ const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;
 const int Z_FLAVOUR        = 23;
 
-const float ELECTRON_MASS =  0.000511;  // [GeV]
-const float MUON_MASS     =  0.106;     // [GeV]
-const float TAU_MASS      =  1.777;     // [GeV]
-const float Z_MASS        = 91.188;     // [GeV]
+const float ELECTRON_MASS =   0.000511;  // [GeV]
+const float MUON_MASS     =   0.106;     // [GeV]
+const float TAU_MASS      =   1.777;     // [GeV]
+const float Z_MASS        =  91.188;     // [GeV]
+const float H_MASS        = 125.0;       // [GeV]
 
 
 const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
@@ -74,11 +77,6 @@ const TString lchannel[nchannel] = {
 
 
 // https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation76X
-// pfCombinedInclusiveSecondaryVertexV2BJetTags
-const float CSVv2L = 0.460;
-const float CSVv2M = 0.800;
-const float CSVv2T = 0.935;
-// pfCombinedMVAV2BJetTags
 const float cMVAv2L = -0.715;
 const float cMVAv2M =  0.185;
 const float cMVAv2T =  0.875;
