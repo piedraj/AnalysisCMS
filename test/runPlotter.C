@@ -34,11 +34,7 @@ void runPlotter(TString level)
 
   plotter.SetLuminosity (lumi_fb);
   plotter.SetStackOption( "hist");
-<<<<<<< HEAD
-  plotter.SetDrawRatio  (  true);  // true
-=======
   plotter.SetDrawRatio  (   true);
->>>>>>> upstream/master
   plotter.SetPublicStyle(  false);
 
 
@@ -78,55 +74,36 @@ void runPlotter(TString level)
       plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
       plotter.AddProcess("09_HWW",      "HWW",     kRed);
-<<<<<<< HEAD
       plotter.AddProcess("12_VVV",      "VVV",     kYellow-6); 
       plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
+     
+      if (analysis.EqualTo("Top"))
+            {
+             plotter.AddProcess("04_ST_tw","tw", kYellow+4);
+             plotter.AddProcess("04_TTbar","TTbar", kYellow);
+            }
+          else
+            {
+             plotter.AddProcess("04_Top", "top", kYellow);
+            }
+
+
+
+
 
       if (datadriven)
 	{
 	  plotter.AddProcess("00_Fakes",  "non-prompt", kGray+1);
 
-	  if (analysis.EqualTo("Top"))
-	    {
-	     plotter.AddProcess("04_ST_tw_DD","tw", kYellow+4);
-	     plotter.AddProcess("04_TTbar_DD","TTbar", kYellow);	
-            }
-	  else
-	    {
-             plotter.AddProcess("04_Top_DD", "top", kYellow);
-            } 
 	}
       else
 	{
-	  if (analysis.EqualTo("Top"))
             {
              plotter.AddProcess("07_WJets", "W+jets", kGray+1);
-             plotter.AddProcess("04_TTJets","TTJets",kYellow);
-	     plotter.AddProcess("04_ST","St",kYellow+4);
-
-            }
-          else
-	    {          
-             plotter.AddProcess("07_WJets", "W+jets", kGray+1);
-	     plotter.AddProcess("04_Top",   "top",    kYellow);
 	    }	
         }
       plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
      }
-=======
-      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
-      plotter.AddProcess("04_Top",      "top",     kYellow);
-
-      if (datadriven)
-	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
-	}
-      else
-	{
-	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
-	}
-    }
->>>>>>> upstream/master
 
 
   // Add signals
@@ -219,13 +196,9 @@ void runPlotter(TString level)
 	  plotter.SetTitle(title);
 
 	  plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", linY);
-	  plotter.Draw(prefix + "nbjet15loose" + suffix, "number of (15 GeV) loose b-jets", -1, 0, "NULL", linY);
-	  plotter.Draw(prefix + "nbjet15tight" + suffix, "number of (15 GeV) tight b-jets", -1, 0, "NULL", linY);
+	  plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", linY);
+	  plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", linY);
-	 // plotter.Draw(prefix + "njet"         + suffix, "number of (30 GeV) jets",         -1, 0, "NULL", scale);
-	 // plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", scale);
-	 // plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", scale);
-	 // plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL",  linY, true,    0,   30);
 	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", linY, true,    0,    4);
 	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  linY, true,    0, 3.15);
