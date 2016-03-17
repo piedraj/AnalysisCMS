@@ -106,6 +106,9 @@ class AnalysisCMS : public AnalysisBase
 
   void GetStarVar          ();
 
+  void OpenMinitree        ();
+
+
   // Data members
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;

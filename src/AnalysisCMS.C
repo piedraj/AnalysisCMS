@@ -226,19 +226,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
 
-
-  // Save variables of interest in a minitree
-  //----------------------------------------------------------------------------
-  if (_saveminitree)
-    {
-      gSystem->mkdir("minitrees/" + _analysis, kTRUE);
-
-      root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
-
-      minitree = new TTree("latino", "minitree");
-
-      minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
-    }
+  OpenMinitree();
 
   return;
 }
@@ -813,4 +801,25 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_pt2l        [ichannel][icut][ijet] = new TH1D("h_pt2l"         + suffix, "", 3000,    0, 3000);
   h_ptww        [ichannel][icut][ijet] = new TH1D("h_ptww"         + suffix, "", 3000,    0, 3000);
   h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    9,    0,    9);
+}
+
+
+//------------------------------------------------------------------------------
+// OpenMinitree
+//------------------------------------------------------------------------------
+void AnalysisCMS::OpenMinitree()
+{
+  if (!_saveminitree) return;
+
+  gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+
+  root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+
+  minitree = new TTree("latino", "minitree");
+
+
+  // These are the minitree variables
+  //----------------------------------------------------------------------------
+  minitree->Branch("baseW",      &baseW,      "baseW/F");
+  minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
 }
