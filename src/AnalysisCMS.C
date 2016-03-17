@@ -822,4 +822,14 @@ void AnalysisCMS::OpenMinitree()
   //----------------------------------------------------------------------------
   minitree->Branch("baseW",      &baseW,      "baseW/F");
   minitree->Branch("metPfType1", &metPfType1, "metPfType1/F");
+  minitree->Branch("metTtrk",    &metTtrk,    "metTtrk/F");
+  minitree->Branch("dphilmet1",  &dphilmet1,  "dphilmet1/F");
+  minitree->Branch("dphilmet2",  &dphilmet2,  "dphilmet2/F");
+  minitree->Branch("mtw1",       &mtw1,       "mtw1/F");
+  minitree->Branch("mtw2",       &mtw2,       "mtw2/F");
+  minitree->Branch("mth",        &mth,        "mth/F");
+  minitree->Branch("mll",        &mll,        "mll/F");
+  minitree->Branch("_mc",        &_mc,        "_mc/F");
+  minitree->Branch("_mpmet",     &_mpmet,     "_mpmet/F");
+  minitree->Branch("drll",       &drll,       "drll/F");
 }
