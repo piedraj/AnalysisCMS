@@ -222,8 +222,8 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
   h_htnojets  [ichannel][icut][ijet]->Fill(_htnojets,                    _event_weight);
   h_lepphi1   [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(0), _event_weight);
   h_lepphi2   [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(1), _event_weight);
-  h_mllstar   [ichannel][icut][ijet]->Fill(_mllStar,                     _event_weight);
-  h_dphillstar[ichannel][icut][ijet]->Fill(_dphillStar,                  _event_weight);
+  h_mllstar   [ichannel][icut][ijet]->Fill(_mllstar,                     _event_weight);
+  h_dphillstar[ichannel][icut][ijet]->Fill(_dphillstar,                  _event_weight);
 
   h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
 
