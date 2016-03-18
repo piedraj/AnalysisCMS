@@ -106,6 +106,9 @@ class AnalysisCMS : public AnalysisBase
 
   void GetStarVar          ();
 
+  void OpenMinitree        ();
+
+
   // Data members
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
@@ -115,6 +118,7 @@ class AnalysisCMS : public AnalysisBase
   TLorentzVector         MET;
   TLorentzVector         trkMET;
 
+  bool                   _saveminitree;
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
@@ -165,6 +169,8 @@ class AnalysisCMS : public AnalysisBase
   ofstream               txt_eventdump;
   ofstream               txt_summary;
   TFile*                 root_output;
+  TFile*                 root_minitree;
+  TTree*                 minitree;
 
 
   // Common TH1 histograms

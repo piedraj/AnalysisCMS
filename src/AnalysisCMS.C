@@ -7,8 +7,9 @@
 //------------------------------------------------------------------------------
 AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
 {
-  _eventdump = false;
-  _ismc      = true;
+  _saveminitree = false;
+  _eventdump    = false;
+  _ismc         = true;
 }
 
 
@@ -224,6 +225,8 @@ void AnalysisCMS::Setup(TString analysis,
   root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
 
   if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
+
+  OpenMinitree();
 
   return;
 }
@@ -728,6 +731,17 @@ void AnalysisCMS::EndJob()
 {
   if (_eventdump) txt_eventdump.close();
 
+  if (_saveminitree)
+    {
+      root_minitree->cd();
+
+      printf("\n\n Writing minitree. This can take a while...\n");
+
+      root_minitree->Write("", TObject::kOverwrite);
+  
+      root_minitree->Close();
+    }
+
   txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
 
   txt_summary << "\n";
@@ -787,4 +801,38 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_pt2l        [ichannel][icut][ijet] = new TH1D("h_pt2l"         + suffix, "", 3000,    0, 3000);
   h_ptww        [ichannel][icut][ijet] = new TH1D("h_ptww"         + suffix, "", 3000,    0, 3000);
   h_fakes       [ichannel][icut][ijet] = new TH1D("h_fakes"        + suffix, "",    9,    0,    9);
+}
+
+
+//------------------------------------------------------------------------------
+// OpenMinitree
+//------------------------------------------------------------------------------
+void AnalysisCMS::OpenMinitree()
+{
+  if (!_saveminitree) return;
+
+  gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+
+  root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+
+  minitree = new TTree("latino", "minitree");
+
+
+  // The variables created in AnalysisCMS have the "_" prefix
+  // For consistency "_" is removed in the minitree variables
+  //----------------------------------------------------------------------------
+  minitree->Branch("baseW",         &baseW,         "baseW/F");
+  minitree->Branch("metPfType1",    &metPfType1,    "metPfType1/F");
+  minitree->Branch("metPfType1Phi", &metPfType1Phi, "metPfType1Phi/F");
+  minitree->Branch("metTtrk",       &metTtrk,       "metTtrk/F");
+  minitree->Branch("metTtrkPhi",    &metTtrkPhi,    "metTtrkPhi/F");
+  minitree->Branch("dphilmet1",     &dphilmet1,     "dphilmet1/F");
+  minitree->Branch("dphilmet2",     &dphilmet2,     "dphilmet2/F");
+  minitree->Branch("mtw1",          &mtw1,          "mtw1/F");
+  minitree->Branch("mtw2",          &mtw2,          "mtw2/F");
+  minitree->Branch("mth",           &mth,           "mth/F");
+  minitree->Branch("mll",           &mll,           "mll/F");
+  minitree->Branch("drll",          &drll,          "drll/F");
+  minitree->Branch("mc",            &_mc,           "mc/F");
+  minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
 }

@@ -129,10 +129,10 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 20.);
     FillLevelHistograms(MonoH_02_PfMet, pass);
 
-    bool pass_zveto = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && fabs(mll - Z_MASS) > 15.);
+    bool pass_zveto = (_nelectron == 1 || fabs(mll - Z_MASS) > 15.);
     FillLevelHistograms(MonoH_03_ZVeto, pass && pass_zveto);
 
-    pass &= (mpmet > 20.);
+    pass &= (_mpmet > 20. || (_nelectron == 1 && _mpmet > 45.));
     FillLevelHistograms(MonoH_04_MpMet, pass && pass_zveto);
 
     pass &= (_passdphiveto);
