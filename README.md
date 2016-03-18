@@ -235,13 +235,12 @@ Then log in to lxplus, mount eos and choose the input folder.
     bash -l
     cd CMSSW_7_6_3/src
     cmsenv
-    scram b -j 8
     cd /tmp/$USER
 
     alias eosusermount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount'
     eosusermount eos
 
-    rsync -avzH /tmp/$USER/eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -avzH eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
 
 Do not forget unmounting eos once everything has been copied.
 
