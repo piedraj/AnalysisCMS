@@ -727,8 +727,8 @@ void AnalysisCMS::EventSetup()
   
   GetMET(metPfType1, metPfType1Phi);
   
-  GetTrkMET(metTtrk,    metTtrkPhi);
-  
+  GetTrkMET(metTtrk, metTtrkPhi);
+
   GetLeptons();
 
   GetJets();
