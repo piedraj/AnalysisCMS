@@ -220,7 +220,7 @@ void runPlotter(TString level)
           plotter.Draw(prefix + "jetpt2"  	 + suffix, "trailing jet p_{T}",               2, 0, "GeV",  linY, true,    0,  100);
           plotter.Draw(prefix + "dphilmet1" 	 + suffix, "#Delta#phi(lep1,E_{T}^{miss})",   10, 1, "rad",  linY, true,    0,  3.2);
           plotter.Draw(prefix + "dphilmet2" 	 + suffix, "#Delta#phi(lep2,E_{T}^{miss})",   10, 1, "rad",  linY, true,    0,  3.2);
-	  plotter.Draw(prefix + "htJets"         + suffix,"H_{T}",                            10, 0, "GeV",  linY, true,    0,  800);  
+	  plotter.Draw(prefix + "htjets"         + suffix,"H_{T}",                            10, 0, "GeV",  linY, true,    0,  800);  
 //=======
 	  //plotter.Draw(prefix + "m2l" + suffix, "m_{#font[12]{ll}}", m2l_ngroup, 0, "GeV", scale, true, m2l_xmin, m2l_xmax);
 

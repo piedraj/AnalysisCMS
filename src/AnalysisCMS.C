@@ -487,7 +487,7 @@ void AnalysisCMS::GetHt()
       if (std_vector_jet_pt->at(i) < 30.) continue;
 
       _ht += std_vector_jet_pt->at(i);
-      htjets += std_vector_jet_pt->at(i);	
+      _htjets += std_vector_jet_pt->at(i);	
     }
 }
 

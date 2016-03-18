@@ -3,16 +3,12 @@
 
 
 //#include "CutsMonoH.h"
-<<<<<<< HEAD
 #include "CutsTop.h"
 
-=======
 //#include "CutsTop.h"
->>>>>>> upstream/master
 //#include "CutsTTDM.h"
 
 //#include "CutsWW.h"
-#include "CutsWZ.h"
 
 //#include "CutsWZ.h"
 
