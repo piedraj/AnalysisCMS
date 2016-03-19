@@ -254,8 +254,6 @@ void runPlotter(TString level)
   // Cross Section
   //----------------------------------------------------------------------------
 
-  if (analysis.EqualTo("WZ")) {
-
   printf("========================================================================== \n");
   plotter.CrossSection(level,"eee","WZ");
   plotter.CrossSection(level,"eem","WZ");
@@ -264,7 +262,6 @@ void runPlotter(TString level)
   plotter.CrossSection(level,"lll","WZ");
   printf("========================================================================= \n");
 
-  }
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
