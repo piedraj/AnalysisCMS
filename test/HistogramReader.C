@@ -532,7 +532,7 @@ void HistogramReader::CrossSection(TString level,
 
   float mu = (counterData - counterBkg)/(counterSignalLum);
 
-  printf("mu = %f \n", mu);
+  printf("mu = (ndata: %.0f - nbkg:%.0f) / (counterSignalLum:%0.f) = %f \n", counterData, counterBkg, counterSignalLum, mu);
 
   // Luminosity error
   //----------------------------------------------------------------------------  
