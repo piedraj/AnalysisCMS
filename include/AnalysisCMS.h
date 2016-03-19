@@ -104,9 +104,11 @@ class AnalysisCMS : public AnalysisBase
 			    TString  precision,
 			    TString  title);
 
-  void GetStarVar          ();
+  void    GetStarVar       ();
 
-  void OpenMinitree        ();
+  void    GetDeltaPhi      ();
+
+  void    OpenMinitree     ();
 
 
   // Data members
@@ -128,6 +130,16 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
 
+  float                  _dphijet1met;
+  float                  _dphijet2met;
+  float                  _dphijj;
+  float                  _dphijjmet;
+  float                  _dphilep1jet1;
+  float                  _dphilep1jet2;
+  float                  _dphilep2jet1;
+  float                  _dphilep2jet2;
+  float                  _dphillmet;
+  float                  _dphillstar;
   float                  _event_weight;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
@@ -138,23 +150,28 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
+  float                  _fullpmet;
   float                  _ht;
   float                  _htjets;
   float                  _htnojets;
+  float                  _lep1eta;
+  float                  _lep1phi;
+  float                  _lep1pt;
+  float                  _lep2eta;
+  float                  _lep2phi;
+  float                  _lep2pt;
   float                  _luminosity;
   float                  _mc;
-  float                  _mpmet;
   float                  _metvar;
-  float                  _fullpmet;
-  float                  _trkpmet;
+  float                  _mllstar;
+  float                  _mpmet;
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;
   float                  _ptww;
   float                  _pt2l;
+  float                  _trkpmet;
   float                  _sumjpt12;
-  float                  _dphillStar;
-  float                  _mllStar;
 
   Long64_t               _nentries;
 
