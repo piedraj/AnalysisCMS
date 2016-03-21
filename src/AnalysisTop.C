@@ -122,30 +122,36 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
 
-    bool pass1 = _ht > 260.;
-//    bool pass1_jet = _htjets > 100.;   
-    bool pass1_1 = _ht > 300.;   
-//    bool pass1_1_jet = _htjets > 125.;
-    FillLevelHistograms(Top_00_ht260, pass && pass1);
-    FillLevelHistograms(Top_00_ht300, pass && pass1_1);
-//    FillLevelHistograms( Top_00_htjets100, pass && pass1_jet);
-//    FillLevelHistograms( Top_00_htjets125, pass && pass1_1_jet);
+//    bool pass1 = _ht > 260.;
+    bool pass1_jet = _htjets > 100.;   
+//    bool pass1_1 = _ht > 300.;   
+    bool pass1_1_jet = _htjets > 125.;
+//    FillLevelHistograms(Top_00_ht260, pass && pass1);
+//    FillLevelHistograms(Top_00_ht300, pass && pass1_1);
+    FillLevelHistograms( Top_00_htjets100, pass && pass1_jet);
+    FillLevelHistograms( Top_00_htjets125, pass && pass1_1_jet);
+
+    bool pass1_2_jet = _htjets > 150.;
+    FillLevelHistograms( Top_00_htjets150, pass && pass1_2_jet);
+
+    
 
 
     //--------------------------------------------------------------------------
     // Basics + _ht > 260 + met > 50 + Has2Leptons
      
-    pass1 &= MET.Et() > 50.;    
-    pass1_1 &= MET.Et() > 50.;    	
-//      pass1_jet &= MET.Et() > 50.;
-//      pass1_1_jet &= MET.Et() > 50.;
+//    pass1 &= MET.Et() > 50.;    
+//    pass1_1 &= MET.Et() > 50.;    	
+      pass1_jet &= MET.Et() > 50.;
+      pass1_1_jet &= MET.Et() > 50.;
   
-    FillLevelHistograms(Top_00_ht260Met50, pass && pass1);
-    FillLevelHistograms(Top_00_ht300Met50, pass && pass1_1);
-//      FillLevelHistograms( Top_00_htjets100Met50, pass && pass1_jet);
-//      FillLevelHistograms( Top_00_htjets125Met50, pass && pass1_1_jet);
+//    FillLevelHistograms(Top_00_ht260Met50, pass && pass1);
+//    FillLevelHistograms(Top_00_ht300Met50, pass && pass1_1);
+      FillLevelHistograms( Top_00_htjets100Met50, pass && pass1_jet);
+      FillLevelHistograms( Top_00_htjets125Met50, pass && pass1_1_jet);
 	 
-
+      pass1_2_jet &= MET.Et() > 50.;
+      FillLevelHistograms( Top_00_htjets150Met50, pass && pass1_2_jet);
 
     //-------------------------------------------------------------------------
     // Basics + Has1BJet
@@ -160,6 +166,10 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     pass2 &= (_nbjet30tight > 0);
 
     FillLevelHistograms(Top_02_Has1BJet, pass2);
+
+    pass2 &= _htjets > 150.;    
+
+    FillLevelHistograms(Top_02_Has1BJetHtJets150, pass2);
     
     //--------------------------------------------------------------------------
     // Basics + met > 50 + Has2Leptons
