@@ -157,11 +157,12 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://amanjong.web.cern.ch/amanjong/figures/
-    https://bchazinq.web.cern.ch/bchazinq/figures/
-    https://cprieels.web.cern.ch/cprieels/figures/
-    https://ntrevisa.web.cern.ch/ntrevisa/figures/
-    https://piedra.web.cern.ch/piedra/figures/
+    https://amanjong.web.cern.ch/amanjong/
+    https://bchazinq.web.cern.ch/bchazinq/
+    https://cprieels.web.cern.ch/cprieels/
+    https://jgarciaf.web.cern.ch/jgarciaf/
+    https://ntrevisa.web.cern.ch/ntrevisa/
+    https://piedra.web.cern.ch/piedra/
 
 
 7. It is commit time
