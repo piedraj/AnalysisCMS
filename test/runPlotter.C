@@ -48,35 +48,37 @@ void runPlotter(TString level)
   if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("05_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
+      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
+      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
+      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
 
       if (datadriven)
 	{
 	  plotter.AddProcess("00_Fakes", "non-prompt", kGreen+2);
-	  plotter.AddProcess("11_Zg",    "Z#gamma",    kTeal);
+	  plotter.AddProcess("12_Zg",    "Z#gamma",    kTeal);
 	}
       else
 	{
-	  plotter.AddProcess("06_ZJets", "Z+jets", kGreen+2);
-	  plotter.AddProcess("04_Top",   "top",    kYellow);
+	  plotter.AddProcess("07_ZJets",    "Z+jets", kGreen+2);
+	  plotter.AddProcess("04_TTo2L2Nu", "tt",     kYellow);
+	  plotter.AddProcess("05_ST",       "tW",     kYellow+3);
 	}
     }
   else
     {
-      plotter.AddProcess("05_WW",       "WW",      kAzure-9);
+      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("10_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("06_ZJets",    "Z+jets",  kGreen+2);
-      plotter.AddProcess("08_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("09_HWW",      "HWW",     kRed);
-      plotter.AddProcess("13_HZ",       "HZ",      kRed+1);
-      plotter.AddProcess("12_VVV",      "VVV",     kYellow-6);
-      plotter.AddProcess("04_Top",      "top",     kYellow);
+      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
+      plotter.AddProcess("07_ZJets",    "Z+jets",  kGreen+2);
+      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
+      plotter.AddProcess("10_HWW",      "HWW",     kRed);
+      plotter.AddProcess("14_HZ",       "HZ",      kRed+1);
+      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",     kYellow);
+      plotter.AddProcess("05_ST",        "tW",     kYellow+3);
 
       if (datadriven)
 	{
@@ -84,7 +86,7 @@ void runPlotter(TString level)
 	}
       else
 	{
-	  plotter.AddProcess("07_WJets", "W+jets", kGray+1);
+	  plotter.AddProcess("08_WJets", "W+jets", kGray+1);
 	}
     }
 
