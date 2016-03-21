@@ -3,6 +3,7 @@
 if [ $# -lt 1 ] ; then
     echo "  "
     echo "  ./merge.sh ../rootfiles/<analysis>"
+    echo "  ./merge.sh ../minitrees/<analysis>"
     echo "  "
     exit -1
 fi

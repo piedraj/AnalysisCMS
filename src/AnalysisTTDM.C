@@ -161,7 +161,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_02_Preselection, preselection);
 
-    if (pass && _saveminitree) minitree->Fill();
+    if (preselection && _saveminitree) minitree->Fill();
 
     pass &= (njet > 1);
 
