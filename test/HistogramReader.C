@@ -584,7 +584,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   TString final_label = Form(" %s", label.Data());
 
   if (_drawyield && !_publicstyle)
-    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+    final_label = Form("%s (%.1f)", final_label.Data(), Yield(hist));
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();
