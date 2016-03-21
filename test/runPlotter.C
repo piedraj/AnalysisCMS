@@ -249,18 +249,20 @@ void runPlotter(TString level)
 	    }
 	}
     }
-  
 
-  // Cross Section
+
+  // Cross-section
   //----------------------------------------------------------------------------
+  if (analysis.EqualTo("WZ"))
+    {
+      printf("\n Cross section mu\n");
+      printf("------------------\n");
 
-  printf("========================================================================== \n");
-  plotter.CrossSection(level,"eee","WZ");
-  plotter.CrossSection(level,"eem","WZ");
-  plotter.CrossSection(level,"emm","WZ");
-  plotter.CrossSection(level,"mmm","WZ");
-  plotter.CrossSection(level,"lll","WZ");
-  printf("========================================================================= \n");
+      for (int i=firstchannel; i<=lastchannel; i++)
+	plotter.CrossSection(level, schannel[i], analysis);
+
+      printf("\n");
+    }
 
 
   // Copy index.php in every directory

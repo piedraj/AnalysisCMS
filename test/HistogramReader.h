@@ -61,9 +61,9 @@ class HistogramReader
 			       Float_t        ymin         = -999,
 			       Float_t        ymax         = -999);
 
-  void     CrossSection       (TString       level,
-			       TString       channel,
-			       TString       process);
+  void     CrossSection       (TString        level,
+			       TString        channel,
+			       TString        process);
 
   void     DrawLatex          (Font_t         tfont,
 			       Float_t        x,

@@ -468,6 +468,7 @@ void HistogramReader::Draw(TString hname,
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
 }
 
+
 //------------------------------------------------------------------------------
 // CrossSection
 //------------------------------------------------------------------------------
@@ -475,8 +476,7 @@ void HistogramReader::CrossSection(TString level,
 				   TString channel,
 				   TString process)
 {
-
-  // Stack processes
+  // Get the signal and the backgrounds
   //----------------------------------------------------------------------------
   _mchist.clear();
 
@@ -485,86 +485,59 @@ void HistogramReader::CrossSection(TString level,
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
-    if (_mclabel[i].EqualTo(process)){
-        signal = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
+    if (_mclabel[i].EqualTo(process))
+      {
+        signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
         signalLum = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
-    }
+      }
     else
       {
        	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 	_mchist.push_back((TH1D*)dummy->Clone());
       }
-}
+  }
+
+  float counterBkg       = 0.;
+  float	counterSignal    = Yield(signal);
+  float	counterSignalLum = Yield(signalLum);
+
+  for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
 
 
   // Get the data
   //----------------------------------------------------------------------------
-    if (_datafile)
-  {
-    TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
+  if (_datafile)
+    {
+      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
 
-    _datahist = (TH1D*)dummy->Clone();      
-  }
+      _datahist = (TH1D*)dummy->Clone();      
+    }
 
-  // CrossSection calculation
+  float	counterData = Yield(_datahist);
+
+
+  // Cross-section calculation
   //----------------------------------------------------------------------------  
+  float efficiency   = counterSignal / 1980800.;
+  float crossSection = (counterData - counterBkg) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float mu           = (counterData - counterBkg) / (counterSignalLum);
 
-  float counterBkg       = 0.;
-
-  float	counterData      = Yield(_datahist);
-  float	counterSignal    = Yield(signal);
-  float	counterSignalLum = Yield(signalLum);
-
-  for (UInt_t i=0; i<_mchist.size(); i++) {  
-    counterBkg += Yield(_mchist[i]);
-  }
-  
-  float efficiency = counterSignal/1980800.;
-  float crossSection = (counterData - counterBkg)/ (1000. * lumi_fb * efficiency * WZ23lnu);
-  
-  printf("xs = (ndata:%.0f - nbkg:%.0f) / (1000.*(lumi:%f * eff:%f * BR:%f)) = %f pb \n", 
-  	 counterData,
-  	 counterBkg,
-  	 lumi_fb,
-  	 efficiency,
-	 WZ23lnu,
-  	 crossSection);
-
-  float mu = (counterData - counterBkg)/(counterSignalLum);
-
-  printf("mu = (ndata: %.0f - nbkg:%.0f) / (counterSignalLum:%0.f) = %f \n", counterData, counterBkg, counterSignalLum, mu);
-
-  // Luminosity error
-  //----------------------------------------------------------------------------  
-
-  float xsErrorLumi = crossSection * lumi_error_percent;
-  float muErrorLumi = mu * lumi_error_percent;
-
-  printf("mu = %f +/- %f (error luminosity) \n", mu, muErrorLumi);
-  printf("xs = %f +/- %.1f (error luminosity) \n", crossSection, xsErrorLumi);
 
   // Statistical error
   //----------------------------------------------------------------------------  
-
-  float xsErrorStat = sqrt(counterData) / (lumi_fb * 1000. * efficiency * WZ23lnu);
+  float xsErrorStat = sqrt(counterData) / (1e3 * lumi_fb * efficiency * WZ23lnu);
   float muErrorStat = sqrt(counterData) / (counterSignalLum); 
  
-  printf("mu = %f +/- %f (error stat) \n", mu, muErrorStat);
-  printf("xs = %f +/- %.1f (error stat) \n \n", crossSection, xsErrorStat);
-
-  // Systematical error
-  //----------------------------------------------------------------------------  
-
-
-  // Theoretical error
-  //----------------------------------------------------------------------------  
-
-
+  printf(" mu(%s) = %.2f $\\pm$ %.2f (stat.) $\\pm$ %.2f (lumi.) \\\\\n",
+	 channel.Data(),
+	 mu,
+	 muErrorStat,
+	 mu * lumi_error_percent);
 }
 
 
 //------------------------------------------------------------------------------
-// Drawlatex 
+// DrawLatex 
 //------------------------------------------------------------------------------
 void HistogramReader::DrawLatex(Font_t      tfont,
 				Float_t     x,
