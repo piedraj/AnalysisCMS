@@ -157,9 +157,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
-    bool preselection = pass && (njet > 0) && (MET.Et() > 80.);
+    bool preselection = pass && (njet > 0) && (MET.Et() > 30.);
 
     FillLevelHistograms(TTDM_02_Preselection, preselection);
+
+    if (pass && _saveminitree) minitree->Fill();
 
     pass &= (njet > 1);
 
