@@ -185,6 +185,8 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet20loose > 0.);
 
     FillLevelHistograms(WZ_05_TopRegion, pass);
+
+    if (pass && _saveminitree) minitree->Fill();
   }
 
 

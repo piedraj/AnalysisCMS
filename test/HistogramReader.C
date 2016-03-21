@@ -470,7 +470,74 @@ void HistogramReader::Draw(TString hname,
 
 
 //------------------------------------------------------------------------------
-// DrawLatex
+// CrossSection
+//------------------------------------------------------------------------------
+void HistogramReader::CrossSection(TString level,
+				   TString channel,
+				   TString process)
+{
+  // Get the signal and the backgrounds
+  //----------------------------------------------------------------------------
+  _mchist.clear();
+
+  TH1D* signal;
+  TH1D* signalLum;
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) {
+
+    if (_mclabel[i].EqualTo(process))
+      {
+        signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
+        signalLum = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+      }
+    else
+      {
+       	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+	_mchist.push_back((TH1D*)dummy->Clone());
+      }
+  }
+
+  float counterBkg       = 0.;
+  float	counterSignal    = Yield(signal);
+  float	counterSignalLum = Yield(signalLum);
+
+  for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
+
+
+  // Get the data
+  //----------------------------------------------------------------------------
+  if (_datafile)
+    {
+      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
+
+      _datahist = (TH1D*)dummy->Clone();      
+    }
+
+  float	counterData = Yield(_datahist);
+
+
+  // Cross-section calculation
+  //----------------------------------------------------------------------------  
+  float efficiency   = counterSignal / 1980800.;
+  float crossSection = (counterData - counterBkg) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float mu           = (counterData - counterBkg) / (counterSignalLum);
+
+
+  // Statistical error
+  //----------------------------------------------------------------------------  
+  float xsErrorStat = sqrt(counterData) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float muErrorStat = sqrt(counterData) / (counterSignalLum); 
+ 
+  printf(" mu(%s) = %.2f $\\pm$ %.2f (stat.) $\\pm$ %.2f (lumi.) \\\\\n",
+	 channel.Data(),
+	 mu,
+	 muErrorStat,
+	 mu * lumi_error_percent);
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLatex 
 //------------------------------------------------------------------------------
 void HistogramReader::DrawLatex(Font_t      tfont,
 				Float_t     x,
@@ -517,7 +584,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   TString final_label = Form(" %s", label.Data());
 
   if (_drawyield && !_publicstyle)
-    final_label = Form("%s (%.1f)", final_label.Data(), Yield(hist));
+    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();

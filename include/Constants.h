@@ -4,16 +4,13 @@
 
 //#include "CutsMonoH.h"
 #include "CutsTop.h"
-
-//#include "CutsTop.h"
 //#include "CutsTTDM.h"
-
 //#include "CutsWW.h"
-
 //#include "CutsWZ.h"
 
-const float lumi_fb = 2.263;
 
+const float lumi_fb = 2.263;
+const float lumi_error_percent = 0.027;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -25,6 +22,15 @@ const float MUON_MASS     =   0.106;     // [GeV]
 const float TAU_MASS      =   1.777;     // [GeV]
 const float Z_MASS        =  91.188;     // [GeV]
 const float H_MASS        = 125.0;       // [GeV]
+
+
+// Branching ratios
+//------------------------------------------------------------------------------
+const Double_t W2e     = 0.1075;
+const Double_t W2m     = 0.1057;
+const Double_t W2tau   = 0.1125;
+const Double_t Z2ll    = 0.033658;
+const Double_t WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
 
 
 const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
@@ -108,4 +114,3 @@ const TString sfilter[nfilter] = {
 };
 
 
-#endif

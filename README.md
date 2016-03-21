@@ -43,14 +43,14 @@ Then, do a git remote in order to check if the upstream appears.
 *Do this only if you want to create a tag.*
 
     pushd AnalysisCMS
-    git tag -a 20160204_neutrino -m 'First AnalysisCMS tag'
-    git push origin 20160204_neutrino
+    git tag -a 20160318_electron -m 'Second AnalysisCMS tag'
+    git push origin 20160318_electron
     popd
 
 *Do this only if you want to use a tag.*
 
     pushd AnalysisCMS
-    git checkout tags/20160204_neutrino
+    git checkout tags/20160318_electron
     popd
 
 <!---
@@ -157,11 +157,12 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://amanjong.web.cern.ch/amanjong/figures/
-    https://bchazinq.web.cern.ch/bchazinq/figures/
-    https://cprieels.web.cern.ch/cprieels/figures/
-    https://ntrevisa.web.cern.ch/ntrevisa/figures/
-    https://piedra.web.cern.ch/piedra/figures/
+    https://amanjong.web.cern.ch/amanjong/
+    https://bchazinq.web.cern.ch/bchazinq/
+    https://cprieels.web.cern.ch/cprieels/
+    https://jgarciaf.web.cern.ch/jgarciaf/
+    https://ntrevisa.web.cern.ch/ntrevisa/
+    https://piedra.web.cern.ch/piedra/
 
 
 7. It is commit time
@@ -235,13 +236,12 @@ Then log in to lxplus, mount eos and choose the input folder.
     bash -l
     cd CMSSW_7_6_3/src
     cmsenv
-    scram b -j 8
     cd /tmp/$USER
 
     alias eosusermount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount'
     eosusermount eos
 
-    rsync -avzH /tmp/$USER/eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -avzH eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
 
 Do not forget unmounting eos once everything has been copied.
 
@@ -249,11 +249,11 @@ Do not forget unmounting eos once everything has been copied.
     eosuserumount eos
     rmdir eos
 
-In this example, the folder **MC** will be copied at the following gridui path.
+Check that the input folder has be copied at the following gridui path.
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
 
-Once everything has been copied, go to gridui and rename the folder to a more meaningful name.
+Finally, go to gridui and rename the folder to a more meaningful name.
 
     cd /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
     mv MC 22Jan_25ns_mAODv2_MC
