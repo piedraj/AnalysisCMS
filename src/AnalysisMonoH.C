@@ -69,6 +69,8 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 	h_mr            [i][j][k] = new TH1D("h_mr"+ suffix, "",  2000, 0, 2000);          
         // h_met_m2l       [i][j][k] = new TH2D("h_met_m2l" + suffix, "", 200, 0, 2000, 100, 0, 200);
         // h_met_deltaphill[i][j][k] = new TH2D("h_met_deltaphill" + suffix, "", 200, 0, 2000, 100, 0, 5);
+	h_mllstar   [i][j][k] = new TH1D("h_mllstar"     + suffix, "", 3000, 0, 3000);
+	h_dphillstar[i][j][k] = new TH1D("h_dphillstar"  + suffix, "", 1000, 0,   10);
 
        }
     }
@@ -144,8 +146,10 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet20loose == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
-    pass &= (!_foundsoftmuon);
-    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
+    if (_saveminitree && pass && pass_zveto)  minitree->Fill();
+
+    //    pass &= (!_foundsoftmuon);
+    //    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
 
     // monoH cuts                                                         
     bool pass_monoh = (pass && pass_zveto);
@@ -247,6 +251,8 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
   h_lepphi2[ichannel][icut][ijet]    ->Fill(std_vector_lepton_phi->at(1), _event_weight);
   h_pt1_pdfUp[ichannel][icut][ijet]  ->Fill(std_vector_lepton_pt->at(0),  _event_weight);
   h_pt1_pdfDown[ichannel][icut][ijet]->Fill(std_vector_lepton_pt->at(0),  _event_weight);
+  h_mllstar    [ichannel][icut][ijet]->Fill(_mllstar,                     _event_weight);
+  h_dphillstar [ichannel][icut][ijet]->Fill(_dphillstar,                  _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
