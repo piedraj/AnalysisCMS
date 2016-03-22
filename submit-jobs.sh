@@ -27,5 +27,6 @@ echo "  Let's play it safe. Compiling runAnalysis..."
 echo "  "
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
+mkdir -p jobs
 qsub -t 1-$NJOBS -v SAMPLES settings.sge
 echo "  "

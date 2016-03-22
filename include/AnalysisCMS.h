@@ -110,6 +110,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    OpenMinitree     ();
 
+  void    SetSaveMinitree  (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+
 
   // Data members
   //----------------------------------------------------------------------------

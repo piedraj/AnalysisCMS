@@ -5,7 +5,10 @@
 //------------------------------------------------------------------------------
 // AnalysisMonoH
 //------------------------------------------------------------------------------
-AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree)
+{
+  SetSaveMinitree(false);
+}
 
 
 //------------------------------------------------------------------------------

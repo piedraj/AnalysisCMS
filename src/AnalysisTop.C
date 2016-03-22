@@ -5,7 +5,10 @@
 //------------------------------------------------------------------------------
 // AnalysisTop
 //------------------------------------------------------------------------------
-AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree)
+{
+  SetSaveMinitree(false);
+}
 
 
 //------------------------------------------------------------------------------
