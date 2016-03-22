@@ -315,6 +315,8 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-1;
+      if (analysis == "MonoH")
+	theMin = 1e-4;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
     }
   else
