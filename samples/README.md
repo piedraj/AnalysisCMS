@@ -25,3 +25,12 @@ We need the 2loose lepton skim for data and the 1loose lepton skim for the follo
 
     TT
     TTJets
+
+How to copy files from Xavier's srm.
+
+    ssh -Y gridui.ifca.es -o ServerAliveInterval=240
+    voms-proxy-init --voms=cms
+
+    lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/22Jan_25ns_mAODv2_MC/MCl1loose__EpTCorr | awk -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/22Jan_25ns_mAODv2_MC/MCl1loose__EpTCorr/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/22Jan_25ns_mAODv2_MC/MCl1loose_EpTCorr/"$11}' > lcg-cp.sh
+
+    source lcg-cp.sh
