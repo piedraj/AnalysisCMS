@@ -5,7 +5,6 @@
 
 
 enum {
-  // Puesto por Alberto Manjon
   MonoH_00_Has2Leptons,
   MonoH_01_Mll,
   MonoH_02_PfMet,
@@ -14,13 +13,11 @@ enum {
   MonoH_05_DPhiVeto,
   MonoH_06_Ptll,
   MonoH_07_BVeto,
-  MonoH_08_SoftMu,
-  // Fin de Puesto por Alberto Manjon
+  // MonoH_08_SoftMu,
   // MonoH_100_Mc,
   // MonoH_101_DRll,
   // MonoH_102_MpMet,
   // MonoH_103_CR,
-  // Cortes tras inspeccionar variables
   MonoH_09_mpmet100,
   MonoH_10_mth200,
   MonoH_11_dphil1met,
@@ -33,7 +30,6 @@ enum {
 };
 
 const TString scut[ncut] = {
-  // Puesto por Alberto Manjon
   "MonoH/00_Has2Leptons",
   "MonoH/01_Mll",
   "MonoH/02_PfMet",
@@ -42,13 +38,11 @@ const TString scut[ncut] = {
   "MonoH/05_DPhiVeto",
   "MonoH/06_Ptll",
   "MonoH/07_BVeto",
-  "MonoH/08_SoftMu",
-  // Fin de Puesto por Alberto Manjon
+  // "MonoH/08_SoftMu",
   // "MonoH/100_Mc",
   // "MonoH/101_DRll",
   // "MonoH/102_MpMet",
   // "MonoH/103_CR",
-  // Cortes tras inspeccionar variables
   "MonoH/09_mpmet100",
   "MonoH/10_mth200",
   "MonoH/11_dphil1met",
