@@ -31,18 +31,14 @@ void MVA(TString signal = "06_WW")
 
   (TMVA::gConfig().GetIONames()).fWeightFileDir = weightsdir;
 
-  MVATrain(signal);
+  //  MVATrain(signal);
 
   MVARead(signal, signal);
-  MVARead(signal, "08_WJets");
   MVARead(signal, "09_TTV");
-  MVARead(signal, "01_Data");
   MVARead(signal, "07_ZJets");
-  MVARead(signal, "00_Fakes");
   MVARead(signal, "02_WZTo3LNu");
   MVARead(signal, "05_ST");
   MVARead(signal, "03_ZZ");
-  MVARead(signal, "04_TTTo2L2Nu");
 }
 
 
@@ -63,15 +59,11 @@ void MVATrain(TString signal)
   // Get the trees
   //----------------------------------------------------------------------------
   TFile *inputSFile  = TFile::Open(inputdir + analysis + "/" + signal + ".root", "read");
-  TFile *inputB1File = TFile::Open(inputdir + analysis + "/08_WJets.root",       "read");
-  TFile *inputB2File = TFile::Open(inputdir + analysis + "/09_TTV.root",         "read");
-  TFile *inputB3File = TFile::Open(inputdir + analysis + "/01_Data.root",        "read");
-  TFile *inputB4File = TFile::Open(inputdir + analysis + "/07_ZJets.root",       "read");
-  TFile *inputB5File = TFile::Open(inputdir + analysis + "/00_Fakes.root",       "read");
-  TFile *inputB6File = TFile::Open(inputdir + analysis + "/02_WZTo3LNu.root",    "read");
-  TFile *inputB7File = TFile::Open(inputdir + analysis + "/05_ST.root",          "read");
-  TFile *inputB8File = TFile::Open(inputdir + analysis + "/03_ZZ.root",          "read");
-  TFile *inputB9File = TFile::Open(inputdir + analysis + "/04_TTTo2L2Nu.root",   "read");
+  TFile *inputB1File = TFile::Open(inputdir + analysis + "/09_TTV.root",         "read");
+  TFile *inputB2File = TFile::Open(inputdir + analysis + "/07_ZJets.root",       "read");
+  TFile *inputB3File = TFile::Open(inputdir + analysis + "/02_WZTo3LNu.root",    "read");
+  TFile *inputB4File = TFile::Open(inputdir + analysis + "/05_ST.root",          "read");
+  TFile *inputB5File = TFile::Open(inputdir + analysis + "/03_ZZ.root",          "read");
 
   TTree *signalTree  = (TTree*)inputSFile ->Get("latino");
   TTree *background1 = (TTree*)inputB1File->Get("latino");
@@ -79,10 +71,6 @@ void MVATrain(TString signal)
   TTree *background3 = (TTree*)inputB3File->Get("latino");
   TTree *background4 = (TTree*)inputB4File->Get("latino");
   TTree *background5 = (TTree*)inputB5File->Get("latino");
-  TTree *background6 = (TTree*)inputB6File->Get("latino");
-  TTree *background7 = (TTree*)inputB7File->Get("latino");
-  TTree *background8 = (TTree*)inputB8File->Get("latino");
-  TTree *background9 = (TTree*)inputB9File->Get("latino");
 
   Double_t weight = 1.0;
 
@@ -92,10 +80,6 @@ void MVATrain(TString signal)
   factory->AddBackgroundTree(background3, weight);
   factory->AddBackgroundTree(background4, weight);
   factory->AddBackgroundTree(background5, weight);
-  factory->AddBackgroundTree(background6, weight);
-  factory->AddBackgroundTree(background7, weight);
-  factory->AddBackgroundTree(background8, weight);
-  factory->AddBackgroundTree(background9, weight);
   
   factory->SetWeightExpression("eventW");
 
@@ -109,7 +93,7 @@ void MVATrain(TString signal)
 //factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large?
 //factory->AddVariable("mll",          "", "", 'F');  // Empty range too large?
   factory->AddVariable("njet",         "", "", 'F');
-  factory->AddVariable("nbjet20loose", "", "", 'F');
+//factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
@@ -132,7 +116,7 @@ void MVATrain(TString signal)
   TCut mycut = "";
 
 //factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=650:nTest_Signal=650:nTrain_Background=500:nTest_Background=500:SplitMode=Alternate:!V");  // Faster
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1500:nTest_Background=1500:SplitMode=Alternate:!V");  // Faster
 
 
   // Book MVA
@@ -167,7 +151,7 @@ void MVARead(TString signal, TString sample)
 //float metPfType1;
 //float mll;
   float njet;
-  float nbjet20loose;
+//float nbjet20loose;
   float lep1pt;
   float lep2pt;
   float jet1pt;
@@ -188,7 +172,7 @@ void MVARead(TString signal, TString sample)
 //reader->AddVariable("metPfType1",   &metPfType1);
 //reader->AddVariable("mll",          &mll);
   reader->AddVariable("njet",         &njet);
-  reader->AddVariable("nbjet20loose", &nbjet20loose);
+//reader->AddVariable("nbjet20loose", &nbjet20loose);
   reader->AddVariable("lep1pt",       &lep1pt);
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
@@ -213,7 +197,7 @@ void MVARead(TString signal, TString sample)
 
   // Get MVA response
   //----------------------------------------------------------------------------
-  TH1F* h_mva = new TH1F("h_mva", "", 100, -0.1, 1.1);
+  TH1F* h_mva = new TH1F("h_mva", "", 100, -0.5, 1.5);
 
   TFile* input = TFile::Open(inputdir + analysis + "/" + sample + ".root", "update");
 
@@ -225,54 +209,12 @@ void MVARead(TString signal, TString sample)
 float MVAresponse; 
 TBranch *MVABranch = theTree -> Branch( "MVA" + signal, &MVAresponse, "MVAresponse/F" );
 
-//load "auxliar variables":                                                                          !?
-//float <my_aux_var>;                                                                                !?
-//float weight                                                                                       !?
-//theTree->SetBranchAddress( "TChannel",  &<my_aux_var> ); //     CORTES                             !?
-//theTree->SetBranchAddress( "Weight"  ,  &weight       ); //     PESADO funcion Fillhistogram       !?
-
-//float var01, var02, var03, var04, var05, var06, var07, var08, var09, var10, var11, var12, var13, var14, var15, var16, var17, var18, var19, var20;
-
-
-//theTree -> SetBranchAddress( "channel"  , &var01 );
-//theTree -> SetBranchAddress( "MET"      , &var02 );
-//theTree -> SetBranchAddress( "mll"      , &var03 );
-//theTree -> SetBranchAddress( "njet"     , &var04 );
-//theTree -> SetBranchAddress( "nbjet15"  , &var05 );
-//theTree -> SetBranchAddress( "lep1Pt"   , &var06 );
-//theTree -> SetBranchAddress( "lep2Pt"   , &var07 );
-//theTree -> SetBranchAddress( "jetpt1"   , &var08 );
-//theTree -> SetBranchAddress( "jetpt2"   , &var09 );
-//
-//theTree -> SetBranchAddress( "dphilep1lep2", &var10 );
-//theTree -> SetBranchAddress( "dphilep1jet1", &var11 );
-//theTree -> SetBranchAddress( "dphilep1jet2", &var12 );
-//theTree -> SetBranchAddress( "dphilep1MET" , &var13 );
-//theTree -> SetBranchAddress( "dphilep2jet1", &var14 );
-//theTree -> SetBranchAddress( "dphilep2jet2", &var15 );
-//theTree -> SetBranchAddress( "dphilep2MET" , &var16 );
-//theTree -> SetBranchAddress( "dphijet1jet2", &var17 );
-//theTree -> SetBranchAddress( "dphijet1MET" , &var18 );
-//theTree -> SetBranchAddress( "dphijet2MET" , &var19 );
-//theTree -> SetBranchAddress( "dphilep1lep2MET" , &var20 );
-//theTree -> SetBranchAddress( "dphijet1jet2MET" , &var21 );
-
-
-
-
-
-
-
-
-
-
-
 
 //theTree->SetBranchAddress("channel",      &channel);
 //theTree->SetBranchAddress("metPfType1",   &metPfType1);
 //theTree->SetBranchAddress("mll",          &mll);
   theTree->SetBranchAddress("njet",         &njet);
-  theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
+//theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
   theTree->SetBranchAddress("lep1pt",       &lep1pt);
   theTree->SetBranchAddress("lep2pt",       &lep2pt);
   theTree->SetBranchAddress("jet1pt",       &jet1pt);
@@ -295,79 +237,32 @@ TBranch *MVABranch = theTree -> Branch( "MVA" + signal, &MVAresponse, "MVArespon
 
 
 
+  for ( Long64_t ievt = 0; ievt < theTree -> GetEntries(); ievt++ ) {
 
+    if ( ievt % 500000 == 0 ) cout << "--- ... Processing event: " << ievt << endl;
 
+    theTree -> GetEntry(ievt);
 
-
-
-
-
-
-
-
-
-
-for ( Long64_t ievt = 0; ievt < theTree -> GetEntries(); ievt++ ) {
-
-	if ( ievt % 500000 == 0 ) cout << "--- ... Processing event: " << ievt << endl;
-
-	theTree -> GetEntry(ievt);
-
-//	channel   = var01;
-//	MET       = var02;
-//	mll       = var03;
-//	njet      = var04;
-//	nbjet15   = var05;
-//	lep1Pt    = var06;
-//	lep2Pt    = var07;
-//	jetpt1    = var08;
-//	jetpt2    = var09;
-//	dphilep1lep2 = var10;
-//	dphilep1jet1 = var11;
-//	dphilep1jet2 = var12;
-//	dphilep1MET  = var13;
-//	dphilep2jet1 = var14;
-//	dphilep2jet2 = var15;
-//	dphilep2MET  = var16;
-//	dphijet1jet2 = var17;
-//	dphijet1MET  = var18;
-//	dphijet2MET  = var19;
-//	dphilep1lep2MET = var20;
-	//dphijet1jet2MET = var21;
-
-
-			MVAresponse = reader -> EvaluateMVA("MLP");
-			h_mva -> Fill(MVAresponse, eventW);
-			MVABranch -> Fill();
-
-}    
+    MVAresponse = reader -> EvaluateMVA("MLP");
+    h_mva -> Fill(MVAresponse, eventW);
+    MVABranch -> Fill();
+  }    
                                             
 
 
 /////////////////////////////////
 
 //to add the MVA-branch to the input file
-theTree -> Write("", TObject::kOverwrite);
+  theTree -> Write("", TObject::kOverwrite);
 
-input -> Close();
-
-
+  input -> Close();
 
 
+  TFile *target = TFile::Open(applicationdir + signal + "__" + sample + ".root", "recreate");
 
- TFile *target = TFile::Open (applicationdir + signal + "__" + sample + ".root", "recreate");
+  h_mva -> Write();
+  
+  target -> Close();
 
-h_mva -> Write();
-
-target -> Close();
-
-
-
-
-
-delete reader;
-} 
-
-
-
-
+  delete reader;
+}
