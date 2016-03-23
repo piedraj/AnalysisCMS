@@ -633,7 +633,7 @@ void AnalysisCMS::GetSoftMuon()
   _foundsoftmuon = false;
   
   /*
-  for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); i) {
+  for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); i++) {
     
     if (std_vector_jet_pt->at(i)       < 10.) continue;
     if (std_vector_jet_pt->at(i)       > 30.) continue;
@@ -646,7 +646,7 @@ void AnalysisCMS::GetSoftMuon()
   */
 
   // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
-  for (UInt_t i=0; i<std_vector_softMuPt->size(); i) {
+  for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
 
     if (std_vector_softMuPt->at(i)  < 3.)                       continue;
     if (std_vector_softMuD0->at(i)  < 0.2)                      continue;
@@ -913,7 +913,7 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("channel",       &_channel,      "channel/F");
+  minitree->Branch("channel",       &_channel,      "channel/F");  // Careful, _channel is an int variable
   minitree->Branch("dphijet1met",   &_dphijet1met,  "dphijet1met/F");
   minitree->Branch("dphijet2met",   &_dphijet2met,  "dphijet2met/F");
   minitree->Branch("dphijj",        &_dphijj,       "dphijj/F");

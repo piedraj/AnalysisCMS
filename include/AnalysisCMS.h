@@ -133,7 +133,6 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
 
-  float                  _channel;
   float                  _dphijet1met;
   float                  _dphijet2met;
   float                  _dphijj;
@@ -182,6 +181,7 @@ class AnalysisCMS : public AnalysisBase
 
   Long64_t               _nentries;
 
+  int                    _channel;
   unsigned int           _jetbin;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
