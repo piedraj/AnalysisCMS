@@ -90,8 +90,8 @@ void MVATrain(TString signal)
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
 //factory->AddVariable("channel",      "", "", 'F');
-//factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large?
-//factory->AddVariable("mll",          "", "", 'F');  // Empty range too large?
+//factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large
+//factory->AddVariable("mll",          "", "", 'F');  // Empty range too large
   factory->AddVariable("njet",         "", "", 'F');
 //factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
@@ -147,26 +147,28 @@ void MVARead(TString signal, TString sample)
 {
   TMVA::Reader* reader = new TMVA::Reader("!Color:!Silent");   
 
-//float channel;
-//float metPfType1;
-//float mll;
+  float channel;
+  float metPfType1;
+  float mll;
   float njet;
-//float nbjet20loose;
+  float nbjet20loose;
   float lep1pt;
   float lep2pt;
   float jet1pt;
-//float jet2pt;
+  float jet2pt;
   float dphill;
   float dphilep1jet1;
-//float dphilep1jet2;
+  float dphilep1jet2;
   float dphilmet1;
   float dphilep2jet1;
-//float dphilep2jet2;
+  float dphilep2jet2;
   float dphilmet2;
-//float dphijj;
+  float dphijj;
   float dphijet1met;
-//float dphijet2met;
+  float dphijet2met;
   float dphillmet;
+  float eventW;
+  float mva; 
 
 //reader->AddVariable("channel",      &channel);
 //reader->AddVariable("metPfType1",   &metPfType1);
@@ -203,66 +205,53 @@ void MVARead(TString signal, TString sample)
 
   TTree* theTree = (TTree*)input->Get("latino");
 
+  TBranch* b_mva = theTree->Branch("mva" + signal, &mva, "mva/F" );
 
-
-// output branch 
-float MVAresponse; 
-TBranch *MVABranch = theTree -> Branch( "MVA" + signal, &MVAresponse, "MVAresponse/F" );
-
-
-//theTree->SetBranchAddress("channel",      &channel);
-//theTree->SetBranchAddress("metPfType1",   &metPfType1);
-//theTree->SetBranchAddress("mll",          &mll);
+  theTree->SetBranchAddress("channel",      &channel);
+  theTree->SetBranchAddress("metPfType1",   &metPfType1);
+  theTree->SetBranchAddress("mll",          &mll);
   theTree->SetBranchAddress("njet",         &njet);
-//theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
+  theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
   theTree->SetBranchAddress("lep1pt",       &lep1pt);
   theTree->SetBranchAddress("lep2pt",       &lep2pt);
   theTree->SetBranchAddress("jet1pt",       &jet1pt);
-//theTree->SetBranchAddress("jet2pt",       &jet2pt);
+  theTree->SetBranchAddress("jet2pt",       &jet2pt);
   theTree->SetBranchAddress("dphill",       &dphill);
   theTree->SetBranchAddress("dphilep1jet1", &dphilep1jet1);
-//theTree->SetBranchAddress("dphilep1jet2", &dphilep1jet2);
+  theTree->SetBranchAddress("dphilep1jet2", &dphilep1jet2);
   theTree->SetBranchAddress("dphilmet1",    &dphilmet1);
   theTree->SetBranchAddress("dphilep2jet1", &dphilep2jet1);
-//theTree->SetBranchAddress("dphilep2jet2", &dphilep2jet2);
+  theTree->SetBranchAddress("dphilep2jet2", &dphilep2jet2);
   theTree->SetBranchAddress("dphilmet2",    &dphilmet2);
-//theTree->SetBranchAddress("dphijj",       &dphijj);
+  theTree->SetBranchAddress("dphijj",       &dphijj);
   theTree->SetBranchAddress("dphijet1met",  &dphijet1met);
-//theTree->SetBranchAddress("dphijet2met",  &dphijet2met);
+  theTree->SetBranchAddress("dphijet2met",  &dphijet2met);
   theTree->SetBranchAddress("dphillmet",    &dphillmet);
+  theTree->SetBranchAddress("eventW",       &eventW);
 
-  float eventW;
+  for (Long64_t ievt=0; ievt<theTree->GetEntries(); ievt++) {
 
-  theTree->SetBranchAddress("eventW",    &eventW);
+    theTree->GetEntry(ievt);
 
+    mva = reader->EvaluateMVA("MLP");
 
+    h_mva->Fill(mva, eventW);
+    b_mva->Fill();
+  }
 
-  for ( Long64_t ievt = 0; ievt < theTree -> GetEntries(); ievt++ ) {
+  // Save
+  //----------------------------------------------------------------------------
+  theTree->Write("", TObject::kOverwrite);
 
-    if ( ievt % 500000 == 0 ) cout << "--- ... Processing event: " << ievt << endl;
+  input->Close();
 
-    theTree -> GetEntry(ievt);
+  TFile* target = TFile::Open(applicationdir + signal + "__" + sample + ".root", "recreate");
 
-    MVAresponse = reader -> EvaluateMVA("MLP");
-    h_mva -> Fill(MVAresponse, eventW);
-    MVABranch -> Fill();
-  }    
-                                            
-
-
-/////////////////////////////////
-
-//to add the MVA-branch to the input file
-  theTree -> Write("", TObject::kOverwrite);
-
-  input -> Close();
-
-
-  TFile *target = TFile::Open(applicationdir + signal + "__" + sample + ".root", "recreate");
-
-  h_mva -> Write();
+  h_mva->Write();
   
-  target -> Close();
+  target->Close();
+
+  h_mva->Delete();
 
   delete reader;
 }
