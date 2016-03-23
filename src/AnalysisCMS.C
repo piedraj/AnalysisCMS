@@ -632,17 +632,34 @@ void AnalysisCMS::GetSoftMuon()
 {
   _foundsoftmuon = false;
   
-  for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); ++i)
-    {
-      if (std_vector_jet_pt->at(i)       < 10.) continue;
-      if (std_vector_jet_pt->at(i)       > 30.) continue;
-      if (std_vector_jet_softMuPt->at(i) <  3.) continue;
-
-      _foundsoftmuon = true;
-
-      break;
-    }
+  /*
+   for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); i)
+     {
+       if (std_vector_jet_pt->at(i)       < 10.) continue;
+       if (std_vector_jet_pt->at(i)       > 30.) continue;
+       if (std_vector_jet_softMuPt->at(i) <  3.) continue;
+ 
+       _foundsoftmuon = true;
+  
+       break;
+     }
+       */
+  for (UInt_t i=0; i<std_vector_softMuPt->size(); i){
+    if (std_vector_softMuPt->at(i) < 3)                         continue;
+    if (std_vector_softMuIsTrackerMuon->at(i) == false)         continue;
+    if (std_vector_softMuTMLastStationAngTight->at(i) == false) continue;
+    if (std_vector_softMuD0->at(i) < 0.2)                       continue;
+    if (std_vector_softMuDz->at(i) < 0.5)                       continue;
+    if (std_vector_softMuIso->at(i) < 0.15)                     continue;
+    
+    _foundsoftmuon = true;
+    
+    break;
+    
+    //https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons (more or less ;) )
+  }
 }
+
 
 
 //------------------------------------------------------------------------------
