@@ -356,6 +356,7 @@ public :
    Float_t         nllW_Qdown;
    Float_t         gen_mww;
    Float_t         gen_ptww;
+   Float_t         gen_ptll;
    vector<float>   *std_vector_lepton_chargedHadronIso;
    vector<float>   *std_vector_lepton_photonIso;
    vector<float>   *std_vector_lepton_closejet_PartonFlavour;
@@ -777,6 +778,7 @@ public :
    TBranch        *b_nllW_Qdown;   //!
    TBranch        *b_gen_mww;   //!
    TBranch        *b_gen_ptww;   //!
+   TBranch        *b_gen_ptll;   //!
    TBranch        *b_std_vector_lepton_chargedHadronIso;   //!
    TBranch        *b_std_vector_lepton_photonIso;   //!
    TBranch        *b_std_vector_lepton_closejet_PartonFlavour;   //!
@@ -1422,6 +1424,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("nllW_Qdown", &nllW_Qdown, &b_nllW_Qdown);
    fChain->SetBranchAddress("gen_mww", &gen_mww, &b_gen_mww);
    fChain->SetBranchAddress("gen_ptww", &gen_ptww, &b_gen_ptww);
+   fChain->SetBranchAddress("gen_ptll", &gen_ptll, &b_gen_ptll);
    fChain->SetBranchAddress("std_vector_lepton_chargedHadronIso", &std_vector_lepton_chargedHadronIso, &b_std_vector_lepton_chargedHadronIso);
    fChain->SetBranchAddress("std_vector_lepton_photonIso", &std_vector_lepton_photonIso, &b_std_vector_lepton_photonIso);
    fChain->SetBranchAddress("std_vector_lepton_closejet_PartonFlavour", &std_vector_lepton_closejet_PartonFlavour, &b_std_vector_lepton_closejet_PartonFlavour);

@@ -259,7 +259,7 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
 
-  //  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
+  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
 
   if (!GEN_weight_SM) return;
   
@@ -376,9 +376,10 @@ void AnalysisCMS::GetJets()
 
     Jet goodjet;
 
-    goodjet.index  = i;
-    goodjet.cmvav2 = std_vector_jet_cmvav2->at(i);
-    goodjet.v      = tlv;
+    goodjet.index    = i;
+    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
+    goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+    goodjet.v        = tlv;
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
@@ -895,7 +896,7 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("channel",       &_channel,      "channel/I");
+  minitree->Branch("channel",       &_channel,      "channel/F");
   minitree->Branch("dphijet1met",   &_dphijet1met,  "dphijet1met/F");
   minitree->Branch("dphijet2met",   &_dphijet2met,  "dphijet2met/F");
   minitree->Branch("dphijj",        &_dphijj,       "dphijj/F");
@@ -913,9 +914,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2eta",       &_lep2eta,      "lep2eta/F");
   minitree->Branch("lep2phi",       &_lep2phi,      "lep2phi/F");
   minitree->Branch("lep2pt",        &_lep2pt,       "lep2pt/F");
-  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/I");
-  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/I");
-  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/I");
+  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/F");
+  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/F");
+  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/F");
   minitree->Branch("mc",            &_mc,           "mc/F");
   minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
 }
