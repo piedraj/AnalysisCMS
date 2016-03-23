@@ -105,11 +105,11 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-//factory->AddVariable("channel",      "", "", 'I');
+//factory->AddVariable("channel",      "", "", 'F');
 //factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large?
 //factory->AddVariable("mll",          "", "", 'F');  // Empty range too large?
   factory->AddVariable("njet",         "", "", 'F');
-//factory->AddVariable("nbjet20loose", "", "", 'I');  // The reader does not like int variables
+  factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
@@ -163,11 +163,11 @@ void MVARead(TString signal, TString sample)
 {
   TMVA::Reader* reader = new TMVA::Reader("!Color:!Silent");   
 
-//int   channel;
+//float channel;
 //float metPfType1;
 //float mll;
   float njet;
-//float nbjet20loose;  // It was saved as int, but it has to be float for the Reader
+  float nbjet20loose;
   float lep1pt;
   float lep2pt;
   float jet1pt;
@@ -188,7 +188,7 @@ void MVARead(TString signal, TString sample)
 //reader->AddVariable("metPfType1",   &metPfType1);
 //reader->AddVariable("mll",          &mll);
   reader->AddVariable("njet",         &njet);
-//reader->AddVariable("nbjet20loose", &nbjet20loose);
+  reader->AddVariable("nbjet20loose", &nbjet20loose);
   reader->AddVariable("lep1pt",       &lep1pt);
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
@@ -272,7 +272,7 @@ TBranch *MVABranch = theTree -> Branch( "MVA" + signal, &MVAresponse, "MVArespon
 //theTree->SetBranchAddress("metPfType1",   &metPfType1);
 //theTree->SetBranchAddress("mll",          &mll);
   theTree->SetBranchAddress("njet",         &njet);
-//theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
+  theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
   theTree->SetBranchAddress("lep1pt",       &lep1pt);
   theTree->SetBranchAddress("lep2pt",       &lep2pt);
   theTree->SetBranchAddress("jet1pt",       &jet1pt);
