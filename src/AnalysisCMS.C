@@ -259,6 +259,8 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
 
+  //  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
+
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
@@ -374,9 +376,10 @@ void AnalysisCMS::GetJets()
 
     Jet goodjet;
 
-    goodjet.index  = i;
-    goodjet.cmvav2 = std_vector_jet_cmvav2->at(i);
-    goodjet.v      = tlv;
+    goodjet.index    = i;
+    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
+    goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+    goodjet.v        = tlv;
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;

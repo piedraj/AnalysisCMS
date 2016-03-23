@@ -29,6 +29,7 @@ struct Jet
 {
   int            index;
   float          cmvav2;
+  float          csvv2ivf;
   TLorentzVector v;
 };
 
@@ -109,6 +110,8 @@ class AnalysisCMS : public AnalysisBase
   void    GetDeltaPhi      ();
 
   void    OpenMinitree     ();
+
+  void    SetSaveMinitree  (Bool_t   saveminitree) {_saveminitree = saveminitree;}
 
 
   // Data members

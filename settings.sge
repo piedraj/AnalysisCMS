@@ -4,7 +4,7 @@
 #$ -cwd
 #$ -t 1-1
 #$ -N AnalysisCMS
-#$ -o job_$JOB_ID-$TASK_ID.out
+#$ -o jobs/job_$JOB_ID-$TASK_ID.out
 #$ -j y
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
