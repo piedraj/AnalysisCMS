@@ -896,7 +896,7 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("channel",       &_channel,      "channel/I");
+  minitree->Branch("channel",       &_channel,      "channel/F");
   minitree->Branch("dphijet1met",   &_dphijet1met,  "dphijet1met/F");
   minitree->Branch("dphijet2met",   &_dphijet2met,  "dphijet2met/F");
   minitree->Branch("dphijj",        &_dphijj,       "dphijj/F");
@@ -914,9 +914,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2eta",       &_lep2eta,      "lep2eta/F");
   minitree->Branch("lep2phi",       &_lep2phi,      "lep2phi/F");
   minitree->Branch("lep2pt",        &_lep2pt,       "lep2pt/F");
-  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/I");
-  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/I");
-  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/I");
+  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/F");
+  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/F");
+  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/F");
   minitree->Branch("mc",            &_mc,           "mc/F");
   minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
 }

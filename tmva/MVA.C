@@ -17,15 +17,19 @@ void MVARead (TString signal,
 	      TString sample);
 
 
-const TString analysis  = "TTDM";
-const TString inputdir  = "../minitrees/";
-const TString outputdir = "training_test_outputs/trainOPT/";
+const TString analysis       = "TTDM";
+const TString inputdir       = "../minitrees/";
+const TString trainingdir    = "output/training/";
+const TString weightsdir     = "output/weights/";
+const TString applicationdir = "output/application/";
 
 
 void MVA(TString signal = "06_WW")
 {
-  gSystem->mkdir(outputdir, kTRUE);
-  gSystem->mkdir("application_outputs/OPT", kTRUE);
+  gSystem->mkdir(trainingdir,    kTRUE);
+  gSystem->mkdir(applicationdir, kTRUE);
+
+  (TMVA::gConfig().GetIONames()).fWeightFileDir = weightsdir;
 
   MVATrain(signal);
 
@@ -47,10 +51,8 @@ void MVA(TString signal = "06_WW")
 //------------------------------------------------------------------------------
 void MVATrain(TString signal)
 {
-  TFile* outputfile = TFile::Open(outputdir + signal + ".root", "recreate");
+  TFile* outputfile = TFile::Open(trainingdir + signal + ".root", "recreate");
 
-  (TMVA::gConfig().GetIONames()).fWeightFileDir = "training_test_outputs/weightsOPT";
-   
 
   // Factory
   //----------------------------------------------------------------------------
@@ -100,7 +102,7 @@ void MVATrain(TString signal)
 
   // Add variables
   //----------------------------------------------------------------------------
-  // Be careful with the order: it must be respected at the application step
+  // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
 //factory->AddVariable("channel",      "", "", 'I');
@@ -130,7 +132,7 @@ void MVATrain(TString signal)
   TCut mycut = "";
 
 //factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1500:nTest_Signal=1500:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");  // Faster
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=650:nTest_Signal=650:nTrain_Background=500:nTest_Background=500:SplitMode=Alternate:!V");  // Faster
 
 
   // Book MVA
@@ -206,12 +208,12 @@ void MVARead(TString signal, TString sample)
 
   // Book MVA methods
   //----------------------------------------------------------------------------
-  reader->BookMVA("MLP", "training_test_outputs/weightsOPT/" + signal + "_MLP.weights.xml");
+  reader->BookMVA("MLP", weightsdir + signal + "_MLP.weights.xml");
 
 
   // Get MVA response
   //----------------------------------------------------------------------------
-  TH1F* hCuts = new TH1F("hCuts", "hCuts", 100, -0.1, 1.1);
+  TH1F* h_mva = new TH1F("h_mva", "", 100, -0.1, 1.1);
 
   TFile* input = TFile::Open(inputdir + analysis + "/" + sample + ".root", "update");
 
@@ -335,7 +337,7 @@ for ( Long64_t ievt = 0; ievt < theTree -> GetEntries(); ievt++ ) {
 
 
 			MVAresponse = reader -> EvaluateMVA("MLP");
-			hCuts -> Fill(MVAresponse, eventW);
+			h_mva -> Fill(MVAresponse, eventW);
 			MVABranch -> Fill();
 
 }    
@@ -353,11 +355,9 @@ input -> Close();
 
 
 
-//new file for the MVA-histogram
-//TFile *target  =  TFile::Open ("application_outputs/CR/h_MLP_"+sample+".root","UPDATE" );
-TFile *target  =  TFile::Open ("application_outputs/OPT/h_Cuts_" + signal + "_" + sample + ".root","recreate" );   
+ TFile *target = TFile::Open (applicationdir + signal + "__" + sample + ".root", "recreate");
 
-hCuts -> Write();
+h_mva -> Write();
 
 target -> Close();
 
