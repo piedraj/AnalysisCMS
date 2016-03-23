@@ -259,7 +259,7 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
 
-  //  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
+  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
 
   if (!GEN_weight_SM) return;
   

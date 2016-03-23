@@ -77,6 +77,8 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 20.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
 
+    if (_nlepton > 2) continue;
+
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
