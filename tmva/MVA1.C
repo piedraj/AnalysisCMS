@@ -88,8 +88,8 @@ void optim12(TString signal)
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
 //factory->AddVariable("channel",      "", "", 'I');
-  factory->AddVariable("metPfType1",   "", "", 'F');
-  factory->AddVariable("mll",          "", "", 'F');
+//factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large?
+//factory->AddVariable("mll",          "", "", 'F');  // Empty range too large?
   factory->AddVariable("njet",         "", "", 'F');
   factory->AddVariable("nbjet20loose", "", "", 'I');
   factory->AddVariable("lep1pt",       "", "", 'F');
@@ -113,8 +113,8 @@ void optim12(TString signal)
   //----------------------------------------------------------------------------
   TCut mycut = "";
 
-  factory->PrepareTrainingAndTestTree(mycut,     
-				      ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
+//factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1500:nTest_Signal=1500:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");  // Faster
 
 
   // Book MVA
