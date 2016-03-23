@@ -138,10 +138,10 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && nbjet > 0);
     FillLevelHistograms(WW_50_TopCR, pass_topCR);
 
-    bool pass_dyttCR = (nbjet == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
+    bool pass_dyttCR = (_nbjet20loose == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
     FillLevelHistograms(WW_60_DYttCR, pass_dyttCR);
 
-    bool pass_dyCR = (nbjet == 0 && !pass_zwindow);
+    bool pass_dyCR = (_nbjet20loose == 0 && !pass_zwindow);
     FillLevelHistograms(WW_70_DYCR, pass_dyCR);
 
 
