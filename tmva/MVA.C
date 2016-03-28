@@ -26,14 +26,17 @@ const TString applicationdir = "output/application/";
 
 void MVA(TString signal = "06_WW")
 {
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+
   gSystem->mkdir(trainingdir,    kTRUE);
   gSystem->mkdir(applicationdir, kTRUE);
 
   (TMVA::gConfig().GetIONames()).fWeightFileDir = weightsdir;
 
-  //  MVATrain(signal);
+  MVATrain(signal);
 
   MVARead(signal, signal);
+  MVARead(signal, "01_Data");
   MVARead(signal, "09_TTV");
   MVARead(signal, "07_ZJets");
   MVARead(signal, "02_WZTo3LNu");
