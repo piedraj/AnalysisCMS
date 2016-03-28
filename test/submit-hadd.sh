@@ -3,6 +3,7 @@
 if [ $# -lt 1 ]; then
     echo "  "
     echo "  ./submit-hadd.sh ../rootfiles/<analysis>"
+    echo "  ./submit-hadd.sh ../minitrees/<analysis>"
     echo "  "
     exit -1
 fi
@@ -14,6 +15,8 @@ echo "  "
 echo "  Submitting" $NJOBS "jobs"
 echo "  "
 
-`mkdir -p jobs`
+mkdir -p jobs
+
 qsub -t 1-$NJOBS -v FOLDER settings.sge
+
 echo "  "

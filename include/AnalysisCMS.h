@@ -29,6 +29,7 @@ struct Jet
 {
   int            index;
   float          cmvav2;
+  float          csvv2ivf;
   TLorentzVector v;
 };
 
@@ -110,6 +111,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    OpenMinitree     ();
 
+  void    SetSaveMinitree  (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -168,6 +171,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;
+  float                  _nbjet20loose;
+  float                  _nbjet20tight;
+  float                  _nbjet30tight;
   float                  _ptww;
   float                  _pt2l;
   float                  _trkpmet;
@@ -177,9 +183,6 @@ class AnalysisCMS : public AnalysisBase
 
   int                    _channel;
   unsigned int           _jetbin;
-  unsigned int           _nbjet20loose;
-  unsigned int           _nbjet20tight;
-  unsigned int           _nbjet30tight;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
   

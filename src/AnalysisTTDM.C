@@ -5,7 +5,10 @@
 //------------------------------------------------------------------------------
 // AnalysisTTDM
 //------------------------------------------------------------------------------
-AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree)
+{
+  SetSaveMinitree(true);
+}
 
 
 //------------------------------------------------------------------------------
@@ -130,6 +133,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
+    if (_nlepton > 2) continue;
+
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -157,11 +162,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
-    bool preselection = pass && (njet > 0) && (MET.Et() > 30.);
+    bool preselection = pass && (njet > 0) && (MET.Et() > 50.);
 
     FillLevelHistograms(TTDM_02_Preselection, preselection);
 
-    if (pass && _saveminitree) minitree->Fill();
+    if (preselection && _saveminitree) minitree->Fill();
 
     pass &= (njet > 1);
 

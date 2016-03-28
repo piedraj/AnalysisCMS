@@ -3,8 +3,8 @@
 
 
 //#include "CutsMonoH.h"
-#include "CutsTop.h"
-//#include "CutsTTDM.h"
+//#include "CutsTop.h"
+#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
@@ -79,9 +79,17 @@ const TString lchannel[nchannel] = {
 
 
 // https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation76X
+// pfCombinedMVAV2BJetTags
 const float cMVAv2L = -0.715;
 const float cMVAv2M =  0.185;
 const float cMVAv2T =  0.875;
+
+
+// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation76X
+// pfCombinedInclusiveSecondaryVertexV2BJetTags
+const float CSVv2L = 0.460;
+const float CSVv2M = 0.800;
+const float CSVv2T = 0.935;
 
 
 // MET filters

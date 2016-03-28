@@ -259,6 +259,8 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
 
+  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
+
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
@@ -376,9 +378,10 @@ void AnalysisCMS::GetJets()
 
     Jet goodjet;
 
-    goodjet.index  = i;
-    goodjet.cmvav2 = std_vector_jet_cmvav2->at(i);
-    goodjet.v      = tlv;
+    goodjet.index    = i;
+    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
+    goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+    goodjet.v        = tlv;
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
@@ -630,16 +633,33 @@ void AnalysisCMS::GetSoftMuon()
 {
   _foundsoftmuon = false;
   
-  for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); ++i)
-    {
-      if (std_vector_jet_pt->at(i)       < 10.) continue;
-      if (std_vector_jet_pt->at(i)       > 30.) continue;
-      if (std_vector_jet_softMuPt->at(i) <  3.) continue;
+  /*
+  for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); i++) {
+    
+    if (std_vector_jet_pt->at(i)       < 10.) continue;
+    if (std_vector_jet_pt->at(i)       > 30.) continue;
+    if (std_vector_jet_softMuPt->at(i) <  3.) continue;
+    
+    _foundsoftmuon = true;
+       
+    break;
+  }
+  */
 
-      _foundsoftmuon = true;
+  // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
+  for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
 
-      break;
-    }
+    if (std_vector_softMuPt->at(i)  < 3.)                       continue;
+    if (std_vector_softMuD0->at(i)  < 0.2)                      continue;
+    if (std_vector_softMuDz->at(i)  < 0.5)                      continue;
+    if (std_vector_softMuIso->at(i) < 0.15)                     continue;
+    if (std_vector_softMuIsTrackerMuon->at(i)         == false) continue;
+    if (std_vector_softMuTMLastStationAngTight->at(i) == false) continue;
+    
+    _foundsoftmuon = true;
+    
+    break;
+  }
 }
 
 
@@ -894,7 +914,7 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("channel",       &_channel,      "channel/I");
+  minitree->Branch("channel",       &_channel,      "channel/F");  // Careful, _channel is an int variable
   minitree->Branch("dphijet1met",   &_dphijet1met,  "dphijet1met/F");
   minitree->Branch("dphijet2met",   &_dphijet2met,  "dphijet2met/F");
   minitree->Branch("dphijj",        &_dphijj,       "dphijj/F");
@@ -912,9 +932,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2eta",       &_lep2eta,      "lep2eta/F");
   minitree->Branch("lep2phi",       &_lep2phi,      "lep2phi/F");
   minitree->Branch("lep2pt",        &_lep2pt,       "lep2pt/F");
-  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/I");
-  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/I");
-  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/I");
+  minitree->Branch("nbjet20loose",  &_nbjet20loose, "nbjet20loose/F");
+  minitree->Branch("nbjet20tight",  &_nbjet20tight, "nbjet20tight/F");
+  minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/F");
   minitree->Branch("mc",            &_mc,           "mc/F");
   minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
 }

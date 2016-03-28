@@ -5,7 +5,10 @@
 //------------------------------------------------------------------------------
 // AnalysisTop
 //------------------------------------------------------------------------------
-AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree)
+{
+  SetSaveMinitree(false);
+}
 
 
 //------------------------------------------------------------------------------
@@ -82,7 +85,8 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 20.) continue;
 
     // "Third Z-Veto" This requirement should be applied on a loose lepton 
-    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
+    //if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
+    if (_nlepton > 2) continue;
 
     _nelectron = 0;
 
