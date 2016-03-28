@@ -24,8 +24,6 @@ echo "  "
 echo "  Let's play it safe. Compiling runAnalysis..."
 ./make
 
-`mkdir -p jobs`
-
 echo "  "
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "

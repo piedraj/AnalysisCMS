@@ -93,7 +93,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30tight[ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx        [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_met         [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
-  h_mpmet       [ichannel][icut][ijet]->Fill(mpmet,          _event_weight);  // Needs l2Sel
+  h_mpmet       [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_njet        [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
   h_drll        [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
   h_dphill      [ichannel][icut][ijet]->Fill(fabs(dphill),   _event_weight);  // Needs l2Sel
@@ -360,9 +360,7 @@ void AnalysisCMS::GetJets()
 
   _nbjet20loose = 0;
   _nbjet20tight = 0;
-  //_nbjet30medium = 0;
   _nbjet30tight = 0;
-  
 
   int vector_jet_size = std_vector_jet_pt->size();
 
@@ -540,8 +538,8 @@ void AnalysisCMS::GetHt()
     {
       if (std_vector_jet_pt->at(i) < 30.) continue;
 
-      _ht += std_vector_jet_pt->at(i);
-      _htjets += std_vector_jet_pt->at(i);	
+      _ht     += std_vector_jet_pt->at(i);
+      _htjets += std_vector_jet_pt->at(i);
     }
 }
 
@@ -670,6 +668,7 @@ void AnalysisCMS::GetFakeWeights()
 {
   if (!_sample.Contains("DD_"))
     {
+      _fake_weight            = 1.;
       _fake_weight_elUp       = 1.;
       _fake_weight_elDown     = 1.;
       _fake_weight_elStatUp   = 1.;
@@ -851,7 +850,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_njet        [ichannel][icut][ijet] = new TH1D("h_njet"         + suffix, "",    7, -0.5,  6.5);
   h_nbjet20loose[ichannel][icut][ijet] = new TH1D("h_nbjet20loose" + suffix, "",    7, -0.5,  6.5);
   h_nbjet20tight[ichannel][icut][ijet] = new TH1D("h_nbjet20tight" + suffix, "",    7, -0.5,  6.5);
- // h_nbjet30medium[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight[ichannel][icut][ijet] = new TH1D("h_nbjet30tight" + suffix, "",    7, -0.5,  6.5);
   h_nvtx        [ichannel][icut][ijet] = new TH1D("h_nvtx"         + suffix, "",   50,    0,   50);
   h_drll        [ichannel][icut][ijet] = new TH1D("h_drll"         + suffix, "",  100,    0,    5);
