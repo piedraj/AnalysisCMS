@@ -51,8 +51,14 @@ void MVA(TString signal)
 
   (TMVA::gConfig().GetIONames()).fWeightFileDir = weightsdir;
 
+
+  // Training
+  //----------------------------------------------------------------------------
   MVATrain(signal);
 
+
+  // Reading
+  //----------------------------------------------------------------------------
   MVARead(signal, "01_Data");
   MVARead(signal, "14_HZ");
   MVARead(signal, "10_HWW");
