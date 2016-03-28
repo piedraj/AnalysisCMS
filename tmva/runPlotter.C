@@ -35,6 +35,7 @@ void runPlotter(TString signal)
 
   gSystem->mkdir(outputdir, kTRUE);
 
+  plotter.Draw("h_mva", "MVA output", -1, 2, "NULL", linY);
   plotter.Draw("h_mva", "MVA output", -1, 2, "NULL", logY);
 
 
