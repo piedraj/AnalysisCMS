@@ -121,5 +121,4 @@ const TString sfilter[nfilter] = {
   "allFilter"
 };
 
-
 #endif
