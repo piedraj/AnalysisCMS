@@ -12,18 +12,36 @@
 #include "TTree.h"
 
 
-void MVATrain(TString signal);
-void MVARead (TString signal,
-	      TString sample);
-
-
-const TString analysis       = "TTDM";
-const TString inputdir       = "../minitrees/";
+// Constants
+//------------------------------------------------------------------------------
+const TString inputdir       = "../minitrees/TTDM/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
 
 
+// Functions
+//------------------------------------------------------------------------------
+void MVATrain  (TString signal);
+
+void MVARead   (TString signal,
+		TString filename);
+
+void AddProcess(TString kind,
+		TString filename);
+
+
+// Data members
+//------------------------------------------------------------------------------
+TTree*              _signaltree;
+std::vector<TTree*> _mctree;
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// MVA
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(TString signal = "06_WW")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
@@ -35,13 +53,19 @@ void MVA(TString signal = "06_WW")
 
   MVATrain(signal);
 
-  MVARead(signal, signal);
   MVARead(signal, "01_Data");
-  MVARead(signal, "09_TTV");
-  MVARead(signal, "07_ZJets");
+  MVARead(signal, "14_HZ");
+  MVARead(signal, "10_HWW");
+  MVARead(signal, "06_WW");
   MVARead(signal, "02_WZTo3LNu");
-  MVARead(signal, "05_ST");
   MVARead(signal, "03_ZZ");
+  MVARead(signal, "11_Wg");
+  MVARead(signal, "07_ZJets");
+  MVARead(signal, "09_TTV");
+  MVARead(signal, "13_VVV");
+  MVARead(signal, "04_TTTo2L2Nu");
+  MVARead(signal, "05_ST");
+  MVARead(signal, "00_Fakes");
 }
 
 
@@ -61,28 +85,26 @@ void MVATrain(TString signal)
 
   // Get the trees
   //----------------------------------------------------------------------------
-  TFile *inputSFile  = TFile::Open(inputdir + analysis + "/" + signal + ".root", "read");
-  TFile *inputB1File = TFile::Open(inputdir + analysis + "/09_TTV.root",         "read");
-  TFile *inputB2File = TFile::Open(inputdir + analysis + "/07_ZJets.root",       "read");
-  TFile *inputB3File = TFile::Open(inputdir + analysis + "/02_WZTo3LNu.root",    "read");
-  TFile *inputB4File = TFile::Open(inputdir + analysis + "/05_ST.root",          "read");
-  TFile *inputB5File = TFile::Open(inputdir + analysis + "/03_ZZ.root",          "read");
+  _mctree.clear();
 
-  TTree *signalTree  = (TTree*)inputSFile ->Get("latino");
-  TTree *background1 = (TTree*)inputB1File->Get("latino");
-  TTree *background2 = (TTree*)inputB2File->Get("latino");
-  TTree *background3 = (TTree*)inputB3File->Get("latino");
-  TTree *background4 = (TTree*)inputB4File->Get("latino");
-  TTree *background5 = (TTree*)inputB5File->Get("latino");
+  AddProcess("mc",     "14_HZ");
+  AddProcess("mc",     "10_HWW");
+  AddProcess("signal", "06_WW");
+  AddProcess("mc",     "02_WZTo3LNu");
+  AddProcess("mc",     "03_ZZ");
+  AddProcess("mc",     "11_Wg");
+  AddProcess("mc",     "07_ZJets");
+  AddProcess("mc",     "09_TTV");
+  AddProcess("mc",     "13_VVV");
+  AddProcess("mc",     "04_TTTo2L2Nu");
+  AddProcess("mc",     "05_ST");
+  AddProcess("mc",     "00_Fakes");
 
   Double_t weight = 1.0;
 
-  factory->AddSignalTree    (signalTree , weight);
-  factory->AddBackgroundTree(background1, weight);
-  factory->AddBackgroundTree(background2, weight);
-  factory->AddBackgroundTree(background3, weight);
-  factory->AddBackgroundTree(background4, weight);
-  factory->AddBackgroundTree(background5, weight);
+  factory->AddSignalTree(_signaltree, weight);
+
+  for (UInt_t i=0; i<_mctree.size(); i++) factory->AddBackgroundTree(_mctree[i], weight);
   
   factory->SetWeightExpression("eventW");
 
@@ -146,7 +168,7 @@ void MVATrain(TString signal)
 //------------------------------------------------------------------------------
 // MVARead
 //------------------------------------------------------------------------------
-void MVARead(TString signal, TString sample)
+void MVARead(TString signal, TString filename)
 {
   TMVA::Reader* reader = new TMVA::Reader("!Color:!Silent");   
 
@@ -204,7 +226,7 @@ void MVARead(TString signal, TString sample)
   //----------------------------------------------------------------------------
   TH1F* h_mva = new TH1F("h_mva", "", 100, -0.5, 1.5);
 
-  TFile* input = TFile::Open(inputdir + analysis + "/" + sample + ".root", "update");
+  TFile* input = TFile::Open(inputdir + filename + ".root", "update");
 
   TTree* theTree = (TTree*)input->Get("latino");
 
@@ -248,7 +270,7 @@ void MVARead(TString signal, TString sample)
 
   input->Close();
 
-  TFile* target = TFile::Open(applicationdir + signal + "__" + sample + ".root", "recreate");
+  TFile* target = TFile::Open(applicationdir + signal + "__" + filename + ".root", "recreate");
 
   h_mva->Write();
   
@@ -257,4 +279,28 @@ void MVARead(TString signal, TString sample)
   h_mva->Delete();
 
   delete reader;
+}
+
+
+//------------------------------------------------------------------------------
+// AddProcess
+//------------------------------------------------------------------------------
+void AddProcess(TString kind, TString filename)
+{
+  TString fullname = inputdir + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [MVA::AddProcess] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "read");
+
+  TTree* tree = (TTree*)file->Get("latino");
+
+  if (kind.EqualTo("signal"))
+    _signaltree = tree;
+  else
+    _mctree.push_back(tree);
 }

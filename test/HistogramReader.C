@@ -164,6 +164,8 @@ void HistogramReader::Draw(TString hname,
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
+    _mcfile[i]->cd();
+
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
     _mchist.push_back((TH1D*)dummy->Clone());
@@ -182,6 +184,8 @@ void HistogramReader::Draw(TString hname,
 
   for (UInt_t i=0; i<_signalfile.size(); i++) {
 
+    _signalfile[i]->cd();
+
     TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
 
     _signalhist.push_back((TH1D*)dummy->Clone());
@@ -196,6 +200,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (_datafile)
     {
+      _datafile->cd();
+
       TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
       _datahist = (TH1D*)dummy->Clone();
@@ -485,6 +491,8 @@ void HistogramReader::CrossSection(TString level,
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
+    _mcfile[i]->cd();
+
     if (_mclabel[i].EqualTo(process))
       {
         signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
@@ -508,6 +516,8 @@ void HistogramReader::CrossSection(TString level,
   //----------------------------------------------------------------------------
   if (_datafile)
     {
+      _datafile->cd();
+
       TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
 
       _datahist = (TH1D*)dummy->Clone();      
