@@ -55,7 +55,7 @@ int main(int argc, char ** argv)
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 
-    printf(" ./runPlotter 06_WW\n\n");
+    printf(" ./runPlotter <signal>\n\n");
 
     exit(0);
   }
