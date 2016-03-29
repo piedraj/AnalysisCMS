@@ -397,6 +397,7 @@ void AnalysisCMS::GetJets()
   _jetbin = (njet < njetbin) ? njet : njetbin - 1;
 }
 
+
 //------------------------------------------------------------------------------
 // GetJetPtSum
 //------------------------------------------------------------------------------
@@ -490,15 +491,15 @@ void AnalysisCMS::GetDeltaPhi()
 {
   // Reset variables
   //----------------------------------------------------------------------------
-  _dphijet1met  = -999;
-  _dphijet2met  = -999;
-  _dphijj       = -999;
-  _dphijjmet    = -999;
-  _dphilep1jet1 = -999;
-  _dphilep1jet2 = -999;
-  _dphilep2jet1 = -999;
-  _dphilep2jet2 = -999;
-  _dphillmet    = -999;
+  _dphijet1met  = -0.1;
+  _dphijet2met  = -0.1;
+  _dphijj       = -0.1;
+  _dphijjmet    = -0.1;
+  _dphilep1jet1 = -0.1;
+  _dphilep1jet2 = -0.1;
+  _dphilep2jet1 = -0.1;
+  _dphilep2jet2 = -0.1;
+  _dphillmet    = -0.1;
 
 
   // Fill variables

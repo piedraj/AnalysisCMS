@@ -42,7 +42,7 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal)
+void MVA(TString signal = "06_WW")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -59,19 +59,19 @@ void MVA(TString signal)
 
   // Reading
   //----------------------------------------------------------------------------
-  MVARead(signal, "01_Data");
-  MVARead(signal, "14_HZ");
-  MVARead(signal, "10_HWW");
-  MVARead(signal, "06_WW");
-  MVARead(signal, "02_WZTo3LNu");
-  MVARead(signal, "03_ZZ");
-  MVARead(signal, "11_Wg");
-  MVARead(signal, "07_ZJets");
-  MVARead(signal, "09_TTV");
-  MVARead(signal, "13_VVV");
-  MVARead(signal, "04_TTTo2L2Nu");
-  MVARead(signal, "05_ST");
-  MVARead(signal, "00_Fakes");
+//  MVARead(signal, "01_Data");
+//  MVARead(signal, "14_HZ");
+//  MVARead(signal, "10_HWW");
+//  MVARead(signal, "06_WW");
+//  MVARead(signal, "02_WZTo3LNu");
+//  MVARead(signal, "03_ZZ");
+//  MVARead(signal, "11_Wg");
+//  MVARead(signal, "07_ZJets");
+//  MVARead(signal, "09_TTV");
+//  MVARead(signal, "13_VVV");
+//  MVARead(signal, "04_TTTo2L2Nu");
+//  MVARead(signal, "05_ST");
+//  MVARead(signal, "00_Fakes");
 }
 
 
@@ -120,11 +120,11 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-//factory->AddVariable("channel",      "", "", 'F');
-//factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large
-//factory->AddVariable("mll",          "", "", 'F');  // Empty range too large
+  factory->AddVariable("channel",      "", "", 'F');
+  factory->AddVariable("metPfType1",   "", "", 'F');
+  factory->AddVariable("mll",          "", "", 'F');
   factory->AddVariable("njet",         "", "", 'F');
-//factory->AddVariable("nbjet20loose", "", "", 'F');
+  factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
@@ -201,11 +201,11 @@ void MVARead(TString signal, TString filename)
   float eventW;
   float mva; 
 
-//reader->AddVariable("channel",      &channel);
-//reader->AddVariable("metPfType1",   &metPfType1);
-//reader->AddVariable("mll",          &mll);
+  reader->AddVariable("channel",      &channel);
+  reader->AddVariable("metPfType1",   &metPfType1);
+  reader->AddVariable("mll",          &mll);
   reader->AddVariable("njet",         &njet);
-//reader->AddVariable("nbjet20loose", &nbjet20loose);
+  reader->AddVariable("nbjet20loose", &nbjet20loose);
   reader->AddVariable("lep1pt",       &lep1pt);
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
