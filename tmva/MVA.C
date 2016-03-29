@@ -128,7 +128,7 @@ void MVATrain(TString signal)
   factory->AddVariable("lep1pt",       "", "", 'F');
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
-//factory->AddVariable("jet2pt",       "", "", 'F');
+  factory->AddVariable("jet2pt",       "", "", 'F');
   factory->AddVariable("dphill",       "", "", 'F');
   factory->AddVariable("dphilep1jet1", "", "", 'F');
   factory->AddVariable("dphilep1jet2", "", "", 'F');
@@ -209,7 +209,7 @@ void MVARead(TString signal, TString filename)
   reader->AddVariable("lep1pt",       &lep1pt);
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
-//reader->AddVariable("jet2pt",       &jet2pt);
+  reader->AddVariable("jet2pt",       &jet2pt);
   reader->AddVariable("dphill",       &dphill);
   reader->AddVariable("dphilep1jet1", &dphilep1jet1);
   reader->AddVariable("dphilep1jet2", &dphilep1jet2);
