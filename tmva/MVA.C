@@ -59,19 +59,19 @@ void MVA(TString signal = "06_WW")
 
   // Reading
   //----------------------------------------------------------------------------
-//  MVARead(signal, "01_Data");
-//  MVARead(signal, "14_HZ");
-//  MVARead(signal, "10_HWW");
-//  MVARead(signal, "06_WW");
-//  MVARead(signal, "02_WZTo3LNu");
-//  MVARead(signal, "03_ZZ");
-//  MVARead(signal, "11_Wg");
-//  MVARead(signal, "07_ZJets");
-//  MVARead(signal, "09_TTV");
-//  MVARead(signal, "13_VVV");
-//  MVARead(signal, "04_TTTo2L2Nu");
-//  MVARead(signal, "05_ST");
-//  MVARead(signal, "00_Fakes");
+  MVARead(signal, "01_Data");
+  MVARead(signal, "14_HZ");
+  MVARead(signal, "10_HWW");
+  MVARead(signal, "06_WW");
+  MVARead(signal, "02_WZTo3LNu");
+  MVARead(signal, "03_ZZ");
+  MVARead(signal, "11_Wg");
+  MVARead(signal, "07_ZJets");
+  MVARead(signal, "09_TTV");
+  MVARead(signal, "13_VVV");
+  MVARead(signal, "04_TTTo2L2Nu");
+  MVARead(signal, "05_ST");
+  MVARead(signal, "00_Fakes");
 }
 
 
@@ -131,14 +131,14 @@ void MVATrain(TString signal)
 //factory->AddVariable("jet2pt",       "", "", 'F');
   factory->AddVariable("dphill",       "", "", 'F');
   factory->AddVariable("dphilep1jet1", "", "", 'F');
-//factory->AddVariable("dphilep1jet2", "", "", 'F');
+  factory->AddVariable("dphilep1jet2", "", "", 'F');
   factory->AddVariable("dphilmet1",    "", "", 'F');
   factory->AddVariable("dphilep2jet1", "", "", 'F');
-//factory->AddVariable("dphilep2jet2", "", "", 'F');
+  factory->AddVariable("dphilep2jet2", "", "", 'F');
   factory->AddVariable("dphilmet2",    "", "", 'F');
-//factory->AddVariable("dphijj",       "", "", 'F');
+  factory->AddVariable("dphijj",       "", "", 'F');
   factory->AddVariable("dphijet1met",  "", "", 'F');
-//factory->AddVariable("dphijet2met",  "", "", 'F');
+  factory->AddVariable("dphijet2met",  "", "", 'F');
   factory->AddVariable("dphillmet",    "", "", 'F');
 
 
@@ -212,14 +212,14 @@ void MVARead(TString signal, TString filename)
 //reader->AddVariable("jet2pt",       &jet2pt);
   reader->AddVariable("dphill",       &dphill);
   reader->AddVariable("dphilep1jet1", &dphilep1jet1);
-//reader->AddVariable("dphilep1jet2", &dphilep1jet2);
+  reader->AddVariable("dphilep1jet2", &dphilep1jet2);
   reader->AddVariable("dphilmet1",    &dphilmet1);
   reader->AddVariable("dphilep2jet1", &dphilep2jet1);
-//reader->AddVariable("dphilep2jet2", &dphilep2jet2);
+  reader->AddVariable("dphilep2jet2", &dphilep2jet2);
   reader->AddVariable("dphilmet2",    &dphilmet2);
-//reader->AddVariable("dphijj",       &dphijj);
+  reader->AddVariable("dphijj",       &dphijj);
   reader->AddVariable("dphijet1met",  &dphijet1met);
-//reader->AddVariable("dphijet2met",  &dphijet2met);
+  reader->AddVariable("dphijet2met",  &dphijet2met);
   reader->AddVariable("dphillmet",    &dphillmet);
 
 
