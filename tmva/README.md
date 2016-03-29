@@ -9,7 +9,6 @@
 ====
 
     cd AnalysisCMS/tmva
-    root -l -b -q "MVA.C+(\"<signal>\")"
     root -l -b -q "MVA.C+(\"ttDM0001pseudo0010\")"
 
 
@@ -18,5 +17,4 @@
 
     cd AnalysisCMS/tmva
     ./make
-    ./runPlotter
     ./runPlotter ttDM0001pseudo0010
