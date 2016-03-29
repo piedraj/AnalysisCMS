@@ -90,6 +90,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetFakeWeights   ();
 
+  void    GetGenPtllWeight ();
+
   bool    IsIsolatedLepton (int      k);
 
   float   MuonIsolation    (int      k);
@@ -154,6 +156,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
+  float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
   float                  _htjets;

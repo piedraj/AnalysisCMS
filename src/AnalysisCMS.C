@@ -259,7 +259,7 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
 
-  if (_sample.Contains("DYJetsToLL_M")) _event_weight *= (0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8));
+  _event_weight *= _gen_ptll_weight;
 
   if (!GEN_weight_SM) return;
   
@@ -741,6 +741,8 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup()
 {
+  GetGenPtllWeight();
+
   GetFakeWeights();
 
   ApplyWeights();
@@ -936,4 +938,33 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30tight",  &_nbjet30tight, "nbjet30tight/F");
   minitree->Branch("mc",            &_mc,           "mc/F");
   minitree->Branch("mpmet",         &_mpmet,        "mpmet/F");
+}
+
+
+//------------------------------------------------------------------------------
+// GetGenPtllWeight
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetGenPtllWeight()
+{
+  _gen_ptll_weight = 1.0;
+
+  if (!_sample.Contains("DYJetsToLL_M")) return;
+
+
+  // Andrea's version
+  //----------------------------------------------------------------------------
+  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8);
+
+
+  // Rafael's version
+  //----------------------------------------------------------------------------
+  float p0 = 1.02852e+00;
+  float p1 = 9.49640e-02;
+  float p2 = 1.90422e+01;
+  float p3 = 1.04487e+01;
+  float p4 = 7.58834e-02;
+  float p5 = 5.61146e+01;
+  float p6 = 4.11653e+01;
+
+  _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
 }
