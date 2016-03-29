@@ -176,7 +176,11 @@ class AnalysisCMS : public AnalysisBase
   float                  _m2l;
   float                  _m3l;
   float                  _nbjet20loose;
+  float                  _nbjet20medium;
   float                  _nbjet20tight;
+  float                  _nbjet15loose;
+  float                  _nbjet15medium;
+  float                  _nbjet15tight;
   float                  _nbjet30tight;
   float                  _ptww;
   float                  _pt2l;
@@ -198,31 +202,35 @@ class AnalysisCMS : public AnalysisBase
 
   // Common TH1 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_counterRaw  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_counterLum  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_njet        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20loose[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20tight[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet30tight[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nvtx        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_drll        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphill      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_met         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkmet      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mpmet       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_m2l         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw1        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw2        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mth         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mc          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt1         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumpt12     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumjpt12    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2l        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ptww        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_fakes       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20loose [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20medium[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15loose [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15medium[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nvtx         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_drll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphill       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_met          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mpmet        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m2l          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw1         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw2         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mth          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt1          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptww         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
 };
 
 #endif
