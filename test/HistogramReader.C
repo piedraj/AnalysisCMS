@@ -542,7 +542,7 @@ void HistogramReader::CrossSection(TString level,
 	 channel.Data(),
 	 mu,
 	 muErrorStat,
-	 mu * lumi_error_percent);
+	 mu * lumi_error_percent / 1e2);
 }
 
 
