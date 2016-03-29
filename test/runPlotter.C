@@ -139,7 +139,7 @@ void runPlotter(TString level)
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("Top") && !level.Contains("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -161,7 +161,7 @@ void runPlotter(TString level)
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("Top") && !level.Contains("WW") && j != njetbin) continue;   
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -256,7 +256,7 @@ void runPlotter(TString level)
 
   // Cross-section
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ"))
+  if (analysis.EqualTo("WZ") && level.Contains("BVeto"))
     {
       printf("\n Cross section mu\n");
       printf("------------------\n");
