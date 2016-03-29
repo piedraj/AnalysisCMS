@@ -4,9 +4,9 @@
 
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"
-//#include "CutsTTDM.h"
+#include "CutsTTDM.h"
 //#include "CutsWW.h"
-#include "CutsWZ.h"
+//#include "CutsWZ.h"
 
 
 const float lumi_fb = 2.318;
