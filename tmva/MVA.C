@@ -147,7 +147,7 @@ void MVATrain(TString signal)
   TCut mycut = "";
 
 //factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1500:nTest_Background=1500:SplitMode=Alternate:!V");  // Faster
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1100:nTest_Signal=1100:nTrain_Background=1400:nTest_Background=1400:SplitMode=Alternate:!V");  // Faster
 
 
   // Book MVA
