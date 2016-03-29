@@ -42,7 +42,7 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal = "06_WW")
+void MVA(TString signal = "ttDM0001pseudo0010")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -59,6 +59,7 @@ void MVA(TString signal = "06_WW")
 
   // Reading
   //----------------------------------------------------------------------------
+  MVARead(signal, signal);
   MVARead(signal, "01_Data");
   MVARead(signal, "14_HZ");
   MVARead(signal, "10_HWW");
@@ -93,18 +94,20 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   _mctree.clear();
 
-  AddProcess("mc",     "14_HZ");
-  AddProcess("mc",     "10_HWW");
-  AddProcess("signal", "06_WW");
-  AddProcess("mc",     "02_WZTo3LNu");
-  AddProcess("mc",     "03_ZZ");
-  AddProcess("mc",     "11_Wg");
-  AddProcess("mc",     "07_ZJets");
-  AddProcess("mc",     "09_TTV");
-  AddProcess("mc",     "13_VVV");
-  AddProcess("mc",     "04_TTTo2L2Nu");
-  AddProcess("mc",     "05_ST");
-  AddProcess("mc",     "00_Fakes");
+  AddProcess("signal", signal);
+
+  AddProcess("mc", "14_HZ");
+  AddProcess("mc", "10_HWW");
+  AddProcess("mc", "06_WW");
+  AddProcess("mc", "02_WZTo3LNu");
+  AddProcess("mc", "03_ZZ");
+  AddProcess("mc", "11_Wg");
+  AddProcess("mc", "07_ZJets");
+  AddProcess("mc", "09_TTV");
+  AddProcess("mc", "13_VVV");
+  AddProcess("mc", "04_TTTo2L2Nu");
+  AddProcess("mc", "05_ST");
+  AddProcess("mc", "00_Fakes");
 
   Double_t weight = 1.0;
 
@@ -146,8 +149,7 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   TCut mycut = "";
 
-//factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1100:nTest_Signal=1100:nTrain_Background=1400:nTest_Background=1400:SplitMode=Alternate:!V");  // Faster
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
 
 
   // Book MVA

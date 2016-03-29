@@ -22,6 +22,7 @@ void runPlotter(TString signal)
   plotter.AddData   (signal + "__01_Data",      "data",       kBlack);
   plotter.AddProcess(signal + "__14_HZ",        "HZ",         kOrange+1);
   plotter.AddProcess(signal + "__10_HWW",       "HWW",        kAzure-9);
+  plotter.AddProcess(signal + "__06_WW",        "WW",         kAzure-9);
   plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         kOrange-2);
   plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         kRed+3);
   plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    kBlue);
@@ -31,12 +32,15 @@ void runPlotter(TString signal)
   plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         kYellow);
   plotter.AddProcess(signal + "__05_ST",        "tW",         kYellow+3);
   plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", kGray+1);
-  plotter.AddSignal (signal + "__06_WW",        "WW",         kRed+1);
+
+  // Signal
+  //----------------------------------------------------------------------------
+  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{#phi}10", kRed+1);
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  plotter.Draw("h_mva", "MVA output", -1, 2, "NULL", linY);
-  plotter.Draw("h_mva", "MVA output", -1, 2, "NULL", logY);
+  plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", linY);
+  plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", logY);
 
 
   // Copy index.php in every directory
