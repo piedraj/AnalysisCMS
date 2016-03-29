@@ -238,7 +238,7 @@ void MVARead(TString signal, TString filename)
 
   TTree* theTree = (TTree*)input->Get("latino");
 
-  TBranch* b_mva = theTree->Branch("mva" + signal, &mva, "mva/F" );
+  TBranch* b_mva = theTree->Branch("mva_" + signal, &mva, "mva/F" );
 
   theTree->SetBranchAddress("channel",      &channel);
   theTree->SetBranchAddress("metPfType1",   &metPfType1);
