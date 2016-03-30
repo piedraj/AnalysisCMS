@@ -122,9 +122,9 @@ class HistogramReader
 
   void     SetTitle           (TString        title) {_title = title;}
 
-  void     SetSavePdf         (Bool_t         savepdf) {_savepdf = savepdf};
+  void     SetSavePdf         (Bool_t         savepdf) {_savepdf = savepdf;}
 
-  void     SetSavePng         (Bool_t         savepng) {_savepng = savepng};
+  void     SetSavePng         (Bool_t         savepng) {_savepng = savepng;}
   
   Float_t  Yield              (TH1*           hist);
 
