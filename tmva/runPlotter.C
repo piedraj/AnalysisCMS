@@ -1,6 +1,7 @@
 #include "../test/HistogramReader.h"
 
 
+const int     ngroup    = 2;
 const TString inputdir  = "output/application/";
 const TString outputdir = "figures/";
 
@@ -51,13 +52,13 @@ void runPlotter(TString signal)
   //----------------------------------------------------------------------------
   gSystem->mkdir(outputdir, kTRUE);
 
-  plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", linY);
-  plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", logY);
+  plotter.Draw("h_mva", "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva", "MVA output", ngroup, 2, "NULL", logY);
 
 
   // Optimization
   //----------------------------------------------------------------------------
-  int score = plotter.GetBestSignalScore("h_mva", "S/sqrt(B)", 2);
+  int score = plotter.GetBestSignalScore("h_mva", "S/sqrt(B)", ngroup);
 
 
   // Copy index.php in every directory
