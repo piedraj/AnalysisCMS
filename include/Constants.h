@@ -3,14 +3,14 @@
 
 
 //#include "CutsMonoH.h"
-//#include "CutsTop.h"
-#include "CutsTTDM.h"
+#include "CutsTop.h"
+//#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
 
-const float lumi_fb = 2.263;
-const float lumi_error_percent = 0.027;
+const float lumi_fb = 2.318;
+const float lumi_error_percent = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
