@@ -140,8 +140,8 @@ class HistogramReader
 
   void     LoopEventsByChannel(TString        level);
 
-  Int_t    GetExtremumScore   (TH1*           hist_sig,
-			       TH1*           hist_bkg);
+  Int_t    GetBestScoreBin    (TH1*           sig_hist,
+			       TH1*           bkg_hist);
 
 
  private :
