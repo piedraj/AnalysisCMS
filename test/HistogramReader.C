@@ -997,7 +997,9 @@ void HistogramReader::LoopEventsByChannel(TString level)
 //------------------------------------------------------------------------------
 // GetBestScoreBin
 //------------------------------------------------------------------------------
-Int_t HistogramReader::GetBestScoreBin(TH1* sig_hist, TH1* bkg_hist)
+Int_t HistogramReader::GetBestScoreBin(TH1*    sig_hist,
+				       TH1*    bkg_hist,
+				       TString fom)
 {
   Int_t nbins = sig_hist->GetNbinsX();
 
@@ -1012,16 +1014,26 @@ Int_t HistogramReader::GetBestScoreBin(TH1* sig_hist, TH1* bkg_hist)
 
     if (sig_yield > 0. && bkg_yield > 0.)
       {
-	Float_t ratio = sig_yield / bkg_yield;
+	Float_t score = -999;
 
-	if (ratio > score_value)
+	if (fom.EqualTo("S/sqrt(B)"))   score = sig_yield / sqrt(bkg_yield);
+	if (fom.EqualTo("S/sqrt(S+B)")) score = sig_yield / sqrt(sig_yield + bkg_yield);
+	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield;
+
+	if (score > score_value)
 	  {
-	    score_value = ratio;
+	    score_value = score;
 	    score_bin   = k;
 	  }
       }
   }
 
+
+  printf("\n [HistogramReader::GetBestScoreBin] The bin %d (of %d) has the best %s (%f)\n\n",
+	 score_bin,
+	 nbins,
+	 fom.Data(),
+	 score_value);
 
   return score_bin;
 }

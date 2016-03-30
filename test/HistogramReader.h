@@ -141,7 +141,8 @@ class HistogramReader
   void     LoopEventsByChannel(TString        level);
 
   Int_t    GetBestScoreBin    (TH1*           sig_hist,
-			       TH1*           bkg_hist);
+			       TH1*           bkg_hist,
+			       TString        fom = "S/sqrt(S+B)");
 
 
  private :
