@@ -183,6 +183,8 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL", linY,  true, 0,   30);
 	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", scale, true, 0,    4);
 	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  scale, true, 0, 3.15);
+	  plotter.Draw(prefix + "dphilmet1"    + suffix, "#Delta#phi(lep1,E_{T}^{miss})",    5, 1, "rad",  scale, true, 0, 3.15);
+	  plotter.Draw(prefix + "dphilmet2"    + suffix, "#Delta#phi(lep2,E_{T}^{miss})",    5, 1, "rad",  scale, true, 0, 3.15);
 	  plotter.Draw(prefix + "metPfType1"   + suffix, "E_{T}^{miss}",                    10, 0, "GeV",  scale, true, 0,  400);
 	  plotter.Draw(prefix + "metTtrk"      + suffix, "track E_{T}^{miss}",              10, 0, "GeV",  scale, true, 0,  400);
 	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",      10, 0, "GeV",  scale, true, 0,  400);
@@ -207,8 +209,6 @@ void runPlotter(TString level)
 	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
 	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
 	      plotter.Draw(prefix + "htnojets"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 10, 0, "GeV", scale, false, 0, 300);
-	      plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})",     10, 1, "rad", scale, false, 0, 3.2);
-	      plotter.Draw(prefix + "dphilmet2" + suffix, "#Delta#phi(lep2,E_{T}^{miss})",     10, 1, "rad", scale, false, 0, 3.2);
 	      plotter.Draw(prefix + "fullpmet"  + suffix, "projected E_{T}^{miss}",            10, 0, "GeV", scale, false, 0, 100);
 	      plotter.Draw(prefix + "trkpmet"   + suffix, "projected track E_{T}^{miss}",       2, 0, "GeV", scale, false, 0, 100);
 	      plotter.Draw(prefix + "metphi"    + suffix, "E_{T}^{miss} #phi",                 10, 0, "rad", scale, false, 0, 3.2);
@@ -223,13 +223,11 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("MonoH"))
 	    {
-	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",     2, 1, "NULL", scale, false, 0,   4);
-	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",     2, 1, "NULL", scale, false, 0,   4);
-	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",       2, 1, "NULL", scale, false, 0,   4);
-	      plotter.Draw(prefix + "deltaphil1met" + suffix, "#Delta#phi(lep1,E_{T}^{miss})",  2, 1, "rad",  scale, false, 0, 3.2);
-	      plotter.Draw(prefix + "deltaphil2met" + suffix, "#Delta#phi(lep2,E_{T}^{miss})",  2, 1, "rad",  scale, false, 0, 3.2);
-	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",    2, 1, "rad",  scale, false, 0, 3.2);
-	      plotter.Draw(prefix + "mr"            + suffix, "M_{R}",                         10, 0, "GeV",  scale, false, 0, 300);
+	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",   2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",   2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",     2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",  2, 1, "rad",  scale, false, 0, 3.2);
+	      plotter.Draw(prefix + "mr"            + suffix, "M_{R}",                       10, 0, "GeV",  scale, false, 0, 300);
 	    }
 
 
