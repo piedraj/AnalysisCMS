@@ -96,7 +96,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet20tight [ichannel][icut][ijet]->Fill(_nbjet20tight,  _event_weight);
   h_nbjet30tight [ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx         [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
-  h_met          [ichannel][icut][ijet]->Fill(MET.Et(),       _event_weight);
+  h_metPfType1   [ichannel][icut][ijet]->Fill(metPfType1,     _event_weight);
+  h_metTtrk      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);
   h_mpmet        [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_njet         [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
   h_drll         [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
@@ -109,7 +110,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_sumpt12      [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
   h_sumjpt12     [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
   h_pt2l         [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_trkmet       [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);
   h_mc           [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
   h_ptww         [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
 
@@ -869,8 +869,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
   h_drll         [ichannel][icut][ijet] = new TH1D("h_drll"          + suffix, "",  100,    0,    5);
   h_dphill       [ichannel][icut][ijet] = new TH1D("h_dphill"        + suffix, "",  100,    0,    5);
-  h_met          [ichannel][icut][ijet] = new TH1D("h_met"           + suffix, "", 3000,    0, 3000);
-  h_trkmet       [ichannel][icut][ijet] = new TH1D("h_trkmet"        + suffix, "", 3000,    0, 3000);
+  h_metPfType1   [ichannel][icut][ijet] = new TH1D("h_metPfType1"    + suffix, "", 3000,    0, 3000);
+  h_metTtrk      [ichannel][icut][ijet] = new TH1D("h_metTtrk"       + suffix, "", 3000,    0, 3000);
   h_mpmet        [ichannel][icut][ijet] = new TH1D("h_mpmet"         + suffix, "", 3000,    0, 3000);
   h_m2l          [ichannel][icut][ijet] = new TH1D("h_m2l"           + suffix, "", 3000,    0, 3000);
   h_mtw1         [ichannel][icut][ijet] = new TH1D("h_mtw1"          + suffix, "", 3000,    0, 3000);
