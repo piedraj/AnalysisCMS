@@ -234,9 +234,6 @@ Then log in to lxplus, mount eos and choose the input folder.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
-    cd CMSSW_7_6_3/src
-    cmsenv
-    cd /tmp/$USER
 
     alias eosusermount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount'
     eosusermount eos

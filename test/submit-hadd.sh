@@ -14,9 +14,6 @@ export NJOBS=`cat merge.sh | grep hadd | wc -l`
 echo "  "
 echo "  Submitting" $NJOBS "jobs"
 echo "  "
-
 mkdir -p jobs
-
 qsub -t 1-$NJOBS -v FOLDER settings.sge
-
 echo "  "

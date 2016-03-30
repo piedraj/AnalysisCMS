@@ -321,7 +321,7 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-4;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 5);
     }
   else
     {
@@ -542,7 +542,7 @@ void HistogramReader::CrossSection(TString level,
 	 channel.Data(),
 	 mu,
 	 muErrorStat,
-	 mu * lumi_error_percent);
+	 mu * lumi_error_percent / 1e2);
 }
 
 
@@ -684,8 +684,7 @@ void HistogramReader::MoveOverflows(TH1*    hist,
 				    Float_t xmax)
 {
   int nentries = hist->GetEntries();
-
-  int nbins = hist->GetNbinsX();
+  int nbins    = hist->GetNbinsX();
   
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
 
@@ -816,7 +815,7 @@ void HistogramReader::SetHistogram(TH1*     hist,
 {
   if (!hist)
     {
-      printf("\n Error: histogram does not exist\n\n");
+      printf("\n [HistogramReader::SetHistogram] Error: histogram does not exist\n\n");
       return;
     }
 
@@ -858,8 +857,17 @@ Float_t HistogramReader::Yield(TH1* hist)
   if (!hist) return 0;
 
   Int_t nbins = hist->GetNbinsX();
-      
-  return fabs(hist->Integral(0, nbins+1));
+
+  Float_t hist_yield = hist->Integral(0, nbins+1);
+
+  if (hist_yield < 0)
+    {
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
+	     hist->GetName(),
+	     hist_yield);
+    }
+
+  return fabs(hist_yield);
 }
 
 
@@ -983,4 +991,37 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
+}
+
+
+//------------------------------------------------------------------------------
+// GetBestScoreBin
+//------------------------------------------------------------------------------
+Int_t HistogramReader::GetBestScoreBin(TH1* sig_hist, TH1* bkg_hist)
+{
+  Int_t nbins = sig_hist->GetNbinsX();
+
+  Float_t score_value = 0;
+  Int_t   score_bin   = 0;
+
+
+  for (UInt_t k=0; k<nbins+1; k++) {
+
+    Float_t sig_yield = sig_hist->Integral(k, nbins+1);
+    Float_t bkg_yield = bkg_hist->Integral(k, nbins+1);
+
+    if (sig_yield > 0. && bkg_yield > 0.)
+      {
+	Float_t ratio = sig_yield / bkg_yield;
+
+	if (ratio > score_value)
+	  {
+	    score_value = ratio;
+	    score_bin   = k;
+	  }
+      }
+  }
+
+
+  return score_bin;
 }

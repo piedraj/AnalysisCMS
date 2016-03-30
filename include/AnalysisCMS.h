@@ -90,6 +90,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetFakeWeights   ();
 
+  void    GetGenPtllWeight ();
+
   bool    IsIsolatedLepton (int      k);
 
   float   MuonIsolation    (int      k);
@@ -133,6 +135,7 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
 
+  float                  _channel;
   float                  _dphijet1met;
   float                  _dphijet2met;
   float                  _dphijj;
@@ -153,6 +156,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
+  float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
   float                  _htjets;
@@ -171,7 +175,11 @@ class AnalysisCMS : public AnalysisBase
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;
+  float                  _nbjet15loose;
+  float                  _nbjet15medium;
+  float                  _nbjet15tight;
   float                  _nbjet20loose;
+  float                  _nbjet20medium;
   float                  _nbjet20tight;
   float                  _nbjet30tight;
   float                  _ptww;
@@ -181,7 +189,6 @@ class AnalysisCMS : public AnalysisBase
 
   Long64_t               _nentries;
 
-  int                    _channel;
   unsigned int           _jetbin;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
@@ -195,31 +202,35 @@ class AnalysisCMS : public AnalysisBase
 
   // Common TH1 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_counterRaw  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_counterLum  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_njet        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20loose[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20tight[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet30tight[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nvtx        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_drll        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphill      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_met         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_trkmet      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mpmet       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_m2l         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw1        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw2        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mth         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mc          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt1         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumpt12     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumjpt12    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2l        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ptww        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_fakes       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15loose [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15medium[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20loose [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20medium[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nvtx         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_drll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphill       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_met          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_trkmet       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mpmet        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m2l          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw1         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw2         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mth          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt1          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptww         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
 };
 
 #endif

@@ -42,7 +42,7 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal)
+void MVA(TString signal = "ttDM0001pseudo0010")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -59,6 +59,7 @@ void MVA(TString signal)
 
   // Reading
   //----------------------------------------------------------------------------
+  MVARead(signal, signal);
   MVARead(signal, "01_Data");
   MVARead(signal, "14_HZ");
   MVARead(signal, "10_HWW");
@@ -93,18 +94,20 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   _mctree.clear();
 
-  AddProcess("mc",     "14_HZ");
-  AddProcess("mc",     "10_HWW");
-  AddProcess("signal", "06_WW");
-  AddProcess("mc",     "02_WZTo3LNu");
-  AddProcess("mc",     "03_ZZ");
-  AddProcess("mc",     "11_Wg");
-  AddProcess("mc",     "07_ZJets");
-  AddProcess("mc",     "09_TTV");
-  AddProcess("mc",     "13_VVV");
-  AddProcess("mc",     "04_TTTo2L2Nu");
-  AddProcess("mc",     "05_ST");
-  AddProcess("mc",     "00_Fakes");
+  AddProcess("signal", signal);
+
+  AddProcess("mc", "14_HZ");
+  AddProcess("mc", "10_HWW");
+  AddProcess("mc", "06_WW");
+  AddProcess("mc", "02_WZTo3LNu");
+  AddProcess("mc", "03_ZZ");
+  AddProcess("mc", "11_Wg");
+  AddProcess("mc", "07_ZJets");
+  AddProcess("mc", "09_TTV");
+  AddProcess("mc", "13_VVV");
+  AddProcess("mc", "04_TTTo2L2Nu");
+  AddProcess("mc", "05_ST");
+  AddProcess("mc", "00_Fakes");
 
   Double_t weight = 1.0;
 
@@ -120,25 +123,25 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-//factory->AddVariable("channel",      "", "", 'F');
-//factory->AddVariable("metPfType1",   "", "", 'F');  // Empty range too large
-//factory->AddVariable("mll",          "", "", 'F');  // Empty range too large
+  factory->AddVariable("channel",      "", "", 'F');
+  factory->AddVariable("metPfType1",   "", "", 'F');
+  factory->AddVariable("mll",          "", "", 'F');
   factory->AddVariable("njet",         "", "", 'F');
-//factory->AddVariable("nbjet20loose", "", "", 'F');
+  factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
-//factory->AddVariable("jet2pt",       "", "", 'F');
+  factory->AddVariable("jet2pt",       "", "", 'F');
   factory->AddVariable("dphill",       "", "", 'F');
   factory->AddVariable("dphilep1jet1", "", "", 'F');
-//factory->AddVariable("dphilep1jet2", "", "", 'F');
+  factory->AddVariable("dphilep1jet2", "", "", 'F');
   factory->AddVariable("dphilmet1",    "", "", 'F');
   factory->AddVariable("dphilep2jet1", "", "", 'F');
-//factory->AddVariable("dphilep2jet2", "", "", 'F');
+  factory->AddVariable("dphilep2jet2", "", "", 'F');
   factory->AddVariable("dphilmet2",    "", "", 'F');
-//factory->AddVariable("dphijj",       "", "", 'F');
+  factory->AddVariable("dphijj",       "", "", 'F');
   factory->AddVariable("dphijet1met",  "", "", 'F');
-//factory->AddVariable("dphijet2met",  "", "", 'F');
+  factory->AddVariable("dphijet2met",  "", "", 'F');
   factory->AddVariable("dphillmet",    "", "", 'F');
 
 
@@ -146,8 +149,7 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   TCut mycut = "";
 
-//factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1500:nTest_Background=1500:SplitMode=Alternate:!V");  // Faster
+  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
 
 
   // Book MVA
@@ -201,25 +203,25 @@ void MVARead(TString signal, TString filename)
   float eventW;
   float mva; 
 
-//reader->AddVariable("channel",      &channel);
-//reader->AddVariable("metPfType1",   &metPfType1);
-//reader->AddVariable("mll",          &mll);
+  reader->AddVariable("channel",      &channel);
+  reader->AddVariable("metPfType1",   &metPfType1);
+  reader->AddVariable("mll",          &mll);
   reader->AddVariable("njet",         &njet);
-//reader->AddVariable("nbjet20loose", &nbjet20loose);
+  reader->AddVariable("nbjet20loose", &nbjet20loose);
   reader->AddVariable("lep1pt",       &lep1pt);
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
-//reader->AddVariable("jet2pt",       &jet2pt);
+  reader->AddVariable("jet2pt",       &jet2pt);
   reader->AddVariable("dphill",       &dphill);
   reader->AddVariable("dphilep1jet1", &dphilep1jet1);
-//reader->AddVariable("dphilep1jet2", &dphilep1jet2);
+  reader->AddVariable("dphilep1jet2", &dphilep1jet2);
   reader->AddVariable("dphilmet1",    &dphilmet1);
   reader->AddVariable("dphilep2jet1", &dphilep2jet1);
-//reader->AddVariable("dphilep2jet2", &dphilep2jet2);
+  reader->AddVariable("dphilep2jet2", &dphilep2jet2);
   reader->AddVariable("dphilmet2",    &dphilmet2);
-//reader->AddVariable("dphijj",       &dphijj);
+  reader->AddVariable("dphijj",       &dphijj);
   reader->AddVariable("dphijet1met",  &dphijet1met);
-//reader->AddVariable("dphijet2met",  &dphijet2met);
+  reader->AddVariable("dphijet2met",  &dphijet2met);
   reader->AddVariable("dphillmet",    &dphillmet);
 
 
@@ -236,7 +238,7 @@ void MVARead(TString signal, TString filename)
 
   TTree* theTree = (TTree*)input->Get("latino");
 
-  TBranch* b_mva = theTree->Branch("mva" + signal, &mva, "mva/F" );
+  TBranch* b_mva = theTree->Branch("mva_" + signal, &mva, "mva/F" );
 
   theTree->SetBranchAddress("channel",      &channel);
   theTree->SetBranchAddress("metPfType1",   &metPfType1);

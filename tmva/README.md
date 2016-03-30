@@ -1,13 +1,20 @@
-1. Run MVA
+0. Get the input files
 ====
 
-    root -l -b -q "MVA.C+(\"<signal>\")"
-    root -l -b -q "MVA.C+(\"06_WW\")"
+    cd AnalysisCMS/test
+    ./submit-hadd.sh ../minitrees/TTDM
 
 
-2. Draw MVA
+1. Train the MVA
 ====
 
+    cd AnalysisCMS/tmva
+    root -l -b -q "MVA.C+(\"ttDM0001pseudo0010\")"
+
+
+2. Draw the MVA response
+====
+
+    cd AnalysisCMS/tmva
     ./make
-    ./runPlotter
-    ./runPlotter 06_WW
+    ./runPlotter ttDM0001pseudo0010
