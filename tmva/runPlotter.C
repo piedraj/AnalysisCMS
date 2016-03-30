@@ -38,7 +38,7 @@ void runPlotter(TString signal)
   // Backgrounds
   //----------------------------------------------------------------------------
   plotter.AddProcess(signal + "__14_HZ",        "HZ",         kOrange+1);
-  plotter.AddProcess(signal + "__10_HWW",       "HWW",        kAzure-9);
+  plotter.AddProcess(signal + "__10_HWW",       "HWW",        kAzure-7);
   plotter.AddProcess(signal + "__06_WW",        "WW",         kAzure-9);
   plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         kOrange-2);
   plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         kRed+3);

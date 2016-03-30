@@ -70,7 +70,7 @@ void runPlotter(TString level)
   else
     {
       plotter.AddProcess("14_HZ",       "HZ",      kOrange+1);
-      plotter.AddProcess("10_HWW",      "HWW",     kRed);
+      plotter.AddProcess("10_HWW",      "HWW",     kAzure-7);
       plotter.AddProcess("06_WW",       "WW",      kAzure-9);
       plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
       plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
