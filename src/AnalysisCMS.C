@@ -856,9 +856,12 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 				   int     ijet,
 				   TString suffix)
 {
-  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3,    0,    3);
   h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
-  h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
+  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3,    0,    3);
+  h_dphill       [ichannel][icut][ijet] = new TH1D("h_dphill"        + suffix, "",  100,    0,    5);
+  h_drll         [ichannel][icut][ijet] = new TH1D("h_drll"          + suffix, "",  100,    0,    5);
+  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
+  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
   h_nbjet15loose [ichannel][icut][ijet] = new TH1D("h_nbjet15loose"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet15medium[ichannel][icut][ijet] = new TH1D("h_nbjet15medium" + suffix, "",    7, -0.5,  6.5);
   h_nbjet15tight [ichannel][icut][ijet] = new TH1D("h_nbjet15tight"  + suffix, "",    7, -0.5,  6.5);
@@ -866,25 +869,22 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet20medium[ichannel][icut][ijet] = new TH1D("h_nbjet20medium" + suffix, "",    7, -0.5,  6.5);
   h_nbjet20tight [ichannel][icut][ijet] = new TH1D("h_nbjet20tight"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight [ichannel][icut][ijet] = new TH1D("h_nbjet30tight"  + suffix, "",    7, -0.5,  6.5);
+  h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
   h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
-  h_drll         [ichannel][icut][ijet] = new TH1D("h_drll"          + suffix, "",  100,    0,    5);
-  h_dphill       [ichannel][icut][ijet] = new TH1D("h_dphill"        + suffix, "",  100,    0,    5);
+  h_mc           [ichannel][icut][ijet] = new TH1D("h_mc"            + suffix, "", 3000,    0, 3000);
   h_metPfType1   [ichannel][icut][ijet] = new TH1D("h_metPfType1"    + suffix, "", 3000,    0, 3000);
   h_metTtrk      [ichannel][icut][ijet] = new TH1D("h_metTtrk"       + suffix, "", 3000,    0, 3000);
   h_mpmet        [ichannel][icut][ijet] = new TH1D("h_mpmet"         + suffix, "", 3000,    0, 3000);
-  h_m2l          [ichannel][icut][ijet] = new TH1D("h_m2l"           + suffix, "", 3000,    0, 3000);
+  h_mth          [ichannel][icut][ijet] = new TH1D("h_mth"           + suffix, "", 3000,    0, 3000);
   h_mtw1         [ichannel][icut][ijet] = new TH1D("h_mtw1"          + suffix, "", 3000,    0, 3000);
   h_mtw2         [ichannel][icut][ijet] = new TH1D("h_mtw2"          + suffix, "", 3000,    0, 3000);
-  h_mth          [ichannel][icut][ijet] = new TH1D("h_mth"           + suffix, "", 3000,    0, 3000);
-  h_mc           [ichannel][icut][ijet] = new TH1D("h_mc"            + suffix, "", 3000,    0, 3000);
-  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
+  h_m2l          [ichannel][icut][ijet] = new TH1D("h_m2l"           + suffix, "", 3000,    0, 3000);
+  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
   h_pt1          [ichannel][icut][ijet] = new TH1D("h_pt1"           + suffix, "", 3000,    0, 3000);
   h_pt2          [ichannel][icut][ijet] = new TH1D("h_pt2"           + suffix, "", 3000,    0, 3000);
-  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
-  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
   h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
-  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
-  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
+  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
+  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
 }
 
 
@@ -902,22 +902,22 @@ void AnalysisCMS::OpenMinitree()
   minitree = new TTree("latino", "minitree");
 
   minitree->Branch("dphill",        &dphill,        "dphill/F" );
-  minitree->Branch("dphilmet1",     &dphilmet1,     "dphilmet1/F");
-  minitree->Branch("dphilmet2",     &dphilmet2,     "dphilmet2/F");
+  minitree->Branch("dphilmet1",     &dphilmet1,     "dphilmet1/F");      // Histogram available in AnalysisTop and AnalysisMonoH
+  minitree->Branch("dphilmet2",     &dphilmet2,     "dphilmet2/F");      // Histogram available in AnalysisTop and AnalysisMonoH
   minitree->Branch("drll",          &drll,          "drll/F");
-  minitree->Branch("jet1eta",       &jeteta1,       "jet1eta/F");
-  minitree->Branch("jet1mass",      &jetmass1,      "jet1mass/F");
-  minitree->Branch("jet1phi",       &jetphi1,       "jet1phi/F");
-  minitree->Branch("jet1pt",        &jetpt1,        "jet1pt/F");
-  minitree->Branch("jet2eta",       &jeteta2,       "jet2eta/F");
-  minitree->Branch("jet2mass",      &jetmass2,      "jet2mass/F");
-  minitree->Branch("jet2phi",       &jetphi2,       "jet2phi/F");
-  minitree->Branch("jet2pt",        &jetpt2,        "jet2pt/F");
+  minitree->Branch("jet1eta",       &jeteta1,       "jet1eta/F");        // Histogram to be done
+  minitree->Branch("jet1mass",      &jetmass1,      "jet1mass/F");       // Histogram to be done
+  minitree->Branch("jet1phi",       &jetphi1,       "jet1phi/F");        // Histogram to be done
+  minitree->Branch("jet1pt",        &jetpt1,        "jet1pt/F");         // Histogram available in AnalysisTop and AnalysisMonoH
+  minitree->Branch("jet2eta",       &jeteta2,       "jet2eta/F");        // Histogram to be done
+  minitree->Branch("jet2mass",      &jetmass2,      "jet2mass/F");       // Histogram to be done
+  minitree->Branch("jet2phi",       &jetphi2,       "jet2phi/F");        // Histogram to be done
+  minitree->Branch("jet2pt",        &jetpt2,        "jet2pt/F");         // Histogram available in AnalysisTop
   minitree->Branch("njet",          &njet,          "njet/F");
   minitree->Branch("metPfType1",    &metPfType1,    "metPfType1/F");
-  minitree->Branch("metPfType1Phi", &metPfType1Phi, "metPfType1Phi/F");
+  minitree->Branch("metPfType1Phi", &metPfType1Phi, "metPfType1Phi/F");  // Histogram available in AnalysisMonoH
   minitree->Branch("metTtrk",       &metTtrk,       "metTtrk/F");
-  minitree->Branch("metTtrkPhi",    &metTtrkPhi,    "metTtrkPhi/F");
+  minitree->Branch("metTtrkPhi",    &metTtrkPhi,    "metTtrkPhi/F");     // Histogram to be done
   minitree->Branch("mll",           &mll,           "mll/F");
   minitree->Branch("mth",           &mth,           "mth/F");
   minitree->Branch("mtw1",          &mtw1,          "mtw1/F");
@@ -927,24 +927,24 @@ void AnalysisCMS::OpenMinitree()
   // The variables created in AnalysisCMS have the "_" prefix
   // For consistency "_" is removed in the minitree variables
   //----------------------------------------------------------------------------
-  minitree->Branch("channel",       &_channel,       "channel/F");
-  minitree->Branch("dphijet1met",   &_dphijet1met,   "dphijet1met/F");
-  minitree->Branch("dphijet2met",   &_dphijet2met,   "dphijet2met/F");
-  minitree->Branch("dphijj",        &_dphijj,        "dphijj/F");
-  minitree->Branch("dphijjmet",     &_dphijjmet,     "dphijjmet/F");	 
-  minitree->Branch("dphilep1jet1",  &_dphilep1jet1,  "dphilep1jet1/F");
-  minitree->Branch("dphilep1jet2",  &_dphilep1jet2,  "dphilep1jet2/F");
-  minitree->Branch("dphilep2jet1",  &_dphilep2jet1,  "dphilep2jet1/F");
-  minitree->Branch("dphilep2jet2",  &_dphilep2jet2,  "dphilep2jet2/F");
-  minitree->Branch("dphillmet",     &_dphillmet,     "dphillmet/F");
-  minitree->Branch("dphillstar",    &_dphillstar,    "dphillstar/F");  
-  minitree->Branch("eventW",        &_event_weight,  "eventW/F");
-  minitree->Branch("lep1eta",       &_lep1eta,       "lep1eta/F");
-  minitree->Branch("lep1phi",       &_lep1phi,       "lep1phi/F");
-  minitree->Branch("lep1pt",        &_lep1pt,        "lep1pt/F");
-  minitree->Branch("lep2eta",       &_lep2eta,       "lep2eta/F");
-  minitree->Branch("lep2phi",       &_lep2phi,       "lep2phi/F");
-  minitree->Branch("lep2pt",        &_lep2pt,        "lep2pt/F");
+  minitree->Branch("channel",       &_channel,       "channel/F");       // Histogram to be done
+  minitree->Branch("dphijet1met",   &_dphijet1met,   "dphijet1met/F");   // Histogram to be done
+  minitree->Branch("dphijet2met",   &_dphijet2met,   "dphijet2met/F");   // Histogram to be done
+  minitree->Branch("dphijj",        &_dphijj,        "dphijj/F");        // Histogram to be done
+  minitree->Branch("dphijjmet",     &_dphijjmet,     "dphijjmet/F");	 // Histogram to be done
+  minitree->Branch("dphilep1jet1",  &_dphilep1jet1,  "dphilep1jet1/F");  // Histogram to be done
+  minitree->Branch("dphilep1jet2",  &_dphilep1jet2,  "dphilep1jet2/F");  // Histogram to be done
+  minitree->Branch("dphilep2jet1",  &_dphilep2jet1,  "dphilep2jet1/F");  // Histogram to be done
+  minitree->Branch("dphilep2jet2",  &_dphilep2jet2,  "dphilep2jet2/F");  // Histogram to be done
+  minitree->Branch("dphillmet",     &_dphillmet,     "dphillmet/F");     // Histogram to be done
+  minitree->Branch("dphillstar",    &_dphillstar,    "dphillstar/F");    // Histogram to be done
+  minitree->Branch("eventW",        &_event_weight,  "eventW/F");        // Histogram to be done
+  minitree->Branch("lep1eta",       &_lep1eta,       "lep1eta/F");       // Histogram to be done
+  minitree->Branch("lep1phi",       &_lep1phi,       "lep1phi/F");       // Histogram available in AnalysisMonoH
+  minitree->Branch("lep1pt",        &_lep1pt,        "lep1pt/F");        // Histogram to be done
+  minitree->Branch("lep2eta",       &_lep2eta,       "lep2eta/F");       // Histogram to be done
+  minitree->Branch("lep2phi",       &_lep2phi,       "lep2phi/F");       // Histogram available in AnalysisMonoH
+  minitree->Branch("lep2pt",        &_lep2pt,        "lep2pt/F");        // Histogram to be done
   minitree->Branch("nbjet15loose",  &_nbjet15loose,  "nbjet15loose/F");
   minitree->Branch("nbjet15medium", &_nbjet15medium, "nbjet15medium/F");
   minitree->Branch("nbjet15tight",  &_nbjet15tight,  "nbjet15tight/F");
