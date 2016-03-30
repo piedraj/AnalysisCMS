@@ -61,7 +61,8 @@ class HistogramReader
 			       Float_t        ymin         = -999,
 			       Float_t        ymax         = -999);
 
-  void     BestSignalScore    (TString        hname,
+  Int_t    GetBestSignalScore (TString        hname,
+			       TString        fom,
 			       Int_t          ngroup = -1);
 
   void     CrossSection       (TString        level,

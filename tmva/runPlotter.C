@@ -57,7 +57,7 @@ void runPlotter(TString signal)
 
   // Optimization
   //----------------------------------------------------------------------------
-  plotter.BestSignalScore("h_mva", 2);
+  int score = plotter.GetBestSignalScore("h_mva", "S/sqrt(B)", 2);
 
 
   // Copy index.php in every directory

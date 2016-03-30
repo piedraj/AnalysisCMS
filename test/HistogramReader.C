@@ -1041,12 +1041,13 @@ Int_t HistogramReader::GetBestScoreBin(TH1*    sig_hist,
 
 
 //------------------------------------------------------------------------------
-//
+// GetBestSignalScore
 //------------------------------------------------------------------------------
-void HistogramReader::BestSignalScore(TString hname,
-				      Int_t   ngroup)
+Int_t HistogramReader::GetBestSignalScore(TString hname,
+					  TString fom,
+					  Int_t   ngroup)
 {
-  printf("\n [HistogramReader::BestSignalScore] Warning: reading only the first signal\n\n");
+  printf("\n [HistogramReader::GetBestSignalScore] Warning: reading only the first signal\n\n");
 
 
   // Get the signals
@@ -1089,5 +1090,5 @@ void HistogramReader::BestSignalScore(TString hname,
   //----------------------------------------------------------------------------
   TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
 
-  GetBestScoreBin(_signalhist[0], backgroundhist, "S/sqrt(B)");
+  return GetBestScoreBin(_signalhist[0], backgroundhist, fom);
 }
