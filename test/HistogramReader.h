@@ -121,6 +121,10 @@ class HistogramReader
   void     SetStackOption     (TString        option) {_stackoption = option;}
 
   void     SetTitle           (TString        title) {_title = title;}
+
+  void     SetSavePdf         (Bool_t         savepdf) {_savepdf = savepdf};
+
+  void     SetSavePng         (Bool_t         savepng) {_savepng = savepng};
   
   Float_t  Yield              (TH1*           hist);
 
@@ -135,6 +139,9 @@ class HistogramReader
 			       TString        level);
 
   void     LoopEventsByChannel(TString        level);
+
+  Int_t    GetExtremumScore   (TH1*           hist_sig,
+			       TH1*           hist_bkg);
 
 
  private :
