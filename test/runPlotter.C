@@ -77,7 +77,6 @@ void runPlotter(TString level)
       plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
       plotter.AddProcess("07_ZJets",    "Z+jets",  kGreen+2);
       plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",     kYellow);
       plotter.AddProcess("05_ST",        "tW",     kYellow+3);
 

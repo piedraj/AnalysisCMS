@@ -69,7 +69,6 @@ void MVA(TString signal = "ttDM0001pseudo0010")
   MVARead(signal, "11_Wg");
   MVARead(signal, "07_ZJets");
   MVARead(signal, "09_TTV");
-  MVARead(signal, "13_VVV");
   MVARead(signal, "04_TTTo2L2Nu");
   MVARead(signal, "05_ST");
   MVARead(signal, "00_Fakes");
@@ -104,7 +103,6 @@ void MVATrain(TString signal)
   AddProcess("mc", "11_Wg");
   AddProcess("mc", "07_ZJets");
   AddProcess("mc", "09_TTV");
-  AddProcess("mc", "13_VVV");
   AddProcess("mc", "04_TTTo2L2Nu");
   AddProcess("mc", "05_ST");
   AddProcess("mc", "00_Fakes");
