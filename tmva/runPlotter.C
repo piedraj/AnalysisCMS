@@ -1,6 +1,9 @@
 #include "../test/HistogramReader.h"
 
 
+
+// Constants
+//------------------------------------------------------------------------------
 const int     ngroup    = 2;
 const TString inputdir  = "output/application/";
 const TString outputdir = "figures/";
@@ -8,6 +11,11 @@ const TString outputdir = "figures/";
 enum {linY, logY};
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// runPlotter
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString signal)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
