@@ -1035,5 +1035,59 @@ Int_t HistogramReader::GetBestScoreBin(TH1*    sig_hist,
 	 fom.Data(),
 	 score_value);
 
+
   return score_bin;
+}
+
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+void HistogramReader::BestSignalScore(TString hname,
+				      Int_t   ngroup)
+{
+  printf("\n [HistogramReader::BestSignalScore] Warning: reading only the first signal\n\n");
+
+
+  // Get the signals
+  //----------------------------------------------------------------------------
+  _signalhist.clear();
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) {
+
+    _signalfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
+
+    _signalhist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _signalhist[i]->Rebin(ngroup);
+  }
+
+  
+  // Get the backgrounds
+  //----------------------------------------------------------------------------
+  _mchist.clear();
+
+  THStack* mcstack = new THStack(hname + "_mcstack", hname + "_mcstack");
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) {
+
+    _mcfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+
+    _mchist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
+
+    mcstack->Add(_mchist[i]);
+  }
+
+
+  // Get the best score
+  //----------------------------------------------------------------------------
+  TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
+
+  GetBestScoreBin(_signalhist[0], backgroundhist, "S/sqrt(B)");
 }

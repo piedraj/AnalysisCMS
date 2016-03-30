@@ -47,10 +47,17 @@ void runPlotter(TString signal)
   plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{#phi}10", kRed+1);
 
 
+  // Draw
+  //----------------------------------------------------------------------------
   gSystem->mkdir(outputdir, kTRUE);
 
   plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", linY);
   plotter.Draw("h_mva", "MVA output", 2, 2, "NULL", logY);
+
+
+  // Optimization
+  //----------------------------------------------------------------------------
+  plotter.BestSignalScore("h_mva", 2);
 
 
   // Copy index.php in every directory
