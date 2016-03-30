@@ -48,7 +48,7 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
-      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZ);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZTo3LNu);
       plotter.AddProcess("06_WW",       "WW",      color_WW);
       plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
       plotter.AddProcess("03_ZZ",       "ZZ",      color_ZZ);
@@ -96,7 +96,7 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal4);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
       plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
       plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
       plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
