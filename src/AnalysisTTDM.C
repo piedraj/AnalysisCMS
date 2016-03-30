@@ -126,6 +126,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
+    if (run > 258750) continue;
+
     if (!trigger) continue;
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
