@@ -36,6 +36,7 @@ void runPlotter(TString level)
   plotter.SetStackOption( "hist");
   plotter.SetDrawRatio  (   true);
   plotter.SetPublicStyle(  false);
+  plotter.SetSavePdf    (   true);
 
 
   // Get the data

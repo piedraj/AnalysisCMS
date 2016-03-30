@@ -684,8 +684,7 @@ void HistogramReader::MoveOverflows(TH1*    hist,
 				    Float_t xmax)
 {
   int nentries = hist->GetEntries();
-
-  int nbins = hist->GetNbinsX();
+  int nbins    = hist->GetNbinsX();
   
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
 
@@ -816,7 +815,7 @@ void HistogramReader::SetHistogram(TH1*     hist,
 {
   if (!hist)
     {
-      printf("\n Error: histogram does not exist\n\n");
+      printf("\n [HistogramReader::SetHistogram] Error: histogram does not exist\n\n");
       return;
     }
 
@@ -858,8 +857,17 @@ Float_t HistogramReader::Yield(TH1* hist)
   if (!hist) return 0;
 
   Int_t nbins = hist->GetNbinsX();
-      
-  return fabs(hist->Integral(0, nbins+1));
+
+  Float_t hist_yield = hist->Integral(0, nbins+1);
+
+  if (hist_yield < 0)
+    {
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
+	     hist->GetName(),
+	     hist_yield);
+    }
+
+  return fabs(hist_yield);
 }
 
 
@@ -983,4 +991,112 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
+}
+
+
+//------------------------------------------------------------------------------
+// GetExtremumScore
+//------------------------------------------------------------------------------
+Int_t HistogramReader::GetExtremumScore(TH1* hist_sig, TH1* hist_bkg)
+{
+  /*
+  Int_t nbins = hist_sig->GetNbinsX();
+
+  Float_t S0 = Yield(hist_sig);   
+  Float_t B0 = Yield(hist_bkg);  
+
+	float S[nbin+2];
+	float B[nbin+2];
+
+	float eff[nbin+2];
+	float rej[nbin+2];
+
+	float ratio = 0;
+	int k2 = 0;
+
+	for ( int k = 0; k < nbin + 2; k++ ) {
+
+		if ( k != nbin+1 ) {
+	
+			S[k] = MVAsig -> Integral(k, nbin+1);
+
+			B[k] = MVAbkg -> Integral(k, nbin+1);
+
+		}
+						
+		else {
+
+			S[k] = 0; B[k] = 0; 
+
+		}
+		
+		eff[k] = S[k]/S0;
+		 
+		rej[k] = 1 - B[k]/B0;
+
+		//cout << k << " -- " << S[k] << " -- " << B[k] << " -- " << S[k]/sqrt(S[k]+B[k]) << endl; 
+
+		if ( S[k] != 0  &&  B[k] != 0 ) {
+		
+						
+			//if ( eff[k] * S[k]/(S[k]+B[k])  >  ratio ) {
+
+			//	ratio = eff[k] * S[k]/(S[k]+B[k]);
+
+			//	k2 = k;
+	
+			//}
+
+
+			//if ( S[k]/sqrt(S[k]+B[k] ) > ratio ) {
+
+			//	ratio = S[k]/sqrt(S[k]+B[k]);
+
+			//	k2 = k;
+	
+			//}
+
+
+			if ( S[k]/sqrt(B[k]) > ratio ) {
+
+				ratio = S[k]/sqrt(B[k]);
+
+				k2 = k;
+
+			}
+
+
+			//if ( S[k]/B[k] > ratio ) {
+
+			//	ratio = S[k]/B[k];
+
+			//	k2 = k;
+
+			//}
+
+			
+			//if ( sqrt(S[k]+B[k]) - sqrt(B[k]) > ratio ) {
+
+			//	ratio = sqrt(S[k]+B[k]) - sqrt(B[k]);
+
+			//	k2 = k; 
+
+			//}
+
+		}
+
+
+	}
+
+	//SB = new TGraph(n, cut, score);	
+
+	float maxR = ratio;
+	
+	float cut = inf + ( sup - inf ) * k2 / nbin;
+
+	//cout << "  the extremum on the score is " << maxR << " for the cut at " << cut << endl;
+	//cout << "  signal efficiency = " << eff[k2] << "// bkg rejection = " << rej[k2]   << endl; 
+
+	return k2;
+  */
 }
