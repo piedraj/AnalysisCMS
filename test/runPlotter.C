@@ -41,53 +41,53 @@ void runPlotter(TString level)
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", kBlack);
+  plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
-      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZ);
+      plotter.AddProcess("06_WW",       "WW",      color_WW);
+      plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
+      plotter.AddProcess("03_ZZ",       "ZZ",      color_ZZ);
+      plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
+      plotter.AddProcess("13_VVV",      "VVV",     color_VVV);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGreen+2);
-	  plotter.AddProcess("12_Zg",    "Z#gamma",    kTeal);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
 	{
-	  plotter.AddProcess("07_ZJets",    "Z+jets", kGreen+2);
-	  plotter.AddProcess("04_TTo2L2Nu", "tt",     kYellow);
-	  plotter.AddProcess("05_ST",       "tW",     kYellow+3);
+	  plotter.AddProcess("07_ZJets",    "Z+jets", color_ZJets);
+	  plotter.AddProcess("04_TTTo2L2Nu", "tt",    color_TTTo2L2Nu);
+	  plotter.AddProcess("05_ST",       "tW",     color_ST);
 	}
     }
   else
     {
-      plotter.AddProcess("14_HZ",       "HZ",      kOrange+1);
-      plotter.AddProcess("10_HWW",      "HWW",     kAzure-7);
-      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("07_ZJets",    "Z+jets",  kGreen+2);
-      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",     kYellow);
-      plotter.AddProcess("05_ST",        "tW",     kYellow+3);
+      plotter.AddProcess("14_HZ",       "HZ",      color_HZ);
+      plotter.AddProcess("10_HWW",      "HWW",     color_HWW);
+      plotter.AddProcess("06_WW",       "WW",      color_WW);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZTo3LNu);
+      plotter.AddProcess("03_ZZ",       "ZZ",      color_ZZ);
+      plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
+      plotter.AddProcess("07_ZJets",    "Z+jets",  color_ZJets);
+      plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+      plotter.AddProcess("05_ST",        "tW",     color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 
 	}
       else
 	{
-	  plotter.AddProcess("08_WJets", "W+jets", kGray+1);
+	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
@@ -96,19 +96,19 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  kRed-4);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  kRed-3);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", kRed-2);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", kRed-1);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", kRed);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", kRed+1);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", kRed+2);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", kRed+3);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal4);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{#phi}10", kRed+1);
+      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{#phi}10", color_Signal);
     }
 
   

@@ -32,27 +32,27 @@ void runPlotter(TString signal)
 
   // Data
   //----------------------------------------------------------------------------
-  plotter.AddData(signal + "__01_Data", "data", kBlack);
+  plotter.AddData(signal + "__01_Data", "data", color_Data);
 
 
   // Backgrounds
   //----------------------------------------------------------------------------
-  plotter.AddProcess(signal + "__14_HZ",        "HZ",         kOrange+1);
-  plotter.AddProcess(signal + "__10_HWW",       "HWW",        kAzure-7);
-  plotter.AddProcess(signal + "__06_WW",        "WW",         kAzure-9);
-  plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         kOrange-2);
-  plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         kRed+3);
-  plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    kBlue);
-  plotter.AddProcess(signal + "__07_ZJets",     "Z+jets",     kGreen+2);
-  plotter.AddProcess(signal + "__09_TTV",       "ttV",        kGreen-6);
-  plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         kYellow);
-  plotter.AddProcess(signal + "__05_ST",        "tW",         kYellow+3);
-  plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", kGray+1);
+  plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
+  plotter.AddProcess(signal + "__10_HWW",       "HWW",        color_HWW);
+  plotter.AddProcess(signal + "__06_WW",        "WW",         color_WW);
+  plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
+  plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         color_ZZ);
+  plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    color_Wg);
+  plotter.AddProcess(signal + "__07_ZJets",     "Z+jets",     color_ZJets);
+  plotter.AddProcess(signal + "__09_TTV",       "ttV",        color_TTV);
+  plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
+  plotter.AddProcess(signal + "__05_ST",        "tW",         color_ST);
+  plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
 
 
   // Signal
   //----------------------------------------------------------------------------
-  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{#phi}10", kRed+1);
+  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{#phi}10", color_Signal);
 
 
   // Draw
