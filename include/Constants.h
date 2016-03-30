@@ -9,8 +9,8 @@
 //#include "CutsWZ.h"
 
 
-const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
-//const float lumi_fb = 2.318;
+//const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
+const float lumi_fb = 2.318;
 const float lumi_error_percent = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
