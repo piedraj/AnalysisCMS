@@ -135,7 +135,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
-    if (_nlepton > 2) continue;
+    //    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;  // Synchro with Stany
 
     _nelectron = 0;
 
@@ -164,8 +164,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
-    bool preselection = pass && (njet > 1 && MET.Et() > 50.);
-    //    bool preselection = pass && (njet > 0 && MET.Et() > 50.);  // Synchro with Stany
+    //    bool preselection = pass && (njet > 1 && MET.Et() > 50.);
+    bool preselection = pass && (njet > 0 && MET.Et() > 50.);  // Synchro with Stany
 
     FillLevelHistograms(TTDM_02_Preselection, preselection);
 
