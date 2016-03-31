@@ -16,7 +16,7 @@ enum {linY, logY};
 // runPlotter
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void runPlotter(TString signal)
+void runPlotter(TString signal, TString label)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -52,20 +52,20 @@ void runPlotter(TString signal)
 
   // Signal
   //----------------------------------------------------------------------------
-  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{P}10", color_Signal);
+  plotter.AddSignal(signal + "__" + signal, label, color_Signal);
 
 
   // Draw
   //----------------------------------------------------------------------------
   gSystem->mkdir(outputdir, kTRUE);
 
-  plotter.Draw("h_mva", "MVA output", ngroup, 2, "NULL", linY);
-  plotter.Draw("h_mva", "MVA output", ngroup, 2, "NULL", logY);
+  plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", logY);
 
 
   // Optimization
   //----------------------------------------------------------------------------
-  int score = plotter.GetBestSignalScore("h_mva", "S/sqrt(B)", ngroup);
+  int score = plotter.GetBestSignalScore("h_mva_" + signal, "S/sqrt(B)", ngroup);
 
 
   // Copy index.php in every directory
@@ -81,16 +81,44 @@ void runPlotter(TString signal)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if(argc < 2) {
+  if(argc < 3) {
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 
-    printf(" ./runPlotter <signal>\n\n");
+    printf(" ./runPlotter ttDM0001pseudo0010 \"m_{#chi}1 m_{P}10\"\n");
+    printf(" ./runPlotter ttDM0001pseudo0020 \"m_{#chi}1 m_{P}20\"\n");
+    printf(" ./runPlotter ttDM0001pseudo0050 \"m_{#chi}1 m_{P}50\"\n");
+    printf(" ./runPlotter ttDM0001pseudo0100 \"m_{#chi}1 m_{P}100\"\n");
+    printf(" ./runPlotter ttDM0001pseudo0200 \"m_{#chi}1 m_{P}200\"\n");
+    printf(" ./runPlotter ttDM0001pseudo0500 \"m_{#chi}1 m_{P}500\"\n");
+    printf(" ./runPlotter ttDM0010pseudo0100 \"m_{#chi}10 m_{P}100\"\n");
+    printf(" ./runPlotter ttDM0050pseudo0200 \"m_{#chi}50 m_{P}200\"\n");
+    printf(" ./runPlotter ttDM0150pseudo0200 \"m_{#chi}150 m_{P}200\"\n");
+    printf(" ./runPlotter ttDM0150pseudo0500 \"m_{#chi}150 m_{P}500\"\n");
+
+    printf("\n");
+
+    printf(" ./runPlotter ttDM0001scalar0010 \"m_{#chi}1 m_{S}10\"\n");
+    printf(" ./runPlotter ttDM0001scalar0050 \"m_{#chi}1 m_{S}50\"\n");
+    printf(" ./runPlotter ttDM0001scalar0100 \"m_{#chi}1 m_{S}100\"\n");
+    printf(" ./runPlotter ttDM0001scalar0200 \"m_{#chi}1 m_{S}200\"\n");
+    printf(" ./runPlotter ttDM0001scalar0300 \"m_{#chi}1 m_{S}300\"\n");
+    printf(" ./runPlotter ttDM0001scalar0500 \"m_{#chi}1 m_{S}500\"\n");
+    printf(" ./runPlotter ttDM0010scalar0010 \"m_{#chi}10 m_{S}10\"\n");
+    printf(" ./runPlotter ttDM0010scalar0050 \"m_{#chi}10 m_{S}50\"\n");
+    printf(" ./runPlotter ttDM0010scalar0100 \"m_{#chi}10 m_{S}100\"\n");
+    printf(" ./runPlotter ttDM0050scalar0050 \"m_{#chi}50 m_{S}50\"\n");
+    printf(" ./runPlotter ttDM0050scalar0200 \"m_{#chi}50 m_{S}200\"\n");
+    printf(" ./runPlotter ttDM0050scalar0300 \"m_{#chi}50 m_{S}300\"\n");
+    printf(" ./runPlotter ttDM0150scalar0200 \"m_{#chi}150 m_{S}200\"\n");
+    printf(" ./runPlotter ttDM0500scalar0500 \"m_{#chi}500 m_{S}500\"\n");
+
+    printf("\n");
 
     exit(0);
   }
 
-  runPlotter(argv[1]);
+  runPlotter(argv[1], argv[2]);
 
   return 0;
 }

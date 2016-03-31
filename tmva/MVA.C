@@ -230,7 +230,7 @@ void MVARead(TString signal, TString filename)
 
   // Get MVA response
   //----------------------------------------------------------------------------
-  TH1F* h_mva = new TH1F("h_mva", "", 100, -0.5, 1.5);
+  TH1F* h_mva = new TH1F("h_mva_" + signal, "", 100, -0.5, 1.5);
 
   TFile* input = TFile::Open(inputdir + filename + ".root", "update");
 
