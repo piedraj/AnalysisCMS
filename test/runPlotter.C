@@ -108,7 +108,7 @@ void runPlotter(TString level)
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{#phi}10", color_Signal);
+      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{P}10", color_Signal);
     }
 
   

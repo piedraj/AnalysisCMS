@@ -52,7 +52,7 @@ void runPlotter(TString signal)
 
   // Signal
   //----------------------------------------------------------------------------
-  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{#phi}10", color_Signal);
+  plotter.AddSignal(signal + "__" + signal, "m_{#chi}1 m_{P}10", color_Signal);
 
 
   // Draw
