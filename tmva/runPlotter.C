@@ -65,7 +65,7 @@ void runPlotter(TString signal, TString label)
 
   // Optimization
   //----------------------------------------------------------------------------
-  int score = plotter.GetBestSignalScore("h_mva_" + signal, "S/sqrt(B)", ngroup);
+  float score_x = plotter.GetBestSignalScoreX("h_mva_" + signal, "S/sqrt(B)", ngroup);
 
 
   // Copy index.php in every directory

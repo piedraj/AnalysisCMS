@@ -995,16 +995,16 @@ void HistogramReader::LoopEventsByChannel(TString level)
 
 
 //------------------------------------------------------------------------------
-// GetBestScoreBin
+// GetBestScoreX
 //------------------------------------------------------------------------------
-Int_t HistogramReader::GetBestScoreBin(TH1*    sig_hist,
+Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
 				       TH1*    bkg_hist,
 				       TString fom)
 {
   Int_t nbins = sig_hist->GetNbinsX();
 
   Float_t score_value = 0;
-  Int_t   score_bin   = 0;
+  Float_t score_x     = 0;
 
 
   for (UInt_t k=0; k<nbins+1; k++) {
@@ -1023,31 +1023,32 @@ Int_t HistogramReader::GetBestScoreBin(TH1*    sig_hist,
 	if (score > score_value)
 	  {
 	    score_value = score;
-	    score_bin   = k;
+	    score_x     = sig_hist->GetBinCenter(k);
 	  }
       }
   }
 
 
-  printf("\n [HistogramReader::GetBestScoreBin] The bin %d (of %d) has the best %s (%f)\n\n",
-	 score_bin,
-	 nbins,
+  printf("\n [HistogramReader::GetBestScoreX] x = %.2f (%.2f < x < %.2f) has the best %s (%f)\n\n",
+	 score_x,
+	 sig_hist->GetXaxis()->GetXmin(),
+	 sig_hist->GetXaxis()->GetXmax(),
 	 fom.Data(),
 	 score_value);
 
 
-  return score_bin;
+  return score_x;
 }
 
 
 //------------------------------------------------------------------------------
-// GetBestSignalScore
+// GetBestSignalScoreX
 //------------------------------------------------------------------------------
-Int_t HistogramReader::GetBestSignalScore(TString hname,
-					  TString fom,
-					  Int_t   ngroup)
+Float_t HistogramReader::GetBestSignalScoreX(TString hname,
+					     TString fom,
+					     Int_t   ngroup)
 {
-  printf("\n [HistogramReader::GetBestSignalScore] Warning: reading only the first signal\n\n");
+  printf("\n [HistogramReader::GetBestSignalScoreX] Warning: reading only the first signal\n");
 
 
   // Get the signals
@@ -1090,5 +1091,5 @@ Int_t HistogramReader::GetBestSignalScore(TString hname,
   //----------------------------------------------------------------------------
   TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
 
-  return GetBestScoreBin(_signalhist[0], backgroundhist, fom);
+  return GetBestScoreX(_signalhist[0], backgroundhist, fom);
 }
