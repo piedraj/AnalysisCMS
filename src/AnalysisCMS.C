@@ -429,8 +429,8 @@ void AnalysisCMS::EventDump()
     {
       int index = AnalysisLeptons[i].index;
 
-      txt_eventdump << Form("%.0f:%d:%f:%f:%f:%.0f",
-			    evt,
+      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f",
+			    event,
 			    AnalysisLeptons[i].flavour,
 			    AnalysisLeptons[i].v.Pt(),
 			    AnalysisLeptons[i].v.Eta(),

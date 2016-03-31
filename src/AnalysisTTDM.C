@@ -116,7 +116,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	    {
 	      pass_all_met_filters = false;
 
-	      txt_metfilters << Form("%.0f:%.0f:%.0f:%s\n", run, lumi, evt, sfilter[j].Data());
+	      txt_metfilters << Form("%d:%d:%d:%s\n", run, lumi, event, sfilter[j].Data());
 	    }
 	}
     
@@ -135,7 +135,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
-    //    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;  // Synchro with Stany
+    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10. && AnalysisLeptons[2].type == Tight) continue;  // Synchro with Stany
 
     _nelectron = 0;
 

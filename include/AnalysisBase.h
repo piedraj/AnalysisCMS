@@ -40,7 +40,6 @@ public :
    Float_t         chmetphi;
    Float_t         dataset;
    Float_t         effW;
-   Float_t         evt;
    Float_t         fakeW;
    Float_t         fakeW2l0j;
    Float_t         fakeW2l0jElUp;
@@ -106,7 +105,6 @@ public :
    Float_t         jetssvhe1;
    Float_t         jetssvhe2;
    Float_t         kfW;
-   Float_t         lumi;
    Float_t         mctruth;
    Float_t         metGeneta;
    Float_t         metGenphi;
@@ -192,7 +190,9 @@ public :
    Float_t         pho_sietaieta;
    Float_t         predmet;
    Float_t         redmet;
-   Float_t         run;
+   UInt_t          run;
+   UInt_t          lumi;
+   UInt_t          event;
    Float_t         softbjpb;
    Float_t         softcmvav2;
    Float_t         softcsvv2ivf;
@@ -461,7 +461,6 @@ public :
    TBranch        *b_chmetphi;   //!
    TBranch        *b_dataset;   //!
    TBranch        *b_effW;   //!
-   TBranch        *b_evt;   //!
    TBranch        *b_fakeW;   //!
 
    TBranch        *b_fakeW3l;
@@ -528,7 +527,6 @@ public :
    TBranch        *b_jetssvhe1;   //!
    TBranch        *b_jetssvhe2;   //!
    TBranch        *b_kfW;   //!
-   TBranch        *b_lumi;   //!
    TBranch        *b_mctruth;   //!
    TBranch        *b_metGeneta;   //!
    TBranch        *b_metGenphi;   //!
@@ -615,6 +613,8 @@ public :
    TBranch        *b_predmet;   //!
    TBranch        *b_redmet;   //!
    TBranch        *b_run;   //!
+   TBranch        *b_lumi;   //!
+   TBranch        *b_event;   //!
    TBranch        *b_softbjpb;   //!
    TBranch        *b_softcmvav2;   //!
    TBranch        *b_softcsvv2ivf;   //!
@@ -1108,7 +1108,6 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("chmetphi", &chmetphi, &b_chmetphi);
    fChain->SetBranchAddress("dataset", &dataset, &b_dataset);
    fChain->SetBranchAddress("effW", &effW, &b_effW);
-   fChain->SetBranchAddress("evt", &evt, &b_evt);
    fChain->SetBranchAddress("fakeW", &fakeW, &b_fakeW);
    fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);
    fChain->SetBranchAddress("fakeW2l0jElUp", &fakeW2l0jElUp, &b_fakeW2l0jElUp);
@@ -1174,7 +1173,6 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("jetssvhe1", &jetssvhe1, &b_jetssvhe1);
    fChain->SetBranchAddress("jetssvhe2", &jetssvhe2, &b_jetssvhe2);
    fChain->SetBranchAddress("kfW", &kfW, &b_kfW);
-   fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
    fChain->SetBranchAddress("mctruth", &mctruth, &b_mctruth);
    fChain->SetBranchAddress("metGeneta", &metGeneta, &b_metGeneta);
    fChain->SetBranchAddress("metGenphi", &metGenphi, &b_metGenphi);
@@ -1261,6 +1259,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("predmet", &predmet, &b_predmet);
    fChain->SetBranchAddress("redmet", &redmet, &b_redmet);
    fChain->SetBranchAddress("run", &run, &b_run);
+   fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
+   fChain->SetBranchAddress("event", &event, &b_event);
    fChain->SetBranchAddress("softbjpb", &softbjpb, &b_softbjpb);
    fChain->SetBranchAddress("softcmvav2", &softcmvav2, &b_softcmvav2);
    fChain->SetBranchAddress("softcsvv2ivf", &softcsvv2ivf, &b_softcsvv2ivf);
