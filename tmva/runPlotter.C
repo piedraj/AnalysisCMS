@@ -27,9 +27,9 @@ void runPlotter(TString signal,
 
   HistogramReader plotter(inputdir, outputdir);
 
-  plotter.SetStackOption( option);
-  plotter.SetPublicStyle(  false);
-  plotter.SetSavePdf    (   true);
+  plotter.SetStackOption(option);
+  plotter.SetPublicStyle( false);
+  plotter.SetSavePdf    (  true);
   
   if (option.Contains("nostack"))
     {
