@@ -260,7 +260,9 @@ void MVARead(TString signal, TString filename)
   theTree->SetBranchAddress("dphillmet",    &dphillmet);
   theTree->SetBranchAddress("eventW",       &eventW);
 
-  for (Long64_t ievt=0; ievt<theTree->GetEntries(); ievt++) {
+  Long64_t nentries = tree->GetEntries();
+
+  for (Long64_t ievt=0; ievt<nentries; ievt++) {
 
     theTree->GetEntry(ievt);
 
