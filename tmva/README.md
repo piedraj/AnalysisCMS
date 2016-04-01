@@ -17,4 +17,4 @@
 
     cd AnalysisCMS/tmva
     ./make
-    ./runPlotter ttDM0001pseudo0010
+    ./runPlotter
