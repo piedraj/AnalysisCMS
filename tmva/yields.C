@@ -77,9 +77,9 @@ float GetYield(TString sample)
   tree->SetBranchAddress("eventW", &eventW);
   tree->SetBranchAddress("mva_" + _signal, &mva);
 
-  Long64_t nentries = tree->GetEntries();
-
   float counter = 0; 
+
+  Long64_t nentries = tree->GetEntries();
 
   for (Long64_t ievt=0; ievt<nentries; ievt++) {
 

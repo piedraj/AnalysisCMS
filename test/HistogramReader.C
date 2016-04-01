@@ -10,7 +10,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
   _title        ("cms"),
-  _luminosity_fb(0),
+  _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
@@ -405,7 +405,10 @@ void HistogramReader::Draw(TString hname,
       DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
     }
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  if (_luminosity_fb > 0)
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  else
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
   SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
 

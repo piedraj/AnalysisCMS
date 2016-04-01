@@ -15,44 +15,50 @@ enum {linY, logY};
 //
 // runPlotter
 //
+// option = "hist"         --> all distributions normalized to the luminosity
+// option = "nostack,hist" --> signal and top distributions normalized to one
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void runPlotter(TString signal, TString label)
+void runPlotter(TString signal,
+		TString label,
+		TString option = "hist")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   HistogramReader plotter(inputdir, outputdir);
 
-  plotter.SetLuminosity (lumi_fb);
-  plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (   true);
-  plotter.SetDrawYield  (   true);
+  plotter.SetStackOption( option);
   plotter.SetPublicStyle(  false);
   plotter.SetSavePdf    (   true);
+  
+  if (option.Contains("nostack"))
+    {
+      plotter.SetDrawRatio(false);
+      plotter.SetDrawYield(false);
 
+      plotter.AddSignal (signal + "__" + signal,    label, color_Signal);
+      plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",  kBlack);
+    }
+  else
+    {
+      plotter.SetLuminosity(lumi_fb);
+      plotter.SetDrawRatio (   true);
+      plotter.SetDrawYield (   true);
 
-  // Data
-  //----------------------------------------------------------------------------
-  plotter.AddData(signal + "__01_Data", "data", color_Data);
-
-
-  // Backgrounds
-  //----------------------------------------------------------------------------
-  plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
-  plotter.AddProcess(signal + "__10_HWW",       "HWW",        color_HWW);
-  plotter.AddProcess(signal + "__06_WW",        "WW",         color_WW);
-  plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
-  plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         color_ZZ);
-  plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    color_Wg);
-  plotter.AddProcess(signal + "__07_ZJets",     "Z+jets",     color_ZJets);
-  plotter.AddProcess(signal + "__09_TTV",       "ttV",        color_TTV);
-  plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
-  plotter.AddProcess(signal + "__05_ST",        "tW",         color_ST);
-  plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
-
-
-  // Signal
-  //----------------------------------------------------------------------------
-  plotter.AddSignal(signal + "__" + signal, label, color_Signal);
+      plotter.AddSignal (signal + "__" + signal,    label,        color_Signal);
+      plotter.AddData   (signal + "__01_Data",      "data",       color_Data);
+      plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
+      plotter.AddProcess(signal + "__10_HWW",       "HWW",        color_HWW);
+      plotter.AddProcess(signal + "__06_WW",        "WW",         color_WW);
+      plotter.AddProcess(signal + "__02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
+      plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         color_ZZ);
+      plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    color_Wg);
+      plotter.AddProcess(signal + "__07_ZJets",     "Z+jets",     color_ZJets);
+      plotter.AddProcess(signal + "__09_TTV",       "ttV",        color_TTV);
+      plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
+      plotter.AddProcess(signal + "__05_ST",        "tW",         color_ST);
+      plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
+    }
 
 
   // Draw
@@ -118,7 +124,10 @@ int main(int argc, char ** argv)
     exit(0);
   }
 
-  runPlotter(argv[1], argv[2]);
+  if (argc == 3)
+    runPlotter(argv[1], argv[2]);
+  else
+    runPlotter(argv[1], argv[2], argv[3]);
 
   return 0;
 }
