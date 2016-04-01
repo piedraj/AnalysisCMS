@@ -289,10 +289,11 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    float pt   = std_vector_lepton_pt->at(i);
-    float eta  = std_vector_lepton_eta->at(i);
-    float phi  = std_vector_lepton_phi->at(i);
-    float type = std_vector_lepton_isTightLepton->at(i);
+    float eta     = std_vector_lepton_eta->at(i);
+    float flavour = std_vector_lepton_flavour->at(i);
+    float phi     = std_vector_lepton_phi->at(i);
+    float pt      = std_vector_lepton_pt->at(i);
+    float type    = std_vector_lepton_isTightLepton->at(i);
 
     if (pt < 0.) continue;
     //    if (abs(std_vector_lepton_flavour->at(i)) == 13 && abs(std_vector_lepton_eta->at(i)) > 2.4) continue;
@@ -316,7 +317,7 @@ void AnalysisCMS::GetLeptons()
       
     lep.index   = i;
     lep.type    = type;
-    lep.flavour = std_vector_lepton_flavour->at(i);
+    lep.flavour = flavour;
       
     float mass = -999;
 

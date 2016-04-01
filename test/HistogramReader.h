@@ -61,7 +61,7 @@ class HistogramReader
 			       Float_t        ymin         = -999,
 			       Float_t        ymax         = -999);
 
-  Int_t    GetBestSignalScore (TString        hname,
+  Float_t  GetBestSignalScoreX(TString        hname,
 			       TString        fom,
 			       Int_t          ngroup = -1);
 
@@ -144,7 +144,7 @@ class HistogramReader
 
   void     LoopEventsByChannel(TString        level);
 
-  Int_t    GetBestScoreBin    (TH1*           sig_hist,
+  Float_t  GetBestScoreX      (TH1*           sig_hist,
 			       TH1*           bkg_hist,
 			       TString        fom = "S/sqrt(S+B)");
 
