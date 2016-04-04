@@ -268,9 +268,10 @@ void AnalysisCMS::ApplyWeights()
   
   _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
   
-  if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
+  if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
+  if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
 
-  //  if (_sample.EqualTo("TTTo2L2Nu") && _analysis.EqualTo("TTDM")) _event_weight *= 0.93;  // data/mc = 12640/13632 
+  if (_sample.EqualTo("TTTo2L2Nu") && _analysis.EqualTo("TTDM")) _event_weight *= 0.93;  // data/mc = 12640/13632 
 
   _event_weight *= _gen_ptll_weight;
 
