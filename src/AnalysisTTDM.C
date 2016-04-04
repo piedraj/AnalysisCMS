@@ -165,30 +165,16 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
-    bool preselection = pass && (njet > 1 && MET.Et() > 50.);
-    //    bool preselection = pass && (njet > 0 && MET.Et() > 50.);  // Synchro with Stany
+    pass &= (MET.Et() > 50.);
+    //    pass &= (njet > 0);  // Synchro with Stany
 
-    FillLevelHistograms(TTDM_02_Preselection, preselection);
+    FillLevelHistograms(TTDM_02_Preselection, pass);
 
-    if (preselection && _saveminitree) minitree->Fill();
+    if (pass && _saveminitree) minitree->Fill();
 
     pass &= (njet > 1);
 
-    FillLevelHistograms(TTDM_03_Has2Jets, pass);
-
-    pass &= (_nbjet20loose > 0);
-
-    FillLevelHistograms(TTDM_04_Has1BJet, pass);
-
-    float _dphillmet = (Lepton1.v + Lepton2.v).DeltaPhi(MET);
-
-    pass &= (fabs(_dphillmet) > 0.6);
-
-    FillLevelHistograms(TTDM_05_DeltaPhi, pass);
-
-    pass &= (MET.Et() > 120.);
-
-    FillLevelHistograms(TTDM_06_MET, pass);
+    FillLevelHistograms(TTDM_03_PreMVA, pass);
   }
 
 
