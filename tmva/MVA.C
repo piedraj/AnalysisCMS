@@ -42,8 +42,12 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal = "ttDM0001pseudo0010")
+void MVA(TString signal     = "ttDM0001pseudo0010",
+	 bool    doMVATrain = true,
+	 bool    doMVARead  = false)
 {
+  if (!doMVATrain && !doMVARead) return;
+
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   gSystem->mkdir(trainingdir,    kTRUE);
@@ -54,24 +58,27 @@ void MVA(TString signal = "ttDM0001pseudo0010")
 
   // Training
   //----------------------------------------------------------------------------
-  MVATrain(signal);
+  if (doMVATrain) MVATrain(signal);
 
 
   // Reading
   //----------------------------------------------------------------------------
-  MVARead(signal, signal);
-  MVARead(signal, "01_Data");
-  MVARead(signal, "14_HZ");
-  MVARead(signal, "10_HWW");
-  MVARead(signal, "06_WW");
-  MVARead(signal, "02_WZTo3LNu");
-  MVARead(signal, "03_ZZ");
-  MVARead(signal, "11_Wg");
-  MVARead(signal, "07_ZJets");
-  MVARead(signal, "09_TTV");
-  MVARead(signal, "04_TTTo2L2Nu");
-  MVARead(signal, "05_ST");
-  MVARead(signal, "00_Fakes");
+  if (doMVARead)
+    {
+      MVARead(signal, signal);
+      MVARead(signal, "01_Data");
+      MVARead(signal, "14_HZ");
+      MVARead(signal, "10_HWW");
+      MVARead(signal, "06_WW");
+      MVARead(signal, "02_WZTo3LNu");
+      MVARead(signal, "03_ZZ");
+      MVARead(signal, "11_Wg");
+      MVARead(signal, "07_ZJets");
+      MVARead(signal, "09_TTV");
+      MVARead(signal, "04_TTTo2L2Nu");
+      MVARead(signal, "05_ST");
+      MVARead(signal, "00_Fakes");
+    }
 }
 
 
@@ -260,7 +267,7 @@ void MVARead(TString signal, TString filename)
   theTree->SetBranchAddress("dphillmet",    &dphillmet);
   theTree->SetBranchAddress("eventW",       &eventW);
 
-  Long64_t nentries = tree->GetEntries();
+  Long64_t nentries = theTree->GetEntries();
 
   for (Long64_t ievt=0; ievt<nentries; ievt++) {
 
