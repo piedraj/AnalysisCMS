@@ -61,6 +61,10 @@ class HistogramReader
 			       Float_t        ymin         = -999,
 			       Float_t        ymax         = -999);
 
+  Float_t  GetBestSignalScoreX(TString        hname,
+			       TString        fom,
+			       Int_t          ngroup = -1);
+
   void     CrossSection       (TString        level,
 			       TString        channel,
 			       TString        process);
@@ -121,6 +125,10 @@ class HistogramReader
   void     SetStackOption     (TString        option) {_stackoption = option;}
 
   void     SetTitle           (TString        title) {_title = title;}
+
+  void     SetSavePdf         (Bool_t         savepdf) {_savepdf = savepdf;}
+
+  void     SetSavePng         (Bool_t         savepng) {_savepng = savepng;}
   
   Float_t  Yield              (TH1*           hist);
 
@@ -135,6 +143,10 @@ class HistogramReader
 			       TString        level);
 
   void     LoopEventsByChannel(TString        level);
+
+  Float_t  GetBestScoreX      (TH1*           sig_hist,
+			       TH1*           bkg_hist,
+			       TString        fom = "S/sqrt(S+B)");
 
 
  private :

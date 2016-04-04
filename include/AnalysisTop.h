@@ -22,9 +22,17 @@ class AnalysisTop : public AnalysisCMS
 			      float   luminosity);
 
 
+  // Data members
+  //----------------------------------------------------------------------------
+
+
+
   // Analysis histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_test[nchannel][ncut][njetbin+1];
+  TH1D*                  h_htjets[nchannel][ncut][njetbin+1];
+  TH2F*                  h_2ht   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jetpt1[nchannel][ncut][njetbin+1];
+  TH1D*                  h_jetpt2[nchannel][ncut][njetbin+1];
 };
 
 #endif

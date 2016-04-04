@@ -10,7 +10,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
   _title        ("cms"),
-  _luminosity_fb(0),
+  _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
@@ -164,6 +164,8 @@ void HistogramReader::Draw(TString hname,
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
+    _mcfile[i]->cd();
+
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
     _mchist.push_back((TH1D*)dummy->Clone());
@@ -182,6 +184,8 @@ void HistogramReader::Draw(TString hname,
 
   for (UInt_t i=0; i<_signalfile.size(); i++) {
 
+    _signalfile[i]->cd();
+
     TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
 
     _signalhist.push_back((TH1D*)dummy->Clone());
@@ -196,6 +200,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (_datafile)
     {
+      _datafile->cd();
+
       TH1D* dummy = (TH1D*)_datafile->Get(hname);
 
       _datahist = (TH1D*)dummy->Clone();
@@ -315,7 +321,7 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 1e-4;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 5);
     }
   else
     {
@@ -399,7 +405,10 @@ void HistogramReader::Draw(TString hname,
       DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
     }
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  if (_luminosity_fb > 0)
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  else
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
   SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
 
@@ -486,6 +495,8 @@ void HistogramReader::CrossSection(TString level,
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
+    _mcfile[i]->cd();
+
     if (_mclabel[i].EqualTo(process))
       {
         signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
@@ -515,6 +526,8 @@ void HistogramReader::CrossSection(TString level,
   //----------------------------------------------------------------------------
   if (_datafile)
     {
+      _datafile->cd();
+
       TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
 
       _datahist = (TH1D*)dummy->Clone();      
@@ -539,7 +552,8 @@ void HistogramReader::CrossSection(TString level,
 	 channel.Data(),
 	 mu,
 	 muErrorStat,
-	 mu * lumi_error_percent);
+	 mu * lumi_error_percent / 1e2);
+
 
   printf("counterData : %.2f    counterBkg : %.2f    counterFake : %.2f    counterSignalLum : %2.f \n",
 	 counterData,
@@ -687,8 +701,7 @@ void HistogramReader::MoveOverflows(TH1*    hist,
 				    Float_t xmax)
 {
   int nentries = hist->GetEntries();
-
-  int nbins = hist->GetNbinsX();
+  int nbins    = hist->GetNbinsX();
   
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
 
@@ -819,7 +832,7 @@ void HistogramReader::SetHistogram(TH1*     hist,
 {
   if (!hist)
     {
-      printf("\n Error: histogram does not exist\n\n");
+      printf("\n [HistogramReader::SetHistogram] Error: histogram does not exist\n\n");
       return;
     }
 
@@ -861,8 +874,17 @@ Float_t HistogramReader::Yield(TH1* hist)
   if (!hist) return 0;
 
   Int_t nbins = hist->GetNbinsX();
-      
-  return fabs(hist->Integral(0, nbins+1));
+
+  Float_t hist_yield = hist->Integral(0, nbins+1);
+
+  if (hist_yield < 0)
+    {
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
+	     hist->GetName(),
+	     hist_yield);
+    }
+
+  return fabs(hist_yield);
 }
 
 
@@ -986,4 +1008,105 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
+}
+
+
+//------------------------------------------------------------------------------
+// GetBestScoreX
+//------------------------------------------------------------------------------
+Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
+				       TH1*    bkg_hist,
+				       TString fom)
+{
+  Int_t nbins = sig_hist->GetNbinsX();
+
+  Float_t score_value = 0;
+  Float_t score_x     = 0;
+
+
+  for (UInt_t k=0; k<nbins+1; k++) {
+
+    Float_t sig_yield = sig_hist->Integral(k, nbins+1);
+    Float_t bkg_yield = bkg_hist->Integral(k, nbins+1);
+
+    if (sig_yield > 0. && bkg_yield > 0.)
+      {
+	Float_t score = -999;
+
+	if (fom.EqualTo("S/sqrt(B)"))   score = sig_yield / sqrt(bkg_yield);
+	if (fom.EqualTo("S/sqrt(S+B)")) score = sig_yield / sqrt(sig_yield + bkg_yield);
+	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield;
+
+	if (score > score_value)
+	  {
+	    score_value = score;
+	    score_x     = sig_hist->GetBinCenter(k);
+	  }
+      }
+  }
+
+
+  printf("\n [HistogramReader::GetBestScoreX] x = %.2f (%.2f < x < %.2f) has the best %s (%f)\n\n",
+	 score_x,
+	 sig_hist->GetXaxis()->GetXmin(),
+	 sig_hist->GetXaxis()->GetXmax(),
+	 fom.Data(),
+	 score_value);
+
+
+  return score_x;
+}
+
+
+//------------------------------------------------------------------------------
+// GetBestSignalScoreX
+//------------------------------------------------------------------------------
+Float_t HistogramReader::GetBestSignalScoreX(TString hname,
+					     TString fom,
+					     Int_t   ngroup)
+{
+  printf("\n [HistogramReader::GetBestSignalScoreX] Warning: reading only the first signal\n");
+
+
+  // Get the signals
+  //----------------------------------------------------------------------------
+  _signalhist.clear();
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) {
+
+    _signalfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
+
+    _signalhist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _signalhist[i]->Rebin(ngroup);
+  }
+
+  
+  // Get the backgrounds
+  //----------------------------------------------------------------------------
+  _mchist.clear();
+
+  THStack* mcstack = new THStack(hname + "_mcstack", hname + "_mcstack");
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) {
+
+    _mcfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+
+    _mchist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
+
+    mcstack->Add(_mchist[i]);
+  }
+
+
+  // Get the best score
+  //----------------------------------------------------------------------------
+  TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
+
+  return GetBestScoreX(_signalhist[0], backgroundhist, fom);
 }

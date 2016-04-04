@@ -36,57 +36,58 @@ void runPlotter(TString level)
   plotter.SetStackOption( "hist");
   plotter.SetDrawRatio  (   true);
   plotter.SetPublicStyle(  false);
+  plotter.SetSavePdf    (   true);
 
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", kBlack);
+  plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("WZ"))
     {
-      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZTo3LNu);
+      plotter.AddProcess("06_WW",       "WW",      color_WW);
+      plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
+      plotter.AddProcess("03_ZZ",       "ZZ",      color_ZZ);
+      plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
+      plotter.AddProcess("13_VVV",      "VVV",     color_VVV);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGreen+2);
-	  plotter.AddProcess("12_Zg",    "Z#gamma",    kTeal);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
 	{
-	  plotter.AddProcess("07_ZJets",    "Z+jets", kGreen+2);
-	  plotter.AddProcess("04_TTo2L2Nu", "tt",     kYellow);
-	  plotter.AddProcess("05_ST",       "tW",     kYellow+3);
+	  plotter.AddProcess("07_ZJets",    "Z+jets", color_ZJets);
+	  plotter.AddProcess("04_TTTo2L2Nu", "tt",    color_TTTo2L2Nu);
+	  plotter.AddProcess("05_ST",       "tW",     color_ST);
 	}
     }
   else
     {
-      plotter.AddProcess("06_WW",       "WW",      kAzure-9);
-      plotter.AddProcess("02_WZTo3LNu", "WZ",      kOrange-2);
-      plotter.AddProcess("03_ZZ",       "ZZ",      kRed+3);
-      plotter.AddProcess("11_Wg",       "W#gamma", kBlue);
-      plotter.AddProcess("07_ZJets",    "Z+jets",  kGreen+2);
-      plotter.AddProcess("09_TTV",      "ttV",     kGreen-6);
-      plotter.AddProcess("10_HWW",      "HWW",     kRed);
-      plotter.AddProcess("14_HZ",       "HZ",      kRed+1);
-      plotter.AddProcess("13_VVV",      "VVV",     kYellow-6);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",     kYellow);
-      plotter.AddProcess("05_ST",        "tW",     kYellow+3);
+      plotter.AddProcess("14_HZ",       "HZ",      color_HZ);
+      plotter.AddProcess("10_HWW",      "HWW",     color_HWW);
+      plotter.AddProcess("06_WW",       "WW",      color_WW);
+      plotter.AddProcess("02_WZTo3LNu", "WZ",      color_WZTo3LNu);
+      plotter.AddProcess("03_ZZ",       "ZZ",      color_ZZ);
+      plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
+      plotter.AddProcess("07_ZJets",    "Z+jets",  color_ZJets);
+      plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+      plotter.AddProcess("05_ST",        "tW",     color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", kGray+1);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+
 	}
       else
 	{
-	  plotter.AddProcess("08_WJets", "W+jets", kGray+1);
+	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
@@ -95,26 +96,19 @@ void runPlotter(TString level)
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  kRed-4);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  kRed-3);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", kRed-2);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", kRed-1);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", kRed);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", kRed+1);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", kRed+2);
-      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", kRed+3);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
+      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM1scalar20",    "m_{#chi}1 m_{#phi}20",    kRed-4);
-      //      plotter.AddSignal("ttDM1scalar50",    "m_{#chi}1 m_{#phi}50",    kRed-3);
-      //      plotter.AddSignal("ttDM1scalar500",   "m_{#chi}1 m_{#phi}500",   kRed-2);
-      //      plotter.AddSignal("ttDM10scalar10",   "m_{#chi}10 m_{#phi}10",   kRed-1);
-      //      plotter.AddSignal("ttDM50scalar50",   "m_{#chi}50 m_{#phi}50",   kRed);
-      //      plotter.AddSignal("ttDM50scalar200",  "m_{#chi}50 m_{#phi}200",  kRed+1);
-      //      plotter.AddSignal("ttDM50scalar300",  "m_{#chi}50 m_{#phi}300",  kRed+2);
-      //      plotter.AddSignal("ttDM150scalar200", "m_{#chi}150 m_{#phi}200", kRed+3);
+      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{P}10", color_Signal);
     }
 
   
@@ -138,7 +132,7 @@ void runPlotter(TString level)
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -160,8 +154,8 @@ void runPlotter(TString level)
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!level.Contains("WW") && j != njetbin) continue;
-      
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;   
+         
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
       gSystem->mkdir(outputdir + level + jetbin, kTRUE);
@@ -185,42 +179,42 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "nbjet20loose" + suffix, "number of (20 GeV) loose b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20tight" + suffix, "number of (20 GeV) tight b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30tight" + suffix, "number of (30 GeV) tight b-jets", -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL",  linY, true,    0,   30);
-	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", scale, true,    0,    4);
-	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  scale, true,    0, 3.15);
-	  plotter.Draw(prefix + "met"          + suffix, "E_{T}^{miss}",                    10, 0, "GeV",  scale, true,    0,  400);
-	  plotter.Draw(prefix + "trkmet"       + suffix, "track E_{T}^{miss}",              10, 0, "GeV",  scale, true,    0,  400);
-	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",      10, 0, "GeV",  scale, true,    0,  400);
-	  plotter.Draw(prefix + "mtw1"         + suffix, "m_{T}^{W,1}",                     10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                     10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true,    0,  300);
-	  plotter.Draw(prefix + "mc"           + suffix, "m_{c}",                           10, 0, "GeV",  scale, true,    0,  500);
-	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                           10, 0, "GeV",  scale, true,    0,  500);
-	  plotter.Draw(prefix + "pt1"          + suffix, "leading lepton p_{T}",             2, 0, "GeV",  scale, true,    0,  200);
-	  plotter.Draw(prefix + "pt2"          + suffix, "trailing lepton p_{T}",            2, 0, "GeV",  scale, true,    0,  200);
-	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",            2, 0, "GeV",  scale, true,    0,  200);
-	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                       2, 0, "GeV",  scale, true,    0,  200);
-	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",     10, 0, "GeV",  scale, true,    0,  600);
-	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",     10, 0, "GeV",  scale, true,    0,  600);
+	  plotter.Draw(prefix + "nvtx"         + suffix, "number of vertices",              -1, 0, "NULL", linY,  true, 0,   30);
+	  plotter.Draw(prefix + "drll"         + suffix, "#DeltaR_{#font[12]{ll}}",          5, 1, "NULL", scale, true, 0,    4);
+	  plotter.Draw(prefix + "dphill"       + suffix, "#Delta#phi_{#font[12]{ll}}",       5, 1, "rad",  scale, true, 0, 3.15);
+	  plotter.Draw(prefix + "dphilmet1"    + suffix, "#Delta#phi(lep1,E_{T}^{miss})",    5, 1, "rad",  scale, true, 0, 3.15);
+	  plotter.Draw(prefix + "dphilmet2"    + suffix, "#Delta#phi(lep2,E_{T}^{miss})",    5, 1, "rad",  scale, true, 0, 3.15);
+	  plotter.Draw(prefix + "metPfType1"   + suffix, "E_{T}^{miss}",                    10, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "metTtrk"      + suffix, "track E_{T}^{miss}",              10, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",      10, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "mtw1"         + suffix, "m_{T}^{W,1}",                     10, 0, "GeV",  scale, true, 0,  300);
+	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                     10, 0, "GeV",  scale, true, 0,  300);
+	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true, 0,  300);
+	  plotter.Draw(prefix + "mc"           + suffix, "m_{c}",                           10, 0, "GeV",  scale, true, 0,  500);
+	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                           10, 0, "GeV",  scale, true, 0,  500);
+	  plotter.Draw(prefix + "pt1"          + suffix, "leading lepton p_{T}",             2, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "pt2"          + suffix, "trailing lepton p_{T}",            2, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",            2, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                       2, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",     10, 0, "GeV",  scale, true, 0,  600);
+	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",     10, 0, "GeV",  scale, true, 0,  600);
 
 
 	  // WW and MonoH histograms
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
-	      plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",                  2, 0, "GeV", linY, false, 0, 100);
-	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", logY, false, 0, 300);
-	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", linY, false, 0, 300);
-	      plotter.Draw(prefix + "htnojets"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 10, 0, "GeV", linY, false, 0, 300);
-	      plotter.Draw(prefix + "dphilmet1" + suffix, "#Delta#phi(lep1,E_{T}^{miss})",     10, 1, "rad", linY, false, 0, 3.2);
-	      plotter.Draw(prefix + "dphilmet2" + suffix, "#Delta#phi(lep2,E_{T}^{miss})",     10, 1, "rad", linY, false, 0, 3.2);
-	      plotter.Draw(prefix + "fullpmet"  + suffix, "projected E_{T}^{miss}",            10, 0, "GeV", linY, false, 0, 100);
-	      plotter.Draw(prefix + "trkpmet"   + suffix, "projected track E_{T}^{miss}",       2, 0, "GeV", linY, false, 0, 100);
-	      plotter.Draw(prefix + "metphi"    + suffix, "E_{T}^{miss} #phi",                 10, 0, "rad", linY, false, 0, 3.2);
-	      plotter.Draw(prefix + "lepphi1"   + suffix, "leading lep #phi",                  10, 0, "rad", linY, false, 0, 3.2);
-	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",                 10, 0, "rad", linY, false, 0, 3.2);
-	      plotter.Draw(prefix + "mllstar"   + suffix, "m2l^{*}",                           10, 0, "GeV", linY, false, 0, 300);
-	      plotter.Draw(prefix + "dphillstar"+ suffix, "#Delta#phi_{ll}^{*}",               10, 0, "rad", linY, false, 0, 3.2);
+	      plotter.Draw(prefix + "jetpt1"    + suffix, "leading jet p_{T}",                  2, 0, "GeV", scale, false, 0, 100);
+	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
+	      plotter.Draw(prefix + "htjets"    + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
+	      plotter.Draw(prefix + "htnojets"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 10, 0, "GeV", scale, false, 0, 300);
+	      plotter.Draw(prefix + "fullpmet"  + suffix, "projected E_{T}^{miss}",            10, 0, "GeV", scale, false, 0, 100);
+	      plotter.Draw(prefix + "trkpmet"   + suffix, "projected track E_{T}^{miss}",       2, 0, "GeV", scale, false, 0, 100);
+	      plotter.Draw(prefix + "metphi"    + suffix, "E_{T}^{miss} #phi",                 10, 0, "rad", scale, false, 0, 3.2);
+	      plotter.Draw(prefix + "lepphi1"   + suffix, "leading lep #phi",                  10, 0, "rad", scale, false, 0, 3.2);
+	      plotter.Draw(prefix + "lepphi2"   + suffix, "trailing lep #phi",                 10, 0, "rad", scale, false, 0, 3.2);
+	      plotter.Draw(prefix + "mllstar"   + suffix, "m2l^{*}",                           10, 0, "GeV", scale, false, 0, 300);
+	      plotter.Draw(prefix + "dphillstar"+ suffix, "#Delta#phi_{ll}^{*}",               10, 0, "rad", scale, false, 0, 3.2);
 	    }
 
 
@@ -228,13 +222,11 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("MonoH"))
 	    {
-	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",     2, 1, "NULL", logY, false, 0,   4);
-	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",     2, 1, "NULL", logY, false, 0,   4);
-	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",       2, 1, "NULL", logY, false, 0,   4);
-	      plotter.Draw(prefix + "deltaphil1met" + suffix, "#Delta#phi(lep1,E_{T}^{miss})",  2, 1, "rad",  logY, false, 0, 3.2);
-	      plotter.Draw(prefix + "deltaphil2met" + suffix, "#Delta#phi(lep2,E_{T}^{miss})",  2, 1, "rad",  logY, false, 0, 3.2);
-	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",    2, 1, "rad",  logY, false, 0, 3.2);
-	      plotter.Draw(prefix + "mr"            + suffix, "M_{R}",                         10, 0, "GeV",  logY, false, 0, 300);
+	      plotter.Draw(prefix + "deltarl1met"   + suffix, "#DeltaR(lep1,E_{T}^{miss})",   2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltarl2met"   + suffix, "#DeltaR(lep2,E_{T}^{miss})",   2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltarllmet"   + suffix, "#DeltaR(ll,E_{T}^{miss})",     2, 1, "NULL", scale, false, 0,   4);
+	      plotter.Draw(prefix + "deltaphillmet" + suffix, "#Delta#phi(ll,E_{T}^{miss})",  2, 1, "rad",  scale, false, 0, 3.2);
+	      plotter.Draw(prefix + "mr"            + suffix, "M_{R}",                       10, 0, "GeV",  scale, false, 0, 300);
 	    }
 
 
@@ -255,7 +247,7 @@ void runPlotter(TString level)
 
   // Cross-section
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ"))
+  if (analysis.EqualTo("WZ") && level.Contains("BVeto"))
     {
       printf("\n Cross section mu\n");
       printf("------------------\n");
