@@ -254,7 +254,7 @@ void AnalysisCMS::ApplyWeights()
 	std_vector_lepton_idisoW->at(1) *
 	std_vector_lepton_idisoW->at(2);
       
-      _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+      _event_weight *= effTrigW * lepton_scale_factor;  // Scale factors
     }
   
   if (_sample.EqualTo("WWTo2L2Nu")) _event_weight *= nllW;
@@ -381,8 +381,8 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-    if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
-    if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet20loose++;
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet20tight++;
 
     if (pt < 30.) continue;
 
