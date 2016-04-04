@@ -66,6 +66,7 @@ void MVA(TString signal     = "ttDM0001pseudo0010",
   if (doMVARead)
     {
       MVARead(signal, signal);
+
       MVARead(signal, "01_Data");
       MVARead(signal, "14_HZ");
       MVARead(signal, "10_HWW");
@@ -101,12 +102,17 @@ void MVATrain(TString signal)
   _mctree.clear();
 
   AddProcess("signal", signal);
-  AddProcess("background", "04_TTTo2L2Nu");
-  //  AddProcess("background", "07_ZJets");
-  //  AddProcess("background", "05_ST");
+  AddProcess("background", "TTTo2L2Nu");
+
+  //  AddProcess("background", "14_HZ");
+  //  AddProcess("background", "10_HWW");
   //  AddProcess("background", "06_WW");
   //  AddProcess("background", "02_WZTo3LNu");
   //  AddProcess("background", "03_ZZ");
+  //  AddProcess("background", "11_Wg");
+  //  AddProcess("background", "07_ZJets");
+  //  AddProcess("background", "09_TTV");
+  //  AddProcess("background", "05_ST");
   //  AddProcess("background", "00_Fakes");
 
   Double_t weight = 1.0;
@@ -147,9 +153,7 @@ void MVATrain(TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  TCut mycut = "njet > 1";
-
-  factory->PrepareTrainingAndTestTree(mycut, ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
+  factory->PrepareTrainingAndTestTree("", ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
 
 
   // Book MVA
@@ -270,8 +274,8 @@ void MVARead(TString signal, TString filename)
 
     mva = reader->EvaluateMVA("MLP");
 
-    h_mva->Fill(mva, eventW);
     b_mva->Fill();
+    h_mva->Fill(mva, eventW);
   }
 
 

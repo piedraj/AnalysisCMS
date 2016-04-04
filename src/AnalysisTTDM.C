@@ -166,15 +166,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
     pass &= (MET.Et() > 50.);
-    //    pass &= (njet > 0);  // Synchro with Stany
+    pass &= (njet > 1);
 
     FillLevelHistograms(TTDM_02_Preselection, pass);
 
     if (pass && _saveminitree) minitree->Fill();
-
-    pass &= (njet > 1);
-
-    FillLevelHistograms(TTDM_03_PreMVA, pass);
   }
 
 
