@@ -202,8 +202,8 @@ void GetScaleFactors()
 {
   printf("\n [GetScaleFactors]\n\n");
 
-  float box1[] = {1, -1, 0, 0};
-  float box2[] = {1,  5, 1, 3};
+  float box1[] = {1, -1, 0,  1};
+  float box2[] = {1, -1, 2, -1};
 
   float r1b1_data,  r1b2_data,  r2b1_data,  r2b2_data;
   float r1b1_top,   r1b2_top,   r2b1_top,   r2b2_top;

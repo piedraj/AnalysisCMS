@@ -136,7 +136,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 10.) continue;
 
     if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
-    //    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10. && AnalysisLeptons[2].type == Tight) continue;  // Synchro with Stany
 
     _nelectron = 0;
 
