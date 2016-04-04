@@ -102,17 +102,17 @@ void MVATrain(TString signal)
 
   AddProcess("signal", signal);
 
-  AddProcess("mc", "14_HZ");
-  AddProcess("mc", "10_HWW");
+  AddProcess("mc", "04_TTTo2L2Nu");
+  AddProcess("mc", "07_ZJets");
+  AddProcess("mc", "05_ST");
   AddProcess("mc", "06_WW");
   AddProcess("mc", "02_WZTo3LNu");
   AddProcess("mc", "03_ZZ");
-  AddProcess("mc", "11_Wg");
-  AddProcess("mc", "07_ZJets");
-  AddProcess("mc", "09_TTV");
-  AddProcess("mc", "04_TTTo2L2Nu");
-  AddProcess("mc", "05_ST");
   AddProcess("mc", "00_Fakes");
+  AddProcess("mc", "14_HZ");
+  AddProcess("mc", "10_HWW");
+  AddProcess("mc", "11_Wg");
+  AddProcess("mc", "09_TTV");
 
   Double_t weight = 1.0;
 
