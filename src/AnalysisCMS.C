@@ -970,7 +970,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30tight",  &_nbjet30tight,  "nbjet30tight/F");
   minitree->Branch("mc",            &_mc,            "mc/F");
   minitree->Branch("mpmet",         &_mpmet,         "mpmet/F");
-  minitree->Branch("m2l",           &_m2l,           "m2l/F");
+  minitree->Branch("mll",           &_m2l,           "mll/F");
 }
 
 
