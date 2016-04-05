@@ -49,7 +49,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 	h_dphilmet2     [i][j][k] = new TH1D("h_dphilmet2"     + suffix, "", 1000, 0., 10.0);
 	h_fullpmet      [i][j][k] = new TH1D("h_fullpmet"      + suffix, "", 1000, 0., 1000);
 	h_trkpmet       [i][j][k] = new TH1D("h_trkpmet"       + suffix, "", 1000, 0., 1000);
-	h_jetpt1        [i][j][k] = new TH1D("h_jetpt1"        + suffix, "", 1000, 0., 1000);
 	h_lepphi1       [i][j][k] = new TH1D("h_lepphi1"       + suffix, "", 1000, 0., 10.0);
 	h_lepphi2       [i][j][k] = new TH1D("h_lepphi2"       + suffix, "", 1000, 0., 10.0);
         h_deltarl1met   [i][j][k] = new TH1D("h_deltarl1met"   + suffix, "",  100, 0,     5);
@@ -212,7 +211,6 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
   h_dphilmet2    [ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);
   h_fullpmet     [ichannel][icut][ijet]->Fill(_fullpmet,                    _event_weight);
   h_trkpmet      [ichannel][icut][ijet]->Fill(_trkpmet,                     _event_weight);
-  h_jetpt1       [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
   h_lepphi1      [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(0), _event_weight);
   h_lepphi2      [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(1), _event_weight);
   h_mllstar      [ichannel][icut][ijet]->Fill(_mllstar,                     _event_weight);

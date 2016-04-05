@@ -31,6 +31,15 @@ void  GetBoxPopulation(TString sample,
 
 void  GetScaleFactors ();
 
+void  SolveSystem     (float   data1,
+		       float   bkg1,
+		       float   top1,
+		       float   ww1,
+		       float   data2,
+		       float   bkg2,
+		       float   top2,
+		       float   ww2);
+
 
 // Data members
 //------------------------------------------------------------------------------
@@ -44,7 +53,7 @@ float   _cut;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void analysis(TString signal = "ttDM0001pseudo0010",
-	      float   cut    = 0.56)
+	      float   cut    = 0.44)
 {
   _signal = signal;
   _cut    = cut;
@@ -191,6 +200,8 @@ void GetBoxPopulation(TString sample,
 //------------------------------------------------------------------------------
 void GetScaleFactors()
 {
+  printf("\n [GetScaleFactors]\n\n");
+
   float box1[] = {1, -1, 0,  1};
   float box2[] = {1, -1, 2, -1};
 
@@ -224,34 +235,53 @@ void GetScaleFactors()
   float r2b2_bkg = r2b2_hz + r2b2_wz + r2b2_zz + r2b2_wg + r2b2_zj + r2b2_ttv + r2b2_st + r2b2_fakes;
 
 
-  // Tested     with MVA region 1
-  // To be done with MVA region 2
-  //----------------------------------------------------------------------------
-  float r1b1_yield = r1b1_data - r1b1_bkg;
-  float r1b2_yield = r1b2_data - r1b2_bkg;
+  printf("\n MVA region 1 (cut-0.2 < mva < cut)\n\n");
+  SolveSystem(r1b1_data, r1b1_bkg, r1b1_top, r1b1_ww, r1b2_data, r1b2_bkg, r1b2_top, r1b2_ww);
 
-  printf("\n MVA region 1 (cut-0.2 < mva < cut)\n");
-  printf("------------------------------------\n");
-  printf("            box1    box2\n");
-  printf(" data-bkg = %.1f    %.1f\n", r1b1_yield, r1b2_yield);
-  printf(" top      = %.1f    %.1f\n", r1b1_top,  r1b2_top);
-  printf(" ww       = %.1f    %.1f\n", r1b1_ww,   r1b2_ww);
+  printf("\n MVA region 2 (cut-0.4 < mva < cut-0.2)\n\n");
+  SolveSystem(r2b1_data, r2b1_bkg, r2b1_top, r2b1_ww, r2b2_data, r2b2_bkg, r2b2_top, r2b2_ww);
+}
+
+
+//------------------------------------------------------------------------------
+// SolveSystem
+//
+// sf_top*top1 + sf_ww*ww1 + bkg1 = data1
+// sf_top*top2 + sf_ww*ww2 + bkg2 = data2
+//
+//------------------------------------------------------------------------------
+void SolveSystem(float data1,
+		 float bkg1,
+		 float top1,
+		 float ww1,
+		 float data2,
+		 float bkg2,
+		 float top2,
+		 float ww2)
+{
+  float yield1 = data1 - bkg1;
+  float yield2 = data2 - bkg2;
+
+  printf("            box1 \t box2\n");
+  printf(" data-bkg = %.1f \t %.1f\n", yield1, yield2);
+  printf(" top      = %.1f \t %.1f\n", top1,   top2);
+  printf(" ww       = %.1f \t %.1f\n", ww1,    ww2);
   
-  float det = r1b1_ww * r1b2_top - r1b2_ww * r1b1_top; 
+  float det = ww1 * top2 - ww2 * top1; 
 
-  float b11 =  r1b2_top / det;
-  float b12 = -r1b1_top / det;
-  float b21 = -r1b2_ww  / det;
-  float b22 =  r1b1_ww  / det;
+  float b11 =  top2 / det;
+  float b12 = -top1 / det;
+  float b21 = -ww2  / det;
+  float b22 =  ww1  / det;
   
-  float sf_ww  = b11 * r1b1_yield + b12 * r1b2_yield;
-  float sf_top = b21 * r1b1_yield + b22 * r1b2_yield;
+  float sf_ww  = b11 * yield1 + b12 * yield2;
+  float sf_top = b21 * yield1 + b22 * yield2;
 
-  float sf_ww_error   = sqrt(b11*b11*(r1b1_data+r1b1_bkg) + b12*b12*(r1b2_data+r1b2_bkg));
-  float sf_top_error  = sqrt(b21*b21*(r1b1_data+r1b1_bkg) + b22*b22*(r1b2_data+r1b2_bkg));
-  float sf_covariance =     (b11*b21*(r1b1_data+r1b1_bkg) + b12*b22*(r1b2_data+r1b2_bkg)) / (sf_ww_error * sf_top_error);
+  float sf_ww_error   = sqrt(b11*b11*(data1+bkg1) + b12*b12*(data2+bkg2));
+  float sf_top_error  = sqrt(b21*b21*(data1+bkg1) + b22*b22*(data2+bkg2));
+  float sf_covariance =     (b11*b21*(data1+bkg1) + b12*b22*(data2+bkg2)) / (sf_ww_error * sf_top_error);
 
-  printf("\n [GetScaleFactors] sf_top = %.2f +- %.2f and sf_ww = %.2f +- %.2f with cov = %.2f\n\n",
+  printf("\n [SolveSystem] sf_top = %.2f +- %.2f and sf_ww = %.2f +- %.2f with cov = %.2f\n\n",
 	 sf_top,
 	 sf_top_error,
 	 sf_ww,
