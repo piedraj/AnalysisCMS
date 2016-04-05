@@ -26,6 +26,7 @@ void runPlotter(TString level)
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("WW"))    scale = linY;
   if (analysis.EqualTo("WZ"))    scale = linY;
+  if (analysis.EqualTo("TTDM"))  scale = linY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -106,12 +107,12 @@ void runPlotter(TString level)
       plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
     }
 
-  if (analysis.EqualTo("TTDM"))
-    {
-      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{P}10", color_Signal);
-    }
+  //  if (analysis.EqualTo("TTDM"))
+  //    {
+  //      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{P}10", color_Signal);
+  //    }
 
-  
+
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -149,7 +150,7 @@ void runPlotter(TString level)
   plotter.SetDrawYield(true);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
-  float m2l_xmax   = (level.Contains("WZ")) ? 120 : 500;  // [GeV]
+  float m2l_xmax   = (level.Contains("WZ")) ? 120 : 400;  // [GeV]
   int   m2l_ngroup = (level.Contains("WZ")) ?   2 :  10;
   
   for (int j=0; j<=njetbin; j++)
@@ -192,8 +193,8 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "mth"          + suffix, "m_{T}^{H}",                       10, 0, "GeV",  scale, true, 0,  300);
 	  plotter.Draw(prefix + "mc"           + suffix, "m_{c}",                           10, 0, "GeV",  scale, true, 0,  500);
 	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                           10, 0, "GeV",  scale, true, 0,  500);
-	  plotter.Draw(prefix + "pt1"          + suffix, "leading lepton p_{T}",             2, 0, "GeV",  scale, true, 0,  200);
-	  plotter.Draw(prefix + "pt2"          + suffix, "trailing lepton p_{T}",            2, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "pt1"          + suffix, "leading lepton p_{T}",             5, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "pt2"          + suffix, "trailing lepton p_{T}",            5, 0, "GeV",  scale, true, 0,  200);
 	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",            2, 0, "GeV",  scale, true, 0,  200);
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                       2, 0, "GeV",  scale, true, 0,  200);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",     10, 0, "GeV",  scale, true, 0,  600);
