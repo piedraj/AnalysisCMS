@@ -84,25 +84,36 @@ bool AnalysisCMS::IsIsolatedLepton(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
+  // TH1 histograms
+  //----------------------------------------------------------------------------
   h_counterRaw   [ichannel][icut][ijet]->Fill(1);
   h_counterLum   [ichannel][icut][ijet]->Fill(1,              _event_weight);
   h_ht           [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
-  h_m2l          [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
-  h_nbjet15loose [ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
-  h_nbjet15medium[ichannel][icut][ijet]->Fill(_nbjet15medium, _event_weight);
-  h_nbjet15tight [ichannel][icut][ijet]->Fill(_nbjet15tight,  _event_weight);
-  h_nbjet20loose [ichannel][icut][ijet]->Fill(_nbjet20loose,  _event_weight);
-  h_nbjet20medium[ichannel][icut][ijet]->Fill(_nbjet20medium, _event_weight);
-  h_nbjet20tight [ichannel][icut][ijet]->Fill(_nbjet20tight,  _event_weight);
-  h_nbjet30tight [ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_nvtx         [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
-  h_metPfType1   [ichannel][icut][ijet]->Fill(metPfType1,     _event_weight);
-  h_metPfType1Phi[ichannel][icut][ijet]->Fill(metPfType1Phi,  _event_weight);
-  h_metTtrk      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);
-  h_metTtrkPhi   [ichannel][icut][ijet]->Fill(metTtrkPhi,     _event_weight);
-  h_mpmet        [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
-  h_njet         [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
+  h_sumjpt12     [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
+  h_sumpt12      [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
+  h_ptww         [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+  h_pt2l         [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
+
+
+  // TH1 histograms with minitree variables
+  //----------------------------------------------------------------------------
+  h_channel      [ichannel][icut][ijet]->Fill(_channel,       _event_weight);
+  h_dphijet1met  [ichannel][icut][ijet]->Fill(_dphijet1met,   _event_weight);
+  h_dphijet2met  [ichannel][icut][ijet]->Fill(_dphijet2met,   _event_weight);
+  h_dphijj       [ichannel][icut][ijet]->Fill(_dphijj,        _event_weight);
+  h_dphijjmet    [ichannel][icut][ijet]->Fill(_dphijjmet,     _event_weight);
+  h_dphill       [ichannel][icut][ijet]->Fill(dphill,         _event_weight);  // Needs l2Sel
+  h_dphillmet    [ichannel][icut][ijet]->Fill(_dphillmet,     _event_weight);
+  h_dphillstar   [ichannel][icut][ijet]->Fill(_dphillstar,    _event_weight);
+  h_dphilmet1    [ichannel][icut][ijet]->Fill(dphilmet1,      _event_weight);  // Needs l2Sel
+  h_dphilmet2    [ichannel][icut][ijet]->Fill(dphilmet2,      _event_weight);  // Needs l2Sel
+  h_dphilep1jet1 [ichannel][icut][ijet]->Fill(_dphilep1jet1,  _event_weight);
+  h_dphilep1jet2 [ichannel][icut][ijet]->Fill(_dphilep1jet2,  _event_weight);
+  h_dphilep2jet1 [ichannel][icut][ijet]->Fill(_dphilep2jet1,  _event_weight);
+  h_dphilep2jet2 [ichannel][icut][ijet]->Fill(_dphilep2jet2,  _event_weight);
   h_drll         [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
+  h_eventW       [ichannel][icut][ijet]->Fill(_event_weight,  _event_weight);
   h_jet1eta      [ichannel][icut][ijet]->Fill(jeteta1,        _event_weight);
   h_jet1mass     [ichannel][icut][ijet]->Fill(jetmass1,       _event_weight);
   h_jet1phi      [ichannel][icut][ijet]->Fill(jetphi1,        _event_weight);
@@ -111,19 +122,30 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_jet2mass     [ichannel][icut][ijet]->Fill(jetmass2,       _event_weight);
   h_jet2phi      [ichannel][icut][ijet]->Fill(jetphi2,        _event_weight);
   h_jet2pt       [ichannel][icut][ijet]->Fill(jetpt2,         _event_weight);
-  h_dphill       [ichannel][icut][ijet]->Fill(dphill,         _event_weight);  // Needs l2Sel
-  h_dphilmet1    [ichannel][icut][ijet]->Fill(dphilmet1,      _event_weight);  // Needs l2Sel
-  h_dphilmet2    [ichannel][icut][ijet]->Fill(dphilmet2,      _event_weight);  // Needs l2Sel
+  h_lep1eta      [ichannel][icut][ijet]->Fill(_lep1eta,       _event_weight);
+  h_lep1phi      [ichannel][icut][ijet]->Fill(_lep1phi,       _event_weight);
+  h_lep1pt       [ichannel][icut][ijet]->Fill(_lep1pt,        _event_weight);
+  h_lep2eta      [ichannel][icut][ijet]->Fill(_lep2eta,       _event_weight);
+  h_lep2phi      [ichannel][icut][ijet]->Fill(_lep2phi,       _event_weight);
+  h_lep2pt       [ichannel][icut][ijet]->Fill(_lep2pt,        _event_weight);
+  h_mc           [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
+  h_metPfType1   [ichannel][icut][ijet]->Fill(metPfType1,     _event_weight);
+  h_metPfType1Phi[ichannel][icut][ijet]->Fill(metPfType1Phi,  _event_weight);
+  h_metTtrk      [ichannel][icut][ijet]->Fill(metTtrk,        _event_weight);
+  h_metTtrkPhi   [ichannel][icut][ijet]->Fill(metTtrkPhi,     _event_weight);
+  h_mpmet        [ichannel][icut][ijet]->Fill(_mpmet,         _event_weight);
   h_mth          [ichannel][icut][ijet]->Fill(mth,            _event_weight);  // Needs l2Sel
   h_mtw1         [ichannel][icut][ijet]->Fill(mtw1,           _event_weight);  // Needs l2Sel
   h_mtw2         [ichannel][icut][ijet]->Fill(mtw2,           _event_weight);  // Needs l2Sel
-  h_pt1          [ichannel][icut][ijet]->Fill(pt1,            _event_weight);  // Needs l2Sel
-  h_pt2          [ichannel][icut][ijet]->Fill(pt2,            _event_weight);  // Needs l2Sel
-  h_sumpt12      [ichannel][icut][ijet]->Fill(pt1+pt2,        _event_weight);  // Needs l2Sel
-  h_sumjpt12     [ichannel][icut][ijet]->Fill(_sumjpt12,      _event_weight);
-  h_pt2l         [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
-  h_mc           [ichannel][icut][ijet]->Fill(_mc,            _event_weight);
-  h_ptww         [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
+  h_m2l          [ichannel][icut][ijet]->Fill(_m2l,           _event_weight);
+  h_nbjet15loose [ichannel][icut][ijet]->Fill(_nbjet15loose,  _event_weight);
+  h_nbjet15medium[ichannel][icut][ijet]->Fill(_nbjet15medium, _event_weight);
+  h_nbjet15tight [ichannel][icut][ijet]->Fill(_nbjet15tight,  _event_weight);
+  h_nbjet20loose [ichannel][icut][ijet]->Fill(_nbjet20loose,  _event_weight);
+  h_nbjet20medium[ichannel][icut][ijet]->Fill(_nbjet20medium, _event_weight);
+  h_nbjet20tight [ichannel][icut][ijet]->Fill(_nbjet20tight,  _event_weight);
+  h_nbjet30tight [ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
+  h_njet         [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
 
 
   // Non-prompt systematic uncertainties
@@ -859,31 +881,51 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 				   int     ijet,
 				   TString suffix)
 {
-  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
+  // TH1 histograms
+  //----------------------------------------------------------------------------
   h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3,    0,    3);
+  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
+  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
+  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
+  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
+  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
+  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
+  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
+  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
+
+
+  // TH1 histograms with minitree variables
+  //----------------------------------------------------------------------------
+  h_channel      [ichannel][icut][ijet] = new TH1D("channel"         + suffix, "",   10,    0,   10);
+  h_dphijet1met  [ichannel][icut][ijet] = new TH1D("dphijet1met"     + suffix, "",  100,    0,    5);
+  h_dphijet2met  [ichannel][icut][ijet] = new TH1D("dphijet2met"     + suffix, "",  100,    0,    5);
+  h_dphijj       [ichannel][icut][ijet] = new TH1D("dphijj"          + suffix, "",  100,    0,    5);
+  h_dphijjmet    [ichannel][icut][ijet] = new TH1D("dphijjmet"       + suffix, "",  100,    0,    5);
+  h_dphilep1jet1 [ichannel][icut][ijet] = new TH1D("dphilep1jet"     + suffix, "",  100,    0,    5);
+  h_dphilep1jet2 [ichannel][icut][ijet] = new TH1D("dphilep1jet"     + suffix, "",  100,    0,    5);
+  h_dphilep2jet1 [ichannel][icut][ijet] = new TH1D("dphilep2jet"     + suffix, "",  100,    0,    5);
+  h_dphilep2jet2 [ichannel][icut][ijet] = new TH1D("dphilep2jet"     + suffix, "",  100,    0,    5);
   h_dphill       [ichannel][icut][ijet] = new TH1D("h_dphill"        + suffix, "",  100,    0,    5);
+  h_dphillmet    [ichannel][icut][ijet] = new TH1D("dphillmet"       + suffix, "",  100,    0,    5);
+  h_dphillstar   [ichannel][icut][ijet] = new TH1D("dphillstar"      + suffix, "",  100,    0,    5);
   h_dphilmet1    [ichannel][icut][ijet] = new TH1D("h_dphilmet1"     + suffix, "",  100,    0,    5);
   h_dphilmet2    [ichannel][icut][ijet] = new TH1D("h_dphilmet2"     + suffix, "",  100,    0,    5);
   h_drll         [ichannel][icut][ijet] = new TH1D("h_drll"          + suffix, "",  100,    0,    5);
+  h_eventW       [ichannel][icut][ijet] = new TH1D("eventW"          + suffix, "",  200, -100,  100);
   h_jet1eta      [ichannel][icut][ijet] = new TH1D("h_jet1eta"       + suffix, "",  100,   -5,    5);
   h_jet1mass     [ichannel][icut][ijet] = new TH1D("h_jet1mass"      + suffix, "",  200,    0,  200);
   h_jet1phi      [ichannel][icut][ijet] = new TH1D("h_jet1phi"       + suffix, "",   64, -3.2,  3.2);
-  h_jet1pt       [ichannel][icut][ijet] = new TH1D("h_jet1pt"        + suffix, "", 2000,    0, 2000);
+  h_jet1pt       [ichannel][icut][ijet] = new TH1D("h_jet1pt"        + suffix, "", 3000,    0, 3000);
   h_jet2eta      [ichannel][icut][ijet] = new TH1D("h_jet2eta"       + suffix, "",  100,   -5,    5);
   h_jet2mass     [ichannel][icut][ijet] = new TH1D("h_jet2mass"      + suffix, "",  200,    0,  200);
   h_jet2phi      [ichannel][icut][ijet] = new TH1D("h_jet2phi"       + suffix, "",   64, -3.2,  3.2);
-  h_jet2pt       [ichannel][icut][ijet] = new TH1D("h_jet1"          + suffix, "", 2000,    0, 2000);
-  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
-  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
-  h_nbjet15loose [ichannel][icut][ijet] = new TH1D("h_nbjet15loose"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15medium[ichannel][icut][ijet] = new TH1D("h_nbjet15medium" + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15tight [ichannel][icut][ijet] = new TH1D("h_nbjet15tight"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet20loose [ichannel][icut][ijet] = new TH1D("h_nbjet20loose"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet20medium[ichannel][icut][ijet] = new TH1D("h_nbjet20medium" + suffix, "",    7, -0.5,  6.5);
-  h_nbjet20tight [ichannel][icut][ijet] = new TH1D("h_nbjet20tight"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet30tight [ichannel][icut][ijet] = new TH1D("h_nbjet30tight"  + suffix, "",    7, -0.5,  6.5);
-  h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
-  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
+  h_jet2pt       [ichannel][icut][ijet] = new TH1D("h_jet1"          + suffix, "", 3000,    0, 3000);
+  h_lep1eta      [ichannel][icut][ijet] = new TH1D("lep1eta"         + suffix, "",  100,   -5,    5);
+  h_lep1phi      [ichannel][icut][ijet] = new TH1D("lep1phi"         + suffix, "",   64, -3.2,  3.2);
+  h_lep1pt       [ichannel][icut][ijet] = new TH1D("lep1pt"          + suffix, "", 3000,    0, 3000);
+  h_lep2eta      [ichannel][icut][ijet] = new TH1D("lep2eta"         + suffix, "",  100,   -5,    5);
+  h_lep2phi      [ichannel][icut][ijet] = new TH1D("lep2phi"         + suffix, "",   64, -3.2,  3.2);
+  h_lep2pt       [ichannel][icut][ijet] = new TH1D("lep2pt"          + suffix, "", 3000,    0, 3000);
   h_mc           [ichannel][icut][ijet] = new TH1D("h_mc"            + suffix, "", 3000,    0, 3000);
   h_metPfType1   [ichannel][icut][ijet] = new TH1D("h_metPfType1"    + suffix, "", 3000,    0, 3000);
   h_metPfType1Phi[ichannel][icut][ijet] = new TH1D("h_metPfType1Phi" + suffix, "",   64, -3.2,  3.2);
@@ -894,12 +936,14 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mtw1         [ichannel][icut][ijet] = new TH1D("h_mtw1"          + suffix, "", 3000,    0, 3000);
   h_mtw2         [ichannel][icut][ijet] = new TH1D("h_mtw2"          + suffix, "", 3000,    0, 3000);
   h_m2l          [ichannel][icut][ijet] = new TH1D("h_m2l"           + suffix, "", 3000,    0, 3000);
-  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
-  h_pt1          [ichannel][icut][ijet] = new TH1D("h_pt1"           + suffix, "", 3000,    0, 3000);
-  h_pt2          [ichannel][icut][ijet] = new TH1D("h_pt2"           + suffix, "", 3000,    0, 3000);
-  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
-  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
-  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
+  h_nbjet15loose [ichannel][icut][ijet] = new TH1D("h_nbjet15loose"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet15medium[ichannel][icut][ijet] = new TH1D("h_nbjet15medium" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet15tight [ichannel][icut][ijet] = new TH1D("h_nbjet15tight"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet20loose [ichannel][icut][ijet] = new TH1D("h_nbjet20loose"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet20medium[ichannel][icut][ijet] = new TH1D("h_nbjet20medium" + suffix, "",    7, -0.5,  6.5);
+  h_nbjet20tight [ichannel][icut][ijet] = new TH1D("h_nbjet20tight"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30tight [ichannel][icut][ijet] = new TH1D("h_nbjet30tight"  + suffix, "",    7, -0.5,  6.5);
+  h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
 }
 
 
@@ -916,33 +960,6 @@ void AnalysisCMS::OpenMinitree()
 
   minitree = new TTree("latino", "minitree");
 
-
-  // latino variables
-  //----------------------------------------------------------------------------
-  minitree->Branch("dphill",        &dphill,        "dphill/F" );
-  minitree->Branch("dphilmet1",     &dphilmet1,     "dphilmet1/F");
-  minitree->Branch("dphilmet2",     &dphilmet2,     "dphilmet2/F");
-  minitree->Branch("drll",          &drll,          "drll/F");
-  minitree->Branch("jet1eta",       &jeteta1,       "jet1eta/F");
-  minitree->Branch("jet1mass",      &jetmass1,      "jet1mass/F");
-  minitree->Branch("jet1phi",       &jetphi1,       "jet1phi/F");
-  minitree->Branch("jet1pt",        &jetpt1,        "jet1pt/F");
-  minitree->Branch("jet2eta",       &jeteta2,       "jet2eta/F");
-  minitree->Branch("jet2mass",      &jetmass2,      "jet2mass/F");
-  minitree->Branch("jet2phi",       &jetphi2,       "jet2phi/F");
-  minitree->Branch("jet2pt",        &jetpt2,        "jet2pt/F");
-  minitree->Branch("njet",          &njet,          "njet/F");
-  minitree->Branch("metPfType1",    &metPfType1,    "metPfType1/F");
-  minitree->Branch("metPfType1Phi", &metPfType1Phi, "metPfType1Phi/F");
-  minitree->Branch("metTtrk",       &metTtrk,       "metTtrk/F");
-  minitree->Branch("metTtrkPhi",    &metTtrkPhi,    "metTtrkPhi/F");
-  minitree->Branch("mth",           &mth,           "mth/F");
-  minitree->Branch("mtw1",          &mtw1,          "mtw1/F");
-  minitree->Branch("mtw2",          &mtw2,          "mtw2/F");
-
-
-  // AnalysisCMS variables
-  //----------------------------------------------------------------------------
   minitree->Branch("channel",       &_channel,       "channel/F");
   minitree->Branch("dphijet1met",   &_dphijet1met,   "dphijet1met/F");
   minitree->Branch("dphijet2met",   &_dphijet2met,   "dphijet2met/F");
@@ -952,15 +969,37 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dphilep1jet2",  &_dphilep1jet2,  "dphilep1jet2/F");
   minitree->Branch("dphilep2jet1",  &_dphilep2jet1,  "dphilep2jet1/F");
   minitree->Branch("dphilep2jet2",  &_dphilep2jet2,  "dphilep2jet2/F");
+  minitree->Branch("dphill",        &dphill,         "dphill/F" );
   minitree->Branch("dphillmet",     &_dphillmet,     "dphillmet/F");
   minitree->Branch("dphillstar",    &_dphillstar,    "dphillstar/F");
+  minitree->Branch("dphilmet1",     &dphilmet1,      "dphilmet1/F");
+  minitree->Branch("dphilmet2",     &dphilmet2,      "dphilmet2/F");
+  minitree->Branch("drll",          &drll,           "drll/F");
   minitree->Branch("eventW",        &_event_weight,  "eventW/F");
+  minitree->Branch("jet1eta",       &jeteta1,        "jet1eta/F");
+  minitree->Branch("jet1mass",      &jetmass1,       "jet1mass/F");
+  minitree->Branch("jet1phi",       &jetphi1,        "jet1phi/F");
+  minitree->Branch("jet1pt",        &jetpt1,         "jet1pt/F");
+  minitree->Branch("jet2eta",       &jeteta2,        "jet2eta/F");
+  minitree->Branch("jet2mass",      &jetmass2,       "jet2mass/F");
+  minitree->Branch("jet2phi",       &jetphi2,        "jet2phi/F");
+  minitree->Branch("jet2pt",        &jetpt2,         "jet2pt/F");
   minitree->Branch("lep1eta",       &_lep1eta,       "lep1eta/F");
   minitree->Branch("lep1phi",       &_lep1phi,       "lep1phi/F");
   minitree->Branch("lep1pt",        &_lep1pt,        "lep1pt/F");
   minitree->Branch("lep2eta",       &_lep2eta,       "lep2eta/F");
   minitree->Branch("lep2phi",       &_lep2phi,       "lep2phi/F");
   minitree->Branch("lep2pt",        &_lep2pt,        "lep2pt/F");
+  minitree->Branch("mc",            &_mc,            "mc/F");
+  minitree->Branch("mll",           &_m2l,           "mll/F");
+  minitree->Branch("mpmet",         &_mpmet,         "mpmet/F");
+  minitree->Branch("metPfType1",    &metPfType1,     "metPfType1/F");
+  minitree->Branch("metPfType1Phi", &metPfType1Phi,  "metPfType1Phi/F");
+  minitree->Branch("metTtrk",       &metTtrk,        "metTtrk/F");
+  minitree->Branch("metTtrkPhi",    &metTtrkPhi,     "metTtrkPhi/F");
+  minitree->Branch("mth",           &mth,            "mth/F");
+  minitree->Branch("mtw1",          &mtw1,           "mtw1/F");
+  minitree->Branch("mtw2",          &mtw2,           "mtw2/F");
   minitree->Branch("nbjet15loose",  &_nbjet15loose,  "nbjet15loose/F");
   minitree->Branch("nbjet15medium", &_nbjet15medium, "nbjet15medium/F");
   minitree->Branch("nbjet15tight",  &_nbjet15tight,  "nbjet15tight/F");
@@ -968,9 +1007,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet20medium", &_nbjet20medium, "nbjet20medium/F");
   minitree->Branch("nbjet20tight",  &_nbjet20tight,  "nbjet20tight/F");
   minitree->Branch("nbjet30tight",  &_nbjet30tight,  "nbjet30tight/F");
-  minitree->Branch("mc",            &_mc,            "mc/F");
-  minitree->Branch("mpmet",         &_mpmet,         "mpmet/F");
-  minitree->Branch("mll",           &_m2l,           "mll/F");
+  minitree->Branch("njet",          &njet,          "njet/F");
 }
 
 

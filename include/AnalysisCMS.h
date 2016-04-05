@@ -200,27 +200,37 @@ class AnalysisCMS : public AnalysisBase
   TTree*                 minitree;
 
 
-  // Common TH1 histograms
+  // TH1 histograms
   //----------------------------------------------------------------------------
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nvtx         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt1          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ptww         [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nvtx         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptww         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
 
 
-  // TH1 histograms with (latino) minitree variables
+  // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
+  TH1D*                  h_channel      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijet1met  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijet2met  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijj       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijjmet    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep1jet1 [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep1jet2 [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep2jet1 [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep2jet2 [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphill       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphillmet    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphillstar   [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet1    [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet2    [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_eventW       [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1eta      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1mass     [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1phi      [nchannel][ncut][njetbin+1];
@@ -229,36 +239,22 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_jet2mass     [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2phi      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1eta      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1phi      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1pt       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2eta      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2phi      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2pt       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc           [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1   [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1Phi[nchannel][ncut][njetbin+1];
   TH1D*                  h_metTtrk      [nchannel][ncut][njetbin+1];
   TH1D*                  h_metTtrkPhi   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mpmet        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mth          [nchannel][ncut][njetbin+1];
   TH1D*                  h_mtw1         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mtw2         [nchannel][ncut][njetbin+1];
-
-
-  // TH1 histograms with (AnalysisCMS) minitree variables
-  //----------------------------------------------------------------------------
-  //  minitree->Branch("channel",       &_channel,       "channel/F");       // Histogram to be done
-  //  minitree->Branch("dphijet1met",   &_dphijet1met,   "dphijet1met/F");   // Histogram to be done
-  //  minitree->Branch("dphijet2met",   &_dphijet2met,   "dphijet2met/F");   // Histogram to be done
-  //  minitree->Branch("dphijj",        &_dphijj,        "dphijj/F");        // Histogram to be done
-  //  minitree->Branch("dphijjmet",     &_dphijjmet,     "dphijjmet/F");     // Histogram to be done
-  //  minitree->Branch("dphilep1jet1",  &_dphilep1jet1,  "dphilep1jet1/F");  // Histogram to be done
-  //  minitree->Branch("dphilep1jet2",  &_dphilep1jet2,  "dphilep1jet2/F");  // Histogram to be done
-  //  minitree->Branch("dphilep2jet1",  &_dphilep2jet1,  "dphilep2jet1/F");  // Histogram to be done
-  //  minitree->Branch("dphilep2jet2",  &_dphilep2jet2,  "dphilep2jet2/F");  // Histogram to be done
-  //  minitree->Branch("dphillmet",     &_dphillmet,     "dphillmet/F");     // Histogram to be done
-  //  minitree->Branch("dphillstar",    &_dphillstar,    "dphillstar/F");    // Histogram to be done
-  //  minitree->Branch("eventW",        &_event_weight,  "eventW/F");        // Histogram to be done
-  //  minitree->Branch("lep1eta",       &_lep1eta,       "lep1eta/F");       // Histogram to be done
-  //  minitree->Branch("lep1phi",       &_lep1phi,       "lep1phi/F");       // Histogram available in AnalysisMonoH
-  //  minitree->Branch("lep1pt",        &_lep1pt,        "lep1pt/F");        // Histogram to be done
-  //  minitree->Branch("lep2eta",       &_lep2eta,       "lep2eta/F");       // Histogram to be done
-  //  minitree->Branch("lep2phi",       &_lep2phi,       "lep2phi/F");       // Histogram available in AnalysisMonoH
-  //  minitree->Branch("lep2pt",        &_lep2pt,        "lep2pt/F");        // Histogram to be done
+  TH1D*                  h_m2l          [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15loose [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15medium[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15tight [nchannel][ncut][njetbin+1];
@@ -266,9 +262,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet20medium[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20tight [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mc           [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mpmet        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_m2l          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
 };
 
 #endif
