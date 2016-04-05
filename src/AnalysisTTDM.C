@@ -51,19 +51,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   root_output->cd();
 
 
-  // MET filters histograms and output file
-  //----------------------------------------------------------------------------
-  ofstream txt_metfilters;
-
-  txt_metfilters.open("txt/" + _analysis + "/" + _sample + "_metfilters.txt");
-
-  for (int j=0; j<nfilter; j++) {
-
-    met_Flag_nocut [j] = new TH1D(Form("met_Flag_nocut_%s",  sfilter[j].Data()), "", 3000, 0, 3000);
-    met_Flag_met300[j] = new TH1D(Form("met_Flag_met300_%s", sfilter[j].Data()), "", 3000, 0, 3000);
-  }
-
-
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
@@ -77,51 +64,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup();
-
-
-    // MET filters histograms
-    //--------------------------------------------------------------------------
-    float truncated_met = (MET.Et() > 2999.5) ? 2999.5 : MET.Et();
-
-    bool pass_all_met_filters;
-
-
-    // MET filters histograms :: No cut
-    //--------------------------------------------------------------------------
-    pass_all_met_filters = true;
-
-    met_Flag_nocut[noFilter]->Fill(truncated_met);
-
-    for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
-
-      if (std_vector_trigger_special->at(j) > 0) met_Flag_nocut[j]->Fill(truncated_met);
-      else pass_all_met_filters = false;
-    }
-    
-    if (pass_all_met_filters) met_Flag_nocut[allFilter]->Fill(truncated_met);
-
-
-    // MET filters histograms :: MET > 300 GeV
-    //--------------------------------------------------------------------------
-    if (truncated_met > 300.)
-      {
-	pass_all_met_filters = true;
-
-	met_Flag_met300[noFilter]->Fill(truncated_met);
-
-	for (int j=HBHENoiseFilter; j<=muonBadTrackFilter; j++) {
-
-	  if (std_vector_trigger_special->at(j) > 0) met_Flag_met300[j]->Fill(truncated_met);
-	  else
-	    {
-	      pass_all_met_filters = false;
-
-	      txt_metfilters << Form("%d:%d:%d:%s\n", run, lumi, event, sfilter[j].Data());
-	    }
-	}
-    
-	if (pass_all_met_filters) met_Flag_met300[allFilter]->Fill(truncated_met);
-      }
 
 
     // Analysis
@@ -165,17 +107,18 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
     pass &= (MET.Et() > 50.);
-    pass &= (njet > 1);
 
-    FillLevelHistograms(TTDM_02_Preselection, pass);
+    FillLevelHistograms(TTDM_02_MET50, pass);
 
     if (pass && _saveminitree) minitree->Fill();
+
+    pass &= (njet > 1);
+
+    FillLevelHistograms(TTDM_03_Preselection, pass);
   }
 
 
   EndJob();
-
-  txt_metfilters.close();
 }
 
 
