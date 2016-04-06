@@ -901,10 +901,10 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphijet2met  [ichannel][icut][ijet] = new TH1D("h_dphijet2met"   + suffix, "",  100,    0,    5);
   h_dphijj       [ichannel][icut][ijet] = new TH1D("h_dphijj"        + suffix, "",  100,    0,    5);
   h_dphijjmet    [ichannel][icut][ijet] = new TH1D("h_dphijjmet"     + suffix, "",  100,    0,    5);
-  h_dphilep1jet1 [ichannel][icut][ijet] = new TH1D("h_dphilep1jet"   + suffix, "",  100,    0,    5);
-  h_dphilep1jet2 [ichannel][icut][ijet] = new TH1D("h_dphilep1jet"   + suffix, "",  100,    0,    5);
-  h_dphilep2jet1 [ichannel][icut][ijet] = new TH1D("h_dphilep2jet"   + suffix, "",  100,    0,    5);
-  h_dphilep2jet2 [ichannel][icut][ijet] = new TH1D("h_dphilep2jet"   + suffix, "",  100,    0,    5);
+  h_dphilep1jet1 [ichannel][icut][ijet] = new TH1D("h_dphilep1jet1"  + suffix, "",  100,    0,    5);
+  h_dphilep1jet2 [ichannel][icut][ijet] = new TH1D("h_dphilep1jet2"  + suffix, "",  100,    0,    5);
+  h_dphilep2jet1 [ichannel][icut][ijet] = new TH1D("h_dphilep2jet1"  + suffix, "",  100,    0,    5);
+  h_dphilep2jet2 [ichannel][icut][ijet] = new TH1D("h_dphilep2jet2"  + suffix, "",  100,    0,    5);
   h_dphill       [ichannel][icut][ijet] = new TH1D("h_dphill"        + suffix, "",  100,    0,    5);
   h_dphillmet    [ichannel][icut][ijet] = new TH1D("h_dphillmet"     + suffix, "",  100,    0,    5);
   h_dphillstar   [ichannel][icut][ijet] = new TH1D("h_dphillstar"    + suffix, "",  100,    0,    5);
