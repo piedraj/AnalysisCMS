@@ -174,6 +174,7 @@ class HistogramReader
 
   std::vector<TFile*>   _mcfile;
   std::vector<TH1*>     _mchist;
+  std::vector<TH1*>     _kk;
   std::vector<Color_t>  _mccolor;
   std::vector<TString>  _mclabel;
 
