@@ -45,19 +45,14 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_dphilmet1     [i][j][k] = new TH1D("h_dphilmet1"     + suffix, "", 1000, 0., 10.0);
-	h_dphilmet2     [i][j][k] = new TH1D("h_dphilmet2"     + suffix, "", 1000, 0., 10.0);
 	h_fullpmet      [i][j][k] = new TH1D("h_fullpmet"      + suffix, "", 1000, 0., 1000);
 	h_trkpmet       [i][j][k] = new TH1D("h_trkpmet"       + suffix, "", 1000, 0., 1000);
-	h_lepphi1       [i][j][k] = new TH1D("h_lepphi1"       + suffix, "", 1000, 0., 10.0);
-	h_lepphi2       [i][j][k] = new TH1D("h_lepphi2"       + suffix, "", 1000, 0., 10.0);
         h_deltarl1met   [i][j][k] = new TH1D("h_deltarl1met"   + suffix, "",  100, 0,     5);
         h_deltarl2met   [i][j][k] = new TH1D("h_deltarl2met"   + suffix, "",  100, 0,     5);
         h_deltarllmet   [i][j][k] = new TH1D("h_deltarllmet"   + suffix, "",  100, 0,     5);
         h_deltaphillmet [i][j][k] = new TH1D("h_deltaphillmet" + suffix, "",  100, 0,     5);
 	h_mr            [i][j][k] = new TH1D("h_mr"            + suffix, "", 2000, 0,  2000);          
 	h_mllstar       [i][j][k] = new TH1D("h_mllstar"       + suffix, "", 3000, 0,  3000);
-	h_dphillstar    [i][j][k] = new TH1D("h_dphillstar"    + suffix, "", 1000, 0,    10);
 	h_htjets        [i][j][k] = new TH1D("h_htjets"        + suffix, "", 3000, 0,  3000);
 	h_htnojets      [i][j][k] = new TH1D("h_htnojets"      + suffix, "", 3000, 0,  3000);
 	h_metphi        [i][j][k] = new TH1D("h_metphi"        + suffix, "",  100, 0,     5);
@@ -207,14 +202,9 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
   h_deltarllmet  [ichannel][icut][ijet]->Fill(deltarllmet,                  _event_weight);
   h_deltaphillmet[ichannel][icut][ijet]->Fill(deltaphillmet,                _event_weight);
   h_mr           [ichannel][icut][ijet]->Fill(m_r,                          _event_weight);  
-  h_dphilmet1    [ichannel][icut][ijet]->Fill(dphilmet1,                    _event_weight);
-  h_dphilmet2    [ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);
   h_fullpmet     [ichannel][icut][ijet]->Fill(_fullpmet,                    _event_weight);
   h_trkpmet      [ichannel][icut][ijet]->Fill(_trkpmet,                     _event_weight);
-  h_lepphi1      [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(0), _event_weight);
-  h_lepphi2      [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(1), _event_weight);
   h_mllstar      [ichannel][icut][ijet]->Fill(_mllstar,                     _event_weight);
-  h_dphillstar   [ichannel][icut][ijet]->Fill(_dphillstar,                  _event_weight);
   h_htjets       [ichannel][icut][ijet]->Fill(_htjets,                      _event_weight);
   h_htnojets     [ichannel][icut][ijet]->Fill(_htnojets,                    _event_weight);
   h_metphi       [ichannel][icut][ijet]->Fill(MET.Phi(),                    _event_weight);
