@@ -422,10 +422,6 @@ void AnalysisCMS::GetJets()
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
-<<<<<<< HEAD
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet20loose++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet20tight++;
-=======
     if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15loose++;
     if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15medium++;
     if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15tight++;
@@ -433,7 +429,6 @@ void AnalysisCMS::GetJets()
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20loose++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20medium++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
->>>>>>> 23defc679a9d78211a311baa1b913ed2d8434944
 
     if (pt < 30.) continue;
 

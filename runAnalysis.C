@@ -1,8 +1,9 @@
+#include "src/AnalysisFR.C"
 //#include "src/AnalysisMonoH.C"
 //#include "src/AnalysisTop.C"
 //#include "src/AnalysisTTDM.C"
 //#include "src/AnalysisWW.C"
-#include "src/AnalysisWZ.C"
+//#include "src/AnalysisWZ.C"
 
 
 void runAnalysis(TString filename)
@@ -13,11 +14,12 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
+      AnalysisFR    fr(latino); fr.Loop("FR", filename, lumi_fb);
   //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi_fb);
   //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
   //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);
   //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi_fb);
-    AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
+  //  AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
 }
 
 

@@ -1,16 +1,16 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-
+#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
-#include "CutsWZ.h"
+//#include "CutsWZ.h"
 
 
-const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
-//const float lumi_fb = 2.318;
+//const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
+const float lumi_fb = 2.318;
 const float lumi_error_percent = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
@@ -60,9 +60,12 @@ const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 
-const int nchannel = 9;
+const int nchannel = 12;
 
 enum {
+  e,
+  m,
+  l, 
   ee,
   mm,
   em,
