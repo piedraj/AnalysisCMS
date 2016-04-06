@@ -88,7 +88,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   //----------------------------------------------------------------------------
   h_counterRaw   [ichannel][icut][ijet]->Fill(1);
   h_counterLum   [ichannel][icut][ijet]->Fill(1,              _event_weight);
-  h_ht           [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_nvtx         [ichannel][icut][ijet]->Fill(nvtx,           _event_weight);
   h_ptww         [ichannel][icut][ijet]->Fill(_ptww,          _event_weight);
   h_pt2l         [ichannel][icut][ijet]->Fill(_pt2l,          _event_weight);
@@ -113,6 +112,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphilep2jet1 [ichannel][icut][ijet]->Fill(_dphilep2jet1,  _event_weight);
   h_dphilep2jet2 [ichannel][icut][ijet]->Fill(_dphilep2jet2,  _event_weight);
   h_drll         [ichannel][icut][ijet]->Fill(drll,           _event_weight);  // Needs l2Sel
+  h_ht           [ichannel][icut][ijet]->Fill(_ht,            _event_weight);
   h_jet1eta      [ichannel][icut][ijet]->Fill(jeteta1,        _event_weight);
   h_jet1mass     [ichannel][icut][ijet]->Fill(jetmass1,       _event_weight);
   h_jet1phi      [ichannel][icut][ijet]->Fill(jetphi1,        _event_weight);
@@ -886,7 +886,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
   h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
   h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
-  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
   h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
   h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
   h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
@@ -926,6 +925,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_jet2pt       [ichannel][icut][ijet] = new TH1D("h_jet2pt"        + suffix, "", 3000,    0, 3000);
   h_jet1mass     [ichannel][icut][ijet] = new TH1D("h_jet1mass"      + suffix, "",  100,    0,  100);
   h_jet2mass     [ichannel][icut][ijet] = new TH1D("h_jet2mass"      + suffix, "",  100,    0,  100);
+  h_ht           [ichannel][icut][ijet] = new TH1D("h_ht"            + suffix, "", 3000,    0, 3000);
   h_mc           [ichannel][icut][ijet] = new TH1D("h_mc"            + suffix, "", 3000,    0, 3000);
   h_metPfType1   [ichannel][icut][ijet] = new TH1D("h_metPfType1"    + suffix, "", 3000,    0, 3000);
   h_metTtrk      [ichannel][icut][ijet] = new TH1D("h_metTtrk"       + suffix, "", 3000,    0, 3000);
@@ -974,6 +974,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dphilmet2",     &dphilmet2,      "dphilmet2/F");
   minitree->Branch("drll",          &drll,           "drll/F");
   minitree->Branch("eventW",        &_event_weight,  "eventW/F");
+  minitree->Branch("ht",            &_ht,            "ht/F");
   minitree->Branch("jet1eta",       &jeteta1,        "jet1eta/F");
   minitree->Branch("jet1mass",      &jetmass1,       "jet1mass/F");
   minitree->Branch("jet1phi",       &jetphi1,        "jet1phi/F");
