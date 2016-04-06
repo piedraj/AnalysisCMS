@@ -491,7 +491,6 @@ void HistogramReader::Draw(TString hname,
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
 }
 
-
 //------------------------------------------------------------------------------
 // CrossSection
 //------------------------------------------------------------------------------
@@ -502,7 +501,6 @@ void HistogramReader::CrossSection(TString level,
   // Get the signal and the backgrounds
   //----------------------------------------------------------------------------
   _mchist.clear();
-  _kk.clear();
 
   TH1D* signal;
   TH1D* signalLum;
@@ -516,23 +514,17 @@ void HistogramReader::CrossSection(TString level,
         signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
         signalLum = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
       }
-        else if (_mclabel[i].EqualTo("non-prompt")) {
-    	TH1D* kk = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
-    	_kk.push_back((TH1D*)kk->Clone());
-     }
-    else 
+    else
       {
-       	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 	_mchist.push_back((TH1D*)dummy->Clone());
       }
   }
 
-  float counterFake      = 0.;
   float counterBkg       = 0.;
-  float	counterSignal    = Yield(signal);
-  float	counterSignalLum = Yield(signalLum);
+  floatcounterSignal    = Yield(signal);
+  floatcounterSignalLum = Yield(signalLum);
 
-   for (UInt_t i=0; i<_kk.size(); i++) counterFake += Yield(_kk[i]);
   for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
 
 
@@ -547,14 +539,14 @@ void HistogramReader::CrossSection(TString level,
       _datahist = (TH1D*)dummy->Clone();      
     }
 
-  float	counterData = Yield(_datahist);
+  floatcounterData = Yield(_datahist);
 
 
   // Cross-section calculation
   //----------------------------------------------------------------------------  
   float efficiency   = counterSignal / 1980800.;
   float crossSection = (counterData - counterBkg) / (1e3 * lumi_fb * efficiency * WZ23lnu);
-  float mu           = (counterData - counterBkg - counterFake) / (counterSignalLum);
+  float mu           = (counterData - counterBkg) / (counterSignalLum);
 
 
   // Statistical error
@@ -567,14 +559,6 @@ void HistogramReader::CrossSection(TString level,
 	 mu,
 	 muErrorStat,
 	 mu * lumi_error_percent / 1e2);
-
-
-  printf("counterData : %.2f    counterBkg : %.2f    counterFake : %.2f    counterSignalLum : %2.f \n",
-	 counterData,
-	 counterBkg,
-	 counterFake,
-	 counterSignalLum);
-
 }
 
 //-----------------------------------------------------------------------------
