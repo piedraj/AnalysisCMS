@@ -33,20 +33,24 @@ Copy files from srm to gridui
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
 
 
-Data files for non-prompt background estimation.
+*l1loose* data files for non-prompt background estimation.
 
     voms-proxy-init --voms=cms
 
     mkdir -p /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr/
-    lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr | awk -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr/"$11}' > lcg-cp.sh
+    lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr | awk -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015C_16Dec2015/l1loose__EpTCorr/"$11}' > lcg-cp-2015C.sh
+
+    source lcg-cp-2015C.sh
+
+    voms-proxy-init --voms=cms
 
     mkdir -p /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr/
-    lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr | awk -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr/"$11}' > lcg-cp.sh
+    lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr | awk -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_Run2015D_16Dec2015/l1loose__EpTCorr/"$11}' > lcg-cp-2015D.sh
 
-    source lcg-cp.sh
+    source lcg-cp-2015D.sh
 
 
-MC files for non-prompt background estimation.
+*l1loose* MC files for non-prompt background estimation.
 
     voms-proxy-init --voms=cms
 
@@ -62,7 +66,7 @@ MC files for non-prompt background estimation.
     voms-proxy-init --voms=cms; source lcg-cp-03
 
 
-Standard Model files for systematic uncertainties.
+*l2tight* Standard Model files for systematic uncertainties.
 
     voms-proxy-init --voms=cms
 
@@ -93,7 +97,7 @@ Standard Model files for systematic uncertainties.
     source lcg-cp.sh
 
 
-Signal (ttDM) files for systematic uncertainties.
+*l2tight* signal (ttDM) files for systematic uncertainties.
 
     voms-proxy-init --voms=cms
 
