@@ -318,6 +318,20 @@ void HistogramReader::Draw(TString hname,
 
   if (theMaxMC > theMax) theMax = theMaxMC;
 
+  Float_t theMaxSignal = 0.0;
+
+  if (_signalfile.size() > 0)
+    {
+      for (UInt_t i=0; i<_signalfile.size(); i++)
+	{
+	  Float_t signalhist_i_max = GetMaximum(_signalhist[i], xmin, xmax, false);
+
+	  if (signalhist_i_max > theMaxSignal) theMaxSignal = signalhist_i_max;
+	}
+    }
+
+  if (theMaxSignal > theMax) theMax = theMaxSignal;
+
   if (pad1->GetLogy())
     {
       theMin = 1e-4;
