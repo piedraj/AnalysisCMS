@@ -33,7 +33,7 @@ Copy files from srm to gridui
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
 
 
-*l1loose* data files for non-prompt background estimation.
+**l1loose** data files for non-prompt background estimation.
 
     voms-proxy-init --voms=cms
 
@@ -50,7 +50,7 @@ Copy files from srm to gridui
     source lcg-cp-2015D.sh
 
 
-*l1loose* MC files for non-prompt background estimation.
+**l1loose** MC files for non-prompt background estimation.
 
     voms-proxy-init --voms=cms
 
@@ -66,7 +66,7 @@ Copy files from srm to gridui
     voms-proxy-init --voms=cms; source lcg-cp-03
 
 
-*l2tight* Standard Model files for systematic uncertainties.
+**l2tight** Standard Model files for systematic uncertainties.
 
     voms-proxy-init --voms=cms
 
@@ -97,7 +97,7 @@ Copy files from srm to gridui
     source lcg-cp.sh
 
 
-*l2tight* signal (ttDM) files for systematic uncertainties.
+**l2tight** signal (ttDM) files for systematic uncertainties.
 
     voms-proxy-init --voms=cms
 
