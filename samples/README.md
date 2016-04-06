@@ -1,7 +1,7 @@
 Non-prompt background
 ====
 
-We need the 2loose lepton skim for data and the 1loose lepton skim for the following MC samples.
+We need the 1loose and 2loose lepton skims for data, and the 1loose lepton skim for the following MC samples.
 
     DYJetsToLL_M-10to50
     DYJetsToLL_M-10to50ext3

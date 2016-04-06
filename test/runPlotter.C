@@ -186,7 +186,6 @@ void runPlotter(TString level)
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{#font[12]{ll}}", m2l_ngroup, 0, "GeV", scale, true, m2l_xmin, m2l_xmax);
 
-	  plotter.Draw(prefix + "channel"       + suffix, "channel",                          -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "dphijet1met"   + suffix, "#Delta#phi(jet1,E_{T}^{miss})",     5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijet2met"   + suffix, "#Delta#phi(jet2,E_{T}^{miss})",     5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijj"        + suffix, "#Delta#phi(jet1,jet2)",             5, 2, "rad",  scale);
