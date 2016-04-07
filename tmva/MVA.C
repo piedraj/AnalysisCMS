@@ -138,6 +138,7 @@ void MVATrain(TString signal)
   factory->AddVariable("lep2pt",       "", "", 'F');
   factory->AddVariable("jet1pt",       "", "", 'F');
   factory->AddVariable("jet2pt",       "", "", 'F');
+  factory->AddVariable("mtw1",         "", "", 'F');
   factory->AddVariable("dphill",       "", "", 'F');
   factory->AddVariable("dphilep1jet1", "", "", 'F');
   factory->AddVariable("dphilep1jet2", "", "", 'F');
@@ -193,6 +194,7 @@ void MVARead(TString signal, TString filename)
   float lep2pt;
   float jet1pt;
   float jet2pt;
+  float mtw1;
   float dphill;
   float dphilep1jet1;
   float dphilep1jet2;
@@ -216,6 +218,7 @@ void MVARead(TString signal, TString filename)
   reader->AddVariable("lep2pt",       &lep2pt);
   reader->AddVariable("jet1pt",       &jet1pt);
   reader->AddVariable("jet2pt",       &jet2pt);
+  reader->AddVariable("mtw1",         &mtw1);
   reader->AddVariable("dphill",       &dphill);
   reader->AddVariable("dphilep1jet1", &dphilep1jet1);
   reader->AddVariable("dphilep1jet2", &dphilep1jet2);
@@ -253,6 +256,7 @@ void MVARead(TString signal, TString filename)
   theTree->SetBranchAddress("lep2pt",       &lep2pt);
   theTree->SetBranchAddress("jet1pt",       &jet1pt);
   theTree->SetBranchAddress("jet2pt",       &jet2pt);
+  theTree->SetBranchAddress("mtw1",         &mtw1);
   theTree->SetBranchAddress("dphill",       &dphill);
   theTree->SetBranchAddress("dphilep1jet1", &dphilep1jet1);
   theTree->SetBranchAddress("dphilep1jet2", &dphilep1jet2);

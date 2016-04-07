@@ -274,20 +274,23 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
-  _event_weight = 1.;
+  _event_weight = trigger * metFilter;
 
-  if (!_ismc && _sample.Contains("DD_")) _event_weight = _fake_weight;
+  if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
-  _event_weight = _luminosity * baseW * puW;  // Default weights
+  _event_weight *= _luminosity * baseW * puW;  // Default weights
 
-  float lepton_scale_factor =
-    std_vector_lepton_idisoW->at(0) *
-    std_vector_lepton_idisoW->at(1) *
-    std_vector_lepton_idisoW->at(2);
+  if (std_vector_lepton_idisoW)
+    {
+      float lepton_scale_factor =
+	std_vector_lepton_idisoW->at(0) *
+	std_vector_lepton_idisoW->at(1) *
+	std_vector_lepton_idisoW->at(2);
   
-  _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+      _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+    }
   
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
