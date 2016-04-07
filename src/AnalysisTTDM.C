@@ -70,7 +70,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
 
-    if (!trigger) continue;
+    if (!trigger)   continue;
+    if (!metFilter) continue;
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 

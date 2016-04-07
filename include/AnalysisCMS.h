@@ -205,7 +205,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
   TH1D*                  h_nvtx         [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptww         [nchannel][ncut][njetbin+1];
   TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
@@ -230,6 +229,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_dphilmet1    [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet2    [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1eta      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1mass     [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1phi      [nchannel][ncut][njetbin+1];

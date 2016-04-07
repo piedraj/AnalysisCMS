@@ -153,7 +153,7 @@ void MVATrain(TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree("", ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
+  factory->PrepareTrainingAndTestTree("njet > 1", ":nTrain_Signal=0:nTest_Signal=0:nTrain_Background=2000:nTest_Background=2000:SplitMode=Alternate:!V");
 
 
   // Book MVA
@@ -236,7 +236,7 @@ void MVARead(TString signal, TString filename)
 
   // Get MVA response
   //----------------------------------------------------------------------------
-  TH1F* h_mva = new TH1F("h_mva_" + signal, "", 100, -0.5, 1.5);
+  TH1D* h_mva = new TH1D("h_mva_" + signal, "", 100, -0.5, 1.5);
 
   TFile* input = TFile::Open(inputdir + filename + ".root", "update");
 
@@ -272,10 +272,11 @@ void MVARead(TString signal, TString filename)
 
     theTree->GetEntry(ievt);
 
-    mva = reader->EvaluateMVA("MLP");
+    mva = (njet > 1) ? reader->EvaluateMVA("MLP") : -9999;
 
     b_mva->Fill();
-    h_mva->Fill(mva, eventW);
+
+    if (njet > 1) h_mva->Fill(mva, eventW);
   }
 
 
