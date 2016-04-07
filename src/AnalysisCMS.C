@@ -282,14 +282,33 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= _luminosity * baseW * puW;  // Default weights
 
+
+  // Includes btag, trigger and idiso systematic uncertainties
+  //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
-      float lepton_scale_factor =
-	std_vector_lepton_idisoW->at(0) *
-	std_vector_lepton_idisoW->at(1) *
-	std_vector_lepton_idisoW->at(2);
-  
-      _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+      float sf_btag    = bPogSF;
+      float sf_trigger = effTrigW; // To be updated for WZ
+      float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
+
+      if (nuisances_btag_up)   sf_btag = bPogSFUp;
+      if (nuisances_btag_down) sf_btag = bPogSFDown;
+
+      if (nuisances_trigger_up)   sf_trigger = effTrigW_Up;
+      if (nuisances_trigger_down) sf_trigger = effTrigW_Down;
+
+      if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+
+      if (_analysis.EqualTo("WZ"))
+	{
+	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
+
+	  if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
+	  if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	}
+
+      _event_weight *= sf_btag * sf_trigger * sf_idiso;
     }
   
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
