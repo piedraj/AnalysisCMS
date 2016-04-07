@@ -42,7 +42,7 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal     = "ttDM0001pseudo0010",
+void MVA(TString signal     = "ttDM0001scalar0500",
 	 bool    doMVATrain = true,
 	 bool    doMVARead  = true)
 {
@@ -276,7 +276,7 @@ void MVARead(TString signal, TString filename)
 
     theTree->GetEntry(ievt);
 
-    mva = (njet > 1) ? reader->EvaluateMVA("MLP") : -9999;
+    mva = reader->EvaluateMVA("MLP");
 
     b_mva->Fill();
 
