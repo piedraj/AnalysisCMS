@@ -28,22 +28,19 @@ void runPlotter(TString signal,
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetStackOption(option);
+  plotter.SetDrawRatio  ( false);
+  plotter.SetDrawYield  ( false);
   plotter.SetPublicStyle( false);
   plotter.SetSavePdf    (  true);
   
   if (option.Contains("nostack"))
     {
-      plotter.SetDrawRatio(false);
-      plotter.SetDrawYield(false);
-
       plotter.AddSignal (signal + "__" + signal,    label, color_Signal);
       plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",  kBlack);
     }
   else
     {
       plotter.SetLuminosity(lumi_fb);
-      plotter.SetDrawRatio (   true);
-      plotter.SetDrawYield (   true);
 
       plotter.AddSignal (signal + "__" + signal,    label,        color_Signal);
       plotter.AddData   (signal + "__01_Data",      "data",       color_Data);
