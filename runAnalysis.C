@@ -14,7 +14,7 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-      AnalysisFR    fr(latino); fr.Loop("FR", filename, lumi_fb);
+    AnalysisFR    fr(latino); fr.Loop("FR", filename, lumi_fb);
   //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi_fb);
   //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
   //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);

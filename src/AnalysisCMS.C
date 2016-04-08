@@ -177,8 +177,25 @@ void AnalysisCMS::Summary(TString analysis,
 			  TString precision,
 			  TString title)
 {
-  int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
-  int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
+
+    int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
+    int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
+
+  firstChannel = (analysis.EqualTo("FR")) ? e : firstChannel;
+  lastChannel = (analysis.EqualTo("FR")) ? ee : lastChannel;
+  
+  /*
+  if (analysis.EqualTo("FR")) {
+      int firstChannel = e;
+      int lastChannel =ee;
+  } else if (analysis.EqualTo("WZ")) {
+	int firstChannel = eee;
+	int lastChannel = nchannel;
+      } else {
+	int firstChannel = ee;
+	int lastChannel = eee;
+      }
+  */  
 
   txt_summary << Form("\n%30s", title.Data());
 
@@ -274,13 +291,28 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
+  printf(" [AnalysisCMS::ApplyWeights]\n");
+
   _event_weight = 1.;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight = _fake_weight;
+
+  printf(" [AnalysisCMS::ApplyWeights] After fake_weight\n");
+
     
   if (!_ismc) return;
 
+  printf(" [AnalysisCMS::ApplyWeights] lumi %f\n", _luminosity);
+  printf(" [AnalysisCMS::ApplyWeights] baseW %f\n", baseW);
+  printf(" [AnalysisCMS::ApplyWeights] puW %f\n", puW);
+
   _event_weight = _luminosity * baseW * puW;  // Default weights
+
+  if (std_vector_lepton_idisoW)
+    {
+  printf(" idisoW0: %f\n", std_vector_lepton_idisoW->at(0));
+  printf(" bPogSF: %f\n", bPogSF);
+  printf(" effTrigW: %f\n", effTrigW);
 
   float lepton_scale_factor =
     std_vector_lepton_idisoW->at(0) *
@@ -288,6 +320,7 @@ void AnalysisCMS::ApplyWeights()
     std_vector_lepton_idisoW->at(2);
   
   _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+    }
   
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
@@ -380,10 +413,11 @@ void AnalysisCMS::GetLeptons()
   _lep1eta = Lepton1.v.Eta();
   _lep1phi = Lepton1.v.Phi();
   _lep1pt  = Lepton1.v.Pt();
-
+  printf(" debug before\n");
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+  printf(" debug after\n");
 }
 
 
@@ -492,7 +526,11 @@ void AnalysisCMS::EventDump()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetMET(float module, float phi)
 {
+  printf(" Inside GetMET %f %f\n", module, phi);
+
   MET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
+
+  printf(" Leaving GetMET %f %f\n", module, phi);
 }
 
 
@@ -773,39 +811,55 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup()
 {
+  printf(" Hello 1\n");
   GetGenPtllWeight();
-
+  printf(" Hello 2\n");
   GetFakeWeights();
-
+  printf(" Hello 3\n");
   ApplyWeights();
-  
+  printf(" Hello 3.5\n");
+ 
   GetMET(metPfType1, metPfType1Phi);
+  printf(" Hello 4\n");
   
   GetTrkMET(metTtrk, metTtrkPhi);
+  printf(" Hello 5\n");
 
   GetLeptons();
+  printf(" Hello 6\n");
 
   GetJets();
+  printf(" Hello 7\n");
 
   GetDeltaPhi();
+  printf(" Hello 8\n");
 
   GetJetPtSum();
+  printf(" Hello 9\n");
 
   GetHt();
+  printf(" Hello 10\n");
 
   GetStarVar();
+  printf(" Hello 11\n");
 
   GetMpMet();
+  printf(" Hello 12\n");
 
   GetSoftMuon();
+  printf(" Hello 13\n");
 
   GetMc();
-  
+    printf(" Hello 14\n");
+
   GetPtWW();
+  printf(" Hello 15\n");
 
   GetMetVar();
+  printf(" Hello 16\n");
 
   GetDeltaPhiVeto();
+  printf(" Hello 17\n");
 }
 
 
@@ -833,21 +887,23 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 //------------------------------------------------------------------------------
 void AnalysisCMS::EndJob()
 {
+  printf("1\n");
   if (_eventdump) txt_eventdump.close();
-
+  printf("2\n");
   if (_saveminitree)
     {
+      printf("3\n");
       root_minitree->cd();
-
+      printf("4\n");
       printf("\n\n Writing minitree. This can take a while...");
-
+      
       root_minitree->Write("", TObject::kOverwrite);
-  
+      printf("5\n");
       root_minitree->Close();
     }
-
+  printf("6\n");
   txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
-
+  printf("7\n");
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
   txt_summary << Form("   filename: %s\n",        _filename.Data());
@@ -855,19 +911,19 @@ void AnalysisCMS::EndJob()
   txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
   txt_summary << Form("   nentries: %lld\n",      _nentries);
   txt_summary << "\n";
-
-  Summary(_analysis, "11.0", "raw yields");
-
+  printf("8\n");
+  //  Summary(_analysis, "11.0", "raw yields");
+  printf("9\n");
   txt_summary.close();
-
+  printf("10\n");
   root_output->cd();
- 
+  printf("11\n");
   printf("\n\n Writing histograms. This can take a while...\n");
 
   root_output->Write("", TObject::kOverwrite);
-  
+  printf("12\n");
   root_output->Close();
-  
+  printf("13\n");
   printf("\n Done!\n\n");
 }
 

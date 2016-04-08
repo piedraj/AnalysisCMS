@@ -522,8 +522,8 @@ void HistogramReader::CrossSection(TString level,
   }
 
   float counterBkg       = 0.;
-  floatcounterSignal    = Yield(signal);
-  floatcounterSignalLum = Yield(signalLum);
+  float counterSignal    = Yield(signal);
+  float counterSignalLum = Yield(signalLum);
 
   for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
 
@@ -539,7 +539,7 @@ void HistogramReader::CrossSection(TString level,
       _datahist = (TH1D*)dummy->Clone();      
     }
 
-  floatcounterData = Yield(_datahist);
+  float counterData = Yield(_datahist);
 
 
   // Cross-section calculation

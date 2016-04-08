@@ -78,6 +78,9 @@ enum {
 };
 
 const TString schannel[nchannel] = {
+  "e",
+  "m",
+  "l",
   "ee",
   "mm",
   "em",
@@ -90,6 +93,9 @@ const TString schannel[nchannel] = {
 };
 
 const TString lchannel[nchannel] = {
+  "e",
+  "#mu",
+  "all",
   "ee",
   "#mu#mu",
   "e#mu",
