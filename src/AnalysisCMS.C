@@ -291,35 +291,42 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
-  printf(" [AnalysisCMS::ApplyWeights]\n");
+  _event_weight = trigger * metFilter;
 
-  _event_weight = 1.;
-
-  if (!_ismc && _sample.Contains("DD_")) _event_weight = _fake_weight;
-
-  printf(" [AnalysisCMS::ApplyWeights] After fake_weight\n");
-
+  if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
-  printf(" [AnalysisCMS::ApplyWeights] lumi %f\n", _luminosity);
-  printf(" [AnalysisCMS::ApplyWeights] baseW %f\n", baseW);
-  printf(" [AnalysisCMS::ApplyWeights] puW %f\n", puW);
+  _event_weight *= _luminosity * baseW * puW;  // Default weights
 
-  _event_weight = _luminosity * baseW * puW;  // Default weights
 
+  // Includes btag, trigger and idiso systematic uncertainties
+  //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
-  printf(" idisoW0: %f\n", std_vector_lepton_idisoW->at(0));
-  printf(" bPogSF: %f\n", bPogSF);
-  printf(" effTrigW: %f\n", effTrigW);
+      float sf_btag    = bPogSF;
+      float sf_trigger = effTrigW; // To be updated for WZ
+      float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 
-  float lepton_scale_factor =
-    std_vector_lepton_idisoW->at(0) *
-    std_vector_lepton_idisoW->at(1) *
-    std_vector_lepton_idisoW->at(2);
-  
-  _event_weight *= bPogSF * effTrigW * lepton_scale_factor;  // Scale factors
+      if (nuisances_btag_up)   sf_btag = bPogSFUp;
+      if (nuisances_btag_down) sf_btag = bPogSFDown;
+
+      if (nuisances_trigger_up)   sf_trigger = effTrigW_Up;
+      if (nuisances_trigger_down) sf_trigger = effTrigW_Down;
+
+      if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+
+      if (_analysis.EqualTo("WZ"))
+	{
+	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
+
+	  if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
+	  if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	}
+
+      _event_weight *= sf_btag * sf_trigger * sf_idiso;
+
     }
   
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;

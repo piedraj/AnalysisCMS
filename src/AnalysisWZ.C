@@ -75,8 +75,6 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!trigger) continue;
-
     if (_nlepton < 3) continue;
 
     if (AnalysisLeptons[0].v.Pt() < 10.) continue;

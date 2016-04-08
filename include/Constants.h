@@ -25,6 +25,16 @@ const float Z_MASS        =  91.188;     // [GeV]
 const float H_MASS        = 125.0;       // [GeV]
 
 
+// Systematic uncertainties
+//------------------------------------------------------------------------------
+const Bool_t nuisances_btag_up      = false;
+const Bool_t nuisances_btag_down    = false;
+const Bool_t nuisances_trigger_up   = false;
+const Bool_t nuisances_trigger_down = false;
+const Bool_t nuisances_idiso_up     = false;
+const Bool_t nuisances_idiso_down   = false;
+
+
 // Process colors
 //------------------------------------------------------------------------------
 const Color_t color_Signal    = kRed;

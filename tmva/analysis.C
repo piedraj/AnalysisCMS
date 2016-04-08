@@ -7,9 +7,10 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir = "../minitrees/TTDM/";
+//const TString inputdir = "../minitrees/TTDM/";
+const TString inputdir = "/gpfs/csic_projects/cms/jgarciaf/CMSSW_7_6_3/src/AnalysisCMS/minitrees_0jet/TTDM/";  // Temporary
 
-enum {njetmin, njetmax, nbjetmin, nbjetmax};
+enum {njmin, njmax, nbmin, nbmax};
 
 
 // Functions
@@ -29,9 +30,11 @@ void  GetBoxPopulation(TString sample,
 		       float&  mvaregion2_box1_yield,
 		       float&  mvaregion2_box2_yield);
 
-void  GetScaleFactors ();
+void  GetScaleFactors (float*  box_ww,
+		       float*  box_top);
 
-void  SolveSystem     (float   data1,
+void  SolveSystem     (TString region,
+		       float   data1,
 		       float   bkg1,
 		       float   top1,
 		       float   ww1,
@@ -52,15 +55,34 @@ float   _cut;
 // analysis
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void analysis(TString signal = "ttDM0001pseudo0010",
-	      float   cut    = 0.44)
+void analysis(TString signal = "ttDM0001scalar0500",
+	      float   cut    = 0.80)
 {
+  printf("\n [analysis] signal = %s and MVA cut = %.2f\n\n", signal.Data(), cut);
+
   _signal = signal;
   _cut    = cut;
 
   PrintYields();
 
-  GetScaleFactors();
+
+  // Get scale factors
+  //----------------------------------------------------------------------------
+  printf("\n [GetScaleFactors]\n\n");
+
+  float ww_box1[] = {0,  0, 0, 0};
+  float ww_box2[] = {1, -1, 0, 0};
+  float ww_box3[] = {0, -1, 0, 0};
+
+  float top_box1[] = {2, 3, 1, 2};
+  float top_box2[] = {1, 4, 1, 2};
+
+  GetScaleFactors(ww_box1, top_box1);
+  GetScaleFactors(ww_box1, top_box2);
+  GetScaleFactors(ww_box2, top_box1);
+  GetScaleFactors(ww_box2, top_box2);
+  GetScaleFactors(ww_box3, top_box1);
+  GetScaleFactors(ww_box3, top_box2);
 }
 
 
@@ -69,6 +91,8 @@ void analysis(TString signal = "ttDM0001pseudo0010",
 //------------------------------------------------------------------------------
 float GetYield(TString sample)
 {
+  float temporary_sf = (sample.Contains("TTTo2L2Nu")) ? (1./0.93) : 1.;
+
   TFile* file = new TFile(inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
@@ -87,7 +111,7 @@ float GetYield(TString sample)
 
     tree->GetEntry(ievt);
 
-    if (mva > _cut) yield += eventW;
+    if (mva > _cut) yield += (eventW * temporary_sf);
   }
 
   PrintYield(sample, yield);
@@ -149,6 +173,8 @@ void GetBoxPopulation(TString sample,
 		      float&  mvaregion2_box1_yield,
 		      float&  mvaregion2_box2_yield)
 {
+  float temporary_sf = (sample.Contains("TTTo2L2Nu")) ? (1./0.93) : 1.;
+
   TFile* file = new TFile(inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
@@ -177,20 +203,20 @@ void GetBoxPopulation(TString sample,
     bool reject_mvaregion1 = (mva < _cut-0.2 || mva > _cut);
     bool reject_mvaregion2 = (mva < _cut-0.4 || mva > _cut-0.2);
 
-    bool reject_box1 = ((box1[njetmin]  > 0 && njet  < box1[njetmin])  ||
-			(box1[njetmax]  > 0 && njet  > box1[njetmax])  ||
-			(box1[nbjetmin] > 0 && nbjet < box1[nbjetmin]) ||
-			(box1[nbjetmax] > 0 && nbjet > box1[nbjetmax]));
+    bool reject_box1 = ((box1[njmin] > -1 && njet  < box1[njmin]) ||
+			(box1[njmax] > -1 && njet  > box1[njmax]) ||
+			(box1[nbmin] > -1 && nbjet < box1[nbmin]) ||
+			(box1[nbmax] > -1 && nbjet > box1[nbmax]));
 
-    bool reject_box2 = ((box2[njetmin]  > 0 && njet  < box2[njetmin])  ||
-			(box2[njetmax]  > 0 && njet  > box2[njetmax])  ||
-			(box2[nbjetmin] > 0 && nbjet < box2[nbjetmin]) ||
-			(box2[nbjetmax] > 0 && nbjet > box2[nbjetmax]));
+    bool reject_box2 = ((box2[njmin] > -1 && njet  < box2[njmin]) ||
+			(box2[njmax] > -1 && njet  > box2[njmax]) ||
+			(box2[nbmin] > -1 && nbjet < box2[nbmin]) ||
+			(box2[nbmax] > -1 && nbjet > box2[nbmax]));
 
-    if (!reject_mvaregion1 && !reject_box1) mvaregion1_box1_yield += eventW;
-    if (!reject_mvaregion1 && !reject_box2) mvaregion1_box2_yield += eventW;
-    if (!reject_mvaregion2 && !reject_box1) mvaregion2_box1_yield += eventW;
-    if (!reject_mvaregion2 && !reject_box2) mvaregion2_box2_yield += eventW;
+    if (!reject_mvaregion1 && !reject_box1) mvaregion1_box1_yield += (eventW * temporary_sf);
+    if (!reject_mvaregion1 && !reject_box2) mvaregion1_box2_yield += (eventW * temporary_sf);
+    if (!reject_mvaregion2 && !reject_box1) mvaregion2_box1_yield += (eventW * temporary_sf);
+    if (!reject_mvaregion2 && !reject_box2) mvaregion2_box2_yield += (eventW * temporary_sf);
   }
 }
 
@@ -198,12 +224,13 @@ void GetBoxPopulation(TString sample,
 //------------------------------------------------------------------------------
 // GetScaleFactors
 //------------------------------------------------------------------------------
-void GetScaleFactors()
+void GetScaleFactors(float* box_ww,
+		     float* box_top)
 {
-  printf("\n [GetScaleFactors]\n\n");
-
-  float box1[] = {1, -1, 0,  1};
-  float box2[] = {1, -1, 2, -1};
+  printf("\n-------------------------------------------------------------\n\n");
+  printf("     box = { njmin, njmax, nbmin, nbmax, }\n");
+  printf(" ww  box = {"); for (UInt_t i=0; i<4; i++) printf("%6.0f,", box_ww [i]); printf(" }\n");
+  printf(" top box = {"); for (UInt_t i=0; i<4; i++) printf("%6.0f,", box_top[i]); printf(" }");
 
   float r1b1_data,  r1b2_data,  r2b1_data,  r2b2_data;
   float r1b1_top,   r1b2_top,   r2b1_top,   r2b2_top;
@@ -217,56 +244,53 @@ void GetScaleFactors()
   float r1b1_st,    r1b2_st,    r2b1_st,    r2b2_st;
   float r1b1_fakes, r1b2_fakes, r2b1_fakes, r2b2_fakes;
 
-  GetBoxPopulation("01_Data",      box1, box2, r1b1_data,  r1b2_data,  r2b1_data,  r2b2_data);
-  GetBoxPopulation("04_TTTo2L2Nu", box1, box2, r1b1_top,   r1b2_top,   r2b1_top,   r2b2_top);
-  GetBoxPopulation("06_WW",        box1, box2, r1b1_ww,    r1b2_ww,    r2b1_ww,    r2b2_ww);
-  GetBoxPopulation("14_HZ",        box1, box2, r1b1_hz,    r1b2_hz,    r2b1_hz,    r2b2_hz);
-  GetBoxPopulation("02_WZTo3LNu",  box1, box2, r1b1_wz,    r1b2_wz,    r2b1_wz,    r2b2_wz);
-  GetBoxPopulation("03_ZZ",        box1, box2, r1b1_zz,    r1b2_zz,    r2b1_zz,    r2b2_zz);
-  GetBoxPopulation("11_Wg",        box1, box2, r1b1_wg,    r1b2_wg,    r2b1_wg,    r2b2_wg);
-  GetBoxPopulation("07_ZJets",     box1, box2, r1b1_zj,    r1b2_zj,    r2b1_zj,    r2b2_zj);
-  GetBoxPopulation("09_TTV",       box1, box2, r1b1_ttv,   r1b2_ttv,   r2b1_ttv,   r2b2_ttv);
-  GetBoxPopulation("05_ST",        box1, box2, r1b1_st,    r1b2_st,    r2b1_st,    r2b2_st);
-  GetBoxPopulation("00_Fakes",     box1, box2, r1b1_fakes, r1b2_fakes, r2b1_fakes, r2b2_fakes);
+  GetBoxPopulation("01_Data",      box_ww, box_top, r1b1_data,  r1b2_data,  r2b1_data,  r2b2_data);
+  GetBoxPopulation("04_TTTo2L2Nu", box_ww, box_top, r1b1_top,   r1b2_top,   r2b1_top,   r2b2_top);
+  GetBoxPopulation("06_WW",        box_ww, box_top, r1b1_ww,    r1b2_ww,    r2b1_ww,    r2b2_ww);
+  GetBoxPopulation("14_HZ",        box_ww, box_top, r1b1_hz,    r1b2_hz,    r2b1_hz,    r2b2_hz);
+  GetBoxPopulation("02_WZTo3LNu",  box_ww, box_top, r1b1_wz,    r1b2_wz,    r2b1_wz,    r2b2_wz);
+  GetBoxPopulation("03_ZZ",        box_ww, box_top, r1b1_zz,    r1b2_zz,    r2b1_zz,    r2b2_zz);
+  GetBoxPopulation("11_Wg",        box_ww, box_top, r1b1_wg,    r1b2_wg,    r2b1_wg,    r2b2_wg);
+  GetBoxPopulation("07_ZJets",     box_ww, box_top, r1b1_zj,    r1b2_zj,    r2b1_zj,    r2b2_zj);
+  GetBoxPopulation("09_TTV",       box_ww, box_top, r1b1_ttv,   r1b2_ttv,   r2b1_ttv,   r2b2_ttv);
+  GetBoxPopulation("05_ST",        box_ww, box_top, r1b1_st,    r1b2_st,    r2b1_st,    r2b2_st);
+  GetBoxPopulation("00_Fakes",     box_ww, box_top, r1b1_fakes, r1b2_fakes, r2b1_fakes, r2b2_fakes);
 
   float r1b1_bkg = r1b1_hz + r1b1_wz + r1b1_zz + r1b1_wg + r1b1_zj + r1b1_ttv + r1b1_st + r1b1_fakes;
   float r1b2_bkg = r1b2_hz + r1b2_wz + r1b2_zz + r1b2_wg + r1b2_zj + r1b2_ttv + r1b2_st + r1b2_fakes;
   float r2b1_bkg = r2b1_hz + r2b1_wz + r2b1_zz + r2b1_wg + r2b1_zj + r2b1_ttv + r2b1_st + r2b1_fakes;
   float r2b2_bkg = r2b2_hz + r2b2_wz + r2b2_zz + r2b2_wg + r2b2_zj + r2b2_ttv + r2b2_st + r2b2_fakes;
 
+  printf("\n");
 
-  printf("\n MVA region 1 (cut-0.2 < mva < cut)\n\n");
-  SolveSystem(r1b1_data, r1b1_bkg, r1b1_top, r1b1_ww, r1b2_data, r1b2_bkg, r1b2_top, r1b2_ww);
+  SolveSystem("[ cut-0.2 < MVA < cut     ]", r1b1_data, r1b1_bkg, r1b1_top, r1b1_ww, r1b2_data, r1b2_bkg, r1b2_top, r1b2_ww);
+  SolveSystem("[ cut-0.4 < MVA < cut-0.2 ]", r2b1_data, r2b1_bkg, r2b1_top, r2b1_ww, r2b2_data, r2b2_bkg, r2b2_top, r2b2_ww);
 
-  printf("\n MVA region 2 (cut-0.4 < mva < cut-0.2)\n\n");
-  SolveSystem(r2b1_data, r2b1_bkg, r2b1_top, r2b1_ww, r2b2_data, r2b2_bkg, r2b2_top, r2b2_ww);
+  printf("\n");
 }
 
 
 //------------------------------------------------------------------------------
+//
 // SolveSystem
 //
 // sf_top*top1 + sf_ww*ww1 + bkg1 = data1
 // sf_top*top2 + sf_ww*ww2 + bkg2 = data2
 //
 //------------------------------------------------------------------------------
-void SolveSystem(float data1,
-		 float bkg1,
-		 float top1,
-		 float ww1,
-		 float data2,
-		 float bkg2,
-		 float top2,
-		 float ww2)
+void SolveSystem(TString region,
+		 float   data1,
+		 float   bkg1,
+		 float   top1,
+		 float   ww1,
+		 float   data2,
+		 float   bkg2,
+		 float   top2,
+		 float   ww2)
 {
   float yield1 = data1 - bkg1;
   float yield2 = data2 - bkg2;
 
-  printf("            box1 \t box2\n");
-  printf(" data-bkg = %.1f \t %.1f\n", yield1, yield2);
-  printf(" top      = %.1f \t %.1f\n", top1,   top2);
-  printf(" ww       = %.1f \t %.1f\n", ww1,    ww2);
-  
   float det = ww1 * top2 - ww2 * top1; 
 
   float b11 =  top2 / det;
@@ -281,7 +305,17 @@ void SolveSystem(float data1,
   float sf_top_error  = sqrt(b21*b21*(data1+bkg1) + b22*b22*(data2+bkg2));
   float sf_covariance =     (b11*b21*(data1+bkg1) + b12*b22*(data2+bkg2)) / (sf_ww_error * sf_top_error);
 
-  printf("\n [SolveSystem] sf_top = %.2f +- %.2f and sf_ww = %.2f +- %.2f with cov = %.2f\n\n",
+
+  // Print
+  //----------------------------------------------------------------------------
+  printf("\n");
+  printf("            ww box \t top box\n");
+  printf(" data-bkg = %6.1f \t %7.1f\n", yield1, yield2);
+  printf(" top      = %6.1f \t %7.1f\n", top1,   top2);
+  printf(" ww       = %6.1f \t %7.1f\n", ww1,    ww2);
+  printf("\n");
+  printf(" [SolveSystem] %s sf_top = %5.2f +- %5.2f and sf_ww = %5.2f +- %5.2f with cov = %5.2f\n",
+	 region.Data(),
 	 sf_top,
 	 sf_top_error,
 	 sf_ww,

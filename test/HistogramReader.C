@@ -334,12 +334,12 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-4;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 5);
+      theMin = 1e-5;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
   else
     {
-      theMax *= 1.5;
+      theMax *= 1.6;
     }
 
   hfirst->SetMinimum(theMin);
