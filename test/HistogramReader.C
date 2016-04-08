@@ -339,7 +339,7 @@ void HistogramReader::Draw(TString hname,
     }
   else
     {
-      theMax *= 1.6;
+      theMax *= 1.7;
     }
 
   hfirst->SetMinimum(theMin);
