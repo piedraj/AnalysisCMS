@@ -1,7 +1,6 @@
 #include "../test/HistogramReader.h"
 
 
-
 // Constants
 //------------------------------------------------------------------------------
 const int     ngroup    = 2;
@@ -84,7 +83,7 @@ void runPlotter(TString signal,
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if(argc < 3) {
+  if (argc < 3) {
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 

@@ -1,6 +1,8 @@
 #include "HistogramReader.h"
 
 
+// Constants
+//------------------------------------------------------------------------------
 const Bool_t datadriven = true;
 
 const TString inputdir  = "../rootfiles/";
@@ -9,7 +11,16 @@ const TString outputdir = "figures/";
 enum {linY, logY};
 
 
-void runPlotter(TString level)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// runPlotter
+//
+// option = "hist"         --> all distributions normalized to the luminosity
+// option = "nostack,hist" --> signal and top distributions normalized to one
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void runPlotter(TString level,
+		TString option = "hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -33,11 +44,19 @@ void runPlotter(TString level)
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
-  plotter.SetLuminosity (lumi_fb);
-  plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (   true);
-  plotter.SetPublicStyle(  false);
-  plotter.SetSavePdf    (   true);
+  plotter.SetStackOption(option);
+  plotter.SetPublicStyle( false);
+  plotter.SetSavePdf    (  true);
+
+  if (option.Contains("nostack"))
+    {
+      plotter.SetDrawRatio(false);
+    }
+  else
+    {
+      plotter.SetLuminosity(lumi_fb);
+      plotter.SetDrawRatio (   true);
+    }
 
 
   // Get the data
@@ -147,7 +166,7 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(true);
+  if (!option.Contains("nostack")) plotter.SetDrawYield(true);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
   float m2l_xmax   = (level.Contains("WZ")) ? 120 : 400;  // [GeV]
@@ -298,7 +317,7 @@ void runPlotter(TString level)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if(argc < 2) {
+  if (argc < 2) {
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 
@@ -309,7 +328,10 @@ int main(int argc, char ** argv)
     exit(0);
   }
 
-  runPlotter(argv[1]);
+  if (argc == 2)
+    runPlotter(argv[1]);
+  else
+    runPlotter(argv[1], argv[2]);
 
   return 0;
 }
