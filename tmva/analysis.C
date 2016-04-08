@@ -200,8 +200,11 @@ void GetBoxPopulation(TString sample,
 
     tree->GetEntry(ievt);
 
-    bool reject_mvaregion1 = (mva < _cut-0.2 || mva > _cut);
-    bool reject_mvaregion2 = (mva < _cut-0.4 || mva > _cut-0.2);
+    //    bool reject_mvaregion1 = (mva < _cut-0.2 || mva > _cut);
+    //    bool reject_mvaregion2 = (mva < _cut-0.4 || mva > _cut-0.2);
+
+    bool reject_mvaregion1 = (mva < _cut/2. || mva > _cut);
+    bool reject_mvaregion2 = (mva > _cut/2.);
 
     bool reject_box1 = ((box1[njmin] > -1 && njet  < box1[njmin]) ||
 			(box1[njmax] > -1 && njet  > box1[njmax]) ||
@@ -263,8 +266,8 @@ void GetScaleFactors(float* box_ww,
 
   printf("\n");
 
-  SolveSystem("[ cut-0.2 < MVA < cut     ]", r1b1_data, r1b1_bkg, r1b1_top, r1b1_ww, r1b2_data, r1b2_bkg, r1b2_top, r1b2_ww);
-  SolveSystem("[ cut-0.4 < MVA < cut-0.2 ]", r2b1_data, r2b1_bkg, r2b1_top, r2b1_ww, r2b2_data, r2b2_bkg, r2b2_top, r2b2_ww);
+  SolveSystem("[ cut/2 < MVA < cut   ]", r1b1_data, r1b1_bkg, r1b1_top, r1b1_ww, r1b2_data, r1b2_bkg, r1b2_top, r1b2_ww);
+  SolveSystem("[         MVA < cut/2 ]", r2b1_data, r2b1_bkg, r2b1_top, r2b1_ww, r2b2_data, r2b2_bkg, r2b2_top, r2b2_ww);
 
   printf("\n");
 }
@@ -309,10 +312,11 @@ void SolveSystem(TString region,
   // Print
   //----------------------------------------------------------------------------
   printf("\n");
-  printf("            ww box \t top box\n");
-  printf(" data-bkg = %6.1f \t %7.1f\n", yield1, yield2);
-  printf(" top      = %6.1f \t %7.1f\n", top1,   top2);
-  printf(" ww       = %6.1f \t %7.1f\n", ww1,    ww2);
+  printf("        ww box \t top box\n");
+  printf(" data = %6.1f \t %7.1f\n", data1, data2);
+  printf(" bkg  = %6.1f \t %7.1f\n", bkg1,  bkg2);
+  printf(" top  = %6.1f \t %7.1f\n", top1,  top2);
+  printf(" ww   = %6.1f \t %7.1f\n", ww1,   ww2);
   printf("\n");
   printf(" [SolveSystem] %s sf_top = %5.2f +- %5.2f and sf_ww = %5.2f +- %5.2f with cov = %5.2f\n",
 	 region.Data(),
