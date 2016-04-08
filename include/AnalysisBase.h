@@ -270,6 +270,7 @@ public :
    vector<float>   *std_vector_trackjet_probabilityB;
    vector<float>   *std_vector_trackjet_pt;
    vector<float>   *std_vector_trigger_special;
+   vector<float>   *std_vector_trigger;
    Float_t         tightmu;
    Float_t         triggW;
    Float_t         trigger;
@@ -692,6 +693,7 @@ public :
    TBranch        *b_std_vector_trackjet_probabilityB;   //!
    TBranch        *b_std_vector_trackjet_pt;   //!
    TBranch        *b_std_vector_trigger_special;   //!
+   TBranch        *b_std_vector_trigger;   //!
    TBranch        *b_tightmu;   //!
    TBranch        *b_triggW;   //!
    TBranch        *b_trigger;   //!
@@ -1002,6 +1004,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_trackjet_probabilityB = 0;
    std_vector_trackjet_pt = 0;
    std_vector_trigger_special = 0;
+   std_vector_trigger = 0;
    std_vector_electron_ooEmooP = 0;
    std_vector_jet_puid = 0;
    std_vector_muon_NTkLayers = 0;
@@ -1338,6 +1341,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_trackjet_probabilityB", &std_vector_trackjet_probabilityB, &b_std_vector_trackjet_probabilityB);
    fChain->SetBranchAddress("std_vector_trackjet_pt", &std_vector_trackjet_pt, &b_std_vector_trackjet_pt);
    fChain->SetBranchAddress("std_vector_trigger_special", &std_vector_trigger_special, &b_std_vector_trigger_special);
+   fChain->SetBranchAddress("std_vector_trigger", &std_vector_trigger, &b_std_vector_trigger);
    fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
    fChain->SetBranchAddress("triggW", &triggW, &b_triggW);
    fChain->SetBranchAddress("trigger", &trigger, &b_trigger);

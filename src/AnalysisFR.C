@@ -1,6 +1,9 @@
 #define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
 
+    float _event_weight_fr = 1.;
+
+
 //------------------------------------------------------------------------------
 // AnalysisFR
 //------------------------------------------------------------------------------
@@ -16,7 +19,7 @@ AnalysisFR::AnalysisFR(TTree* tree) : AnalysisCMS(tree)
 
 void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 {
-  printf(" Debug [0]\n");
+
   if (fChain == 0) return;
 
   Setup(analysis, filename, luminosity);
@@ -57,10 +60,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
   // Loop over events
   //--------------------------------------------------------------------------
-  printf(" Debug [1]\n");
 
-  //  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-  for (Long64_t jentry=0; jentry<100;jentry++) {
+    for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
 
@@ -75,23 +76,56 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     // Analysis
     //--------------------------------------------------------------------------
 
-    //    if (!std_vector_trigger_special[27]) continue;
-  printf(" Debug [2]\n");
+    // Trigger analysis
+
+    bool passTrigger = false;
+
+    printf("Lepton1 : %f    MUON : %f \n", Lepton1.flavour, MUON_FLAVOUR);
+
+    if (abs(Lepton1.flavour == MUON_FLAVOUR)) {
+          printf("2 \n");
+      if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22) == 1) { //Lumi HLT_Mu8_TrkIsoVVL: 1.386 pb
+	    printf("3 \n");
+	passTrigger= true;
+	_event_weight_fr = (_luminosity*1000 / 1.386);
+
+      }
+      else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23) == 1) { //Lumi HLT_Mu17_TrkIsoVVL: 201.951 pb
+
+	passTrigger = true;
+	_event_weight_fr = (_luminosity*1000 / 201.951);
+
+      }
+    
+    } else if (abs(Lepton1.flavour == ELECTRON_FLAVOUR)) {
+      
+      if (Lepton1.v.Pt() > 13. && Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31) == 1) { //Lumi HLT_Ele8_Iso: 11.204 pb;
+
+	passTrigger = true;
+	_event_weight_fr = (_luminosity*1000 / 11.204);
+
+      } else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33) == 1) { //Lumi HLT_Ele23_Iso: 3.201
+
+	passTrigger = true;
+	_event_weight_fr = (_luminosity*1000 / 3.201);
+      
+      }
+ 
+    }
+
+    if (!passTrigger) continue;
+
 
     if (_nlepton != 1) continue;
-  printf(" Debug [3]\n");
-
+ 
     if (njet < 1) continue;
-  printf(" Debug [4]\n");
-
+ 
     if (AnalysisJets[0].v.DeltaR(Lepton1.v) < 1) continue;
-  printf(" Debug [5]\n");
-
+ 
     _nelectron = 0;
     
     if (abs(Lepton1.flavour == ELECTRON_FLAVOUR)) _nelectron++;
-  printf(" Debug [6]\n");
-
+ 
     if (_nelectron == 0) _channel = m;
     else if (_nelectron == 1) _channel = e;
     
@@ -99,23 +133,20 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     
     GetMt(Lepton1, _mtw);
-  printf(" Debug [7]\n");
-    
+     
     bool pass = true;
     
     pass &= (MET.Et() < 20.);
     pass &= (_mtw < 20.);
-  printf(" Debug [8]\n");
-    
-      FillLevelHistograms(FR_00_QCD, pass);
-  printf(" Debug [9]\n");
-    
+     
+    FillLevelHistograms(FR_00_QCD, pass);
+     
     if (pass && _saveminitree) minitree->Fill();
-    printf(" Debug [10]\n");
-  }
-  printf(" Debug [11]\n");
+ 
+    }
+ 
   EndJob();
-  printf(" Debug [12]\n");
+ 
 }
 
 //------------------------------------------------------------------------------
@@ -126,11 +157,11 @@ void AnalysisFR::FillAnalysisHistograms(int ichannel,
 					int ijet)
 {
 
-  //  if (Lepton1.type == 0) {
-    h_loose       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(),            _event_weight);
-    //} else if (Lepton1.type == 1) {
-    h_tight       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(),            _event_weight);
-    //}
+  if (Lepton1.type == 0) {
+    h_loose       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(),            _event_weight_fr);
+  } else if (Lepton1.type == 1) {
+    h_tight       [ichannel][icut][ijet]->Fill(Lepton1.v.Pt(),            _event_weight_fr);
+  }
 
   //  if (ichannel != l) FillAnalysisHistograms(l, icut, ijet);
 }
@@ -143,11 +174,9 @@ void AnalysisFR::FillLevelHistograms(int  icut,
 {
   if (!pass) return;
   
-  //  FillHistograms(_channel, icut, _jetbin);
-  //  FillHistograms(_channel, icut, njetbin);
-  
-    FillAnalysisHistograms(_channel, icut, _jetbin);
-    FillAnalysisHistograms(_channel, icut, njetbin);
+  FillAnalysisHistograms(_channel, icut, _jetbin);
+  FillAnalysisHistograms(_channel, icut, njetbin);
+
 }
 
 
