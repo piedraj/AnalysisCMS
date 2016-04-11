@@ -1,14 +1,15 @@
 #include <iostream>
 
+#include <fstream>
 #include "TFile.h"
 #include "TString.h"
+#include "TSystem.h"
 #include "TTree.h"
 
 
 // Constants
 //------------------------------------------------------------------------------
-//const TString inputdir = "../minitrees/TTDM/";
-const TString inputdir = "/gpfs/csic_projects/cms/jgarciaf/CMSSW_7_6_3/src/AnalysisCMS/minitrees_0jet/TTDM/";  // Temporary
+const TString inputdir = "../minitrees/TTDM/";
 
 enum {njmin, njmax, nbmin, nbmax};
 
@@ -46,8 +47,9 @@ void  SolveSystem     (TString region,
 
 // Data members
 //------------------------------------------------------------------------------
-TString _signal;
-float   _cut;
+TString                  _signal;
+float                    _cut;
+ofstream                 _datacard;
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,34 +57,49 @@ float   _cut;
 // analysis
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void analysis(TString signal = "ttDM0001scalar0500",
-	      float   cut    = 0.80)
+void analysis(TString signal            = "ttDM0001scalar0500",
+	      float   cut               = 0.80,
+	      bool    doPrintYields     = true,
+	      bool    doGetScaleFactors = false)
 {
+  if (!doPrintYields && !doGetScaleFactors) return;
+
   printf("\n [analysis] signal = %s and MVA cut = %.2f\n\n", signal.Data(), cut);
 
   _signal = signal;
   _cut    = cut;
 
-  PrintYields();
+
+  // Print yields
+  //----------------------------------------------------------------------------
+  if (doPrintYields) {
+
+    gSystem->mkdir("datacards", kTRUE);
+  
+    PrintYields();
+  }
 
 
   // Get scale factors
   //----------------------------------------------------------------------------
-  printf("\n [GetScaleFactors]\n\n");
+  if (doGetScaleFactors) {
 
-  float ww_box1[] = {0,  0, 0, 0};
-  float ww_box2[] = {1, -1, 0, 0};
-  float ww_box3[] = {0, -1, 0, 0};
+    printf("\n [GetScaleFactors]\n\n");
 
-  float top_box1[] = {2, 3, 1, 2};
-  float top_box2[] = {1, 4, 1, 2};
-
-  GetScaleFactors(ww_box1, top_box1);
-  GetScaleFactors(ww_box1, top_box2);
-  GetScaleFactors(ww_box2, top_box1);
-  GetScaleFactors(ww_box2, top_box2);
-  GetScaleFactors(ww_box3, top_box1);
-  GetScaleFactors(ww_box3, top_box2);
+    float ww_box1[] = {0,  0, 0, 0};
+    float ww_box2[] = {1, -1, 0, 0};
+    float ww_box3[] = {0, -1, 0, 0};
+    
+    float top_box1[] = {2, 3, 1, 2};
+    float top_box2[] = {1, 4, 1, 2};
+    
+    GetScaleFactors(ww_box1, top_box1);
+    GetScaleFactors(ww_box1, top_box2);
+    GetScaleFactors(ww_box2, top_box1);
+    GetScaleFactors(ww_box2, top_box2);
+    GetScaleFactors(ww_box3, top_box1);
+    GetScaleFactors(ww_box3, top_box2);
+  }
 }
 
 
@@ -91,16 +108,16 @@ void analysis(TString signal = "ttDM0001scalar0500",
 //------------------------------------------------------------------------------
 float GetYield(TString sample)
 {
-  float temporary_sf = (sample.Contains("TTTo2L2Nu")) ? (1./0.93) : 1.;
-
   TFile* file = new TFile(inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
 
   float eventW;
+  float njet;
   float mva;
 
   tree->SetBranchAddress("eventW", &eventW);
+  tree->SetBranchAddress("njet",   &njet);
   tree->SetBranchAddress("mva_" + _signal, &mva);
 
   float yield = 0; 
@@ -111,7 +128,7 @@ float GetYield(TString sample)
 
     tree->GetEntry(ievt);
 
-    if (mva > _cut) yield += (eventW * temporary_sf);
+    if (njet > 1 && mva > _cut) yield += eventW;
   }
 
   PrintYield(sample, yield);
@@ -159,6 +176,28 @@ void PrintYields()
   PrintYield("expected", nexpected);
 
   printf("\n");
+
+
+  //  Create the datacard
+  //----------------------------------------------------------------------------
+  _datacard.open("datacards/" + _signal + ".txt");
+
+  _datacard << "imax 1   number of channels\n";
+  _datacard << "jmax 1   number of backgrounds\n";
+  _datacard << "kmax 0   number of nuisance parameters\n";
+  _datacard << "------------\n";
+  _datacard << "\n";
+  _datacard << "bin 1\n";
+  _datacard << Form("observation %f\n", ndata);
+  _datacard << "------------\n";
+  _datacard << "\n";
+  _datacard << "bin             1           1\n";
+  _datacard << "process         DM          bkg\n";
+  _datacard << "process         0           1\n";
+  _datacard << Form("rate            %f    %f\n", nsignal, nexpected);
+  _datacard << "------------\n";
+
+  _datacard.close();
 }
 
 
