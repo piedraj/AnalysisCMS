@@ -1,6 +1,8 @@
 #include "HistogramReader.h"
 
 
+// Constants
+//------------------------------------------------------------------------------
 const Bool_t datadriven = true;
 
 const TString inputdir  = "../rootfiles/";
@@ -9,7 +11,16 @@ const TString outputdir = "figures/";
 enum {linY, logY};
 
 
-void runPlotter(TString level)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// runPlotter
+//
+// option = "hist"         --> all distributions normalized to the luminosity
+// option = "nostack,hist" --> signal and top distributions normalized to one
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void runPlotter(TString level,
+		TString option = "hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -33,11 +44,19 @@ void runPlotter(TString level)
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
-  plotter.SetLuminosity (lumi_fb);
-  plotter.SetStackOption( "hist");
-  plotter.SetDrawRatio  (   true);
-  plotter.SetPublicStyle(  false);
-  plotter.SetSavePdf    (   true);
+  plotter.SetStackOption(option);
+  plotter.SetPublicStyle( false);
+  plotter.SetSavePdf    (  true);
+
+  if (option.Contains("nostack"))
+    {
+      plotter.SetDrawRatio(false);
+    }
+  else
+    {
+      plotter.SetLuminosity(lumi_fb);
+      plotter.SetDrawRatio (   true);
+    }
 
 
   // Get the data
@@ -107,10 +126,11 @@ void runPlotter(TString level)
       plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
     }
 
-  //  if (analysis.EqualTo("TTDM"))
-  //    {
-  //      plotter.AddSignal("ttDM0001pseudo0010", "m_{#chi}1 m_{P}10", color_Signal);
-  //    }
+  if (analysis.EqualTo("TTDM"))
+    {
+      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+    }
 
 
   // Draw events by cut
@@ -147,7 +167,7 @@ void runPlotter(TString level)
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  plotter.SetDrawYield(true);
+  if (!option.Contains("nostack")) plotter.SetDrawYield(true);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
   float m2l_xmax   = (level.Contains("WZ")) ? 120 : 400;  // [GeV]
@@ -175,7 +195,7 @@ void runPlotter(TString level)
 	  // Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "nvtx"     + suffix, "number of vertices",          -1, 0, "NULL", linY,  true, 0,   30);
-	  plotter.Draw(prefix + "ht"       + suffix, "H_{T}",                       10, 0, "GeV",  scale, true, 0, 1500);
+	  plotter.Draw(prefix + "ht"       + suffix, "H_{T}",                       20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "sumjpt12" + suffix, "p_{T}^{jet1} + p_{T}^{jet2}", 10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2}", 10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "ptww"     + suffix, "p_{T}^{WW}",                  10, 0, "GeV",  scale, true, 0,  600);
@@ -216,13 +236,13 @@ void runPlotter(TString level)
 	  plotter.Draw(prefix + "jet2pt"        + suffix, "trailing jet p_{T}",                5, 0, "GeV",  scale, true, 0, 400);
 	  plotter.Draw(prefix + "jet1mass"      + suffix, "leading jet mass",                 -1, 0, "GeV",  scale, true, 0,  50);
 	  plotter.Draw(prefix + "jet2mass"      + suffix, "trailing jet mass",                -1, 0, "GeV",  scale, true, 0,  50);
-	  plotter.Draw(prefix + "mc"            + suffix, "m_{c}",                            10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "metPfType1"    + suffix, "E_{T}^{miss}",                     10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "metTtrk"       + suffix, "track E_{T}^{miss}",               10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "mpmet"         + suffix, "min projected E_{T}^{miss}",       10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "mth"           + suffix, "m_{T}^{H}",                        10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "mtw1"          + suffix, "m_{T}^{W,1}",                      10, 0, "GeV",  scale, true, 0, 400);
-	  plotter.Draw(prefix + "mtw2"          + suffix, "m_{T}^{W,2}",                      10, 0, "GeV",  scale, true, 0, 400);
+	  plotter.Draw(prefix + "mc"            + suffix, "m_{c}",                            10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "metPfType1"    + suffix, "E_{T}^{miss}",                     10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "metTtrk"       + suffix, "track E_{T}^{miss}",               10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "mpmet"         + suffix, "min projected E_{T}^{miss}",       10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "mth"           + suffix, "m_{T}^{H}",                        10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "mtw1"          + suffix, "m_{T}^{W,1}",                      10, 0, "GeV",  scale, true, 0, 500);
+	  plotter.Draw(prefix + "mtw2"          + suffix, "m_{T}^{W,2}",                      10, 0, "GeV",  scale, true, 0, 500);
 	  plotter.Draw(prefix + "nbjet15loose"  + suffix, "number of (15 GeV) loose b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet15medium" + suffix, "number of (15 GeV) medium b-jets", -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet15tight"  + suffix, "number of (15 GeV) tight b-jets",  -1, 0, "NULL", scale);
@@ -298,7 +318,7 @@ void runPlotter(TString level)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if(argc < 2) {
+  if (argc < 2) {
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 
@@ -309,7 +329,10 @@ int main(int argc, char ** argv)
     exit(0);
   }
 
-  runPlotter(argv[1]);
+  if (argc == 2)
+    runPlotter(argv[1]);
+  else
+    runPlotter(argv[1], argv[2]);
 
   return 0;
 }
