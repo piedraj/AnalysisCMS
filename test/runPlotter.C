@@ -32,6 +32,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
+  float lumi = (analysis.EqualTo("TTDM")) ? lumi_fb_blind : lumi_fb;
+
   Bool_t scale = logY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
@@ -54,8 +56,8 @@ void runPlotter(TString level,
     }
   else
     {
-      plotter.SetLuminosity(lumi_fb);
-      plotter.SetDrawRatio (   true);
+      plotter.SetLuminosity(lumi);
+      plotter.SetDrawRatio (true);
     }
 
 
