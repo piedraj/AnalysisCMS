@@ -40,6 +40,8 @@ void runPlotter(TString level,
   if (analysis.EqualTo("WW"))    scale = linY;
   if (analysis.EqualTo("WZ"))    scale = linY;
   if (analysis.EqualTo("TTDM"))  scale = linY;
+  if (analysis.EqualTo("Top"))   scale = linY;
+
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -196,7 +198,7 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "nvtx"     + suffix, "number of vertices",          -1, 0, "NULL", linY,  true, 0,   30);
+	  plotter.Draw(prefix + "nvtx"     + suffix, "number of vertices",          -1, 0, "NULL", scale,  true, 0,   30);
 	  plotter.Draw(prefix + "ht"       + suffix, "H_{T}",                       20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "sumjpt12" + suffix, "p_{T}^{jet1} + p_{T}^{jet2}", 10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2}", 10, 0, "GeV",  scale, true, 0,  600);
@@ -218,10 +220,10 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphilep2jet2"  + suffix, "#Delta#phi(lep2,jet2)",             5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphill"        + suffix, "#Delta#phi(lep1,lep2)",             5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphillmet"     + suffix, "#Delta#phi(ll,E_{T}^{miss})",       5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "dphillstar"    + suffix, "#Delta#phi*(lep1,lep2)",            5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "dphilmet1"     + suffix, "#Delta#phi(lep1,E_{T}^{miss})",     5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "dphilmet2"     + suffix, "#Delta#phi(lep2,E_{T}^{miss})",     5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "drll"          + suffix, "#DeltaR(lep1,lep2)",                5, 1, "NULL", scale);
+	  plotter.Draw(prefix + "dphillstar"    + suffix, "#Delta#phi*(lep1,lep2)",            5, 2, "rad",scale);
+	  plotter.Draw(prefix + "dphilmet1"     + suffix, "#Delta#phi(lep1,E_{T}^{miss})",     5, 2, "rad",scale);
+	  plotter.Draw(prefix + "dphilmet2"     + suffix, "#Delta#phi(lep2,E_{T}^{miss})",     5, 2, "rad", scale);
+	  plotter.Draw(prefix + "drll"          + suffix, "#DeltaR(lep1,lep2)",                5, 1, "NULL",scale);
 	  plotter.Draw(prefix + "lep1eta"       + suffix, "leading lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep2eta"       + suffix, "trailing lepton #eta",             -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "jet1eta"       + suffix, "leading jet #eta",                 -1, 1, "NULL", scale);
@@ -253,6 +255,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet20tight"  + suffix, "number of (20 GeV) tight b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30tight"  + suffix, "number of (30 GeV) tight b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "njet"          + suffix, "number of (30 GeV) jets",          -1, 0, "NULL", scale);
+          plotter.Draw(prefix + "htjets"   + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
+          plotter.Draw(prefix + "htnojets" + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 10, 0, "GeV", scale, false, 0, 300);
+
 
 
 	  // WW and MonoH histograms

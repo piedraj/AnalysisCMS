@@ -1,5 +1,6 @@
 #define AnalysisTop_cxx
 #include "../include/AnalysisTop.h"
+using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -78,8 +79,8 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 20.) continue;
 
     // "Third Z-Veto" This requirement should be applied on a loose lepton 
-    //if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
-    if (_nlepton > 2) continue;
+    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
+  //  if (_nlepton > 2) continue;
 
     _nelectron = 0;
 
@@ -92,7 +93,6 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     
     _m2l  = mll;
     _pt2l = ptll;
-
 
 	
     // Fill histograms
@@ -120,16 +120,18 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     // Basics + _ht > 260 + Has2Leptons    
 
 //    bool pass1 = _ht > 260.;
-    bool pass1_jet = _htjets > 100.;   
+//    bool pass1_jet = _htjets > 100.;   
 //    bool pass1_1 = _ht > 300.;   
-    bool pass1_1_jet = _htjets > 125.;
+//    bool pass1_1_jet = _htjets > 125.;
+//
 //    FillLevelHistograms(Top_00_ht260, pass && pass1);
 //    FillLevelHistograms(Top_00_ht300, pass && pass1_1);
-    FillLevelHistograms( Top_00_htjets100, pass && pass1_jet);
-    FillLevelHistograms( Top_00_htjets125, pass && pass1_1_jet);
-
-    bool pass1_2_jet = _htjets > 150.;
-    FillLevelHistograms( Top_00_htjets150, pass && pass1_2_jet);
+//    FillLevelHistograms( Top_00_htjets100, pass && pass1_jet);
+//    FillLevelHistograms( Top_00_htjets125, pass && pass1_1_jet);
+//
+//    bool pass1_2_jet = _htjets > 150.;
+//
+//    FillLevelHistograms( Top_00_htjets150, pass && pass1_2_jet);
 
     
 
@@ -139,43 +141,55 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
      
 //    pass1 &= MET.Et() > 50.;    
 //    pass1_1 &= MET.Et() > 50.;    	
-      pass1_jet &= MET.Et() > 50.;
-      pass1_1_jet &= MET.Et() > 50.;
-  
+//    pass1_jet &= MET.Et() > 50.;
+//    pass1_1_jet &= MET.Et() > 50.;
+// 
 //    FillLevelHistograms(Top_00_ht260Met50, pass && pass1);
 //    FillLevelHistograms(Top_00_ht300Met50, pass && pass1_1);
-      FillLevelHistograms( Top_00_htjets100Met50, pass && pass1_jet);
-      FillLevelHistograms( Top_00_htjets125Met50, pass && pass1_1_jet);
-	 
-      pass1_2_jet &= MET.Et() > 50.;
-      FillLevelHistograms( Top_00_htjets150Met50, pass && pass1_2_jet);
+//    FillLevelHistograms( Top_00_htjets100Met50, pass && pass1_jet);
+//    FillLevelHistograms( Top_00_htjets125Met50, pass && pass1_1_jet);
+//	 
+//    pass1_2_jet &= MET.Et() > 50.;
+//
+//    FillLevelHistograms( Top_00_htjets150Met50, pass && pass1_2_jet);
 
     //-------------------------------------------------------------------------
     // Basics + Has1BJet
    
-    bool pass2 = pass && (njet > 1);
+    pass &= (njet > 1);
+  
+    FillLevelHistograms(Top_01_Has2Jets, pass);
 
-    //pass &= (njet > 1);
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! pass &= (_nbjet20loose > 0);
 
-    FillLevelHistograms(Top_01_Has2Jets, pass2);
+    pass &= (_nbjet30tight > 0);
 
-    pass2 &= (_nbjet30tight > 0);
+    FillLevelHistograms(Top_02_Has1BJet, pass);
 
-    FillLevelHistograms(Top_02_Has1BJet, pass2);
-
-    pass2 &= _htjets > 150.;    
-
-    FillLevelHistograms(Top_02_Has1BJetHtJets150, pass2);
     
+    bool pass_htjets = _htjets > 150.;
+    bool pass_mpmet  = (_nelectron == 1 || _mpmet > 30.);
+    
+
+    pass_htjets &= pass;    
+
+    FillLevelHistograms(Top_02_Has1BJetHtJets150, pass_htjets);
+
+
+    pass_mpmet &= pass;
+
+    FillLevelHistograms(Top_02_Has1BJetSFmpMet30, pass_mpmet);
+ 
+    
+
+
     //--------------------------------------------------------------------------
     // Basics + met > 50 + Has2Leptons
 
-    bool pass_met50 = MET.Et() > 50.;
+//    bool pass_met50 = MET.Et() > 50.;
 
-    bool pass3 = pass && pass_met50;
+//    bool pass3 = pass && pass_met50;
 
-    FillLevelHistograms(Top_00_Met50, pass3);
+//    FillLevelHistograms(Top_00_Met50, pass3);
 
     //--------------------------------------------------------------------------
   }
