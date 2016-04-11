@@ -38,6 +38,8 @@ void runPlotter(TString level,
   if (analysis.EqualTo("WW"))    scale = linY;
   if (analysis.EqualTo("WZ"))    scale = linY;
   if (analysis.EqualTo("TTDM"))  scale = linY;
+  if (analysis.EqualTo("Top"))   scale = linY;
+
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -251,7 +253,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet20tight"  + suffix, "number of (20 GeV) tight b-jets",  -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "nbjet30tight"  + suffix, "number of (30 GeV) tight b-jets",  -1, 0, "NULL", linY);
 	  plotter.Draw(prefix + "njet"          + suffix, "number of (30 GeV) jets",          -1, 0, "NULL", linY);
->>>>>>> upstream/master
+          plotter.Draw(prefix + "htjets"   + suffix, "#sum_{jet} p_{T}",                  10, 0, "GeV", scale, false, 0, 300);
+          plotter.Draw(prefix + "htnojets" + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 10, 0, "GeV", scale, false, 0, 300);
+
 
 
 	  // WW and MonoH histograms
