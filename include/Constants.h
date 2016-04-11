@@ -9,6 +9,7 @@
 //#include "CutsWZ.h"
 
 
+//const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
 const float lumi_fb = 2.318;
 const float lumi_error_percent = 2.7;
 
@@ -22,6 +23,36 @@ const float MUON_MASS     =   0.106;     // [GeV]
 const float TAU_MASS      =   1.777;     // [GeV]
 const float Z_MASS        =  91.188;     // [GeV]
 const float H_MASS        = 125.0;       // [GeV]
+
+
+// Systematic uncertainties
+//------------------------------------------------------------------------------
+const Bool_t nuisances_btag_up      = false;
+const Bool_t nuisances_btag_down    = false;
+const Bool_t nuisances_trigger_up   = false;
+const Bool_t nuisances_trigger_down = false;
+const Bool_t nuisances_idiso_up     = false;
+const Bool_t nuisances_idiso_down   = false;
+
+
+// Process colors
+//------------------------------------------------------------------------------
+const Color_t color_Signal    = kRed;
+const Color_t color_Fakes     = kGray+1;
+const Color_t color_Data      = kBlack;
+const Color_t color_WZTo3LNu  = kOrange-2;
+const Color_t color_ZZ        = kOrange+3;
+const Color_t color_TTTo2L2Nu = kYellow;
+const Color_t color_ST        = kYellow+3;
+const Color_t color_WW        = kAzure-9;
+const Color_t color_ZJets     = kGreen+2;
+const Color_t color_WJets     = kGray+1;
+const Color_t color_TTV       = kGreen-6;
+const Color_t color_HWW       = kAzure-7;
+const Color_t color_Wg        = kBlue;
+const Color_t color_Zg        = kTeal;
+const Color_t color_VVV       = kYellow-6;
+const Color_t color_HZ        = kOrange+1;
 
 
 // Branching ratios

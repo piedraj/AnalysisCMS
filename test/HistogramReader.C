@@ -10,7 +10,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
   _title        ("cms"),
-  _luminosity_fb(0),
+  _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
   _drawyield    (false),
@@ -115,6 +115,8 @@ void HistogramReader::Draw(TString hname,
   _printlabels = true;
 
   TString cname = hname;
+
+  if (_stackoption.Contains("nostack")) cname += "_nostack";
 
   if (setlogy) cname += "_log";
 
@@ -318,14 +320,28 @@ void HistogramReader::Draw(TString hname,
 
   if (theMaxMC > theMax) theMax = theMaxMC;
 
+  Float_t theMaxSignal = 0.0;
+
+  if (_signalfile.size() > 0)
+    {
+      for (UInt_t i=0; i<_signalfile.size(); i++)
+	{
+	  Float_t signalhist_i_max = GetMaximum(_signalhist[i], xmin, xmax, false);
+
+	  if (signalhist_i_max > theMaxSignal) theMaxSignal = signalhist_i_max;
+	}
+    }
+
+  if (theMaxSignal > theMax) theMax = theMaxSignal;
+
   if (pad1->GetLogy())
     {
-      theMin = 1e-4;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 5);
+      theMin = 1e-5;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
   else
     {
-      theMax *= 1.5;
+      theMax *= 1.7;
     }
 
   hfirst->SetMinimum(theMin);
@@ -405,9 +421,12 @@ void HistogramReader::Draw(TString hname,
       DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
     }
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  if (_luminosity_fb > 0)
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+  else
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
-  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
+  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.8);
 
 
   //----------------------------------------------------------------------------
@@ -995,14 +1014,16 @@ void HistogramReader::LoopEventsByChannel(TString level)
 
 
 //------------------------------------------------------------------------------
-// GetBestScoreBin
+// GetBestScoreX
 //------------------------------------------------------------------------------
-Int_t HistogramReader::GetBestScoreBin(TH1* sig_hist, TH1* bkg_hist)
+Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
+				       TH1*    bkg_hist,
+				       TString fom)
 {
   Int_t nbins = sig_hist->GetNbinsX();
 
   Float_t score_value = 0;
-  Int_t   score_bin   = 0;
+  Float_t score_x     = 0;
 
 
   for (UInt_t k=0; k<nbins+1; k++) {
@@ -1012,16 +1033,82 @@ Int_t HistogramReader::GetBestScoreBin(TH1* sig_hist, TH1* bkg_hist)
 
     if (sig_yield > 0. && bkg_yield > 0.)
       {
-	Float_t ratio = sig_yield / bkg_yield;
+	Float_t score = -999;
 
-	if (ratio > score_value)
+	if (fom.EqualTo("S/sqrt(B)"))   score = sig_yield / sqrt(bkg_yield);
+	if (fom.EqualTo("S/sqrt(S+B)")) score = sig_yield / sqrt(sig_yield + bkg_yield);
+	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield;
+
+	if (score > score_value)
 	  {
-	    score_value = ratio;
-	    score_bin   = k;
+	    score_value = score;
+	    score_x     = sig_hist->GetBinCenter(k);
 	  }
       }
   }
 
 
-  return score_bin;
+  printf("\n [HistogramReader::GetBestScoreX] x = %.2f (%.2f < x < %.2f) has the best %s (%f)\n\n",
+	 score_x,
+	 sig_hist->GetXaxis()->GetXmin(),
+	 sig_hist->GetXaxis()->GetXmax(),
+	 fom.Data(),
+	 score_value);
+
+
+  return score_x;
+}
+
+
+//------------------------------------------------------------------------------
+// GetBestSignalScoreX
+//------------------------------------------------------------------------------
+Float_t HistogramReader::GetBestSignalScoreX(TString hname,
+					     TString fom,
+					     Int_t   ngroup)
+{
+  printf("\n [HistogramReader::GetBestSignalScoreX] Warning: reading only the first signal\n");
+
+
+  // Get the signals
+  //----------------------------------------------------------------------------
+  _signalhist.clear();
+
+  for (UInt_t i=0; i<_signalfile.size(); i++) {
+
+    _signalfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
+
+    _signalhist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _signalhist[i]->Rebin(ngroup);
+  }
+
+  
+  // Get the backgrounds
+  //----------------------------------------------------------------------------
+  _mchist.clear();
+
+  THStack* mcstack = new THStack(hname + "_mcstack", hname + "_mcstack");
+
+  for (UInt_t i=0; i<_mcfile.size(); i++) {
+
+    _mcfile[i]->cd();
+
+    TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+
+    _mchist.push_back((TH1D*)dummy->Clone());
+
+    if (ngroup > 0) _mchist[i]->Rebin(ngroup);
+
+    mcstack->Add(_mchist[i]);
+  }
+
+
+  // Get the best score
+  //----------------------------------------------------------------------------
+  TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
+
+  return GetBestScoreX(_signalhist[0], backgroundhist, fom);
 }
