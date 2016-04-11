@@ -34,8 +34,6 @@ class AnalysisMonoH : public AnalysisCMS
   TH1D*                  h_deltarl2met[nchannel][ncut][njetbin+1];
   TH1D*                  h_deltarllmet[nchannel][ncut][njetbin+1];
   TH1D*                  h_mllstar    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_htjets     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_htnojets   [nchannel][ncut][njetbin+1];
   TH1D*                  h_mr         [nchannel][ncut][njetbin+1];
   TH2D*                  h_metvar_m2l [nchannel][ncut][njetbin+1];
 };
