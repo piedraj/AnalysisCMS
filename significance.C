@@ -49,7 +49,7 @@ void significance (){
           double signal;   
           double significance [lastchannel+1][100];
   
-          TH1F* yield [nyield];
+          TH1F* yield_ht [nyield];
         
         TGraph* gr[lastchannel+1];  
 
