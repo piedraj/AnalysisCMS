@@ -20,12 +20,6 @@ class AnalysisTTDM : public AnalysisCMS
   void Loop                  (TString analysis,
 			      TString sample,
 			      float   luminosity);
-
-
-  // MET filters histograms
-  //----------------------------------------------------------------------------
-  TH1D*                  met_Flag_nocut [nfilter];
-  TH1D*                  met_Flag_met300[nfilter];
 };
 
 #endif

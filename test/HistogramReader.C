@@ -116,6 +116,8 @@ void HistogramReader::Draw(TString hname,
 
   TString cname = hname;
 
+  if (_stackoption.Contains("nostack")) cname += "_nostack";
+
   if (setlogy) cname += "_log";
 
   TCanvas* canvas = NULL;
@@ -318,14 +320,28 @@ void HistogramReader::Draw(TString hname,
 
   if (theMaxMC > theMax) theMax = theMaxMC;
 
+  Float_t theMaxSignal = 0.0;
+
+  if (_signalfile.size() > 0)
+    {
+      for (UInt_t i=0; i<_signalfile.size(); i++)
+	{
+	  Float_t signalhist_i_max = GetMaximum(_signalhist[i], xmin, xmax, false);
+
+	  if (signalhist_i_max > theMaxSignal) theMaxSignal = signalhist_i_max;
+	}
+    }
+
+  if (theMaxSignal > theMax) theMax = theMaxSignal;
+
   if (pad1->GetLogy())
     {
-      theMin = 1e-4;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 5);
+      theMin = 1e-5;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
   else
     {
-      theMax *= 1.5;
+      theMax *= 1.7;
     }
 
   hfirst->SetMinimum(theMin);
@@ -410,7 +426,7 @@ void HistogramReader::Draw(TString hname,
   else
     DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
-  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.7);
+  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.8);
 
 
   //----------------------------------------------------------------------------

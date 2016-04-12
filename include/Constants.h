@@ -9,8 +9,8 @@
 //#include "CutsWZ.h"
 
 
-const float lumi_fb = 1.371;  // Luminosity for any blinded analysis
-//const float lumi_fb = 2.318;
+const float lumi_fb_blind = 1.371;
+const float lumi_fb       = 2.318;
 const float lumi_error_percent = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
@@ -23,6 +23,16 @@ const float MUON_MASS     =   0.106;     // [GeV]
 const float TAU_MASS      =   1.777;     // [GeV]
 const float Z_MASS        =  91.188;     // [GeV]
 const float H_MASS        = 125.0;       // [GeV]
+
+
+// Systematic uncertainties
+//------------------------------------------------------------------------------
+const Bool_t nuisances_btag_up      = false;
+const Bool_t nuisances_btag_down    = false;
+const Bool_t nuisances_trigger_up   = false;
+const Bool_t nuisances_trigger_down = false;
+const Bool_t nuisances_idiso_up     = false;
+const Bool_t nuisances_idiso_down   = false;
 
 
 // Process colors

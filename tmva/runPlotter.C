@@ -1,7 +1,6 @@
 #include "../test/HistogramReader.h"
 
 
-
 // Constants
 //------------------------------------------------------------------------------
 const int     ngroup    = 2;
@@ -28,24 +27,20 @@ void runPlotter(TString signal,
   HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetStackOption(option);
+  plotter.SetDrawRatio  ( false);
+  plotter.SetDrawYield  ( false);
   plotter.SetPublicStyle( false);
   plotter.SetSavePdf    (  true);
   
   if (option.Contains("nostack"))
     {
-      plotter.SetDrawRatio(false);
-      plotter.SetDrawYield(false);
-
-      plotter.AddSignal (signal + "__" + signal,    label, color_Signal);
       plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",  kBlack);
+      plotter.AddSignal (signal + "__" + signal,    label, color_Signal);
     }
   else
     {
-      plotter.SetLuminosity(lumi_fb);
-      plotter.SetDrawRatio (   true);
-      plotter.SetDrawYield (   true);
+      plotter.SetLuminosity(lumi_fb_blind);
 
-      plotter.AddSignal (signal + "__" + signal,    label,        color_Signal);
       plotter.AddData   (signal + "__01_Data",      "data",       color_Data);
       plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
       plotter.AddProcess(signal + "__10_HWW",       "HWW",        color_HWW);
@@ -58,6 +53,7 @@ void runPlotter(TString signal,
       plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
       plotter.AddProcess(signal + "__05_ST",        "tW",         color_ST);
       plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
+      plotter.AddSignal (signal + "__" + signal,    label,        color_Signal);
     }
 
 
@@ -66,7 +62,9 @@ void runPlotter(TString signal,
   gSystem->mkdir(outputdir, kTRUE);
 
   plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", linY);
-  plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+
+  if (!option.Contains("nostack"))
+    plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", logY);
 
 
   // Optimization
@@ -87,7 +85,7 @@ void runPlotter(TString signal,
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if(argc < 3) {
+  if (argc < 3) {
     
     printf("\n rm -rf %s\n\n", outputdir.Data());
 

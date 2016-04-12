@@ -45,5 +45,5 @@
 3. Print final yields
 ====
 
-    root -l -b -q "yields.C+(\"ttDM0001pseudo0010\",0.56)"
+    root -l -b -q "analysis.C+(\"ttDM0001pseudo0010\",0.56)"
 
