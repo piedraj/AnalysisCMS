@@ -39,7 +39,7 @@ void runPlotter(TString signal,
     }
   else
     {
-      plotter.SetLuminosity(lumi_fb);
+      plotter.SetLuminosity(lumi_fb_blind);
 
       plotter.AddData   (signal + "__01_Data",      "data",       color_Data);
       plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
