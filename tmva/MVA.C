@@ -131,7 +131,7 @@ void MVATrain(TString signal)
 
   factory->AddVariable("channel",      "", "", 'F');
   factory->AddVariable("metPfType1",   "", "", 'F');
-  factory->AddVariable("mll",          "", "", 'F');
+  factory->AddVariable("m2l",          "", "", 'F');
   factory->AddVariable("njet",         "", "", 'F');
   factory->AddVariable("nbjet20loose", "", "", 'F');
   factory->AddVariable("lep1pt",       "", "", 'F');
@@ -187,7 +187,7 @@ void MVARead(TString signal, TString filename)
 
   float channel;
   float metPfType1;
-  float mll;
+  float m2l;
   float njet;
   float nbjet20loose;
   float lep1pt;
@@ -211,7 +211,7 @@ void MVARead(TString signal, TString filename)
 
   reader->AddVariable("channel",      &channel);
   reader->AddVariable("metPfType1",   &metPfType1);
-  reader->AddVariable("mll",          &mll);
+  reader->AddVariable("m2l",          &m2l);
   reader->AddVariable("njet",         &njet);
   reader->AddVariable("nbjet20loose", &nbjet20loose);
   reader->AddVariable("lep1pt",       &lep1pt);
@@ -249,7 +249,7 @@ void MVARead(TString signal, TString filename)
 
   theTree->SetBranchAddress("channel",      &channel);
   theTree->SetBranchAddress("metPfType1",   &metPfType1);
-  theTree->SetBranchAddress("mll",          &mll);
+  theTree->SetBranchAddress("m2l",          &m2l);
   theTree->SetBranchAddress("njet",         &njet);
   theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
   theTree->SetBranchAddress("lep1pt",       &lep1pt);
