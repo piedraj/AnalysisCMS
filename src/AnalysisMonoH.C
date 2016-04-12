@@ -45,16 +45,25 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_fullpmet   [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 1000, 0., 1000);
-	h_trkpmet    [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 1000, 0., 1000);
-        h_deltarl1met[i][j][k] = new TH1D("h_deltarl1met" + suffix, "",  100, 0,     5);
-        h_deltarl2met[i][j][k] = new TH1D("h_deltarl2met" + suffix, "",  100, 0,     5);
-        h_deltarllmet[i][j][k] = new TH1D("h_deltarllmet" + suffix, "",  100, 0,     5);
-	h_mr         [i][j][k] = new TH1D("h_mr"          + suffix, "", 2000, 0,  2000);          
-	h_mllstar    [i][j][k] = new TH1D("h_mllstar"     + suffix, "", 3000, 0,  3000);
+	h_fullpmet         [i][j][k] = new TH1D("h_fullpmet"        + suffix, "", 1000, 0.,  1000);
+	h_trkpmet          [i][j][k] = new TH1D("h_trkpmet"         + suffix, "", 1000, 0.,  1000);
+        h_deltarl1met      [i][j][k] = new TH1D("h_deltarl1met"     + suffix, "",  100, 0.,     5);
+        h_deltarl2met      [i][j][k] = new TH1D("h_deltarl2met"     + suffix, "",  100, 0.,     5);
+        h_deltarllmet      [i][j][k] = new TH1D("h_deltarllmet"     + suffix, "",  100, 0.,     5);
+	h_deltarjet1met    [i][j][k] = new TH1D("h_deltarjet1met"   + suffix, "",  100, 0.,     5);
+	h_deltarjet2met    [i][j][k] = new TH1D("h_deltarjet2met"   + suffix, "",  100, 0.,     5);
+	h_deltarjj         [i][j][k] = new TH1D("h_deltarjj"        + suffix, "",  100, 0.,     5);
+	h_deltarjjmet      [i][j][k] = new TH1D("h_deltarjjmet"     + suffix, "",  100, 0.,     5);
+	h_deltarlep1jet1   [i][j][k] = new TH1D("h_deltarlep1jet1"  + suffix, "",  100, 0.,     5);
+	h_deltarlep1jet2   [i][j][k] = new TH1D("h_deltarlep1jet2"  + suffix, "",  100, 0.,     5);
+	h_deltarlep2jet1   [i][j][k] = new TH1D("h_deltarlep2jet1"  + suffix, "",  100, 0.,     5);
+	h_deltarlep2jet2   [i][j][k] = new TH1D("h_deltarlep2jet2"  + suffix, "",  100, 0.,     5);
+       	h_mllstar          [i][j][k] = new TH1D("h_mllstar"         + suffix, "", 3000, 0.,  3000);
+	//h_mr             [i][j][k] = new TH1D("h_mr"              + suffix, "", 2000, 0.,  2000);
 
-	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
-
+	h_metvar_m2l        [i][j][k] = new TH2D("h_metvar_m2l"     + suffix, "",   4, metvar_bins, 2000, 0, 200);
+	//h_met_m2l         [i][j][k] = new TH2D("h_met_m2l"        + suffix, "", 200,  0,  2000,  100,   0, 200);
+	//h_met_deltaphill  [i][j][k] = new TH2D("h_met_deltaphill" + suffix, "", 200,  0,  2000,  100,   0,   5);     
       }
     }
   }
@@ -75,6 +84,8 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup();
+
+    GetDeltaR();
 
 
     // Analysis
@@ -174,6 +185,47 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
   EndJob();
 }
 
+//------------------------------------------------------------------------------                                                            
+// GetDeltaR
+//------------------------------------------------------------------------------                                                
+void AnalysisMonoH::GetDeltaR()
+{
+  // Reset DeltaR variables
+  //----------------------------------------------------------------------------                                 
+  _deltarjet1met  = -0.1;
+  _deltarjet2met  = -0.1;
+  _deltarjj       = -0.1;
+  _deltarjjmet    = -0.1;
+  _deltarlep1jet1 = -0.1;
+  _deltarlep1jet2 = -0.1;
+  _deltarlep2jet1 = -0.1;
+  _deltarlep2jet2 = -0.1;
+  _deltarllmet    = -0.1;
+  _deltarl1met    = -0.1;
+  _deltarl2met    = -0.1;
+
+  // Fill DeltaR variables
+  //----------------------------------------------------------------------------                                  
+  _deltarllmet = fabs((Lepton1.v+Lepton2.v).DeltaR(MET));
+  _deltarl1met = fabs(Lepton1.v.DeltaR(MET));
+  _deltarl2met = fabs(Lepton2.v.DeltaR(MET));
+
+  if (njet > 0)
+    {
+      _deltarjet1met  = fabs(AnalysisJets[0].v.DeltaR(MET));
+      _deltarlep1jet1 = fabs(Lepton1.v.DeltaR(AnalysisJets[0].v));
+      _deltarlep2jet1 = fabs(Lepton2.v.DeltaR(AnalysisJets[0].v));
+    }
+
+  if (njet > 1)
+    {
+    _deltarjet2met  = fabs(AnalysisJets[1].v.DeltaR(MET));
+    _deltarlep1jet2 = fabs(Lepton1.v.DeltaR(AnalysisJets[1].v));
+    _deltarlep2jet2 = fabs(Lepton2.v.DeltaR(AnalysisJets[1].v));
+    _deltarjj       = fabs(AnalysisJets[0].v.DeltaR(AnalysisJets[1].v));
+    _deltarjjmet    = fabs((AnalysisJets[0].v + AnalysisJets[1].v).DeltaR(MET));
+    }
+}
 
 //------------------------------------------------------------------------------
 // FillAnalysisHistograms
@@ -183,22 +235,27 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
 					   int ijet)
 {
 
-  // Puesto por Alberto Manjon
-  float deltarl1met = fabs(Lepton1.v.DeltaR(MET));
-  float deltarl2met = fabs(Lepton2.v.DeltaR(MET));
-  float deltarllmet = fabs((Lepton1.v+Lepton2.v).DeltaR(MET));
+  //float m_r = sqrt(pow(Lepton1.v(3)+Lepton2.v(3),2)-pow(Lepton1.v(2)+Lepton2.v(2),2));
+  
+  h_fullpmet        [ichannel][icut][ijet]->Fill(_fullpmet,         _event_weight);
+  h_trkpmet         [ichannel][icut][ijet]->Fill(_trkpmet,          _event_weight);
+  h_deltarl1met     [ichannel][icut][ijet]->Fill(_deltarl1met,      _event_weight);
+  h_deltarl2met     [ichannel][icut][ijet]->Fill(_deltarl2met,      _event_weight);
+  h_deltarllmet     [ichannel][icut][ijet]->Fill(_deltarllmet,      _event_weight);
+  h_deltarjet1met   [ichannel][icut][ijet]->Fill(_deltarjet1met,    _event_weight);
+  h_deltarjet2met   [ichannel][icut][ijet]->Fill(_deltarjet2met,    _event_weight);
+  h_deltarjj        [ichannel][icut][ijet]->Fill(_deltarjj,         _event_weight);
+  h_deltarjjmet     [ichannel][icut][ijet]->Fill(_deltarjjmet,      _event_weight);                         
+  h_deltarlep1jet1  [ichannel][icut][ijet]->Fill(_deltarlep1jet1,   _event_weight);                                                                             
+  h_deltarlep1jet2  [ichannel][icut][ijet]->Fill(_deltarlep1jet2,   _event_weight);                                                                              
+  h_deltarlep2jet1  [ichannel][icut][ijet]->Fill(_deltarlep2jet1,   _event_weight);                                                                              
+  h_deltarlep2jet2  [ichannel][icut][ijet]->Fill(_deltarlep2jet2,   _event_weight);  
+  h_mllstar         [ichannel][icut][ijet]->Fill(_mllstar,          _event_weight);
+  //h_mr            [ichannel][icut][ijet]->Fill(m_r,               _event_weight);
 
-  float m_r = sqrt(pow(Lepton1.v(3)+Lepton2.v(3),2)-pow(Lepton1.v(2)+Lepton2.v(2),2));
-
-  h_deltarl1met[ichannel][icut][ijet]->Fill(deltarl1met, _event_weight);
-  h_deltarl2met[ichannel][icut][ijet]->Fill(deltarl2met, _event_weight);
-  h_deltarllmet[ichannel][icut][ijet]->Fill(deltarllmet, _event_weight);
-  h_mr         [ichannel][icut][ijet]->Fill(m_r,         _event_weight);  
-  h_fullpmet   [ichannel][icut][ijet]->Fill(_fullpmet,   _event_weight);
-  h_trkpmet    [ichannel][icut][ijet]->Fill(_trkpmet,    _event_weight);
-  h_mllstar    [ichannel][icut][ijet]->Fill(_mllstar,    _event_weight);
-
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+  h_metvar_m2l       [ichannel][icut][ijet] ->Fill(_metvar,      _m2l,        _event_weight);
+  //h_met_m2l        [ichannel][icut][ijet] ->Fill(pfType1Met,   _m2l,        _event_weight); 
+  //h_met_deltaphill [ichannel][icut][ijet] ->Fill(pfType1Met, dphill,        _event_weight);  
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
