@@ -46,8 +46,6 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-        h_htjets[i][j][k] = new TH1D("h_htjets" + suffix, "", 300, 0, 800);
-        h_htnojets[i][j][k] = new TH1D("h_htnojets" + suffix, "", 300, 0, 800);
 	h_2ht[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800, 300, 0, 800);
 
       }
@@ -207,8 +205,6 @@ void AnalysisTop::FillAnalysisHistograms(int ichannel,
 					 int icut,
 					 int ijet)
 {
-  h_htjets[ichannel][icut][ijet]->Fill(_htjets, _event_weight);
-  h_htnojets[ichannel][icut][ijet]->Fill(_htnojets, _event_weight);
   h_2ht[ichannel][icut][ijet]->Fill(_ht, _htjets, _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
