@@ -17,7 +17,7 @@ void significance (){
 
         // Top bakgrounds
 
-          const int nyield = 12;
+          const int nyield = 11;
 	  const TString syield [nyield] = {
 
             "00_Fakes",
@@ -29,7 +29,6 @@ void significance (){
             "09_TTV",
             "10_HWW",
             "11_Wg",
-            "12_Zg",
             "13_VVV",
             "14_HZ",
      };
@@ -51,31 +50,35 @@ void significance (){
   
           TH1F* yield_ht [nyield];
         
-        TGraph* gr[lastchannel+1];  
+          TGraph* gr;  
 
-        for (Int_t i = firstchannel; i <= lastchannel; i++){
+          for (Int_t i = firstchannel; i <= lastchannel; i++){
 
-	      inFile<<"\\begin{tabular}{cccccccccccccccccccccccccc}"<< endl;
+
+              std::cout << "-----------------------------------------------------------------------" << std::endl;
+              std::cout << "channel " << schannel[i] << std::endl;	      
+              std::cout << "-----------------------------------------------------------------------" << std::endl;
+        
+
+              inFile<<"\\begin{tabular}{cccccccccccccccccccccccccc}"<< endl;
      	      inFile<<"\\hline"<< endl;
      	      inFile<< schannel[i];
               inFile<<"\\\\" << endl;
               inFile<<"\\hline"<< endl;
 
-             // inFile << "Varible Cut Level";
-             // inFile << " & "<< "Signal" << " & " << "Background" << " & " << "S / sqrt(S + B)";
-             // inFile << " \\\\ "<< endl;
-             // inFile << "\\hline"<< endl;
+              inFile << "Ht Cut Level"<<  " & "<< "Signal" << " & " << "Background" << " & " << "S / sqrt(S + B)";
+              inFile << " \\\\ "<< endl;
+              inFile << "\\hline"<< endl;
 
 
 
-              gr[i] = new TGraph();
+              gr = new TGraph();
 
-              bkg = 0.0; 
 
               TFile *Ttbar =  new TFile(path + Top_signal +".root","read");
               TH1F  *Ttbar_ht = (TH1F*)Ttbar -> Get("Top/00_Met40/2jet/h_ht_" + schannel[i]);
               Int_t nbins = Ttbar_ht -> GetNbinsX();
-              std::cout<< "nbins:"<< nbins << std::endl;
+              //std::cout<< "nbins:"<< nbins << std::endl;
 
               for (Int_t k = 0; k < nyield; ++k){
 
@@ -84,29 +87,59 @@ void significance (){
 
               }
         	      
- 
-	      for (Int_t j = 0; j < nbins; ++j){
+              int k=0;
+              int limit=250;
+	      for (Int_t j = 150; j <= limit; j++){
 
-		  std::cout<< j << std::endl;
+		  //std::cout<< j << std::endl;
 
-                  signal = Ttbar_ht -> Integral (int (Ttbar_ht -> FindBin(j)), int (Ttbar_ht -> FindBin(nbins)));           
-             	  inFile << signal;
+                  signal = Ttbar_ht -> Integral (j, nbins+1);           
                
+                  bkg = 0.0; 
+            
                   for (Int_t k = 0; k < nyield; ++k){                 
 
-                       bkg += (yield_ht[k] -> Integral (int (yield_ht[k] -> FindBin(j)), int (yield_ht[k] -> FindBin(nbins))));
-         //         yield -> Close(); 
-                  }                  
-        
-        }
+                      bkg +=  yield_ht[k] -> Integral (j, nbins+1);
+                  
+                  }
 
+                  double x = j;
+                  double y = (signal / sqrt(signal + bkg));
+                  gr->SetPoint(k++, x, y);
 
-
-
-
-
+                  inFile << x << " & "<<  signal << " & " << bkg <<" & "<< y;
+                  inFile<<"\\\\"<<endl;
+            
+                  std::cout <<"Ht = " << j << " (GeV)" << "\t bkg = " << bkg << "\t signal = " << signal << "\t S/sqrt(S+B):" << y <<std::endl;   
               }
- inFile.close();
+            
+              
+             TCanvas *mycanvas = new TCanvas();
+
+             gr -> Draw("APE");
+             gr -> SetTitle ("channel \t " + schannel[i]);
+             gr -> GetXaxis() -> SetTitle("Ht (GeV)");
+             gr -> GetYaxis() -> SetTitle("S/sqrt(S+B)");
+             gr -> SetMarkerStyle (kFullDotMedium);
+             gr -> SetMarkerSize (3);
+             gr -> SetMarkerColor(kBlue);
+
+             mycanvas->SaveAs("significance/"+ schannel[i] +".png");
+
+             inFile<<"\\end{tabular}"<<endl;
+             inFile<<"\\ hline"<<endl;
+
  
+             }
+
+              for (Int_t l= 0 ; l <= 100 ; l += 10 ){
+     
+                  std::cout << l << "\t sqrt():  "<< sqrt(l) << std::endl;
+                  
+
+  	      }    
+         
+
+ inFile.close();
 
 }
