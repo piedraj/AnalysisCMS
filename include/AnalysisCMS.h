@@ -117,8 +117,6 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetSumOfWeightsLHE();
 
-  void    GetRatiosLHE      ();
-
 
   // Data members
   //----------------------------------------------------------------------------
@@ -188,10 +186,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30tight;
   float                  _ptww;
   float                  _pt2l;
-  float                  _pdfratio_up;
-  float                  _pdfratio_down;
-  float                  _qcdratio_up;
-  float                  _qcdratio_down;
   float                  _sumjpt12;
   float                  _trkpmet;
 
