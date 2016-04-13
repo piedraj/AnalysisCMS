@@ -1075,8 +1075,8 @@ void AnalysisCMS::GetGenPtllWeight()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetSumOfWeightsLHE()
 {
-  for (int i=0; i<100; i++) h_pdfsum->Fill(i, std_vector_LHE_weight->at(i+9));
-  for (int i=0; i< 10; i++) h_qcdsum->Fill(i, std_vector_LHE_weight->at(i));
+  for (int i=0; i<h_pdfsum->GetNbinsX(); i++) h_pdfsum->Fill(i, std_vector_LHE_weight->at(i+9));
+  for (int i=0; i<h_qcdsum->GetNbinsX(); i++) h_qcdsum->Fill(i, std_vector_LHE_weight->at(i));
 }
 
 

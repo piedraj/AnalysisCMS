@@ -27,7 +27,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   TH1::SetDefaultSumw2();
 
-  h_qcdsum = new TH1D("h_qcdsum", "",  10, 0,  10);
+  h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
   h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
 
   for (int j=0; j<ncut; j++) {
