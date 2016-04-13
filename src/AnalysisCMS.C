@@ -1068,3 +1068,53 @@ void AnalysisCMS::GetGenPtllWeight()
 
   _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
 }
+
+
+//------------------------------------------------------------------------------
+// GetSumOfWeightsLHE
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetSumOfWeightsLHE()
+{
+  for (int i=0; i<100; i++) h_pdfsum->Fill(i, std_vector_LHE_weight->at(i+9));
+  for (int i=0; i< 10; i++) h_qcdsum->Fill(i, std_vector_LHE_weight->at(i));
+}
+
+
+//------------------------------------------------------------------------------
+// GetRatiosLHE
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetRatiosLHE()
+{
+  // QCD
+  //----------------------------------------------------------------------------
+  _qcdratio_up   = h_qcdsum->GetBinContent(9) / h_qcdsum->GetBinContent(1);
+  _qcdratio_down = h_qcdsum->GetBinContent(5) / h_qcdsum->GetBinContent(1);
+
+
+  // PDF
+  //----------------------------------------------------------------------------
+  int nbinsx = h_pdfsum->GetNbinsX();
+
+  float m  = 0;
+  float m2 = 0;
+
+  for (int i=1; i<=nbinsx; i++) {
+
+    m += h_pdfsum->GetBinContent(i);
+
+    m2 += pow(h_pdfsum->GetBinContent(i), 2);
+  }
+
+  float mean = m/nbinsx;
+  float unc  = sqrt(m2/nbinsx - pow(mean, 2));
+   
+  _pdfratio_up   = (mean + unc) / mean;
+  _pdfratio_down = (mean - unc) / mean;
+
+  printf("\n\n");
+  printf(" [GetRatiosLHE]\n");
+  printf(" pdfratio_up   = %f\n", _pdfratio_up);
+  printf(" pdfratio_down = %f\n", _pdfratio_down);
+  printf(" qcdratio_up   = %f\n", _qcdratio_up);
+  printf(" qcdratio_down = %f\n", _qcdratio_down);
+}

@@ -40,80 +40,84 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0);
 
-  void    ApplyWeights     ();
+  void    ApplyWeights      ();
 
-  void    DefineHistograms (int      ichannel,
-			    int      icut,
-			    int      ijet,
-			    TString  suffix);
+  void    DefineHistograms  (int      ichannel,
+			     int      icut,
+			     int      ijet,
+			     TString  suffix);
 
-  float   ElectronIsolation(int      k);
+  float   ElectronIsolation (int      k);
 
-  void    EndJob           ();
+  void    EndJob            ();
 
-  void    EventDump        ();
+  void    EventDump         ();
 
-  void    EventSetup       ();
+  void    EventSetup        ();
 
-  void    FillHistograms   (int      ichannel,
-			    int      icut,
-			    int      ijet);
+  void    FillHistograms    (int      ichannel,
+			     int      icut,
+			     int      ijet);
 
-  void    GetDeltaPhiVeto  ();
+  void    GetDeltaPhiVeto   ();
 
-  void    GetHt            ();
+  void    GetHt             ();
 
-  void    GetJets          ();
+  void    GetJets           ();
 
-  void    GetJetPtSum      ();
+  void    GetJetPtSum       ();
 
-  void    GetLeptons       ();
+  void    GetLeptons        ();
 
-  void    GetMc            ();
+  void    GetMc             ();
 
-  void    GetMET           (float    module,
-			    float    phi);
+  void    GetMET            (float    module,
+			     float    phi);
 
-  void    GetTrkMET        (float    module,
-			    float    phi);
+  void    GetTrkMET         (float    module,
+			     float    phi);
 
-  void    GetMpMet         ();
+  void    GetMpMet          ();
 
-  void    GetMetVar        ();
+  void    GetMetVar         ();
 
-  void    GetMt            (Lepton   lep,
-			    float&   transverse_mass);
+  void    GetMt             (Lepton   lep,
+			     float&   transverse_mass);
 
-  void    GetPtWW          ();
+  void    GetPtWW           ();
 
-  void    GetSoftMuon      ();
+  void    GetSoftMuon       ();
 
-  void    GetFakeWeights   ();
+  void    GetFakeWeights    ();
 
-  void    GetGenPtllWeight ();
+  void    GetGenPtllWeight  ();
 
-  bool    IsIsolatedLepton (int      k);
+  bool    IsIsolatedLepton  (int      k);
 
-  float   MuonIsolation    (int      k);
+  float   MuonIsolation     (int      k);
 
-  void    PrintProgress    (Long64_t counter,
-			    Long64_t total);
+  void    PrintProgress     (Long64_t counter,
+			     Long64_t total);
 
-  void    Setup            (TString  analysis,
-			    TString  filename,
-			    float    luminosity);
+  void    Setup             (TString  analysis,
+			     TString  filename,
+			     float    luminosity);
 
-  void    Summary          (TString  analysis,
-			    TString  precision,
-			    TString  title);
+  void    Summary           (TString  analysis,
+			     TString  precision,
+			     TString  title);
 
-  void    GetStarVar       ();
+  void    GetStarVar        ();
 
-  void    GetDeltaPhi      ();
+  void    GetDeltaPhi       ();
 
-  void    OpenMinitree     ();
+  void    OpenMinitree      ();
 
-  void    SetSaveMinitree  (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+  void    SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+
+  void    GetSumOfWeightsLHE();
+
+  void    GetRatiosLHE      ();
 
 
   // Data members
@@ -184,8 +188,12 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30tight;
   float                  _ptww;
   float                  _pt2l;
-  float                  _trkpmet;
+  float                  _pdfratio_up;
+  float                  _pdfratio_down;
+  float                  _qcdratio_up;
+  float                  _qcdratio_down;
   float                  _sumjpt12;
+  float                  _trkpmet;
 
   Long64_t               _nentries;
 
@@ -202,6 +210,9 @@ class AnalysisCMS : public AnalysisBase
 
   // TH1 histograms
   //----------------------------------------------------------------------------
+  TH1D*                  h_pdfsum;
+  TH1D*                  h_qcdsum;
+
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
