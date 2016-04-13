@@ -128,6 +128,14 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (njet > 1);
 
     FillLevelHistograms(TTDM_03_Preselection, pass);
+
+    
+    // AN-16-105 analysis
+    //--------------------------------------------------------------------------
+    pass &= (_nbjet30medium > 0);
+    pass &= (_dphillmet > 1.2);
+
+    FillLevelHistograms(TTDM_04_AN16105, pass);
   }
 
 

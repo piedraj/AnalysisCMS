@@ -183,6 +183,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet20loose;
   float                  _nbjet20medium;
   float                  _nbjet20tight;
+  float                  _nbjet30loose;
+  float                  _nbjet30medium;
   float                  _nbjet30tight;
   float                  _ptww;
   float                  _pt2l;
@@ -267,6 +269,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet20loose [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20medium[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20tight [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30loose [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30medium[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
   TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
 };
