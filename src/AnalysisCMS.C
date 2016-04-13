@@ -1042,7 +1042,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2phi",       &_lep2phi,       "lep2phi/F");
   minitree->Branch("lep2pt",        &_lep2pt,        "lep2pt/F");
   minitree->Branch("mc",            &_mc,            "mc/F");
-  minitree->Branch("mll",           &_m2l,           "mll/F");
+  minitree->Branch("m2l",           &_m2l,           "m2l/F");
   minitree->Branch("mpmet",         &_mpmet,         "mpmet/F");
   minitree->Branch("metPfType1",    &metPfType1,     "metPfType1/F");
   minitree->Branch("metPfType1Phi", &metPfType1Phi,  "metPfType1Phi/F");
@@ -1058,7 +1058,10 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet20medium", &_nbjet20medium, "nbjet20medium/F");
   minitree->Branch("nbjet20tight",  &_nbjet20tight,  "nbjet20tight/F");
   minitree->Branch("nbjet30tight",  &_nbjet30tight,  "nbjet30tight/F");
-  minitree->Branch("njet",          &njet,          "njet/F");
+  minitree->Branch("njet",          &njet,           "njet/F");
+
+  if (std_vector_LHE_weight)
+    minitree->Branch("LHEweight", &std_vector_LHE_weight);
 }
 
 
