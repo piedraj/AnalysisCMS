@@ -145,6 +145,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet20loose [ichannel][icut][ijet]->Fill(_nbjet20loose,  _event_weight);
   h_nbjet20medium[ichannel][icut][ijet]->Fill(_nbjet20medium, _event_weight);
   h_nbjet20tight [ichannel][icut][ijet]->Fill(_nbjet20tight,  _event_weight);
+  h_nbjet30loose [ichannel][icut][ijet]->Fill(_nbjet30loose,  _event_weight);
+  h_nbjet30medium[ichannel][icut][ijet]->Fill(_nbjet30medium, _event_weight);
   h_nbjet30tight [ichannel][icut][ijet]->Fill(_nbjet30tight,  _event_weight);
   h_njet         [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
 
@@ -425,6 +427,8 @@ void AnalysisCMS::GetJets()
   _nbjet20loose  = 0;
   _nbjet20medium = 0;
   _nbjet20tight  = 0;
+  _nbjet30loose  = 0;
+  _nbjet30medium = 0;
   _nbjet30tight  = 0;
 
   int vector_jet_size = std_vector_jet_pt->size();
@@ -456,6 +460,8 @@ void AnalysisCMS::GetJets()
 
     if (pt < 30.) continue;
 
+    if (goodjet.cmvav2 > cMVAv2L) _nbjet30loose++;
+    if (goodjet.cmvav2 > cMVAv2M) _nbjet30medium++;
     if (goodjet.cmvav2 > cMVAv2T) _nbjet30tight++;
 
     AnalysisJets.push_back(goodjet);
@@ -967,6 +973,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet20loose [ichannel][icut][ijet] = new TH1D("h_nbjet20loose"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet20medium[ichannel][icut][ijet] = new TH1D("h_nbjet20medium" + suffix, "",    7, -0.5,  6.5);
   h_nbjet20tight [ichannel][icut][ijet] = new TH1D("h_nbjet20tight"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30loose [ichannel][icut][ijet] = new TH1D("h_nbjet30loose"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30medium[ichannel][icut][ijet] = new TH1D("h_nbjet30medium" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight [ichannel][icut][ijet] = new TH1D("h_nbjet30tight"  + suffix, "",    7, -0.5,  6.5);
   h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
 }
@@ -1034,6 +1042,8 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet20loose",  &_nbjet20loose,  "nbjet20loose/F");
   minitree->Branch("nbjet20medium", &_nbjet20medium, "nbjet20medium/F");
   minitree->Branch("nbjet20tight",  &_nbjet20tight,  "nbjet20tight/F");
+  minitree->Branch("nbjet30loose",  &_nbjet30loose,  "nbjet30loose/F");
+  minitree->Branch("nbjet30medium", &_nbjet30medium, "nbjet30medium/F");
   minitree->Branch("nbjet30tight",  &_nbjet30tight,  "nbjet30tight/F");
   minitree->Branch("njet",          &njet,           "njet/F");
 
@@ -1068,4 +1078,23 @@ void AnalysisCMS::GetGenPtllWeight()
   float p6 = 4.11653e+01;
 
   _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
+}
+
+
+//------------------------------------------------------------------------------
+// GetSumOfWeightsLHE
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetSumOfWeightsLHE()
+{
+  if (!std_vector_LHE_weight) return;
+
+  for (int i=0; i<h_pdfsum->GetNbinsX(); i++)
+    {
+      h_pdfsum->Fill(i, std_vector_LHE_weight->at(i+9));
+    }
+
+  for (int i=0; i<h_qcdsum->GetNbinsX(); i++)
+    {
+      h_qcdsum->Fill(i, std_vector_LHE_weight->at(i));
+    }
 }
