@@ -25,6 +25,16 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   //----------------------------------------------------------------------------
   TH1::SetDefaultSumw2();
 
+  if (_saveminitree)
+    {
+      root_minitree->cd();
+
+      h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
+      h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
+    }
+
+  root_output->cd();
+
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {
@@ -64,6 +74,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup();
+
+
+    // LHE weights for QCD and PDF systematic uncertainties
+    //--------------------------------------------------------------------------
+    GetSumOfWeightsLHE();
 
 
     // Analysis
@@ -113,6 +128,14 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (njet > 1);
 
     FillLevelHistograms(TTDM_03_Preselection, pass);
+
+    
+    // AN-16-105 analysis
+    //--------------------------------------------------------------------------
+    pass &= (_nbjet30medium > 0);
+    pass &= (_dphillmet > 1.2);
+
+    FillLevelHistograms(TTDM_04_AN16105, pass);
   }
 
 
