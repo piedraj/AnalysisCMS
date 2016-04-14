@@ -22,21 +22,10 @@ class AnalysisMonoH : public AnalysisCMS
 			      TString sample,
 			      float   luminosity);
 
-  void GetDeltaR             ();
 
   // Data members
   //----------------------------------------------------------------------------
-  float _deltarjet1met;
-  float _deltarjet2met;
-  float _deltarjj;
-  float _deltarjjmet;
-  float _deltarlep1jet1;
-  float _deltarlep1jet2;
-  float _deltarlep2jet1;
-  float _deltarlep2jet2;
-  float _deltarllmet;
-  float _deltarl1met;
-  float _deltarl2met;
+
 
   // Analysis histograms
   //----------------------------------------------------------------------------
