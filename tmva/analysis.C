@@ -10,8 +10,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-//const TString inputdir = "../minitrees/TTDM/";
-const TString inputdir = "/gpfs/csic_projects/cms/jgarciaf/CMSSW_7_6_3/src/AnalysisCMS/minitrees_thunc/TTDM/";
+const TString inputdir = "../minitrees/TTDM/";
 
 enum {njmin, njmax, nbmin, nbmax};
 
