@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "TFile.h"
+#include "TH1D.h"
 #include "TString.h"
 #include "TSystem.h"
 #include "TTree.h"
@@ -9,13 +10,16 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir = "../minitrees/TTDM/";
+//const TString inputdir = "../minitrees/TTDM/";
+const TString inputdir = "/gpfs/csic_projects/cms/jgarciaf/CMSSW_7_6_3/src/AnalysisCMS/minitrees_thunc/TTDM/";
 
 enum {njmin, njmax, nbmin, nbmax};
 
 
 // Functions
 //------------------------------------------------------------------------------
+void  GetPdfQcdSyst   (TString sample);
+
 float GetYield        (TString sample);
 
 void  PrintYield      (TString sample,
@@ -57,12 +61,13 @@ ofstream                 _datacard;
 // analysis
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void analysis(TString signal            = "ttDM0001scalar0500",
-	      float   cut               = 0.80,
-	      bool    doPrintYields     = true,
-	      bool    doGetScaleFactors = false)
+void analysis(TString signal            = "ttDM0001scalar0010",
+	      float   cut               = 0.16,
+	      bool    doPrintYields     = false,
+	      bool    doGetScaleFactors = false,
+	      bool    doGetPdfQcdSyst   = true)
 {
-  if (!doPrintYields && !doGetScaleFactors) return;
+  if (!doPrintYields && !doGetScaleFactors && !doGetPdfQcdSyst) return;
 
   printf("\n [analysis] signal = %s and MVA cut = %.2f\n\n", signal.Data(), cut);
 
@@ -100,7 +105,117 @@ void analysis(TString signal            = "ttDM0001scalar0500",
     GetScaleFactors(ww_box3, top_box1);
     GetScaleFactors(ww_box3, top_box2);
   }
+
+
+  // Get PDF and QCD systematic uncertainties
+  //----------------------------------------------------------------------------
+  if (doGetPdfQcdSyst)
+    {
+      printf("\n [GetPdfQcdSyst]\n\n");
+
+      GetPdfQcdSyst("02_WZTo3LNu");
+      GetPdfQcdSyst("03_ZZ");
+    //GetPdfQcdSyst("04_TTTo2L2Nu");  // Scale factor estimated from data-driven method
+    //GetPdfQcdSyst("06_WW");         // Scale factor estimated from data-driven method
+      GetPdfQcdSyst("05_ST");
+      GetPdfQcdSyst("07_ZJets");
+      GetPdfQcdSyst("09_TTV");
+      GetPdfQcdSyst("10_HWW");
+      GetPdfQcdSyst("11_Wg");
+    //GetPdfQcdSyst("12_Zg");
+    //GetPdfQcdSyst("13_VVV");
+      GetPdfQcdSyst("14_HZ");
+
+      printf("\n");
+    }
 }
+
+
+//------------------------------------------------------------------------------
+// GetPdfQcdSyst
+//------------------------------------------------------------------------------
+void GetPdfQcdSyst(TString sample)
+{
+  TFile* file = new TFile(inputdir + sample + ".root", "read");
+
+  TTree* tree = (TTree*)file->Get("latino");
+
+  float          mva;
+  float          njet;
+  vector<float> *LHEweight = 0;
+
+  tree->SetBranchAddress("mva_" + _signal, &mva);
+  tree->SetBranchAddress("njet",           &njet);
+  tree->SetBranchAddress("LHEweight",      &LHEweight );
+
+  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum");
+  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum");
+
+  TH1D* h_pdfsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_pdfsum_rec");
+  TH1D* h_qcdsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_qcdsum_rec");
+
+  h_pdfsum_rec->Reset();
+  h_qcdsum_rec->Reset();
+
+  int nbinpdf = h_pdfsum_gen->GetNbinsX();
+  int nbinqcd = h_qcdsum_gen->GetNbinsX();
+
+
+  // Loop over the tree
+  //----------------------------------------------------------------------------
+  Long64_t nentries = tree->GetEntries();
+
+  for (Long64_t i=0; i<nentries; i++) {
+
+    tree->GetEntry(i);
+
+    if (mva < _cut) continue;
+
+    if (njet < 1) continue;
+
+    for (int a=0; a<nbinpdf; a++) h_pdfsum_rec->Fill(a, LHEweight->at(a+9));
+    for (int a=0; a<nbinqcd; a++) h_qcdsum_rec->Fill(a, LHEweight->at(a));
+  }
+
+
+  // Produce the QCD uncertainties
+  //----------------------------------------------------------------------------
+  float qcdratio_gen_up   = h_qcdsum_gen->GetBinContent(9) / h_qcdsum_gen->GetBinContent(1);
+  float qcdratio_gen_down = h_qcdsum_gen->GetBinContent(5) / h_qcdsum_gen->GetBinContent(1);
+
+  float qcdratio_rec_up   = h_qcdsum_rec->GetBinContent(9) / h_qcdsum_rec->GetBinContent(1);
+  float qcdratio_rec_down = h_qcdsum_rec->GetBinContent(5) / h_qcdsum_rec->GetBinContent(1);
+
+
+  // Produce the PDF uncertainties
+  //----------------------------------------------------------------------------
+  float pdf_gen_mean = h_pdfsum_gen->Integral() / nbinpdf;
+  float pdf_rec_mean = h_pdfsum_rec->Integral() / nbinpdf;
+
+  float pdf_gen_mean_sq = 0;
+  float pdf_rec_mean_sq = 0;
+
+  for (int a=1; a<=nbinpdf; a++)
+    {
+      pdf_gen_mean_sq += (pow(h_pdfsum_gen->GetBinContent(a), 2) / nbinpdf);
+      pdf_rec_mean_sq += (pow(h_pdfsum_rec->GetBinContent(a), 2) / nbinpdf);
+    }
+
+  float pdf_gen_sd = sqrt(pdf_gen_mean_sq - pow(pdf_gen_mean, 2)); 
+  float pdf_rec_sd = sqrt(pdf_rec_mean_sq - pow(pdf_rec_mean, 2)); 
+
+  float pdf_gen_ratio = 1 + (pdf_gen_sd / pdf_gen_mean);
+  float pdf_rec_ratio = 1 + (pdf_rec_sd / pdf_rec_mean);
+
+
+  // Print the uncertainties
+  //----------------------------------------------------------------------------
+  printf("\n %s\n", sample.Data());
+  printf("---------------------------------------\n");
+  printf(" QCD up   -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_up,   qcdratio_rec_up   / qcdratio_gen_up);
+  printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
+  printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
+}  
 
 
 //------------------------------------------------------------------------------
