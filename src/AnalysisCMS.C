@@ -354,7 +354,6 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
 
     if (pt < 0.) continue;
-    //    if (abs(std_vector_lepton_flavour->at(i)) == 13 && abs(std_vector_lepton_eta->at(i)) > 2.4) continue;
 
     bool reject_lepton = false;
     
