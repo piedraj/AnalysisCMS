@@ -42,8 +42,21 @@
     ./runPlotter
 
 
-3. Print final yields
+3. Run analysis.C
 ====
 
-    root -l -b -q "analysis.C+(\"ttDM0001pseudo0010\",0.56)"
+Print all yields for a given signal and MVA cut.
 
+    doPrintYields = true,
+
+Get the top and WW scale factors,
+
+    doGetScaleFactors = true,
+
+Get the PDF and QCD systematic uncertainties.
+
+    doGetPdfQcdSyst = true,
+
+Run the code.   
+
+    root -l -b -q "analysis.C+(\"ttDM0001pseudo0010\",0.56)"

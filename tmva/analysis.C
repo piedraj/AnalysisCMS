@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "TFile.h"
+#include "TH1D.h"
 #include "TString.h"
 #include "TSystem.h"
 #include "TTree.h"
@@ -16,20 +17,23 @@ enum {njmin, njmax, nbmin, nbmax};
 
 // Functions
 //------------------------------------------------------------------------------
-float GetYield        (TString sample);
+void  GetPdfQcdSyst   (TString sample);
+
+float GetYield        (TString sample,
+		       float   cut = -999);
 
 void  PrintYield      (TString sample,
 		       float   yield);
 
-void  PrintYields     ();
+void  PrintYields     (float   cut = -999);
 
 void  GetBoxPopulation(TString sample,
 		       float*  box1,
 		       float*  box2,
-		       float&  mvaregion1_box1_yield,
-		       float&  mvaregion1_box2_yield,
-		       float&  mvaregion2_box1_yield,
-		       float&  mvaregion2_box2_yield);
+		       float&  region1_box1_yield,
+		       float&  region1_box2_yield,
+		       float&  region2_box1_yield,
+		       float&  region2_box2_yield);
 
 void  GetScaleFactors (float*  box_ww,
 		       float*  box_top);
@@ -58,11 +62,12 @@ ofstream                 _datacard;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void analysis(TString signal            = "ttDM0001scalar0500",
-	      float   cut               = 0.80,
+	      float   cut               = 0.8,
 	      bool    doPrintYields     = true,
-	      bool    doGetScaleFactors = false)
+	      bool    doGetScaleFactors = false,
+	      bool    doGetPdfQcdSyst   = false)
 {
-  if (!doPrintYields && !doGetScaleFactors) return;
+  if (!doPrintYields && !doGetScaleFactors && !doGetPdfQcdSyst) return;
 
   printf("\n [analysis] signal = %s and MVA cut = %.2f\n\n", signal.Data(), cut);
 
@@ -76,7 +81,9 @@ void analysis(TString signal            = "ttDM0001scalar0500",
 
     gSystem->mkdir("datacards", kTRUE);
   
-    PrintYields();
+    //    PrintYields(_cut);
+
+    for (int i=0; i<10; i++) PrintYields(0.1*i);
   }
 
 
@@ -100,14 +107,126 @@ void analysis(TString signal            = "ttDM0001scalar0500",
     GetScaleFactors(ww_box3, top_box1);
     GetScaleFactors(ww_box3, top_box2);
   }
+
+
+  // Get PDF and QCD systematic uncertainties
+  //----------------------------------------------------------------------------
+  if (doGetPdfQcdSyst)
+    {
+      printf("\n [GetPdfQcdSyst]\n\n");
+
+      GetPdfQcdSyst("02_WZTo3LNu");
+      GetPdfQcdSyst("03_ZZ");
+    //GetPdfQcdSyst("04_TTTo2L2Nu");  // Scale factor estimated from data-driven method
+    //GetPdfQcdSyst("06_WW");         // Scale factor estimated from data-driven method
+      GetPdfQcdSyst("05_ST");
+      GetPdfQcdSyst("07_ZJets");
+      GetPdfQcdSyst("09_TTV");
+      GetPdfQcdSyst("10_HWW");
+      GetPdfQcdSyst("11_Wg");
+    //GetPdfQcdSyst("12_Zg");
+    //GetPdfQcdSyst("13_VVV");
+      GetPdfQcdSyst("14_HZ");
+
+      printf("\n");
+    }
 }
+
+
+//------------------------------------------------------------------------------
+// GetPdfQcdSyst
+//------------------------------------------------------------------------------
+void GetPdfQcdSyst(TString sample)
+{
+  TFile* file = new TFile(inputdir + sample + ".root", "read");
+
+  TTree* tree = (TTree*)file->Get("latino");
+
+  float          mva;
+  float          njet;
+  vector<float> *LHEweight = 0;
+
+  tree->SetBranchAddress("mva_" + _signal, &mva);
+  tree->SetBranchAddress("njet",           &njet);
+  tree->SetBranchAddress("LHEweight",      &LHEweight );
+
+  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum");
+  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum");
+
+  TH1D* h_pdfsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_pdfsum_rec");
+  TH1D* h_qcdsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_qcdsum_rec");
+
+  h_pdfsum_rec->Reset();
+  h_qcdsum_rec->Reset();
+
+  int nbinpdf = h_pdfsum_gen->GetNbinsX();
+  int nbinqcd = h_qcdsum_gen->GetNbinsX();
+
+
+  // Loop over the tree
+  //----------------------------------------------------------------------------
+  Long64_t nentries = tree->GetEntries();
+
+  for (Long64_t i=0; i<nentries; i++) {
+
+    tree->GetEntry(i);
+
+    if (mva < _cut) continue;
+
+    if (njet < 1) continue;
+
+    for (int a=0; a<nbinpdf; a++) h_pdfsum_rec->Fill(a, LHEweight->at(a+9));
+    for (int a=0; a<nbinqcd; a++) h_qcdsum_rec->Fill(a, LHEweight->at(a));
+  }
+
+
+  // Produce the QCD uncertainties
+  //----------------------------------------------------------------------------
+  float qcdratio_gen_up   = h_qcdsum_gen->GetBinContent(9) / h_qcdsum_gen->GetBinContent(1);
+  float qcdratio_gen_down = h_qcdsum_gen->GetBinContent(5) / h_qcdsum_gen->GetBinContent(1);
+
+  float qcdratio_rec_up   = h_qcdsum_rec->GetBinContent(9) / h_qcdsum_rec->GetBinContent(1);
+  float qcdratio_rec_down = h_qcdsum_rec->GetBinContent(5) / h_qcdsum_rec->GetBinContent(1);
+
+
+  // Produce the PDF uncertainties
+  //----------------------------------------------------------------------------
+  float pdf_gen_mean = h_pdfsum_gen->Integral() / nbinpdf;
+  float pdf_rec_mean = h_pdfsum_rec->Integral() / nbinpdf;
+
+  float pdf_gen_mean_sq = 0;
+  float pdf_rec_mean_sq = 0;
+
+  for (int a=1; a<=nbinpdf; a++)
+    {
+      pdf_gen_mean_sq += (pow(h_pdfsum_gen->GetBinContent(a), 2) / nbinpdf);
+      pdf_rec_mean_sq += (pow(h_pdfsum_rec->GetBinContent(a), 2) / nbinpdf);
+    }
+
+  float pdf_gen_sd = sqrt(pdf_gen_mean_sq - pow(pdf_gen_mean, 2)); 
+  float pdf_rec_sd = sqrt(pdf_rec_mean_sq - pow(pdf_rec_mean, 2)); 
+
+  float pdf_gen_ratio = 1 + (pdf_gen_sd / pdf_gen_mean);
+  float pdf_rec_ratio = 1 + (pdf_rec_sd / pdf_rec_mean);
+
+
+  // Print the uncertainties
+  //----------------------------------------------------------------------------
+  printf("\n %s\n", sample.Data());
+  printf("---------------------------------------\n");
+  printf(" QCD up   -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_up,   qcdratio_rec_up   / qcdratio_gen_up);
+  printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
+  printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
+}  
 
 
 //------------------------------------------------------------------------------
 // GetYield
 //------------------------------------------------------------------------------
-float GetYield(TString sample)
+float GetYield(TString sample, float cut)
 {
+  if (cut < 0) cut = _cut;
+
   TFile* file = new TFile(inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
@@ -128,7 +247,7 @@ float GetYield(TString sample)
 
     tree->GetEntry(ievt);
 
-    if (njet > 1 && mva > _cut) yield += eventW;
+    if (njet > 1 && mva > cut) yield += eventW;
   }
 
   PrintYield(sample, yield);
@@ -149,25 +268,27 @@ void PrintYield(TString sample, float yield)
 //------------------------------------------------------------------------------
 // PrintYields
 //------------------------------------------------------------------------------
-void PrintYields()
+void PrintYields(float cut)
 {
-  printf("\n [PrintYields]\n\n");
+  if (cut < 0) cut = _cut;
 
-  float nsignal = GetYield(_signal);
-  float ndata   = GetYield("01_Data");
+  printf("\n [PrintYields] MVA cut = %.2f\n\n", cut);
+
+  float nsignal = GetYield(_signal,   cut);
+  float ndata   = GetYield("01_Data", cut);
   
   float nexpected = 0;
   
-  nexpected += GetYield("14_HZ");
-  nexpected += GetYield("06_WW");
-  nexpected += GetYield("02_WZTo3LNu");
-  nexpected += GetYield("03_ZZ");
-  nexpected += GetYield("11_Wg");
-  nexpected += GetYield("07_ZJets");
-  nexpected += GetYield("09_TTV");
-  nexpected += GetYield("04_TTTo2L2Nu");
-  nexpected += GetYield("05_ST");
-  nexpected += GetYield("00_Fakes");
+  nexpected += GetYield("14_HZ",        cut);
+  nexpected += GetYield("06_WW",        cut);
+  nexpected += GetYield("02_WZTo3LNu",  cut);
+  nexpected += GetYield("03_ZZ",        cut);
+  nexpected += GetYield("11_Wg",        cut);
+  nexpected += GetYield("07_ZJets",     cut);
+  nexpected += GetYield("09_TTV",       cut);
+  nexpected += GetYield("04_TTTo2L2Nu", cut);
+  nexpected += GetYield("05_ST",        cut);
+  nexpected += GetYield("00_Fakes",     cut);
 
   printf("--------------------------------\n");
 
@@ -180,7 +301,7 @@ void PrintYields()
 
   //  Create the datacard
   //----------------------------------------------------------------------------
-  _datacard.open("datacards/" + _signal + ".txt");
+  _datacard.open(Form("datacards/%s_mva%.2f.txt", _signal.Data(), cut));
 
   _datacard << "imax 1   number of channels\n";
   _datacard << "jmax 1   number of backgrounds\n";
@@ -207,10 +328,10 @@ void PrintYields()
 void GetBoxPopulation(TString sample,
 		      float*  box1,
 		      float*  box2,
-		      float&  mvaregion1_box1_yield,
-		      float&  mvaregion1_box2_yield,
-		      float&  mvaregion2_box1_yield,
-		      float&  mvaregion2_box2_yield)
+		      float&  region1_box1_yield,
+		      float&  region1_box2_yield,
+		      float&  region2_box1_yield,
+		      float&  region2_box2_yield)
 {
   float temporary_sf = (sample.Contains("TTTo2L2Nu")) ? (1./0.93) : 1.;
 
@@ -219,19 +340,19 @@ void GetBoxPopulation(TString sample,
   TTree* tree = (TTree*)file->Get("latino");
 
   float eventW;
+  float mva;
   float nbjet;
   float njet;
-  float mva;
 
   tree->SetBranchAddress("eventW",         &eventW);
+  tree->SetBranchAddress("mva_" + _signal, &mva);
   tree->SetBranchAddress("nbjet20loose",   &nbjet);
   tree->SetBranchAddress("njet",           &njet);
-  tree->SetBranchAddress("mva_" + _signal, &mva);
 
-  mvaregion1_box1_yield = 0;
-  mvaregion1_box2_yield = 0;
-  mvaregion2_box1_yield = 0;
-  mvaregion2_box2_yield = 0;
+  region1_box1_yield = 0;
+  region1_box2_yield = 0;
+  region2_box1_yield = 0;
+  region2_box2_yield = 0;
 
   Long64_t nentries = tree->GetEntries();
 
@@ -239,11 +360,8 @@ void GetBoxPopulation(TString sample,
 
     tree->GetEntry(ievt);
 
-    //    bool reject_mvaregion1 = (mva < _cut-0.2 || mva > _cut);
-    //    bool reject_mvaregion2 = (mva < _cut-0.4 || mva > _cut-0.2);
-
-    bool reject_mvaregion1 = (mva < _cut/2. || mva > _cut);
-    bool reject_mvaregion2 = (mva > _cut/2.);
+    bool reject_region1 = (mva < _cut/2. || mva > _cut);
+    bool reject_region2 = (mva > _cut/2.);
 
     bool reject_box1 = ((box1[njmin] > -1 && njet  < box1[njmin]) ||
 			(box1[njmax] > -1 && njet  > box1[njmax]) ||
@@ -255,10 +373,10 @@ void GetBoxPopulation(TString sample,
 			(box2[nbmin] > -1 && nbjet < box2[nbmin]) ||
 			(box2[nbmax] > -1 && nbjet > box2[nbmax]));
 
-    if (!reject_mvaregion1 && !reject_box1) mvaregion1_box1_yield += (eventW * temporary_sf);
-    if (!reject_mvaregion1 && !reject_box2) mvaregion1_box2_yield += (eventW * temporary_sf);
-    if (!reject_mvaregion2 && !reject_box1) mvaregion2_box1_yield += (eventW * temporary_sf);
-    if (!reject_mvaregion2 && !reject_box2) mvaregion2_box2_yield += (eventW * temporary_sf);
+    if (!reject_region1 && !reject_box1) region1_box1_yield += (eventW * temporary_sf);
+    if (!reject_region1 && !reject_box2) region1_box2_yield += (eventW * temporary_sf);
+    if (!reject_region2 && !reject_box1) region2_box1_yield += (eventW * temporary_sf);
+    if (!reject_region2 && !reject_box2) region2_box2_yield += (eventW * temporary_sf);
   }
 }
 
