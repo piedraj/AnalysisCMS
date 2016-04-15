@@ -185,22 +185,6 @@ void AnalysisCMS::Summary(TString analysis,
     int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
     int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
 
-  firstChannel = (analysis.EqualTo("FR")) ? e : firstChannel;
-  lastChannel = (analysis.EqualTo("FR")) ? ee : lastChannel;
-  
-  /*
-  if (analysis.EqualTo("FR")) {
-      int firstChannel = e;
-      int lastChannel =ee;
-  } else if (analysis.EqualTo("WZ")) {
-	int firstChannel = eee;
-	int lastChannel = nchannel;
-      } else {
-	int firstChannel = ee;
-	int lastChannel = eee;
-      }
-  */  
-
   txt_summary << Form("\n%30s", title.Data());
 
   for (int i=firstChannel; i<lastChannel; i++)
@@ -359,7 +343,7 @@ void AnalysisCMS::GetLeptons()
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
-
+  
   int vector_lepton_size = std_vector_lepton_pt->size();
 
   for (int i=0; i<vector_lepton_size; i++) {
@@ -369,6 +353,8 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
+
+    //    if (std_vector_lepton_isLooseLepton -> at(i) != 1) continue;
 
     if (pt < 0.) continue;
 

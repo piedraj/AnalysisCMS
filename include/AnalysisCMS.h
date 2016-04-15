@@ -40,6 +40,8 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0);
 
+  
+
   void    ApplyWeights      ();
 
   void    DefineHistograms  (int      ichannel,
