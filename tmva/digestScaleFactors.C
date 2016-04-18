@@ -1,16 +1,16 @@
 const int ntrials = 6;
 
-float sf_top_near[ntrials] = { 0.90,  0.84,  0.89,  0.83,  0.89,  0.83};
-float sf_ww_near [ntrials] = { 0.41,  0.43,  0.87,  0.96,  0.70,  0.77};
-float er_top_near[ntrials] = { 0.06,  0.04,  0.06,  0.04,  0.06,  0.04};
-float er_ww_near [ntrials] = { 0.57,  0.57,  0.32,  0.32,  0.29,  0.29};
-float cov_near   [ntrials] = {-0.16, -0.26, -0.33, -0.32, -0.28, -0.27};
+float sf_top_near[ntrials] = { 0.96,  0.92,  0.95,  0.92,  0.96,  0.92};
+float er_top_near[ntrials] = { 0.05,  0.03,  0.05,  0.03,  0.05,  0.03};
+float sf_ww_near [ntrials] = { 0.67,  0.69,  0.85,  0.91,  0.77,  0.81};
+float er_ww_near [ntrials] = { 0.36,  0.36,  0.26,  0.26,  0.22,  0.22};
+float cov_near   [ntrials] = {-0.14, -0.22, -0.34, -0.32, -0.27, -0.26};
 
-float sf_top_far[ntrials] = { 1.00,  0.90,  1.00,  0.90,  1.00,  0.90};
-float er_top_far[ntrials] = { 0.05,  0.04,  0.05,  0.04,  0.05,  0.04};
-float sf_ww_far [ntrials] = { 0.25,  0.29,  0.02,  0.17,  0.20,  0.26};
-float er_ww_far [ntrials] = { 0.17,  0.17,  0.30,  0.30,  0.15,  0.15};
-float cov_far   [ntrials] = {-0.13, -0.15, -0.30, -0.31, -0.22, -0.21};
+float sf_top_far[ntrials] = { 1.09,  0.99,  1.10,  1.00,  1.09,  1.00};
+float er_top_far[ntrials] = { 0.04,  0.03,  0.04,  0.03,  0.04,  0.03};
+float sf_ww_far [ntrials] = { 0.71,  0.74,  0.41,  0.57,  0.64,  0.70};
+float er_ww_far [ntrials] = { 0.14,  0.14,  0.25,  0.25,  0.12,  0.12};
+float cov_far   [ntrials] = {-0.13, -0.14, -0.30, -0.31, -0.22, -0.21};
 
 
 //------------------------------------------------------------------------------
