@@ -20,31 +20,50 @@ float cov_far   [ntrials] = {-0.13, -0.15, -0.30, -0.31, -0.22, -0.21};
 //------------------------------------------------------------------------------
 void digestScaleFactors()
 {
-  float sf_top = 0;
-  float sf_ww  = 0;
-  float er_top = 0;
-  float er_ww  = 0;
+  float sf_top_av  = 0;
+  float sf_top_av2 = 0;
+  float sf_ww_av   = 0;
+  float sf_ww_av2  = 0;
 
   for (int i=0; i<ntrials; i++)
     {
-      sf_top += sf_top_near[i];
-      sf_ww  += sf_ww_near [i];
-
-      er_top += (er_top_near[i]*er_top_near[i]);
-      er_top += (er_top_far [i]*er_top_far [i]);
-
-      er_ww += (er_ww_near[i]*er_ww_near[i]);
-      er_ww += (er_ww_far [i]*er_ww_far [i]);
+      sf_top_av += (sf_top_near[i] + sf_top_far[i]);
+      sf_ww_av  += (sf_ww_near [i] + sf_ww_far [i]);
+ 
+      sf_top_av2 += (sf_top_near[i]*sf_top_near[i] + sf_top_far[i]*sf_top_far[i]);
+      sf_ww_av2  += (sf_ww_near [i]*sf_ww_near [i] + sf_ww_far [i]*sf_ww_far [i]);
     }
 
-  sf_top /= ntrials;
-  sf_ww  /= ntrials;
-  
-  er_top = sqrt(er_top) / ntrials;
-  er_ww  = sqrt(er_ww)  / ntrials;
 
+  // Average
+  sf_top_av /= (2. * ntrials);
+  sf_ww_av  /= (2. * ntrials);
+
+
+  // Average of squares
+  sf_top_av2 /= (2. * ntrials);
+  sf_ww_av2  /= (2. * ntrials);
+
+
+  // Spread taken as systematic
+  float rms_top = sqrt(sf_top_av2 - sf_top_av*sf_top_av);
+  float rms_ww  = sqrt(sf_ww_av2  - sf_ww_av *sf_ww_av);
+
+
+  // Weighted average of near and far for the first box
+  float er_top = 1./(er_top_near[0]*er_top_near[0]) + 1./(er_top_far[0]*er_top_far[0]);
+  float er_ww  = 1./(er_ww_near [0]*er_ww_near [0]) + 1./(er_ww_far [0]*er_ww_far [0]);
+
+  er_top = 1./sqrt(er_top);
+  er_ww  = 1./sqrt(er_ww);
+
+  float sf_top = (sf_top_near[0]/(er_top_near[0]*er_top_near[0]) + sf_top_far[0]/(er_top_far[0]*er_top_far[0]))*er_top*er_top;
+  float sf_ww  = (sf_ww_near [0]/(er_ww_near [0]*er_ww_near [0]) + sf_ww_far [0]/(er_ww_far [0]*er_ww_far [0]))*er_ww*er_ww;
+
+
+  // Print
   printf("\n");
-  printf(" SF ttbar = %.2f +- %.2f\n", sf_top, er_top);
-  printf(" SF WW    = %.2f +- %.2f\n", sf_ww,  er_ww);
+  printf(" SF ttbar = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_top, er_top,rms_top);
+  printf(" SF WW    = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_ww,  er_ww, rms_ww);
   printf("\n");
 }

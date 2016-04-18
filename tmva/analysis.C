@@ -64,8 +64,8 @@ ofstream                 _datacard;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void analysis(TString signal            = "ttDM0001scalar0500",
 	      float   cut               = 0.8,
-	      bool    doPrintYields     = false,
-	      bool    doGetScaleFactors = true,
+	      bool    doPrintYields     = true,
+	      bool    doGetScaleFactors = false,
 	      bool    doGetPdfQcdSyst   = false)
 {
   if (!doPrintYields && !doGetScaleFactors && !doGetPdfQcdSyst) return;
@@ -83,8 +83,11 @@ void analysis(TString signal            = "ttDM0001scalar0500",
     gSystem->mkdir("datacards", kTRUE);
   
     //    PrintYields(_cut);
+    
+    int   nstep = 50;
+    float step  = 1. / nstep;
 
-    for (int i=0; i<10; i++) PrintYields(0.1*i);
+    for (int i=0; i<nstep; i++) PrintYields(step * i);
   }
 
 
@@ -131,6 +134,8 @@ void analysis(TString signal            = "ttDM0001scalar0500",
 
       if (_verbosity > 0) printf("\n");
     }
+
+  printf("\n [analysis] I hope you are happy with the results!\n\n");
 }
 
 
@@ -251,7 +256,11 @@ float GetYield(TString sample, float cut)
     if (njet > 1 && mva > cut) yield += eventW;
   }
 
-  PrintYield(sample, yield);
+  if (_verbosity > 0) PrintYield(sample, yield);
+
+  delete tree;
+
+  file->Close();
 
   return yield;
 }
@@ -273,7 +282,11 @@ void PrintYields(float cut)
 {
   if (cut < 0) cut = _cut;
 
-  if (_verbosity > 0) printf("\n [PrintYields] MVA cut = %.2f\n\n", cut);
+  if (_verbosity > 0) printf("\n");
+
+  printf(" [PrintYields] MVA cut = %.2f\n", cut);
+
+  if (_verbosity > 0) printf("\n");
 
   float nsignal = GetYield(_signal,   cut);
   float ndata   = GetYield("01_Data", cut);
@@ -291,13 +304,16 @@ void PrintYields(float cut)
   nexpected += GetYield("05_ST",        cut);
   nexpected += GetYield("00_Fakes",     cut);
 
-  printf("--------------------------------\n");
+  if (_verbosity > 0)
+    {
+      printf("--------------------------------\n");
 
-  PrintYield("signal",   nsignal);
-  PrintYield("data",     ndata);
-  PrintYield("expected", nexpected);
+      PrintYield("signal",   nsignal);
+      PrintYield("data",     ndata);
+      PrintYield("expected", nexpected);
 
-  printf("\n");
+      printf("\n");
+    }
 
 
   //  Create the datacard
