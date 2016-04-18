@@ -32,7 +32,9 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = (analysis.EqualTo("TTDM")) ? lumi_fb_blind : lumi_fb;
+  float lumi = lumi_fb;
+
+  //  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
 
   Bool_t scale = logY;
 
@@ -49,7 +51,7 @@ void runPlotter(TString level,
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    (  true);
+  plotter.SetSavePdf    ( false);
 
   if (option.Contains("nostack"))
     {
@@ -131,8 +133,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
-      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      //plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
 
