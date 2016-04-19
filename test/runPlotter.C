@@ -34,7 +34,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  //  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
+  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
 
   Bool_t scale = logY;
 
@@ -102,7 +102,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
       plotter.AddProcess("07_ZJets",    "Z+jets",  color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",     color_ST);
 
       if (datadriven)

@@ -21,6 +21,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _mcfile.clear();
   _mccolor.clear();
   _mclabel.clear();
+  _mcscale.clear();
 
   _datafile  = NULL;
   _datahist  = NULL;
@@ -56,7 +57,8 @@ void HistogramReader::AddData(const TString& filename,
 //------------------------------------------------------------------------------
 void HistogramReader::AddProcess(const TString& filename,
 				 const TString& label,
-				 Color_t        color)
+				 Color_t        color,
+				 Float_t        scale)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
 
@@ -71,6 +73,10 @@ void HistogramReader::AddProcess(const TString& filename,
   _mcfile.push_back(file);
   _mclabel.push_back(label);
   _mccolor.push_back(color);
+  _mcscale.push_back(scale);
+  
+  if (scale > 0)
+    printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 }
 
 
@@ -169,6 +175,8 @@ void HistogramReader::Draw(TString hname,
     _mcfile[i]->cd();
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
+
+    if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
@@ -518,7 +526,11 @@ void HistogramReader::CrossSection(TString level,
       }
     else
       {
+
 	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+
+	if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
+
 	_mchist.push_back((TH1D*)dummy->Clone());
       }
   }

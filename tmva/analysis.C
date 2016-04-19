@@ -64,8 +64,8 @@ ofstream                 _datacard;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void analysis(TString signal            = "ttDM0001scalar0500",
 	      float   cut               = 0.8,
-	      bool    doPrintYields     = true,
-	      bool    doGetScaleFactors = false,
+	      bool    doPrintYields     = false,
+	      bool    doGetScaleFactors = true,
 	      bool    doGetPdfQcdSyst   = false)
 {
   if (!doPrintYields && !doGetScaleFactors && !doGetPdfQcdSyst) return;
@@ -350,8 +350,6 @@ void GetBoxPopulation(TString sample,
 		      float&  region2_box1_yield,
 		      float&  region2_box2_yield)
 {
-  float temporary_sf = (sample.Contains("TTTo2L2Nu")) ? (1./0.93) : 1.;
-
   TFile* file = new TFile(_inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
@@ -390,10 +388,10 @@ void GetBoxPopulation(TString sample,
 			(box2[nbmin] > -1 && nbjet < box2[nbmin]) ||
 			(box2[nbmax] > -1 && nbjet > box2[nbmax]));
 
-    if (!reject_region1 && !reject_box1) region1_box1_yield += (eventW * temporary_sf);
-    if (!reject_region1 && !reject_box2) region1_box2_yield += (eventW * temporary_sf);
-    if (!reject_region2 && !reject_box1) region2_box1_yield += (eventW * temporary_sf);
-    if (!reject_region2 && !reject_box2) region2_box2_yield += (eventW * temporary_sf);
+    if (!reject_region1 && !reject_box1) region1_box1_yield += eventW;
+    if (!reject_region1 && !reject_box2) region1_box2_yield += eventW;
+    if (!reject_region2 && !reject_box1) region2_box1_yield += eventW;
+    if (!reject_region2 && !reject_box2) region2_box2_yield += eventW;
   }
 }
 

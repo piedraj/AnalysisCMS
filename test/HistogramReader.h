@@ -43,7 +43,8 @@ class HistogramReader
 
   void     AddProcess         (const TString& filename,
 			       const TString& label,
-			       Color_t        color);
+			       Color_t        color,
+			       Float_t        scale = -1);
 
   void     AddSignal          (const TString& filename,
 			       const TString& label,
@@ -177,6 +178,7 @@ class HistogramReader
   std::vector<TH1*>     _kk;
   std::vector<Color_t>  _mccolor;
   std::vector<TString>  _mclabel;
+  std::vector<Float_t>  _mcscale;
 
   std::vector<TFile*>   _signalfile;
   std::vector<TH1*>     _signalhist;
