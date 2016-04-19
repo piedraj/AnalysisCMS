@@ -59,17 +59,13 @@ class AnalysisCMS : public AnalysisBase
 			     int      icut,
 			     int      ijet);
 
-  void    GetDeltaPhiVeto   ();
+  void    GetFakeWeights    ();
 
-  void    GetHt             ();
+  void    GetGenPtllWeight  ();
 
   void    GetJets           ();
 
-  void    GetJetPtSum       ();
-
   void    GetLeptons        ();
-
-  void    GetMc             ();
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -77,27 +73,16 @@ class AnalysisCMS : public AnalysisBase
   void    GetTrkMET         (float    module,
 			     float    phi);
 
-  void    GetMpMet          ();
-
-  void    GetMetVar         ();
-
-  void    GetMt             (Lepton   lep,
-			     float&   transverse_mass);
-
-  void    GetPtWW           ();
-
-  void    GetSoftMuon       ();
-
-  void    GetFakeWeights    ();
-
-  void    GetGenPtllWeight  ();
-
   bool    IsIsolatedLepton  (int      k);
 
   float   MuonIsolation     (int      k);
 
+  void    OpenMinitree      ();
+
   void    PrintProgress     (Long64_t counter,
 			     Long64_t total);
+
+  void    SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
 
   void    Setup             (TString  analysis,
 			     TString  filename,
@@ -107,13 +92,33 @@ class AnalysisCMS : public AnalysisBase
 			     TString  precision,
 			     TString  title);
 
-  void    GetStarVar        ();
 
+  // New analysis variables
+  //----------------------------------------------------------------------------
   void    GetDeltaPhi       ();
 
-  void    OpenMinitree      ();
+  void    GetDeltaPhiVeto   ();
 
-  void    SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+  void    GetDeltaR         ();
+
+  void    GetHt             ();
+
+  void    GetJetPtSum       ();
+
+  void    GetMc             ();
+
+  void    GetMetVar         ();
+
+  void    GetMpMet          ();
+
+  void    GetMt             (Lepton   lep,
+			     float&   transverse_mass);
+
+  void    GetPtWW           ();
+
+  void    GetSoftMuon       ();
+
+  void    GetStarVar        ();
 
   void    GetSumOfWeightsLHE();
 
@@ -138,6 +143,17 @@ class AnalysisCMS : public AnalysisBase
   TString                _sample;
 
   float                  _channel;
+  float                  _deltarjet1met;
+  float                  _deltarjet2met;
+  float                  _deltarjj;
+  float                  _deltarjjmet;
+  float                  _deltarlep1jet1;
+  float                  _deltarlep1jet2;
+  float                  _deltarlep2jet1;
+  float                  _deltarlep2jet2;
+  float                  _deltarllmet;
+  float                  _deltarl1met;
+  float                  _deltarl2met;
   float                  _dphijet1met;
   float                  _dphijet2met;
   float                  _dphijj;
