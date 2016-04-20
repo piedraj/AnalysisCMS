@@ -34,6 +34,41 @@ const Bool_t nuisances_trigger_down = false;
 const Bool_t nuisances_idiso_up     = false;
 const Bool_t nuisances_idiso_down   = false;
 
+enum {
+  JESMaxdo,
+  JESMaxup,
+  LepElepTdo,
+  LepElepTup,
+  LepMupTdo,
+  LepMupTup,
+  METdo,
+  METup,
+  Btagdo,
+  Btagup,
+  Triggerdo,
+  Triggerup,
+  Idisodo,
+  Idisoup,
+  nsystematic  // This line should be always last
+};
+
+const TString ssystematic[nsystematic] = {
+  "JESMaxdo",
+  "JESMaxup",
+  "LepElepTdo",
+  "LepElepTup",
+  "LepMupTdo",
+  "LepMupTup",
+  "METdo",
+  "METup",
+  "Btagdo",
+  "Btagup",
+  "Triggerdo",
+  "Triggerup",
+  "Idisodo",
+  "Idisoup"
+};
+
 
 // Process colors
 //------------------------------------------------------------------------------
