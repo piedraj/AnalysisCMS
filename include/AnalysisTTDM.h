@@ -8,7 +8,7 @@ class AnalysisTTDM : public AnalysisCMS
 {
  public :
 
-  AnalysisTTDM(TTree* tree = 0);
+  AnalysisTTDM(TTree* tree, TString systematic);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,

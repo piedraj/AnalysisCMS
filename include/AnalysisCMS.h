@@ -38,7 +38,7 @@ class AnalysisCMS : public AnalysisBase
 {
  public :
 
-  AnalysisCMS(TTree* tree = 0);
+  AnalysisCMS(TTree* tree = 0, TString systematic = "nominal");
 
   void    ApplyWeights      ();
 
@@ -141,6 +141,7 @@ class AnalysisCMS : public AnalysisBase
   TString                _analysis;
   TString                _filename;
   TString                _sample;
+  TString                _systematic;
 
   float                  _channel;
   float                  _deltarjet1met;

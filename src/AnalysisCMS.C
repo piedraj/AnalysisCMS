@@ -5,11 +5,12 @@
 //------------------------------------------------------------------------------
 // AnalysisCMS
 //------------------------------------------------------------------------------
-AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
+AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 {
+  _ismc         = true;
   _saveminitree = false;
   _eventdump    = false;
-  _ismc         = true;
+  _systematic   = systematic;
 }
 
 
@@ -260,12 +261,12 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   
-  gSystem->mkdir("rootfiles/" + _analysis, kTRUE);
-  gSystem->mkdir("txt/"       + _analysis, kTRUE);
+  gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
 
   OpenMinitree();
 
@@ -986,9 +987,9 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
-  gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+  gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
   minitree = new TTree("latino", "minitree");
 

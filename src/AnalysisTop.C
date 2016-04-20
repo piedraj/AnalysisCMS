@@ -6,7 +6,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 // AnalysisTop
 //------------------------------------------------------------------------------
-AnalysisTop::AnalysisTop(TTree* tree) : AnalysisCMS(tree)
+AnalysisTop::AnalysisTop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(false);
 }

@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 // AnalysisTTDM
 //------------------------------------------------------------------------------
-AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree)
+AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
 }

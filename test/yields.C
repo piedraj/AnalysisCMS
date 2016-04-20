@@ -79,7 +79,7 @@ void yields(TString flavourChannel = "em",
 
   Float_t yield[nProcesses][nCuts];
   
-  TString path = "rootfiles/"+analysis+"/";
+  TString path = "rootfiles/nominal" + analysis + "/";
   
   inFile<<"\\begin{tabular}{cSSSSSSSSSSSSSSSSSSSS}"<<endl;
   cout  <<"\\begin{tabular}{cSSSSSSSSSSSSSSSSSSSS}"<<endl;

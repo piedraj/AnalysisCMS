@@ -14,7 +14,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir       = "../minitrees/TTDM/";
+const TString inputdir       = "../minitrees/nominal/TTDM/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";

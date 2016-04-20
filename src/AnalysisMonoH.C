@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 // AnalysisMonoH
 //------------------------------------------------------------------------------
-AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree)
+AnalysisMonoH::AnalysisMonoH(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(false);
 }

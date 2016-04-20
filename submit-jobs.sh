@@ -2,17 +2,17 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/samples_data.txt"
-    echo "  ./submit-jobs.sh samples/samples_datadriven.txt"
-    echo "  ./submit-jobs.sh samples/samples_mc.txt"
-#   echo "  ./submit-jobs.sh samples/samples_metfilters.txt"
-#   echo "  ./submit-jobs.sh samples/samples_monoh.txt"
-    echo "  ./submit-jobs.sh samples/samples_ttdm.txt"
+    echo "  ./submit-jobs.sh samples/samples_data.txt       nominal"
+    echo "  ./submit-jobs.sh samples/samples_datadriven.txt nominal"
+    echo "  ./submit-jobs.sh samples/samples_mc.txt         nominal"
+#   echo "  ./submit-jobs.sh samples/samples_monoh.txt      nominal"
+    echo "  ./submit-jobs.sh samples/samples_ttdm.txt       nominal"
     echo "  "
     exit -1
 fi
 
 export SAMPLES=$1
+export SYSTEMATIC=$2
 export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
 
 echo "  "
@@ -23,5 +23,5 @@ echo "  "
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
 mkdir -p jobs
-qsub -t 1-$NJOBS -v SAMPLES settings.sge
+qsub -t 1-$NJOBS -v SAMPLES -v SYSTEMATIC settings.sge
 echo "  "
