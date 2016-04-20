@@ -2,7 +2,7 @@
 ====
 
     cd AnalysisCMS/test
-    ./submit-hadd.sh ../minitrees/TTDM
+    ./submit-hadd.sh ../minitrees/nominal/TTDM
 
 
 1. Train the MVA

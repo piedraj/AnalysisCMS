@@ -139,7 +139,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_02_MET50, pass);
 
-    if (pass && _saveminitree) minitree->Fill();
+    if (_saveminitree && pass) minitree->Fill();
 
     pass &= (njet > 1);
 
