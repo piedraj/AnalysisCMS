@@ -11,5 +11,5 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scramv1 runtime -sh`
 
 pushd $FOLDER
-`cat ../../test/merge.sh | grep hadd | awk -v line=$SGE_TASK_ID '{ if (NR==line) print }'`
+`cat ../../../test/merge.sh | grep hadd | awk -v line=$SGE_TASK_ID '{ if (NR==line) print }'`
 popd
