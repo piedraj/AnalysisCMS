@@ -10,7 +10,15 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _ismc         = true;
   _saveminitree = false;
   _eventdump    = false;
-  _systematic   = systematic;
+
+  _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
+  _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
+  _systematic_idiso_do   = (systematic.Contains("Idisodo"))   ? true : false;
+  _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
+  _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
+  _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
+
+  _systematic = systematic;
 }
 
 
@@ -296,21 +304,21 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 
-      if (nuisances_btag_up)   sf_btag = bPogSFUp;
-      if (nuisances_btag_down) sf_btag = bPogSFDown;
+      if (_systematic_btag_up) sf_btag = bPogSFUp;
+      if (_systematic_btag_do) sf_btag = bPogSFDown;
 
-      if (nuisances_trigger_up)   sf_trigger = effTrigW_Up;
-      if (nuisances_trigger_down) sf_trigger = effTrigW_Down;
+      if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
-      if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
-      if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
+      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
       if (_analysis.EqualTo("WZ"))
 	{
 	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
 
-	  if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
-	  if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
+	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
 	}
 
       _event_weight *= sf_btag * sf_trigger * sf_idiso;

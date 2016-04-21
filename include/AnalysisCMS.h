@@ -137,6 +137,12 @@ class AnalysisCMS : public AnalysisBase
   bool                   _foundsoftmuon;
   bool                   _ismc;
   bool                   _passdphiveto;
+  bool                   _systematic_btag_do;
+  bool                   _systematic_btag_up;
+  bool                   _systematic_idiso_do;
+  bool                   _systematic_idiso_up;
+  bool                   _systematic_trigger_do;
+  bool                   _systematic_trigger_up;
 
   TString                _analysis;
   TString                _filename;
