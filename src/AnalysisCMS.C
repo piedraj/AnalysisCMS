@@ -5,11 +5,20 @@
 //------------------------------------------------------------------------------
 // AnalysisCMS
 //------------------------------------------------------------------------------
-AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
+AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 {
+  _ismc         = true;
   _saveminitree = false;
   _eventdump    = false;
-  _ismc         = true;
+
+  _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
+  _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
+  _systematic_idiso_do   = (systematic.Contains("Idisodo"))   ? true : false;
+  _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
+  _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
+  _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
+
+  _systematic = systematic;
 }
 
 
@@ -261,12 +270,12 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   
-  gSystem->mkdir("rootfiles/" + _analysis, kTRUE);
-  gSystem->mkdir("txt/"       + _analysis, kTRUE);
+  gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
 
   OpenMinitree();
 
@@ -295,21 +304,21 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 
-      if (nuisances_btag_up)   sf_btag = bPogSFUp;
-      if (nuisances_btag_down) sf_btag = bPogSFDown;
+      if (_systematic_btag_up) sf_btag = bPogSFUp;
+      if (_systematic_btag_do) sf_btag = bPogSFDown;
 
-      if (nuisances_trigger_up)   sf_trigger = effTrigW_Up;
-      if (nuisances_trigger_down) sf_trigger = effTrigW_Down;
+      if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
-      if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
-      if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
+      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
       if (_analysis.EqualTo("WZ"))
 	{
 	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
 
-	  if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
-	  if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
+	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
 	}
 
       _event_weight *= sf_btag * sf_trigger * sf_idiso;
@@ -883,9 +892,9 @@ void AnalysisCMS::EndJob()
   
       root_minitree->Close();
     }
-  
-  txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
-  
+
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + ".txt");
+
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
   txt_summary << Form("   filename: %s\n",        _filename.Data());
@@ -996,9 +1005,9 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
-  gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+  gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
   minitree = new TTree("latino", "minitree");
 

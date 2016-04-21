@@ -9,7 +9,7 @@ class AnalysisMonoH : public AnalysisCMS
 {
  public :
 
-  AnalysisMonoH(TTree* tree = 0);
+  AnalysisMonoH(TTree* tree, TString systematic);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,

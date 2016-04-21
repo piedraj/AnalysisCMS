@@ -8,7 +8,7 @@ class AnalysisWW : public AnalysisCMS
 {
  public :
 
-  AnalysisWW(TTree* tree = 0);
+  AnalysisWW(TTree* tree, TString systematic);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,

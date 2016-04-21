@@ -6,7 +6,8 @@
 //#include "src/AnalysisWZ.C"
 
 
-void runAnalysis(TString filename)
+void runAnalysis(TString filename,
+		 TString systematic)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -27,14 +28,18 @@ void runAnalysis(TString filename)
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if (argc != 2)
+  if (argc != 3)
     {
-      printf("\n ./runAnalysis <filename>\n\n");
+      printf("\n ./runAnalysis <filename> <systematic>\n");
+      printf("\n The output will be saved in\n\n");
+      printf("            minitrees/<systematic>\n");
+      printf("            rootfiles/<systematic>\n");
+      printf("            txt/<systematic>\n\n");
       
       return -1;
     }
 
-  runAnalysis(argv[1]);
+  runAnalysis(argv[1], argv[2]);
 
   return 0;
 }

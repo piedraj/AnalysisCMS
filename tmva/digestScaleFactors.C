@@ -17,8 +17,8 @@ float cov_far   [ntrials] = {-0.13, -0.14, -0.30, -0.31, -0.22, -0.21};
 //
 // digestScaleFactors
 //
-//   SF ttbar = 1.04 +- 0.04 (stat) +- 0.06 (syst)
-//   SF WW    = 0.57 +- 0.16 (stat) +- 0.27 (syst)
+//   SF ttbar = 1.04 +- 0.04 (stat) +- 0.06 (syst) = 1.04 +- 0.07
+//   SF WW    = 0.57 +- 0.16 (stat) +- 0.27 (syst) = 0.57 +- 0.32
 //
 //------------------------------------------------------------------------------
 void digestScaleFactors()
@@ -66,7 +66,7 @@ void digestScaleFactors()
 
   // Print
   printf("\n");
-  printf(" SF ttbar = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_top, er_top,rms_top);
-  printf(" SF WW    = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_ww,  er_ww, rms_ww);
+  printf(" SF ttbar = %.2f +- %.2f (stat) +- %.2f (syst) = %.2f +- %.2f\n", sf_top, er_top, rms_top, sf_top, sqrt(er_top*er_top + rms_top*rms_top));
+  printf(" SF WW    = %.2f +- %.2f (stat) +- %.2f (syst) = %.2f +- %.2f\n", sf_ww,  er_ww,  rms_ww,  sf_ww,  sqrt(er_ww *er_ww  + rms_ww *rms_ww));
   printf("\n");
 }

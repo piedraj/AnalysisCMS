@@ -38,7 +38,7 @@ class AnalysisCMS : public AnalysisBase
 {
  public :
 
-  AnalysisCMS(TTree* tree = 0);
+  AnalysisCMS(TTree* tree = 0, TString systematic = "nominal");
 
   
 
@@ -139,10 +139,17 @@ class AnalysisCMS : public AnalysisBase
   bool                   _foundsoftmuon;
   bool                   _ismc;
   bool                   _passdphiveto;
+  bool                   _systematic_btag_do;
+  bool                   _systematic_btag_up;
+  bool                   _systematic_idiso_do;
+  bool                   _systematic_idiso_up;
+  bool                   _systematic_trigger_do;
+  bool                   _systematic_trigger_up;
 
   TString                _analysis;
   TString                _filename;
   TString                _sample;
+  TString                _systematic;
 
   float                  _channel;
   float                  _deltarjet1met;

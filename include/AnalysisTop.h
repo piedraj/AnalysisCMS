@@ -8,7 +8,7 @@ class AnalysisTop : public AnalysisCMS
 {
  public :
 
-  AnalysisTop(TTree* tree = 0);
+  AnalysisTop(TTree* tree, TString systematic);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,

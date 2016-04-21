@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 // AnalysisWZ
 //------------------------------------------------------------------------------
-AnalysisWZ::AnalysisWZ(TTree* tree) : AnalysisCMS(tree)
+AnalysisWZ::AnalysisWZ(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(false);
 }

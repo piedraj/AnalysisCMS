@@ -129,7 +129,7 @@ void doDY(Int_t   njet,
 
   // Input files and maps
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  TString path   = "../rootfiles/25ns/";
+  TString path   = "../rootfiles/nominal/";
 
   TFile* inputDY   = new TFile(path + "06_ZJets.root");
   TFile* inputWZ   = new TFile(path + "02_WZ.root");

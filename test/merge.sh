@@ -2,8 +2,8 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh ../rootfiles/<analysis>"
-    echo "  ./merge.sh ../minitrees/<analysis>"
+    echo "  ./merge.sh ../rootfiles/<systematic>/<analysis>"
+    echo "  ./merge.sh ../minitrees/<systematic>/<analysis>"
     echo "  "
     exit -1
 fi

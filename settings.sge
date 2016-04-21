@@ -13,4 +13,4 @@ eval `scramv1 runtime -sh`
 
 stat ./runAnalysis
 
-`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID '{ if (NR==line) print "./runAnalysis "$1 }'`
+`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID -v syst=$SYSTEMATIC '{ if (NR==line) print "./runAnalysis "$1,syst }'`
