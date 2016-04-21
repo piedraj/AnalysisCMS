@@ -4,8 +4,10 @@
 float _event_weight_fr;
 float inputJetEt;
 
-int counter = 0;
+int counter1 = 0;
 int counter2 = 0;
+int counter3 = 0;
+int counter4 = 0;
 
 float _luminosity = 2.263;
 
@@ -61,7 +63,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	h_loose  [i][j][k] = new TH1D("h_loose" + suffix,  "", 100, 0, 100); 
 	h_tight  [i][j][k] = new TH1D("h_tight" + suffix,  "", 100, 0, 100); 
-        h_pt_eta [i][j][k] = new TH2F("h_pt_eta" + suffix, "h_pt_eta", pTbin, pTbins, etabin, etabins);
+        
+	h_Muon_loose_pt_eta_bin   = new TH2F("h_Muon_loose_pt_eta_bin", "h_Muon_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+	h_Muon_tight_pt_eta_bin = new TH2F("h_Muon_tight_pt_eta_bin", "h_Muon_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+
+	h_Ele_loose_pt_eta_bin    = new TH2F("h_Ele_loose_pt_eta_bin", "h_Ele_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+	h_Ele_tight_pt_eta_bin  = new TH2F("h_Ele_tight_pt_eta_bin", "h_Ele_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
 
       }
     }
@@ -86,9 +93,62 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
+
+    // Z+jets
+
+    if (_ismc && filename.Contains("DYJetsToLL")) {
+
+      Double_t genWeight = 1.0;
+      genWeight = GEN_weight_SM/abs(GEN_weight_SM);
+      _event_weight_fr = puW * baseW * _luminosity * genWeight;
+
+      for (int iMu1 = 0; iMu1 < AnalysisLeptons.size(); iMu1++) {
+
+	if (AnalysisLeptons[iMu1].v.Pt() < 10.) continue;
+	if (AnalysisLeptons[iMu1].type != Tight) continue; 
+	if (AnalysisLeptons[iMu1].flavour != ELECTRON_FLAVOUR && AnalysisLeptons[iMu1].flavour != MUON_FLAVOUR) continue; // We just want electrons and muons
+
+	for (int iMu2 = iMu1+1; iMu2 < AnalysisLeptons.size(); iMu2++) {
+	  
+	  if (AnalysisLeptons[iMu2].v.Pt() < 10.) continue;
+	  if (fabs(AnalysisLeptons[iMu1].flavour) !=fabs( AnalysisLeptons[iMu2].flavour)) continue;
+	  if ((AnalysisLeptons[iMu1].flavour + AnalysisLeptons[iMu2].flavour) != 0.) continue; // Opposite charge
+
+	  float inv_mass = (AnalysisLeptons[iMu1].v+AnalysisLeptons[iMu2].v).M();
+
+	  if (inv_mass < 70. || inv_mass > 110.) continue;
+
+	  float pt = std_vector_lepton_pt -> at(iMu2);
+	  float eta = fabs(std_vector_lepton_eta -> at(iMu2));
+
+	  if (AnalysisLeptons[iMu1].flavour == MUON_FLAVOUR) {
+
+	    h_Muon_loose_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+
+	    if (AnalysisLeptons[iMu2].type == Tight) {
+
+	      h_Muon_tight_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+
+	    }
+	  }
+
+	  else if (AnalysisLeptons[iMu1].flavour == ELECTRON_FLAVOUR) {
+
+	    h_Ele_loose_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+
+	    if (AnalysisLeptons[iMu2].type == Tight) {
+
+	      h_Ele_tight_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+
+	    }
+	  }
+	}
+      }
+    }
+
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
-    // Trigger analysis
+    // Data and W+jets analysis
 
     bool passTrigger = true;
     _event_weight_fr = 1.0;
@@ -139,13 +199,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     
     }
 
-
-
     if (!passTrigger) continue;
     
     if (!PassJetSelection()) continue;
     if (AnalysisJets.size() < 1 ) continue;
 
+    // Temporary solution
     if (_channel == e) {
       inputJetEt = 20.;
     } else if (_channel == m) {
@@ -164,7 +223,23 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() < 20.);
     pass &= (_mtw < 20.);
 
-    FillLevelHistograms(FR_00_QCD, pass);
+    if (pass & Lepton1.type == Loose || Lepton1.type == Tight) {
+      if (_channel == m) {
+	h_Muon_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+      } else if (_channel == e) {
+	h_Ele_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+      }
+    }
+    
+    if (pass & Lepton1.type == Tight) {
+      if (_channel == m) {
+	h_Muon_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+      } else if (_channel == e) {
+	h_Ele_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+      }
+    }
+
+    //FillLevelHistograms(FR_00_QCD, pass);
      
     if (pass && _saveminitree) minitree->Fill();
  
@@ -182,6 +257,7 @@ void AnalysisFR::FillAnalysisHistograms(int ichannel,
 					int ijet)
 {
 
+  /*
   if (Lepton1.type == Loose || Lepton1.type == Tight) {
     
     h_loose       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
@@ -193,8 +269,8 @@ void AnalysisFR::FillAnalysisHistograms(int ichannel,
     h_tight       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 
   }
-
-  h_pt_eta [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr); 
+  */
+  //  h_Muon_fake_pt_eta_bin [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr); 
 
   //  if (ichannel != l) FillAnalysisHistograms(l, icut, ijet);
 

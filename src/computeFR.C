@@ -1,23 +1,54 @@
 
 void computeFR() {
 
-  TFile*  f         = new TFile  ("../rootfiles/FR/Run2015D_16Dec2015_DoubleMuon_0000__part0.root","read");
-  
-  TH1D*   h_loose = (TH1D*)f -> Get("FR/00_QCD/h_loose_m");
-  TH1D*   h_tight = (TH1D*)f -> Get("FR/00_QCD/h_tight_m");
-  
-  TH2F*   h_pt_eta = (TH2F*)f -> Get("FR/00_QCD/h_pt_eta_m");
+  //  TFile*  f = new TFile ("../rootfiles/nominal/FR/Run2015D_16Dec2015_DoubleMuon_0000__part0.root","read");
+  TFile*  f = new TFile ("../rootfiles/nominal/FR/DYJetsToLL_M-50_0000__part0.root","read");
+    
+  TH2F*   h_Muon_loose_pt_eta_bin = (TH2F*)f -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin");
+  TH2F*   h_Muon_tight_pt_eta_bin = (TH2F*)f -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin");
 
-  int loose = h_loose -> Integral();
-  int tight = h_tight -> Integral();
-  
-  float fakeRate = float(tight)/loose;
-  
-  //  printf("Number of loose muons = %i \n", loose);
-  //  printf("Number of tight muons = %i \n", tight);
+  TH2F*   h_Muon_FR_pt_eta = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
 
-  //  printf("Fake rate of muons = %f \n", fakeRate);
+  h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., "");
 
-  h_pt_eta -> Draw();
+  TH2F*   h_zjets_loose_pt_eta = (TH2F*) h_Muon_loose_pt_eta_bin -> Clone();
+  TH2F*   h_zjets_tight_pt_eta = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
+  
+  TH2F*   h_Muon_loose_pt_eta_corrZ  = (TH2F*) h_Muon_loose_pt_eta_bin -> Clone();
+  TH2F*   h_Muon_tight_pt_eta_corrZ  = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
+  TH2F*   h_Muon_FR_pt_eta_corrZ     = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
+
+  h_Muon_loose_pt_eta_corrZ -> Add(h_zjets_loose_pt_eta, -1);
+  h_Muon_tight_pt_eta_corrZ -> Add(h_zjets_tight_pt_eta, -1);
+    
+  h_Muon_FR_pt_eta_corrZ -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., "");
+
+  h_Muon_FR_pt_eta_corrZ -> Draw();
+
+
+ //  TFile*  f = new TFile ("../rootfiles/nominal/FR/Run2015D_16Dec2015_DoubleMuon_0000__part0.root","read");
+  TFile*  f = new TFile ("../rootfiles/nominal/FR/DYJetsToLL_M-50_0000__part0.root","read");
+    
+  TH2F*   h_Ele_loose_pt_eta_bin = (TH2F*)f -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin");
+  TH2F*   h_Ele_tight_pt_eta_bin = (TH2F*)f -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin");
+
+  TH2F*   h_Ele_FR_pt_eta = (TH2F*) h_Ele_tight_pt_eta_bin -> Clone();
+
+  h_Ele_FR_pt_eta -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., "");
+
+  TH2F*   h_Ele_loose_pt_eta_corrZ  = (TH2F*) h_Ele_loose_pt_eta_bin -> Clone();
+  TH2F*   h_Ele_tight_pt_eta_corrZ  = (TH2F*) h_Ele_tight_pt_eta_bin -> Clone();
+  TH2F*   h_Ele_FR_pt_eta_corrZ     = (TH2F*) h_ELe_tight_pt_eta_bin -> Clone();
+
+  h_Ele_loose_pt_eta_corrZ -> Add(h_zjets_loose_pt_eta, -1);
+  h_Ele_tight_pt_eta_corrZ -> Add(h_zjets_tight_pt_eta, -1);
+    
+  h_Ele_FR_pt_eta_corrZ -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., "");
+
+  h_Ele_FR_pt_eta_corrZ -> Draw();
+
+ 
 
 }
+
+
