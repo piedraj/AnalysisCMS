@@ -243,6 +243,8 @@ void AnalysisCMS::Setup(TString analysis,
   _filename   = filename;
   _luminosity = luminosity;
   _nentries   = fChain->GetEntries();
+
+  TH1::SetDefaultSumw2();
   
   TString tok;
 
@@ -999,6 +1001,15 @@ void AnalysisCMS::OpenMinitree()
 
   root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
+
+  // Histograms for PDF and QCD uncertainties
+  //----------------------------------------------------------------------------
+  h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
+  h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
+
+
+  // Minitree branches
+  //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
   minitree->Branch("channel",       &_channel,       "channel/F");

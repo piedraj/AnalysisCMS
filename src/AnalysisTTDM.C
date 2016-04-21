@@ -23,16 +23,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
-  if (_saveminitree)
-    {
-      root_minitree->cd();
-
-      h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
-      h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
-    }
-
   root_output->cd();
 
   for (int j=0; j<ncut; j++) {
