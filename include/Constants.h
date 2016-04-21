@@ -8,7 +8,6 @@
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
-
 const float lumi_fb_blind = 1.371;
 const float lumi_fb       = 2.318;
 const float lumi_error_percent = 2.7;

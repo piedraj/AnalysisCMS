@@ -8,6 +8,7 @@ if [ $# -lt 1 ]; then
 #   echo "  ./submit-jobs.sh samples/samples_metfilters.txt"
 #   echo "  ./submit-jobs.sh samples/samples_monoh.txt"
 #   echo "  ./submit-jobs.sh samples/samples_fakes.txt"
+    echo "  ./submit-jobs.sh samples/samples_fakes_data.txt"
     echo "  ./submit-jobs.sh samples/samples_ttdm.txt"
     echo "  "
     exit -1
