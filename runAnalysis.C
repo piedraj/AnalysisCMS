@@ -5,7 +5,8 @@
 //#include "src/AnalysisWZ.C"
 
 
-void runAnalysis(TString filename)
+void runAnalysis(TString filename,
+		 TString systematic)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -13,25 +14,29 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  //  AnalysisMonoH analysis(latino); analysis.Loop("MonoH", filename, lumi_fb);
-  //  AnalysisTop   analysis(latino); analysis.Loop("Top",   filename, lumi_fb);
-  AnalysisTTDM  analysis(latino); analysis.Loop("TTDM",  filename, lumi_fb_blind);
-  //  AnalysisWW    analysis(latino); analysis.Loop("WW",    filename, lumi_fb);
-  //  AnalysisWZ    analysis(latino); analysis.Loop("WZ",    filename, lumi_fb);
+  //  AnalysisMonoH analysis(latino, systematic); analysis.Loop("MonoH", filename, lumi_fb);
+  //  AnalysisTop   analysis(latino, systematic); analysis.Loop("Top",   filename, lumi_fb);
+  AnalysisTTDM  analysis(latino, systematic); analysis.Loop("TTDM",  filename, lumi_fb_blind);
+  //  AnalysisWW    analysis(latino, systematic); analysis.Loop("WW",    filename, lumi_fb);
+  //  AnalysisWZ    analysis(latino, systematic); analysis.Loop("WZ",    filename, lumi_fb);
 }
 
 
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if (argc != 2)
+  if (argc != 3)
     {
-      printf("\n ./runAnalysis <filename>\n\n");
+      printf("\n ./runAnalysis <filename> <systematic>\n");
+      printf("\n The output will be saved in\n\n");
+      printf("            minitrees/<systematic>\n");
+      printf("            rootfiles/<systematic>\n");
+      printf("            txt/<systematic>\n\n");
       
       return -1;
     }
 
-  runAnalysis(argv[1]);
+  runAnalysis(argv[1], argv[2]);
 
   return 0;
 }

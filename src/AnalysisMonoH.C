@@ -5,9 +5,9 @@
 //------------------------------------------------------------------------------
 // AnalysisMonoH
 //------------------------------------------------------------------------------
-AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree)
+AnalysisMonoH::AnalysisMonoH(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetSaveMinitree(true);
 }
 
 
@@ -23,8 +23,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {
@@ -85,8 +83,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
     EventSetup();
 
-    GetDeltaR();
-
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -136,7 +132,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet20loose == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
-    if (_saveminitree && pass && pass_zveto)  minitree->Fill();
+    if (_saveminitree && pass && pass_zveto) minitree->Fill();
 
     //    pass &= (!_foundsoftmuon);
     //    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
@@ -185,47 +181,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
   EndJob();
 }
 
-//------------------------------------------------------------------------------                                                            
-// GetDeltaR
-//------------------------------------------------------------------------------                                                
-void AnalysisMonoH::GetDeltaR()
-{
-  // Reset DeltaR variables
-  //----------------------------------------------------------------------------                                 
-  _deltarjet1met  = -0.1;
-  _deltarjet2met  = -0.1;
-  _deltarjj       = -0.1;
-  _deltarjjmet    = -0.1;
-  _deltarlep1jet1 = -0.1;
-  _deltarlep1jet2 = -0.1;
-  _deltarlep2jet1 = -0.1;
-  _deltarlep2jet2 = -0.1;
-  _deltarllmet    = -0.1;
-  _deltarl1met    = -0.1;
-  _deltarl2met    = -0.1;
-
-  // Fill DeltaR variables
-  //----------------------------------------------------------------------------                                  
-  _deltarllmet = fabs((Lepton1.v+Lepton2.v).DeltaR(MET));
-  _deltarl1met = fabs(Lepton1.v.DeltaR(MET));
-  _deltarl2met = fabs(Lepton2.v.DeltaR(MET));
-
-  if (njet > 0)
-    {
-      _deltarjet1met  = fabs(AnalysisJets[0].v.DeltaR(MET));
-      _deltarlep1jet1 = fabs(Lepton1.v.DeltaR(AnalysisJets[0].v));
-      _deltarlep2jet1 = fabs(Lepton2.v.DeltaR(AnalysisJets[0].v));
-    }
-
-  if (njet > 1)
-    {
-    _deltarjet2met  = fabs(AnalysisJets[1].v.DeltaR(MET));
-    _deltarlep1jet2 = fabs(Lepton1.v.DeltaR(AnalysisJets[1].v));
-    _deltarlep2jet2 = fabs(Lepton2.v.DeltaR(AnalysisJets[1].v));
-    _deltarjj       = fabs(AnalysisJets[0].v.DeltaR(AnalysisJets[1].v));
-    _deltarjjmet    = fabs((AnalysisJets[0].v + AnalysisJets[1].v).DeltaR(MET));
-    }
-}
 
 //------------------------------------------------------------------------------
 // FillAnalysisHistograms

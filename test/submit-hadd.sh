@@ -2,8 +2,8 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-hadd.sh ../rootfiles/<analysis>"
-    echo "  ./submit-hadd.sh ../minitrees/<analysis>"
+    echo "  ./submit-hadd.sh ../rootfiles/<systematic>/<analysis>"
+    echo "  ./submit-hadd.sh ../minitrees/<systematic>/<analysis>"
     echo "  "
     exit -1
 fi

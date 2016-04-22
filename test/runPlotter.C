@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
 
-const TString inputdir  = "../rootfiles/";
+const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -32,7 +32,9 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = (analysis.EqualTo("TTDM")) ? lumi_fb_blind : lumi_fb;
+  float lumi = lumi_fb;
+
+  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
 
   Bool_t scale = logY;
 
@@ -100,7 +102,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma", color_Wg);
       plotter.AddProcess("07_ZJets",    "Z+jets",  color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",     color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",     color_ST);
 
       if (datadriven)
@@ -131,8 +133,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
-      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      //plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
 

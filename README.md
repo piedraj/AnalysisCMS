@@ -86,12 +86,13 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
 
-    ./runAnalysis /full/path/latino_WZTo3LNu.root
+    ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
 
 Submit jobs to the gridui batch system.
 
-    rm -rf rootfiles
-    rm -rf txt
+    rm -rf minitrees/<systematic>
+    rm -rf rootfiles/<systematic>
+    rm -rf txt/<systematic>
 
     ./submit-jobs.sh
 
@@ -108,12 +109,12 @@ Alternatively one can login to a node and run interactively.
     cmsenv
     cd AnalysisCMS
     ./make
-    ./runAnalysis /full/path/latino_WZTo3LNu.root
+    ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
 
-    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root
+    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root nominal
 -->
 
 
@@ -246,6 +247,7 @@ Then log in to lxplus, mount eos and choose the input folder.
     eosusermount eos
 
     rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/a/amassiro/HWW2015/22Jan_25ns_mAODv2_MC/MC $USER@pool03.ifca.es:
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/r/rebeca/HWW2015/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight $USER@pool03.ifca.es:
 
 Do not forget unmounting eos once everything has been copied.
 
@@ -256,8 +258,3 @@ Do not forget unmounting eos once everything has been copied.
 Check that the input folder has be copied at the following gridui path.
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
-
-Finally, go to gridui and rename the folder to a more meaningful name.
-
-    cd /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
-    mv MC 22Jan_25ns_mAODv2_MC

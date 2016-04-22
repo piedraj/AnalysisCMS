@@ -5,11 +5,20 @@
 //------------------------------------------------------------------------------
 // AnalysisCMS
 //------------------------------------------------------------------------------
-AnalysisCMS::AnalysisCMS(TTree* tree) : AnalysisBase(tree)
+AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 {
+  _ismc         = true;
   _saveminitree = false;
   _eventdump    = false;
-  _ismc         = true;
+
+  _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
+  _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
+  _systematic_idiso_do   = (systematic.Contains("Idisodo"))   ? true : false;
+  _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
+  _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
+  _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
+
+  _systematic = systematic;
 }
 
 
@@ -234,6 +243,8 @@ void AnalysisCMS::Setup(TString analysis,
   _filename   = filename;
   _luminosity = luminosity;
   _nentries   = fChain->GetEntries();
+
+  TH1::SetDefaultSumw2();
   
   TString tok;
 
@@ -260,12 +271,12 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   
-  gSystem->mkdir("rootfiles/" + _analysis, kTRUE);
-  gSystem->mkdir("txt/"       + _analysis, kTRUE);
+  gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _analysis + "/" + _sample + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
 
   OpenMinitree();
 
@@ -295,21 +306,21 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 
-      if (nuisances_btag_up)   sf_btag = bPogSFUp;
-      if (nuisances_btag_down) sf_btag = bPogSFDown;
+      if (_systematic_btag_up) sf_btag = bPogSFUp;
+      if (_systematic_btag_do) sf_btag = bPogSFDown;
 
-      if (nuisances_trigger_up)   sf_trigger = effTrigW_Up;
-      if (nuisances_trigger_down) sf_trigger = effTrigW_Down;
+      if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
-      if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
-      if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
+      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
       if (_analysis.EqualTo("WZ"))
 	{
 	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
 
-	  if (nuisances_idiso_up)   sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
-	  if (nuisances_idiso_down) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
+	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
 	}
 
       _event_weight *= sf_btag * sf_trigger * sf_idiso;
@@ -317,8 +328,6 @@ void AnalysisCMS::ApplyWeights()
   
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-
-  if (_sample.EqualTo("TTTo2L2Nu") && _analysis.EqualTo("TTDM")) _event_weight *= 0.93;  // data/mc = 12640/13632 
 
   _event_weight *= _gen_ptll_weight;
 
@@ -354,7 +363,6 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
 
     if (pt < 0.) continue;
-    //    if (abs(std_vector_lepton_flavour->at(i)) == 13 && abs(std_vector_lepton_eta->at(i)) > 2.4) continue;
 
     bool reject_lepton = false;
     
@@ -820,6 +828,8 @@ void AnalysisCMS::EventSetup()
 
   GetDeltaPhi();
 
+  GetDeltaR();
+
   GetJetPtSum();
 
   GetHt();
@@ -877,7 +887,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _analysis + "/" + _sample + ".txt");
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + ".txt");
 
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
@@ -987,10 +997,19 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
-  gSystem->mkdir("minitrees/" + _analysis, kTRUE);
+  gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
 
+
+  // Histograms for PDF and QCD uncertainties
+  //----------------------------------------------------------------------------
+  h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
+  h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
+
+
+  // Minitree branches
+  //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
   minitree->Branch("channel",       &_channel,       "channel/F");
@@ -1096,5 +1115,49 @@ void AnalysisCMS::GetSumOfWeightsLHE()
   for (int i=0; i<h_qcdsum->GetNbinsX(); i++)
     {
       h_qcdsum->Fill(i, std_vector_LHE_weight->at(i));
+    }
+}
+
+
+//------------------------------------------------------------------------------                                                            
+// GetDeltaR
+//------------------------------------------------------------------------------                                                
+void AnalysisCMS::GetDeltaR()
+{
+  // Reset variables
+  //----------------------------------------------------------------------------                                 
+  _deltarjet1met  = -0.1;
+  _deltarjet2met  = -0.1;
+  _deltarjj       = -0.1;
+  _deltarjjmet    = -0.1;
+  _deltarlep1jet1 = -0.1;
+  _deltarlep1jet2 = -0.1;
+  _deltarlep2jet1 = -0.1;
+  _deltarlep2jet2 = -0.1;
+  _deltarllmet    = -0.1;
+  _deltarl1met    = -0.1;
+  _deltarl2met    = -0.1;
+
+
+  // Fill variables
+  //----------------------------------------------------------------------------                                  
+  _deltarllmet = fabs((Lepton1.v + Lepton2.v).DeltaR(MET));
+  _deltarl1met = fabs(Lepton1.v.DeltaR(MET));
+  _deltarl2met = fabs(Lepton2.v.DeltaR(MET));
+
+  if (njet > 0)
+    {
+      _deltarjet1met  = fabs(AnalysisJets[0].v.DeltaR(MET));
+      _deltarlep1jet1 = fabs(Lepton1.v.DeltaR(AnalysisJets[0].v));
+      _deltarlep2jet1 = fabs(Lepton2.v.DeltaR(AnalysisJets[0].v));
+    }
+
+  if (njet > 1)
+    {
+      _deltarjet2met  = fabs(AnalysisJets[1].v.DeltaR(MET));
+      _deltarjj       = fabs(AnalysisJets[0].v.DeltaR(AnalysisJets[1].v));
+      _deltarjjmet    = fabs((AnalysisJets[0].v + AnalysisJets[1].v).DeltaR(MET));
+      _deltarlep1jet2 = fabs(Lepton1.v.DeltaR(AnalysisJets[1].v));
+      _deltarlep2jet2 = fabs(Lepton2.v.DeltaR(AnalysisJets[1].v));
     }
 }

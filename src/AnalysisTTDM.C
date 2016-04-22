@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 // AnalysisTTDM
 //------------------------------------------------------------------------------
-AnalysisTTDM::AnalysisTTDM(TTree* tree) : AnalysisCMS(tree)
+AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
 }
@@ -23,16 +23,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
-  if (_saveminitree)
-    {
-      root_minitree->cd();
-
-      h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
-      h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
-    }
-
   root_output->cd();
 
   for (int j=0; j<ncut; j++) {
@@ -87,10 +77,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
-    if (Lepton1.v.Pt() < 30.) continue;
+    if (Lepton1.v.Pt() < 10.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
-
-    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
 
     _nelectron = 0;
 
@@ -104,18 +92,36 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
+    bool pass;
 
-    // Fill histograms
+
+    // AN-15-305 analysis
     //--------------------------------------------------------------------------
-    bool pass = true;
+    pass = true;
+
+    pass &= (Lepton1.v.Pt() > 20.);
+    pass &= (Lepton2.v.Pt() > 20.);
+    pass &= (_m2l > 20.);
+    pass &= (njet > 1);
+    pass &= (_nbjet30medium > 0);
+    pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (_nelectron == 1 || MET.Et() > 40.);
+
+    FillLevelHistograms(TTDM_04_AN15305, pass);
+
+
+    // IFCA ttDM analysis
+    //--------------------------------------------------------------------------
+    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
+
+    pass = true;
+
+    pass &= (Lepton1.v.Pt() > 30.);
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
-    bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
-    bool pass_df = (_nelectron == 1);
-
     pass &= (_m2l > 20.);
-    pass &= (pass_sf || pass_df);
+    pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
 
     FillLevelHistograms(TTDM_01_ZVeto, pass);
 
@@ -123,7 +129,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_02_MET50, pass);
 
-    if (pass && _saveminitree) minitree->Fill();
+    if (_saveminitree && pass) minitree->Fill();
 
     pass &= (njet > 1);
 
@@ -135,7 +141,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet30medium > 0);
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_04_AN16105, pass);
+    FillLevelHistograms(TTDM_05_AN16105, pass);
   }
 
 

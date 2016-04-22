@@ -14,7 +14,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir       = "../minitrees/TTDM/";
+const TString inputdir       = "../minitrees/nominal/TTDM/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -44,7 +44,7 @@ std::vector<TTree*> _mctree;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(TString signal     = "ttDM0001scalar0500",
 	 bool    doMVATrain = true,
-	 bool    doMVARead  = true)
+	 bool    doMVARead  = false)
 {
   if (!doMVATrain && !doMVARead) return;
 
