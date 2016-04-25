@@ -469,7 +469,10 @@ void AnalysisCMS::GetJets()
     if (pt < 30.) continue;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30loose++;
-    if (goodjet.cmvav2 > cMVAv2M) _nbjet30medium++;
+//    if (goodjet.cmvav2 > cMVAv2M) _nbjet30medium++;
+//    The following is jost for comparing with AN 15 305
+    if (goodjet.csvv2ivf >  CSVv2M) _nbjet30medium++;
+	
     if (goodjet.cmvav2 > cMVAv2T) _nbjet30tight++;
 
     AnalysisJets.push_back(goodjet);

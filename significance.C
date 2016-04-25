@@ -16,7 +16,7 @@ void significance (){
         // Xmin, Xmax, step
      
           Xmin = 150; 
- 	  Xmax = 400; 
+ 	  Xmax = 250; 
 	  Xstep = 1; 
 
         // General adress
@@ -144,7 +144,7 @@ void significance (){
             
                   for (Int_t k = 0; k < nyield; ++k){                 
 
-                      bkg +=  yield_ht[k] -> Integral (j, nbins+1);
+                      bkg +=  yield_ht[k] -> Integral (j, nbins+1); // AÃadir FinBin(min/max) 
                   
                   }
 
@@ -184,7 +184,7 @@ void significance (){
 
              inFile << schannel[i] << " & " << MaxX << " & "<< MaxY;
              inFile<<"\\\\"<<endl;
-             //inFile<<"\\ hline"<<endl;
+             inFile<<"\\ hline"<<endl;
           
 
             // Draw the graph 
