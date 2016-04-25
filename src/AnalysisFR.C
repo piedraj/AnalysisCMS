@@ -106,13 +106,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (AnalysisLeptons[iMu1].v.Pt() < 10.) continue;
 	if (AnalysisLeptons[iMu1].type != Tight) continue; 
-	if (AnalysisLeptons[iMu1].flavour != ELECTRON_FLAVOUR && AnalysisLeptons[iMu1].flavour != MUON_FLAVOUR) continue; // We just want electrons and muons
+	if (AnalysisLeptons[iMu1].flavour != ELECTRON_FLAVOUR && AnalysisLeptons[iMu1].flavour != MUON_FLAVOUR) continue;
 
 	for (int iMu2 = iMu1+1; iMu2 < AnalysisLeptons.size(); iMu2++) {
 	  
 	  if (AnalysisLeptons[iMu2].v.Pt() < 10.) continue;
 	  if (fabs(AnalysisLeptons[iMu1].flavour) !=fabs( AnalysisLeptons[iMu2].flavour)) continue;
-	  if ((AnalysisLeptons[iMu1].flavour + AnalysisLeptons[iMu2].flavour) != 0.) continue; // Opposite charge
+	  if ((AnalysisLeptons[iMu1].flavour + AnalysisLeptons[iMu2].flavour) != 0.) continue;
 
 	  float inv_mass = (AnalysisLeptons[iMu1].v+AnalysisLeptons[iMu2].v).M();
 
@@ -167,6 +167,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (_channel == m) {
 
 	if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && (std_vector_trigger -> at(22) == 1) ) { //Lumi HLT_Mu8_TrkIsoVVL: 1.386 pb
+
+	  if (Lepton1.type == Tight && Lepton1.v.Pt() > 15.) printf(" We have tight muons with pt = %f\n", Lepton1.v.Pt());
 
 	  passTrigger= true;
 	  _event_weight_fr *= (_luminosity*1000 / 1.386);
