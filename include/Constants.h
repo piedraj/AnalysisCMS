@@ -27,6 +27,7 @@ const float H_MASS        = 125.0;       // [GeV]
 // Systematic uncertainties
 //------------------------------------------------------------------------------
 enum {
+  nominal,
   JESMaxdo,
   JESMaxup,
   LepElepTdo,
@@ -45,6 +46,7 @@ enum {
 };
 
 const TString ssystematic[nsystematic] = {
+  "nominal",
   "JESMaxdo",
   "JESMaxup",
   "LepElepTdo",
