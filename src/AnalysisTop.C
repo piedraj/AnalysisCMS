@@ -78,7 +78,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton2.v.Pt() < 20.) continue;
 
     // "Third Z-Veto" This requirement should be applied on a loose lepton 
-    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
+//    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
   //  if (_nlepton > 2) continue;
 
     _nelectron = 0;
@@ -96,24 +96,63 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 	
     // Fill histograms
     //--------------------------------------------------------------------------
-    bool pass = true;
+    bool pass;
 
-    FillLevelHistograms(Top_00_Has2Leptons, pass);    
+  	 // AN-15-305 analysis
+  	 //--------------------------------------------------------------------------
+  	 
+		pass = true;
+    	
+	        FillLevelHistograms(Top_00_Has2Leptons, pass);    
+
+    		pass &= (Lepton1.v.Pt() > 20.);
+    		pass &= (Lepton2.v.Pt() > 20.);
+    		pass &= (_m2l > 20.);
+   		pass &= (njet > 1);
+    		pass &= (_nbjet30medium > 0);
+    		pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+
+	        FillLevelHistograms(Top_00_Zveto, pass);
+
+    		pass &= (_nelectron == 1 || MET.Et() > 40.);
+
+    		FillLevelHistograms(Top_04_AN15305, pass);
+
+
+    //  FillLevelHistograms(Top_00_Has2Leptons, pass);    
    
     //-------------------------------------------------------------------------
     // Basics Top
 
-    pass &= mll>20.;
-   
-    FillLevelHistograms(Top_00_mll20, pass);
+    
 
-    pass &= fabs(mll - Z_MASS) > 15.;
+   // bool pass_sf = (_nelectron != 1 && fabs(_m2l - Z_MASS) > 15.);
+   // bool pass_df = (_nelectron == 1);
 
-    FillLevelHistograms(Top_00_Zveto, pass);
+   // pass &= mll>20.;
+   //
+   // FillLevelHistograms(Top_00_mll20, pass);
 
-    pass &= (MET.Et() > 40.);
+   // pass &= fabs(mll - Z_MASS) > 15.;
 
-    FillLevelHistograms(Top_00_Met40, pass); 
+   // FillLevelHistograms(Top_00_Zveto, pass);
+
+   // pass &= (MET.Et() > 40.);
+
+   // FillLevelHistograms(Top_00_Met40, pass); 
+
+
+    //--------------------------------------------------------------------------
+    // Basics + met > 50 + Has2Leptons
+ 
+   //  bool pass_met50 = MET.Et() > 50.;
+
+   //  bool pass3 = pass && pass_met50;
+ 
+   //  FillLevelHistograms(Top_00_Met50, pass3);
+    
+
+
    
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
@@ -155,42 +194,30 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //-------------------------------------------------------------------------
     // Basics + Has1BJet
    
-    pass &= (njet > 1);
-  
-    FillLevelHistograms(Top_01_Has2Jets, pass);
+  //  pass &= (njet > 1);
+  //
+  //  FillLevelHistograms(Top_01_Has2Jets, pass);
 
 
-    pass &= (_nbjet30tight > 0);
+  //  pass &= (_nbjet30tight > 0);
 
-    FillLevelHistograms(Top_02_Has1BJet, pass);
+  //  FillLevelHistograms(Top_02_Has1BJet, pass);
 
-    
-    bool pass_htjets = _htjets > 150.;
-    bool pass_mpmet  = (_nelectron == 1 || _mpmet > 30.);
-    
+  //  
+  //  bool pass_htjets = _htjets > 150.;
+  //  bool pass_mpmet  = (_nelectron == 1 || _mpmet > 30.);
+  //  
 
-    pass_htjets &= pass;    
+  //  pass_htjets &= pass;    
 
-    FillLevelHistograms(Top_02_Has1BJetHtJets150, pass_htjets);
-
-
-    pass_mpmet &= pass;
-
-    FillLevelHistograms(Top_02_Has1BJetSFmpMet30, pass_mpmet);
- 
-    
+  //  FillLevelHistograms(Top_02_Has1BJetHtJets150, pass_htjets);
 
 
-    //--------------------------------------------------------------------------
-    // Basics + met > 50 + Has2Leptons
+  //  pass_mpmet &= pass;
 
-//    bool pass_met50 = MET.Et() > 50.;
+  //  FillLevelHistograms(Top_02_Has1BJetSFmpMet30, pass_mpmet);
 
-//    bool pass3 = pass && pass_met50;
 
-//    FillLevelHistograms(Top_00_Met50, pass3);
-
-    //--------------------------------------------------------------------------
   }
 
 
