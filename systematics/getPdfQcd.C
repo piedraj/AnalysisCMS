@@ -31,18 +31,12 @@ void GetPdfQcdSyst(TString sample)
 {
   TFile* file = new TFile(_inputdir + sample + ".root", "read");
 
-  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum_gen");
-  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum_gen");
-
-  TH1D* h_pdfsum_rec = (TH1D*)file->Get("h_pdfsum_rec");
-  TH1D* h_qcdsum_rec = (TH1D*)file->Get("h_qcdsum_rec");
-
-  int nbinpdf = h_pdfsum_gen->GetNbinsX();
-  int nbinqcd = h_qcdsum_gen->GetNbinsX();
-
 
   // Produce the QCD uncertainties
   //----------------------------------------------------------------------------
+  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum_gen");
+  TH1D* h_qcdsum_rec = (TH1D*)file->Get("h_qcdsum_rec");
+
   float qcdratio_gen_up   = h_qcdsum_gen->GetBinContent(9) / h_qcdsum_gen->GetBinContent(1);
   float qcdratio_gen_down = h_qcdsum_gen->GetBinContent(5) / h_qcdsum_gen->GetBinContent(1);
 
@@ -52,6 +46,11 @@ void GetPdfQcdSyst(TString sample)
 
   // Produce the PDF uncertainties
   //----------------------------------------------------------------------------
+  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum_gen");
+  TH1D* h_pdfsum_rec = (TH1D*)file->Get("h_pdfsum_rec");
+
+  int nbinpdf = h_pdfsum_gen->GetNbinsX();
+
   float pdf_gen_mean = h_pdfsum_gen->Integral() / nbinpdf;
   float pdf_rec_mean = h_pdfsum_rec->Integral() / nbinpdf;
 
