@@ -2,7 +2,7 @@
 ====
 
     cd AnalysisCMS/test
-    ./submit-hadd.sh ../minitrees/TTDM
+    ./submit-hadd.sh ../minitrees/nominal/TTDM
 
 
 1. Train the MVA
@@ -35,14 +35,21 @@
     root -l -b -q "MVA.C+(\"ttDM0500scalar0500\")"
 
 
-2. Draw the MVA response
+2. Study the MVA input and output
+====
+
+    root -l
+    TMVA::TMVAGui("output/training/ttDM0001scalar0500.root")
+
+
+3. Draw the MVA response for all processes
 ====
 
     ./make
     ./runPlotter
 
 
-3. Run analysis.C
+4. Run analysis.C
 ====
 
 Print all yields for a given signal and MVA cut.

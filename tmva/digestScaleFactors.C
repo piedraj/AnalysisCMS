@@ -1,21 +1,24 @@
 const int ntrials = 6;
 
-float sf_top_near[ntrials] = { 0.96,  0.92,  0.95,  0.92,  0.96,  0.92};
-float er_top_near[ntrials] = { 0.05,  0.03,  0.05,  0.03,  0.05,  0.03};
-float sf_ww_near [ntrials] = { 0.67,  0.69,  0.85,  0.91,  0.77,  0.81};
-float er_ww_near [ntrials] = { 0.36,  0.36,  0.26,  0.26,  0.22,  0.22};
-float cov_near   [ntrials] = {-0.14, -0.22, -0.34, -0.32, -0.27, -0.26};
+float sf_top_near[ntrials] = { 0.96,  0.93,  0.96,  0.93,  0.96,  0.93};
+float er_top_near[ntrials] = { 0.06,  0.04,  0.06,  0.04,  0.06,  0.04};
+float sf_ww_near [ntrials] = { 0.84,  0.86,  1.00,  1.06,  0.93,  0.97};
+float er_ww_near [ntrials] = { 0.47,  0.47,  0.34,  0.34,  0.29,  0.28};
+float cov_near   [ntrials] = {-0.14, -0.22, -0.33, -0.32, -0.27, -0.26};
 
-float sf_top_far[ntrials] = { 1.09,  0.99,  1.10,  1.00,  1.09,  1.00};
-float er_top_far[ntrials] = { 0.04,  0.03,  0.04,  0.03,  0.04,  0.03};
-float sf_ww_far [ntrials] = { 0.71,  0.74,  0.41,  0.57,  0.64,  0.70};
-float er_ww_far [ntrials] = { 0.14,  0.14,  0.25,  0.25,  0.12,  0.12};
+float sf_top_far[ntrials] = { 1.10,  1.00,  1.10,  1.00,  1.10,  1.00};
+float er_top_far[ntrials] = { 0.05,  0.04,  0.05,  0.04,  0.05,  0.04};
+float sf_ww_far [ntrials] = { 0.53,  0.56,  0.20,  0.36,  0.46,  0.52};
+float er_ww_far [ntrials] = { 0.17,  0.17,  0.32,  0.32,  0.16,  0.15};
 float cov_far   [ntrials] = {-0.13, -0.14, -0.30, -0.31, -0.22, -0.21};
 
 
 //------------------------------------------------------------------------------
 //
 // digestScaleFactors
+//
+//   SF ttbar = 1.04 +- 0.04 (stat) +- 0.06 (syst) = 1.04 +- 0.07
+//   SF WW    = 0.57 +- 0.16 (stat) +- 0.27 (syst) = 0.57 +- 0.32
 //
 //------------------------------------------------------------------------------
 void digestScaleFactors()
@@ -63,7 +66,7 @@ void digestScaleFactors()
 
   // Print
   printf("\n");
-  printf(" SF ttbar = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_top, er_top,rms_top);
-  printf(" SF WW    = %.2f +- %.2f (stat) +- %.2f (syst)\n", sf_ww,  er_ww, rms_ww);
+  printf(" SF ttbar = %.2f +- %.2f (stat) +- %.2f (syst) = %.2f +- %.2f\n", sf_top, er_top, rms_top, sf_top, sqrt(er_top*er_top + rms_top*rms_top));
+  printf(" SF WW    = %.2f +- %.2f (stat) +- %.2f (syst) = %.2f +- %.2f\n", sf_ww,  er_ww,  rms_ww,  sf_ww,  sqrt(er_ww *er_ww  + rms_ww *rms_ww));
   printf("\n");
 }

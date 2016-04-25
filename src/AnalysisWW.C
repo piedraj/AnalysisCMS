@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 // AnalysisWW
 //------------------------------------------------------------------------------
-AnalysisWW::AnalysisWW(TTree* tree) : AnalysisCMS(tree)
+AnalysisWW::AnalysisWW(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(false);
 }
@@ -23,8 +23,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {

@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
 
-const TString inputdir  = "../rootfiles/";
+const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
 
 enum {linY, logY};

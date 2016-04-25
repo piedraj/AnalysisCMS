@@ -27,12 +27,40 @@ const float H_MASS        = 125.0;       // [GeV]
 
 // Systematic uncertainties
 //------------------------------------------------------------------------------
-const Bool_t nuisances_btag_up      = false;
-const Bool_t nuisances_btag_down    = false;
-const Bool_t nuisances_trigger_up   = false;
-const Bool_t nuisances_trigger_down = false;
-const Bool_t nuisances_idiso_up     = false;
-const Bool_t nuisances_idiso_down   = false;
+enum {
+  JESMaxdo,
+  JESMaxup,
+  LepElepTdo,
+  LepElepTup,
+  LepMupTdo,
+  LepMupTup,
+  METdo,
+  METup,
+  Btagdo,
+  Btagup,
+  Idisodo,
+  Idisoup,
+  Triggerdo,
+  Triggerup,
+  nsystematic  // This line should be always last
+};
+
+const TString ssystematic[nsystematic] = {
+  "JESMaxdo",
+  "JESMaxup",
+  "LepElepTdo",
+  "LepElepTup",
+  "LepMupTdo",
+  "LepMupTup",
+  "METdo",
+  "METup",
+  "Btagdo",
+  "Btagup",
+  "Idisodo",
+  "Idisoup",
+  "Triggerdo",
+  "Triggerup"
+};
 
 
 // Process colors

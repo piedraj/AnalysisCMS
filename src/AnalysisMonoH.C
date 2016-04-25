@@ -5,9 +5,9 @@
 //------------------------------------------------------------------------------
 // AnalysisMonoH
 //------------------------------------------------------------------------------
-AnalysisMonoH::AnalysisMonoH(TTree* tree) : AnalysisCMS(tree)
+AnalysisMonoH::AnalysisMonoH(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetSaveMinitree(true);
 }
 
 
@@ -23,8 +23,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {
@@ -134,7 +132,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet20loose == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
-    if (_saveminitree && pass && pass_zveto)  minitree->Fill();
+    if (_saveminitree && pass && pass_zveto) minitree->Fill();
 
     //    pass &= (!_foundsoftmuon);
     //    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
