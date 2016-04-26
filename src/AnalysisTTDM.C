@@ -68,7 +68,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // LHE weights for QCD and PDF systematic uncertainties
     //--------------------------------------------------------------------------
-    GetSumOfWeightsLHE(h_pdfsum, h_qcdsum);
     GetSumOfWeightsLHE(h_pdfsum_gen, h_qcdsum_gen);
 
 

@@ -285,13 +285,11 @@ void AnalysisCMS::Setup(TString analysis,
   //----------------------------------------------------------------------------
   root_minitree->cd();
 
-  h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
-  h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
+  h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
+  h_qcdsum_gen = new TH1D("h_qcdsum_gen", "",   9, 0,   9);
 
   root_output->cd();
 
-  h_pdfsum_gen      = new TH1D("h_pdfsum_gen",      "", 100, 0, 100);
-  h_qcdsum_gen      = new TH1D("h_qcdsum_gen",      "",   9, 0,   9);
   h_pdfsum_rec_0jet = new TH1D("h_pdfsum_rec_0jet", "", 100, 0, 100);
   h_pdfsum_rec_1jet = new TH1D("h_pdfsum_rec_1jet", "", 100, 0, 100);
   h_qcdsum_rec_0jet = new TH1D("h_qcdsum_rec_0jet", "",   9, 0,   9);

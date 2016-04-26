@@ -99,7 +99,7 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
       h_pdfratio->Fill(ratio);
     }
 
-  TCanvas* c1 = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
+  TCanvas* canvas = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
 
   h_pdfratio->Draw();
 
