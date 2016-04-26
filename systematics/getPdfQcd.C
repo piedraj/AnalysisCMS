@@ -29,14 +29,19 @@ void getPdfQcd()
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString sample)
 {
-  TFile* file = new TFile(_inputdir + sample + ".root", "read");
+  TFile* gen_file = new TFile("WWTo2L2Nu_lheweights_gen.root", "read");
+
+  TH1D* h_qcdsum_gen = (TH1D*)gen_file->Get("h_qcdsum_gen");
+  TH1D* h_pdfsum_gen = (TH1D*)gen_file->Get("h_pdfsum_gen");
+
+  TFile* rec_file = new TFile(_inputdir + sample + ".root", "read");
+
+  TH1D* h_pdfsum_rec = (TH1D*)rec_file->Get("h_pdfsum_rec");
+  TH1D* h_qcdsum_rec = (TH1D*)rec_file->Get("h_qcdsum_rec");
 
 
   // Produce the QCD uncertainties
   //----------------------------------------------------------------------------
-  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum_gen");
-  TH1D* h_qcdsum_rec = (TH1D*)file->Get("h_qcdsum_rec");
-
   float qcdratio_gen_up   = h_qcdsum_gen->GetBinContent(9) / h_qcdsum_gen->GetBinContent(1);
   float qcdratio_gen_down = h_qcdsum_gen->GetBinContent(5) / h_qcdsum_gen->GetBinContent(1);
 
@@ -46,8 +51,6 @@ void GetPdfQcdSyst(TString sample)
 
   // Produce the PDF uncertainties
   //----------------------------------------------------------------------------
-  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum_gen");
-  TH1D* h_pdfsum_rec = (TH1D*)file->Get("h_pdfsum_rec");
 
   int nbinpdf = h_pdfsum_gen->GetNbinsX();
 
@@ -78,4 +81,13 @@ void GetPdfQcdSyst(TString sample)
   printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
   printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
   printf("\n");
-}  
+
+
+  // Print RMS
+  //----------------------------------------------------------------------------
+  printf(" More on the PDF\n");
+  printf(" rec RMS = %5.3f\n", h_pdfsum_rec->GetRMS());
+  printf(" gen RMS = %5.3f\n", h_pdfsum_gen->GetRMS());
+  printf(" rec RMS / gen RMS = %f\n", h_pdfsum_rec->GetRMS() / h_pdfsum_gen->GetRMS());
+  printf("\n");
+}

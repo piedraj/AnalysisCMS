@@ -1116,12 +1116,12 @@ void AnalysisCMS::GetSumOfWeightsLHE(TH1D* h_pdf, TH1D* h_qcd)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int i=0; i<h_pdfsum->GetNbinsX(); i++)
+  for (int i=0; i<h_pdf->GetNbinsX(); i++)
     {
       h_pdf->Fill(i, std_vector_LHE_weight->at(i+9));
     }
 
-  for (int i=0; i<h_qcdsum->GetNbinsX(); i++)
+  for (int i=0; i<h_qcd->GetNbinsX(); i++)
     {
       h_qcd->Fill(i, std_vector_LHE_weight->at(i));
     }
