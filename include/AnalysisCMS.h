@@ -233,8 +233,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pdfsum;      // Saved in minitrees
   TH1D*                  h_qcdsum;      // Saved in minitrees
   TH1D*                  h_pdfsum_gen;  // Saved in rootfiles
-  TH1D*                  h_pdfsum_rec;  // Saved in rootfiles
   TH1D*                  h_qcdsum_gen;  // Saved in rootfiles
+  TH1D*                  h_pdfsum_rec;  // Saved in rootfiles
   TH1D*                  h_qcdsum_rec;  // Saved in rootfiles
 
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
