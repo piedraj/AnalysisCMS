@@ -11,12 +11,16 @@ vector<float> *std_vector_LHE_weight;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// getPdfQcdGenSum
+// root -l -b -q "getPdfQcdGenSum.C+(\"WWTo2L2Nu__part0\",\"WWTo2L2Nu\")"
+// root -l -b -q "getPdfQcdGenSum.C+(\"VBFHToWWTo2L2Nu_M125\")"
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//void getPdfQcdGenSum(TString inputname = "WWTo2L2Nu__part0", TString outputname = "WWTo2L2Nu")
-void getPdfQcdGenSum(TString inputname = "VBFHToWWTo2L2Nu_M125", TString outputname = "VBFHToWWTo2L2Nu_M125")
+void getPdfQcdGenSum(TString inputname = "", TString outputname = "")
 {
+  if (inputname.Length() == 0) return;
+
+  if (outputname.Length() == 0) outputname = inputname;
+
   TFile* output = new TFile(outputname + "_lheweights.root", "recreate");
 
   TH1D* h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
