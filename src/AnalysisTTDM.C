@@ -109,13 +109,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (metPfType1 > 20.);
     pass &= (mpmet > 20.);
     pass &= (ptll > 30.);
-    pass &= (njet == 0);
     pass &= (_nbjet20loose == 0);
 
-    if (pass)
-      {
-	GetSumOfWeightsLHE(h_pdfsum_rec, h_qcdsum_rec);
-      }
+    if (pass && njet == 0) GetSumOfWeightsLHE(h_pdfsum_rec_0jet, h_qcdsum_rec_0jet);
+    if (pass && njet == 1) GetSumOfWeightsLHE(h_pdfsum_rec_1jet, h_qcdsum_rec_1jet);
 
 
     // [AN-15-305]

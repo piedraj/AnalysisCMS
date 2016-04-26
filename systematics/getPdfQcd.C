@@ -10,7 +10,8 @@ const TString _inputdir = "../rootfiles/nominal/TTDM/";
 
 // Functions
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample);
+void GetPdfQcdSyst(TString sample,
+		   TString jetbin);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,14 +21,15 @@ void GetPdfQcdSyst(TString sample);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getPdfQcd()
 {
-  GetPdfQcdSyst("WWTo2L2Nu");
+  GetPdfQcdSyst("WWTo2L2Nu", "0jet");
+  GetPdfQcdSyst("WWTo2L2Nu", "1jet");
 }
 
 
 //------------------------------------------------------------------------------
 // GetPdfQcdSyst
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample)
+void GetPdfQcdSyst(TString sample, TString jetbin)
 {
   TFile* gen_file = new TFile("WWTo2L2Nu_lheweights_gen.root", "read");
 
@@ -36,8 +38,8 @@ void GetPdfQcdSyst(TString sample)
 
   TFile* rec_file = new TFile(_inputdir + sample + ".root", "read");
 
-  TH1D* h_pdfsum_rec = (TH1D*)rec_file->Get("h_pdfsum_rec");
-  TH1D* h_qcdsum_rec = (TH1D*)rec_file->Get("h_qcdsum_rec");
+  TH1D* h_pdfsum_rec = (TH1D*)rec_file->Get("h_pdfsum_rec_" + jetbin);
+  TH1D* h_qcdsum_rec = (TH1D*)rec_file->Get("h_qcdsum_rec_" + jetbin);
 
 
   // Produce the QCD uncertainties
@@ -51,7 +53,6 @@ void GetPdfQcdSyst(TString sample)
 
   // Produce the PDF uncertainties
   //----------------------------------------------------------------------------
-
   int nbinpdf = h_pdfsum_gen->GetNbinsX();
 
   float pdf_gen_mean = h_pdfsum_gen->Integral() / nbinpdf;
@@ -75,17 +76,17 @@ void GetPdfQcdSyst(TString sample)
 
   // Print the uncertainties
   //----------------------------------------------------------------------------
-  printf("\n %s\n", sample.Data());
-  printf("---------------------------------------\n");
-  printf(" QCD up   -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_up,   qcdratio_rec_up   / qcdratio_gen_up);
-  printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
-  printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
+  printf("\n %s %s\n", sample.Data(), jetbin.Data());
+  printf("-------------------------------------\n");
+  printf(" QCD up   xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_up),   1e2 * fabs(1. - qcdratio_rec_up   / qcdratio_gen_up));
+  printf(" QCD down xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_down), 1e2 * fabs(1. - qcdratio_rec_down / qcdratio_gen_down));
+  printf(" PDF      xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 * fabs(1. - pdf_gen_ratio),     1e2 * fabs(1. - pdf_rec_ratio     / pdf_gen_ratio));
   printf("\n");
 
 
   // Alternative PDF approach
   //----------------------------------------------------------------------------
-  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 50, 0.985, 1.015);
+  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.98, 1.1);
 
   float denominator = h_qcdsum_rec->GetBinContent(1) / h_qcdsum_gen->GetBinContent(1);  // Nominal values
 
@@ -98,9 +99,9 @@ void GetPdfQcdSyst(TString sample)
       h_pdfratio->Fill(ratio);
     }
 
-  TCanvas* c1 = new TCanvas("c1", "c1");
+  TCanvas* c1 = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
 
   h_pdfratio->Draw();
 
-  printf(" Alternative PDF acceptance approach RMS = %.2f%s\n\n", 1e2*h_pdfratio->GetRMS(), "%");
+  printf(" Alternative PDF acceptance approach RMS = %4.2f%s\n\n", 1e2*h_pdfratio->GetRMS(), "%");
 }
