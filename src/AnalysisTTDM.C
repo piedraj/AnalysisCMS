@@ -68,7 +68,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // LHE weights for QCD and PDF systematic uncertainties
     //--------------------------------------------------------------------------
-    GetSumOfWeightsLHE();
+    GetSumOfWeightsLHE(h_pdfsum, h_qcdsum);
+    GetSumOfWeightsLHE(h_pdfsum_gen, h_qcdsum_gen);
 
 
     // Analysis
@@ -95,7 +96,31 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     bool pass;
 
 
-    // AN-15-305 analysis
+    // [AN-15-325]
+    // WW cross section measurement at sqrt(s) = 13 TeV
+    //--------------------------------------------------------------------------
+    pass = true;
+
+    pass &= (_channel == em);
+    pass &= (std_vector_lepton_pt->at(0) > 20.);
+    pass &= (std_vector_lepton_pt->at(1) > 20.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    pass &= (mll > 12.);
+    pass &= (metPfType1 > 20.);
+    pass &= (mpmet > 20.);
+    pass &= (ptll > 30.);
+    pass &= (njet == 0);
+    pass &= (_nbjet20loose == 0);
+
+    if (pass)
+      {
+	GetSumOfWeightsLHE(h_pdfsum_rec, h_qcdsum_rec);
+      }
+
+
+    // [AN-15-305]
+    // Measurement of the top-quark pair production cross section in the dilepton
+    // channel with 2.2 fb-1 of 13 TeV data using the cut and count method
     //--------------------------------------------------------------------------
     pass = true;
 
