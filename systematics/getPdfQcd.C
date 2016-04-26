@@ -81,12 +81,11 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   printf(" QCD up   xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_up),   1e2 * fabs(1. - qcdratio_rec_up   / qcdratio_gen_up));
   printf(" QCD down xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_down), 1e2 * fabs(1. - qcdratio_rec_down / qcdratio_gen_down));
   printf(" PDF      xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 * fabs(1. - pdf_gen_ratio),     1e2 * fabs(1. - pdf_rec_ratio     / pdf_gen_ratio));
-  printf("\n");
 
 
   // Alternative PDF approach
   //----------------------------------------------------------------------------
-  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.98, 1.1);
+  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.97, 1.03);
 
   float denominator = h_qcdsum_rec->GetBinContent(1) / h_qcdsum_gen->GetBinContent(1);  // Nominal values
 
@@ -103,5 +102,5 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
 
   h_pdfratio->Draw();
 
-  printf(" Alternative PDF acceptance approach RMS = %4.2f%s\n\n", 1e2*h_pdfratio->GetRMS(), "%");
+  printf(" PDF                     acc = %4.2f%% (Andrea's way)\n\n", 1e2*h_pdfratio->GetRMS());
 }
