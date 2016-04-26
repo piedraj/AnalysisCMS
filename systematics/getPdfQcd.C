@@ -23,6 +23,9 @@ void getPdfQcd()
 {
   GetPdfQcdSyst("WWTo2L2Nu", "0jet");
   GetPdfQcdSyst("WWTo2L2Nu", "1jet");
+
+  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "0jet");
+  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "1jet");
 }
 
 
@@ -31,7 +34,7 @@ void getPdfQcd()
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString sample, TString jetbin)
 {
-  TFile* gen_file = new TFile("WWTo2L2Nu_lheweights_gen.root", "read");
+  TFile* gen_file = new TFile(sample + "_lheweights.root", "read");
 
   TH1D* h_qcdsum_gen = (TH1D*)gen_file->Get("h_qcdsum_gen");
   TH1D* h_pdfsum_gen = (TH1D*)gen_file->Get("h_pdfsum_gen");

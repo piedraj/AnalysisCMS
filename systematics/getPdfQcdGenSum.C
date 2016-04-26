@@ -14,14 +14,15 @@ vector<float> *std_vector_LHE_weight;
 // getPdfQcdGenSum
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcdGenSum()
+//void getPdfQcdGenSum(TString inputname = "WWTo2L2Nu__part0", TString outputname = "WWTo2L2Nu")
+void getPdfQcdGenSum(TString inputname = "VBFHToWWTo2L2Nu_M125", TString outputname = "VBFHToWWTo2L2Nu_M125")
 {
-  TFile* output = new TFile("WWTo2L2Nu_lheweights_gen.root", "recreate");
+  TFile* output = new TFile(outputname + "_lheweights.root", "recreate");
 
   TH1D* h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
   TH1D* h_qcdsum_gen = new TH1D("h_qcdsum_gen", "",   9, 0,   9);
 
-  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/RunII/22Jan/MC/25ns/LatinoTrees/latino_WWTo2L2Nu__part0.root", "read");
+  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/RunII/22Jan/MC/25ns/LatinoTrees/latino_" + inputname + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("myTree");
 
