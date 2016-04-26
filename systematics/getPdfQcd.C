@@ -26,6 +26,9 @@ void getPdfQcd()
 
   GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "0jet");
   GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "1jet");
+
+  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "0jet");
+  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "1jet");
 }
 
 
@@ -34,7 +37,7 @@ void getPdfQcd()
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString sample, TString jetbin)
 {
-  TFile* gen_file = new TFile(sample + "_lheweights.root", "read");
+  TFile* gen_file = new TFile("rootfiles/" + sample + "_lheweights.root", "read");
 
   TH1D* h_qcdsum_gen = (TH1D*)gen_file->Get("h_qcdsum_gen");
   TH1D* h_pdfsum_gen = (TH1D*)gen_file->Get("h_pdfsum_gen");
@@ -80,10 +83,10 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   // Print the uncertainties
   //----------------------------------------------------------------------------
   printf("\n %s %s\n", sample.Data(), jetbin.Data());
-  printf("-------------------------------------\n");
-  printf(" QCD up   xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_up),   1e2 * fabs(1. - qcdratio_rec_up   / qcdratio_gen_up));
-  printf(" QCD down xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_down), 1e2 * fabs(1. - qcdratio_rec_down / qcdratio_gen_down));
-  printf(" PDF      xs = %5.2f%%, \t acc = %4.2f%%\n", 1e2 * fabs(1. - pdf_gen_ratio),     1e2 * fabs(1. - pdf_rec_ratio     / pdf_gen_ratio));
+  printf("--------------------------------------\n");
+  printf(" QCD up    xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_up),   1e2 * fabs(1. - qcdratio_rec_up   / qcdratio_gen_up));
+  printf(" QCD down  xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_down), 1e2 * fabs(1. - qcdratio_rec_down / qcdratio_gen_down));
+  printf(" PDF       xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 * fabs(1. - pdf_gen_ratio),     1e2 * fabs(1. - pdf_rec_ratio     / pdf_gen_ratio));
 
 
   // Alternative PDF approach
@@ -105,5 +108,5 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
 
   h_pdfratio->Draw();
 
-  printf(" PDF                     acc = %4.2f%% (Andrea's way)\n\n", 1e2*h_pdfratio->GetRMS());
+  printf(" PDF %20s acc = %4.2f%% (Andrea's way)\n\n", " ", 1e2*h_pdfratio->GetRMS());
 }

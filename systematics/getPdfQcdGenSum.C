@@ -11,6 +11,8 @@ vector<float> *std_vector_LHE_weight;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
+// >>> myTree NOT AVAILABLE <<< root -l -b -q "getPdfQcdGenSum.C+(\"GluGluWWTo2L2Nu_MCFM__part0\",\"GluGluWWTo2L2Nu_MCFM\")"
+// root -l -b -q "getPdfQcdGenSum.C+(\"GluGluHToWWTo2L2Nu_M125__part0\",\"GluGluHToWWTo2L2Nu_M125\")"
 // root -l -b -q "getPdfQcdGenSum.C+(\"WWTo2L2Nu__part0\",\"WWTo2L2Nu\")"
 // root -l -b -q "getPdfQcdGenSum.C+(\"VBFHToWWTo2L2Nu_M125\")"
 //
