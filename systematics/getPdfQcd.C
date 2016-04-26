@@ -83,11 +83,24 @@ void GetPdfQcdSyst(TString sample)
   printf("\n");
 
 
-  // Print RMS
+  // Alternative PDF approach
   //----------------------------------------------------------------------------
-  printf(" More on the PDF\n");
-  printf(" rec RMS = %5.3f\n", h_pdfsum_rec->GetRMS());
-  printf(" gen RMS = %5.3f\n", h_pdfsum_gen->GetRMS());
-  printf(" rec RMS / gen RMS = %f\n", h_pdfsum_rec->GetRMS() / h_pdfsum_gen->GetRMS());
-  printf("\n");
+  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 50, 0.985, 1.015);
+
+  float denominator = h_qcdsum_rec->GetBinContent(1) / h_qcdsum_gen->GetBinContent(1);  // Nominal values
+
+  for (int a=1; a<=nbinpdf; a++)
+    {
+      float numerator = h_pdfsum_rec->GetBinContent(a) / h_pdfsum_gen->GetBinContent(a);
+
+      float ratio = numerator / denominator;
+
+      h_pdfratio->Fill(ratio);
+    }
+
+  TCanvas* c1 = new TCanvas("c1", "c1");
+
+  h_pdfratio->Draw();
+
+  printf(" Alternative PDF acceptance approach RMS = %.2f%s\n\n", 1e2*h_pdfratio->GetRMS(), "%");
 }
