@@ -120,8 +120,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetStarVar        ();
 
-  void    GetSumOfWeightsLHE(TH1D*    h_pdf,
-			     TH1D*    h_qcd);
+  void    GetSumOfWeightsLHE(TH1D*    h_weights);
 
 
   // Data members
@@ -230,12 +229,8 @@ class AnalysisCMS : public AnalysisBase
 
   // TH1 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_pdfsum_gen;       // Saved in root_minitree
-  TH1D*                  h_qcdsum_gen;       // Saved in root_minitree
-  TH1D*                  h_pdfsum_rec_0jet;  // Saved in root_output
-  TH1D*                  h_pdfsum_rec_1jet;  // Saved in root_output
-  TH1D*                  h_qcdsum_rec_0jet;  // Saved in root_output
-  TH1D*                  h_qcdsum_rec_1jet;  // Saved in root_output
+  TH1D*                  h_weights_rec_0jet;  // Saved in root_output
+  TH1D*                  h_weights_rec_1jet;  // Saved in root_output
 
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];

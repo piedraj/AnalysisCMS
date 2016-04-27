@@ -281,19 +281,12 @@ void AnalysisCMS::Setup(TString analysis,
   OpenMinitree();
 
 
-  // Histograms for PDF and QCD uncertainties
+  // Histograms for QCD, PDF and alpha_s uncertainties
   //----------------------------------------------------------------------------
-  root_minitree->cd();
-
-  h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
-  h_qcdsum_gen = new TH1D("h_qcdsum_gen", "",   9, 0,   9);
-
   root_output->cd();
 
-  h_pdfsum_rec_0jet = new TH1D("h_pdfsum_rec_0jet", "", 100, 0, 100);
-  h_pdfsum_rec_1jet = new TH1D("h_pdfsum_rec_1jet", "", 100, 0, 100);
-  h_qcdsum_rec_0jet = new TH1D("h_qcdsum_rec_0jet", "",   9, 0,   9);
-  h_qcdsum_rec_1jet = new TH1D("h_qcdsum_rec_1jet", "",   9, 0,   9);
+  h_weights_rec_0jet = new TH1D("h_weights_rec_0jet", "", 200, 0, 200);
+  h_weights_rec_1jet = new TH1D("h_weights_rec_1jet", "", 200, 0, 200);
 
   return;
 }
@@ -1112,18 +1105,13 @@ void AnalysisCMS::GetGenPtllWeight()
 //------------------------------------------------------------------------------
 // GetSumOfWeightsLHE
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetSumOfWeightsLHE(TH1D* h_pdf, TH1D* h_qcd)
+void AnalysisCMS::GetSumOfWeightsLHE(TH1D* h_weights)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int i=0; i<h_pdf->GetNbinsX(); i++)
+  for (int i=0; i<=h_weights->GetNbinsX(); i++)
     {
-      h_pdf->Fill(i, std_vector_LHE_weight->at(i+9));
-    }
-
-  for (int i=0; i<h_qcd->GetNbinsX(); i++)
-    {
-      h_qcd->Fill(i, std_vector_LHE_weight->at(i));
+      h_weights->Fill(i, std_vector_LHE_weight->at(i));
     }
 }
 
