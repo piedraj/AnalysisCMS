@@ -66,11 +66,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     EventSetup();
 
 
-    // LHE weights for QCD and PDF systematic uncertainties
-    //--------------------------------------------------------------------------
-    GetSumOfWeightsLHE(h_pdfsum_gen, h_qcdsum_gen);
-
-
     // Analysis
     //--------------------------------------------------------------------------
     if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
@@ -110,8 +105,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (ptll > 30.);
     pass &= (_nbjet20loose == 0);
 
-    if (pass && njet == 0) GetSumOfWeightsLHE(h_pdfsum_rec_0jet, h_qcdsum_rec_0jet);
-    if (pass && njet == 1) GetSumOfWeightsLHE(h_pdfsum_rec_1jet, h_qcdsum_rec_1jet);
+    if (pass && njet == 0) GetSumOfWeightsLHE(list_vectors_weights_0jet);
+    if (pass && njet == 1) GetSumOfWeightsLHE(list_vectors_weights_1jet);
 
 
     // [AN-15-305]

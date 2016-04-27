@@ -281,6 +281,13 @@ void AnalysisCMS::Setup(TString analysis,
 
   OpenMinitree();
 
+  // Histograms for QCD, PDF and alpha_s uncertainties
+  //----------------------------------------------------------------------------
+  root_output->cd();
+
+  list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
+  list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
+
   return;
 }
 
@@ -1084,14 +1091,6 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-
-  // Andrea's version
-  //----------------------------------------------------------------------------
-  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14)/8.8);
-
-
-  // Rafael's version
-  //----------------------------------------------------------------------------
   float p0 = 1.02852e+00;
   float p1 = 9.49640e-02;
   float p2 = 1.90422e+01;
@@ -1106,19 +1105,17 @@ void AnalysisCMS::GetGenPtllWeight()
 
 //------------------------------------------------------------------------------
 // GetSumOfWeightsLHE
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetSumOfWeightsLHE(TH1D* h_pdf, TH1D* h_qcd)
+void AnalysisCMS::GetSumOfWeightsLHE(TH1F* list_vectors_weights)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int i=0; i<h_pdf->GetNbinsX(); i++)
+  for (int iWeight=0; iWeight<list_vectors_weights->GetNbinsX(); iWeight++)
     {
-      h_pdf->Fill(i, std_vector_LHE_weight->at(i+9));
-    }
+      float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
 
-  for (int i=0; i<h_qcd->GetNbinsX(); i++)
-    {
-      h_qcd->Fill(i, std_vector_LHE_weight->at(i));
+      list_vectors_weights->Fill(iWeight+0.5, ratio);
     }
 }
 
