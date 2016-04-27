@@ -78,64 +78,20 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   TFile* genfile = new TFile(_gendir + "latino_" + sample + ".root", "read");
   TFile* recfile = new TFile(_recdir + sample + ".root", "read");
 
-  TH1D* h_weights_gen = (TH1D*)genfile->Get("list_vectors_weights");
-  TH1D* h_weights_rec = (TH1D*)recfile->Get("h_weights_rec_" + jetbin);
+  TH1F* h_weights_gen = (TH1F*)genfile->Get("list_vectors_weights");
+  TH1F* h_weights_rec = (TH1F*)recfile->Get("list_vectors_weights_" + jetbin);
 
 
   // Produce the QCD uncertainties
   //----------------------------------------------------------------------------
-  float qcdratio_gen_up = h_weights_gen->GetBinContent(9) / h_weights_gen->GetBinContent(1);
-  float qcdratio_gen_do = h_weights_gen->GetBinContent(5) / h_weights_gen->GetBinContent(1);
+  float qcd_gen_mu05 = h_weights_gen->GetBinContent(9) / h_weights_gen->GetBinContent(1);
+  float qcd_gen_mu20 = h_weights_gen->GetBinContent(5) / h_weights_gen->GetBinContent(1);
 
-  float qcdratio_rec_up = h_weights_rec->GetBinContent(9) / h_weights_rec->GetBinContent(1);
-  float qcdratio_rec_do = h_weights_rec->GetBinContent(5) / h_weights_rec->GetBinContent(1);
-
-
-  // Produce the alpha_s uncertainties
-  //----------------------------------------------------------------------------
-  float alpharatio_gen_up = h_weights_gen->GetBinContent(110) / h_weights_gen->GetBinContent(1);
-  float alpharatio_gen_do = h_weights_gen->GetBinContent(111) / h_weights_gen->GetBinContent(1);
-
-  float alpharatio_rec_up = h_weights_rec->GetBinContent(110) / h_weights_rec->GetBinContent(1);
-  float alpharatio_rec_do = h_weights_rec->GetBinContent(111) / h_weights_rec->GetBinContent(1);
+  float qcd_rec_mu05 = h_weights_rec->GetBinContent(9) / h_weights_rec->GetBinContent(1);
+  float qcd_rec_mu20 = h_weights_rec->GetBinContent(5) / h_weights_rec->GetBinContent(1);
 
 
   // Produce the PDF uncertainties
-  //----------------------------------------------------------------------------
-  float pdf_gen_mean = 0;
-  float pdf_rec_mean = 0;
-
-  float pdf_gen_mean_sq = 0;
-  float pdf_rec_mean_sq = 0;
-
-  for (int i=10; i<110; i++)
-    {
-      pdf_gen_mean += (h_weights_gen->GetBinContent(i) / _npdf);
-      pdf_rec_mean += (h_weights_rec->GetBinContent(i) / _npdf);
-
-      pdf_gen_mean_sq += (pow(h_weights_gen->GetBinContent(i), 2) / _npdf);
-      pdf_rec_mean_sq += (pow(h_weights_rec->GetBinContent(i), 2) / _npdf);
-    }
-
-  float pdf_gen_sd = sqrt(pdf_gen_mean_sq - pow(pdf_gen_mean, 2)); 
-  float pdf_rec_sd = sqrt(pdf_rec_mean_sq - pow(pdf_rec_mean, 2)); 
-
-  float pdf_gen_ratio = 1 + (pdf_gen_sd / pdf_gen_mean);
-  float pdf_rec_ratio = 1 + (pdf_rec_sd / pdf_rec_mean);
-
-
-  // Print the uncertainties
-  //----------------------------------------------------------------------------
-  printf("\n %s %s\n", sample.Data(), jetbin.Data());
-  printf("--------------------------------------\n");
-  printf(" QCD up        xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_up),   1e2 * fabs(1. - qcdratio_rec_up   / qcdratio_gen_up));
-  printf(" QCD down      xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - qcdratio_gen_do),   1e2 * fabs(1. - qcdratio_rec_do   / qcdratio_gen_do));
-  printf(" alpha_s up    xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - alpharatio_gen_up), 1e2 * fabs(1. - alpharatio_rec_up / alpharatio_gen_up));
-  printf(" alpha_s down  xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 *     (1. - alpharatio_gen_do), 1e2 * fabs(1. - alpharatio_rec_do / alpharatio_gen_do));
-//printf(" PDF           xs = %6.2f%%,  acc = %4.2f%%\n", 1e2 * fabs(1. - pdf_gen_ratio),     1e2 * fabs(1. - pdf_rec_ratio     / pdf_gen_ratio));
-
-
-  // Alternative PDF approach
   //----------------------------------------------------------------------------
   TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.97, 1.03);
 
@@ -154,5 +110,34 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
 
   h_pdfratio->Draw();
 
-  printf(" PDF %24s acc = %4.2f%% (Andrea's way)\n\n", " ", 1e2*h_pdfratio->GetRMS());
+
+  // Produce the alpha_s uncertainties
+  //----------------------------------------------------------------------------
+  float alpha_gen_265000 = h_weights_gen->GetBinContent(110) / h_weights_gen->GetBinContent(1);
+  float alpha_gen_266000 = h_weights_gen->GetBinContent(111) / h_weights_gen->GetBinContent(1);
+
+  float alpha_rec_265000 = h_weights_rec->GetBinContent(110) / h_weights_rec->GetBinContent(1);
+  float alpha_rec_266000 = h_weights_rec->GetBinContent(111) / h_weights_rec->GetBinContent(1);
+
+
+  // Print the uncertainties
+  //----------------------------------------------------------------------------
+  float qcd_mu05 = 1e2 * fabs(1. - qcd_rec_mu05 / qcd_gen_mu05);
+  float qcd_mu20 = 1e2 * fabs(1. - qcd_rec_mu20 / qcd_gen_mu20);
+
+  float alpha_265000 = 1e2 * fabs(1. - alpha_rec_265000 / alpha_gen_265000);
+  float alpha_266000 = 1e2 * fabs(1. - alpha_rec_266000 / alpha_gen_266000);
+
+  float pdf = 1e2 * h_pdfratio->GetRMS();
+
+  float pdf_alpha = sqrt(pdf*pdf + (alpha_265000*alpha_265000 + alpha_266000*alpha_266000)/2.);
+
+
+  printf("\n %s %s acceptance uncertainties\n", sample.Data(), jetbin.Data());
+  printf("-----------------------------------------\n");
+  printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
+  printf(" alpha_s     265000 / 266000   %4.2f%% / %4.2f%%\n", alpha_265000, alpha_266000);
+  printf(" PDF                           %4.2f%%\n", pdf);
+  printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
+  printf("\n");
 }

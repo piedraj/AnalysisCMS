@@ -120,7 +120,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetStarVar        ();
 
-  void    GetSumOfWeightsLHE(TH1D*    h_weights);
+  void    GetSumOfWeightsLHE(TH1F*    list_vectors_weights);
 
 
   // Data members
@@ -226,12 +226,16 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_minitree;
   TTree*                 minitree;
 
+  
+  // Histograms for QCD, PDF and alpha_s uncertainties
+  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+  //----------------------------------------------------------------------------
+  TH1F*                  list_vectors_weights_0jet;
+  TH1F*                  list_vectors_weights_1jet;
+
 
   // TH1 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_weights_rec_0jet;  // Saved in root_output
-  TH1D*                  h_weights_rec_1jet;  // Saved in root_output
-
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];

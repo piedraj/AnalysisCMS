@@ -105,8 +105,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (ptll > 30.);
     pass &= (_nbjet20loose == 0);
 
-    if (pass && njet == 0) GetSumOfWeightsLHE(h_weights_rec_0jet);
-    if (pass && njet == 1) GetSumOfWeightsLHE(h_weights_rec_1jet);
+    if (pass && njet == 0) GetSumOfWeightsLHE(list_vectors_weights_0jet);
+    if (pass && njet == 1) GetSumOfWeightsLHE(list_vectors_weights_1jet);
 
 
     // [AN-15-305]
