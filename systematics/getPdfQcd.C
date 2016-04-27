@@ -1,6 +1,10 @@
 /*
+
+  The QCD, PDF and alpha_s variations are documented in the following slides,
+
+  https://indico.cern.ch/event/459797/contributions/1961581/attachments/1181555/1800214/mcaod-Feb15-2016.pdf
   
-  From mcWeightExplainedOrdered
+  The correspondence with latinos is documented in the mcWeightExplainedOrdered histogram,
 
   >>> 9 QCD variations
   [bin    1]   <weight id="1001"> muR=1 muF=1 </weight>
