@@ -49,7 +49,16 @@ const TString _recdir = "../rootfiles/nominal/TTDM/";
 
 // Functions
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample, TString jetbin);
+void GetPdfQcdSyst(TString     sample,
+		   TString     jetbin);
+
+void DrawLatex    (Font_t      tfont,
+		   Float_t     x,
+		   Float_t     y,
+		   Float_t     tsize,
+		   Short_t     align,
+		   const char* text,
+		   Bool_t      setndc = true);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,6 +68,10 @@ void GetPdfQcdSyst(TString sample, TString jetbin);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getPdfQcd()
 {
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+
+  gSystem->mkdir("figures", kTRUE);
+
   GetPdfQcdSyst("WWTo2L2Nu", "0jet");
   GetPdfQcdSyst("WWTo2L2Nu", "1jet");
 
@@ -67,6 +80,9 @@ void getPdfQcd()
 
   GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "0jet");
   GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "1jet");
+
+  GetPdfQcdSyst("WZTo3LNu", "0jet");
+  GetPdfQcdSyst("WZTo3LNu", "1jet");
 }
 
 
@@ -106,9 +122,28 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
       h_pdfratio->Fill(ratio);
     }
 
+
+  // Draw the PDF distribution
+  //----------------------------------------------------------------------------
   TCanvas* canvas = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
 
-  h_pdfratio->Draw();
+  h_pdfratio->SetFillColor(kRed+1);
+  h_pdfratio->SetFillStyle(  1001);
+  h_pdfratio->SetLineColor(kRed+1);
+
+  h_pdfratio->Draw("hist");
+
+  h_pdfratio->SetXTitle("#frac{N_{rec}^{PDF} / N_{gen}^{PDF}}{N_{rec}^{nominal} / N_{gen}^{nominal}}");
+  h_pdfratio->SetYTitle("entries / bin");
+
+  h_pdfratio->GetXaxis()->SetTitleOffset(2.0);
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, sample + " " + jetbin);
+
+  canvas->GetFrame()->DrawClone();
+
+  canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".pdf");
+  canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".png");
 
 
   // Produce the alpha_s uncertainties
@@ -140,4 +175,26 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   printf(" PDF                           %4.2f%%\n", pdf);
   printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
   printf("\n");
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLatex 
+//------------------------------------------------------------------------------
+void DrawLatex(Font_t      tfont,
+	       Float_t     x,
+	       Float_t     y,
+	       Float_t     tsize,
+	       Short_t     align,
+	       const char* text,
+	       Bool_t      setndc)
+{
+  TLatex* tl = new TLatex(x, y, text);
+
+  tl->SetNDC      (setndc);
+  tl->SetTextAlign( align);
+  tl->SetTextFont ( tfont);
+  tl->SetTextSize ( tsize);
+
+  tl->Draw("same");
 }
