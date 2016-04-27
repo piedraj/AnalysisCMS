@@ -61,16 +61,23 @@ void DrawLatex    (Font_t      tfont,
 		   Bool_t      setndc = true);
 
 
+// Data members
+//------------------------------------------------------------------------------
+bool _savefigures;
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 // getPdfQcd
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcd()
+void getPdfQcd(bool savefigures = false)
 {
+  _savefigures = savefigures;
+  
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  gSystem->mkdir("figures", kTRUE);
+  if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
   GetPdfQcdSyst("WWTo2L2Nu", "0jet");
   GetPdfQcdSyst("WWTo2L2Nu", "1jet");
@@ -83,6 +90,15 @@ void getPdfQcd()
 
   GetPdfQcdSyst("WZTo3LNu", "0jet");
   GetPdfQcdSyst("WZTo3LNu", "1jet");
+
+  GetPdfQcdSyst("HWminusJ_HToWW_M125", "0jet");
+  GetPdfQcdSyst("HWminusJ_HToWW_M125", "1jet");
+
+  GetPdfQcdSyst("HWplusJ_HToWW_M125", "0jet");
+  GetPdfQcdSyst("HWplusJ_HToWW_M125", "1jet");
+
+  GetPdfQcdSyst("HZJ_HToWW_M125", "0jet");
+  GetPdfQcdSyst("HZJ_HToWW_M125", "1jet");
 }
 
 
@@ -142,8 +158,11 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
 
   canvas->GetFrame()->DrawClone();
 
-  canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".pdf");
-  canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".png");
+  if (_savefigures)
+    {
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".pdf");
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".png");
+    }
 
 
   // Produce the alpha_s uncertainties
