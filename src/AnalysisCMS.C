@@ -286,15 +286,15 @@ void AnalysisCMS::Setup(TString analysis,
   //----------------------------------------------------------------------------
   root_minitree->cd();
 
-  h_pdfsum = new TH1D("h_pdfsum", "", 100, 0, 100);
-  h_qcdsum = new TH1D("h_qcdsum", "",   9, 0,   9);
+  h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
+  h_qcdsum_gen = new TH1D("h_qcdsum_gen", "",   9, 0,   9);
 
   root_output->cd();
 
-  h_pdfsum_gen = new TH1D("h_pdfsum_gen", "", 100, 0, 100);
-  h_pdfsum_rec = new TH1D("h_pdfsum_rec", "", 100, 0, 100);
-  h_qcdsum_gen = new TH1D("h_qcdsum_gen", "",   9, 0,   9);
-  h_qcdsum_rec = new TH1D("h_qcdsum_rec", "",   9, 0,   9);
+  h_pdfsum_rec_0jet = new TH1D("h_pdfsum_rec_0jet", "", 100, 0, 100);
+  h_pdfsum_rec_1jet = new TH1D("h_pdfsum_rec_1jet", "", 100, 0, 100);
+  h_qcdsum_rec_0jet = new TH1D("h_qcdsum_rec_0jet", "",   9, 0,   9);
+  h_qcdsum_rec_1jet = new TH1D("h_qcdsum_rec_1jet", "",   9, 0,   9);
 
   return;
 }
@@ -1126,12 +1126,12 @@ void AnalysisCMS::GetSumOfWeightsLHE(TH1D* h_pdf, TH1D* h_qcd)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int i=0; i<h_pdfsum->GetNbinsX(); i++)
+  for (int i=0; i<h_pdf->GetNbinsX(); i++)
     {
       h_pdf->Fill(i, std_vector_LHE_weight->at(i+9));
     }
 
-  for (int i=0; i<h_qcdsum->GetNbinsX(); i++)
+  for (int i=0; i<h_qcd->GetNbinsX(); i++)
     {
       h_qcd->Fill(i, std_vector_LHE_weight->at(i));
     }
