@@ -49,7 +49,22 @@ const TString _recdir = "../rootfiles/nominal/TTDM/";
 
 // Functions
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample, TString jetbin);
+void GetPdfQcdSyst(TString     sample,
+		   TString     label,
+		   TString     jetbin);
+
+void DrawLatex    (Font_t      tfont,
+		   Float_t     x,
+		   Float_t     y,
+		   Float_t     tsize,
+		   Short_t     align,
+		   const char* text,
+		   Bool_t      setndc = true);
+
+
+// Data members
+//------------------------------------------------------------------------------
+bool _savefigures;
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,23 +72,43 @@ void GetPdfQcdSyst(TString sample, TString jetbin);
 // getPdfQcd
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcd()
+void getPdfQcd(bool savefigures = true)
 {
-  GetPdfQcdSyst("WWTo2L2Nu", "0jet");
-  GetPdfQcdSyst("WWTo2L2Nu", "1jet");
+  _savefigures = savefigures;
+  
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "0jet");
-  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "1jet");
+  if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "0jet");
-  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "1jet");
+  GetPdfQcdSyst("WWTo2L2Nu", "WW", "0jet");
+  GetPdfQcdSyst("WWTo2L2Nu", "WW", "1jet");
+
+  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "qqH", "0jet");
+  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "qqH", "1jet");
+
+  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "ggH", "0jet");
+  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "ggH", "1jet");
+
+  GetPdfQcdSyst("WZTo3LNu", "WZ", "0jet");
+  GetPdfQcdSyst("WZTo3LNu", "WZ", "1jet");
+
+  GetPdfQcdSyst("HWminusJ_HToWW_M125", "HW-", "0jet");
+  GetPdfQcdSyst("HWminusJ_HToWW_M125", "HW-", "1jet");
+
+  GetPdfQcdSyst("HWplusJ_HToWW_M125", "HW+", "0jet");
+  GetPdfQcdSyst("HWplusJ_HToWW_M125", "HW+", "1jet");
+
+  GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "0jet");
+  GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "1jet");
 }
 
 
 //------------------------------------------------------------------------------
 // GetPdfQcdSyst
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample, TString jetbin)
+void GetPdfQcdSyst(TString sample,
+		   TString label,
+		   TString jetbin)
 {
   TFile* genfile = new TFile(_gendir + "latino_" + sample + ".root", "read");
   TFile* recfile = new TFile(_recdir + sample + ".root", "read");
@@ -93,7 +128,7 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
 
   // Produce the PDF uncertainties
   //----------------------------------------------------------------------------
-  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.97, 1.03);
+  TH1D* h_pdfratio = new TH1D("h_pdfratio", "", 100, 0.965, 1.035);
 
   float denominator = h_weights_rec->GetBinContent(1) / h_weights_gen->GetBinContent(1);  // Nominal values
 
@@ -106,9 +141,31 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
       h_pdfratio->Fill(ratio);
     }
 
+
+  // Draw the PDF distribution
+  //----------------------------------------------------------------------------
   TCanvas* canvas = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
 
-  h_pdfratio->Draw();
+  h_pdfratio->SetFillColor(kRed+1);
+  h_pdfratio->SetFillStyle(  1001);
+  h_pdfratio->SetLineColor(kRed+1);
+
+  h_pdfratio->Draw("hist");
+
+  h_pdfratio->SetXTitle("#frac{N_{rec}^{PDF} / N_{gen}^{PDF}}{N_{rec}^{nominal} / N_{gen}^{nominal}}");
+  h_pdfratio->SetYTitle("entries / bin");
+
+  h_pdfratio->GetXaxis()->SetTitleOffset(2.0);
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, label + " " + jetbin);
+
+  canvas->GetFrame()->DrawClone();
+
+  if (_savefigures)
+    {
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".pdf");
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".png");
+    }
 
 
   // Produce the alpha_s uncertainties
@@ -120,7 +177,7 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   float alpha_rec_266000 = h_weights_rec->GetBinContent(111) / h_weights_rec->GetBinContent(1);
 
 
-  // Print the uncertainties
+  // Prepare the final uncertainties
   //----------------------------------------------------------------------------
   float qcd_mu05 = 1e2 * fabs(1. - qcd_rec_mu05 / qcd_gen_mu05);
   float qcd_mu20 = 1e2 * fabs(1. - qcd_rec_mu20 / qcd_gen_mu20);
@@ -133,6 +190,8 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   float pdf_alpha = sqrt(pdf*pdf + (alpha_265000*alpha_265000 + alpha_266000*alpha_266000)/2.);
 
 
+  // Print the final uncertainties
+  //----------------------------------------------------------------------------
   printf("\n %s %s acceptance uncertainties\n", sample.Data(), jetbin.Data());
   printf("-----------------------------------------\n");
   printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
@@ -140,4 +199,26 @@ void GetPdfQcdSyst(TString sample, TString jetbin)
   printf(" PDF                           %4.2f%%\n", pdf);
   printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
   printf("\n");
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLatex 
+//------------------------------------------------------------------------------
+void DrawLatex(Font_t      tfont,
+	       Float_t     x,
+	       Float_t     y,
+	       Float_t     tsize,
+	       Short_t     align,
+	       const char* text,
+	       Bool_t      setndc)
+{
+  TLatex* tl = new TLatex(x, y, text);
+
+  tl->SetNDC      (setndc);
+  tl->SetTextAlign( align);
+  tl->SetTextFont ( tfont);
+  tl->SetTextSize ( tsize);
+
+  tl->Draw("same");
 }
