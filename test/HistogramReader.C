@@ -1160,7 +1160,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" & %10.0f $\\pm$ %7.0f", process_yield, process_error);
+	_yields_table << Form(" & %24.0f", process_yield);
       }
     else
       {
