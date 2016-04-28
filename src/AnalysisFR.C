@@ -4,23 +4,18 @@
 float _event_weight_fr;
 float inputJetEt;
 
-int counter1 = 0;
-int counter2 = 0;
-int counter3 = 0;
-int counter4 = 0;
+const float _luminosity = 2.263;
 
-float _luminosity = 2.263;
+const int pTbin = 8;
+const Double_t pTbins[pTbin+1] = { 10., 15., 20., 25., 30., 35.,40., 45., 50.};
 
-int pTbin = 8;
-Double_t pTbins[9] = { 10., 15., 20., 25., 30., 35.,40., 45., 50.};
-
-int etabin = 5;
-Double_t etabins[6] = {0.0, 0.5, 1.0, 1.5, 2.0, 2.5};
+const int etabin = 5;
+const Double_t etabins[etabin+1] = {0.0, 0.5, 1.0, 1.5, 2.0, 2.5};
 
 //------------------------------------------------------------------------------
 // AnalysisFR
 //------------------------------------------------------------------------------
-AnalysisFR::AnalysisFR(TTree* tree) : AnalysisCMS(tree)
+AnalysisFR::AnalysisFR(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(false);
 }
@@ -39,7 +34,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   // Define histograms
   //----------------------------------------------------------------------------
 
-  TH1::SetDefaultSumw2();
+  h_Muon_loose_pt_eta_bin   = new TH2D("h_Muon_loose_pt_eta_bin", "h_Muon_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+  h_Muon_tight_pt_eta_bin = new TH2D("h_Muon_tight_pt_eta_bin", "h_Muon_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+
+  h_Ele_loose_pt_eta_bin    = new TH2D("h_Ele_loose_pt_eta_bin", "h_Ele_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+  h_Ele_tight_pt_eta_bin  = new TH2D("h_Ele_tight_pt_eta_bin", "h_Ele_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
 
   for (int j=0; j<ncut; j++) {
 
@@ -61,20 +60,14 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_loose  [i][j][k] = new TH1D("h_loose" + suffix,  "", 100, 0, 100); 
-	h_tight  [i][j][k] = new TH1D("h_tight" + suffix,  "", 100, 0, 100); 
-        
-	h_Muon_loose_pt_eta_bin   = new TH2F("h_Muon_loose_pt_eta_bin", "h_Muon_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
-	h_Muon_tight_pt_eta_bin = new TH2F("h_Muon_tight_pt_eta_bin", "h_Muon_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
-
-	h_Ele_loose_pt_eta_bin    = new TH2F("h_Ele_loose_pt_eta_bin", "h_Ele_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
-	h_Ele_tight_pt_eta_bin  = new TH2F("h_Ele_tight_pt_eta_bin", "h_Ele_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+	h_loose  [i][j][k] = new TH1D("h_loose" + suffix,  "", 120, 0, 120); 
+	h_tight  [i][j][k] = new TH1D("h_tight" + suffix,  "", 120, 0, 120); 
 
       }
     }
   }
 
-  root_output->cd();
+  // Jonatan -- root_output->cd();
 
   // Loop over events
   //--------------------------------------------------------------------------
@@ -94,8 +87,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     // Analysis
     //--------------------------------------------------------------------------
 
-    // Z+jets
-
     if (_ismc && filename.Contains("DYJetsToLL")) {
 
       Double_t genWeight = 1.0;
@@ -109,7 +100,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	if (AnalysisLeptons[iMu1].flavour != ELECTRON_FLAVOUR && AnalysisLeptons[iMu1].flavour != MUON_FLAVOUR) continue;
 
 	for (int iMu2 = iMu1+1; iMu2 < AnalysisLeptons.size(); iMu2++) {
-	  
+	    
 	  if (AnalysisLeptons[iMu2].v.Pt() < 10.) continue;
 	  if (fabs(AnalysisLeptons[iMu1].flavour) !=fabs( AnalysisLeptons[iMu2].flavour)) continue;
 	  if ((AnalysisLeptons[iMu1].flavour + AnalysisLeptons[iMu2].flavour) != 0.) continue;
@@ -148,8 +139,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
-    // Data and W+jets analysis
-
     bool passTrigger = true;
     _event_weight_fr = 1.0;
 
@@ -168,8 +157,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && (std_vector_trigger -> at(22) == 1) ) { //Lumi HLT_Mu8_TrkIsoVVL: 1.386 pb
 
-	  if (Lepton1.type == Tight && Lepton1.v.Pt() > 15.) printf(" We have tight muons with pt = %f\n", Lepton1.v.Pt());
-
 	  passTrigger= true;
 	  _event_weight_fr *= (_luminosity*1000 / 1.386);
 
@@ -179,12 +166,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	  passTrigger = true;
 	  _event_weight_fr *= (_luminosity*1000 / 201.951);
 
-	}
-    
+	}    
       }
 
       if (_channel == e) {
-	counter2 ++;
+	
 	if (Lepton1.v.Pt() > 13. && Lepton1.v.Pt() <= 25. && (std_vector_trigger->at(31) == 1) ) { //Lumi HLT_Ele8_Iso: 11.204 pb;
 
 	  passTrigger = true;
@@ -196,9 +182,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	  _event_weight_fr *= (_luminosity*1000 / 3.201);
 	
        	}
-  
       }
-    
     }
 
     if (!passTrigger) continue;
@@ -206,7 +190,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (!PassJetSelection()) continue;
     if (AnalysisJets.size() < 1 ) continue;
 
-    // Temporary solution
     if (_channel == e) {
       inputJetEt = 20.;
     } else if (_channel == m) {
@@ -241,7 +224,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
     }
 
-    //FillLevelHistograms(FR_00_QCD, pass);
+        FillLevelHistograms(FR_00_QCD, pass);
      
     if (pass && _saveminitree) minitree->Fill();
  
@@ -259,22 +242,13 @@ void AnalysisFR::FillAnalysisHistograms(int ichannel,
 					int ijet)
 {
 
-  /*
-  if (Lepton1.type == Loose || Lepton1.type == Tight) {
-    
+  if (Lepton1.type == Loose || Lepton1.type == Tight) {    
     h_loose       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-
   } 
 
   if (Lepton1.type == Tight) {
-
     h_tight       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-
   }
-  */
-  //  h_Muon_fake_pt_eta_bin [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr); 
-
-  //  if (ichannel != l) FillAnalysisHistograms(l, icut, ijet);
 
 }
 
