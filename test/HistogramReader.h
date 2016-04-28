@@ -133,6 +133,8 @@ class HistogramReader
   
   Float_t  Yield              (TH1*           hist);
 
+  Float_t  Error              (TH1*           hist);
+
   void     EventsByCut        (TFile*         file,
 			       TString        analysis,
 			       TString        hname);

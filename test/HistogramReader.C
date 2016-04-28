@@ -885,6 +885,19 @@ Float_t HistogramReader::Yield(TH1* hist)
 
 
 //------------------------------------------------------------------------------
+// Error
+//------------------------------------------------------------------------------
+Float_t HistogramReader::Error(TH1* hist)
+{
+  if (!hist) return 0;
+
+  Float_t hist_error = sqrt(hist->GetSumw2()->GetSum());
+
+  return hist_error;
+}
+
+
+//------------------------------------------------------------------------------
 // EventsByCut
 //------------------------------------------------------------------------------
 void HistogramReader::EventsByCut(TFile*  file,
@@ -919,7 +932,10 @@ void HistogramReader::EventsByCut(TFile*  file,
 
       TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
-      hist->SetBinContent(++bin, Yield(dummy));
+      bin++;
+
+      hist->SetBinContent(bin, Yield(dummy));
+      hist->SetBinError  (bin, Error(dummy));
 
 
       // Change the evolution histogram x-axis labels
@@ -982,7 +998,10 @@ void HistogramReader::EventsByChannel(TFile*  file,
     {
       TH1D* dummy = (TH1D*)file->Get(level + "/h_counterLum_" + schannel[i]);
 
-      hist->SetBinContent(++bin, Yield(dummy));
+      bin++;
+
+      hist->SetBinContent(bin, Yield(dummy));
+      hist->SetBinError  (bin, Error(dummy));
 
       hist->GetXaxis()->SetBinLabel(bin, lchannel[i]);
     }
@@ -1126,7 +1145,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" & %16s", binlabel.Data());
+	_yields_table << Form(" & %24s", binlabel.Data());
       }
 
       _yields_table << Form(" \\\\\n");
@@ -1136,7 +1155,8 @@ void HistogramReader::WriteYields(TH1*    hist,
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
 
-   _yields_table << Form(" & %16.0f", hist->GetBinContent(i));
+   _yields_table << Form(" & %10.2f", hist->GetBinContent(i));
+   _yields_table << Form(" $\\pm$ %7.2f", sqrt(hist->GetSumw2()->At(i)));
   }
 
   _yields_table << Form(" \\\\\n");
