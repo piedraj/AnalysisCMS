@@ -72,7 +72,7 @@ bool _savefigures;
 // getPdfQcd
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcd(bool savefigures = true)
+void getPdfQcd(bool savefigures = false)
 {
   _savefigures = savefigures;
   
@@ -194,6 +194,7 @@ void GetPdfQcdSyst(TString sample,
   //----------------------------------------------------------------------------
   printf("\n %s %s acceptance uncertainties\n", sample.Data(), jetbin.Data());
   printf("-----------------------------------------\n");
+  printf(" nominal acceptance * eff      %4.2f%%\n", 1e2 * h_weights_rec->GetBinContent(1) / h_weights_gen->GetBinContent(1));
   printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
   printf(" alpha_s     265000 / 266000   %4.2f%% / %4.2f%%\n", alpha_265000, alpha_266000);
   printf(" PDF                           %4.2f%%\n", pdf);
