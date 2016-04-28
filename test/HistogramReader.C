@@ -1155,8 +1155,17 @@ void HistogramReader::WriteYields(TH1*    hist,
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
 
-   _yields_table << Form(" & %10.2f", hist->GetBinContent(i));
-   _yields_table << Form(" $\\pm$ %7.2f", sqrt(hist->GetSumw2()->At(i)));
+    float process_yield = hist->GetBinContent(i);
+    float process_error = sqrt(hist->GetSumw2()->At(i));
+
+    if (label.EqualTo("data"))
+      {
+	_yields_table << Form(" & %10.0f $\\pm$ %7.0f", process_yield, process_error);
+      }
+    else
+      {
+	_yields_table << Form(" & %10.2f $\\pm$ %7.2f", process_yield, process_error);
+      }
   }
 
   _yields_table << Form(" \\\\\n");
