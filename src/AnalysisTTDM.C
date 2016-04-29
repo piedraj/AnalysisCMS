@@ -132,7 +132,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = true;
 
-    pass &= (std_vector_lepton_pt->at(0) < 30.);
+    pass &= (std_vector_lepton_pt->at(0) > 30.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
