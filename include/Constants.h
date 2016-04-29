@@ -100,8 +100,6 @@ const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 
-const int nchannel = 9;
-
 enum {
   ee,
   mm,
@@ -111,7 +109,8 @@ enum {
   eem,
   emm,
   mmm,
-  lll
+  lll,
+  nchannel  // This line should be always last
 };
 
 const TString schannel[nchannel] = {
@@ -130,12 +129,12 @@ const TString lchannel[nchannel] = {
   "ee",
   "#mu#mu",
   "e#mu",
-  "all",
+  "ll",
   "eee",
   "ee#mu",
   "e#mu#mu",
   "#mu#mu#mu",
-  "all"
+  "lll"
 };
 
 
@@ -166,7 +165,7 @@ enum {
   muonBadTrackFilter,
   noFilter,
   allFilter,
-  nfilter
+  nfilter  // This line should be always last
 };
 
 const TString sfilter[nfilter] = {

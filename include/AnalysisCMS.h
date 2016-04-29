@@ -300,6 +300,11 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet30medium[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
   TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
+
+
+  // TH2 histograms
+  //----------------------------------------------------------------------------
+  TH2D*                  h_metvar_m2l   [nchannel][ncut][njetbin+1];
 };
 
 #endif

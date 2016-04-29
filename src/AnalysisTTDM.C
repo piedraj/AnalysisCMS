@@ -120,10 +120,13 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_m2l > 20.);
     pass &= (njet > 1);
     pass &= (_nbjet30medium > 0);
+
+    FillLevelHistograms(TTDM_10_Rinout, pass);
+
     pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
     pass &= (_nelectron == 1 || MET.Et() > 40.);
 
-    FillLevelHistograms(TTDM_04_AN15305, pass);
+    FillLevelHistograms(TTDM_11_AN15305, pass);
 
 
     // AN-16-011
@@ -160,7 +163,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet30medium > 0);
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_05_AN16105, pass);
+    FillLevelHistograms(TTDM_20_AN16105, pass);
   }
 
 
