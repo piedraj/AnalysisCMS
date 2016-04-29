@@ -148,7 +148,7 @@ void runPlotter(TString level,
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", scale, false);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY, false);
     }
 
 
