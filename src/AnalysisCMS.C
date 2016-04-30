@@ -162,7 +162,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
 
 
   // Non-prompt systematic uncertainties
@@ -1004,7 +1004,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metvar_m2l[ichannel][icut][ijet] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 200, 0, 200);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_met_m2l" + suffix, "", nmetbin, metbins, 200, 0, 200);
 }
 
 

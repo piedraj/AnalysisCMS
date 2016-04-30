@@ -87,14 +87,16 @@ const Color_t color_HZ        = kOrange+1;
 
 // Branching ratios
 //------------------------------------------------------------------------------
-const Double_t W2e     = 0.1075;
-const Double_t W2m     = 0.1057;
-const Double_t W2tau   = 0.1125;
-const Double_t Z2ll    = 0.033658;
-const Double_t WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
+const float W2e     = 0.1075;
+const float W2m     = 0.1057;
+const float W2tau   = 0.1125;
+const float Z2ll    = 0.033658;
+const float WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
 
 
-const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
+const int nmetbin = 5;
+
+const float metbins[nmetbin+1] = {0, 20, 25, 30, 45, 3000};  // [GeV]
 
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
