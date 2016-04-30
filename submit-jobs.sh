@@ -39,6 +39,6 @@ if [ -z "$3" ]; then
 else
     echo " Submit the jobs interactively if the cluster is busy..."
     echo "  "
-    cat $SAMPLES | grep latino | grep -v "#" | awk -v syst=$SYSTEMATIC '{ print "./runAnalysis "$1,syst,"2> /dev/null &" }'
-#   cat $SAMPLES | grep latino | grep -v "#" | awk -v syst=$SYSTEMATIC '{ print "./runAnalysis "$1,syst,"&> /dev/null &" }'
+    eval `cat $SAMPLES | grep latino | grep -v "#" | awk -v syst=$SYSTEMATIC '{ print "./runAnalysis "$1,syst,"2> /dev/null &" }'`
+   #eval `cat $SAMPLES | grep latino | grep -v "#" | awk -v syst=$SYSTEMATIC '{ print "./runAnalysis "$1,syst,"&> /dev/null &" }'`
 fi
