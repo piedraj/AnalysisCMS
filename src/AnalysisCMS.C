@@ -876,7 +876,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 
   if (fractpart < 1e-2)
     {
-      std::cout << "   progress: " << int(ceil(progress)) << "%\r";
+      std::cout << "   " << _sample.Data() << " progress: " << int(ceil(progress)) << "%\r";
       std::cout.flush();
     }
 }
@@ -922,7 +922,7 @@ void AnalysisCMS::EndJob()
   
   root_output->Close();
   
-  printf("\n Done!\n\n");
+  printf("\n Done with %s\n\n", _filename.Data());
 }
 
 
