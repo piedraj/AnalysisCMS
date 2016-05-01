@@ -94,11 +94,6 @@ const double Z2ll    = 0.033658;
 const double WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
 
 
-const int nmetbin = 5;
-
-const double metbins[nmetbin+1] = {0, 20, 25, 30, 45, 3000};  // [GeV]
-
-
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 

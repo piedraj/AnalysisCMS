@@ -1004,7 +1004,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", nmetbin, metbins, 200, 0, 200);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0, 100, 100, 40, 140);
 }
 
 

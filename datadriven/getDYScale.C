@@ -15,7 +15,8 @@ float errRatio(float a, float err_a, float b, float err_b);
 //     ll data/dy scale = 1.40 +- 0.11
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "TTDM")
+void getDYScale(float   metcut   = 45,
+		TString analysis = "TTDM")
 {
   TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",  "read");
   TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root", "read");
@@ -37,16 +38,16 @@ void getDYScale(TString analysis = "TTDM")
   TH1D* h_m2l_mm_data = (TH1D*)h2_mm_data->ProjectionY("h_m2l_mm_data");
 
 
-  // Extract m2l with MET > metbins[4]
+  // Extract m2l with MET > metcut
   //----------------------------------------------------------------------------
-  int nbinsx = h2_ee_data->GetXaxis()->GetNbins();
+  int bin_metcut = h2_ee_data->GetXaxis()->FindBin(metcut);
 
-  TH1D* h_m2l_ee_data_metcut = (TH1D*)h2_ee_data->ProjectionY("h_m2l_ee_data_metcut", nbinsx, nbinsx+1);
-  TH1D* h_m2l_mm_data_metcut = (TH1D*)h2_mm_data->ProjectionY("h_m2l_mm_data_metcut", nbinsx, nbinsx+1);
-  TH1D* h_m2l_em_data_metcut = (TH1D*)h2_em_data->ProjectionY("h_m2l_em_data_metcut", nbinsx, nbinsx+1);
+  TH1D* h_m2l_ee_data_metcut = (TH1D*)h2_ee_data->ProjectionY("h_m2l_ee_data_metcut", bin_metcut);
+  TH1D* h_m2l_mm_data_metcut = (TH1D*)h2_mm_data->ProjectionY("h_m2l_mm_data_metcut", bin_metcut);
+  TH1D* h_m2l_em_data_metcut = (TH1D*)h2_em_data->ProjectionY("h_m2l_em_data_metcut", bin_metcut);
 
-  TH1D* h_m2l_ee_dy_metcut = (TH1D*)h2_ee_dy->ProjectionY("h_m2l_ee_dy_metcut", nbinsx, nbinsx+1);
-  TH1D* h_m2l_mm_dy_metcut = (TH1D*)h2_mm_dy->ProjectionY("h_m2l_mm_dy_metcut", nbinsx, nbinsx+1);
+  TH1D* h_m2l_ee_dy_metcut = (TH1D*)h2_ee_dy->ProjectionY("h_m2l_ee_dy_metcut", bin_metcut);
+  TH1D* h_m2l_mm_dy_metcut = (TH1D*)h2_mm_dy->ProjectionY("h_m2l_mm_dy_metcut", bin_metcut);
 
 
   // Initialize counters and errors
