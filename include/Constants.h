@@ -99,8 +99,6 @@ const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 
-const int nchannel = 12;
-
 enum {
   e,
   m,
@@ -113,7 +111,8 @@ enum {
   eem,
   emm,
   mmm,
-  lll
+  lll,
+  nchannel
 };
 
 const TString schannel[nchannel] = {

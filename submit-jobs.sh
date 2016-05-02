@@ -7,6 +7,8 @@ if [ $# -lt 1 ]; then
     echo "  ./submit-jobs.sh samples/samples_mc.txt         nominal"
 #   echo "  ./submit-jobs.sh samples/samples_monoh.txt      nominal"
     echo "  ./submit-jobs.sh samples/samples_ttdm.txt       nominal"
+    echo "  ./submit-jobs.sh samples/samples_fakes_data.txt nominal"
+    echo "  ./submit-jobs.sh samples/samples_fakes_mc.txt   nominal"
     echo "  "
     exit -1
 fi

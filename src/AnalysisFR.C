@@ -37,8 +37,21 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   h_Muon_loose_pt_eta_bin   = new TH2D("h_Muon_loose_pt_eta_bin", "h_Muon_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
   h_Muon_tight_pt_eta_bin = new TH2D("h_Muon_tight_pt_eta_bin", "h_Muon_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
 
+  h_Muon_loose_pt_bin = new TH1D("h_Muon_loose_pt_bin", "h_Muon_loose_pt_bin", pTbin, pTbins);
+  h_Muon_tight_pt_bin = new TH1D("h_Muon_tight_pt_bin", "h_Muon_tight_pt_bin", pTbin, pTbins);
+
+  h_Muon_loose_eta_bin = new TH1D("h_Muon_loose_eta_bin", "h_Muon_loose_eta_bin", etabin, etabins);
+  h_Muon_tight_eta_bin = new TH1D("h_Muon_tight_eta_bin", "h_Muon_tight_eta_bin", etabin, etabins);
+
   h_Ele_loose_pt_eta_bin    = new TH2D("h_Ele_loose_pt_eta_bin", "h_Ele_loose_pt_eta_bin", pTbin, pTbins, etabin, etabins);
   h_Ele_tight_pt_eta_bin  = new TH2D("h_Ele_tight_pt_eta_bin", "h_Ele_tight_pt_eta_bin", pTbin, pTbins, etabin, etabins);
+
+  h_Ele_loose_pt_bin = new TH1D("h_Ele_loose_pt_bin", "h_Ele_loose_pt_bin", pTbin, pTbins);
+  h_Ele_tight_pt_bin = new TH1D("h_Ele_tight_pt_bin", "h_Ele_tight_pt_bin", pTbin, pTbins);
+
+  h_Ele_loose_eta_bin = new TH1D("h_Ele_loose_eta_bin", "h_Ele_loose_eta_bin", etabin, etabins);
+  h_Ele_tight_eta_bin = new TH1D("h_Ele_tight_eta_bin", "h_Ele_tight_eta_bin", etabin, etabins);
+
 
   for (int j=0; j<ncut; j++) {
 
@@ -115,10 +128,14 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	  if (AnalysisLeptons[iMu1].flavour == MUON_FLAVOUR) {
 
 	    h_Muon_loose_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+	    h_Muon_loose_pt_bin -> Fill(pt, _event_weight_fr);
+	    h_Muon_loose_eta_bin -> Fill(eta, _event_weight_fr);
 
 	    if (AnalysisLeptons[iMu2].type == Tight) {
 
 	      h_Muon_tight_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+	      h_Muon_tight_pt_bin -> Fill(pt, _event_weight_fr);
+	      h_Muon_loose_eta_bin -> Fill(pt, _event_weight_fr);
 
 	    }
 	  }
@@ -126,10 +143,14 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	  else if (AnalysisLeptons[iMu1].flavour == ELECTRON_FLAVOUR) {
 
 	    h_Ele_loose_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+	    h_Ele_loose_pt_bin -> Fill(pt, _event_weight_fr);
+	    h_Ele_loose_eta_bin -> Fill(eta, _event_weight_fr); 
 
 	    if (AnalysisLeptons[iMu2].type == Tight) {
 
 	      h_Ele_tight_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
+	      h_Ele_tight_pt_bin -> Fill(pt, _event_weight_fr);
+	      h_Ele_tight_eta_bin -> Fill(eta, _event_weight_fr); 
 
 	    }
 	  }
@@ -210,17 +231,33 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (pass & Lepton1.type == Loose || Lepton1.type == Tight) {
       if (_channel == m) {
+
 	h_Muon_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+	h_Muon_loose_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
+	h_Muon_loose_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
       } else if (_channel == e) {
+
 	h_Ele_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+	h_Ele_loose_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
+	h_Ele_loose_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
       }
     }
     
     if (pass & Lepton1.type == Tight) {
       if (_channel == m) {
+
 	h_Muon_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+	h_Muon_tight_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
+	h_Muon_tight_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
       } else if (_channel == e) {
+
 	h_Ele_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
+	h_Ele_tight_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
+	h_Ele_tight_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
       }
     }
 
