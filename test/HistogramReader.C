@@ -120,20 +120,21 @@ void HistogramReader::Draw(TString hname,
 			   Float_t ymin,
 			   Float_t ymax)
 {
-  _writeyields = (hname.Contains("h_counterLum_evolution")) ? true : false;
-
-  if (_writeyields)
-    {
-      _yields_table.open(_outputdir + "/" + hname + ".txt");
-
-      _writelabels = true;
-    }
-
   TString cname = hname;
 
   if (_stackoption.Contains("nostack")) cname += "_nostack";
 
   if (setlogy) cname += "_log";
+
+  _writeyields = (hname.Contains("_evolution")) ? true : false;
+
+  if (_writeyields)
+    {
+      _yields_table.open(_outputdir + "/" + cname + ".txt");
+
+      _writelabels = true;
+    }
+
 
   TCanvas* canvas = NULL;
 
@@ -1138,19 +1139,19 @@ void HistogramReader::WriteYields(TH1*    hist,
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %22s", " ");
+      _yields_table << Form("\n %14s", " ");
         
       for (int i=1; i<=hist->GetNbinsX(); i++) {
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" & %24s", binlabel.Data());
+	_yields_table << Form(" & %-24s", binlabel.Data());
       }
 
       _yields_table << Form(" \\\\\n");
     }
 
-  _yields_table << Form(" %22s", label.Data());
+  _yields_table << Form(" %14s", label.Data());
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
 
@@ -1159,7 +1160,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" & %24.0f", process_yield);
+	_yields_table << Form(" & %7.0f %16s", process_yield, " ");
       }
     else
       {

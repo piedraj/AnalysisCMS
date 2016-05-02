@@ -59,7 +59,6 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
        	h_mllstar          [i][j][k] = new TH1D("h_mllstar"         + suffix, "", 3000, 0.,  3000);
 	//h_mr             [i][j][k] = new TH1D("h_mr"              + suffix, "", 2000, 0.,  2000);
 
-	h_metvar_m2l        [i][j][k] = new TH2D("h_metvar_m2l"     + suffix, "",   4, metvar_bins, 2000, 0, 200);
 	//h_met_m2l         [i][j][k] = new TH2D("h_met_m2l"        + suffix, "", 200,  0,  2000,  100,   0, 200);
 	//h_met_deltaphill  [i][j][k] = new TH2D("h_met_deltaphill" + suffix, "", 200,  0,  2000,  100,   0,   5);     
       }
@@ -208,7 +207,6 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
   h_mllstar         [ichannel][icut][ijet]->Fill(_mllstar,          _event_weight);
   //h_mr            [ichannel][icut][ijet]->Fill(m_r,               _event_weight);
 
-  h_metvar_m2l       [ichannel][icut][ijet] ->Fill(_metvar,      _m2l,        _event_weight);
   //h_met_m2l        [ichannel][icut][ijet] ->Fill(pfType1Met,   _m2l,        _event_weight); 
   //h_met_deltaphill [ichannel][icut][ijet] ->Fill(pfType1Met, dphill,        _event_weight);  
 

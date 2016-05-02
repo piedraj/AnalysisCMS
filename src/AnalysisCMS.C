@@ -160,6 +160,11 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_njet         [ichannel][icut][ijet]->Fill(njet,           _event_weight);  // Needs l2Sel
 
 
+  // TH2 histograms
+  //----------------------------------------------------------------------------
+  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
+
+
   // Non-prompt systematic uncertainties
   //----------------------------------------------------------------------------
   h_fakes[ichannel][icut][ijet]->Fill(0., _fake_weight);
@@ -876,7 +881,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 
   if (fractpart < 1e-2)
     {
-      std::cout << "   progress: " << int(ceil(progress)) << "%\r";
+      std::cout << "   " << _sample.Data() << " progress: " << int(ceil(progress)) << "%\r";
       std::cout.flush();
     }
 }
@@ -926,7 +931,7 @@ void AnalysisCMS::EndJob()
   
   root_output->Close();
   
-  printf("\n Done!\n\n");
+  printf("\n Done with %s\n\n", _filename.Data());
 }
 
 
@@ -1004,6 +1009,11 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet30medium[ichannel][icut][ijet] = new TH1D("h_nbjet30medium" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30tight [ichannel][icut][ijet] = new TH1D("h_nbjet30tight"  + suffix, "",    7, -0.5,  6.5);
   h_njet         [ichannel][icut][ijet] = new TH1D("h_njet"          + suffix, "",    7, -0.5,  6.5);
+
+
+  // TH2 histograms
+  //----------------------------------------------------------------------------
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0, 100, 100, 40, 140);
 }
 
 
@@ -1091,15 +1101,23 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-  float p0 = 1.02852e+00;
-  float p1 = 9.49640e-02;
-  float p2 = 1.90422e+01;
-  float p3 = 1.04487e+01;
-  float p4 = 7.58834e-02;
-  float p5 = 5.61146e+01;
-  float p6 = 4.11653e+01;
 
-  _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
+  // Data-driven
+  //----------------------------------------------------------------------------
+  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);
+
+
+  // From resummed calculations
+  //----------------------------------------------------------------------------
+  //  float p0 = 1.02852e+00;
+  //  float p1 = 9.49640e-02;
+  //  float p2 = 1.90422e+01;
+  //  float p3 = 1.04487e+01;
+  //  float p4 = 7.58834e-02;
+  //  float p5 = 5.61146e+01;
+  //  float p6 = 4.11653e+01;
+  //
+  //  _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
 }
 
 
