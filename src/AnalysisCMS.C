@@ -451,6 +451,9 @@ void AnalysisCMS::GetJets()
   _nbjet30loose  = 0;
   _nbjet30medium = 0;
   _nbjet30tight  = 0;
+  _nbjet30csvv2l = 0; // LS
+  _nbjet30csvv2m = 0; // LS
+  _nbjet30csvv2t = 0; // LS
 
   int vector_jet_size = std_vector_jet_pt->size();
 
@@ -479,11 +482,15 @@ void AnalysisCMS::GetJets()
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20medium++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20tight++;
 
-    if (pt < 30.) continue;
+    if (pt < 30. || fabs(eta)>2.4) continue; // LS: adding eta cut
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30loose++;
     if (goodjet.cmvav2 > cMVAv2M) _nbjet30medium++;
     if (goodjet.cmvav2 > cMVAv2T) _nbjet30tight++;
+
+    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; // LS
+    if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++; // LS
+    if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++; // LS
 
     AnalysisJets.push_back(goodjet);
   }

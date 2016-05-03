@@ -209,6 +209,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30loose;
   float                  _nbjet30medium;
   float                  _nbjet30tight;
+  float                  _nbjet30csvv2l; // LS
+  float                  _nbjet30csvv2m; // LS
+  float                  _nbjet30csvv2t; // LS
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
