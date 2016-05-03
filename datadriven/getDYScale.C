@@ -19,6 +19,9 @@ float errRatio(float a, float err_a, float b, float err_b);
 //    Nin(DY)     |   209.6 +- 16.4    402.9 +- 22.9 
 //    Nin(est)    |   263.3 +- 27.5    591.7 +- 44.3 
 //    SF(est/DY)  |   1.256 +- 0.164   1.469 +- 0.138
+//   -------------+-----------------------------------
+//    Nout(DY)    |    20.2 +- 4.1      37.8 +- 4.8  
+//    Nout(est)   |    25.4 +- 6.1      55.5 +- 8.8  
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(float   metcut   = 45,
@@ -71,30 +74,46 @@ void getDYScale(float   metcut   = 45,
   float n_in_ee_dy, err_in_ee_dy = 0;
   float n_in_mm_dy, err_in_mm_dy = 0;
 
+  float n_out_ee_dy, err_out_ee_dy = 0;
+  float n_out_mm_dy, err_out_mm_dy = 0;
 
-  // Sum entries and errors^2 from zmin to zmax
+
+  // Sum entries and errors^2
   //----------------------------------------------------------------------------
-  for (int i=bin_zmin; i<=bin_zmax; i++)
+  for (int i=0; i<=h_m2l_ee_data->GetNbinsX()+1; i++)
     {
-      n_ee += h_m2l_ee_data->GetBinContent(i);
-      n_mm += h_m2l_mm_data->GetBinContent(i);
+      // Inside the Z-peak
+      if (i >= bin_zmin && i <= bin_zmax)
+	{
+	  n_ee += h_m2l_ee_data->GetBinContent(i);
+	  n_mm += h_m2l_mm_data->GetBinContent(i);
 
-      err_ee += h_m2l_ee_data->GetSumw2()->At(i);
-      err_mm += h_m2l_mm_data->GetSumw2()->At(i);
+	  err_ee += h_m2l_ee_data->GetSumw2()->At(i);
+	  err_mm += h_m2l_mm_data->GetSumw2()->At(i);
 
-      n_in_ee_data += h_m2l_ee_data_metcut->GetBinContent(i);
-      n_in_mm_data += h_m2l_mm_data_metcut->GetBinContent(i);
-      n_in_em_data += h_m2l_em_data_metcut->GetBinContent(i);
+	  n_in_ee_data += h_m2l_ee_data_metcut->GetBinContent(i);
+	  n_in_mm_data += h_m2l_mm_data_metcut->GetBinContent(i);
+	  n_in_em_data += h_m2l_em_data_metcut->GetBinContent(i);
 
-      err_in_ee_data += h_m2l_ee_data_metcut->GetSumw2()->At(i);
-      err_in_mm_data += h_m2l_mm_data_metcut->GetSumw2()->At(i);
-      err_in_em_data += h_m2l_em_data_metcut->GetSumw2()->At(i);
+	  err_in_ee_data += h_m2l_ee_data_metcut->GetSumw2()->At(i);
+	  err_in_mm_data += h_m2l_mm_data_metcut->GetSumw2()->At(i);
+	  err_in_em_data += h_m2l_em_data_metcut->GetSumw2()->At(i);
 
-      n_in_ee_dy += h_m2l_ee_dy_metcut->GetBinContent(i);
-      n_in_mm_dy += h_m2l_mm_dy_metcut->GetBinContent(i);
+	  n_in_ee_dy += h_m2l_ee_dy_metcut->GetBinContent(i);
+	  n_in_mm_dy += h_m2l_mm_dy_metcut->GetBinContent(i);
 
-      err_in_ee_dy += h_m2l_ee_dy_metcut->GetSumw2()->At(i);
-      err_in_mm_dy += h_m2l_mm_dy_metcut->GetSumw2()->At(i);
+	  err_in_ee_dy += h_m2l_ee_dy_metcut->GetSumw2()->At(i);
+	  err_in_mm_dy += h_m2l_mm_dy_metcut->GetSumw2()->At(i);
+	}
+      // Outside the Z-peak
+      else
+	{
+	  n_out_ee_dy += h_m2l_ee_dy_metcut->GetBinContent(i);
+	  n_out_mm_dy += h_m2l_mm_dy_metcut->GetBinContent(i);
+
+	  err_out_ee_dy += h_m2l_ee_dy_metcut->GetSumw2()->At(i);
+	  err_out_mm_dy += h_m2l_mm_dy_metcut->GetSumw2()->At(i);
+	}
     }
 
 
@@ -107,6 +126,8 @@ void getDYScale(float   metcut   = 45,
   err_in_em_data = sqrt(err_in_em_data);
   err_in_ee_dy   = sqrt(err_in_ee_dy);
   err_in_mm_dy   = sqrt(err_in_mm_dy);
+  err_out_ee_dy  = sqrt(err_in_ee_dy);
+  err_out_mm_dy  = sqrt(err_in_mm_dy);
 
 
   // Compute the scale factors
@@ -137,6 +158,12 @@ void getDYScale(float   metcut   = 45,
   float err_scale_mm = errRatio(n_in_mm_dy_est, err_in_mm_dy_est, n_in_mm_dy, err_in_mm_dy);
   float err_scale_ll = errRatio(n_in_ll_dy_est, err_in_ll_dy_est, n_in_ll_dy, err_in_ll_dy);
 
+  float n_out_ee_dy_est = scale_ee * n_out_ee_dy;
+  float n_out_mm_dy_est = scale_mm * n_out_mm_dy;
+
+  float err_out_ee_dy_est =sqrt(errAB2(scale_ee, err_scale_ee, n_out_ee_dy, err_out_ee_dy));
+  float err_out_mm_dy_est =sqrt(errAB2(scale_mm, err_scale_mm, n_out_mm_dy, err_out_mm_dy));
+
 
   // Print the results
   //----------------------------------------------------------------------------
@@ -148,6 +175,9 @@ void getDYScale(float   metcut   = 45,
   printf(" Nin(DY)     |  %6.1f +- %-5.1f  %6.1f +- %-5.1f\n", n_in_ee_dy, err_in_ee_dy, n_in_mm_dy, err_in_mm_dy);
   printf(" Nin(est)    |  %6.1f +- %-5.1f  %6.1f +- %-5.1f\n", n_in_ee_dy_est, err_in_ee_dy_est, n_in_mm_dy_est, err_in_mm_dy_est);
   printf(" SF(est/DY)  |  %6.3f +- %-5.3f  %6.3f +- %-5.3f\n", scale_ee, err_scale_ee, scale_mm, err_scale_mm);
+  printf("-------------+-----------------------------------\n");
+  printf(" Nout(DY)    |  %6.1f +- %-5.1f  %6.1f +- %-5.1f\n", n_out_ee_dy, err_out_ee_dy, n_out_mm_dy, err_out_mm_dy);
+  printf(" Nout(est)   |  %6.1f +- %-5.1f  %6.1f +- %-5.1f\n", n_out_ee_dy_est, err_out_ee_dy_est, n_out_mm_dy_est, err_out_mm_dy_est);
   printf("\n");
 }
 
