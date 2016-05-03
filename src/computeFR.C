@@ -57,6 +57,8 @@ void computeFR() {
 
   // Muons with correction
 
+
+
   // Electrons with correction
 
 
@@ -115,71 +117,6 @@ void computeFR() {
   // Muons with correction
 
   // Electrons with correction
-
-
-
-
-
-
-  /*
-
-  TH2F*   h_Muon_loose_pt_eta_bin = (TH2F*) data -> Get("h_Muon_loose_pt_eta_bin");
-  TH2F*   h_Muon_tight_pt_eta_bin = (TH2F*) data -> Get("h_Muon_tight_pt_eta_bin");
-  TH2F*   h_Muon_FR_pt_eta = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
- 
-  h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., "");
-   h_Muon_FR_pt_eta -> Draw();
-   return;
-
-  TH1F*   h_Muon_tight_pt = (TH1F*) h_Muon_tight_pt_eta_bin -> ProjectionX() -> Clone();
-  TH1F*   h_Muon_loose_pt = (TH1F*) h_Muon_loose_pt_eta_bin -> ProjectionX() -> Clone();
-  TH1F*   h_Muon_FR_pt = (TH1F*) h_Muon_tight_pt_eta_bin -> ProjectionX() -> Clone();;
-
-  h_Muon_FR_pt -> Divide(h_Muon_tight_pt, h_Muon_loose_pt, 1., 1., ""); 
-  //  h_Muon_FR_pt -> Draw();
-  //  return;
-
-  TH1F*   h_Muon_tight_eta = (TH1F*) h_Muon_tight_pt_eta_bin -> ProjectionY() -> Clone();
-  TH1F*   h_Muon_loose_eta = (TH1F*) h_Muon_loose_pt_eta_bin -> ProjectionY() -> Clone();
-  TH1F*   h_Muon_FR_eta = (TH1F*) h_Muon_tight_pt_eta_bin -> ProjectionY() -> Clone();;
-
-  h_Muon_FR_eta -> Divide(h_Muon_tight_eta, h_Muon_loose_eta, 1., 1., ""); 
-  
-//  h_Muon_FR_eta -> Draw();
-  // return;
-
-  // Muons with Z correction
-  
-  TH2F*   h_zjets_Muon_loose_pt_eta_bin = (TH2F*) zjets -> Get("h_Muon_loose_pt_eta_bin");
-  TH2F*   h_zjets_Muon_tight_pt_eta_bin = (TH2F*) zjets -> Get("h_Muon_tight_pt_eta_bin");
-
-  TH2F*   h_Muon_loose_pt_eta_bin_corrZ = (TH2F*) h_Muon_loose_pt_eta_bin -> Clone();
-  TH2F*   h_Muon_tight_pt_eta_bin_corrZ = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
-
-  h_Muon_loose_pt_eta_bin_corrZ -> Add(h_zjets_Muon_loose_pt_eta_bin, -1);  
-  h_Muon_tight_pt_eta_bin_corrZ -> Add(h_zjets_Muon_tight_pt_eta_bin, -1);
-
-  TH2F*   h_Muon_FR_pt_eta_corrZ = (TH2F*) h_Muon_tight_pt_eta_bin -> Clone();
-  
-  h_Muon_FR_pt_eta_corrZ -> Divide(h_Muon_tight_pt_eta_bin_corrZ, h_Muon_loose_pt_eta_bin_corrZ, 1., 1., "");
-  */
-  /*
-    h_Muon_tight_pt_eta_bin_corrZ -> Draw();
-  return;
-  h_Muon_loose_pt_eta_bin_corrZ -> Draw();
-  return;
-  */
-
-  //h_Muon_FR_pt_eta_corrZ -> Draw("colz");
-  //    h_Muon_FR_pt_eta_corrZ -> ProjectionX() -> Draw();
-  
-
-
-
-
-
-
-
 
 
 

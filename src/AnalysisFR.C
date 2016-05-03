@@ -135,7 +135,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	      h_Muon_tight_pt_eta_bin -> Fill(pt, eta, _event_weight_fr);
 	      h_Muon_tight_pt_bin -> Fill(pt, _event_weight_fr);
-	      h_Muon_loose_eta_bin -> Fill(pt, _event_weight_fr);
+	      h_Muon_tight_eta_bin -> Fill(eta, _event_weight_fr);
 
 	    }
 	  }
@@ -229,7 +229,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() < 20.);
     pass &= (_mtw < 20.);
 
-    if (pass & Lepton1.type == Loose || Lepton1.type == Tight) {
+    if (pass & (Lepton1.type == Loose || Lepton1.type == Tight)) {
       if (_channel == m) {
 
 	h_Muon_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
@@ -261,7 +261,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
     }
 
-        FillLevelHistograms(FR_00_QCD, pass);
+    //  FillLevelHistograms(FR_00_QCD, pass);
      
     if (pass && _saveminitree) minitree->Fill();
  
