@@ -103,7 +103,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (metPfType1 > 20.);
     pass &= (mpmet > 20.);
     pass &= (ptll > 30.);
-    pass &= (_nbjet20loose == 0);
+    pass &= (_nbjet20cmvav2l == 0);
 
     if (pass && njet == 0) GetSumOfWeightsLHE(list_vectors_weights_0jet);
     if (pass && njet == 1) GetSumOfWeightsLHE(list_vectors_weights_1jet);
@@ -119,7 +119,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (Lepton2.v.Pt() > 20.);
     pass &= (_m2l > 20.);
     pass &= (njet > 1);
-    pass &= (_nbjet30medium > 0);
+    pass &= (_nbjet30cmvav2m > 0);
 
     FillLevelHistograms(TTDM_10_Rinout, pass);
 
@@ -160,7 +160,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // Search for Dark Matter produced in association with top quark pairs
     // in the dilepton channel
     //--------------------------------------------------------------------------
-    pass &= (_nbjet30medium > 0);
+    pass &= (_nbjet30cmvav2m > 0);
     pass &= (_dphillmet > 1.2);
 
     FillLevelHistograms(TTDM_20_AN16105, pass);

@@ -129,27 +129,27 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-  factory->AddVariable("channel",      "", "", 'F');
-  factory->AddVariable("metPfType1",   "", "", 'F');
-  factory->AddVariable("m2l",          "", "", 'F');
-  factory->AddVariable("njet",         "", "", 'F');
-  factory->AddVariable("nbjet20loose", "", "", 'F');
-  factory->AddVariable("lep1pt",       "", "", 'F');
-  factory->AddVariable("lep2pt",       "", "", 'F');
-  factory->AddVariable("jet1pt",       "", "", 'F');
-  factory->AddVariable("jet2pt",       "", "", 'F');
-  factory->AddVariable("mtw1",         "", "", 'F');
-  factory->AddVariable("dphill",       "", "", 'F');
-  factory->AddVariable("dphilep1jet1", "", "", 'F');
-  factory->AddVariable("dphilep1jet2", "", "", 'F');
-  factory->AddVariable("dphilmet1",    "", "", 'F');
-  factory->AddVariable("dphilep2jet1", "", "", 'F');
-  factory->AddVariable("dphilep2jet2", "", "", 'F');
-  factory->AddVariable("dphilmet2",    "", "", 'F');
-  factory->AddVariable("dphijj",       "", "", 'F');
-  factory->AddVariable("dphijet1met",  "", "", 'F');
-  factory->AddVariable("dphijet2met",  "", "", 'F');
-  factory->AddVariable("dphillmet",    "", "", 'F');
+  factory->AddVariable("channel",        "", "", 'F');
+  factory->AddVariable("metPfType1",     "", "", 'F');
+  factory->AddVariable("m2l",            "", "", 'F');
+  factory->AddVariable("njet",           "", "", 'F');
+  factory->AddVariable("nbjet20cmvav2l", "", "", 'F');
+  factory->AddVariable("lep1pt",         "", "", 'F');
+  factory->AddVariable("lep2pt",         "", "", 'F');
+  factory->AddVariable("jet1pt",         "", "", 'F');
+  factory->AddVariable("jet2pt",         "", "", 'F');
+  factory->AddVariable("mtw1",           "", "", 'F');
+  factory->AddVariable("dphill",         "", "", 'F');
+  factory->AddVariable("dphilep1jet1",   "", "", 'F');
+  factory->AddVariable("dphilep1jet2",   "", "", 'F');
+  factory->AddVariable("dphilmet1",      "", "", 'F');
+  factory->AddVariable("dphilep2jet1",   "", "", 'F');
+  factory->AddVariable("dphilep2jet2",   "", "", 'F');
+  factory->AddVariable("dphilmet2",      "", "", 'F');
+  factory->AddVariable("dphijj",         "", "", 'F');
+  factory->AddVariable("dphijet1met",    "", "", 'F');
+  factory->AddVariable("dphijet2met",    "", "", 'F');
+  factory->AddVariable("dphillmet",      "", "", 'F');
 
 
   // Preselection cuts and preparation
@@ -189,7 +189,7 @@ void MVARead(TString signal, TString filename)
   float metPfType1;
   float m2l;
   float njet;
-  float nbjet20loose;
+  float nbjet20cmvav2l;
   float lep1pt;
   float lep2pt;
   float jet1pt;
@@ -209,27 +209,27 @@ void MVARead(TString signal, TString filename)
   float eventW;
   float mva; 
 
-  reader->AddVariable("channel",      &channel);
-  reader->AddVariable("metPfType1",   &metPfType1);
-  reader->AddVariable("m2l",          &m2l);
-  reader->AddVariable("njet",         &njet);
-  reader->AddVariable("nbjet20loose", &nbjet20loose);
-  reader->AddVariable("lep1pt",       &lep1pt);
-  reader->AddVariable("lep2pt",       &lep2pt);
-  reader->AddVariable("jet1pt",       &jet1pt);
-  reader->AddVariable("jet2pt",       &jet2pt);
-  reader->AddVariable("mtw1",         &mtw1);
-  reader->AddVariable("dphill",       &dphill);
-  reader->AddVariable("dphilep1jet1", &dphilep1jet1);
-  reader->AddVariable("dphilep1jet2", &dphilep1jet2);
-  reader->AddVariable("dphilmet1",    &dphilmet1);
-  reader->AddVariable("dphilep2jet1", &dphilep2jet1);
-  reader->AddVariable("dphilep2jet2", &dphilep2jet2);
-  reader->AddVariable("dphilmet2",    &dphilmet2);
-  reader->AddVariable("dphijj",       &dphijj);
-  reader->AddVariable("dphijet1met",  &dphijet1met);
-  reader->AddVariable("dphijet2met",  &dphijet2met);
-  reader->AddVariable("dphillmet",    &dphillmet);
+  reader->AddVariable("channel",        &channel);
+  reader->AddVariable("metPfType1",     &metPfType1);
+  reader->AddVariable("m2l",            &m2l);
+  reader->AddVariable("njet",           &njet);
+  reader->AddVariable("nbjet20cmvav2l", &nbjet20cmvav2l);
+  reader->AddVariable("lep1pt",         &lep1pt);
+  reader->AddVariable("lep2pt",         &lep2pt);
+  reader->AddVariable("jet1pt",         &jet1pt);
+  reader->AddVariable("jet2pt",         &jet2pt);
+  reader->AddVariable("mtw1",           &mtw1);
+  reader->AddVariable("dphill",         &dphill);
+  reader->AddVariable("dphilep1jet1",   &dphilep1jet1);
+  reader->AddVariable("dphilep1jet2",   &dphilep1jet2);
+  reader->AddVariable("dphilmet1",      &dphilmet1);
+  reader->AddVariable("dphilep2jet1",   &dphilep2jet1);
+  reader->AddVariable("dphilep2jet2",   &dphilep2jet2);
+  reader->AddVariable("dphilmet2",      &dphilmet2);
+  reader->AddVariable("dphijj",         &dphijj);
+  reader->AddVariable("dphijet1met",    &dphijet1met);
+  reader->AddVariable("dphijet2met",    &dphijet2met);
+  reader->AddVariable("dphillmet",      &dphillmet);
 
 
   // Book MVA methods
@@ -247,28 +247,28 @@ void MVARead(TString signal, TString filename)
 
   TBranch* b_mva = theTree->Branch("mva_" + signal, &mva, "mva/F" );
 
-  theTree->SetBranchAddress("channel",      &channel);
-  theTree->SetBranchAddress("metPfType1",   &metPfType1);
-  theTree->SetBranchAddress("m2l",          &m2l);
-  theTree->SetBranchAddress("njet",         &njet);
-  theTree->SetBranchAddress("nbjet20loose", &nbjet20loose);
-  theTree->SetBranchAddress("lep1pt",       &lep1pt);
-  theTree->SetBranchAddress("lep2pt",       &lep2pt);
-  theTree->SetBranchAddress("jet1pt",       &jet1pt);
-  theTree->SetBranchAddress("jet2pt",       &jet2pt);
-  theTree->SetBranchAddress("mtw1",         &mtw1);
-  theTree->SetBranchAddress("dphill",       &dphill);
-  theTree->SetBranchAddress("dphilep1jet1", &dphilep1jet1);
-  theTree->SetBranchAddress("dphilep1jet2", &dphilep1jet2);
-  theTree->SetBranchAddress("dphilmet1",    &dphilmet1);
-  theTree->SetBranchAddress("dphilep2jet1", &dphilep2jet1);
-  theTree->SetBranchAddress("dphilep2jet2", &dphilep2jet2);
-  theTree->SetBranchAddress("dphilmet2",    &dphilmet2);
-  theTree->SetBranchAddress("dphijj",       &dphijj);
-  theTree->SetBranchAddress("dphijet1met",  &dphijet1met);
-  theTree->SetBranchAddress("dphijet2met",  &dphijet2met);
-  theTree->SetBranchAddress("dphillmet",    &dphillmet);
-  theTree->SetBranchAddress("eventW",       &eventW);
+  theTree->SetBranchAddress("channel",        &channel);
+  theTree->SetBranchAddress("metPfType1",     &metPfType1);
+  theTree->SetBranchAddress("m2l",            &m2l);
+  theTree->SetBranchAddress("njet",           &njet);
+  theTree->SetBranchAddress("nbjet20cmvav2l", &nbjet20cmvav2l);
+  theTree->SetBranchAddress("lep1pt",         &lep1pt);
+  theTree->SetBranchAddress("lep2pt",         &lep2pt);
+  theTree->SetBranchAddress("jet1pt",         &jet1pt);
+  theTree->SetBranchAddress("jet2pt",         &jet2pt);
+  theTree->SetBranchAddress("mtw1",           &mtw1);
+  theTree->SetBranchAddress("dphill",         &dphill);
+  theTree->SetBranchAddress("dphilep1jet1",   &dphilep1jet1);
+  theTree->SetBranchAddress("dphilep1jet2",   &dphilep1jet2);
+  theTree->SetBranchAddress("dphilmet1",      &dphilmet1);
+  theTree->SetBranchAddress("dphilep2jet1",   &dphilep2jet1);
+  theTree->SetBranchAddress("dphilep2jet2",   &dphilep2jet2);
+  theTree->SetBranchAddress("dphilmet2",      &dphilmet2);
+  theTree->SetBranchAddress("dphijj",         &dphijj);
+  theTree->SetBranchAddress("dphijet1met",    &dphijet1met);
+  theTree->SetBranchAddress("dphijet2met",    &dphijet2met);
+  theTree->SetBranchAddress("dphillmet",      &dphillmet);
+  theTree->SetBranchAddress("eventW",         &eventW);
 
   Long64_t nentries = theTree->GetEntries();
 
