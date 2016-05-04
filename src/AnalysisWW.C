@@ -146,7 +146,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     bool passSoftMuTight = pass && (_nbjet15csvv2t) && (!_foundsoftmuon);
     FillLevelHistograms(WW_15_SoftMuTight, pass && pass_zwindow);
 
-    bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20cmvav2m > 0);
+    bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20cmvav2l > 0);
     FillLevelHistograms(WW_50_TopCR, pass_topCR);
 
     bool pass_dyttCR = (_nbjet20cmvav2l == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
