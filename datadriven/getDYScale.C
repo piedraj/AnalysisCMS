@@ -8,24 +8,33 @@ float errRatio(float a, float err_a, float b, float err_b);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// getDYScale
+// This macro computes the DY scale factor for the ee and mm channels. It needs
+// as input a set of two-dimensional histograms, with MET in the x-axis and m2l
+// in the y-axis. These histograms, for both data and DY, have all the analysis
+// cuts (taken from AN-15-305) with the exception of |m2l - mZ| > 15 GeV and
+// MET > 40 GeV. The scale factor for the ee channel (the procedure is identical
+// for the mm channel) is computed from equations (1) and (2). We have assumed
+// negligible the peaking processes (WZ and ZZ).
 //
-//    Results for MET > 45 GeV
+//    k_ee     = 0.5 * sqrt(n_ee / n_mm);                            (1)
+//    scale_ee = (n_in_ee_data - k_ee * n_in_em_data) / n_in_ee_dy;  (2)
+//
+// And these are the results that we obtain for MET > 40 GeV.
 //   
 //                |         ee               mm
 //   -------------+-----------------------------------
 //    n(data)     |    2998 +- 55       6323 +- 80   
 //    k           |   0.344 +- 0.004   0.726 +- 0.008
-//    Nin(ZZ)     |    2.77 +- 0.05     5.16 +- 0.07 
-//    Nin(DY)     |   209.6 +- 16.4    402.9 +- 22.9 
-//    Nin(est)    |   263.3 +- 27.5    591.7 +- 44.3 
-//    SF(est/DY)  |   1.256 +- 0.164   1.469 +- 0.138
+//    Nin(ZZ)     |    3.92 +- 0.06     7.32 +- 0.08 
+//    Nin(DY)     |   310.0 +- 20.2    673.8 +- 28.6 
+//    Nin(est)    |   383.4 +- 30.3    812.9 +- 47.9 
+//    SF(est/DY)  |   1.237 +- 0.127   1.207 +- 0.088
 //   -------------+-----------------------------------
-//    Nout(DY)    |    20.2 +- 4.1      37.8 +- 4.8  
-//    Nout(est)   |    25.4 +- 6.1      55.5 +- 8.8  
+//    Nout(DY)    |    33.7 +- 4.5      61.1 +- 5.4  
+//    Nout(est)   |    41.6 +- 7.0      73.7 +- 8.4  
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(float   metcut   = 45,
+void getDYScale(float   metcut   = 40,
 		TString analysis = "TTDM")
 {
   TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",  "read");
@@ -151,8 +160,8 @@ void getDYScale(float   metcut   = 45,
 
   // Compute the scale factors
   //----------------------------------------------------------------------------
-  float k_ee = 0.5 * sqrt(n_ee/n_mm);
-  float k_mm = 0.5 * sqrt(n_mm/n_ee);
+  float k_ee = 0.5 * sqrt(n_ee / n_mm);
+  float k_mm = 0.5 * sqrt(n_mm / n_ee);
 
   float err_k_ee = sqrt((1 + n_ee/n_mm) / n_mm) / 4.0;
   float err_k_mm = sqrt((1 + n_mm/n_ee) / n_ee) / 4.0;
