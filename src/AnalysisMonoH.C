@@ -128,7 +128,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
     FillLevelHistograms(MonoH_06_Ptll, pass && pass_zveto);
 
-    pass &= (_nbjet20loose == 0);
+    pass &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
     if (_saveminitree && pass && pass_zveto) minitree->Fill();

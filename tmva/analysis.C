@@ -361,7 +361,7 @@ void GetBoxPopulation(TString sample,
 
   tree->SetBranchAddress("eventW",         &eventW);
   tree->SetBranchAddress("mva_" + _signal, &mva);
-  tree->SetBranchAddress("nbjet20loose",   &nbjet);
+  tree->SetBranchAddress("nbjet20cmvav2l", &nbjet);
   tree->SetBranchAddress("njet",           &njet);
 
   region1_box1_yield = 0;
