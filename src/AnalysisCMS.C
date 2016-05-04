@@ -438,7 +438,7 @@ void AnalysisCMS::GetLeptons()
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetJets()
+void AnalysisCMS::GetJets(float jeta_eta_max)
 {
   AnalysisJets.clear();
 
@@ -459,6 +459,8 @@ void AnalysisCMS::GetJets()
     float pt  = std_vector_jet_pt ->at(i);
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
+
+    if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
     TLorentzVector tlv;
 
@@ -823,7 +825,7 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 // EventSetup
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventSetup()
+void AnalysisCMS::EventSetup(float jet_eta_max)
 {
   GetGenPtllWeight();
 
@@ -837,7 +839,7 @@ void AnalysisCMS::EventSetup()
 
   GetLeptons();
 
-  GetJets();
+  GetJets(jet_eta_max);
 
   GetDeltaPhi();
 
