@@ -487,6 +487,8 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
+    if (pt < 30.) continue;
+
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++;
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
@@ -494,6 +496,8 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
     if (goodjet.cmvav2 > cMVAv2M) _nbjet30cmvav2m++;
     if (goodjet.cmvav2 > cMVAv2T) _nbjet30cmvav2t++;
+
+    AnalysisJets.push_back(goodjet);
   }
 
 
