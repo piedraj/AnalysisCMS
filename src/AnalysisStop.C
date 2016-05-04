@@ -84,7 +84,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup();
+    EventSetup(2.4);
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -120,7 +120,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
-    int _njet = AnalysisJets.size();
+    //int _njet = AnalysisJets.size();
     
     _dphimetjet = -0.1; double MinDeltaPhiMetJet = 999.;
     for (int ijet = 0; ijet<_njet; ijet++) {
@@ -243,7 +243,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Stop_01_Has2Jets, pass2);
 
-    pass2 &= (_nbjet30medium > 0);
+    pass2 &= (_nbjet30csvv2m > 0);
 
     FillLevelHistograms(Stop_02_Has1BJet, pass2);
 
