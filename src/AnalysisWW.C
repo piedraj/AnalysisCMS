@@ -119,47 +119,47 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= pass_ptll;
     FillLevelHistograms(WW_06_Ptll, pass && pass_zwindow);
 
-    bool passBvetoLoose = pass && (_nbjet20loose == 0);
+    bool passBvetoLoose = pass && (_nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_07_BVetoLoose, passBvetoLoose && pass_zwindow);
 
-    bool passBvetoMedium = pass && (_nbjet20medium == 0);
+    bool passBvetoMedium = pass && (_nbjet20cmvav2m == 0);
     FillLevelHistograms(WW_08_BVetoMedium, passBvetoMedium && pass_zwindow);
 
-    bool passBvetoTight = pass && (_nbjet20tight == 0);
+    bool passBvetoTight = pass && (_nbjet20cmvav2t == 0);
     FillLevelHistograms(WW_09_BVetoTight, passBvetoTight && pass_zwindow);
 
-    bool passBvetoLooseOld = pass && (_nbjet15loose == 0);
+    bool passBvetoLooseOld = pass && (_nbjet15csvv2l == 0);
     FillLevelHistograms(WW_10_BVetoLooseOld, passBvetoLooseOld && pass_zwindow);
 
-    bool passBvetoMediumOld = pass && (_nbjet15medium == 0);
+    bool passBvetoMediumOld = pass && (_nbjet15csvv2m == 0);
     FillLevelHistograms(WW_11_BVetoMediumOld, passBvetoMediumOld && pass_zwindow);
 
-    bool passBvetoTightOld = pass && (_nbjet15tight == 0);
+    bool passBvetoTightOld = pass && (_nbjet15csvv2t == 0);
     FillLevelHistograms(WW_12_BVetoTightOld, passBvetoTightOld && pass_zwindow);
 
-    bool passSoftMuLoose = pass && (_nbjet15loose) && (!_foundsoftmuon);
+    bool passSoftMuLoose = pass && (_nbjet15csvv2l) && (!_foundsoftmuon);
     FillLevelHistograms(WW_13_SoftMuLoose, pass && pass_zwindow);
 
-    bool passSoftMuMedium = pass && (_nbjet15medium) && (!_foundsoftmuon);
+    bool passSoftMuMedium = pass && (_nbjet15csvv2m) && (!_foundsoftmuon);
     FillLevelHistograms(WW_14_SoftMuMedium, pass && pass_zwindow);
 
-    bool passSoftMuTight = pass && (_nbjet15tight) && (!_foundsoftmuon);
+    bool passSoftMuTight = pass && (_nbjet15csvv2t) && (!_foundsoftmuon);
     FillLevelHistograms(WW_15_SoftMuTight, pass && pass_zwindow);
 
-    bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20loose > 0);
+    bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20cmvav2l > 0);
     FillLevelHistograms(WW_50_TopCR, pass_topCR);
 
-    bool pass_dyttCR = (_nbjet20loose == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
+    bool pass_dyttCR = (_nbjet20cmvav2l == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
     FillLevelHistograms(WW_60_DYttCR, pass_dyttCR);
 
-    //    bool pass_dyCR = (_nbjet20loose == 0 && !pass_zwindow);
-    bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _mpmet > 20 && _nbjet20loose == 0);
+    //    bool pass_dyCR = (_nbjet20cmvav2l == 0 && !pass_zwindow);
+    bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _mpmet > 20 && _nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_70_DYCR, pass_dyCR);
 
-    bool pass_dyCR_nompmet = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _nbjet20loose == 0);
+    bool pass_dyCR_nompmet = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_71_DYCR_NoMpMet, pass_dyCR_nompmet);
 
-    bool pass_dyCR_justptll = (!pass_zwindow && ptll > 45 && _nbjet20loose == 0);
+    bool pass_dyCR_justptll = (!pass_zwindow && ptll > 45 && _nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_72_DYCR_JustPtll, pass_dyCR_nompmet);
 
 
@@ -191,7 +191,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass_zwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_14_ZWindowPfMet, pass_zwindow);
 
-    pass_zwindow &= (_nbjet20loose == 0);
+    pass_zwindow &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, pass_zwindow);
 
     pass_zwindow &= (!_foundsoftmuon);
