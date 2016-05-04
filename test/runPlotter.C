@@ -251,12 +251,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ht"             + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htjets"         + suffix, "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htnojets"       + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
-	  plotter.Draw(prefix + "nbjet15csvv2l"  + suffix, "number of 15 GeV csvv2l b-jets",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet15csvv2m"  + suffix, "number of 15 GeV csvv2m b-jets",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet15csvv2t"  + suffix, "number of 15 GeV csvv2t b-jets",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",  -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet20cmvav2m" + suffix, "number of 20 GeV cmvav2m b-jets",  -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet20cmvav2t" + suffix, "number of 20 GeV cmvav2t b-jets",  -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2l"  + suffix, "number of 30 GeV csvv2l b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2t"  + suffix, "number of 30 GeV csvv2t b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30cmvav2l" + suffix, "number of 30 GeV cmvav2l b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30cmvav2m" + suffix, "number of 30 GeV cmvav2m b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30cmvav2t" + suffix, "number of 30 GeV cmvav2t b-jets",  -1, 0, "NULL", scale);

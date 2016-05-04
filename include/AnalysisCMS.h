@@ -203,6 +203,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet15csvv2l;
   float                  _nbjet15csvv2m;
   float                  _nbjet15csvv2t;
+  float                  _nbjet30csvv2l;
+  float                  _nbjet30csvv2m;
+  float                  _nbjet30csvv2t;
   float                  _nbjet20cmvav2l;
   float                  _nbjet20cmvav2m;
   float                  _nbjet20cmvav2t;
@@ -294,6 +297,9 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet15csvv2l [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15csvv2m [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15csvv2t [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2l [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2m [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2t [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20cmvav2l[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20cmvav2m[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet20cmvav2t[nchannel][ncut][njetbin+1];
