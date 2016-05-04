@@ -157,7 +157,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30cmvav2l[ichannel][icut][ijet]->Fill(_nbjet30cmvav2l, _event_weight);
   h_nbjet30cmvav2m[ichannel][icut][ijet]->Fill(_nbjet30cmvav2m, _event_weight);
   h_nbjet30cmvav2t[ichannel][icut][ijet]->Fill(_nbjet30cmvav2t, _event_weight);
-  h_njet          [ichannel][icut][ijet]->Fill(njet,            _event_weight);  // Needs l2Sel
+  h_njet          [ichannel][icut][ijet]->Fill(_njet,           _event_weight);
 
 
   // TH2 histograms
@@ -438,7 +438,7 @@ void AnalysisCMS::GetLeptons()
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetJets(float jeta_eta_max)
+void AnalysisCMS::GetJets(float jet_eta_max)
 {
   AnalysisJets.clear();
 
@@ -493,7 +493,9 @@ void AnalysisCMS::GetJets(float jeta_eta_max)
 
   // Define the jet bin
   //----------------------------------------------------------------------------
-  _jetbin = (njet < njetbin) ? njet : njetbin - 1;
+  _njet = AnalysisJets.size();
+
+  _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 }
 
 
@@ -502,7 +504,7 @@ void AnalysisCMS::GetJets(float jeta_eta_max)
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJetPtSum()
 {
-  if (njet < 2)
+  if (_njet < 2)
     _sumjpt12 = -999;
   else
     _sumjpt12 = AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
@@ -605,14 +607,14 @@ void AnalysisCMS::GetDeltaPhi()
   //----------------------------------------------------------------------------
   _dphillmet = fabs((Lepton1.v + Lepton2.v).DeltaPhi(MET));
 
-  if (njet > 0)
+  if (_njet > 0)
     {
       _dphijet1met  = fabs(AnalysisJets[0].v.DeltaPhi(MET));
       _dphilep1jet1 = fabs(Lepton1.v.DeltaPhi(AnalysisJets[0].v));
       _dphilep2jet1 = fabs(Lepton2.v.DeltaPhi(AnalysisJets[0].v));
     }
 
-  if (njet > 1)
+  if (_njet > 1)
     {
       _dphijet2met  = fabs(AnalysisJets[1].v.DeltaPhi(MET));
       _dphilep1jet2 = fabs(Lepton1.v.DeltaPhi(AnalysisJets[1].v));
@@ -668,7 +670,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (njet <= 1) ? _mpmet : MET.Et();
+  _metvar = (_njet <= 1) ? _mpmet : MET.Et();
 }
 
 
@@ -677,7 +679,7 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDeltaPhiVeto()
 {
-  _passdphiveto = (njet < 2 || dphilljetjet < 165.*TMath::DegToRad());  // Needs l2Sel
+  _passdphiveto = (_njet < 2 || dphilljetjet < 165.*TMath::DegToRad());  // Needs l2Sel
 }
 
 
@@ -783,7 +785,7 @@ void AnalysisCMS::GetFakeWeights()
       return;
     }
 
-  if (njet == 0)
+  if (_njet == 0)
     {
       _fake_weight            = fakeW2l0j;
       _fake_weight_elUp       = fakeW2l0jElUp;
@@ -795,7 +797,7 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muStatUp   = fakeW2l0jstatMuUp;
       _fake_weight_muStatDown = fakeW2l0jstatMuDown;
     }
-  else if (njet == 1)
+  else if (_njet == 1)
     {
       _fake_weight            = fakeW2l1j;
       _fake_weight_elUp       = fakeW2l1jElUp;
@@ -1078,7 +1080,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30cmvav2l", &_nbjet30cmvav2l, "nbjet30cmvav2l/F");
   minitree->Branch("nbjet30cmvav2m", &_nbjet30cmvav2m, "nbjet30cmvav2m/F");
   minitree->Branch("nbjet30cmvav2t", &_nbjet30cmvav2t, "nbjet30cmvav2t/F");
-  minitree->Branch("njet",           &njet,            "njet/F");
+  minitree->Branch("njet",           &_njet,           "njet/F");
 
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
@@ -1157,14 +1159,14 @@ void AnalysisCMS::GetDeltaR()
   _deltarl1met = fabs(Lepton1.v.DeltaR(MET));
   _deltarl2met = fabs(Lepton2.v.DeltaR(MET));
 
-  if (njet > 0)
+  if (_njet > 0)
     {
       _deltarjet1met  = fabs(AnalysisJets[0].v.DeltaR(MET));
       _deltarlep1jet1 = fabs(Lepton1.v.DeltaR(AnalysisJets[0].v));
       _deltarlep2jet1 = fabs(Lepton2.v.DeltaR(AnalysisJets[0].v));
     }
 
-  if (njet > 1)
+  if (_njet > 1)
     {
       _deltarjet2met  = fabs(AnalysisJets[1].v.DeltaR(MET));
       _deltarjj       = fabs(AnalysisJets[0].v.DeltaR(AnalysisJets[1].v));

@@ -209,6 +209,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2l;
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
+  float                  _njet;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
