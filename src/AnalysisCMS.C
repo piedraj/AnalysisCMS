@@ -347,9 +347,9 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.23;
   if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  //  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
-  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
+  //  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
   _event_weight *= _gen_ptll_weight;
 
