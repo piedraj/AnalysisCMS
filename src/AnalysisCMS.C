@@ -341,9 +341,15 @@ void AnalysisCMS::ApplyWeights()
 
       _event_weight *= sf_btag * sf_trigger * sf_idiso;
     }
-  
-  if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= 1.23;
+
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
+  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.23;
+  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.23;
+  if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+
+  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+
+  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
   _event_weight *= _gen_ptll_weight;
 
