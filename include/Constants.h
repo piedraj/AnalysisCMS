@@ -28,6 +28,7 @@ const float H_MASS        = 125.0;       // [GeV]
 // Systematic uncertainties
 //------------------------------------------------------------------------------
 enum {
+  nominal,
   JESMaxdo,
   JESMaxup,
   LepElepTdo,
@@ -46,6 +47,7 @@ enum {
 };
 
 const TString ssystematic[nsystematic] = {
+  "nominal",
   "JESMaxdo",
   "JESMaxup",
   "LepElepTdo",
@@ -93,6 +95,7 @@ const Double_t WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
 
 
 const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
+const double metvar_bins_draw[] = {20, 25, 30, 45, 100};  // [GeV]
 
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
