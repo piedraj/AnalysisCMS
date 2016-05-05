@@ -2,6 +2,7 @@
 #include "../include/AnalysisStop.h"
 #include "../include/lester_mt2_bisect.h"
 
+
 //------------------------------------------------------------------------------
 // AnalysisStop
 //------------------------------------------------------------------------------
@@ -45,24 +46,19 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-        h_htjets[i][j][k] = new TH1D("h_htjets" + suffix, "", 300, 0, 800);
-	
 	h_2ht[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800, 300, 0, 800);
-
-	//h_dphill[i][j][k] = new TH1D("h_phill" + suffix, "", 100, 0., 3.2);
-	//h_mll[i][j][k] = new TH1D("h_mll" + suffix, "", 200, 0., 1000.);
-	h_dyll[i][j][k] = new TH1D("h_dyll" + suffix, "", 100, 0, 5);
-	h_mllbb[i][j][k] = new TH1D("h_mllbb" + suffix, "", 200, 0, 1000);
 	h_dym[i][j][k] = new TH2F("h_dym" + suffix, "", 200, 0, 1000, 100, 0, 5);
-	h_dphimetjet[i][j][k] = new TH1D("h_dphimetjet" + suffix, "", 100, 0., 3.2);
-        h_dphimetlep1[i][j][k] = new TH1D("h_dphimetlep1" + suffix, "", 100, 0., 3.2);
-        //h_dphilj[i][j][k] = new TH1D("h_dphilj" + suffix, "", 100, 0., 3.2);
-        h_meff[i][j][k] = new TH1D("h_meff" + suffix, "", 200, 0, 1000);
-        h_ptbll[i][j][k] = new TH1D("h_ptbll" + suffix, "", 200, 0, 1000);
+
+	h_dyll        [i][j][k] = new TH1D("h_dyll" + suffix, "", 100, 0, 5);
+	h_mllbb       [i][j][k] = new TH1D("h_mllbb" + suffix, "", 200, 0, 1000);
+	h_dphimetjet  [i][j][k] = new TH1D("h_dphimetjet" + suffix, "", 100, 0., 3.2);
+        h_dphimetlep1 [i][j][k] = new TH1D("h_dphimetlep1" + suffix, "", 100, 0., 3.2);
+        h_meff        [i][j][k] = new TH1D("h_meff" + suffix, "", 200, 0, 1000);
+        h_ptbll       [i][j][k] = new TH1D("h_ptbll" + suffix, "", 200, 0, 1000);
         h_dphimetptbll[i][j][k] = new TH1D("h_dphimetptbll" + suffix, "", 100, 0., 3.2);
-	h_mt2ll[i][j][k] = new TH1D("h_mt2ll" + suffix, "", 200, 0., 1000);
-	h_mt2bb[i][j][k] = new TH1D("h_mt2bb" + suffix, "", 200, 0., 1000);
-	h_mt2lblb[i][j][k] = new TH1D("h_mt2lblb" + suffix, "", 200, 0., 1000);
+	h_mt2ll       [i][j][k] = new TH1D("h_mt2ll" + suffix, "", 200, 0., 1000);
+	h_mt2bb       [i][j][k] = new TH1D("h_mt2bb" + suffix, "", 200, 0., 1000);
+	h_mt2lblb     [i][j][k] = new TH1D("h_mt2lblb" + suffix, "", 200, 0., 1000);
 
       }
     }
@@ -71,6 +67,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
   root_output->cd();
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
+
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -85,6 +82,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup(2.4);
+
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -277,8 +275,6 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 					 int icut,
 					 int ijet)
 {
-  h_htjets[ichannel][icut][ijet]->Fill(_htjets, _event_weight);
-
   h_2ht[ichannel][icut][ijet]->Fill(_ht, _htjets, _event_weight);
 
   //h_dphill[ichannel][icut][ijet]->Fill(_dphill, _event_weight);
