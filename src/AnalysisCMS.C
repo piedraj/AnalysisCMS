@@ -151,6 +151,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet15csvv2l [ichannel][icut][ijet]->Fill(_nbjet15csvv2l,  _event_weight);
   h_nbjet15csvv2m [ichannel][icut][ijet]->Fill(_nbjet15csvv2m,  _event_weight);
   h_nbjet15csvv2t [ichannel][icut][ijet]->Fill(_nbjet15csvv2t,  _event_weight);
+  h_nbjet30csvv2l [ichannel][icut][ijet]->Fill(_nbjet30csvv2l,  _event_weight);
+  h_nbjet30csvv2m [ichannel][icut][ijet]->Fill(_nbjet30csvv2m,  _event_weight);
+  h_nbjet30csvv2t [ichannel][icut][ijet]->Fill(_nbjet30csvv2t,  _event_weight);
   h_nbjet20cmvav2l[ichannel][icut][ijet]->Fill(_nbjet20cmvav2l, _event_weight);
   h_nbjet20cmvav2m[ichannel][icut][ijet]->Fill(_nbjet20cmvav2m, _event_weight);
   h_nbjet20cmvav2t[ichannel][icut][ijet]->Fill(_nbjet20cmvav2t, _event_weight);
@@ -446,6 +449,9 @@ void AnalysisCMS::GetJets(float jet_eta_max)
   _nbjet15csvv2l  = 0;
   _nbjet15csvv2m  = 0;
   _nbjet15csvv2t  = 0;
+  _nbjet30csvv2l  = 0;
+  _nbjet30csvv2m  = 0;
+  _nbjet30csvv2t  = 0;
   _nbjet20cmvav2l = 0;
   _nbjet20cmvav2m = 0;
   _nbjet20cmvav2t = 0;
@@ -483,6 +489,10 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
     if (pt < 30.) continue;
+
+    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++;
+    if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
+    if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
     if (goodjet.cmvav2 > cMVAv2M) _nbjet30cmvav2m++;
@@ -1006,6 +1016,9 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet15csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2l"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet15csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2m"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet15csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2t"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2l"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2m"  + suffix, "",    7, -0.5,  6.5);
+  h_nbjet30csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2t"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet20cmvav2l[ichannel][icut][ijet] = new TH1D("h_nbjet20cmvav2l" + suffix, "",    7, -0.5,  6.5);
   h_nbjet20cmvav2m[ichannel][icut][ijet] = new TH1D("h_nbjet20cmvav2m" + suffix, "",    7, -0.5,  6.5);
   h_nbjet20cmvav2t[ichannel][icut][ijet] = new TH1D("h_nbjet20cmvav2t" + suffix, "",    7, -0.5,  6.5);
@@ -1083,6 +1096,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet15csvv2l",  &_nbjet15csvv2l,  "nbjet15csvv2l/F");
   minitree->Branch("nbjet15csvv2m",  &_nbjet15csvv2m,  "nbjet15csvv2m/F");
   minitree->Branch("nbjet15csvv2t",  &_nbjet15csvv2t,  "nbjet15csvv2t/F");
+  minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
+  minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
+  minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
   minitree->Branch("nbjet20cmvav2l", &_nbjet20cmvav2l, "nbjet20cmvav2l/F");
   minitree->Branch("nbjet20cmvav2m", &_nbjet20cmvav2m, "nbjet20cmvav2m/F");
   minitree->Branch("nbjet20cmvav2t", &_nbjet20cmvav2t, "nbjet20cmvav2t/F");
