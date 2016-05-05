@@ -46,20 +46,18 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_2ht[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800, 300, 0, 800);
-	h_dym[i][j][k] = new TH2F("h_dym" + suffix, "", 200, 0, 1000, 100, 0, 5);
+	h_2ht[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0,  800, 300, 0, 800);
+	h_dym[i][j][k] = new TH2F("h_dym" + suffix, "", 200, 0, 1000, 100, 0,   5);
 
-	h_dyll        [i][j][k] = new TH1D("h_dyll" + suffix, "", 100, 0, 5);
-	h_mllbb       [i][j][k] = new TH1D("h_mllbb" + suffix, "", 200, 0, 1000);
-	h_dphimetjet  [i][j][k] = new TH1D("h_dphimetjet" + suffix, "", 100, 0., 3.2);
-        h_dphimetlep1 [i][j][k] = new TH1D("h_dphimetlep1" + suffix, "", 100, 0., 3.2);
-        h_meff        [i][j][k] = new TH1D("h_meff" + suffix, "", 200, 0, 1000);
-        h_ptbll       [i][j][k] = new TH1D("h_ptbll" + suffix, "", 200, 0, 1000);
-        h_dphimetptbll[i][j][k] = new TH1D("h_dphimetptbll" + suffix, "", 100, 0., 3.2);
-	h_mt2ll       [i][j][k] = new TH1D("h_mt2ll" + suffix, "", 200, 0., 1000);
-	h_mt2bb       [i][j][k] = new TH1D("h_mt2bb" + suffix, "", 200, 0., 1000);
-	h_mt2lblb     [i][j][k] = new TH1D("h_mt2lblb" + suffix, "", 200, 0., 1000);
-
+	h_dyll        [i][j][k] = new TH1D("h_dyll"         + suffix, "", 100, 0,     5);
+	h_dphimetjet  [i][j][k] = new TH1D("h_dphimetjet"   + suffix, "", 100, 0.,  3.2);
+        h_dphimetptbll[i][j][k] = new TH1D("h_dphimetptbll" + suffix, "", 100, 0.,  3.2);
+	h_mllbb       [i][j][k] = new TH1D("h_mllbb"        + suffix, "", 200, 0,  1000);
+        h_meff        [i][j][k] = new TH1D("h_meff"         + suffix, "", 200, 0,  1000);
+        h_ptbll       [i][j][k] = new TH1D("h_ptbll"        + suffix, "", 200, 0,  1000);
+	h_mt2ll       [i][j][k] = new TH1D("h_mt2ll"        + suffix, "", 200, 0., 1000);
+	h_mt2bb       [i][j][k] = new TH1D("h_mt2bb"        + suffix, "", 200, 0., 1000);
+	h_mt2lblb     [i][j][k] = new TH1D("h_mt2lblb"      + suffix, "", 200, 0., 1000);
       }
     }
   }
@@ -91,8 +89,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     if (Lepton1.v.Pt() < 20.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
 
-    // "Third Z-Veto" This requirement should be applied on a loose lepton 
-    //if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
     if (_nlepton > 2) continue;
 
     _nelectron = 0;
@@ -104,21 +100,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l  = mll;
-    _pt2l = ptll;
-
-    _dyll = fabs(_lep1eta - _lep2eta);
-
-    _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
+    _m2l          = mll;
+    _pt2l         = ptll;
+    _dyll         = fabs(_lep1eta - _lep2eta);
+    _ptbll        = (Lepton1.v + Lepton2.v + MET).Pt();
     _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
+    _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
-    float MaxLeptonPt = _lep1pt;
-    if (_lep2pt>MaxLeptonPt) cout << "Wrong lepton ordering " << _lep1pt << " " << _lep2pt << endl;
-    _dphimetlep1 = fabs(Lepton1.v.DeltaPhi(MET)); 
-
-    _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
-
-    //int _njet = AnalysisJets.size();
     
     _dphimetjet = -0.1; double MinDeltaPhiMetJet = 999.;
     for (int ijet = 0; ijet<_njet; ijet++) {
@@ -173,15 +161,16 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       
     }
     
+
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
 
     FillLevelHistograms(Stop_00_Has2Leptons, pass);    
-   
-    //-------------------------------------------------------------------------
-    // Basics Stop
 
+   
+    // Basics Stop
+    //-------------------------------------------------------------------------
     pass &= mll>20.;
    
     FillLevelHistograms(Stop_00_mll20, pass);
@@ -276,15 +265,11 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 					 int ijet)
 {
   h_2ht[ichannel][icut][ijet]->Fill(_ht, _htjets, _event_weight);
-
-  //h_dphill[ichannel][icut][ijet]->Fill(_dphill, _event_weight);
-  //h_mll[ichannel][icut][ijet]->Fill(_m2l, _event_weight);
   h_dyll[ichannel][icut][ijet]->Fill(_dyll, _event_weight);
   h_mllbb[ichannel][icut][ijet]->Fill(_mllbb, _event_weight);
   h_dym[ichannel][icut][ijet]->Fill(_mllbb, _dyll, _event_weight);
   h_dphimetjet[ichannel][icut][ijet]->Fill(_dphimetjet, _event_weight);
-  h_dphimetlep1[ichannel][icut][ijet]->Fill(_dphimetlep1, _event_weight);
-  //h_dphilj[ichannel][icut][ijet]->Fill(_dphilj, _event_weight);
+//h_dphilj[ichannel][icut][ijet]->Fill(_dphilj, _event_weight);
   h_meff[ichannel][icut][ijet]->Fill(_meff, _event_weight);
   h_ptbll[ichannel][icut][ijet]->Fill(_ptbll, _event_weight);
   h_dphimetptbll[ichannel][icut][ijet]->Fill(_dphimetptbll, _event_weight);
