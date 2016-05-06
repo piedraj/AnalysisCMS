@@ -2,7 +2,7 @@
 
 
 enum {
-  nominal,
+  nominalYield,
   elUp,
   elDown,
   elStatUp,
@@ -80,11 +80,11 @@ void getFakes(TString level = "NONE")
 	  _error[i][j] = sqrt(h_fakes->GetSumw2()->At(j+1));
 	}
 
-      _elSyst[i] = 1e2 * fabs(_value[i][elUp] - _value[i][elDown]) / (2. * _value[i][nominal]);
-      _muSyst[i] = 1e2 * fabs(_value[i][muUp] - _value[i][muDown]) / (2. * _value[i][nominal]);
+      _elSyst[i] = 1e2 * fabs(_value[i][elUp] - _value[i][elDown]) / (2. * _value[i][nominalYield]);
+      _muSyst[i] = 1e2 * fabs(_value[i][muUp] - _value[i][muDown]) / (2. * _value[i][nominalYield]);
 
-      _elStatSyst[i] = 1e2 * fabs(_value[i][elStatUp] - _value[i][elStatDown]) / (2. * _value[i][nominal]);
-      _muStatSyst[i] = 1e2 * fabs(_value[i][muStatUp] - _value[i][muStatDown]) / (2. * _value[i][nominal]);
+      _elStatSyst[i] = 1e2 * fabs(_value[i][elStatUp] - _value[i][elStatDown]) / (2. * _value[i][nominalYield]);
+      _muStatSyst[i] = 1e2 * fabs(_value[i][muStatUp] - _value[i][muStatDown]) / (2. * _value[i][nominalYield]);
     }
 
 

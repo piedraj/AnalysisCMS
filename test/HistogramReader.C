@@ -26,6 +26,8 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _datafile  = NULL;
   _datahist  = NULL;
   _allmchist = NULL;
+
+  TH1::SetDefaultSumw2();
 }
 
 
@@ -75,7 +77,7 @@ void HistogramReader::AddProcess(const TString& filename,
   _mccolor.push_back(color);
   _mcscale.push_back(scale);
   
-  if (scale > 0)
+  if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 }
 
@@ -118,13 +120,21 @@ void HistogramReader::Draw(TString hname,
 			   Float_t ymin,
 			   Float_t ymax)
 {
-  _printlabels = true;
-
   TString cname = hname;
 
   if (_stackoption.Contains("nostack")) cname += "_nostack";
 
   if (setlogy) cname += "_log";
+
+  _writeyields = (hname.Contains("_evolution")) ? true : false;
+
+  if (_writeyields)
+    {
+      _yields_table.open(_outputdir + "/" + cname + ".txt");
+
+      _writelabels = true;
+    }
+
 
   TCanvas* canvas = NULL;
 
@@ -499,6 +509,13 @@ void HistogramReader::Draw(TString hname,
 
   if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
+
+  if (_writeyields)
+    {
+      _yields_table << std::endl;
+      
+      _yields_table.close();
+    }
 }
 
 
@@ -629,40 +646,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();
 
-
-  //----------------------------------------------------------------------------
-  // Print yields
-  //----------------------------------------------------------------------------
-  TString hname = hist->GetName();
-
-  if (hname.Contains("counterLum") && hname.Contains("evolution"))
-    {
-      if (_printlabels)
-	{
-	  _printlabels = false;
-
-	  printf("\n %22s", " ");
-	  
-	  for (int i=1; i<=hist->GetNbinsX(); i++) {
-
-	    TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
-	    
-	    printf(" & %16s", binlabel.Data());
-	  }
-
-	  printf(" \\\\\n");
-	}
-
-      printf(" %22s", label.Data());
-
-      for (int i=1; i<=hist->GetNbinsX(); i++) {
-
-	printf(" & %16.0f", hist->GetBinContent(i));
-      }
-
-      printf(" \\\\\n");
-    }
-
+  WriteYields(hist, label);
 
   return legend;
 }
@@ -902,6 +886,19 @@ Float_t HistogramReader::Yield(TH1* hist)
 
 
 //------------------------------------------------------------------------------
+// Error
+//------------------------------------------------------------------------------
+Float_t HistogramReader::Error(TH1* hist)
+{
+  if (!hist) return 0;
+
+  Float_t hist_error = sqrt(hist->GetSumw2()->GetSum());
+
+  return hist_error;
+}
+
+
+//------------------------------------------------------------------------------
 // EventsByCut
 //------------------------------------------------------------------------------
 void HistogramReader::EventsByCut(TFile*  file,
@@ -936,7 +933,10 @@ void HistogramReader::EventsByCut(TFile*  file,
 
       TH1D* dummy = (TH1D*)file->Get(scut[i] + "/" + hname);
 
-      hist->SetBinContent(++bin, Yield(dummy));
+      bin++;
+
+      hist->SetBinContent(bin, Yield(dummy));
+      hist->SetBinError  (bin, Error(dummy));
 
 
       // Change the evolution histogram x-axis labels
@@ -999,7 +999,10 @@ void HistogramReader::EventsByChannel(TFile*  file,
     {
       TH1D* dummy = (TH1D*)file->Get(level + "/h_counterLum_" + schannel[i]);
 
-      hist->SetBinContent(++bin, Yield(dummy));
+      bin++;
+
+      hist->SetBinContent(bin, Yield(dummy));
+      hist->SetBinError  (bin, Error(dummy));
 
       hist->GetXaxis()->SetBinLabel(bin, lchannel[i]);
     }
@@ -1122,4 +1125,49 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
   TH1D* backgroundhist = (TH1D*)(mcstack->GetStack()->Last());
 
   return GetBestScoreX(_signalhist[0], backgroundhist, fom);
+}
+
+
+//------------------------------------------------------------------------------
+// WriteYields
+//------------------------------------------------------------------------------
+void HistogramReader::WriteYields(TH1*    hist,
+				  TString label)
+{
+  if (!_writeyields) return;
+
+  if (_writelabels)
+    {
+      _writelabels = false;
+
+      _yields_table << Form("\n %14s", " ");
+        
+      for (int i=1; i<=hist->GetNbinsX(); i++) {
+
+	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
+	    
+	_yields_table << Form(" & %-24s", binlabel.Data());
+      }
+
+      _yields_table << Form(" \\\\\n");
+    }
+
+  _yields_table << Form(" %14s", label.Data());
+
+  for (int i=1; i<=hist->GetNbinsX(); i++) {
+
+    float process_yield = hist->GetBinContent(i);
+    float process_error = sqrt(hist->GetSumw2()->At(i));
+
+    if (label.EqualTo("data"))
+      {
+	_yields_table << Form(" & %7.0f %16s", process_yield, " ");
+      }
+    else
+      {
+	_yields_table << Form(" & %10.2f $\\pm$ %7.2f", process_yield, process_error);
+      }
+  }
+
+  _yields_table << Form(" \\\\\n");
 }

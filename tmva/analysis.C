@@ -156,8 +156,8 @@ void GetPdfQcdSyst(TString sample)
   tree->SetBranchAddress("njet",           &njet);
   tree->SetBranchAddress("LHEweight",      &LHEweight );
 
-  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum");
-  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum");
+  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum_gen");  // Not the full gen sample
+  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum_gen");  // Not the full gen sample
 
   TH1D* h_pdfsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_pdfsum_rec");
   TH1D* h_qcdsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_qcdsum_rec");
@@ -361,7 +361,7 @@ void GetBoxPopulation(TString sample,
 
   tree->SetBranchAddress("eventW",         &eventW);
   tree->SetBranchAddress("mva_" + _signal, &mva);
-  tree->SetBranchAddress("nbjet20loose",   &nbjet);
+  tree->SetBranchAddress("nbjet20cmvav2l", &nbjet);
   tree->SetBranchAddress("njet",           &njet);
 
   region1_box1_yield = 0;

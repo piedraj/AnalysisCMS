@@ -133,6 +133,8 @@ class HistogramReader
   
   Float_t  Yield              (TH1*           hist);
 
+  Float_t  Error              (TH1*           hist);
+
   void     EventsByCut        (TFile*         file,
 			       TString        analysis,
 			       TString        hname);
@@ -149,6 +151,9 @@ class HistogramReader
 			       TH1*           bkg_hist,
 			       TString        fom = "S/sqrt(S+B)");
 
+  void     WriteYields        (TH1*           hist,
+			       TString        label);
+
 
  private :
 
@@ -158,7 +163,8 @@ class HistogramReader
   Bool_t                _publicstyle;
   Bool_t                _savepdf;
   Bool_t                _savepng;
-  Bool_t                _printlabels;
+  Bool_t                _writelabels;
+  Bool_t                _writeyields;
 
   Float_t               _luminosity_fb;
   TString               _inputdir;
@@ -183,6 +189,8 @@ class HistogramReader
   std::vector<TH1*>     _signalhist;
   std::vector<Color_t>  _signalcolor;
   std::vector<TString>  _signallabel;
+
+  std::ofstream         _yields_table;
 };
 
 #endif
