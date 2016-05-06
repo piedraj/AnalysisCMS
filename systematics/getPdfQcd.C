@@ -235,11 +235,10 @@ void GetPdfQcdSyst(TString sample,
 		   TString label,
 		   TString jetbin)
 {
-  TFile* genfile = new TFile(_gendir + "latino_" + sample + ".root", "read");
-  TFile* recfile = new TFile(_recdir + sample + ".root", "read");
+  TFile* file = new TFile(_recdir + sample + ".root", "read");
 
-  TH1F* h_weights_gen = (TH1F*)genfile->Get("list_vectors_weights");
-  TH1F* h_weights_rec = (TH1F*)recfile->Get("list_vectors_weights_" + jetbin);
+  TH1F* h_weights_gen = (TH1F*)file->Get("list_vectors_weights_gen");
+  TH1F* h_weights_rec = (TH1F*)file->Get("list_vectors_weights_" + jetbin);
 
 
   // Produce the QCD uncertainties
