@@ -2,11 +2,11 @@
 
 if [ $# -lt 1 ]; then
     echo "  "
-    echo "  ./submit-jobs.sh samples/samples_data.txt       nominal"
-    echo "  ./submit-jobs.sh samples/samples_datadriven.txt nominal"
-    echo "  ./submit-jobs.sh samples/samples_mc.txt         nominal"
-    echo "  ./submit-jobs.sh samples/samples_monoh.txt      nominal"
-    echo "  ./submit-jobs.sh samples/samples_ttdm.txt       nominal"
+    echo "  ./submit-jobs.sh samples/samples_data.txt        nominal  interactive"
+    echo "  ./submit-jobs.sh samples/samples_datadriven.txt  nominal  interactive"
+    echo "  ./submit-jobs.sh samples/samples_mc.txt          nominal  interactive"
+    echo "  ./submit-jobs.sh samples/samples_monoh.txt       nominal  interactive"
+    echo "  ./submit-jobs.sh samples/samples_ttdm.txt        nominal  interactive"
     echo "  "
     exit -1
 fi
