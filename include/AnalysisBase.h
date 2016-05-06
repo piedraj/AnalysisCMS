@@ -28,6 +28,7 @@ public :
    Float_t         GEN_weight_SM;
    Float_t         Gen_ZGstar_deltaR;
    Float_t         Gen_ZGstar_mass;
+   Float_t         Gen_ZGstar_MomId;
    Float_t         Gen_ZGstar_mu1_eta;
    Float_t         Gen_ZGstar_mu1_phi;
    Float_t         Gen_ZGstar_mu1_pt;
@@ -386,6 +387,7 @@ public :
    vector<float>   *std_vector_lepton_closejet_drlj;
    vector<float>   *std_vector_lepton_eleIdTight;
    vector<float>   *std_vector_lepton_d0;
+   vector<float>   *std_vector_lepton_genmatched;
    vector<float>   *std_vector_lepton_isTightMuon;
    Float_t         metPfType1Phi;
    Float_t         metPfType1;
@@ -450,6 +452,7 @@ public :
    TBranch        *b_GEN_weight_SM;   //!
    TBranch        *b_Gen_ZGstar_deltaR;   //!
    TBranch        *b_Gen_ZGstar_mass;   //!
+   TBranch        *b_Gen_ZGstar_MomId;   //!
    TBranch        *b_Gen_ZGstar_mu1_eta;   //!
    TBranch        *b_Gen_ZGstar_mu1_phi;   //!
    TBranch        *b_Gen_ZGstar_mu1_pt;   //!
@@ -809,6 +812,7 @@ public :
    TBranch        *b_std_vector_lepton_closejet_drlj;   //!
    TBranch        *b_std_vector_lepton_eleIdTight;   //!
    TBranch        *b_std_vector_lepton_d0;   //!
+   TBranch        *b_std_vector_lepton_genmatched;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
    TBranch        *b_metPfType1Phi;   //!
    TBranch        *b_metPfType1;   //!
@@ -1081,6 +1085,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_closejet_drlj = 0;
    std_vector_lepton_eleIdTight = 0;
    std_vector_lepton_d0 = 0;
+   std_vector_lepton_genmatched = 0;
    std_vector_lepton_isTightMuon = 0;
    std_vector_lepton_idisoW = 0;
    std_vector_lepton_idisoW_Up = 0;
@@ -1099,6 +1104,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("GEN_weight_SM", &GEN_weight_SM, &b_GEN_weight_SM);
    fChain->SetBranchAddress("Gen_ZGstar_deltaR", &Gen_ZGstar_deltaR, &b_Gen_ZGstar_deltaR);
    fChain->SetBranchAddress("Gen_ZGstar_mass", &Gen_ZGstar_mass, &b_Gen_ZGstar_mass);
+   fChain->SetBranchAddress("Gen_ZGstar_MomId", &Gen_ZGstar_MomId, &b_Gen_ZGstar_MomId);
    fChain->SetBranchAddress("Gen_ZGstar_mu1_eta", &Gen_ZGstar_mu1_eta, &b_Gen_ZGstar_mu1_eta);
    fChain->SetBranchAddress("Gen_ZGstar_mu1_phi", &Gen_ZGstar_mu1_phi, &b_Gen_ZGstar_mu1_phi);
    fChain->SetBranchAddress("Gen_ZGstar_mu1_pt", &Gen_ZGstar_mu1_pt, &b_Gen_ZGstar_mu1_pt);
@@ -1457,6 +1463,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_closejet_drlj", &std_vector_lepton_closejet_drlj, &b_std_vector_lepton_closejet_drlj);
    fChain->SetBranchAddress("std_vector_lepton_eleIdTight", &std_vector_lepton_eleIdTight, &b_std_vector_lepton_eleIdTight);
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
+   fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);
    fChain->SetBranchAddress("metPfType1", &metPfType1, &b_metPfType1);

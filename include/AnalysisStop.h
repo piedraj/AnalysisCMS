@@ -38,7 +38,6 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_mllbb[nchannel][ncut][njetbin+1];
   TH2F*                  h_dym[nchannel][ncut][njetbin+1];
   TH1D*                  h_dphimetjet[nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphimetlep1[nchannel][ncut][njetbin+1];
   //TH1D*                  h_dphilj[nchannel][ncut][njetbin+1];
   TH1D*                  h_meff[nchannel][ncut][njetbin+1];
   TH1D*                  h_ptbll[nchannel][ncut][njetbin+1];
@@ -51,7 +50,6 @@ class AnalysisStop : public AnalysisCMS
   double                 _dyll;        // Rapidity or pseudorapidity?
   double                 _mllbb;
   double                 _dphimetjet;
-  double                 _dphimetlep1; // Maybe already defined
   //double                 _dphilj;    // Meaning to be verified
   double                 _meff;
   double                 _ptbll;

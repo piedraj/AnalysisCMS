@@ -27,5 +27,6 @@ hadd -f -k 11_Wg.root        Wg_AMCNLOFXFX.root
 hadd -f -k 12_Zg.root        Zg.root
 hadd -f -k 13_VVV.root       WZZ.root
 hadd -f -k 14_HZ.root        HZJ_HToWW_M125.root
+hadd -f -k 15_WgStar.root    WgStarLNuEE.root WgStarLNuMuMu.root
 
 popd

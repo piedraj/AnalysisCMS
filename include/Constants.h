@@ -80,6 +80,7 @@ const Color_t color_WJets     = kGray+1;
 const Color_t color_TTV       = kGreen-6;
 const Color_t color_HWW       = kAzure-7;
 const Color_t color_Wg        = kBlue;
+const Color_t color_WgStar    = kBlue+2;
 const Color_t color_Zg        = kTeal;
 const Color_t color_VVV       = kYellow-6;
 const Color_t color_HZ        = kOrange+1;
