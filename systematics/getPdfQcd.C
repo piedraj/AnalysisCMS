@@ -46,6 +46,8 @@ const int _npdf = 100;
 const TString _gendir = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/";
 const TString _recdir = "../rootfiles/nominal/TTDM/";
 
+const bool _savefigures = false;
+
 
 // Functions
 //------------------------------------------------------------------------------
@@ -62,18 +64,13 @@ void DrawLatex    (Font_t      tfont,
 		   Bool_t      setndc = true);
 
 
-// Data members
-//------------------------------------------------------------------------------
-bool _savefigures;
-
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 // getPdfQcd
 //
 //    WWTo2L2Nu 0jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      2.25%
+//    nominal acceptance * eff      2.23%
 //    QCD         mu=0.5 / mu=2.0   0.53% / 0.52%
 //    alpha_s     265000 / 266000   0.02% / 0.02%
 //    PDF                           0.25%
@@ -82,46 +79,46 @@ bool _savefigures;
 //   
 //    WWTo2L2Nu 1jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      0.85%
-//    QCD         mu=0.5 / mu=2.0   1.54% / 1.38%
-//    alpha_s     265000 / 266000   0.01% / 0.01%
+//    nominal acceptance * eff      0.84%
+//    QCD         mu=0.5 / mu=2.0   1.53% / 1.37%
+//    alpha_s     265000 / 266000   0.01% / 0.00%
 //    PDF                           0.27%
 //    PDF+alpha_s                   0.27%
 //   
 //   
 //    VBFHToWWTo2L2Nu_M125 0jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      0.19%
-//    QCD         mu=0.5 / mu=2.0   0.68% / 0.60%
-//    alpha_s     265000 / 266000   1.14% / 0.82%
-//    PDF                           0.51%
-//    PDF+alpha_s                   1.12%
+//    nominal acceptance * eff      0.18%
+//    QCD         mu=0.5 / mu=2.0   0.77% / 0.68%
+//    alpha_s     265000 / 266000   1.07% / 0.75%
+//    PDF                           0.52%
+//    PDF+alpha_s                   1.06%
 //   
 //   
 //    VBFHToWWTo2L2Nu_M125 1jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      0.80%
-//    QCD         mu=0.5 / mu=2.0   0.11% / 0.01%
-//    alpha_s     265000 / 266000   0.22% / 0.29%
+//    nominal acceptance * eff      0.79%
+//    QCD         mu=0.5 / mu=2.0   0.07% / 0.03%
+//    alpha_s     265000 / 266000   0.19% / 0.26%
 //    PDF                           0.31%
-//    PDF+alpha_s                   0.40%
+//    PDF+alpha_s                   0.39%
 //   
 //   
 //    GluGluHToWWTo2L2Nu_M125 0jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      1.14%
-//    QCD         mu=0.5 / mu=2.0   2.71% / 2.26%
-//    alpha_s     265000 / 266000   0.11% / 0.04%
-//    PDF                           0.56%
-//    PDF+alpha_s                   0.57%
+//    nominal acceptance * eff      1.12%
+//    QCD         mu=0.5 / mu=2.0   2.81% / 2.34%
+//    alpha_s     265000 / 266000   0.13% / 0.05%
+//    PDF                           0.58%
+//    PDF+alpha_s                   0.58%
 //   
 //   
 //    GluGluHToWWTo2L2Nu_M125 1jet acceptance uncertainties
 //   -----------------------------------------
-//    nominal acceptance * eff      0.54%
+//    nominal acceptance * eff      0.55%
 //    QCD         mu=0.5 / mu=2.0   2.00% / 1.66%
-//    alpha_s     265000 / 266000   0.29% / 0.31%
-//    PDF                           0.37%
+//    alpha_s     265000 / 266000   0.29% / 0.30%
+//    PDF                           0.38%
 //    PDF+alpha_s                   0.48%
 //   
 //   
@@ -130,51 +127,51 @@ bool _savefigures;
 //    nominal acceptance * eff      0.15%
 //    QCD         mu=0.5 / mu=2.0   1.70% / 1.47%
 //    alpha_s     265000 / 266000   0.15% / 0.26%
-//    PDF                           0.48%
+//    PDF                           0.47%
 //    PDF+alpha_s                   0.52%
 //   
 //   
 //    WZTo3LNu 1jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.14%
-//    QCD         mu=0.5 / mu=2.0   2.94% / 2.57%
-//    alpha_s     265000 / 266000   0.21% / 0.27%
-//    PDF                           0.48%
+//    QCD         mu=0.5 / mu=2.0   2.91% / 2.54%
+//    alpha_s     265000 / 266000   0.20% / 0.27%
+//    PDF                           0.49%
 //    PDF+alpha_s                   0.54%
 //   
 //   
 //    HWminusJ_HToWW_M125 0jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   5.99% / 4.42%
-//    alpha_s     265000 / 266000   0.29% / 0.28%
-//    PDF                           0.55%
-//    PDF+alpha_s                   0.62%
+//    QCD         mu=0.5 / mu=2.0   6.12% / 4.55%
+//    alpha_s     265000 / 266000   0.32% / 0.31%
+//    PDF                           0.56%
+//    PDF+alpha_s                   0.64%
 //   
 //   
 //    HWminusJ_HToWW_M125 1jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   0.99% / 1.36%
+//    QCD         mu=0.5 / mu=2.0   1.32% / 1.52%
 //    alpha_s     265000 / 266000   0.05% / 0.02%
-//    PDF                           0.47%
-//    PDF+alpha_s                   0.48%
+//    PDF                           0.49%
+//    PDF+alpha_s                   0.49%
 //   
 //   
 //    HWplusJ_HToWW_M125 0jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   2.17% / 3.38%
-//    alpha_s     265000 / 266000   0.20% / 0.13%
-//    PDF                           0.47%
+//    QCD         mu=0.5 / mu=2.0   2.29% / 3.39%
+//    alpha_s     265000 / 266000   0.20% / 0.11%
+//    PDF                           0.48%
 //    PDF+alpha_s                   0.50%
 //   
 //   
 //    HWplusJ_HToWW_M125 1jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   4.71% / 3.58%
-//    alpha_s     265000 / 266000   0.10% / 0.03%
+//    QCD         mu=0.5 / mu=2.0   4.64% / 3.57%
+//    alpha_s     265000 / 266000   0.10% / 0.04%
 //    PDF                           0.36%
 //    PDF+alpha_s                   0.36%
 //   
@@ -182,25 +179,23 @@ bool _savefigures;
 //    HZJ_HToWW_M125 0jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.06%
-//    QCD         mu=0.5 / mu=2.0   2.16% / 3.30%
-//    alpha_s     265000 / 266000   0.06% / 0.30%
-//    PDF                           1.29%
-//    PDF+alpha_s                   1.31%
+//    QCD         mu=0.5 / mu=2.0   1.96% / 3.17%
+//    alpha_s     265000 / 266000   0.08% / 0.29%
+//    PDF                           1.22%
+//    PDF+alpha_s                   1.24%
 //   
 //   
 //    HZJ_HToWW_M125 1jet acceptance uncertainties
 //   -----------------------------------------
 //    nominal acceptance * eff      0.06%
-//    QCD         mu=0.5 / mu=2.0   3.74% / 1.18%
-//    alpha_s     265000 / 266000   0.12% / 0.03%
-//    PDF                           0.88%
-//    PDF+alpha_s                   0.89
+//    QCD         mu=0.5 / mu=2.0   2.65% / 0.69%
+//    alpha_s     265000 / 266000   0.09% / 0.01%
+//    PDF                           0.86%
+//    PDF+alpha_s                   0.86%
 //   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcd(bool savefigures = false)
+void getPdfQcd()
 {
-  _savefigures = savefigures;
-  
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);

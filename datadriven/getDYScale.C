@@ -6,10 +6,10 @@
 const float zmin =  76;  // [GeV]
 const float zmax = 106;  // [GeV]
 
-const int nmetcut = 5;
+const int nmetcut = 7;
 
-float metcut [nmetcut] = {20, 25, 30, 45, -1};
-float metdraw[nmetcut] = {20, 25, 30, 45, 75};
+float metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};
+float metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};
 
 const bool printResults = false;
 
@@ -50,18 +50,21 @@ TLegend* DrawLegend(Float_t       x1,
 
 // Data members
 //------------------------------------------------------------------------------
-TH2D* h2_data[ll];  // ee, mm, em
-TH2D* h2_dy  [ll];  // ee, mm, em
-TH2D* h2_wz  [ll];  // ee, mm, em
-TH2D* h2_zz  [ll];  // ee, mm, em
+TH2D*        h2_data[ll];  // ee, mm, em
+TH2D*        h2_dy  [ll];  // ee, mm, em
+TH2D*        h2_wz  [ll];  // ee, mm, em
+TH2D*        h2_zz  [ll];  // ee, mm, em
 
-float k_value[2];   // ee, mm
-float k_error[2];   // ee, mm
+TCanvas*     canvas[3];  // R_ee, R_mm, scale
+TMultiGraph* mgraph[3];  // R_ee, R_mm, scale
 
-int   bin_zmin;
-int   bin_zmax;
-int   bin_metmin;
-int   bin_metmax;
+float        k_value[2];   // ee, mm
+float        k_error[2];   // ee, mm
+
+int          bin_zmin;
+int          bin_zmax;
+int          bin_metmin;
+int          bin_metmax;
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,13 +121,15 @@ void getDYScale(TString analysis = "TTDM")
 
   // Do the work
   //----------------------------------------------------------------------------
-  TGraphErrors* graph_data[2];
-  TGraphErrors* graph_dy  [2];
+  TGraphErrors* graph_R_data[2];
+  TGraphErrors* graph_R_dy  [2];
+  TGraphErrors* graph_scale [2];
 
   for (int k=ee; k<=mm; k++)
     {
-      graph_data[k] = new TGraphErrors();
-      graph_dy  [k] = new TGraphErrors();
+      graph_R_data[k] = new TGraphErrors();
+      graph_R_dy  [k] = new TGraphErrors();
+      graph_scale [k] = new TGraphErrors();
     }
 
   for (int j=0; j<nmetcut-1; j++)
@@ -132,62 +137,94 @@ void getDYScale(TString analysis = "TTDM")
       bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])   : -1;
       bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1]) : -1;
 
-      float sf[2], sf_err[2], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
+      float scale[2], scale_err[2], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
 
-      GetScale(ee, sf[ee], sf_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
-      GetScale(mm, sf[mm], sf_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
+      GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
+      GetScale(mm, scale[mm], scale_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
 
       for (int k=ee; k<=mm; k++)
 	{
-	  graph_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
-	  graph_dy  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy  [k]);
+	  graph_R_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
+	  graph_R_dy  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy  [k]);
+	  graph_scale [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), scale [k]);
 
-	  graph_data[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_data_err[k]);
-	  graph_dy  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err  [k]);
+	  graph_R_data[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_data_err[k]);
+	  graph_R_dy  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err  [k]);
+	  graph_scale [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), scale_err [k]);
 	}
     }
 
 
   // Cosmetics
   //----------------------------------------------------------------------------
-  SetGraph(graph_data[ee], kBlack, kFullCircle);
-  SetGraph(graph_data[mm], kBlack, kFullCircle);
-  SetGraph(graph_dy[ee],   kRed+1, kOpenSquare);
-  SetGraph(graph_dy[mm],   kRed+1, kOpenSquare);
+  SetGraph(graph_R_data[ee], kBlack, kFullCircle);
+  SetGraph(graph_R_data[mm], kBlack, kFullCircle);
+  SetGraph(graph_R_dy[ee],   kRed+1, kOpenSquare);
+  SetGraph(graph_R_dy[mm],   kRed+1, kOpenSquare);
+  SetGraph(graph_scale[ee],  kBlack, kOpenSquare);
+  SetGraph(graph_scale[mm],  kRed+1, kFullCircle);
 
 
-  // Draw
+  // Draw R
   //----------------------------------------------------------------------------
-  TCanvas* canvas[2];
-
-  TMultiGraph* mg[2];
-
   for (int k=ee; k<=mm; k++)
     {
-      canvas[k] = new TCanvas("canvas " + schannel[k], "canvas " + schannel[k]);
+      canvas[k] = new TCanvas("R(out/in) " + schannel[k], "R(out/in) " + schannel[k]);
 
-      mg[k] = new TMultiGraph();
+      mgraph[k] = new TMultiGraph();
 
-      mg[k]->Add(graph_data[k]);
-      mg[k]->Add(graph_dy  [k]);
+      mgraph[k]->Add(graph_R_data[k]);
+      mgraph[k]->Add(graph_R_dy  [k]);
 
-      mg[k]->Draw("ap");
+      mgraph[k]->Draw("ap");
 
-      mg[k]->GetXaxis()->SetTitleOffset(1.5);
-      mg[k]->GetYaxis()->SetTitleOffset(1.7);
-      mg[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
-      mg[k]->GetYaxis()->SetTitle("R(out/in)");
+      mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
+      mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
+      mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+      mgraph[k]->GetYaxis()->SetTitle("R(out/in)");
 
-      mg[k]->SetMinimum(-0.10);
-      mg[k]->SetMaximum(+0.55);
+      mgraph[k]->SetMinimum(-0.10);
+      mgraph[k]->SetMaximum(+0.55);
 
-      DrawLegend(0.22, 0.83, (TObject*)graph_data[k], " " + lchannel[k] + " data");
-      DrawLegend(0.22, 0.77, (TObject*)graph_dy  [k], " " + lchannel[k] + " DY");
+      DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " data");
+      DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
 
       canvas[k]->Modified();
       canvas[k]->Update();
-      canvas[k]->SaveAs("R_outin_" + schannel[k] + ".png");
+      canvas[k]->SaveAs("dy_Routin_" + schannel[k] + ".png");
     }
+
+
+  // Draw scale
+  //----------------------------------------------------------------------------
+  canvas[2] = new TCanvas("scale", "scale");
+
+  mgraph[2] = new TMultiGraph();
+
+  mgraph[2]->Add(graph_scale[ee]);
+  mgraph[2]->Add(graph_scale[mm]);
+
+  mgraph[2]->Draw("ap");
+
+  canvas[2]->Update();
+
+  TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
+  
+  line->SetLineWidth(2);
+  line->SetLineStyle(3);
+  line->Draw("same");
+
+  mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
+  mgraph[2]->GetYaxis()->SetTitleOffset(1.7);
+  mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+  mgraph[2]->GetYaxis()->SetTitle("SF = N^{in}_{est} / N^{in}_{DY}");
+
+  DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
+  DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+
+  canvas[2]->Modified();
+  canvas[2]->Update();
+  canvas[2]->SaveAs("dy_scale.png");
 }
 
 
