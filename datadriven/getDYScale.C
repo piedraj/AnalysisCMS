@@ -8,8 +8,8 @@ const float zmax = 106;  // [GeV]
 
 const int nmetcut = 7;
 
-float metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};
-float metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};
+float metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};  // [GeV]
+float metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};  // [GeV]
 
 const bool printResults = false;
 
@@ -55,8 +55,8 @@ TH2D*        h2_dy  [ll];  // ee, mm, em
 TH2D*        h2_wz  [ll];  // ee, mm, em
 TH2D*        h2_zz  [ll];  // ee, mm, em
 
-TCanvas*     canvas[3];  // R_ee, R_mm, scale
-TMultiGraph* mgraph[3];  // R_ee, R_mm, scale
+TCanvas*     canvas[3];    // R_ee, R_mm, scale
+TMultiGraph* mgraph[3];    // R_ee, R_mm, scale
 
 float        k_value[2];   // ee, mm
 float        k_error[2];   // ee, mm
@@ -217,7 +217,7 @@ void getDYScale(TString analysis = "TTDM")
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
   mgraph[2]->GetYaxis()->SetTitleOffset(1.7);
   mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
-  mgraph[2]->GetYaxis()->SetTitle("SF = N^{in}_{est} / N^{in}_{DY}");
+  mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
   DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
