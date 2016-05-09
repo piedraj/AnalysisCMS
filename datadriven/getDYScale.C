@@ -3,15 +3,17 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const float zmin =  76;  // [GeV]
-const float zmax = 106;  // [GeV]
+const float   zmin =  76;  // [GeV]
+const float   zmax = 106;  // [GeV]
 
-const int nmetcut = 7;
+const int     nmetcut = 7;
 
-float metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};  // [GeV]
-float metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};  // [GeV]
 
-const bool printResults = false;
+const bool    printResults = false;
+
+const TString outputdir = "figures";
 
 
 // Functions
@@ -83,6 +85,8 @@ int          bin_metmax;
 void getDYScale(TString analysis = "TTDM")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+
+  gSystem->mkdir(outputdir, kTRUE);
 
   TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",     "read");
   TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root",    "read");
@@ -191,7 +195,7 @@ void getDYScale(TString analysis = "TTDM")
 
       canvas[k]->Modified();
       canvas[k]->Update();
-      canvas[k]->SaveAs("dy_Routin_" + schannel[k] + ".png");
+      canvas[k]->SaveAs(outputdir + "/dy_Routin_" + schannel[k] + ".png");
     }
 
 
@@ -224,7 +228,7 @@ void getDYScale(TString analysis = "TTDM")
 
   canvas[2]->Modified();
   canvas[2]->Update();
-  canvas[2]->SaveAs("dy_scale.png");
+  canvas[2]->SaveAs(outputdir + "/dy_scale.png");
 }
 
 
