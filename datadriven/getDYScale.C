@@ -74,7 +74,7 @@ int          bin_metmax;
 // and m2l in the y-axis. These histograms have been filled once all analysis
 // cuts have been applied, but removing the Z-peak veto and any MET requirement.
 // The scale factor for the ee channel (the procedure is identical for the mm
-// channel) is computed from equations (1) and (2).
+// channel) is computed with equations (1) and (2).
 //
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
@@ -169,7 +169,7 @@ void getDYScale(TString analysis = "TTDM")
   //----------------------------------------------------------------------------
   for (int k=ee; k<=mm; k++)
     {
-      canvas[k] = new TCanvas("R(out/in) " + schannel[k], "R(out/in) " + schannel[k]);
+      canvas[k] = new TCanvas("R out/in " + schannel[k], "R out/in " + schannel[k]);
 
       mgraph[k] = new TMultiGraph();
 
@@ -181,7 +181,7 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
       mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
-      mgraph[k]->GetYaxis()->SetTitle("R(out/in)");
+      mgraph[k]->GetYaxis()->SetTitle("R_{out/in}");
 
       mgraph[k]->SetMinimum(-0.10);
       mgraph[k]->SetMaximum(+0.55);
@@ -197,7 +197,7 @@ void getDYScale(TString analysis = "TTDM")
 
   // Draw scale
   //----------------------------------------------------------------------------
-  canvas[2] = new TCanvas("scale", "scale");
+  canvas[2] = new TCanvas("scale", "est/DY scale");
 
   mgraph[2] = new TMultiGraph();
 
