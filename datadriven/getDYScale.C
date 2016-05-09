@@ -161,6 +161,12 @@ void getDYScale(TString analysis = "TTDM")
       bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])   : -1;
       bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1]) : -1;
 
+      if (printResults)
+	{
+	  printf("\n--------------------------------------------------------\n");
+	  printf("\n %.0f < MET < %.0f GeV\n", metcut[j], metcut[j+1]);
+	}
+
       float scale[2], scale_err[2], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
 
       GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
@@ -205,12 +211,12 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
       mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
-      mgraph[k]->GetYaxis()->SetTitle("R_{out/in}");
+      mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
       mgraph[k]->SetMinimum(-0.01);
       mgraph[k]->SetMaximum(+0.33);
 
-      DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " data");
+      DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
 
       DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
