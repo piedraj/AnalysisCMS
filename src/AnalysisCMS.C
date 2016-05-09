@@ -293,8 +293,11 @@ void AnalysisCMS::Setup(TString analysis,
   //----------------------------------------------------------------------------
   root_output->cd();
 
+  list_vectors_weights_gen = GetGenWeightsLHE();
+
   list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
   list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
+
 
   return;
 }
@@ -1148,18 +1151,38 @@ void AnalysisCMS::GetGenPtllWeight()
 
 
 //------------------------------------------------------------------------------
-// GetSumOfWeightsLHE
+// GetGenWeightsLHE
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetSumOfWeightsLHE(TH1F* list_vectors_weights)
+TH1F* AnalysisCMS::GetGenWeightsLHE()
+{
+  TFile* f = new TFile(_filename, "read");
+
+  TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
+
+  if (!dummy) return NULL;
+
+  root_output->cd();
+
+  TH1F* hist = (TH1F*)dummy->Clone("list_vectors_weights_gen");
+
+  return hist;
+}
+
+
+//------------------------------------------------------------------------------
+// GetRecoWeightsLHE
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetRecoWeightsLHE(TH1F* hist)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int iWeight=0; iWeight<list_vectors_weights->GetNbinsX(); iWeight++)
+  for (int iWeight=0; iWeight<hist->GetNbinsX(); iWeight++)
     {
       float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
 
-      list_vectors_weights->Fill(iWeight+0.5, ratio);
+      hist->Fill(iWeight+0.5, ratio);
     }
 }
 

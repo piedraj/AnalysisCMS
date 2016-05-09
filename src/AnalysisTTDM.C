@@ -105,8 +105,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (ptll > 30.);
     pass &= (_nbjet20cmvav2l == 0);
 
-    if (pass && _njet == 0) GetSumOfWeightsLHE(list_vectors_weights_0jet);
-    if (pass && _njet == 1) GetSumOfWeightsLHE(list_vectors_weights_1jet);
+    if (pass && _njet == 0) GetRecoWeightsLHE(list_vectors_weights_0jet);
+    if (pass && _njet == 1) GetRecoWeightsLHE(list_vectors_weights_1jet);
 
 
     // AN-15-305
@@ -121,7 +121,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_njet > 1);
     pass &= (_nbjet30cmvav2m > 0);
 
-    FillLevelHistograms(TTDM_10_Rinout, pass);
+    FillLevelHistograms(TTDM_10_Routin, pass);
 
     pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
     pass &= (_nelectron == 1 || MET.Et() > 40.);

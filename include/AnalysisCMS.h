@@ -122,7 +122,9 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetStarVar        ();
 
-  void    GetSumOfWeightsLHE(TH1F*    list_vectors_weights);
+  TH1F*   GetGenWeightsLHE  ();
+
+  void    GetRecoWeightsLHE (TH1F*    hist);
 
 
   // Data members
@@ -236,6 +238,7 @@ class AnalysisCMS : public AnalysisBase
   // Histograms for QCD, PDF and alpha_s uncertainties
   // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
   //----------------------------------------------------------------------------
+  TH1F*                  list_vectors_weights_gen;
   TH1F*                  list_vectors_weights_0jet;
   TH1F*                  list_vectors_weights_1jet;
 
