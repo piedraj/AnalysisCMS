@@ -1151,9 +1151,9 @@ TH1F* AnalysisCMS::GetGenWeightsLHE()
 
   TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
 
-  if (!dummy) return NULL;
-
   root_output->cd();
+
+  if (!dummy) return NULL;
 
   TH1F* hist = (TH1F*)dummy->Clone("list_vectors_weights_gen");
 
