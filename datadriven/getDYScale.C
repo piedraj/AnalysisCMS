@@ -11,7 +11,8 @@ const int     nmetcut = 7;
 const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};  // [GeV]
 const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};  // [GeV]
 
-const bool    printResults = false;
+const bool    includeVZ    = true;
+const bool    printResults = true;
 
 const TString outputdir = "figures";
 
@@ -49,6 +50,14 @@ TLegend* DrawLegend(Float_t       x1,
 		    Float_t       xoffset = 0.200,
 		    Float_t       yoffset = 0.050);
 
+void     DrawLatex (Font_t        tfont,
+		    Float_t       x,
+		    Float_t       y,
+		    Float_t       tsize,
+		    Short_t       align,
+		    const char*   text,
+		    Bool_t        setndc = true);
+
 
 // Data members
 //------------------------------------------------------------------------------
@@ -81,6 +90,17 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
+// Results for MET > 40 GeV and 2.318 fb-1,
+//
+//    ee SF(est/DY) = 1.284 +- 0.117
+//    mm SF(est/DY) = 1.225 +- 0.079
+//
+// Results for MET > 40 GeV and 2.318 fb-1
+// when the peaking backgrounds are not considered,
+//
+//    ee SF(est/DY)  1.305 +- 0.118
+//    mm SF(est/DY)  1.242 +- 0.079
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "TTDM")
 {
@@ -98,10 +118,10 @@ void getDYScale(TString analysis = "TTDM")
   //----------------------------------------------------------------------------
   for (int i=ee; i<ll; i++)
     {
-      h2_data[i] = (TH2D*)file_data->Get(analysis + "/10_Rinout/h_metPfType1_m2l_" + schannel[i]);
-      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/10_Rinout/h_metPfType1_m2l_" + schannel[i]);
-      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/10_Rinout/h_metPfType1_m2l_" + schannel[i]);
-      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/10_Rinout/h_metPfType1_m2l_" + schannel[i]);
+      h2_data[i] = (TH2D*)file_data->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
     }
 
 
@@ -187,11 +207,13 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R_{out/in}");
 
-      mgraph[k]->SetMinimum(-0.10);
-      mgraph[k]->SetMaximum(+0.55);
+      mgraph[k]->SetMinimum(-0.01);
+      mgraph[k]->SetMaximum(+0.33);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " data");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
+
+      DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
 
       canvas[k]->Modified();
       canvas[k]->Update();
@@ -225,6 +247,8 @@ void getDYScale(TString analysis = "TTDM")
 
   DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
 
   canvas[2]->Modified();
   canvas[2]->Update();
@@ -330,13 +354,16 @@ void GetScale(int    ch,
 
   // Include the peaking backgrounds
   //----------------------------------------------------------------------------
-  n_in_est -= (n_in_wz + n_in_zz);
+  if (includeVZ)
+    {
+      n_in_est -= (n_in_wz + n_in_zz);
+  
+      err_in_est = sqrt(err_in_est*err_in_est + err_in_wz*err_in_wz + err_in_zz*err_in_zz);
+  
+      n_out_est -= (n_out_wz + n_out_zz);
 
-  err_in_est = sqrt(err_in_est*err_in_est + err_in_wz*err_in_wz + err_in_zz*err_in_zz);
-
-  n_out_est -= (n_out_wz + n_out_zz);
-
-  err_out_est = sqrt(err_out_est*err_out_est + err_out_wz*err_out_wz + err_out_zz*err_out_zz);
+      err_out_est = sqrt(err_out_est*err_out_est + err_out_wz*err_out_wz + err_out_zz*err_out_zz);
+    }
 
 
   // Compute R and the scale factor
@@ -438,4 +465,26 @@ TLegend* DrawLegend(Float_t  x1,
   legend->Draw();
 
   return legend;
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLatex 
+//------------------------------------------------------------------------------
+void DrawLatex(Font_t      tfont,
+	       Float_t     x,
+	       Float_t     y,
+	       Float_t     tsize,
+	       Short_t     align,
+	       const char* text,
+	       Bool_t      setndc)
+{
+  TLatex* tl = new TLatex(x, y, text);
+
+  tl->SetNDC      (setndc);
+  tl->SetTextAlign( align);
+  tl->SetTextFont ( tfont);
+  tl->SetTextSize ( tsize);
+
+  tl->Draw("same");
 }
