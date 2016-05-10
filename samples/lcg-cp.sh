@@ -37,4 +37,6 @@ mkdir -p /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/$FOLDER
 
 ## eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"srm://srm01.ifca.es/cms/store/group/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
 
-eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
+## eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
+
+lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}' > kk.sh

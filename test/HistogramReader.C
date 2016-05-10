@@ -518,6 +518,7 @@ void HistogramReader::Draw(TString hname,
     }
 }
 
+
 //------------------------------------------------------------------------------
 // CrossSection
 //------------------------------------------------------------------------------
@@ -543,7 +544,6 @@ void HistogramReader::CrossSection(TString level,
       }
     else
       {
-
 	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 
 	if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
@@ -591,6 +591,7 @@ void HistogramReader::CrossSection(TString level,
 	 muErrorStat,
 	 mu * lumi_error_percent / 1e2);
 }
+
 
 //-----------------------------------------------------------------------------
 // DrawLatex 
