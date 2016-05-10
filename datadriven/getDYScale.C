@@ -6,10 +6,10 @@
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 7;
+const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 40, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 40, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 20, 25, 30, 45, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 20, 25, 30, 45, 75};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -130,8 +130,8 @@ void getDYScale(TString analysis = "TTDM")
   TH1D* h_m2l_ee = (TH1D*)h2_data[ee]->ProjectionY("h_m2l_ee");
   TH1D* h_m2l_mm = (TH1D*)h2_data[mm]->ProjectionY("h_m2l_mm");
 
-  bin_zmin = h_m2l_ee->FindBin(zmin);
-  bin_zmax = h_m2l_ee->FindBin(zmax);
+  bin_zmin = h_m2l_ee->FindBin(zmin);    // [zmin, zmax)
+  bin_zmax = h_m2l_ee->FindBin(zmax)-1;  // [zmin, zmax)
 
   float n_ee = h_m2l_ee->Integral(bin_zmin, bin_zmax);
   float n_mm = h_m2l_mm->Integral(bin_zmin, bin_zmax);
@@ -158,8 +158,8 @@ void getDYScale(TString analysis = "TTDM")
 
   for (int j=0; j<nmetcut-1; j++)
     {
-      bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])   : -1;
-      bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1]) : -1;
+      bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])     : -1;  // [metmin, metmax)
+      bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1])-1 : -1;  // [metmin, metmax)
 
       if (printResults)
 	{
@@ -213,8 +213,8 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.01);
-      mgraph[k]->SetMaximum(+0.33);
+      mgraph[k]->SetMinimum(-0.06);
+      mgraph[k]->SetMaximum(+0.40);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
