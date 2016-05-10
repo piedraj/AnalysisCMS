@@ -1,6 +1,5 @@
 #define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
-#include <THStack.h>
 
 float _event_weight_fr;
 float inputJetEt;
@@ -53,30 +52,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   h_Ele_loose_eta_bin = new TH1D("h_Ele_loose_eta_bin", "h_Ele_loose_eta_bin", etabin, etabins);
   h_Ele_tight_eta_bin = new TH1D("h_Ele_tight_eta_bin", "h_Ele_tight_eta_bin", etabin, etabins);
 
-  for (int j=0; j<ncut; j++) {
-
-    for (int k=0; k<=njetbin; k++) {
-
-      TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
-
-      TString directory = scut[j] + sbin;
-
-      root_output->cd();
-
-      if (k < njetbin) gDirectory->mkdir(directory);
-
-      root_output->cd(directory);
-
-      for (int i=e; i<=m; i++) { 
-
-	TString suffix = "_" + schannel[i];
-
-	DefineHistograms(i, j, k, suffix);
-
-      }
-    }
-  }
-
   // Loop over events
   //--------------------------------------------------------------------------
 
@@ -94,6 +69,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
+
+    /*
 
     if (_ismc && filename.Contains("DYJetsToLL")) {
 
@@ -153,19 +130,18 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
     }
 
+    */
+
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
     bool passTrigger = true;
+    _event_weight_fr = 1.0;
 
     if (filename.Contains("WJetsToLNu")) {
 
       Double_t genWeight = 1.0;
       genWeight = GEN_weight_SM/abs(GEN_weight_SM);
       _event_weight_fr = puW * baseW * _luminosity * genWeight;
-
-    } else {
-
-      _event_weight_fr = 1.0;
 
     }
 
@@ -234,7 +210,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (MET.Et() < 20.);
     pass &= (_mtw < 20.);
-    pass &= (!filename.Contains("DYJetsToLL"));
 
     if (pass & (Lepton1.type == Loose || Lepton1.type == Tight)) {
       if (_channel == m) {
@@ -268,45 +243,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
     }
 
-    //  FillLevelHistograms(FR_00_QCD, pass);
-     
     //    if (pass && _saveminitree) minitree->Fill();
  
     }
 
   EndJob();
  
-}
-
-//------------------------------------------------------------------------------
-// FillAnalysisHistograms
-//------------------------------------------------------------------------------
-void AnalysisFR::FillAnalysisHistograms(int ichannel,
-					int icut,
-					int ijet)
-{
-
-  if (Lepton1.type == Loose || Lepton1.type == Tight) {    
-    //    h_loose       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-  } 
-
-  if (Lepton1.type == Tight) {
-    // h_tight       [ichannel][icut][ijet] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-  }
-
-}
-
-//------------------------------------------------------------------------------
-// FillLevelHistograms
-//------------------------------------------------------------------------------
-void AnalysisFR::FillLevelHistograms(int  icut,
-				     bool pass)
-{
-  if (!pass) return;
-  
-  FillAnalysisHistograms(_channel, icut, _jetbin);
-  FillAnalysisHistograms(_channel, icut, njetbin);
-
 }
 
 

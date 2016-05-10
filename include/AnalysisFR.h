@@ -27,20 +27,33 @@ class AnalysisFR: public AnalysisCMS
   // Analysis histograms                                                                                                                                   
   //----------------------------------------------------------------------------                                                                           
 
-  TH1D* h_loose [nchannel][ncut][njetbin+1];  
-  TH1D* h_tight [nchannel][ncut][njetbin+1];
+  TH1D* h_zjets_loose;
+  TH1D* h_zjets_tight;
 
-  TH1D* h_Muon_loose_counter;
-  TH1D* h_Muon_tight_counter;
+  TH1D* h_wjets_loose;
+  TH1D* h_wjets_tight;
 
-  TH1D* h_Ele_loose_counter;
-  TH1D* h_Ele_tight_counter;
- 
+  TH1D* h_data_loose;
+  TH1D* h_data_tight;
+
   TH2D* h_Muon_loose_pt_eta_bin;
   TH2D* h_Muon_tight_pt_eta_bin;
 
+  TH1D* h_Muon_loose_pt_bin;
+  TH1D* h_Muon_tight_pt_bin;
+
+  TH1D* h_Muon_loose_eta_bin;
+  TH1D* h_Muon_tight_eta_bin;
+
   TH2D* h_Ele_loose_pt_eta_bin;
   TH2D* h_Ele_tight_pt_eta_bin;
+
+  TH1D* h_Ele_loose_pt_bin;
+  TH1D* h_Ele_tight_pt_bin;
+
+  TH1D* h_Ele_loose_eta_bin;
+  TH1D* h_Ele_tight_eta_bin;
+  
 
 };
 
