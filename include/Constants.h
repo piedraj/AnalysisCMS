@@ -1,14 +1,13 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-
+#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"
 //#include "CutsStop.h"
-#include "CutsTTDM.h"
+//#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
-
 
 const double lumi_fb_blind = 1.371;
 const double lumi_fb       = 2.318;
@@ -100,6 +99,9 @@ const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 
 enum {
+  e,
+  m,
+  l, 
   ee,
   mm,
   em,
@@ -113,6 +115,9 @@ enum {
 };
 
 const TString schannel[nchannel] = {
+  "e",
+  "m",
+  "l",
   "ee",
   "mm",
   "em",
@@ -125,6 +130,9 @@ const TString schannel[nchannel] = {
 };
 
 const TString lchannel[nchannel] = {
+  "e",
+  "#mu",
+  "all",
   "ee",
   "#mu#mu",
   "e#mu",

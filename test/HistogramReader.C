@@ -518,7 +518,6 @@ void HistogramReader::Draw(TString hname,
     }
 }
 
-
 //------------------------------------------------------------------------------
 // CrossSection
 //------------------------------------------------------------------------------
@@ -544,7 +543,8 @@ void HistogramReader::CrossSection(TString level,
       }
     else
       {
-       	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+
+	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 
 	if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
 
@@ -553,8 +553,8 @@ void HistogramReader::CrossSection(TString level,
   }
 
   float counterBkg       = 0.;
-  float	counterSignal    = Yield(signal);
-  float	counterSignalLum = Yield(signalLum);
+  float counterSignal    = Yield(signal);
+  float counterSignalLum = Yield(signalLum);
 
   for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
 
@@ -570,7 +570,7 @@ void HistogramReader::CrossSection(TString level,
       _datahist = (TH1D*)dummy->Clone();      
     }
 
-  float	counterData = Yield(_datahist);
+  float counterData = Yield(_datahist);
 
 
   // Cross-section calculation
@@ -592,8 +592,7 @@ void HistogramReader::CrossSection(TString level,
 	 mu * lumi_error_percent / 1e2);
 }
 
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // DrawLatex 
 //------------------------------------------------------------------------------
 void HistogramReader::DrawLatex(Font_t      tfont,
