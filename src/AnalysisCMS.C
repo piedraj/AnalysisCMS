@@ -198,15 +198,15 @@ void AnalysisCMS::Summary(TString analysis,
 			  TString precision,
 			  TString title)
 {
-  int firstChannel = ee;
-  int lastChannel  = ll;
+  int firstchannel = ee;
+  int lastchannel  = ll;
 
-  if (analysis.EqualTo("FR")) {firstChannel = e;   lastChannel = l;}
-  if (analysis.EqualTo("WZ")) {firstChannel = eee; lastChannel = lll;}
+  if (analysis.EqualTo("FR")) {firstchannel = e;   lastchannel = l;}
+  if (analysis.EqualTo("WZ")) {firstchannel = eee; lastchannel = lll;}
 
   txt_summary << Form("\n%30s", title.Data());
 
-  for (int i=firstChannel; i<=lastChannel; i++)
+  for (int i=firstchannel; i<=lastchannel; i++)
     txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
 
   txt_summary << Form("\n-------------------------------\n");
@@ -217,7 +217,7 @@ void AnalysisCMS::Summary(TString analysis,
       
     txt_summary << Form("%30s", scut[i].Data());
 
-    for (int j=firstChannel; j<=lastChannel; j++) {
+    for (int j=firstchannel; j<=lastchannel; j++) {
 
       TH1D* h_counter = h_counterRaw[j][i][njetbin];
 
