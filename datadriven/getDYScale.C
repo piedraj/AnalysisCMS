@@ -6,10 +6,10 @@
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 6;
+const int     nmetcut = 7;
 
-const float   metcut [nmetcut] = {-1, 20, 25, 30, 45, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 20, 25, 30, 45, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 45, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 45, 75};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
