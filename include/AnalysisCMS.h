@@ -53,7 +53,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    EventDump         ();
 
-  void    EventSetup        ();
+  void    EventSetup        (float    jet_eta_max = -1);
 
   void    FillHistograms    (int      ichannel,
 			     int      icut,
@@ -63,7 +63,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetGenPtllWeight  ();
 
-  void    GetJets           ();
+  void    GetJets           (float    jet_eta_max);
 
   void    GetLeptons        ();
 
@@ -120,7 +120,9 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetStarVar        ();
 
-  void    GetSumOfWeightsLHE();
+  TH1F*   GetGenWeightsLHE  ();
+
+  void    GetRecoWeightsLHE (TH1F*    hist);
 
 
   // Data members
@@ -200,15 +202,19 @@ class AnalysisCMS : public AnalysisBase
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;
-  float                  _nbjet15loose;
-  float                  _nbjet15medium;
-  float                  _nbjet15tight;
-  float                  _nbjet20loose;
-  float                  _nbjet20medium;
-  float                  _nbjet20tight;
-  float                  _nbjet30loose;
-  float                  _nbjet30medium;
-  float                  _nbjet30tight;
+  float                  _nbjet15csvv2l;
+  float                  _nbjet15csvv2m;
+  float                  _nbjet15csvv2t;
+  float                  _nbjet30csvv2l;
+  float                  _nbjet30csvv2m;
+  float                  _nbjet30csvv2t;
+  float                  _nbjet20cmvav2l;
+  float                  _nbjet20cmvav2m;
+  float                  _nbjet20cmvav2t;
+  float                  _nbjet30cmvav2l;
+  float                  _nbjet30cmvav2m;
+  float                  _nbjet30cmvav2t;
+  float                  _njet;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
@@ -226,12 +232,17 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_minitree;
   TTree*                 minitree;
 
+  
+  // Histograms for QCD, PDF and alpha_s uncertainties
+  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+  //----------------------------------------------------------------------------
+  TH1F*                  list_vectors_weights_gen;
+  TH1F*                  list_vectors_weights_0jet;
+  TH1F*                  list_vectors_weights_1jet;
+
 
   // TH1 histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_pdfsum;
-  TH1D*                  h_qcdsum;
-
   TH1D*                  h_counterRaw   [nchannel][ncut][njetbin+1];
   TH1D*                  h_counterLum   [nchannel][ncut][njetbin+1];
   TH1D*                  h_fakes        [nchannel][ncut][njetbin+1];
@@ -244,58 +255,66 @@ class AnalysisCMS : public AnalysisBase
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
-  TH1D*                  h_channel      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphijet1met  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphijet2met  [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphijj       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphijjmet    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilep1jet1 [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilep1jet2 [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilep2jet1 [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilep2jet2 [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphill       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphillmet    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphillstar   [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilmet1    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_dphilmet2    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_drll         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ht           [nchannel][ncut][njetbin+1];
-  TH1D*                  h_htjets       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_htnojets     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet1eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet1mass     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet1phi      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet1pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet2eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet2mass     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet2phi      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_jet2pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep1eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep1phi      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep1pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep2eta      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep2phi      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_lep2pt       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mc           [nchannel][ncut][njetbin+1];
-  TH1D*                  h_metPfType1   [nchannel][ncut][njetbin+1];
-  TH1D*                  h_metPfType1Phi[nchannel][ncut][njetbin+1];
-  TH1D*                  h_metTtrk      [nchannel][ncut][njetbin+1];
-  TH1D*                  h_metTtrkPhi   [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mpmet        [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mth          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw1         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_mtw2         [nchannel][ncut][njetbin+1];
-  TH1D*                  h_m2l          [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet15loose [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet15medium[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet15tight [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20loose [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20medium[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet20tight [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet30loose [nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet30medium[nchannel][ncut][njetbin+1];
-  TH1D*                  h_nbjet30tight [nchannel][ncut][njetbin+1];
-  TH1D*                  h_njet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_channel       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijet1met   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijet2met   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijj        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphijjmet     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep1jet1  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep1jet2  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep2jet1  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilep2jet2  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphill        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphillmet     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphillstar    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilmet1     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphilmet2     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_drll          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ht            [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htjets        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htnojets      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet1eta       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet1mass      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet1phi       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet1pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet2eta       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet2mass      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet2phi       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_jet2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1eta       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1phi       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2eta       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2phi       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mc            [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metPfType1    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metPfType1Phi [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metTtrk       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metTtrkPhi    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mpmet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mth           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw1          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mtw2          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m2l           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15csvv2l [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15csvv2m [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet15csvv2t [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2l [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2m [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30csvv2t [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20cmvav2l[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20cmvav2m[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet20cmvav2t[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30cmvav2l[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30cmvav2m[nchannel][ncut][njetbin+1];
+  TH1D*                  h_nbjet30cmvav2t[nchannel][ncut][njetbin+1];
+  TH1D*                  h_njet          [nchannel][ncut][njetbin+1];
+
+
+  // TH2 histograms
+  //----------------------------------------------------------------------------
+  TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
 };
 
 #endif

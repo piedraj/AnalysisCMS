@@ -9,8 +9,9 @@ enum {
   TTDM_01_ZVeto,
   TTDM_02_MET50,
   TTDM_03_Preselection,
-  TTDM_04_AN15305,
-  TTDM_05_AN16105,
+  TTDM_10_Routin,
+  TTDM_11_AN15305,
+  TTDM_20_AN16105,
   ncut  // This line should be always last
 };
 
@@ -19,8 +20,9 @@ const TString scut[ncut] = {
   "TTDM/01_ZVeto",
   "TTDM/02_MET50",
   "TTDM/03_Preselection",
-  "TTDM/04_AN15305",
-  "TTDM/05_AN16105"
+  "TTDM/10_Routin",
+  "TTDM/11_AN15305",
+  "TTDM/20_AN16105"
 };
 
 #endif

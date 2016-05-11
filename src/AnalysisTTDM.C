@@ -66,11 +66,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     EventSetup();
 
 
-    // LHE weights for QCD and PDF systematic uncertainties
-    //--------------------------------------------------------------------------
-    GetSumOfWeightsLHE();
-
-
     // Analysis
     //--------------------------------------------------------------------------
     if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
@@ -95,28 +90,53 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     bool pass;
 
 
-    // AN-15-305 analysis
+    // AN-15-325, latinos
+    // WW cross section measurement at sqrt(s) = 13 TeV
+    //--------------------------------------------------------------------------
+    pass = true;
+
+    pass &= (_channel == em);
+    pass &= (std_vector_lepton_pt->at(0) > 20.);
+    pass &= (std_vector_lepton_pt->at(1) > 20.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    pass &= (mll > 12.);
+    pass &= (metPfType1 > 20.);
+    pass &= (mpmet > 20.);
+    pass &= (ptll > 30.);
+    pass &= (_nbjet20cmvav2l == 0);
+
+    if (pass && _njet == 0) GetRecoWeightsLHE(list_vectors_weights_0jet);
+    if (pass && _njet == 1) GetRecoWeightsLHE(list_vectors_weights_1jet);
+
+
+    // AN-15-305
+    // Measurement of the top-quark pair production cross section in the dilepton
+    // channel with 2.2 fb-1 of 13 TeV data using the cut and count method
     //--------------------------------------------------------------------------
     pass = true;
 
     pass &= (Lepton1.v.Pt() > 20.);
     pass &= (Lepton2.v.Pt() > 20.);
     pass &= (_m2l > 20.);
-    pass &= (njet > 1);
-    pass &= (_nbjet30medium > 0);
+    pass &= (_njet > 1);
+    pass &= (_nbjet30cmvav2m > 0);
+
+    FillLevelHistograms(TTDM_10_Routin, pass);
+
     pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
     pass &= (_nelectron == 1 || MET.Et() > 40.);
 
-    FillLevelHistograms(TTDM_04_AN15305, pass);
+    FillLevelHistograms(TTDM_11_AN15305, pass);
 
 
-    // IFCA ttDM analysis
+    // AN-16-011
+    // Search for dark matter production in association with top quark pairs
+    // in the dilepton final state at sqrt(s) = 13 TeV
     //--------------------------------------------------------------------------
-    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
-
     pass = true;
 
-    pass &= (Lepton1.v.Pt() > 30.);
+    pass &= (std_vector_lepton_pt->at(0) > 30.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
@@ -131,17 +151,19 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     if (_saveminitree && pass) minitree->Fill();
 
-    pass &= (njet > 1);
+    pass &= (_njet > 1);
 
     FillLevelHistograms(TTDM_03_Preselection, pass);
 
     
-    // AN-16-105 analysis
+    // AN-16-105, Northwestern University
+    // Search for Dark Matter produced in association with top quark pairs
+    // in the dilepton channel
     //--------------------------------------------------------------------------
-    pass &= (_nbjet30medium > 0);
+    pass &= (_nbjet30cmvav2m > 0);
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_05_AN16105, pass);
+    FillLevelHistograms(TTDM_20_AN16105, pass);
   }
 
 
