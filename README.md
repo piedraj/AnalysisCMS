@@ -81,7 +81,7 @@ It is recommended to test the code. The following example reads a latino tree an
 
     ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
 
-Submit jobs to the gridui batch system.
+Submit jobs to the gridui batch system. It is encouraged to first read the [Basic Grid Engine Usage](https://grid.ifca.es/wiki/Cluster/Usage/GridEngine) documentation.
 
     rm -rf minitrees/<systematic>
     rm -rf rootfiles/<systematic>
