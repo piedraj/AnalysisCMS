@@ -19,9 +19,9 @@ Log in to gridui.
 
 Set a CMSSW release.
 
-    export SCRAM_ARCH=slc6_amd64_gcc493
-    cmsrel CMSSW_8_0_0_pre5
-    cd CMSSW_8_0_0_pre5/src
+    export SCRAM_ARCH=slc6_amd64_gcc530
+    cmsrel CMSSW_8_0_5
+    cd CMSSW_8_0_5/src
     cmsenv
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
@@ -67,7 +67,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_8_0_0_pre5/src
+    cd CMSSW_8_0_5/src
     cmsenv
     cd AnalysisCMS
 
@@ -97,7 +97,7 @@ Show the status of the submitted jobs.
 Alternatively one can login to a node and run interactively. *Do this only if your jobs will take less than 2 hours.*
 
     qlogin -P l.gaes
-    cd CMSSW_8_0_0_pre5/src
+    cd CMSSW_8_0_5/src
     source /cvmfs/cms.cern.ch/cmsset_default.sh
     cmsenv
     cd AnalysisCMS
