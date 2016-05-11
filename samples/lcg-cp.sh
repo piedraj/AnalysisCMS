@@ -30,25 +30,20 @@ if [ $# -lt 1 ]; then
 fi
 
 
-export FOLDER=$1
-
+export  FOLDER=$1
+export  GRIDUI_PATH='srm://srm01.ifca.es/cms/store/group'
+#export GRIDUI_PATH='/gpfs/csic_projects'
 
 mkdir -p /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/$FOLDER
 
 
 #
-# Copy to srm://srm01.ifca.es/cms/store/group. Not yet ready.
+# Copy to $GRIDUI_PATH
 #
-### eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"srm://srm01.ifca.es/cms/store/group/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
+### eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v path=$GRIDUI_PATH -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,path"/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
 
 
 #
-# Copy to /gpfs/csic_projects.
+# Manually copy to $GRIDUI_PATH
 #
-eval `lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}'`
-
-
-#
-# Manually copy to /gpfs/csic_projects.
-#
-### lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,"/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}' > lcg-cp-batch.sh
+lcg-ls srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/$FOLDER | awk -v path=$GRIDUI_PATH -v destination=$FOLDER -F'/' '{print "lcg-cp -v srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/"destination"/"$11,path"/tier3data/LatinosSkims/RunII/cernbox/"destination"/"$11,"&"}' > lcg-cp-batch.sh
