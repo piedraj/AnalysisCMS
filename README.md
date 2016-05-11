@@ -94,7 +94,7 @@ Show the status of the submitted jobs.
     qstat -u $USER
     qstat -j <job-ID.ja-task-ID>
 
-Alternatively one can login to a node and run interactively.
+Alternatively one can login to a node and run interactively. *Do this only if your jobs will take less than 2 hours.*
 
     qlogin -P l.gaes
     cd CMSSW_8_0_0_pre5/src
@@ -103,6 +103,8 @@ Alternatively one can login to a node and run interactively.
     cd AnalysisCMS
 
     ./submit-jobs-interactive.sh
+
+    exit
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
