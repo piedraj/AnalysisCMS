@@ -20,13 +20,6 @@ Log in to gridui.
 Set a CMSSW release.
 
     export SCRAM_ARCH=slc6_amd64_gcc493
-    cmsrel CMSSW_7_6_3
-    cd CMSSW_7_6_3/src
-    cmsenv
-
-To use **TMVA Version 4.2.1** one needs to set a newer CMSSW release.
-
-    export SCRAM_ARCH=slc6_amd64_gcc493
     cmsrel CMSSW_8_0_0_pre5
     cd CMSSW_8_0_0_pre5/src
     cmsenv
@@ -74,7 +67,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_6_3/src
+    cd CMSSW_8_0_0_pre5/src
     cmsenv
     cd AnalysisCMS
 
@@ -104,12 +97,12 @@ Show the status of the submitted jobs.
 Alternatively one can login to a node and run interactively.
 
     qlogin -P l.gaes
+    cd CMSSW_8_0_0_pre5/src
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_6_3/src
     cmsenv
     cd AnalysisCMS
-    ./make
-    ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
+
+    ./submit-jobs-interactive.sh
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.
