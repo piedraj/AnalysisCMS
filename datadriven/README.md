@@ -13,8 +13,9 @@ for the mm channel) is computed with these two equations.
 
 # getFakeRate.C
 
-This macro allows the user to calculate the Fake Rate of a given process. The
-output of the macro is two 2D histograms representing in the x-axis the lepton pt
-and in the y-axis the lepton eta value. The first histogram represents the Fake
-Rate without correction while the second one represents the Fake Rate with the
-electroweak correction given by the Z+Jets and W+jets proceses. 
+This macro allows the user to calculate the Fake Rate for a given definition of
+loose and tight leptons. The output of the macro is two 2D histograms representing
+in the x-axis the lepton pt and in the y-axis the lepton eta values. The first
+histogram represents the Fake Rate without correction while the second one
+represents the Fake Rate with the electroweak correction given by the Z+Jets and
+W+jets processes. 
