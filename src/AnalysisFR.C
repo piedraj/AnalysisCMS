@@ -52,6 +52,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   h_Ele_loose_eta_bin = new TH1D("h_Ele_loose_eta_bin", "h_Ele_loose_eta_bin", etabin, etabins);
   h_Ele_tight_eta_bin = new TH1D("h_Ele_tight_eta_bin", "h_Ele_tight_eta_bin", etabin, etabins);
 
+  h_Muon_loose_pt_stack = new TH1D("h_Muon_loose_pt_stack","h_Muon_loose_pt_stack", 100, 0, 200);
+  h_Muon_tight_pt_stack = new TH1D("h_Muon_tight_pt_stack","h_Muon_tight_pt_stack", 100, 0, 200);
+  h_Ele_loose_pt_stack = new TH1D("h_Ele_loose_pt_stack","h_Ele_loose_pt_stack", 100, 0, 200);
+  h_Ele_tight_pt_stack = new TH1D("h_Ele_tight_pt_stack","h_Ele_tight_pt_stack", 100, 0, 200);
+  
+
   // Loop over events
   //--------------------------------------------------------------------------
 
@@ -158,13 +164,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       if (_channel == m) {
 
-	if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && (std_vector_trigger -> at(22) == 1) ) { //Lumi HLT_Mu8_TrkIsoVVL: 1.386 pb
+	if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && (std_vector_trigger -> at(22) == 1) ) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
 
 	  passTrigger= true;
 	  _event_weight_fr *= (_luminosity*1000 / 1.386);
 
 	}
-	else if (Lepton1.v.Pt() > 20. && (std_vector_trigger->at(23) == 1) ) { //Lumi HLT_Mu17_TrkIsoVVL: 201.951 pb
+	else if (Lepton1.v.Pt() > 20. && (std_vector_trigger->at(23) == 1) ) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
 
 	  passTrigger = true;
 	  _event_weight_fr *= (_luminosity*1000 / 201.951);
@@ -174,12 +180,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       if (_channel == e) {
 	
-	if (Lepton1.v.Pt() > 13. && Lepton1.v.Pt() <= 25. && (std_vector_trigger->at(31) == 1) ) { //Lumi HLT_Ele8_Iso: 11.204 pb;
+	if (Lepton1.v.Pt() > 13. && Lepton1.v.Pt() <= 25. && (std_vector_trigger->at(31) == 1) ) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
 
 	  passTrigger = true;
 	  _event_weight_fr *= (_luminosity*1000 / 11.204);
 	 
-	} else if (Lepton1.v.Pt() > 25. && (std_vector_trigger->at(33) == 1) ) { //Lumi HLT_Ele23_Iso: 3.201
+	} else if (Lepton1.v.Pt() > 25. && (std_vector_trigger->at(33) == 1) ) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
 
 	  passTrigger = true;
 	  _event_weight_fr *= (_luminosity*1000 / 3.201);
@@ -211,12 +217,14 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() < 20.);
     pass &= (_mtw < 20.);
 
-    if (pass & (Lepton1.type == Loose || Lepton1.type == Tight)) {
+    if (pass && (Lepton1.type == Loose || Lepton1.type == Tight)) {
       if (_channel == m) {
 
 	h_Muon_loose_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
 	h_Muon_loose_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 	h_Muon_loose_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
+      	h_Muon_loose_pt_stack -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 
       } else if (_channel == e) {
 
@@ -224,21 +232,27 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	h_Ele_loose_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 	h_Ele_loose_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
 
+        h_Ele_loose_pt_stack -> Fill(Lepton1.v.Pt(), _event_weight_fr);
+
       }
     }
     
-    if (pass & Lepton1.type == Tight) {
+    if (pass && Lepton1.type == Tight) {
       if (_channel == m) {
 
 	h_Muon_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
 	h_Muon_tight_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 	h_Muon_tight_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+	
+	h_Muon_tight_pt_stack -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 
       } else if (_channel == e) {
 
 	h_Ele_tight_pt_eta_bin -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
 	h_Ele_tight_pt_bin -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 	h_Ele_tight_eta_bin -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+
+	h_Ele_tight_pt_stack -> Fill(Lepton1.v.Pt(), _event_weight_fr);
 
       }
     }
@@ -294,3 +308,18 @@ bool AnalysisFR::PassJetSelection()
 
   return pass;
 }
+
+
+
+
+/*
+
+We have checked with brillcalc that the luminosity for the triggers used are correct on the 12th of May 2016.
+This test was performed with brillcalc version 10.7 (running the command export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH  brilcalc --version).
+
+Then, for each trigger, the following line was executed : 
+"brilcalc lumi --hltpath HLT_Mu8_TrkIsoVVL_v* -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt "
+
+The triggers names for the electrons have also been updated.
+
+ */
