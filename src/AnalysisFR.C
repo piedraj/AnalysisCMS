@@ -140,17 +140,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
-    bool passTrigger = true;
-    _event_weight_fr = 1.0;
-
-    if (filename.Contains("WJetsToLNu")) {
-
-      Double_t genWeight = 1.0;
-      genWeight = GEN_weight_SM/abs(GEN_weight_SM);
-      _event_weight_fr = puW * baseW * _luminosity * genWeight;
-
-    }
-
     if (_channel == e && Lepton1.v.Pt() <= 13) continue;
     if (_channel == m && Lepton1.v.Pt() <= 10) continue;
     if (_channel == e && Lepton1.v.Eta() >= 2.5 ) continue;
@@ -158,37 +147,48 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_nlepton != 1) continue;
 
-    if (!_ismc) {
+
+    bool passTrigger = true;
+
+    // Define _event_weight_fr
+    if (_ismc) {
+
+      Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
+      _event_weight_fr = puW * baseW * _luminosity * genWeight;
+    }
+    else {
+
+      _event_weight_fr = 1.0;
 
       passTrigger = false;
 
       if (_channel == m) {
 
-	if (Lepton1.v.Pt() > 10. && Lepton1.v.Pt() <= 20. && (std_vector_trigger -> at(22) == 1) ) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
+	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
 
 	  passTrigger= true;
-	  _event_weight_fr *= (_luminosity*1000 / 1.386);
+	  _event_weight_fr = (_luminosity*1000 / 1.386);
 
 	}
-	else if (Lepton1.v.Pt() > 20. && (std_vector_trigger->at(23) == 1) ) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
+	else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
 
 	  passTrigger = true;
-	  _event_weight_fr *= (_luminosity*1000 / 201.951);
+	  _event_weight_fr = (_luminosity*1000 / 201.951);
 
 	}    
       }
 
       if (_channel == e) {
 	
-	if (Lepton1.v.Pt() > 13. && Lepton1.v.Pt() <= 25. && (std_vector_trigger->at(31) == 1) ) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
+	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
 
 	  passTrigger = true;
-	  _event_weight_fr *= (_luminosity*1000 / 11.204);
+	  _event_weight_fr = (_luminosity*1000 / 11.204);
 	 
-	} else if (Lepton1.v.Pt() > 25. && (std_vector_trigger->at(33) == 1) ) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
+	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
 
 	  passTrigger = true;
-	  _event_weight_fr *= (_luminosity*1000 / 3.201);
+	  _event_weight_fr = (_luminosity*1000 / 3.201);
 	
        	}
       }
@@ -205,7 +205,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       inputJetEt = 20.;
     }
 
-    if (AnalysisJets[0].v.Pt() <  inputJetEt) continue; 
+    if (AnalysisJets[0].v.Pt() < inputJetEt) continue; 
 
     // Selection
     //--------------------------------------------------------------------------
