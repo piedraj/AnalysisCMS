@@ -26,7 +26,7 @@ hadd -f -k 10_HWW.root       GluGluHToWWTo2L2Nu_M124.root VBFHToWWTo2L2Nu_M125.r
 hadd -f -k 11_Wg.root        Wg_AMCNLOFXFX.root
 hadd -f -k 12_Zg.root        Zg.root
 hadd -f -k 13_VVV.root       WZZ.root
-hadd -f -k 14_HZ.root        HZJ_HToWW_M125.root
+hadd -f -k 14_HZ.root        HZJ_HToWW_M125.root ggZH_HToWW_M125.root
 hadd -f -k 15_WgStar.root    WgStarLNuEE.root WgStarLNuMuMu.root
 
 popd

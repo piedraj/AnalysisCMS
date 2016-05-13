@@ -1,8 +1,29 @@
-#include "../include/Constants.h"
-
-
 // Constants
 //------------------------------------------------------------------------------
+const double lumi_fb = 1.371;
+
+enum {
+  ee,
+  mm,
+  em,
+  ll,
+  nchannel  // This line should be always last
+};
+
+const TString schannel[nchannel] = {
+  "ee",
+  "mm",
+  "em",
+  "ll"
+};
+
+const TString lchannel[nchannel] = {
+  "ee",
+  "#mu#mu",
+  "e#mu",
+  "ll"
+};
+
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
@@ -90,16 +111,10 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
-// Results for MET > 40 GeV and 2.318 fb-1,
+// Results for MET > 45 GeV and 1.371 fb-1,
 //
-//    ee SF(est/DY) = 1.284 +- 0.117
-//    mm SF(est/DY) = 1.225 +- 0.079
-//
-// Results for MET > 40 GeV and 2.318 fb-1
-// when the peaking backgrounds are not considered,
-//
-//    ee SF(est/DY)  1.305 +- 0.118
-//    mm SF(est/DY)  1.242 +- 0.079
+//    ee SF(est/DY)  1.370 +- 0.179
+//    mm SF(est/DY)  1.617 +- 0.151
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "TTDM")
@@ -213,8 +228,8 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.06);
-      mgraph[k]->SetMaximum(+0.40);
+      mgraph[k]->SetMinimum(0.0);
+      mgraph[k]->SetMaximum(0.6);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -378,7 +393,7 @@ void GetScale(int    ch,
   R_data_error = errRatio(n_out_est, err_out_est, n_in_est, err_in_est);
 
   R_dy_value = n_out_dy / n_in_dy;
-  R_dy_error = errRatio(n_out_est, err_out_est, n_in_est, err_in_est);
+  R_dy_error = errRatio(n_out_dy, err_out_dy, n_in_dy, err_in_dy);
 
   scale_value = n_in_est / n_in_dy;
   scale_error = errRatio(n_in_est, err_in_est, n_in_dy, err_in_dy);
