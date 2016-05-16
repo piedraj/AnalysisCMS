@@ -1,4 +1,4 @@
-#define AnalysisFR_cxx
+XSX#define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
 
 float _event_weight_fr;

@@ -1,7 +1,7 @@
 void getFakeRate()
 {
   
-  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+    gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
     TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
     TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
@@ -252,11 +252,11 @@ void getFakeRate()
 
     h_zjets_Ele_tight_pt_stack -> SetFillColor(kGreen+2);
     h_zjets_Ele_tight_pt_stack -> SetFillStyle(1001);
-    h_zjets_Ele_tight_pt_stack -> Rebin(20);
+    h_zjets_Ele_tight_pt_stack -> Rebin(2);
 
     h_wjets_Ele_tight_pt_stack -> SetFillColor(kGray+1);
     h_wjets_Ele_tight_pt_stack -> SetFillStyle(1001);
-    h_wjets_Ele_tight_pt_stack -> Rebin(20);
+    h_wjets_Ele_tight_pt_stack -> Rebin(2);
 
     MC_Ele_tight -> Add(h_wjets_Ele_tight_pt_stack);
     MC_Ele_tight -> Add(h_zjets_Ele_tight_pt_stack);
@@ -266,7 +266,7 @@ void getFakeRate()
     Ele_Analysis_tight -> SetLogy();
     h_Ele_tight_pt_stack -> SetMarkerStyle(kFullCircle);
     h_Ele_tight_pt_stack -> Draw("ep");
-    h_Ele_tight_pt_stack -> Rebin(20);
+    h_Ele_tight_pt_stack -> Rebin(2);
     MC_Ele_tight -> Draw("hist,same");
     h_Ele_tight_pt_stack -> Draw("ep, same");
 
