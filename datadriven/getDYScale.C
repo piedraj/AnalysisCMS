@@ -1,6 +1,6 @@
 // Constants
 //------------------------------------------------------------------------------
-const double lumi_fb = 1.371;
+const double lumi_fb = 2.318;
 
 enum {
   ee,
@@ -111,10 +111,10 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
-// Results for MET > 45 GeV and 1.371 fb-1,
+// Results for MET > 45 GeV and 2.318 fb-1,
 //
-//    ee SF(est/DY)  1.370 +- 0.179
-//    mm SF(est/DY)  1.617 +- 0.151
+//    ee SF(est/DY)  1.281 +- 0.149
+//    mm SF(est/DY)  1.435 +- 0.122
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "TTDM")
@@ -229,7 +229,7 @@ void getDYScale(TString analysis = "TTDM")
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
       mgraph[k]->SetMinimum(0.0);
-      mgraph[k]->SetMaximum(0.6);
+      mgraph[k]->SetMaximum(0.4);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
