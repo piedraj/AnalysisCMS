@@ -100,9 +100,14 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 20.);
     pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || _pt2l > 45.);
     pass &= (_nbjet20cmvav2l == 0);
+
+    if (_channel != em)
+      {
+	pass &= (fabs(_m2l - Z_MASS) > 15.);
+	pass &= (MET.Et() > 40.);
+	pass &= (_pt2l > 45.);
+      }
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
@@ -124,8 +129,11 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Control_10_Routin, pass);
 
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || MET.Et() > 40.);
+    if (_channel != em)
+      {
+	pass &= (fabs(_m2l - Z_MASS) > 15.);
+	pass &= (MET.Et() > 40.);
+      }
 
     FillLevelHistograms(Control_11_Top, pass);
   }

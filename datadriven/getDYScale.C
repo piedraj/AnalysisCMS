@@ -117,7 +117,7 @@ int          bin_metmax;
 //    mm SF(est/DY)  1.436 +- 0.122
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "TTDM")
+void getDYScale(TString analysis = "Control")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
