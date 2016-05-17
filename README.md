@@ -19,16 +19,9 @@ Log in to gridui.
 
 Set a CMSSW release.
 
-    export SCRAM_ARCH=slc6_amd64_gcc493
-    cmsrel CMSSW_7_6_3
-    cd CMSSW_7_6_3/src
-    cmsenv
-
-To use **TMVA Version 4.2.1** one needs to set a newer CMSSW release.
-
-    export SCRAM_ARCH=slc6_amd64_gcc493
-    cmsrel CMSSW_8_0_0_pre5
-    cd CMSSW_8_0_0_pre5/src
+    export SCRAM_ARCH=slc6_amd64_gcc530
+    cmsrel CMSSW_8_0_5
+    cd CMSSW_8_0_5/src
     cmsenv
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
@@ -74,7 +67,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_6_3/src
+    cd CMSSW_8_0_5/src
     cmsenv
     cd AnalysisCMS
 
@@ -88,7 +81,7 @@ It is recommended to test the code. The following example reads a latino tree an
 
     ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
 
-Submit jobs to the gridui batch system.
+Submit jobs to the gridui batch system. It is encouraged to first read the [Basic Grid Engine Usage](https://grid.ifca.es/wiki/Cluster/Usage/GridEngine) documentation.
 
     rm -rf minitrees/<systematic>
     rm -rf rootfiles/<systematic>
@@ -101,15 +94,17 @@ Show the status of the submitted jobs.
     qstat -u $USER
     qstat -j <job-ID.ja-task-ID>
 
-Alternatively one can login to a node and run interactively.
+Alternatively one can login to a node and run interactively. *Do this only if your jobs will take less than 2 hours.*
 
     qlogin -P l.gaes
+    cd CMSSW_8_0_5/src
     source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_7_6_3/src
     cmsenv
     cd AnalysisCMS
-    ./make
-    ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
+
+    ./submit-jobs-interactive.sh
+
+    exit
 
 <!---
 Notice that input files can be accessed directly from eos when working from lxplus.

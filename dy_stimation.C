@@ -4,108 +4,92 @@ using namespace std;
 
 void dy_stimation() {
 
- // ZJets
+ // ZJets 
  //-----------
-  TFile *dy = new TFile("rootfiles/Top/06_ZJets.root","read");
-  TH1F* dy_m2l = (TH1F*)dy->Get("Top/00_Has2Leptons/h_m2l_ee");
-
-  double dy_out_l = dy_m2l -> Integral ( int (dy_m2l -> FindBin(50)), int (dy_m2l -> FindBin(75)));
-  double dy_out_r = dy_m2l -> Integral ( int (dy_m2l -> FindBin(107)), int (dy_m2l -> FindBin(3000)));
  
-  double dy_Nout = dy_out_l + dy_out_r;
-  double dy_Nin = dy_m2l -> Integral ( int (dy_m2l -> FindBin(76)), int (dy_m2l -> FindBin(106)));
-  double dy_excluded = dy_m2l -> Integral ( int (dy_m2l -> FindBin(0)), int (dy_m2l -> FindBin(49)) );
+  double DyI ;
+  double DyO ;
+  double DyO1;
+  double DyO2;
+  double R   ;
 
-  //printf("%f, %f", _mc_Nout,_mc_Nin);
+  double DyI_error ;
+  double DyO_error ;
+  double DyO1_error;
+  double DyO2_error;
+  double R_error   ;
 
-  std::cout << "_dy_Nout:" << dy_Nout << "\t _dy_Nin: " << dy_Nin << "\t dy_excluded:" << dy_excluded << "\n" << std::endl;
-
- //Data
- //------------------
-  TFile *data = new TFile("rootfiles/Top/01_Data.root","read");
-  TH1F* dat_m2l = (TH1F*)data->Get("Top/00_Has2Leptons/h_m2l_ee");
-
-  double dat_Nin = dat_m2l -> Integral ( int (dat_m2l -> FindBin(76)), int (dat_m2l -> FindBin(106)));
-  double R_outin = (dy_Nout / dy_Nin );
-  double dat_Nout = dat_Nin * R_outin;
+  TFile *dy_Met = new TFile("rootfiles/nominal/Top/07_ZJets.root","read");
+  TH2D*  met_m2l = (TH2D*) dy_Met -> Get( "Top/02_Restability/0jet/h_metvar_m2l_mm");
+  TH1D *pxI  = met_m2l -> ProjectionX("m2lProyectionOnMet_pxI", 76, 106);
+                // where firstXbin = 76 and lastXbin = 106
+  TH1D *pxO1 = met_m2l -> ProjectionX("m2lProyectionOnMet_pxO1", 20, 75);
+  TH1D *pxO2 = met_m2l -> ProjectionX("m2lProyectionOnMet_pxO2", 107, 3000);
  
-  cout << "data_Nout:"<< dat_Nout << "\t data_Nin:" << dat_Nin << "\n";
+  DyI  = pxI  -> Integral (4,4);
+  DyO1 = pxO1 -> Integral (4,4);
+  DyO2 = pxO2 -> Integral (4,4);
+  DyO  = DyO1 + DyO2;
+  R    = DyO / DyI;
+
+  DyI_error  = sqrt(pxI -> GetSumw2() -> At(4));
+  DyO1_error = sqrt(pxO1-> GetSumw2() -> At(4));
+  DyO2_error = sqrt(pxO2-> GetSumw2() -> At(4));
+  DyO_error  = sqrt(pow(DyO1_error,2) + pow(DyO2_error,2));
+  R_error    = R*sqrt(pow(DyO_error,2)/pow(DyO,2) + pow(DyI_error,2)/pow(DyI,2));
+
+  std::cout << "ZJets " << " \tmm " << endl; 
+
+  std::cout<< " 0 jets" << " & " << R << " $\\pm$ " << R_error <<  "(" << DyO << ", " << DyI << ")" << endl;
+  
+ 
+
 
  //Peaking Backgrounds
  //-------------------
  
- //ZZ
- //--
-  TFile *zz = new TFile("rootfiles/Top/03_ZZ.root","read");
-  TH1F* zz_m2l_ee = (TH1F*)zz->Get("Top/00_Has2Leptons/h_m2l_ee");
-  TH1F* zz_m2l_mm = (TH1F*)zz->Get("Top/00_Has2Leptons/h_m2l_mm");
+ //ZZ -> Included in ZJets => DY/ZZ instead of only DY 
+ //WZ -> Further considerations
 
-  double zz_Nin_ee = zz_m2l_ee -> Integral ( int (zz_m2l_ee -> FindBin(76)), int (zz_m2l_ee -> FindBin(106)));
-  double zz_Nin_mm = zz_m2l_mm -> Integral ( int (zz_m2l_mm -> FindBin(76)), int (zz_m2l_mm -> FindBin(106)));
 
- 
-  //WZ
-  //--
-  TFile *wz = new TFile("rootfiles/Top/02_WZTo3LNu.root","read");
-  TH1F* wz_m2l_ee = (TH1F*)wz->Get("Top/00_Has2Leptons/h_m2l_ee");
-  TH1F* wz_m2l_mm = (TH1F*)wz->Get("Top/00_Has2Leptons/h_m2l_mm");
+ // Non Peaking Backgrounds: 
+ //------------------------------------------------------------------------
 
-  double wz_Nin_ee = wz_m2l_ee -> Integral ( int (wz_m2l_ee -> FindBin(76)), int (wz_m2l_ee -> FindBin(106)));
-  double wz_Nin_mm = wz_m2l_mm -> Integral ( int (wz_m2l_mm -> FindBin(76)), int (wz_m2l_mm -> FindBin(106)));
+ // tw, WW, WJets, ttbar full leptonic (my signal) 
 
-  
- // Total N in 
+	TFile* f_data = new TFile("rootfiles/nominal/Top/01_Data.root", "read");
 
- double PeakBg_Nin_ee = (wz_Nin_ee + zz_Nin_ee);
- double PeakBg_Nin_mm = (wz_Nin_mm + zz_Nin_mm); 
-  
- // Non Peaking Backgrounds: tw, WW, WJets,<<< ttbar semileptonic<<< 
- //-----------------------------------------------------------------
- 
- // kee & kmm
- 
-  TFile *data_ = new TFile("rootfiles/Top/01_Data.root","read");
-  TH1F* dat_m2l_ee = (TH1F*)data_ ->Get("Top/00_Has2Leptons/h_m2l_ee");
-  TH1F* dat_m2l_mm = (TH1F*)data_ ->Get("Top/00_Has2Leptons/h_m2l_mm");
+        TH2D*  data_ee    = (TH2D*) f_data    -> Get( "Top/02_Restability/0jet/h_metvar_m2l_ee");
+        TH2D*  data_mm    = (TH2D*) f_data    -> Get( "Top/02_Restability/0jet/h_metvar_m2l_mm");
+        TH2D*  data_em    = (TH2D*) f_data    -> Get( "Top/02_Restability/0jet/h_metvar_m2l_mm");
+
+        TH1D *pxI_data_ee = data_ee -> ProjectionX("m2lProyectionOnMet_pxI_data_ee", 76, 106);
+        TH1D *pxI_data_mm = data_mm -> ProjectionX("m2lProyectionOnMet_pxI_data_mm", 76, 106);
+        TH1D *pxI_data_em = data_em -> ProjectionX("m2lProyectionOnMet_pxI_data_em", 76, 106);
+
+	double n_ee = pxI_data_ee -> Integral (-1,5);
+	double n_mm = pxI_data_ee -> Integral (-1,5);
+
+	double n_ee_err       = sqrt( pxI_data_ee -> GetSumw2() -> GetSum());
+	double n_mm_err       = sqrt( pxI_data_mm -> GetSumw2() -> GetSum());
+
+	double kee = 0.5*sqrt(n_ee /  n_mm);
+        double kmm  = 0.5*sqrt(n_mm /  n_ee);
+
+        double err_kmm = 0.5*sqrt(1/(4*n_ee) + 4*n_mm/pow(n_ee,2));
+        double err_kee = 0.5*sqrt(1/(4*n_mm) + 4*n_ee/pow(n_mm,2));
+
+	double In_data_ee = pxI_data_ee -> Integral (4,4);
+        double In_data_mm = pxI_data_mm -> Integral (4,4);
+        double In_data_em = pxI_data_em -> Integral (4,4);
+
+	double In_data_ee_err = sqrt(In_data_ee + pow(kee,2)*In_data_em + pow(In_data_em,2)*pow(err_kee,2));                        
+	double In_data_mm_err = sqrt(In_data_mm + pow(kmm,2)*In_data_em + pow(In_data_em,2)*pow(err_kmm,2));                        
+
+	double Out_data_ee = (In_data_ee - kee*In_data_em)*R;	
+ 	double Out_data_mm = (In_data_mm - kmm*In_data_em)*R;
+
+	double Out_data_ee_err = Out_data_ee*sqrt(pow(R_error,2)/pow(R,2) + pow(In_data_ee_err,2)/pow(In_data_ee,2));
+	double Out_data_mm_err = Out_data_mm*sqrt(pow(R_error,2)/pow(R,2) + pow(In_data_mm_err,2)/pow(In_data_mm,2));
    
-  double dat_Nin_ee = dat_m2l_ee -> Integral ( int (dat_m2l_ee -> FindBin(76)), int (dat_m2l_ee -> FindBin(106)));
-  double dat_Nin_mm = dat_m2l_mm -> Integral ( int (dat_m2l_mm -> FindBin(76)), int (dat_m2l_mm -> FindBin(106)));
-
-  double kee = 0.5*sqrt( dat_Nin_ee / dat_Nin_mm );
-  double kmm = 0.5*sqrt( dat_Nin_mm / dat_Nin_ee );
-
-
-
- // WW
- 
- TFile *ww = new TFile("rootfiles/Top/05_WW.root","read");
- TH1F* ww_m2l = (TH1F*)ww->Get("Top/00_Has2Leptons/h_m2l_em");
- 
- double ww_Nin = ww_m2l -> Integral ( int (ww_m2l -> FindBin(76)), int (ww_m2l -> FindBin(106))); 
- 
- // tw
-
- TFile *tw = new TFile("rootfiles/Top/04_ST_tw.root","read");
- TH1F* tw_m2l = (TH1F*)tw->Get("Top/00_Has2Leptons/h_m2l_em"); 
-
- double tw_Nin = tw_m2l -> Integral ( int (tw_m2l -> FindBin(76)), int (tw_m2l -> FindBin(106)));
-
- // wjets
- 
- TFile *wjets = new TFile("rootfiles/Top/07_WJets.root","read");
- TH1F* wjets_m2l = (TH1F*)wjets->Get("Top/00_Has2Leptons/h_m2l_em");
-
- double wjets_Nin = wjets_m2l -> Integral ( int (wjets_m2l -> FindBin(76)), int (wjets_m2l -> FindBin(106)));
-
- // Total N in 
- 
- double NonPeakBg_Nin_EM_ee = (ww_Nin + tw_Nin + wjets_Nin)*kee;
- double NonPeakBg_Nin_EM_mm = (ww_Nin + tw_Nin + wjets_Nin)*kmm;
-
- // N out l+ l- obvs
- // ----------------
- 
- double obv_Nout_ee = R_outin * ( PeakBg_Nin_ee + NonPeakBg_Nin_EM_ee );
- double obv_Nout_mm = R_outin * ( PeakBg_Nin_mm + NonPeakBg_Nin_EM_mm );
-
 }

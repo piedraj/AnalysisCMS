@@ -198,12 +198,15 @@ void AnalysisCMS::Summary(TString analysis,
 			  TString precision,
 			  TString title)
 {
-  int firstChannel = (analysis.EqualTo("WZ")) ? eee : ee;
-  int lastChannel  = (analysis.EqualTo("WZ")) ? nchannel : eee;
+  int firstchannel = ee;
+  int lastchannel  = ll;
+
+  if (analysis.EqualTo("FR")) {firstchannel = e;   lastchannel = l;}
+  if (analysis.EqualTo("WZ")) {firstchannel = eee; lastchannel = lll;}
 
   txt_summary << Form("\n%30s", title.Data());
 
-  for (int i=firstChannel; i<lastChannel; i++)
+  for (int i=firstchannel; i<=lastchannel; i++)
     txt_summary << Form("%11s    %11s", schannel[i].Data(), " ");
 
   txt_summary << Form("\n-------------------------------\n");
@@ -214,7 +217,7 @@ void AnalysisCMS::Summary(TString analysis,
       
     txt_summary << Form("%30s", scut[i].Data());
 
-    for (int j=firstChannel; j<lastChannel; j++) {
+    for (int j=firstchannel; j<=lastchannel; j++) {
 
       TH1D* h_counter = h_counterRaw[j][i][njetbin];
 
@@ -286,6 +289,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
 
+
   OpenMinitree();
 
 
@@ -293,8 +297,11 @@ void AnalysisCMS::Setup(TString analysis,
   //----------------------------------------------------------------------------
   root_output->cd();
 
+  list_vectors_weights_gen = GetGenWeightsLHE();
+
   list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
   list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
+
 
   return;
 }
@@ -318,12 +325,12 @@ void AnalysisCMS::ApplyWeights()
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
-      float sf_btag    = bPogSF;
+      float sf_btag    = bPogSF_CMVAL;
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 
-      if (_systematic_btag_up) sf_btag = bPogSFUp;
-      if (_systematic_btag_do) sf_btag = bPogSFDown;
+      if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+      if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
 
       if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
@@ -345,11 +352,17 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.23;
   if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.23;
-  if (_sample.EqualTo("Wg_AMCNLOFXFX")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  //  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  if (_sample.EqualTo("Wg_AMCNLOFXFX"))
+    {
+      _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+    }
+  else
+    {
+      _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
-  //  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
+      if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
+    }
 
   _event_weight *= _gen_ptll_weight;
 
@@ -850,9 +863,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetFakeWeights();
 
   ApplyWeights();
-  
+
   GetMET(metPfType1, metPfType1Phi);
-  
+
   GetTrkMET(metTtrk, metTtrkPhi);
 
   GetLeptons();
@@ -874,7 +887,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetSoftMuon();
 
   GetMc();
-  
+
   GetPtWW();
 
   GetMetVar();
@@ -916,7 +929,7 @@ void AnalysisCMS::EndJob()
       printf("\n\n Writing minitree. This can take a while...");
 
       root_minitree->Write("", TObject::kOverwrite);
-  
+
       root_minitree->Close();
     }
 
@@ -929,19 +942,19 @@ void AnalysisCMS::EndJob()
   txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
   txt_summary << Form("   nentries: %lld\n",      _nentries);
   txt_summary << "\n";
-
-  Summary(_analysis, "11.0", "raw yields");
+  
+  if (!_analysis.EqualTo("FR")) Summary(_analysis, "11.0", "raw yields");
 
   txt_summary.close();
 
   root_output->cd();
- 
+
   printf("\n\n Writing histograms. This can take a while...\n");
 
   root_output->Write("", TObject::kOverwrite);
-  
+
   root_output->Close();
-  
+
   printf("\n Done with %s\n\n", _filename.Data());
 }
 
@@ -1139,18 +1152,38 @@ void AnalysisCMS::GetGenPtllWeight()
 
 
 //------------------------------------------------------------------------------
-// GetSumOfWeightsLHE
+// GetGenWeightsLHE
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetSumOfWeightsLHE(TH1F* list_vectors_weights)
+TH1F* AnalysisCMS::GetGenWeightsLHE()
+{
+  TFile* f = new TFile(_filename, "read");
+
+  TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
+
+  root_output->cd();
+
+  if (!dummy) return NULL;
+
+  TH1F* hist = (TH1F*)dummy->Clone("list_vectors_weights_gen");
+
+  return hist;
+}
+
+
+//------------------------------------------------------------------------------
+// GetRecoWeightsLHE
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetRecoWeightsLHE(TH1F* hist)
 {
   if (!std_vector_LHE_weight) return;
 
-  for (int iWeight=0; iWeight<list_vectors_weights->GetNbinsX(); iWeight++)
+  for (int iWeight=0; iWeight<hist->GetNbinsX(); iWeight++)
     {
       float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
 
-      list_vectors_weights->Fill(iWeight+0.5, ratio);
+      hist->Fill(iWeight+0.5, ratio);
     }
 }
 

@@ -11,20 +11,19 @@ void significance (){
 
 // void significance (analysis, cut_path, variable, Xmin, Xmax, Xstep){
 
-	std::ofstream inFile("significance.txt",std::ios::out);
  
         // Xmin, Xmax, step
      
-          Xmin = 150; 
- 	  Xmax = 250; 
-	  Xstep = 1; 
+          double Xmin  = 200;  // GeV 
+ 	  double Xmax  = 1500; // GeV 
+	  double Xstep = 10;  // GeV
 
         // General adress
 
-	  TString analysis = "Top";
-          TString root_path = "rootfiles/"+ analysis + "/" ;
-          TString cut_path = "Top/00_Met50/2jet/";
-          TString variable ="ht";
+	  TString analysis  = "Top";
+          TString root_path = "rootfiles/nominal/"+ analysis + "/" ;
+          TString cut_path  = "Top/03_Routin/2jet/";
+          TString variable  = "ht";
 
         // Top Signal
          
@@ -32,7 +31,7 @@ void significance (){
 
         // Top bakgrounds
 
-          const int nyield = 11;
+          const int nyield = 10;
 	  const TString syield [nyield] = {
 
             "00_Fakes",
@@ -44,7 +43,6 @@ void significance (){
             "09_TTV",
             "10_HWW",
             "11_Wg",
-            "13_VVV",
             "14_HZ",
      };
 
@@ -54,6 +52,7 @@ void significance (){
           int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
           int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
          
+        
         // Xmin, Xmax, step
 
           double min = Xmin; 
@@ -63,10 +62,9 @@ void significance (){
           double bkg;
           double signal;  
 
-        //  double significance [lastchannel+1][100];
+       //  double significance [lastchannel+1][100];
   
           TH1F* yield_ht [nyield];
-        
           TGraph* gr;  
           TLegend* leg;
 
@@ -74,11 +72,11 @@ void significance (){
            // Best cut information
           // -------------------------------------------------------------------------------------------------
 
-          TString tok, icut;
+	  TString tok, icut;
           Ssiz_t from = 0;
           while (cut_path.Tokenize(tok, from, "_")) icut = tok;
-
-
+        
+          std::ofstream inFile("significance_"+ icut + "_" + variable +".txt",std::ios::out);     
      
           inFile<<"\\begin{tabular}{cccccccccccccccccccccccccc}"<< endl;
           inFile<<"\\hline"<< endl;
@@ -88,6 +86,15 @@ void significance (){
           inFile << "channel" << " & " <<  variable + " Best cut (GeV) " << " & " << "S / sqrt(S + B)";
           inFile<<"\\\\" << endl;
           inFile<<"\\hline"<< endl;
+
+
+	  // Open .root files
+	 
+          TFile *Signal =  new TFile(root_path + Signal_name +".root","read");
+	  TH1F  *S_Var = (TH1F*)Ttbar -> Get( cut_path + "h_" + variable + "_" + "ll");
+          Int_t nbins = S_Var -> GetNbinsX();
+          double binMin = S_Var-> FindBin(Xmin);
+          double binMax = S_Var-> FindBin(Xmax);
 
 
           for (Int_t i = firstchannel; i <= lastchannel; i++){
@@ -121,8 +128,7 @@ void significance (){
               gr = new TGraph();
 	      //grDot = new TGraph(); 
 
-              TFile *Ttbar =  new TFile(root_path + Signal_name +".root","read");
-              TH1F  *Ttbar_ht = (TH1F*)Ttbar -> Get( cut_path + "h_" + variable + "_" + schannel[i]);
+              TH1F  *Signal_Variable = (TH1F*)Ttbar -> Get( cut_path + "h_" + variable + "_" + schannel[i]);
               Int_t nbins = Ttbar_ht -> GetNbinsX();
               //std::cout<< "nbins:"<< nbins << std::endl;
 

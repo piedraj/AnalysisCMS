@@ -7,8 +7,17 @@
 enum {
 
 	 Top_00_Has2Leptons,
- 	 Top_00_Zveto,
-	 Top_04_AN15305,
+         Top_01_Restability,
+      //   Top_02_Met45,
+         Top_02_Routin,
+ 	// Top_03_Zveto,
+	 //Top_04_bL,
+	 //Top_04_bM,
+	 //Top_04_bT,
+	 //Top_05_AN15305MZwindow,
+	 //Top_06_AN15305L,
+	 Top_03_AN15305M,
+	 //Top_06_AN15305T,
  // Top_00_mll20,
  // Top_00_Zveto,
  // Top_00_Met40,
@@ -34,8 +43,16 @@ enum {
 const TString scut[ncut] = {
 
 	"Top/00_Has2Leptons",
-        "Top/00_Zveto",
-	"Top/04_AN15305"
+	"Top/01_Restability",
+	"Top/02_Routin",
+//        "Top/02_Met45",
+//        "Top/03_Zveto",
+//	"Top/04_AN15305L",
+	"Top/03_AN15305M",
+//        "Top/04_AN15305MZwindow",
+//	"Top/04_AN15305T",
+	
+	
 //  "Top/00_mll20",
 //  "Top/00_Zveto",
 //  "Top/00_Met40",

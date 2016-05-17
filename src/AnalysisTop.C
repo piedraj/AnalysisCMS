@@ -46,8 +46,6 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
 	h_2ht    [i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0, 800, 300, 0, 800);
 	h_met_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 3000, 0, 3000);
-	h_metm2l [i][j][k] = new TH2D("h_metm2l" + suffix, "", 3000, 0,3000, 3000, 0, 3000);
-
       }
     }
   }
@@ -97,47 +95,51 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass;
-    bool passZveto;
+    bool pass0;
+    bool passAN15305;
+    bool passZvetoL;
+    bool passZvetoT;
     bool passZwindow;
+    bool passMet45;
     bool passL;
     bool passM;
     bool passT;
+    bool passRoutin; 
 
   	 // AN-15-305 analysis
   	 //--------------------------------------------------------------------------
-  	 
-		pass = true;
-    	
-	        FillLevelHistograms(Top_00_Has2Leptons, pass);    
+		
+                pass0 = true;
+                FillLevelHistograms(Top_00_Has2Leptons, pass0);
 
-    		pass &= (Lepton1.v.Pt() > 20.);
+    		pass = pass0 && (Lepton1.v.Pt() > 20.);
     		pass &= (Lepton2.v.Pt() > 20.);
     		pass &= (_m2l > 20.);
+                FillLevelHistograms(Top_01_Restability, pass);
 
+    		passMet45 = pass && (_nelectron == 1 || MET.Et() > 45.);
+ //             FillLevelHistograms(Top_02_Met45, passMet45);
+ 
+                passRoutin = (njet > 1) && pass && (_nbjet30cmvav2m > 0);
+		FillLevelHistograms(Top_02_Routin, passRoutin);
+
+  		passL = pass && (njet > 1) && (_nbjet30cmvav2l > 0);
+                passM = pass && (njet > 1) && (_nbjet30cmvav2m > 0);
+                passT = pass && (njet > 1) && (_nbjet30cmvav2t > 0);
+//		FillLevelHistograms(Top_04_bL, passL);
+//                FillLevelHistograms(Top_04_bM, passM);
+//                FillLevelHistograms(Top_04_bT, passT);
+              
+//                passZwindowM = passM && (_nelectron == 1 || fabs(_m2l - Z_MASS) < 15.);
+// 	        FillLevelHistograms(Top_05_AN15305MZwindow, passZwindowM);
+//	                
+		passAN15305 = passMet45 && passM && (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+//		passZvetoL = passL && (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+//		passZvetoT = passT && (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+		FillLevelHistograms(Top_03_AN15305M, passAN15305);
+//		FillLevelHistograms(Top_06_AN15305L, passZvetoL);
+//		FillLevelHistograms(Top_06_AN15305T, passZvetoT);
 		
-		FillLevelHistograms(Top_02_Restability, pass);
-
-    		pass &= (_nelectron == 1 || MET.Et() > 45.);
-
-                FillLevelHistograms(Top_02_Met45, pass); 
-		
-   		pass &= (njet > 1);
-                passZveto = pass && (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
-
-	        FillLevelHistograms(Top_03_Zveto, passZveto);
-
-
-		passL = pass && (_nbjet30loose > 0);
-                passM = pass && (_nbjet30medium > 0);
-                passT = pass && (_nbjet30tight > 0);
-
-                passZwindow = passM && (_nelectron == 1 || fabs(_m2l - Z_MASS) < 15.);
-
-		
-    		FillLevelHistograms(Top_04_AN15305MZwindow, passZwindow);
-    		FillLevelHistograms(Top_04_AN15305L, passL);
-    		FillLevelHistograms(Top_04_AN15305M, passM);
-    		FillLevelHistograms(Top_04_AN15305T, passT);
 
 
     //  FillLevelHistograms(Top_00_Has2Leptons, pass);    
@@ -218,12 +220,12 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
   //  pass &= (njet > 1);
   //
   //  FillLevelHistograms(Top_01_Has2Jets, pass);
-    pass &= (_njet > 1);
+//    pass &= (_njet > 1);
   
-    FillLevelHistograms(Top_01_Has2Jets, pass);
+//    FillLevelHistograms(Top_01_Has2Jets, pass);
 
 
-    pass &= (_nbjet30cmvav2t > 0);
+//    pass &= (_nbjet30cmvav2t > 0);
 
 
   //  pass &= (_nbjet30tight > 0);
@@ -261,7 +263,6 @@ void AnalysisTop::FillAnalysisHistograms(int ichannel,
 {
   h_2ht[ichannel][icut][ijet]->Fill(_ht, _htjets, _event_weight);
   h_met_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
-  h_metm2l [ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
