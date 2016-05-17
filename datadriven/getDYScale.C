@@ -114,7 +114,7 @@ int          bin_metmax;
 // Results for MET > 45 GeV and 2.318 fb-1,
 //
 //    ee SF(est/DY)  1.281 +- 0.149
-//    mm SF(est/DY)  1.435 +- 0.122
+//    mm SF(est/DY)  1.436 +- 0.122
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "TTDM")
