@@ -201,6 +201,7 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
+	  /*
 	  plotter.Draw(prefix + "nvtx"     + suffix, "number of vertices",          -1, 0, "NULL", scale,  true, 0,  30);
 	  plotter.Draw(prefix + "sumjpt12" + suffix, "p_{T}^{jet1} + p_{T}^{jet2}", 10, 0, "GeV",  scale, true, 0, 600);
 	  plotter.Draw(prefix + "sumpt12"  + suffix, "p_{T}^{lep1} + p_{T}^{lep2}", 10, 0, "GeV",  scale, true, 0, 600);
@@ -260,6 +261,22 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet30cmvav2m" + suffix, "number of 30 GeV cmvav2m b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30cmvav2t" + suffix, "number of 30 GeV cmvav2t b-jets",  -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",            -1, 0, "NULL", scale);
+	  */
+
+	  // Stop histograms
+	  //--------------------------------------------------------------------
+	  if (analysis.EqualTo("Stop"))
+	    {
+	      plotter.Draw(prefix + "dyll"	 + suffix, "h_dyll",       -1, 2, "GeV",  scale); 
+	      plotter.Draw(prefix + "dphimetjet"	 + suffix, "h_dphimetjet",   5, 2, "rad",  scale); 
+	      plotter.Draw(prefix + "dphimetptbll" + suffix, "h_dphimetptbll", 5, 2, "rad",  scale); 
+	      plotter.Draw(prefix + "mllbb"	 + suffix, "h_mllbb",2, 0, "GeV",  scale); 
+	      plotter.Draw(prefix + "meff"	 + suffix, "h_meff",2, 0, "GeV",  scale); 
+	      plotter.Draw(prefix + "ptbll"	 + suffix, "h_ptbll",2, 0, "GeV",  scale); 
+	      plotter.Draw(prefix + "mt2ll"	 + suffix, "h_mt2ll",2, 0, "GeV",  scale); 
+	      plotter.Draw(prefix + "mt2bb"	 + suffix, "h_mt2bb",2, 0, "GeV",  scale); 
+	      plotter.Draw(prefix + "mt2lblb"	 + suffix, "h_mt2lblb",2, 0, "GeV",  scale); 
+	    }
 
 
 	  // WW and MonoH histograms
@@ -334,7 +351,11 @@ int main(int argc, char ** argv)
 {
   if (argc < 2) {
     
+    
+
     printf("\n rm -rf %s\n\n", outputdir.Data());
+  
+    
 
     for (int i=0; i<ncut; i++) printf(" ./runPlotter %s\n", scut[i].Data());
 
