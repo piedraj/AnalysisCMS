@@ -106,13 +106,15 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
       {
 	pass &= (fabs(_m2l - Z_MASS) > 15.);
 	pass &= (MET.Et() > 40.);
+	pass &= (mpmet > 40.);
 	pass &= (_pt2l > 45.);
       }
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
 
-    FillLevelHistograms(Control_00_WW, pass);
+    FillLevelHistograms(Control_00_WW0jet, pass && _njet == 0);
+    FillLevelHistograms(Control_00_WW1jet, pass && _njet == 1);
 
 
     // AN-15-305
