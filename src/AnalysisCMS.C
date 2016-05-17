@@ -73,22 +73,6 @@ float AnalysisCMS::ElectronIsolation(int k)
 
 
 //------------------------------------------------------------------------------
-// IsIsolatedLepton
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsIsolatedLepton(int k)
-{
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  bool is_isolated_lepton = false;
-
-  if      (fabs(flavour) == ELECTRON_FLAVOUR) is_isolated_lepton = true;
-  else if (fabs(flavour) == MUON_FLAVOUR)     is_isolated_lepton = (MuonIsolation(k) < 0.15);
-  
-  return is_isolated_lepton;
-}
-
-
-//------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
@@ -765,12 +749,12 @@ void AnalysisCMS::GetSoftMuon()
   // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
   for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
 
-    if (std_vector_softMuPt->at(i)  < 3.)                       continue;
-    if (std_vector_softMuD0->at(i)  < 0.2)                      continue;
-    if (std_vector_softMuDz->at(i)  < 0.5)                      continue;
-    if (std_vector_softMuIso->at(i) < 0.15)                     continue;
-    if (std_vector_softMuIsTrackerMuon->at(i)         == false) continue;
-    if (std_vector_softMuTMLastStationAngTight->at(i) == false) continue;
+    if (std_vector_softMuPt->at(i)  < 3.)               continue;
+    if (std_vector_softMuD0->at(i)  < 0.2)              continue;
+    if (std_vector_softMuDz->at(i)  < 0.5)              continue;
+    if (std_vector_softMuIso->at(i) < 0.15)             continue;
+    if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
+    if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
     
     _foundsoftmuon = true;
     
