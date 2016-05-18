@@ -334,8 +334,8 @@ void AnalysisCMS::ApplyWeights()
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.23;
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.23;
+  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
 
   if (_sample.EqualTo("Wg_AMCNLOFXFX"))
     {
