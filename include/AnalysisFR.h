@@ -9,12 +9,10 @@ class AnalysisFR: public AnalysisCMS
 
   AnalysisFR(TTree* tree, TString systematic);
 
-  void FillAnalysisHistograms(int     ichannel,
-			      int     icut,
-			      int     ijet);
+  void FillAnalysisHistograms(int icut);
 
-  void FillLevelHistograms   (int     icut,
-			      bool    pass);
+  void FillLevelHistograms(int icut, 
+			   bool pass);
 
   void Loop                  (TString analysis,
 			      TString sample,
@@ -27,33 +25,29 @@ class AnalysisFR: public AnalysisCMS
   // Analysis histograms                                                                                                                                   
   //----------------------------------------------------------------------------                                                                           
 
-  TH1D* h_zjets_loose;
-  TH1D* h_zjets_tight;
 
-  TH1D* h_wjets_loose;
-  TH1D* h_wjets_tight;
+  TH2D* h_Muon_loose_pt_eta_bin[ncut];
+  TH2D* h_Muon_tight_pt_eta_bin[ncut];
 
-  TH1D* h_data_loose;
-  TH1D* h_data_tight;
+  TH1D* h_Muon_loose_pt_bin[ncut];
+  TH1D* h_Muon_tight_pt_bin[ncut];
 
-  TH2D* h_Muon_loose_pt_eta_bin;
-  TH2D* h_Muon_tight_pt_eta_bin;
+  TH1D* h_Muon_loose_eta_bin[ncut];
+  TH1D* h_Muon_tight_eta_bin[ncut];
 
-  TH1D* h_Muon_loose_pt_bin;
-  TH1D* h_Muon_tight_pt_bin;
+  TH2D* h_Ele_loose_pt_eta_bin[ncut];
+  TH2D* h_Ele_tight_pt_eta_bin[ncut];
 
-  TH1D* h_Muon_loose_eta_bin;
-  TH1D* h_Muon_tight_eta_bin;
+  TH1D* h_Ele_loose_pt_bin[ncut];
+  TH1D* h_Ele_tight_pt_bin[ncut];
 
-  TH2D* h_Ele_loose_pt_eta_bin;
-  TH2D* h_Ele_tight_pt_eta_bin;
+  TH1D* h_Ele_loose_eta_bin[ncut];
+  TH1D* h_Ele_tight_eta_bin[ncut];
 
-  TH1D* h_Ele_loose_pt_bin;
-  TH1D* h_Ele_tight_pt_bin;
-
-  TH1D* h_Ele_loose_eta_bin;
-  TH1D* h_Ele_tight_eta_bin;
-  
+  TH1D* h_Muon_loose_pt[ncut];
+  TH1D* h_Muon_tight_pt[ncut];
+  TH1D* h_Ele_loose_pt[ncut];
+  TH1D* h_Ele_tight_pt[ncut];
 
 };
 
