@@ -315,7 +315,7 @@ void AnalysisCMS::ApplyWeights()
     {
       float sf_btag = 1.0;
 
-      if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM"))
+      if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
 	{
 	  sf_btag = bPogSF_CSVM;
 	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
