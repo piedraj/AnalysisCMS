@@ -73,8 +73,6 @@ class AnalysisCMS : public AnalysisBase
   void    GetTrkMET         (float    module,
 			     float    phi);
 
-  bool    IsIsolatedLepton  (int      k);
-
   float   MuonIsolation     (int      k);
 
   void    OpenMinitree      ();

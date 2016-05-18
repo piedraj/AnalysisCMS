@@ -394,6 +394,24 @@ public :
    Float_t         bPogSF;
    Float_t         bPogSFUp;
    Float_t         bPogSFDown;
+   Float_t         bPogSF_CMVAL;
+   Float_t         bPogSF_CMVAL_Up;
+   Float_t         bPogSF_CMVAL_Down;
+   Float_t         bPogSF_CMVAM;
+   Float_t         bPogSF_CMVAM_Up;
+   Float_t         bPogSF_CMVAM_Down;
+   Float_t         bPogSF_CMVAT;
+   Float_t         bPogSF_CMVAT_Up;
+   Float_t         bPogSF_CMVAT_Down;
+   Float_t         bPogSF_CSVL;
+   Float_t         bPogSF_CSVL_Up;
+   Float_t         bPogSF_CSVL_Down;
+   Float_t         bPogSF_CSVM;
+   Float_t         bPogSF_CSVM_Up;
+   Float_t         bPogSF_CSVM_Down;
+   Float_t         bPogSF_CSVT;
+   Float_t         bPogSF_CSVT_Up;
+   Float_t         bPogSF_CSVT_Down;
    Float_t         bTPSF;
    Float_t         bTPSFUp;
    Float_t         bTPSFDown;
@@ -819,6 +837,24 @@ public :
    TBranch        *b_bPogSF;   //!
    TBranch        *b_bPogSFUp;   //!
    TBranch        *b_bPogSFDown;   //!
+   TBranch        *b_bPogSF_CMVAL;   //!
+   TBranch        *b_bPogSF_CMVAL_Up;   //!
+   TBranch        *b_bPogSF_CMVAL_Down;   //!
+   TBranch        *b_bPogSF_CMVAM;   //!
+   TBranch        *b_bPogSF_CMVAM_Up;   //!
+   TBranch        *b_bPogSF_CMVAM_Down;   //!
+   TBranch        *b_bPogSF_CMVAT;   //!
+   TBranch        *b_bPogSF_CMVAT_Up;   //!
+   TBranch        *b_bPogSF_CMVAT_Down;   //!
+   TBranch        *b_bPogSF_CSVL;   //!
+   TBranch        *b_bPogSF_CSVL_Up;   //!
+   TBranch        *b_bPogSF_CSVL_Down;   //!
+   TBranch        *b_bPogSF_CSVM;   //!
+   TBranch        *b_bPogSF_CSVM_Up;   //!
+   TBranch        *b_bPogSF_CSVM_Down;   //!
+   TBranch        *b_bPogSF_CSVT;   //!
+   TBranch        *b_bPogSF_CSVT_Up;   //!
+   TBranch        *b_bPogSF_CSVT_Down;   //!
    TBranch        *b_bTPSF;   //!
    TBranch        *b_bTPSFUp;   //!
    TBranch        *b_bTPSFDown;   //!
@@ -1470,6 +1506,24 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);
    fChain->SetBranchAddress("bPogSFUp", &bPogSFUp, &b_bPogSFUp);
    fChain->SetBranchAddress("bPogSFDown", &bPogSFDown, &b_bPogSFDown);
+   fChain->SetBranchAddress("bPogSF_CMVAL", &bPogSF_CMVAL, &b_bPogSF_CMVAL);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Up", &bPogSF_CMVAL_Up, &b_bPogSF_CMVAL_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Down", &bPogSF_CMVAL_Down, &b_bPogSF_CMVAL_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAM", &bPogSF_CMVAM, &b_bPogSF_CMVAM);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Up", &bPogSF_CMVAM_Up, &b_bPogSF_CMVAM_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Down", &bPogSF_CMVAM_Down, &b_bPogSF_CMVAM_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAT", &bPogSF_CMVAT, &b_bPogSF_CMVAT);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Up", &bPogSF_CMVAT_Up, &b_bPogSF_CMVAT_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Down", &bPogSF_CMVAT_Down, &b_bPogSF_CMVAT_Down);
+   fChain->SetBranchAddress("bPogSF_CSVL", &bPogSF_CSVL, &b_bPogSF_CSVL);
+   fChain->SetBranchAddress("bPogSF_CSVL_Up", &bPogSF_CSVL_Up, &b_bPogSF_CSVL_Up);
+   fChain->SetBranchAddress("bPogSF_CSVL_Down", &bPogSF_CSVL_Down, &b_bPogSF_CSVL_Down);
+   fChain->SetBranchAddress("bPogSF_CSVM", &bPogSF_CSVM, &b_bPogSF_CSVM);
+   fChain->SetBranchAddress("bPogSF_CSVM_Up", &bPogSF_CSVM_Up, &b_bPogSF_CSVM_Up);
+   fChain->SetBranchAddress("bPogSF_CSVM_Down", &bPogSF_CSVM_Down, &b_bPogSF_CSVM_Down);
+   fChain->SetBranchAddress("bPogSF_CSVT", &bPogSF_CSVT, &b_bPogSF_CSVT);
+   fChain->SetBranchAddress("bPogSF_CSVT_Up", &bPogSF_CSVT_Up, &b_bPogSF_CSVT_Up);
+   fChain->SetBranchAddress("bPogSF_CSVT_Down", &bPogSF_CSVT_Down, &b_bPogSF_CSVT_Down);
    fChain->SetBranchAddress("bTPSF", &bTPSF, &b_bTPSF);
    fChain->SetBranchAddress("bTPSFUp", &bTPSFUp, &b_bTPSFUp);
    fChain->SetBranchAddress("bTPSFDown", &bTPSFDown, &b_bTPSFDown);

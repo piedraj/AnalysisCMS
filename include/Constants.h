@@ -1,6 +1,7 @@
-#if !defined(MYLIB_CONSTANTS_H)
+1;95;0c#if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
+//#include "CutsControl.h"
 #include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"

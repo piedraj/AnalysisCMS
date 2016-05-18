@@ -34,15 +34,11 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  //  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
+  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind;
 
-  Bool_t scale = logY;
+  Bool_t scale = linY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
-  if (analysis.EqualTo("Top"))   scale = linY;
-  if (analysis.EqualTo("TTDM"))  scale = linY;
-  if (analysis.EqualTo("WW"))    scale = linY;
-  if (analysis.EqualTo("WZ"))    scale = linY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
