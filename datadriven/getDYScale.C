@@ -1,7 +1,5 @@
 // Constants
 //------------------------------------------------------------------------------
-const double lumi_fb = 2.318;
-
 enum {
   ee,
   mm,
@@ -118,7 +116,8 @@ int          bin_metmax;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "TTDM",
-		TString level    = "01_Routin")
+		TString level    = "01_Routin",
+		double  lumi_fb  = 1.371)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -229,8 +228,8 @@ void getDYScale(TString analysis = "TTDM",
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(0.0);
-      mgraph[k]->SetMaximum(0.4);
+      mgraph[k]->SetMinimum(-0.26);
+      mgraph[k]->SetMaximum(+0.51);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -437,9 +436,9 @@ float errAB2(float a, float err_a, float b, float err_b)
 //------------------------------------------------------------------------------
 float errRatio(float a, float err_a, float b, float err_b)
 {
-  float ratio = a/b;
+  float ratio = fabs(a/b);
 
-  float err = (a/b) * sqrt((err_a*err_a)/(a*a) + (err_b*err_b)/(b*b));
+  float err = ratio * sqrt((err_a*err_a)/(a*a) + (err_b*err_b)/(b*b));
 
   return err;
 }
