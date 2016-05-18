@@ -29,8 +29,8 @@ const float   zmax = 106;  // [GeV]
 
 const int     nmetcut = 7;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 45, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 45, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 50, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 50, 75};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -117,7 +117,8 @@ int          bin_metmax;
 //    mm SF(est/DY)  1.436 +- 0.122
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "Control")
+void getDYScale(TString analysis = "TTDM",
+		TString level    = "01_Routin")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -133,10 +134,10 @@ void getDYScale(TString analysis = "Control")
   //----------------------------------------------------------------------------
   for (int i=ee; i<ll; i++)
     {
-      h2_data[i] = (TH2D*)file_data->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
-      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
-      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
-      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/10_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
     }
 
 
