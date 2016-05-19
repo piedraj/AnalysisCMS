@@ -63,7 +63,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup(2.4);  // We consider only jets up to |eta| < 2.4
+    EventSetup(4.0);  // We consider only jets up to |eta| < 4.0
 
 
     // Analysis
