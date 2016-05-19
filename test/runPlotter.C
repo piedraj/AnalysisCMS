@@ -198,17 +198,13 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{#font[12]{ll}}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{#font[12]{ll}}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{#font[12]{ll}}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
 
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(ll,E_{T}^{miss})",        5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, "E_{T}^{miss} #phi",                  5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "metTtrkPhi"     + suffix, "track E_{T}^{miss} #phi",            5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, "E_{T}^{miss}",                      10, 0, "GeV",  scale, true, 0,  500);
-	  plotter.Draw(prefix + "metTtrk"        + suffix, "track E_{T}^{miss}",                10, 0, "GeV",  scale, true, 0,  500);
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);  // Not in minitrees
-	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 
 	  if (!allplots) continue;
@@ -225,6 +221,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphillstar"     + suffix, "#Delta#phi*(lep1,lep2)",             5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphilmet1"      + suffix, "#Delta#phi(lep1,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphilmet2"      + suffix, "#Delta#phi(lep2,E_{T}^{miss})",      5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "metTtrkPhi"     + suffix, "track E_{T}^{miss} #phi",            5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "drll"           + suffix, "#DeltaR(lep1,lep2)",                 5, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",               -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
@@ -241,6 +238,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet1mass"       + suffix, "leading jet mass",                  -1, 0, "GeV",  scale, true, 0,   50);
 	  plotter.Draw(prefix + "jet2mass"       + suffix, "trailing jet mass",                 -1, 0, "GeV",  scale, true, 0,   50);
 	  plotter.Draw(prefix + "mc"             + suffix, "m_{c}",                             10, 0, "GeV",  scale, true, 0,  500);
+	  plotter.Draw(prefix + "metTtrk"        + suffix, "track E_{T}^{miss}",                10, 0, "GeV",  scale, true, 0,  500);
 	  plotter.Draw(prefix + "mpmet"          + suffix, "min projected E_{T}^{miss}",        10, 0, "GeV",  scale, true, 0,  500);
 	  plotter.Draw(prefix + "mth"            + suffix, "m_{T}^{H}",                         10, 0, "GeV",  scale, true, 0,  500);
 	  plotter.Draw(prefix + "mtw1"           + suffix, "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  500);
@@ -252,10 +250,8 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "nbjet30csvv2l"  + suffix, "number of 30 GeV csvv2l b-jets",    -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet30csvv2t"  + suffix, "number of 30 GeV csvv2t b-jets",    -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet30cmvav2l" + suffix, "number of 30 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet30cmvav2t" + suffix, "number of 30 GeV cmvav2t b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 
 
 	  // WW and MonoH histograms
