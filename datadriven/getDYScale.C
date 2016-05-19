@@ -199,6 +199,8 @@ void getDYScale(TString analysis = "TTDM",
 	}
     }
 
+  if (printResults) printf("\n");
+
 
   // Cosmetics
   //----------------------------------------------------------------------------
@@ -223,13 +225,21 @@ void getDYScale(TString analysis = "TTDM",
 
       mgraph[k]->Draw("ap");
 
+      canvas[k]->Update();
+
+      TLine* line = new TLine(canvas[k]->GetUxmin(), 0.0, canvas[k]->GetUxmax(), 0.0);
+  
+      line->SetLineWidth(2);
+      line->SetLineStyle(3);
+      line->Draw("same");
+
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
       mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
       mgraph[k]->SetMinimum(-0.26);
-      mgraph[k]->SetMaximum(+0.51);
+      mgraph[k]->SetMaximum(+0.45);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -404,17 +414,17 @@ void GetScale(int    ch,
   if (printResults)
     {
       printf("\n");
-      printf(" k(%s)      %6.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
-      printf(" Nin(%s)    %6.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
-      printf(" Nin(em)    %6.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
-      printf(" Nin(WZ)    %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
-      printf(" Nin(ZZ)    %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
-      printf(" Nin(DY)    %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
-      printf(" Nin(est)   %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+      printf(" k(%s)         %6.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
+      printf(" Nin(%s)       %6.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
+      printf(" Nin(em)       %6.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
+      printf(" Nin(WZ)       %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
+      printf(" Nin(ZZ)       %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
+      printf(" Nin(DY)       %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
+      printf(" Nin(est)      %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
       printf("----------------------------\n");
-      printf(" R(est)     %6.3f +- %-5.3f\n",                      R_data_value, R_data_error);
-      printf(" R(DY)      %6.3f +- %-5.3f\n",                      R_dy_value,   R_dy_error);
-      printf(" SF(est/DY) %6.3f +- %-5.3f\n",                      scale_value,  scale_error);
+      printf(" R(%s,est)     %6.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
+      printf(" R(%s,DY)      %6.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
+      printf(" SF(%s,est/DY) %6.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
       printf("\n");
     }
 }
