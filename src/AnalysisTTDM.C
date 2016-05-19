@@ -90,9 +90,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // AN-16-011, IFCA
     //--------------------------------------------------------------------------
-    bool pass = true;
-
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    bool pass = (std_vector_lepton_pt->at(2) < 10.);
 
     // Cut applied in AN-16-105 but not in AN-16-011
     // At least one lepton passes a single lepton trigger
@@ -101,23 +99,25 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_m2l > 20.);
     pass &= (_njet > 1);
-    pass &= (_nbjet30csvv2m > 0);
 
-    FillLevelHistograms(TTDM_01_Routin, pass);
+    bool btag = (_nbjet30csvv2m > 0);
+
+    FillLevelHistograms(TTDM_01_Routin, pass && btag);
 
     pass &= (MET.Et() > 50.);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
-    if (_saveminitree && pass) minitree->Fill();
+    if (_saveminitree && pass && btag) minitree->Fill();
 
-    FillLevelHistograms(TTDM_02_Preselection, pass);
+    FillLevelHistograms(TTDM_02_Preselection, pass && btag);
 
     
     // AN-16-105, Northwestern University
     //--------------------------------------------------------------------------
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_03_AN16105, pass);
+    FillLevelHistograms(TTDM_03_NoBtag,  pass);
+    FillLevelHistograms(TTDM_04_AN16105, pass && btag);
   }
 
 
