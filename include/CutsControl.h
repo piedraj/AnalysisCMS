@@ -5,26 +5,26 @@
 
 
 enum {
-  Control_000_WW0j,
-  Control_001_WW1j,
-  Control_010_Routin,
-  Control_011_Top,
-  Control_100_WW0jSS,
-  Control_101_WW1jSS,
-  Control_110_RoutinSS,
-  Control_111_TopSS,
+  Control_00_WW0j,
+  Control_01_WW1j,
+  Control_02_Routin,
+  Control_03_Top,
+  Control_10_WW0jSS,
+  Control_11_WW1jSS,
+  Control_12_RoutinSS,
+  Control_13_TopSS,
   ncut  // This line should be always last
 };
 
 const TString scut[ncut] = {
-  "Control/000_WW0j",
-  "Control/001_WW1j",
-  "Control/010_Routin",
-  "Control/011_Top",
-  "Control/100_WW0jSS",
-  "Control/101_WW1jSS",
-  "Control/110_RoutinSS",
-  "Control/111_TopSS"
+  "Control/00_WW0j",
+  "Control/01_WW1j",
+  "Control/02_Routin",
+  "Control/03_Top",
+  "Control/10_WW0jSS",
+  "Control/11_WW1jSS",
+  "Control/12_RoutinSS",
+  "Control/13_TopSS"
 };
 
 #endif

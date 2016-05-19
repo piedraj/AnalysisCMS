@@ -116,11 +116,11 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 	if (pass && _njet == 1 && opposite_sign) GetRecoWeightsLHE(list_vectors_weights_1jet);
       }
 
-    FillLevelHistograms(Control_000_WW0j,   pass && _njet == 0 && opposite_sign);
-    FillLevelHistograms(Control_100_WW0jSS, pass && _njet == 0 && same_sign);
+    FillLevelHistograms(Control_00_WW0j,   pass && _njet == 0 && opposite_sign);
+    FillLevelHistograms(Control_10_WW0jSS, pass && _njet == 0 && same_sign);
 
-    FillLevelHistograms(Control_001_WW1j,   pass && _njet == 1 && opposite_sign);
-    FillLevelHistograms(Control_101_WW1jSS, pass && _njet == 1 && same_sign);
+    FillLevelHistograms(Control_01_WW1j,   pass && _njet == 1 && opposite_sign);
+    FillLevelHistograms(Control_11_WW1jSS, pass && _njet == 1 && same_sign);
 
 
     // AN-15-305
@@ -135,8 +135,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_njet > 1);
     pass &= (_nbjet30cmvav2m > 0);
 
-    FillLevelHistograms(Control_010_Routin,   pass && opposite_sign);
-    FillLevelHistograms(Control_110_RoutinSS, pass && same_sign);
+    FillLevelHistograms(Control_02_Routin,   pass && opposite_sign);
+    FillLevelHistograms(Control_12_RoutinSS, pass && same_sign);
 
     if (_channel != em)
       {
@@ -144,8 +144,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 	pass &= (MET.Et() > 40.);
       }
 
-    FillLevelHistograms(Control_011_Top,   pass && opposite_sign);
-    FillLevelHistograms(Control_111_TopSS, pass && same_sign);
+    FillLevelHistograms(Control_03_Top,   pass && opposite_sign);
+    FillLevelHistograms(Control_13_TopSS, pass && same_sign);
   }
 
 
