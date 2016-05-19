@@ -296,6 +296,8 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
+  if (_analysis.EqualTo("FR")) return;
+
   _event_weight = trigger * metFilter;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
