@@ -63,7 +63,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup();
+    EventSetup(2.4);  // We consider only jets up to |eta| < 2.4
 
 
     // Analysis
@@ -72,7 +72,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
-    if (Lepton1.v.Pt() < 10.) continue;
+    if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
     _nelectron = 0;
@@ -87,44 +87,37 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
-    bool pass;
 
-
-    // AN-16-011
-    // Search for dark matter production in association with top quark pairs
-    // in the dilepton final state at sqrt(s) = 13 TeV
+    // AN-16-011, IFCA
     //--------------------------------------------------------------------------
-    pass = true;
+    bool pass = true;
 
-    pass &= (std_vector_lepton_pt->at(0) > 30.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
+
+    // Cut applied in AN-16-105 but not in AN-16-011
+    // At least one lepton passes a single lepton trigger
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
     pass &= (_m2l > 20.);
-    pass &= (_nelectron == 1 || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (_njet > 1);
+    pass &= (_nbjet30csvv2m > 0);
 
-    FillLevelHistograms(TTDM_01_ZVeto, pass);
+    FillLevelHistograms(TTDM_01_Routin, pass);
 
     pass &= (MET.Et() > 50.);
-
-    FillLevelHistograms(TTDM_02_MET50, pass);
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
     if (_saveminitree && pass) minitree->Fill();
 
-    pass &= (_njet > 1);
-
-    FillLevelHistograms(TTDM_03_Preselection, pass);
+    FillLevelHistograms(TTDM_02_Preselection, pass);
 
     
     // AN-16-105, Northwestern University
-    // Search for Dark Matter produced in association with top quark pairs
-    // in the dilepton channel
     //--------------------------------------------------------------------------
-    pass &= (_nbjet30cmvav2m > 0);
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_04_AN16105, pass);
+    FillLevelHistograms(TTDM_03_AN16105, pass);
   }
 
 

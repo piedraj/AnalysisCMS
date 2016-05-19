@@ -296,6 +296,9 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
+
+  _event_weight = 1.0;
+
   if (_analysis.EqualTo("FR")) return;
 
   _event_weight = trigger * metFilter;
@@ -311,12 +314,23 @@ void AnalysisCMS::ApplyWeights()
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
-      float sf_btag    = bPogSF_CMVAL;
+      float sf_btag = 1.0;
+
+      if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
+	{
+	  sf_btag = bPogSF_CSVM;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
+	}
+      else
+	{
+	  sf_btag = bPogSF_CMVAL;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
+	}
+
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
-
-      if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-      if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
 
       if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
@@ -336,8 +350,8 @@ void AnalysisCMS::ApplyWeights()
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.23;
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.23;
+  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
 
   if (_sample.EqualTo("Wg_AMCNLOFXFX"))
     {
