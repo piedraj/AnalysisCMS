@@ -876,12 +876,14 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   if (hist_yield < 0)
     {
-      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f. Will use yield = 0\n\n",
 	     hist->GetName(),
 	     hist_yield);
+
+      hist_yield = 0;
     }
 
-  return fabs(hist_yield);
+  return hist_yield;
 }
 
 

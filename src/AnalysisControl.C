@@ -68,8 +68,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
-
     if (Lepton1.v.Pt() < 10.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
@@ -84,6 +82,9 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
+
+    bool opposite_sign = (Lepton1.flavour * Lepton2.flavour < 0);
+    bool same_sign     = (Lepton1.flavour * Lepton2.flavour > 0);
 
     bool pass;
 
@@ -109,12 +110,17 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 	pass &= (mpmet > 40.);
 	pass &= (_pt2l > 45.);
       }
+    else
+      {
+	if (pass && _njet == 0 && opposite_sign) GetRecoWeightsLHE(list_vectors_weights_0jet);
+	if (pass && _njet == 1 && opposite_sign) GetRecoWeightsLHE(list_vectors_weights_1jet);
+      }
 
-    if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
-    if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
+    FillLevelHistograms(Control_00_WW0j,   pass && _njet == 0 && opposite_sign);
+    FillLevelHistograms(Control_10_WW0jSS, pass && _njet == 0 && same_sign);
 
-    FillLevelHistograms(Control_00_WW0jet, pass && _njet == 0);
-    FillLevelHistograms(Control_01_WW1jet, pass && _njet == 1);
+    FillLevelHistograms(Control_01_WW1j,   pass && _njet == 1 && opposite_sign);
+    FillLevelHistograms(Control_11_WW1jSS, pass && _njet == 1 && same_sign);
 
 
     // AN-15-305
@@ -129,7 +135,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_njet > 1);
     pass &= (_nbjet30cmvav2m > 0);
 
-    FillLevelHistograms(Control_10_Routin, pass);
+    FillLevelHistograms(Control_02_Routin,   pass && opposite_sign);
+    FillLevelHistograms(Control_12_RoutinSS, pass && same_sign);
 
     if (_channel != em)
       {
@@ -137,7 +144,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 	pass &= (MET.Et() > 40.);
       }
 
-    FillLevelHistograms(Control_11_Top, pass);
+    FillLevelHistograms(Control_03_Top,   pass && opposite_sign);
+    FillLevelHistograms(Control_13_TopSS, pass && same_sign);
   }
 
 
