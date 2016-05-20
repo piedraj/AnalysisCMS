@@ -1,7 +1,7 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
 #include "../include/lester_mt2_bisect.h"
-
+#include "../../BTagSFUtil/BTagSFUtil.C"
 
 //------------------------------------------------------------------------------
 // AnalysisStop
@@ -66,6 +66,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
 
+  BTagSFUtil *BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, "_T2tt");
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -80,6 +81,31 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     PrintProgress(jentry, _nentries);
 
     EventSetup(2.4);
+
+    if (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) {
+
+      float EventBTagSF = 1.;
+      for (int ijet = 0; ijet<_njet; ijet++) {
+	
+	int ThisIndex = AnalysisJets[ijet].index;
+	int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
+	
+	float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+	float DataEfficiency = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+	
+	if (AnalysisJets[ijet].csvv2ivf>CSVv2M) 
+	  EventBTagSF *= DataEfficiency/MonteCarloEfficiency;
+	else 
+	  EventBTagSF *= (1. - DataEfficiency)/(1. - MonteCarloEfficiency);
+	
+      }
+      
+      float tree_btag_sf = bPogSF_CSVM;
+      _event_weight *= EventBTagSF/tree_btag_sf;
+
+    }
+
+    
 
 
     // Analysis
@@ -120,7 +146,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       }
       
     }
-
+    
     _meff = -0.1;
     _mllbb = -0.1;
     _mt2bb = -0.1;
