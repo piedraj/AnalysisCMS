@@ -253,18 +253,19 @@ void AnalysisCMS::Setup(TString analysis,
     }
   }
 
+  if (_sample.Contains("DoubleEG"))       _ismc = false;
+  if (_sample.Contains("DoubleMuon"))     _ismc = false;
+  if (_sample.Contains("MuonEG"))         _ismc = false;
+  if (_sample.Contains("SingleElectron")) _ismc = false;
+  if (_sample.Contains("SingleMuon"))     _ismc = false;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
   printf("     sample: %s\n",        _sample.Data());
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
-
-  if (_sample.Contains("DoubleEG"))       _ismc = false;
-  if (_sample.Contains("DoubleMuon"))     _ismc = false;
-  if (_sample.Contains("MuonEG"))         _ismc = false;
-  if (_sample.Contains("SingleElectron")) _ismc = false;
-  if (_sample.Contains("SingleMuon"))     _ismc = false;
+  printf("       ismc: %d\n",        _ismc);
   
   gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
