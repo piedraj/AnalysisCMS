@@ -51,39 +51,41 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
 
-  plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt",     20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Muon_tight_pt", "Tight muons pt",     20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_loose_pt",  "Loose electrons pt", 20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_tight_pt",  "Tight electrons pt", 20, 0, "GeV", linY, true, 0, 200);
-
-  plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt log",     20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Muon_tight_pt", "Tight muons p logt",     20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_loose_pt",  "Loose electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_tight_pt",  "Tight electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
-
-  plotter.Draw(prefix + "Muon_loose_mtw", "Loose muons mtw",     20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Muon_tight_mtw", "Tight muons mtw",     20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_loose_mtw",  "Loose electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_tight_mtw",  "Tight electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
-
-  plotter.Draw(prefix + "Muon_loose_mtw", "Loose muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Muon_tight_mtw", "Tight muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_loose_mtw",  "Loose electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
-  plotter.Draw(prefix + "Ele_tight_mtw",  "Tight electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
-
   if (level.Contains("ZRegion")) {
 
-      plotter.Draw(prefix + "Muon_loose_m2l", "Loose muons m2l",     20, 0, "GeV", linY, true, 0, 200);
-      plotter.Draw(prefix + "Muon_tight_m2l", "Tight muons m2l",     20, 0, "GeV", linY, true, 0, 200);
-      plotter.Draw(prefix + "Ele_loose_m2l",  "Loose electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
-      plotter.Draw(prefix + "Ele_tight_m2l",  "Tight electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_loose_m2l", "Loose muons m2l",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_m2l", "Tight muons m2l",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_m2l",  "Loose electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_m2l",  "Tight electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
 
-      plotter.Draw(prefix + "Muon_loose_m2l", "Loose muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
-      plotter.Draw(prefix + "Muon_tight_m2l", "Tight muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
-      plotter.Draw(prefix + "Ele_loose_m2l",  "Loose electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
-      plotter.Draw(prefix + "Ele_tight_m2l",  "Tight electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_loose_m2l", "Loose muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_m2l", "Tight muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_m2l",  "Loose electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_m2l",  "Tight electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
 
-    }
+  } else {
+
+    plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_pt", "Tight muons pt",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_pt",  "Loose electrons pt", 20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_pt",  "Tight electrons pt", 20, 0, "GeV", linY, true, 0, 200);
+
+    plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_pt", "Tight muons p logt",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_pt",  "Loose electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_pt",  "Tight electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
+
+    plotter.Draw(prefix + "Muon_loose_mtw", "Loose muons mtw",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_mtw", "Tight muons mtw",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_mtw",  "Loose electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_mtw",  "Tight electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
+
+    plotter.Draw(prefix + "Muon_loose_mtw", "Loose muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_tight_mtw", "Tight muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_loose_mtw",  "Loose electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter.Draw(prefix + "Ele_tight_mtw",  "Tight electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
+
+  }
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
