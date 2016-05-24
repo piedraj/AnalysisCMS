@@ -47,11 +47,6 @@ void runPlotter(TString level,
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
-  if (analysis.EqualTo("Control") && level.Contains("WW"))
-    plotter.SetDataNorm(true);
-  else
-    plotter.SetDataNorm(false);
-
   plotter.SetStackOption(option);
   plotter.SetPublicStyle( false);
   plotter.SetSavePdf    ( false);
@@ -177,6 +172,15 @@ void runPlotter(TString level,
 
   // Draw distributions
   //----------------------------------------------------------------------------
+  if (analysis.EqualTo("Control") && level.Contains("WW"))
+    {
+      printf("\n [runPlotter] Warning: normalizing MC to data in the WW control regions\n\n");
+      
+      plotter.SetDataNorm(true);
+    }
+  else
+    plotter.SetDataNorm(false);
+
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
