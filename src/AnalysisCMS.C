@@ -301,7 +301,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  if (!_analysis.EqualTo("Control")) _event_weight *= trigger * metFilter;  // The trigger variable is NOT fully understood with 2016B data
+  _event_weight *= trigger * metFilter;
+
+  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     

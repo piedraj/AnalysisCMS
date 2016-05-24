@@ -10,7 +10,7 @@
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
-const double lumi_fb_2016B       = 0.5;
+const double lumi_fb_2016B       = 0.218;
 const double lumi_fb_blind_2015D = 1.324;
 const double lumi_fb_blind       = 1.371;
 const double lumi_fb             = 2.318;
