@@ -301,7 +301,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = trigger * metFilter;
+  if (!_analysis.EqualTo("Control")) _event_weight = trigger * metFilter;  // The trigger variable is NOT fully understood with 2016B data
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
