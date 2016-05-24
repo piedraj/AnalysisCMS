@@ -309,7 +309,7 @@ void AnalysisCMS::ApplyWeights()
     
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;  // Default weights
+  _event_weight *= _luminosity * baseW * puW;
 
 
   // Includes btag, trigger and idiso systematic uncertainties
