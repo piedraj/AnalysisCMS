@@ -3,7 +3,6 @@
 
 //#include "CutsControl.h"
 #include "CutsFR.h"
-//#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"
 //#include "CutsStop.h"
@@ -11,6 +10,7 @@
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
+const double lumi_fb_2016B       = 0.5;
 const double lumi_fb_blind_2015D = 1.324;
 const double lumi_fb_blind       = 1.371;
 const double lumi_fb             = 2.318;

@@ -35,7 +35,8 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_blind_2015D;
+  if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
+  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
 
   Bool_t scale = linY;
 
