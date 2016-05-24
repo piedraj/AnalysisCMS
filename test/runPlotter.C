@@ -47,6 +47,11 @@ void runPlotter(TString level,
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
+  if (analysis.EqualTo("Control") && level.Contains("WW"))
+    plotter.SetDataNorm(true);
+  else
+    plotter.SetDataNorm(false);
+
   plotter.SetStackOption(option);
   plotter.SetPublicStyle( false);
   plotter.SetSavePdf    ( false);
@@ -206,9 +211,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(ll,E_{T}^{miss})",        5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, "E_{T}^{miss} #phi",                  5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  400);
-	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  400);
-	  plotter.Draw(prefix + "metPfType1"     + suffix, "E_{T}^{miss}",                      10, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "metPfType1"     + suffix, "E_{T}^{miss}",                      10, 0, "GeV",  scale, true, 0,  200);
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);  // Not in minitrees
 
 	  if (!allplots) continue;
