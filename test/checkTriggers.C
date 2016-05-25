@@ -1,6 +1,6 @@
 // Constants and data members
 //------------------------------------------------------------------------------
-const TCut SingleElectron = "std_vector_trigger[1]";                             // HLT_Ele23_WPLoose_Gsf_v*
+const TCut SingleElectron = "std_vector_trigger[1]";                             // HLT_Ele23_WPLoose_Gsf
 const TCut SingleMuon     = "std_vector_trigger[40] || std_vector_trigger[17]";  // HLT_IsoMu18, HLT_IsoTkMu20
 const TCut DoubleEG       = "std_vector_trigger[5]";                             // HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
 const TCut DoubleMuon     = "std_vector_trigger[10] || std_vector_trigger[12]";  // HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ, HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ
@@ -23,7 +23,7 @@ void GetTriggerEfficiency(TString sample);
 // checkTriggers
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkTriggers(TString data = "2015D")
+void checkTriggers(TString data = "2016B")
 {
   if (data.Contains("2015D"))
     {
@@ -47,6 +47,8 @@ void checkTriggers(TString data = "2015D")
       GetTriggerEfficiency("Run2016B_PromptReco_DoubleMuon");
       GetTriggerEfficiency("Run2016B_PromptReco_MuonEG");
     }
+
+  printf("\n");
 }
 
 
@@ -57,15 +59,36 @@ void GetTriggerEfficiency(TString sample)
 {
   TFile* file = new TFile(path + sample + ".root");
 
+
+  // Check trigger names
+  //----------------------------------------------------------------------------
+  if (sample.Contains("SingleElectron"))
+    {
+      TH1F* selectedTriggers = (TH1F*)file->Get("selectedTriggers");
+
+      TAxis* xaxis = (TAxis*)selectedTriggers->GetXaxis();
+
+      printf("\n");
+      printf(" SingleElectron: %s\n",     xaxis->GetBinLabel(2));
+      printf(" DoubleEG:       %s\n",     xaxis->GetBinLabel(6));
+      printf(" SingleMuon:     %s, %s\n", xaxis->GetBinLabel(41), xaxis->GetBinLabel(18));
+      printf(" DoubleMuon:     %s, %s\n", xaxis->GetBinLabel(11), xaxis->GetBinLabel(13));
+      printf(" MuonEG:         %s, %s\n", xaxis->GetBinLabel(8),  xaxis->GetBinLabel(10));
+      printf("\n");
+    }
+
+
+  // Compute the trigger efficiency
+  //----------------------------------------------------------------------------
   TCanvas* canvas = new TCanvas("canvas " + sample, "canvas " + sample);
   
   TCut pass = json;
 
-  if (sample.Contains("SingleMuon"))     pass = json && SingleMuon;
-  if (sample.Contains("DoubleMuon"))     pass = json && DoubleMuon;
-  if (sample.Contains("DoubleEG"))       pass = json && DoubleEG;
-  if (sample.Contains("MuonEG"))         pass = json && MuonEG;
   if (sample.Contains("SingleElectron")) pass = json && SingleElectron;
+  if (sample.Contains("SingleMuon"))     pass = json && SingleMuon;
+  if (sample.Contains("DoubleEG"))       pass = json && DoubleEG;
+  if (sample.Contains("DoubleMuon"))     pass = json && DoubleMuon;
+  if (sample.Contains("MuonEG"))         pass = json && MuonEG;
 
   TTree* latino = (TTree*)file->Get("latino");
 
