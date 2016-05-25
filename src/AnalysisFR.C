@@ -139,6 +139,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
       _event_weight_fr = puW * baseW * _luminosity * genWeight;
+
     }
     else {
 
@@ -206,11 +207,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     pass = (MET.Et() > 30.);
     pass &= (_nlepton == 1);
+    pass &= (Lepton1.v.Pt() > 35.);
 
     FillLevelHistograms(FR_01_WRegion, pass);
 
     pass = (MET.Et() > 20.);
     pass &= (_mtw > 20.);
+    pass &= (Lepton1.v.Pt() > 35.);
   
     if (_nlepton < 2) continue;
     if (_m2l < 0) continue;

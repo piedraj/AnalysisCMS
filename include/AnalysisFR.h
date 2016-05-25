@@ -49,6 +49,16 @@ class AnalysisFR: public AnalysisCMS
   TH1D* h_Ele_loose_pt[ncut];
   TH1D* h_Ele_tight_pt[ncut];
 
+  TH1D* h_Muon_loose_mtw[ncut];
+  TH1D* h_Muon_tight_mtw[ncut];
+  TH1D* h_Ele_loose_mtw[ncut];
+  TH1D* h_Ele_tight_mtw[ncut];
+
+  TH1D* h_Muon_loose_m2l[ncut];
+  TH1D* h_Muon_tight_m2l[ncut];
+  TH1D* h_Ele_loose_m2l[ncut];
+  TH1D* h_Ele_tight_m2l[ncut];
+
 };
 
 #endif 
