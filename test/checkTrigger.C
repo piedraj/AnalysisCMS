@@ -72,5 +72,10 @@ void GetTriggerEfficiency(TString sample)
   Long64_t numerator   = latino->Draw("metPfType1", pass);
   Long64_t denominator = latino->Draw("metPfType1", json);
 
-  printf(" %-34s efficiency = %6.2f%s (%lli / %lli)\n", sample.Data(), 1e2 * numerator / denominator, "%", numerator, denominator);
+  printf(" %-34s efficiency = %6.2f%s (%lli / %lli)\n",
+	 sample.Data(),
+	 1e2 * numerator / denominator,
+	 "%",
+	 numerator,
+	 denominator);
 }
