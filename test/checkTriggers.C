@@ -20,10 +20,10 @@ void GetTriggerEfficiency(TString sample);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// checkTrigger
+// checkTriggers
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkTrigger(TString data = "2015D")
+void checkTriggers(TString data = "2015D")
 {
   if (data.Contains("2015D"))
     {
