@@ -142,9 +142,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 	passWW &= (_pt2l > 45.);
       }
 
-    //if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
-    //if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
-
     FillLevelHistograms(Control_00_WW0jet, passWW && _njet == 0);
     FillLevelHistograms(Control_01_WW1jet, passWW && _njet == 1);
 
