@@ -1,6 +1,8 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
 #include "../include/lester_mt2_bisect.h"
+// https://github.com/scodella/BTagSFUtil/blob/master/README.md
+//   git clone https://github.com/scodella/BTagSFUtil
 #include "../../BTagSFUtil/BTagSFUtil.C"
 
 //------------------------------------------------------------------------------
@@ -18,9 +20,8 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
-
+  
   Setup(analysis, filename, luminosity);
-
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -67,7 +68,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
   asymm_mt2_lester_bisect::disableCopyrightMessage();
 
   BTagSFUtil *BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, "_T2tt");
-
+  
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
@@ -75,9 +76,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
-
+    
     fChain->GetEntry(jentry);
-
+    
     PrintProgress(jentry, _nentries);
 
     EventSetup(2.4);
@@ -104,9 +105,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       _event_weight *= EventBTagSF/tree_btag_sf;
 
     }
-
-    
-
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -187,7 +185,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       
     }
     
-
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
