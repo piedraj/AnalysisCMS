@@ -253,18 +253,19 @@ void AnalysisCMS::Setup(TString analysis,
     }
   }
 
+  if (_sample.Contains("DoubleEG"))       _ismc = false;
+  if (_sample.Contains("DoubleMuon"))     _ismc = false;
+  if (_sample.Contains("MuonEG"))         _ismc = false;
+  if (_sample.Contains("SingleElectron")) _ismc = false;
+  if (_sample.Contains("SingleMuon"))     _ismc = false;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
   printf("     sample: %s\n",        _sample.Data());
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
-
-  if (_sample.Contains("DoubleEG"))       _ismc = false;
-  if (_sample.Contains("DoubleMuon"))     _ismc = false;
-  if (_sample.Contains("MuonEG"))         _ismc = false;
-  if (_sample.Contains("SingleElectron")) _ismc = false;
-  if (_sample.Contains("SingleMuon"))     _ismc = false;
+  printf("       ismc: %d\n",        _ismc);
   
   gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
@@ -300,13 +301,15 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = trigger * metFilter;
+  _event_weight *= trigger * metFilter;
+
+  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;  // Default weights
+  _event_weight *= _luminosity * baseW * puW;
 
 
   // Includes btag, trigger and idiso systematic uncertainties

@@ -1,15 +1,16 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-//#include "CutsControl.h"
+#include "CutsControl.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsTop.h"
 //#include "CutsStop.h"
-#include "CutsTTDM.h"
+//#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
+const double lumi_fb_2016B       = 0.218;
 const double lumi_fb_blind_2015D = 1.324;
 const double lumi_fb_blind       = 1.371;
 const double lumi_fb             = 2.318;
