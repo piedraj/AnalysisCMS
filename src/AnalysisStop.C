@@ -1,9 +1,7 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
-#include "../include/lester_mt2_bisect.h"
-// https://github.com/scodella/BTagSFUtil/blob/master/README.md
-//   git clone https://github.com/scodella/BTagSFUtil
 #include "../../BTagSFUtil/BTagSFUtil.C"
+
 
 //------------------------------------------------------------------------------
 // AnalysisStop
@@ -20,8 +18,9 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
-  
+
   Setup(analysis, filename, luminosity);
+
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -65,10 +64,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
   root_output->cd();
 
-  asymm_mt2_lester_bisect::disableCopyrightMessage();
 
   BTagSFUtil *BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, "_T2tt");
-  
+
+
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
@@ -76,9 +75,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
-    
+
     fChain->GetEntry(jentry);
-    
+
     PrintProgress(jentry, _nentries);
 
     EventSetup(2.4);
@@ -102,9 +101,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       }
       
       float tree_btag_sf = bPogSF_CSVM;
-      _event_weight *= EventBTagSF/tree_btag_sf;
 
+      _event_weight *= EventBTagSF/tree_btag_sf;
     }
+
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -112,79 +112,22 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     if (Lepton1.v.Pt() < 20.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
-
+    
     if (_nlepton > 2) continue;
 
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
     if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
-
+    
     if      (_nelectron == 2) _channel = ee;
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
-    _m2l          = mll;
-    _pt2l         = ptll;
-    _dyll         = fabs(_lep1eta - _lep2eta);
-    _ptbll        = (Lepton1.v + Lepton2.v + MET).Pt();
-    _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
-    _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+    _m2l  = mll;
+    _pt2l = ptll;
 
-    
-    _dphimetjet = -0.1; double MinDeltaPhiMetJet = 999.;
-    for (int ijet = 0; ijet<_njet; ijet++) {
-      
-      double ThisDeltaPhiMetJet = fabs(AnalysisJets[ijet].v.DeltaPhi(MET));
-      if (ThisDeltaPhiMetJet<MinDeltaPhiMetJet) {
-	
-	MinDeltaPhiMetJet = ThisDeltaPhiMetJet;
-	_dphimetjet = ThisDeltaPhiMetJet;
-	
-      }
-      
-    }
-    
-    _meff = -0.1;
-    _mllbb = -0.1;
-    _mt2bb = -0.1;
-    _mt2lblb = -0.1;
-    if (_njet>=2) {
-      
-      _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
 
-      int bjetindex[2] = {-1, -1};
-      if (_nbjet30csvv2m>=1) {
-	
-	int nbjetfound = 0, nbjetfromleading = 0;
-	for (int ijet = 0; ijet<_njet; ijet++) {
-	  if (nbjetfound<2) {
-	    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) {
-	      bjetindex[1] = bjetindex[0];
-	      bjetindex[nbjetfound] = ijet;
-	      nbjetfound++;
-	    } else if (nbjetfromleading<1) {
-	      bjetindex[nbjetfound] = ijet;
-	      nbjetfromleading++;
-	    }  
-	  }
-	}
-	if (bjetindex[0]>=0 && bjetindex[1]>=0) {
-	  
-	  _mllbb = (Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).M();
-
-	  _mt2bb = ComputeMT2(AnalysisJets[bjetindex[0]].v, AnalysisJets[bjetindex[1]].v, Lepton1.v + Lepton2.v + MET, 1);
-	    
-	  _mt2lblb = ComputeMT2(AnalysisJets[bjetindex[0]].v + Lepton1.v, AnalysisJets[bjetindex[1]].v + Lepton2.v, MET);
-	  double CombinatorialMT2lblb = ComputeMT2(AnalysisJets[bjetindex[0]].v + Lepton2.v, AnalysisJets[bjetindex[1]].v + Lepton1.v, MET, 2);
-	  if (CombinatorialMT2lblb<_mt2lblb) _mt2lblb = CombinatorialMT2lblb;
-	  
-	}
-	
-      }
-      
-    }
-    
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
@@ -271,7 +214,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     bool pass3 = pass && pass_met50;
 
     FillLevelHistograms(Stop_00_Met50, pass3);
-
     //--------------------------------------------------------------------------
   }
 
@@ -317,49 +259,4 @@ void AnalysisStop::FillLevelHistograms(int  icut,
 
   FillAnalysisHistograms(_channel, icut, _jetbin);
   FillAnalysisHistograms(_channel, icut, njetbin);
-}
-
-
-//------------------------------------------------------------------------------
-// ComputeMT2
-//------------------------------------------------------------------------------
-double AnalysisStop::ComputeMT2(TLorentzVector VisibleA, TLorentzVector VisibleB, 
-				TLorentzVector Invisible, int MT2Type, double MT2Precision) 
-{
-  
-  double mVisA = fabs(VisibleA.M()); // mass of visible object on side A.  Must be >=0.
-  double mVisB = fabs(VisibleB.M()); // mass of visible object on side B.  Must be >=0.
-
-  double chiA = 0.; // hypothesised mass of invisible on side A.  Must be >=0.
-  double chiB = 0.; // hypothesised mass of invisible on side B.  Must be >=0.
-  
-  if (MT2Type==1) {
-
-    mVisA = mVisB = 5.;
-    chiA = chiB = 80.;
-
-  }
-
-  double pxA = VisibleA.Px(); // x momentum of visible object on side A.
-  double pyA = VisibleA.Py(); // y momentum of visible object on side A.
-  
-  double pxB = VisibleB.Px(); // x momentum of visible object on side B.
-  double pyB = VisibleB.Py(); // y momentum of visible object on side B.
-  
-  double pxMiss = Invisible.Px(); // x component of missing transverse momentum.
-  double pyMiss = Invisible.Py(); // y component of missing transverse momentum.
-  
-  double desiredPrecisionOnMt2 = MT2Precision; // Must be >=0.  If 0 alg aims for machine precision.  if >0, MT2 computed to supplied absolute precision.
-  
-  // asymm_mt2_lester_bisect::disableCopyrightMessage();
-  
-  double MT2 =  asymm_mt2_lester_bisect::get_mT2(
-						 mVisA, pxA, pyA,
-						 mVisB, pxB, pyB,
-						 pxMiss, pyMiss,
-						 chiA, chiB,
-						 desiredPrecisionOnMt2);
-
-  return MT2;
-  
 }

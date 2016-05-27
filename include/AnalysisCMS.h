@@ -122,6 +122,14 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetRecoWeightsLHE (TH1F*    hist);
 
+  void    GetStopVar        ();
+
+  double  ComputeMT2        (TLorentzVector VisibleA,
+			     TLorentzVector VisibleB, 
+			     TLorentzVector Invisible,
+			     int            MT2Type = 0,
+			     double         MT2Precision = 0.);
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -217,6 +225,21 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _sumjpt12;
   float                  _trkpmet;
+
+
+  // Variables ported from AnalysisStop
+  //----------------------------------------------------------------------------
+  float                  _dyll;  // Using pseudorapidity
+  float                  _ptbll;
+  float                  _mt2ll;
+  float                  _dphimetptbll;
+  float                  _dphimetjet;
+  float                  _mllbb;
+//float                  _dphilj;  // Meaning to be verified
+  float                  _meff;
+  float                  _mt2bb;
+  float                  _mt2lblb;
+
 
   Long64_t               _nentries;
 
