@@ -253,18 +253,19 @@ void AnalysisCMS::Setup(TString analysis,
     }
   }
 
+  if (_sample.Contains("DoubleEG"))       _ismc = false;
+  if (_sample.Contains("DoubleMuon"))     _ismc = false;
+  if (_sample.Contains("MuonEG"))         _ismc = false;
+  if (_sample.Contains("SingleElectron")) _ismc = false;
+  if (_sample.Contains("SingleMuon"))     _ismc = false;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
   printf("     sample: %s\n",        _sample.Data());
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
-
-  if (_sample.Contains("DoubleEG"))       _ismc = false;
-  if (_sample.Contains("DoubleMuon"))     _ismc = false;
-  if (_sample.Contains("MuonEG"))         _ismc = false;
-  if (_sample.Contains("SingleElectron")) _ismc = false;
-  if (_sample.Contains("SingleMuon"))     _ismc = false;
+  printf("       ismc: %d\n",        _ismc);
   
   gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
@@ -296,25 +297,42 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
-  _event_weight = trigger * metFilter;
+  _event_weight = 1.0;
+
+  if (_analysis.EqualTo("FR")) return;
+
+  _event_weight *= trigger * metFilter;
+
+  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;  // Default weights
+  _event_weight *= _luminosity * baseW * puW;
 
 
   // Includes btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
-      float sf_btag    = bPogSF_CMVAL;
+      float sf_btag = 1.0;
+
+      if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
+	{
+	  sf_btag = bPogSF_CSVM;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
+	}
+      else
+	{
+	  sf_btag = bPogSF_CMVAL;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
+	}
+
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
-
-      if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-      if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
 
       if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);

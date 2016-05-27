@@ -10,9 +10,11 @@
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
-const double lumi_fb_blind = 1.371;
-const double lumi_fb       = 2.318;
-const double lumi_error_percent = 2.7;
+const double lumi_fb_2016B       = 0.218;
+const double lumi_fb_blind_2015D = 1.324;
+const double lumi_fb_blind       = 1.371;
+const double lumi_fb             = 2.318;
+const double lumi_error_percent  = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;

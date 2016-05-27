@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetSaveMinitree(false);
 }
 
 
@@ -68,8 +68,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
-
     if (Lepton1.v.Pt() < 10.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
@@ -85,7 +83,40 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
+    bool opposite_sign = (Lepton1.flavour * Lepton2.flavour < 0);
+
     bool pass;
+
+
+    // Z+jets
+    //--------------------------------------------------------------------------
+    pass = true;
+
+    pass &= opposite_sign;
+    pass &= (Lepton1.v.Pt() > 20.);
+    pass &= (Lepton2.v.Pt() > 20.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    pass &= (_m2l > 12.);
+    pass &= (_nbjet20cmvav2l == 0);
+
+    FillLevelHistograms(Control_00_ZJets, pass);
+
+
+    // Top
+    //--------------------------------------------------------------------------
+    pass = true;
+
+    pass &= opposite_sign;
+    pass &= (Lepton1.v.Pt() > 20.);
+    pass &= (Lepton2.v.Pt() > 20.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    pass &= (_m2l > 12.);
+    pass &= (_nbjet20cmvav2l > 0);
+    pass &= (_njet > 1);
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (_channel == em || MET.Et() > 40.);
+
+    FillLevelHistograms(Control_01_Top, pass);
 
 
     // AN-15-325, latinos
@@ -93,51 +124,25 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = true;
 
+    pass &= opposite_sign;
     pass &= (Lepton1.v.Pt() > 20.);
     pass &= (Lepton2.v.Pt() > 20.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 12.);
+    pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
     pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
-    pass &= (_nbjet20cmvav2l == 0);
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (_channel == em || MET.Et() > 40.);
+    pass &= (_channel == em || mpmet > 40.);
+    pass &= (_channel == em || _pt2l > 45.);
 
-    if (_channel != em)
-      {
-	pass &= (fabs(_m2l - Z_MASS) > 15.);
-	pass &= (MET.Et() > 40.);
-	pass &= (mpmet > 40.);
-	pass &= (_pt2l > 45.);
-      }
+    FillLevelHistograms(Control_02_WW0j, pass && _njet == 0);
+    FillLevelHistograms(Control_03_WW1j, pass && _njet == 1);
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
-
-    FillLevelHistograms(Control_00_WW0jet, pass && _njet == 0);
-    FillLevelHistograms(Control_01_WW1jet, pass && _njet == 1);
-
-
-    // AN-15-305
-    // Measurement of the top-quark pair production cross section in the dilepton
-    // channel with 2.2 fb-1 of 13 TeV data using the cut and count method
-    //--------------------------------------------------------------------------
-    pass = true;
-
-    pass &= (Lepton1.v.Pt() > 20.);
-    pass &= (Lepton2.v.Pt() > 20.);
-    pass &= (_m2l > 20.);
-    pass &= (_njet > 1);
-    pass &= (_nbjet30cmvav2m > 0);
-
-    FillLevelHistograms(Control_10_Routin, pass);
-
-    if (_channel != em)
-      {
-	pass &= (fabs(_m2l - Z_MASS) > 15.);
-	pass &= (MET.Et() > 40.);
-      }
-
-    FillLevelHistograms(Control_11_Top, pass);
   }
 
 

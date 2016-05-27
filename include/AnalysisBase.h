@@ -465,6 +465,7 @@ public :
    Float_t         yll;
    Float_t         mtw2;
    Float_t         mtw1;
+   Float_t         isJsonOk;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -908,6 +909,7 @@ public :
    TBranch        *b_yll;   //!
    TBranch        *b_mtw2;   //!
    TBranch        *b_mtw1;   //!
+   TBranch        *b_isJsonOk;   //!
 
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
@@ -1577,6 +1579,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("yll", &yll, &b_yll);
    fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
    fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
+   fChain->SetBranchAddress("isJsonOk", &isJsonOk, &b_isJsonOk);
    Notify();
 }
 
