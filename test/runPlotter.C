@@ -45,6 +45,7 @@ void runPlotter(TString level,
   Bool_t scale = linY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
+  if (analysis.EqualTo("Stop"))  scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -68,14 +69,14 @@ void runPlotter(TString level,
 
   // Normalize MC to data
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("Control"))
-    {
-      printf("\n [runPlotter] Warning: normalizing MC to data\n\n");
-      
-      plotter.SetDataNorm(true);
-    }
-  else
-    plotter.SetDataNorm(false);
+  //  if (analysis.EqualTo("Control"))
+  //    {
+  //      printf("\n [runPlotter] Warning: normalizing MC to data\n\n");
+  //      
+  //      plotter.SetDataNorm(true);
+  //    }
+  //  else
+  //    plotter.SetDataNorm(false);
 
 
   // Get the data
@@ -236,9 +237,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "mllbb"          + suffix, "m_{" + sll + "bb}",                 10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "meff"           + suffix, "m_{eff}",                           10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}^{" + sll + "}",              10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}^{bb}",                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}^{" + sl + "b" + sl + "b}",   10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 
 	  if (!allplots) continue;
 

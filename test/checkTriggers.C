@@ -23,7 +23,7 @@ void GetTriggerEfficiency(TString sample);
 // checkTriggers
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkTriggers(TString data = "2016B")
+void checkTriggers(TString data = "2015D")
 {
   if (data.Contains("2015D"))
     {
@@ -39,7 +39,8 @@ void checkTriggers(TString data = "2016B")
   else if (data.Contains("2016B"))
     {
       path = path2016B;
-      json = "isJsonOk > 0";
+      json = "metPfType1 > -999";
+      //      json = "isJsonOk > 0";
 
       GetTriggerEfficiency("Run2016B_PromptReco_SingleElectron");
       GetTriggerEfficiency("Run2016B_PromptReco_SingleMuon");
