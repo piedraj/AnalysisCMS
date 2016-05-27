@@ -139,9 +139,41 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
       _event_weight_fr = puW * baseW * _luminosity * genWeight;
+      /*
+      if (filename.Contains("WJetsToLNu")) {
 
-    }
-    else {
+	if (_channel == m) {
+
+	  _event_weight_fr *= 0.077;
+
+	} else if (_channel == e) {
+
+	  if (Lepton1.type == Loose || Lepton1.type == Tight) {
+
+	    _event_weight_fr *= 0.0045;
+
+	  } else if (Lepton1.type == Tight) {
+
+	    _event_weight_fr *= 0.0014;
+
+	  }
+
+	}
+	
+      } else if (filename.Contains("DYJetsToLL")) {
+
+	if (_channel == m) {
+	    
+	  _event_weight_fr *= 0.09;
+
+	} else if (_channel == e) {
+	  
+	  _event_weight_fr *= 0.0014;
+
+	}
+      }
+      */
+    } else  {
 
       _event_weight_fr = 1.0;
 
@@ -205,36 +237,71 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(FR_00_QCD, pass);
 
-    pass = (MET.Et() > 30.);
+    pass = (MET.Et() > 20.);
+    pass &= (_mtw > 20.);
     pass &= (_nlepton == 1);
     pass &= (Lepton1.v.Pt() > 35.);
 
     FillLevelHistograms(FR_01_WRegion, pass);
 
+    pass = (MET.Et() < 20.);
+    pass &= (_mtw > 20.);
+    pass &= (_nlepton == 1);
+    pass &= (Lepton1.v.Pt() > 35.);
+
+    FillLevelHistograms(FR_02_WRegionQCD, pass);
+
     pass = (MET.Et() > 20.);
     pass &= (_mtw > 20.);
+    pass &= (_nlepton >= 2);
     pass &= (Lepton1.v.Pt() > 35.);
-  
-    if (_nlepton < 2) continue;
-    if (_m2l < 0) continue;
-    
-    if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
+    pass &= _m2l > 0;
+
+    if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-      h_Ele_loose_m2l[FR_02_ZRegion] -> Fill(_m2l, _event_weight_fr);     
+      h_Ele_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);     
      
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Ele_tight_m2l[FR_02_ZRegion] -> Fill(_m2l, _event_weight_fr);
+	h_Ele_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
 	
       }
 
-    } else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
+    } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 
-      h_Muon_loose_m2l[FR_02_ZRegion] -> Fill(_m2l, _event_weight_fr);
+      h_Muon_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
 
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Muon_tight_m2l[FR_02_ZRegion] -> Fill(_m2l, _event_weight_fr);
+	h_Muon_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
+
+      } 
+
+    }
+
+    pass = (MET.Et() < 20.);
+    pass &= (_mtw < 20.);
+    pass &= (_nlepton >= 2);
+    pass &= (Lepton1.v.Pt() > 35.);
+    pass &= _m2l > 0;
+
+    if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
+ 
+      h_Ele_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);     
+     
+      if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	h_Ele_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
+	
+      }
+
+    } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
+
+      h_Muon_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
+
+      if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	h_Muon_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
 
       } 
 
@@ -242,7 +309,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
   }
 
-    EndJob();
+  EndJob();
+
 }
 
 //------------------------------------------------------------------------------                                                                           
