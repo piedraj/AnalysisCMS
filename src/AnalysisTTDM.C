@@ -90,7 +90,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // AN-16-011, IFCA
     //--------------------------------------------------------------------------
-    bool pass = (std_vector_lepton_pt->at(2) < 10.);
+    bool pass   = true;
+    bool passTT = true; 
+
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
 
     // Cut applied in AN-16-105 but not in AN-16-011
     // At least one lepton passes a single lepton trigger
@@ -100,24 +103,55 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_m2l > 20.);
     pass &= (_njet > 1);
 
-    bool btag = (_nbjet30csvv2m > 0);
+    FillLevelHistograms(TTDM_010_Routin, pass);
 
-    FillLevelHistograms(TTDM_01_Routin, pass && btag);
+    pass &= (_nbjet30csvv2m > 0);
 
-    pass &= (MET.Et() > 50.);
+    FillLevelHistograms(TTDM_011_Routin, pass);
+
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
-    if (_saveminitree && pass && btag) minitree->Fill();
+    passTT = pass; 
 
-    FillLevelHistograms(TTDM_02_Preselection, pass && btag);
+    pass   &= (MET.Et() > 50.); 
+    passTT &= (MET.Et() < 50.);    passTT&= (MET.Et() > 25.);
+
+    if (_saveminitree && pass ) minitree->Fill();
+
+    FillLevelHistograms(TTDM_02_Preselection, pass );
+    FillLevelHistograms(TTDM_04_ttSideBand  , passTT);
+
+
+    bool passWW = true;
+
+    passWW &= (Lepton1.v.Pt() > 20.);
+    passWW &= (Lepton2.v.Pt() > 20.);
+    passWW &= (std_vector_lepton_pt->at(2) < 10.);
+    passWW &= (_m2l > 12.);
+    passWW &= (MET.Et() > 50.);
+    passWW &= (mpmet > 20.);
+    passWW &= (_pt2l > 30.);
+    passWW &= (_nbjet30csvv2m == 0);
+
+
+    if (_channel != em)
+      {
+	passWW &= (fabs(_m2l - Z_MASS) > 15.);
+	passWW &= (MET.Et() > 50.);
+	passWW &= (mpmet > 40.);
+	passWW &= (_pt2l > 45.);
+      }
+
+    FillLevelHistograms(Control_00_WW0jet, passWW && _njet == 0);
+    FillLevelHistograms(Control_01_WW1jet, passWW && _njet == 1);
+
 
     
     // AN-16-105, Northwestern University
     //--------------------------------------------------------------------------
     pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(TTDM_03_NoBtag,  pass);
-    FillLevelHistograms(TTDM_04_AN16105, pass && btag);
+    FillLevelHistograms(TTDM_03_AN16105, pass);
   }
 
 

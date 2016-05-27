@@ -11,16 +11,21 @@
 // Constants
 //------------------------------------------------------------------------------
 const int     _verbosity = 0;
-const TString _inputdir  = "../minitrees/TTDM/";
+//const TString _inputdir  = "../minitrees/nominal/TTDM/";
 
 enum {njmin, njmax, nbmin, nbmax};
 
 
 // Functions
 //------------------------------------------------------------------------------
+void LHEfunction();
+void LHEfunction2(TString sample);
+
 void  GetPdfQcdSyst   (TString sample);
 
-float GetYield        (TString sample,
+void  GetYield        (TString sample,
+		       float&  yield,
+		       float&  erryield,
 		       float   cut = -999);
 
 void  PrintYield      (TString sample,
@@ -55,7 +60,10 @@ void  SolveSystem     (TString region,
 TString                  _signal;
 float                    _cut;
 ofstream                 _datacard;
-
+TString			 _systematic;
+ofstream		 _yields;
+TString                  _inputdir;
+float			 _thunc[6];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -64,8 +72,9 @@ ofstream                 _datacard;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void analysis(TString signal            = "ttDM0001scalar0500",
 	      float   cut               = 0.8,
-	      bool    doPrintYields     = false,
-	      bool    doGetScaleFactors = true,
+	      TString systematic        = "nominal",
+	      bool    doPrintYields     = true,
+	      bool    doGetScaleFactors = false,
 	      bool    doGetPdfQcdSyst   = false)
 {
   if (!doPrintYields && !doGetScaleFactors && !doGetPdfQcdSyst) return;
@@ -74,22 +83,29 @@ void analysis(TString signal            = "ttDM0001scalar0500",
 
   _signal = signal;
   _cut    = cut;
+  _systematic = systematic;  if(_systematic == "stat") _systematic = "nominal";
 
+  _inputdir  = "/gpfs/csic_projects/cms/jgarciaf/CMSSW_7_6_3/src/AnalysisCMS_old/minitrees/" + _systematic + "/TTDM/";
 
   // Print yields
   //----------------------------------------------------------------------------
   if (doPrintYields) {
 
-    gSystem->mkdir("datacards", kTRUE);
-  
+    //gSystem->mkdir("datacards", kTRUE);
+    gSystem->mkdir("yields"   , kTRUE);
+
     //    PrintYields(_cut);
     
     int   nstep = 50;
     float step  = 1. / nstep;
 
-    for (int i=0; i<nstep; i++) PrintYields(step * i);
-  }
+    //for (int i=0; i<nstep; i++) PrintYields(step * i);
 
+    PrintYields(_cut);
+
+    LHEfunction();
+
+  }
 
   // Get scale factors
   //----------------------------------------------------------------------------
@@ -119,23 +135,76 @@ void analysis(TString signal            = "ttDM0001scalar0500",
     {
       if (_verbosity > 0) printf("\n [GetPdfQcdSyst]\n\n");
 
-      GetPdfQcdSyst("02_WZTo3LNu");
-      GetPdfQcdSyst("03_ZZ");
-    //GetPdfQcdSyst("04_TTTo2L2Nu");  // Scale factor estimated from data-driven method
-    //GetPdfQcdSyst("06_WW");         // Scale factor estimated from data-driven method
-      GetPdfQcdSyst("05_ST");
-      GetPdfQcdSyst("07_ZJets");
-      GetPdfQcdSyst("09_TTV");
-      GetPdfQcdSyst("10_HWW");
-      GetPdfQcdSyst("11_Wg");
+      float thunc[10][6]; 
+
+      //GetPdfQcdSyst(_signal);       thunc[9][0] = _thunc[0];  thunc[9][1] = _thunc[1];  thunc[9][2] = _thunc[2];  thunc[9][3] = _thunc[3];  thunc[9][4] = _thunc[4];  thunc[9][5] = _thunc[5];
+      GetPdfQcdSyst("02_WZTo3LNu"); thunc[0][0] = _thunc[0];  thunc[0][1] = _thunc[1];  thunc[0][2] = _thunc[2];  thunc[0][3] = _thunc[3];  thunc[0][4] = _thunc[4];  thunc[0][5] = _thunc[5];
+      GetPdfQcdSyst("03_ZZ");	    thunc[1][0] = _thunc[0];  thunc[1][1] = _thunc[1];  thunc[1][2] = _thunc[2];  thunc[1][3] = _thunc[3];  thunc[1][4] = _thunc[4];  thunc[1][5] = _thunc[5];
+      GetPdfQcdSyst("04_TTTo2L2Nu");thunc[7][0] = _thunc[0];  thunc[7][1] = _thunc[1];  thunc[7][2] = _thunc[2];  thunc[7][3] = _thunc[3];  thunc[7][4] = _thunc[4];  thunc[7][5] = _thunc[5];
+      GetPdfQcdSyst("05_ST");       thunc[2][0] = _thunc[0];  thunc[2][1] = _thunc[1];  thunc[2][2] = _thunc[2];  thunc[2][3] = _thunc[3];  thunc[2][4] = _thunc[4];  thunc[2][5] = _thunc[5];
+      GetPdfQcdSyst("06_WW");       thunc[8][0] = _thunc[0];  thunc[8][1] = _thunc[1];  thunc[8][2] = _thunc[2];  thunc[8][3] = _thunc[3];  thunc[8][4] = _thunc[4];  thunc[8][5] = _thunc[5];   
+      GetPdfQcdSyst("07_ZJets");    thunc[3][0] = _thunc[0];  thunc[3][1] = _thunc[1];  thunc[3][2] = _thunc[2];  thunc[3][3] = _thunc[3];  thunc[3][4] = _thunc[4];  thunc[3][5] = _thunc[5];
+      GetPdfQcdSyst("09_TTV");      thunc[4][0] = _thunc[0];  thunc[4][1] = _thunc[1];  thunc[4][2] = _thunc[2];  thunc[4][3] = _thunc[3];  thunc[4][4] = _thunc[4];  thunc[4][5] = _thunc[5];
+    //GetPdfQcdSyst("10_HWW");
+      GetPdfQcdSyst("11_Wg");       thunc[5][0] = _thunc[0];  thunc[5][1] = _thunc[1];  thunc[5][2] = _thunc[2];  thunc[5][3] = _thunc[3];  thunc[5][4] = _thunc[4];  thunc[5][5] = _thunc[5];
     //GetPdfQcdSyst("12_Zg");
     //GetPdfQcdSyst("13_VVV");
-      GetPdfQcdSyst("14_HZ");
+      GetPdfQcdSyst("14_HZ");       thunc[6][0] = _thunc[0];  thunc[6][1] = _thunc[1];  thunc[6][2] = _thunc[2];  thunc[6][3] = _thunc[3];  thunc[6][4] = _thunc[4];  thunc[6][5] = _thunc[5];
 
       if (_verbosity > 0) printf("\n");
-    }
+    
 
-  printf("\n [analysis] I hope you are happy with the results!\n\n");
+  //printf("\n [analysis] I hope you are happy with the results!\n\n");
+
+  ofstream xsQCDup; 
+  ofstream acQCDup;  
+  ofstream xsQCDdo; 
+  ofstream acQCDdo; 
+  ofstream xsPDF  ; 
+  ofstream acPDF  ; 
+
+  xsQCDup.open(Form("yields/%s_%s.dat", _signal.Data(), "xsQCDup"));
+  acQCDup.open(Form("yields/%s_%s.dat", _signal.Data(), "acQCDup"));
+  xsQCDdo.open(Form("yields/%s_%s.dat", _signal.Data(), "xsQCDdo"));
+  acQCDdo.open(Form("yields/%s_%s.dat", _signal.Data(), "acQCDdo"));
+  xsPDF  .open(Form("yields/%s_%s.dat", _signal.Data(), "xsPDF"  ));
+  acPDF  .open(Form("yields/%s_%s.dat", _signal.Data(), "acPDF"  ));
+
+  xsQCDup << Form( "%f \n", 0.0        );    acQCDup << Form( "%f \n", 0.0        );    xsQCDdo << Form( "%f \n", 0.0        );    acQCDdo << Form( "%f \n", 0.0        );
+  xsQCDup << Form( "%f \n", 0.0        );    acQCDup << Form( "%f \n", 0.0        );    xsQCDdo << Form( "%f \n", 0.0        );    acQCDdo << Form( "%f \n", 0.0        );
+  xsQCDup << Form( "%f \n", 0.0        );    acQCDup << Form( "%f \n", 0.0        );    xsQCDdo << Form( "%f \n", 0.0        );    acQCDdo << Form( "%f \n", 0.0        );
+  xsQCDup << Form( "%f \n", thunc[0][0]);    acQCDup << Form( "%f \n", thunc[0][1]);    xsQCDdo << Form( "%f \n", thunc[0][2]);    acQCDdo << Form( "%f \n", thunc[0][3]);
+  xsQCDup << Form( "%f \n", thunc[1][0]);    acQCDup << Form( "%f \n", thunc[1][1]);    xsQCDdo << Form( "%f \n", thunc[1][2]);    acQCDdo << Form( "%f \n", thunc[1][3]);
+  xsQCDup << Form( "%f \n", thunc[7][0]);    acQCDup << Form( "%f \n", thunc[7][1]);    xsQCDdo << Form( "%f \n", thunc[7][2]);    acQCDdo << Form( "%f \n", thunc[7][3]);
+  xsQCDup << Form( "%f \n", thunc[2][0]);    acQCDup << Form( "%f \n", thunc[2][1]);    xsQCDdo << Form( "%f \n", thunc[2][2]);    acQCDdo << Form( "%f \n", thunc[2][3]);
+  xsQCDup << Form( "%f \n", thunc[8][0]);    acQCDup << Form( "%f \n", thunc[8][1]);    xsQCDdo << Form( "%f \n", thunc[8][2]);    acQCDdo << Form( "%f \n", thunc[8][3]);
+  xsQCDup << Form( "%f \n", thunc[3][0]);    acQCDup << Form( "%f \n", thunc[3][1]);    xsQCDdo << Form( "%f \n", thunc[3][2]);    acQCDdo << Form( "%f \n", thunc[3][3]);
+  xsQCDup << Form( "%f \n", thunc[4][0]);    acQCDup << Form( "%f \n", thunc[4][1]);    xsQCDdo << Form( "%f \n", thunc[4][2]);    acQCDdo << Form( "%f \n", thunc[4][3]);
+  xsQCDup << Form( "%f \n", thunc[5][0]);    acQCDup << Form( "%f \n", thunc[5][1]);    xsQCDdo << Form( "%f \n", thunc[5][2]);    acQCDdo << Form( "%f \n", thunc[5][3]);
+  xsQCDup << Form( "%f \n", thunc[6][0]);    acQCDup << Form( "%f \n", thunc[6][1]);    xsQCDdo << Form( "%f \n", thunc[6][2]);    acQCDdo << Form( "%f \n", thunc[6][3]);
+
+  xsPDF   << Form( "%f \n", 0.0        );        acPDF   << Form( "%f \n", 0.0        );
+  xsPDF   << Form( "%f \n", 0.0        );        acPDF   << Form( "%f \n", 0.0        );
+  xsPDF   << Form( "%f \n", 0.0        );        acPDF   << Form( "%f \n", 0.0        );
+  xsPDF   << Form( "%f \n", thunc[0][4]);        acPDF   << Form( "%f \n", thunc[0][5]);
+  xsPDF   << Form( "%f \n", thunc[1][4]);        acPDF   << Form( "%f \n", thunc[1][5]);
+  xsPDF   << Form( "%f \n", thunc[7][4]);        acPDF   << Form( "%f \n", thunc[7][5]);
+  xsPDF   << Form( "%f \n", 0.0        );        acPDF   << Form( "%f \n", 0.0        );
+  xsPDF   << Form( "%f \n", thunc[8][4]);        acPDF   << Form( "%f \n", thunc[8][5]);
+  xsPDF   << Form( "%f \n", thunc[3][4]);        acPDF   << Form( "%f \n", thunc[3][5]);
+  xsPDF   << Form( "%f \n", thunc[4][4]);        acPDF   << Form( "%f \n", thunc[4][5]);
+  xsPDF   << Form( "%f \n", thunc[5][4]);        acPDF   << Form( "%f \n", thunc[5][5]);
+  xsPDF   << Form( "%f \n", thunc[6][4]);        acPDF   << Form( "%f \n", thunc[6][5]);
+
+  xsQCDup.close();
+  acQCDup.close();
+  xsQCDdo.close();
+  acQCDdo.close();
+  xsPDF  .close();
+  acPDF  .close();
+
+   }
+
 }
 
 
@@ -144,6 +213,15 @@ void analysis(TString signal            = "ttDM0001scalar0500",
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString sample)
 {
+
+  _thunc[0] = 0; 
+  _thunc[1] = 0;
+  _thunc[2] = 0;
+  _thunc[3] = 0;
+  _thunc[4] = 0;  
+  _thunc[5] = 0;
+
+
   TFile* file = new TFile(_inputdir + sample + ".root", "read");
 
   TTree* tree = (TTree*)file->Get("latino");
@@ -156,8 +234,8 @@ void GetPdfQcdSyst(TString sample)
   tree->SetBranchAddress("njet",           &njet);
   tree->SetBranchAddress("LHEweight",      &LHEweight );
 
-  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum_gen");  // Not the full gen sample
-  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum_gen");  // Not the full gen sample
+  TH1D* h_pdfsum_gen = (TH1D*)file->Get("h_pdfsum");
+  TH1D* h_qcdsum_gen = (TH1D*)file->Get("h_qcdsum");
 
   TH1D* h_pdfsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_pdfsum_rec");
   TH1D* h_qcdsum_rec = (TH1D*)h_pdfsum_gen->Clone("h_qcdsum_rec");
@@ -218,18 +296,87 @@ void GetPdfQcdSyst(TString sample)
 
   // Print the uncertainties
   //----------------------------------------------------------------------------
-  printf("\n %s\n", sample.Data());
-  printf("---------------------------------------\n");
-  printf(" QCD up   -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_up,   qcdratio_rec_up   / qcdratio_gen_up);
-  printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
-  printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
+  //printf("\n %s\n", sample.Data());
+  //printf("---------------------------------------\n");
+  //printf(" QCD up   -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_up,   qcdratio_rec_up   / qcdratio_gen_up);
+  //printf(" QCD down -- xs = %5.3f -- acc = %5.3f\n", qcdratio_gen_down, qcdratio_rec_down / qcdratio_gen_down);
+  //printf(" PDF      -- xs = %5.3f -- acc = %5.3f\n", pdf_gen_ratio,     pdf_rec_ratio     / pdf_gen_ratio);
+
+  _thunc[0] = qcdratio_gen_up                    ; 
+  _thunc[1] = qcdratio_rec_up/qcdratio_gen_up    ;
+  _thunc[2] = qcdratio_gen_down                  ;
+  _thunc[3] = qcdratio_rec_down/qcdratio_gen_down;
+  _thunc[4] = pdf_gen_ratio                      ;  
+  _thunc[5] = pdf_rec_ratio/pdf_gen_ratio        ; 
+
 }  
 
+
+
+//---------------
+// LHEfunction
+//---------------
+void LHEfunction(){
+
+	LHEfunction2(_signal);
+	LHEfunction2("00_Fakes");
+	LHEfunction2("02_WZTo3LNu");
+	LHEfunction2("03_ZZ");
+	LHEfunction2("04_TTTo2L2Nu");
+	LHEfunction2("05_ST");
+	LHEfunction2("06_WW");
+	LHEfunction2("07_ZJets");
+	LHEfunction2("09_TTV");
+	LHEfunction2("11_Wg");
+	LHEfunction2("14_HZ");
+}
+
+void LHEfunction2(TString sample){
+
+	cout << " --- vine a campala... " << sample << endl; 
+
+	TH1F* list_vectors_weights = new TH1F("list_vectors_weights", "", 200, 0, 200);
+
+  	TFile* file = new TFile(_inputdir + sample + ".root", "read");
+
+  	TTree* tree = (TTree*)file->Get("latino");
+
+
+	float          mva;
+  	float          njet;
+  	vector<float> *LHEweight = 0;
+
+  	tree->SetBranchAddress("mva_" + _signal, &mva);
+  	tree->SetBranchAddress("njet",           &njet);
+  	tree->SetBranchAddress("LHEweight", &LHEweight );
+
+	if (!LHEweight) return;
+
+  	Long64_t nentries = tree->GetEntries();
+
+  	for (Long64_t i=0; i<nentries; i++) {
+
+    		tree->GetEntry(i);
+
+    		if (mva < _cut) continue;
+
+	    	if (njet < 1) continue;
+
+	  	for (int iWeight=0; iWeight<list_vectors_weights->GetNbinsX(); iWeight++){
+
+	  	      float ratio = LHEweight->at(iWeight) / LHEweight->at(0);
+
+	      	      list_vectors_weights->Fill(iWeight+0.5, ratio);
+	    	}
+
+	}
+
+}
 
 //------------------------------------------------------------------------------
 // GetYield
 //------------------------------------------------------------------------------
-float GetYield(TString sample, float cut)
+void GetYield(TString sample, float& yield, float& erryield, float cut)
 {
   if (cut < 0) cut = _cut;
 
@@ -239,13 +386,13 @@ float GetYield(TString sample, float cut)
 
   float eventW;
   float njet;
+  float nbjet30loose;
   float mva;
 
   tree->SetBranchAddress("eventW", &eventW);
   tree->SetBranchAddress("njet",   &njet);
+  tree->SetBranchAddress("nbjet30loose",   &nbjet30loose);
   tree->SetBranchAddress("mva_" + _signal, &mva);
-
-  float yield = 0; 
 
   Long64_t nentries = tree->GetEntries();
 
@@ -253,8 +400,11 @@ float GetYield(TString sample, float cut)
 
     tree->GetEntry(ievt);
 
-    if (njet > 1 && mva > cut) yield += eventW;
+    if (njet > 1  && mva > cut) { yield += eventW;  erryield += (eventW * eventW); }
+
   }
+
+  erryield = sqrt(erryield); 	
 
   if (_verbosity > 0) PrintYield(sample, yield);
 
@@ -262,7 +412,6 @@ float GetYield(TString sample, float cut)
 
   file->Close();
 
-  return yield;
 }
 
 
@@ -288,21 +437,33 @@ void PrintYields(float cut)
 
   if (_verbosity > 0) printf("\n");
 
-  float nsignal = GetYield(_signal,   cut);
-  float ndata   = GetYield("01_Data", cut);
+  float nsignal;      float errsignal;                                   GetYield(_signal, nsignal, errsignal, cut);
+   
+  float ndata = 0.0;  float errdata = 0.0;  if(_systematic == "nominal") GetYield("01_Data",  ndata, errdata, cut);
   
-  float nexpected = 0;
+  //float nexpected = 0;
   
-  nexpected += GetYield("14_HZ",        cut);
-  nexpected += GetYield("06_WW",        cut);
-  nexpected += GetYield("02_WZTo3LNu",  cut);
-  nexpected += GetYield("03_ZZ",        cut);
-  nexpected += GetYield("11_Wg",        cut);
-  nexpected += GetYield("07_ZJets",     cut);
-  nexpected += GetYield("09_TTV",       cut);
-  nexpected += GetYield("04_TTTo2L2Nu", cut);
-  nexpected += GetYield("05_ST",        cut);
-  nexpected += GetYield("00_Fakes",     cut);
+  //nexpected += GetYield("14_HZ",        cut);  
+  //nexpected += GetYield("06_WW",        cut);
+  //nexpected += GetYield("02_WZTo3LNu",  cut);
+  //nexpected += GetYield("03_ZZ",        cut);
+  //nexpected += GetYield("11_Wg",        cut);
+  //nexpected += GetYield("07_ZJets",     cut);
+  //nexpected += GetYield("09_TTV",       cut);
+  //nexpected += GetYield("04_TTTo2L2Nu", cut);
+  //nexpected += GetYield("05_ST",        cut);
+  //nexpected += GetYield("00_Fakes",     cut);
+
+  float yield00 = 0.0; float err00 = 0.0;  if(_systematic == "nominal") GetYield("00_Fakes"    , yield00, err00, cut );
+  float yield02;       float err02;                                     GetYield("02_WZTo3LNu" , yield02, err02, cut );
+  float yield03;       float err03;                                     GetYield("03_ZZ"       , yield03, err03, cut );
+  float yield04;       float err04;                                     GetYield("04_TTTo2L2Nu", yield04, err04, cut );
+  float yield05;       float err05;                                     GetYield("05_ST"       , yield05, err05, cut );
+  float yield06;       float err06;                                     GetYield("06_WW"       , yield06, err06, cut );
+  float yield07;       float err07;                                     GetYield("07_ZJets"    , yield07, err07, cut );
+  float yield09;       float err09;                                     GetYield("09_TTV"      , yield09, err09, cut );
+  float yield11;       float err11;                                     GetYield("11_Wg"       , yield11, err11, cut );
+  float yield14;       float err14;                                     GetYield("14_HZ"       , yield14, err14, cut );
 
   if (_verbosity > 0)
     {
@@ -310,32 +471,50 @@ void PrintYields(float cut)
 
       PrintYield("signal",   nsignal);
       PrintYield("data",     ndata);
-      PrintYield("expected", nexpected);
+      //PrintYield("expected", nexpected);
 
       printf("\n");
     }
 
 
-  //  Create the datacard
-  //----------------------------------------------------------------------------
-  _datacard.open(Form("datacards/%s_mva%.2f.txt", _signal.Data(), cut));
 
-  _datacard << "imax 1   number of channels\n";
-  _datacard << "jmax 1   number of backgrounds\n";
-  _datacard << "kmax 0   number of nuisance parameters\n";
-  _datacard << "------------\n";
-  _datacard << "\n";
-  _datacard << "bin 1\n";
-  _datacard << Form("observation %f\n", ndata);
-  _datacard << "------------\n";
-  _datacard << "\n";
-  _datacard << "bin             1           1\n";
-  _datacard << "process         DM          bkg\n";
-  _datacard << "process         0           1\n";
-  _datacard << Form("rate            %f    %f\n", nsignal, nexpected);
-  _datacard << "------------\n";
+  _yields.open(Form("yields/%s_%s.dat", _signal.Data(), _systematic.Data() ));
 
-  _datacard.close();
+  if( _systematic != "stat" ){
+  
+	  _yields << Form( "%f \n", ndata  );
+	  _yields << Form( "%f \n", nsignal);
+	  _yields << Form( "%f \n", yield00);
+	  _yields << Form( "%f \n", yield02);
+	  _yields << Form( "%f \n", yield03);
+	  _yields << Form( "%f \n", yield04);
+	  _yields << Form( "%f \n", yield05);
+	  _yields << Form( "%f \n", yield06);
+	  _yields << Form( "%f \n", yield07);
+	  _yields << Form( "%f \n", yield09);
+	  _yields << Form( "%f \n", yield11);
+	  _yields << Form( "%f \n", yield14);
+
+  }
+
+  else{
+
+	  _yields << Form( "%f \n", errdata  );
+	  _yields << Form( "%f \n", errsignal);
+	  _yields << Form( "%f \n", err00);
+	  _yields << Form( "%f \n", err02);
+	  _yields << Form( "%f \n", err03);
+	  _yields << Form( "%f \n", err04);
+	  _yields << Form( "%f \n", err05);
+	  _yields << Form( "%f \n", err06);
+	  _yields << Form( "%f \n", err07);
+	  _yields << Form( "%f \n", err09);
+	  _yields << Form( "%f \n", err11);
+	  _yields << Form( "%f \n", err14);
+  }
+
+  _yields.close();
+
 }
 
 
@@ -361,7 +540,7 @@ void GetBoxPopulation(TString sample,
 
   tree->SetBranchAddress("eventW",         &eventW);
   tree->SetBranchAddress("mva_" + _signal, &mva);
-  tree->SetBranchAddress("nbjet20cmvav2l", &nbjet);
+  tree->SetBranchAddress("nbjet20loose",   &nbjet);
   tree->SetBranchAddress("njet",           &njet);
 
   region1_box1_yield = 0;
@@ -388,11 +567,25 @@ void GetBoxPopulation(TString sample,
 			(box2[nbmin] > -1 && nbjet < box2[nbmin]) ||
 			(box2[nbmax] > -1 && nbjet > box2[nbmax]));
 
+    if (sample != "01_Data"){
+
+	if (!reject_region1) region1_box1_yield += eventW;
+        if (!reject_region2) region2_box1_yield += eventW;
+
+    }
+
+    else{
+
     if (!reject_region1 && !reject_box1) region1_box1_yield += eventW;
     if (!reject_region1 && !reject_box2) region1_box2_yield += eventW;
     if (!reject_region2 && !reject_box1) region2_box1_yield += eventW;
     if (!reject_region2 && !reject_box2) region2_box2_yield += eventW;
+
+    }
+
   }
+
+  if(sample != "01_Data") cout << sample << " -- " << region1_box1_yield << " -- " << region2_box1_yield << endl;
 }
 
 
@@ -434,6 +627,8 @@ void GetScaleFactors(float* box_ww,
   GetBoxPopulation("09_TTV",       box_ww, box_top, r1b1_ttv,   r1b2_ttv,   r2b1_ttv,   r2b2_ttv);
   GetBoxPopulation("05_ST",        box_ww, box_top, r1b1_st,    r1b2_st,    r2b1_st,    r2b2_st);
   GetBoxPopulation("00_Fakes",     box_ww, box_top, r1b1_fakes, r1b2_fakes, r2b1_fakes, r2b2_fakes);
+  GetBoxPopulation(_signal,      box_ww, box_top, r1b1_fakes, r1b2_fakes, r2b1_fakes, r2b2_fakes);
+
 
   float r1b1_bkg = r1b1_hz + r1b1_wz + r1b1_zz + r1b1_wg + r1b1_zj + r1b1_ttv + r1b1_st + r1b1_fakes;
   float r1b2_bkg = r1b2_hz + r1b2_wz + r1b2_zz + r1b2_wg + r1b2_zj + r1b2_ttv + r1b2_st + r1b2_fakes;
