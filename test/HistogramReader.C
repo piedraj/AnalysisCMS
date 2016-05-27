@@ -579,13 +579,13 @@ void HistogramReader::CrossSection(TString level,
   // Cross-section calculation
   //----------------------------------------------------------------------------  
   float efficiency   = counterSignal / 1980800.;
-  float crossSection = (counterData - counterBkg) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float crossSection = (counterData - counterBkg) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
   float mu           = (counterData - counterBkg) / (counterSignalLum);
 
 
   // Statistical error
   //----------------------------------------------------------------------------  
-  float xsErrorStat = sqrt(counterData) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
   float muErrorStat = sqrt(counterData) / (counterSignalLum); 
  
   printf(" mu(%s) = %.2f $\\pm$ %.2f (stat.) $\\pm$ %.2f (lumi.) \\\\\n",

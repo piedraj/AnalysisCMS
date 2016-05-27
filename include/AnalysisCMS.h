@@ -122,6 +122,14 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetRecoWeightsLHE (TH1F*    hist);
 
+  void    GetStopVar        ();
+
+  double  ComputeMT2        (TLorentzVector VisibleA,
+			     TLorentzVector VisibleB, 
+			     TLorentzVector Invisible,
+			     int            MT2Type = 0,
+			     double         MT2Precision = 0.);
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -218,6 +226,20 @@ class AnalysisCMS : public AnalysisBase
   float                  _sumjpt12;
   float                  _trkpmet;
 
+
+  // Variables ported from AnalysisStop
+  //----------------------------------------------------------------------------
+  float                  _dyll;
+  float                  _ptbll;
+  float                  _mt2ll;
+  float                  _dphimetptbll;
+  float                  _dphimetjet;
+  float                  _mllbb;
+  float                  _meff;
+  float                  _mt2bb;
+  float                  _mt2lblb;
+
+
   Long64_t               _nentries;
 
   unsigned int           _jetbin;
@@ -249,6 +271,15 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
   TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
   TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dyll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mllbb        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetjet   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_meff         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptbll        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetptbll [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2ll        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2bb        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];
 
 
   // TH1 histograms with minitree variables
@@ -313,6 +344,9 @@ class AnalysisCMS : public AnalysisBase
   // TH2 histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
+  TH2D*                  h_2ht           [nchannel][ncut][njetbin+1];
+  TH2D*                  h_dym           [nchannel][ncut][njetbin+1];
+
 };
 
 #endif

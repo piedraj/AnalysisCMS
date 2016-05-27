@@ -1,5 +1,6 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
+#include "../include/lester_mt2_bisect.h"
 
 
 //------------------------------------------------------------------------------
@@ -86,6 +87,15 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_pt2l          [ichannel][icut][ijet]->Fill(_pt2l,           _event_weight);
   h_sumjpt12      [ichannel][icut][ijet]->Fill(_sumjpt12,       _event_weight);
   h_sumpt12       [ichannel][icut][ijet]->Fill(pt1+pt2,         _event_weight);  // Needs l2Sel
+  h_dyll          [ichannel][icut][ijet]->Fill(_dyll,           _event_weight);
+  h_mllbb         [ichannel][icut][ijet]->Fill(_mllbb,          _event_weight);
+  h_dphimetjet    [ichannel][icut][ijet]->Fill(_dphimetjet,     _event_weight);
+  h_meff          [ichannel][icut][ijet]->Fill(_meff,           _event_weight);
+  h_ptbll         [ichannel][icut][ijet]->Fill(_ptbll,          _event_weight);
+  h_dphimetptbll  [ichannel][icut][ijet]->Fill(_dphimetptbll,   _event_weight);
+  h_mt2ll         [ichannel][icut][ijet]->Fill(_mt2ll,          _event_weight);
+  h_mt2bb         [ichannel][icut][ijet]->Fill(_mt2bb,          _event_weight);
+  h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
 
 
   // TH1 histograms with minitree variables
@@ -149,7 +159,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
+  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l,    _event_weight);
+  h_2ht           [ichannel][icut][ijet]->Fill(_ht,        _htjets, _event_weight);
+  h_dym           [ichannel][icut][ijet]->Fill(_mllbb,     _dyll,   _event_weight);
 
 
   // Non-prompt systematic uncertainties
@@ -240,6 +252,8 @@ void AnalysisCMS::Setup(TString analysis,
   _nentries   = fChain->GetEntries();
 
   TH1::SetDefaultSumw2();
+
+  asymm_mt2_lester_bisect::disableCopyrightMessage();
   
   TString tok;
 
@@ -303,7 +317,7 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= trigger * metFilter;
 
-  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
+  //  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
@@ -895,6 +909,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetMetVar();
 
   GetDeltaPhiVeto();
+
+  GetStopVar();
 }
 
 
@@ -971,14 +987,23 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 {
   // TH1 histograms
   //----------------------------------------------------------------------------
-  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3,    0,    3);
-  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
-  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
-  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
-  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
-  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
-  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
-  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
+  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3, 0,    3);
+  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3, 0,    3);
+  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9, 0,    9);
+  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50, 0,   50);
+  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000, 0, 3000);
+  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000, 0, 3000);
+  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000, 0, 3000);
+  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000, 0, 3000);
+  h_dyll         [ichannel][icut][ijet] = new TH1D("h_dyll"          + suffix, "",  100, 0,    5);
+  h_dphimetjet   [ichannel][icut][ijet] = new TH1D("h_dphimetjet"    + suffix, "",  100, 0,  3.2);
+  h_dphimetptbll [ichannel][icut][ijet] = new TH1D("h_dphimetptbll"  + suffix, "",  100, 0,  3.2);
+  h_mllbb        [ichannel][icut][ijet] = new TH1D("h_mllbb"         + suffix, "", 3000, 0, 3000);
+  h_meff         [ichannel][icut][ijet] = new TH1D("h_meff"          + suffix, "", 3000, 0, 3000);
+  h_ptbll        [ichannel][icut][ijet] = new TH1D("h_ptbll"         + suffix, "", 3000, 0, 3000);
+  h_mt2ll        [ichannel][icut][ijet] = new TH1D("h_mt2ll"         + suffix, "", 3000, 0, 3000);
+  h_mt2bb        [ichannel][icut][ijet] = new TH1D("h_mt2bb"         + suffix, "", 3000, 0, 3000);
+  h_mt2lblb      [ichannel][icut][ijet] = new TH1D("h_mt2lblb"       + suffix, "", 3000, 0, 3000);
 
 
   // TH1 histograms with minitree variables
@@ -1042,7 +1067,9 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0, 100, 100, 40, 140);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
 
 
@@ -1231,4 +1258,121 @@ void AnalysisCMS::GetDeltaR()
       _deltarlep1jet2 = fabs(Lepton1.v.DeltaR(AnalysisJets[1].v));
       _deltarlep2jet2 = fabs(Lepton2.v.DeltaR(AnalysisJets[1].v));
     }
+}
+
+
+//------------------------------------------------------------------------------
+// ComputeMT2
+//------------------------------------------------------------------------------
+double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
+			       TLorentzVector VisibleB, 
+			       TLorentzVector Invisible,
+			       int            MT2Type,
+			       double         MT2Precision) 
+{
+  double mVisA = fabs(VisibleA.M());  // Mass of visible object on side A. Must be >= 0.
+  double mVisB = fabs(VisibleB.M());  // Mass of visible object on side B. Must be >= 0.
+
+  double chiA = 0.;  // Hypothesised mass of invisible on side A. Must be >= 0.
+  double chiB = 0.;  // Hypothesised mass of invisible on side B. Must be >= 0.
+  
+  if (MT2Type == 1)
+    {
+      mVisA =  5.;
+      mVisB =  5.;
+      chiA  = 80.;
+      chiB  = 80.;
+    }
+
+  double pxA = VisibleA.Px();  // x momentum of visible object on side A.
+  double pyA = VisibleA.Py();  // y momentum of visible object on side A.
+  
+  double pxB = VisibleB.Px();  // x momentum of visible object on side B.
+  double pyB = VisibleB.Py();  // y momentum of visible object on side B.
+  
+  double pxMiss = Invisible.Px();  // x component of missing transverse momentum.
+  double pyMiss = Invisible.Py();  // y component of missing transverse momentum.
+  
+  double desiredPrecisionOnMt2 = MT2Precision;  // Must be >= 0. If 0 alg aims for machine precision. If >0, MT2 computed to supplied absolute precision.
+  
+  //  asymm_mt2_lester_bisect::disableCopyrightMessage();
+  
+  double MT2 = asymm_mt2_lester_bisect::get_mT2(mVisA, pxA, pyA,
+						mVisB, pxB, pyB,
+						pxMiss, pyMiss,
+						chiA, chiB,
+						desiredPrecisionOnMt2);
+
+  return MT2;
+}
+
+
+//------------------------------------------------------------------------------
+// GetStopVar
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetStopVar()
+{
+  _dyll         = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());  // Should be rapidity?
+  _ptbll        = (Lepton1.v + Lepton2.v + MET).Pt();
+  _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
+  _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+
+  _dphimetjet = -0.1;
+  _mllbb      = -0.1;
+  _meff       = -0.1;
+  _mt2bb      = -0.1;
+  _mt2lblb    = -0.1;
+
+  double minDeltaPhiMetJet = 999.;
+  
+  for (int ijet=0; ijet<_njet; ijet++) {
+      
+    double thisDeltaPhiMetJet = fabs(AnalysisJets[ijet].v.DeltaPhi(MET));
+
+    if (thisDeltaPhiMetJet < minDeltaPhiMetJet) {
+	
+      minDeltaPhiMetJet = thisDeltaPhiMetJet;
+
+      _dphimetjet = thisDeltaPhiMetJet;
+    }
+  }
+    
+  if (_njet >= 2) {
+      
+    _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
+
+    int bjetindex[2] = {-1, -1};
+
+    if (_nbjet30csvv2m >= 1) {
+	
+      int nbjetfound       = 0;
+      int nbjetfromleading = 0;
+
+      for (int ijet=0; ijet<_njet; ijet++) {
+	if (nbjetfound < 2) {
+	  if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+	    bjetindex[1] = bjetindex[0];
+	    bjetindex[nbjetfound] = ijet;
+	    nbjetfound++;
+	  } else if (nbjetfromleading < 1) {
+	    bjetindex[nbjetfound] = ijet;
+	    nbjetfromleading++;
+	  }  
+	}
+      }
+
+      if (bjetindex[0] >= 0 && bjetindex[1] >= 0) {
+	  
+	_mllbb = (Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).M();
+
+	_mt2bb = ComputeMT2(AnalysisJets[bjetindex[0]].v, AnalysisJets[bjetindex[1]].v, Lepton1.v + Lepton2.v + MET, 1);
+	    
+	_mt2lblb = ComputeMT2(AnalysisJets[bjetindex[0]].v + Lepton1.v, AnalysisJets[bjetindex[1]].v + Lepton2.v, MET);
+
+	double combinatorialMT2lblb = ComputeMT2(AnalysisJets[bjetindex[0]].v + Lepton2.v, AnalysisJets[bjetindex[1]].v + Lepton1.v, MET, 2);
+
+	if (combinatorialMT2lblb < _mt2lblb) _mt2lblb = combinatorialMT2lblb;
+      }
+    }
+  }
 }
