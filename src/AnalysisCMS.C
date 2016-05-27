@@ -87,6 +87,15 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_pt2l          [ichannel][icut][ijet]->Fill(_pt2l,           _event_weight);
   h_sumjpt12      [ichannel][icut][ijet]->Fill(_sumjpt12,       _event_weight);
   h_sumpt12       [ichannel][icut][ijet]->Fill(pt1+pt2,         _event_weight);  // Needs l2Sel
+  h_dyll          [ichannel][icut][ijet]->Fill(_dyll,           _event_weight);
+  h_mllbb         [ichannel][icut][ijet]->Fill(_mllbb,          _event_weight);
+  h_dphimetjet    [ichannel][icut][ijet]->Fill(_dphimetjet,     _event_weight);
+  h_meff          [ichannel][icut][ijet]->Fill(_meff,           _event_weight);
+  h_ptbll         [ichannel][icut][ijet]->Fill(_ptbll,          _event_weight);
+  h_dphimetptbll  [ichannel][icut][ijet]->Fill(_dphimetptbll,   _event_weight);
+  h_mt2ll         [ichannel][icut][ijet]->Fill(_mt2ll,          _event_weight);
+  h_mt2bb         [ichannel][icut][ijet]->Fill(_mt2bb,          _event_weight);
+  h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
 
 
   // TH1 histograms with minitree variables
@@ -150,7 +159,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l, _event_weight);
+  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l,    _event_weight);
+  h_2ht           [ichannel][icut][ijet]->Fill(_ht,        _htjets, _event_weight);
+  h_dym           [ichannel][icut][ijet]->Fill(_mllbb,     _dyll,   _event_weight);
 
 
   // Non-prompt systematic uncertainties
@@ -976,14 +987,23 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 {
   // TH1 histograms
   //----------------------------------------------------------------------------
-  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3,    0,    3);
-  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3,    0,    3);
-  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9,    0,    9);
-  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50,    0,   50);
-  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000,    0, 3000);
-  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000,    0, 3000);
-  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000,    0, 3000);
-  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000,    0, 3000);
+  h_counterRaw   [ichannel][icut][ijet] = new TH1D("h_counterRaw"    + suffix, "",    3, 0,    3);
+  h_counterLum   [ichannel][icut][ijet] = new TH1D("h_counterLum"    + suffix, "",    3, 0,    3);
+  h_fakes        [ichannel][icut][ijet] = new TH1D("h_fakes"         + suffix, "",    9, 0,    9);
+  h_nvtx         [ichannel][icut][ijet] = new TH1D("h_nvtx"          + suffix, "",   50, 0,   50);
+  h_ptww         [ichannel][icut][ijet] = new TH1D("h_ptww"          + suffix, "", 3000, 0, 3000);
+  h_pt2l         [ichannel][icut][ijet] = new TH1D("h_pt2l"          + suffix, "", 3000, 0, 3000);
+  h_sumjpt12     [ichannel][icut][ijet] = new TH1D("h_sumjpt12"      + suffix, "", 3000, 0, 3000);
+  h_sumpt12      [ichannel][icut][ijet] = new TH1D("h_sumpt12"       + suffix, "", 3000, 0, 3000);
+  h_dyll         [ichannel][icut][ijet] = new TH1D("h_dyll"          + suffix, "",  100, 0,    5);
+  h_dphimetjet   [ichannel][icut][ijet] = new TH1D("h_dphimetjet"    + suffix, "",  100, 0,  3.2);
+  h_dphimetptbll [ichannel][icut][ijet] = new TH1D("h_dphimetptbll"  + suffix, "",  100, 0,  3.2);
+  h_mllbb        [ichannel][icut][ijet] = new TH1D("h_mllbb"         + suffix, "", 3000, 0, 3000);
+  h_meff         [ichannel][icut][ijet] = new TH1D("h_meff"          + suffix, "", 3000, 0, 3000);
+  h_ptbll        [ichannel][icut][ijet] = new TH1D("h_ptbll"         + suffix, "", 3000, 0, 3000);
+  h_mt2ll        [ichannel][icut][ijet] = new TH1D("h_mt2ll"         + suffix, "", 3000, 0, 3000);
+  h_mt2bb        [ichannel][icut][ijet] = new TH1D("h_mt2bb"         + suffix, "", 3000, 0, 3000);
+  h_mt2lblb      [ichannel][icut][ijet] = new TH1D("h_mt2lblb"       + suffix, "", 3000, 0, 3000);
 
 
   // TH1 histograms with minitree variables
@@ -1047,7 +1067,9 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0, 100, 100, 40, 140);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
 
 
@@ -1290,10 +1312,10 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStopVar()
 {
-  _dyll         = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
+  _dyll         = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());  // Should be rapidity?
   _ptbll        = (Lepton1.v + Lepton2.v + MET).Pt();
-  _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
   _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
+  _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
   _dphimetjet = -0.1;
   _mllbb      = -0.1;
@@ -1323,16 +1345,17 @@ void AnalysisCMS::GetStopVar()
 
     if (_nbjet30csvv2m >= 1) {
 	
-      int nbjetfound = 0, nbjetfromleading = 0;
+      int nbjetfound       = 0;
+      int nbjetfromleading = 0;
 
       for (int ijet=0; ijet<_njet; ijet++) {
 	if (nbjetfound < 2) {
 	  if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
-	    bjetindex[1] = bjetindex[0];  // Jonatan. Why this line?
+	    bjetindex[1] = bjetindex[0];
 	    bjetindex[nbjetfound] = ijet;
 	    nbjetfound++;
 	  } else if (nbjetfromleading < 1) {
-	    bjetindex[nbjetfound] = ijet;  // Jonatan. I don't understand
+	    bjetindex[nbjetfound] = ijet;
 	    nbjetfromleading++;
 	  }  
 	}

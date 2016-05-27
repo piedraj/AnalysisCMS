@@ -45,19 +45,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	TString suffix = "_" + schannel[i];
 
 	DefineHistograms(i, j, k, suffix);
-
-	h_2ht[i][j][k] = new TH2F("h_2ht" + suffix, "", 300, 0,  800, 300, 0, 800);
-	h_dym[i][j][k] = new TH2F("h_dym" + suffix, "", 200, 0, 1000, 100, 0,   5);
-
-	h_dyll        [i][j][k] = new TH1D("h_dyll"         + suffix, "", 100, 0,     5);
-	h_dphimetjet  [i][j][k] = new TH1D("h_dphimetjet"   + suffix, "", 100, 0.,  3.2);
-        h_dphimetptbll[i][j][k] = new TH1D("h_dphimetptbll" + suffix, "", 100, 0.,  3.2);
-	h_mllbb       [i][j][k] = new TH1D("h_mllbb"        + suffix, "", 200, 0,  1000);
-        h_meff        [i][j][k] = new TH1D("h_meff"         + suffix, "", 200, 0,  1000);
-        h_ptbll       [i][j][k] = new TH1D("h_ptbll"        + suffix, "", 200, 0,  1000);
-	h_mt2ll       [i][j][k] = new TH1D("h_mt2ll"        + suffix, "", 200, 0., 1000);
-	h_mt2bb       [i][j][k] = new TH1D("h_mt2bb"        + suffix, "", 200, 0., 1000);
-	h_mt2lblb     [i][j][k] = new TH1D("h_mt2lblb"      + suffix, "", 200, 0., 1000);
       }
     }
   }
@@ -226,22 +213,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 // FillAnalysisHistograms
 //------------------------------------------------------------------------------
 void AnalysisStop::FillAnalysisHistograms(int ichannel,
-					 int icut,
-					 int ijet)
+					  int icut,
+					  int ijet)
 {
-  h_2ht[ichannel][icut][ijet]->Fill(_ht, _htjets, _event_weight);
-  h_dyll[ichannel][icut][ijet]->Fill(_dyll, _event_weight);
-  h_mllbb[ichannel][icut][ijet]->Fill(_mllbb, _event_weight);
-  h_dym[ichannel][icut][ijet]->Fill(_mllbb, _dyll, _event_weight);
-  h_dphimetjet[ichannel][icut][ijet]->Fill(_dphimetjet, _event_weight);
-//h_dphilj[ichannel][icut][ijet]->Fill(_dphilj, _event_weight);
-  h_meff[ichannel][icut][ijet]->Fill(_meff, _event_weight);
-  h_ptbll[ichannel][icut][ijet]->Fill(_ptbll, _event_weight);
-  h_dphimetptbll[ichannel][icut][ijet]->Fill(_dphimetptbll, _event_weight);
-  h_mt2ll[ichannel][icut][ijet]->Fill(_mt2ll, _event_weight);
-  h_mt2bb[ichannel][icut][ijet]->Fill(_mt2bb, _event_weight);
-  h_mt2lblb[ichannel][icut][ijet]->Fill(_mt2lblb, _event_weight);
-  
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }
 
@@ -250,13 +224,13 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 // FillLevelHistograms
 //------------------------------------------------------------------------------
 void AnalysisStop::FillLevelHistograms(int  icut,
-				      bool pass)
+				       bool pass)
 {
   if (!pass) return;
 
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
-  FillAnalysisHistograms(_channel, icut, _jetbin);
-  FillAnalysisHistograms(_channel, icut, njetbin);
+  //  FillAnalysisHistograms(_channel, icut, _jetbin);
+  //  FillAnalysisHistograms(_channel, icut, njetbin);
 }
