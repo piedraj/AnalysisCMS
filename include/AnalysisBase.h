@@ -389,6 +389,10 @@ public :
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
    vector<float>   *std_vector_lepton_isTightMuon;
+   Float_t         susyMstop;
+   Float_t         susyMLSP;
+   Float_t         pfType1Metphi;
+   Float_t         pfType1Met;
    Float_t         metPfType1Phi;
    Float_t         metPfType1;
    Float_t         bPogSF;
@@ -833,6 +837,10 @@ public :
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
+   TBranch        *b_susyMstop;   //!
+   TBranch        *b_susyMLSP;   //!
+   TBranch        *b_pfType1Metphi;   //!
+   TBranch        *b_pfType1Met;   //!
    TBranch        *b_metPfType1Phi;   //!
    TBranch        *b_metPfType1;   //!
    TBranch        *b_bPogSF;   //!
@@ -1503,6 +1511,10 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
+   fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
+   fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
+   fChain->SetBranchAddress("pfType1Metphi", &pfType1Metphi, &b_pfType1Metphi);
+   fChain->SetBranchAddress("pfType1Met", &pfType1Met, &b_pfType1Met);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);
    fChain->SetBranchAddress("metPfType1", &metPfType1, &b_metPfType1);
    fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);

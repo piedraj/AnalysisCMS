@@ -21,6 +21,9 @@ class AnalysisStop : public AnalysisCMS
 			      TString sample,
 			      float   luminosity);
 
+  float StopCrossSection, StopCrossSectionUncertainty;
+  void GetStopCrossSection(float StopMass);
+
 
   // Analysis histograms
   //----------------------------------------------------------------------------

@@ -273,6 +273,8 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
 
+  _is74X = (_filename.Contains("21Oct")) ? true : false;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
@@ -325,25 +327,26 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= _luminosity * baseW * puW;
 
-
   // Includes btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
       float sf_btag = 1.0;
 
-      if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
-	{
-	  sf_btag = bPogSF_CSVM;
-	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
-	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
-	}
-      else
-	{
-	  sf_btag = bPogSF_CMVAL;
-	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
-	}
+      if (!_is74X) {
+	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
+	  {
+	    sf_btag = bPogSF_CSVM;
+	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
+	    if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
+	  }
+	else
+	  {
+	    sf_btag = bPogSF_CMVAL;
+	    if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+	    if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
+	  }
+      }
 
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
@@ -373,7 +376,7 @@ void AnalysisCMS::ApplyWeights()
     {
       _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
     }
-  else
+  else if (!_is74X)
     {
       _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
@@ -510,7 +513,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     Jet goodjet;
 
     goodjet.index    = i;
-    goodjet.cmvav2   = std_vector_jet_cmvav2  ->at(i);
+    goodjet.cmvav2   = (_is74X) ? 1. : std_vector_jet_cmvav2  ->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
@@ -778,20 +781,38 @@ void AnalysisCMS::GetSoftMuon()
 {
   _foundsoftmuon = false;
 
-  // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
-  for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
+  if (_is74X) {
 
-    if (std_vector_softMuPt->at(i)  < 3.)               continue;
-    if (std_vector_softMuD0->at(i)  < 0.2)              continue;
-    if (std_vector_softMuDz->at(i)  < 0.5)              continue;
-    if (std_vector_softMuIso->at(i) < 0.15)             continue;
-    if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
-    if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
+    for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); ++i)
+      {
+        if (std_vector_jet_pt->at(i)       < 10.) continue;
+        if (std_vector_jet_pt->at(i)       > 30.) continue;
+        if (std_vector_jet_softMuPt->at(i) <  3.) continue;
+
+        _foundsoftmuon = true;
+
+        break;
+      }
+
+  } else {
+
+    // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
+    for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
+      
+      if (std_vector_softMuPt->at(i)  < 3.)               continue;
+      if (std_vector_softMuD0->at(i)  < 0.2)              continue;
+      if (std_vector_softMuDz->at(i)  < 0.5)              continue;
+      if (std_vector_softMuIso->at(i) < 0.15)             continue;
+      if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
+      if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
+      
+      _foundsoftmuon = true;
     
-    _foundsoftmuon = true;
-    
-    break;
+      break;
+    }
+
   }
+
 }
 
 
@@ -879,8 +900,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetFakeWeights();
 
   ApplyWeights();
-
-  GetMET(metPfType1, metPfType1Phi);
+ 
+  if (_is74X) 
+    GetMET(pfType1Met, pfType1Metphi);
+  else
+    GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
 
@@ -890,7 +914,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetDeltaPhi();
 
-  GetDeltaR();
+  GetDeltaR(); 
 
   GetJetPtSum();
 
