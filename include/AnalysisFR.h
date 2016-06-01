@@ -25,7 +25,6 @@ class AnalysisFR: public AnalysisCMS
   // Analysis histograms                                                                                                                                   
   //----------------------------------------------------------------------------                                                                           
 
-
   TH2D* h_Muon_loose_pt_eta_bin[ncut];
   TH2D* h_Muon_tight_pt_eta_bin[ncut];
 

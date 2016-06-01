@@ -1,14 +1,16 @@
 #define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
 
-float _event_weight_fr;
+float _event_weight_loose; 
+float _event_weight_tight;
+float _event_weight_tight_2l;
 float inputJetEt;
 
 int   _Zlepton1type;
 int   _Zlepton2type;
 int   _Zdecayflavour;
 
-const float _luminosity = 2.263;
+const float _luminosity = 2.263;  // fb
 
 const int pTbin = 8;
 const Double_t pTbins[pTbin+1] = { 10., 15., 20., 25., 30., 35.,40., 45., 50.};
@@ -112,21 +114,21 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (AnalysisLeptons.size() >= 2) { 
 
-      for (int iMu1 = 0; iMu1 < AnalysisLeptons.size(); iMu1++) {
+      for (int iLep1 = 0; iLep1 < AnalysisLeptons.size(); iLep1++) {
 	
-	if (AnalysisLeptons[iMu1].v.Pt() < 10.) continue;
+	if (AnalysisLeptons[iLep1].v.Pt() < 10.) continue;
 
-	for (int iMu2 = iMu1+1; iMu2 < AnalysisLeptons.size(); iMu2++) {
+	for (int iMu2 = iLep1+1; iLep2 < AnalysisLeptons.size(); iLep2++) {
 	  
-	  if (AnalysisLeptons[iMu2].v.Pt() < 10.) continue;
-	  if ((AnalysisLeptons[iMu1].flavour + AnalysisLeptons[iMu2].flavour) != 0.) continue;
+	  if (AnalysisLeptons[iLep2].v.Pt() < 10.) continue;
+	  if ((AnalysisLeptons[iLep1].flavour + AnalysisLeptons[iLep2].flavour) != 0.) continue;
 	  
-	  _m2l = (AnalysisLeptons[iMu1].v + AnalysisLeptons[iMu2].v).M();
+	  _m2l = (AnalysisLeptons[iLep1].v + AnalysisLeptons[iLep2].v).M();
 
-	  _Zlepton1type = AnalysisLeptons[iMu1].type;  
-	  _Zlepton2type = AnalysisLeptons[iMu2].type;
+	  _Zlepton1type = AnalysisLeptons[iLep1].type;  
+	  _Zlepton2type = AnalysisLeptons[iLep2].type;
 
-	  _Zdecayflavour = AnalysisLeptons[iMu1].flavour; 
+	  _Zdecayflavour = AnalysisLeptons[iLep1].flavour; 
 	  
 	}
       }
@@ -134,29 +136,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     bool passTrigger = true;
 
-    // Define _event_weight_fr
     if (_ismc) {
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
-      _event_weight_fr = puW * baseW * _luminosity * genWeight;
-      /*
+      _event_weight_loose = puW * baseW * genWeight;
+      _event_weight_tight = puW * baseW * genWeight;
+      _event_weight_tight_2l = puW * baseW * genWeight;
+
       if (filename.Contains("WJetsToLNu")) {
 
 	if (_channel == m) {
 
-	  _event_weight_fr *= 0.077;
+	  _event_weight_loose *= 0.081;
+
+	  if (Lepton1.type == Tight) _event_weight_tight *= 0.075;
+
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.075;
 
 	} else if (_channel == e) {
 
-	  if (Lepton1.type == Loose || Lepton1.type == Tight) {
+	  _event_weight_loose *= 0.0057;
 
-	    _event_weight_fr *= 0.0045;
+	  if (Lepton1.type == Tight) _event_weight_tight *= 0.0018;
 
-	  } else if (Lepton1.type == Tight) {
-
-	    _event_weight_fr *= 0.0014;
-
-	  }
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.0018;
 
 	}
 	
@@ -164,18 +167,28 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (_channel == m) {
 	    
-	  _event_weight_fr *= 0.09;
+	  _event_weight_loose *= 0.085;
+
+	  if (Lepton1.type == Tight) _event_weight_tight *= 0.084;
+
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.084;
 
 	} else if (_channel == e) {
-	  
-	  _event_weight_fr *= 0.0014;
+
+	  _event_weight_loose *= 0.0015;
+
+	  if (Lepton1.type == Tight) _event_weight_tight *= 0.0014;
+
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.0014;
 
 	}
       }
-      */
+
     } else  {
 
-      _event_weight_fr = 1.0;
+      _event_weight_loose = 1.0;
+      _event_weight_tight = 1.0;
+      _event_weight_tight_2l = 1.0;
 
       passTrigger = false;
 
@@ -184,13 +197,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
 
 	  passTrigger= true;
-	  //_event_weight_fr = (_luminosity*1000 / 1.386);
 
 	}
 	else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
 
 	  passTrigger = true;
-	  //_event_weight_fr = (_luminosity*1000 / 201.951);
 
 	}    
       }
@@ -200,12 +211,10 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
 
 	  passTrigger = true;
-	  //_event_weight_fr = (_luminosity*1000 / 11.204);
 	   
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
 
 	  passTrigger = true;
-	  //_event_weight_fr = (_luminosity*1000 / 3.201);
 	  
 	}
       }
@@ -259,21 +268,21 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-      h_Ele_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);     
+      h_Ele_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_loose);     
      
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Ele_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
+	h_Ele_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_tight_2l);
 	
       }
 
     } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 
-      h_Muon_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
+      h_Muon_loose_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_loose);
 
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Muon_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_fr);
+	h_Muon_tight_m2l[FR_03_ZRegion] -> Fill(_m2l, _event_weight_tight_2l);
 
       } 
 
@@ -287,27 +296,26 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-      h_Ele_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);     
+      h_Ele_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_loose);     
      
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Ele_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
+	h_Ele_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_tight_2l);
 	
       }
 
     } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 
-      h_Muon_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
+      h_Muon_loose_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_loose);
 
       if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	h_Muon_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_fr);
+	h_Muon_tight_m2l[FR_04_ZRegionQCD] -> Fill(_m2l, _event_weight_tight_2l);
 
       } 
 
-    }
+    }}
 
-  }
 
   EndJob();
 
@@ -335,21 +343,21 @@ void AnalysisFR::FillAnalysisHistograms(int icut) {
 
     if (_channel == m) {
 
-      h_Muon_loose_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
-      h_Muon_loose_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Muon_loose_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+      h_Muon_loose_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_loose);
+      h_Muon_loose_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_loose);
+      h_Muon_loose_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_loose);
      
-      h_Muon_loose_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Muon_loose_mtw[icut] -> Fill(_mtw,           _event_weight_fr);
+      h_Muon_loose_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_loose);
+      h_Muon_loose_mtw[icut] -> Fill(_mtw,           _event_weight_loose);
 
     } else if (_channel == e) {
 
-      h_Ele_loose_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
-      h_Ele_loose_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Ele_loose_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+      h_Ele_loose_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_loose);
+      h_Ele_loose_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_loose);
+      h_Ele_loose_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_loose);
       
-      h_Ele_loose_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Ele_loose_mtw[icut] -> Fill(_mtw,           _event_weight_fr);
+      h_Ele_loose_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_loose);
+      h_Ele_loose_mtw[icut] -> Fill(_mtw,           _event_weight_loose);
 
     }
  
@@ -359,21 +367,21 @@ void AnalysisFR::FillAnalysisHistograms(int icut) {
    
     if (_channel == m) {
 
-      h_Muon_tight_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
-      h_Muon_tight_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Muon_tight_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+      h_Muon_tight_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_tight);
+      h_Muon_tight_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_tight);
+      h_Muon_tight_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_tight);
       
-      h_Muon_tight_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Muon_tight_mtw[icut] -> Fill(_mtw,           _event_weight_fr);	
+      h_Muon_tight_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_tight);
+      h_Muon_tight_mtw[icut] -> Fill(_mtw,           _event_weight_tight);	
 
     } else if (_channel == e) {
 
-      h_Ele_tight_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_fr);
-      h_Ele_tight_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Ele_tight_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_fr);
+      h_Ele_tight_pt_eta_bin[icut] -> Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight_tight);
+      h_Ele_tight_pt_bin[icut] -> Fill(Lepton1.v.Pt(), _event_weight_tight);
+      h_Ele_tight_eta_bin[icut] -> Fill(Lepton1.v.Eta(), _event_weight_tight);
 	
-      h_Ele_tight_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_fr);
-      h_Ele_tight_mtw[icut] -> Fill(_mtw,           _event_weight_fr);
+      h_Ele_tight_pt[icut]  -> Fill(Lepton1.v.Pt(), _event_weight_tight);
+      h_Ele_tight_mtw[icut] -> Fill(_mtw,           _event_weight_tight);
 
     }
   }

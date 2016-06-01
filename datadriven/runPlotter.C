@@ -65,7 +65,7 @@ void runPlotter(TString level,
 
   } else {
 
-    plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt",     20, 0, "GeV", linY, true, 0, 200);
+    plotter.Draw(prefix + "Muon_loose_pt", "Loose muons pt",     20, 0, "GeV", linY, true, 35., 200);
     plotter.Draw(prefix + "Muon_tight_pt", "Tight muons pt",     20, 0, "GeV", linY, true, 0, 200);
     plotter.Draw(prefix + "Ele_loose_pt",  "Loose electrons pt", 20, 0, "GeV", linY, true, 0, 200);
     plotter.Draw(prefix + "Ele_tight_pt",  "Tight electrons pt", 20, 0, "GeV", linY, true, 0, 200);
@@ -84,6 +84,14 @@ void runPlotter(TString level,
     plotter.Draw(prefix + "Muon_tight_mtw", "Tight muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
     plotter.Draw(prefix + "Ele_loose_mtw",  "Loose electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
     plotter.Draw(prefix + "Ele_tight_mtw",  "Tight electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
+
+    /*
+    plotter.Draw(prefix + "h_mtw_met", "h_mtw_met", 20, 0, "GeV", linY, true, 0, 200, 0, 200);
+    plotter.Draw(prefix + "h_Muon_loose_mtw_met", "Muon loose mtw met", 20, 0, "GeV", linY, true, 0, 200, 0, 200);
+    plotter.Draw(prefix + "h_Muon_tight_mtw_met", "Muon tight mtw met", 20, 0, "GeV", linY, true, 0, 200, 0, 200);
+    plotter.Draw(prefix + "h_Ele_loose_mtw_met", "Ele loose mtw met", 20, 0, "GeV", linY, true, 0, 200, 0, 200);
+    plotter.Draw(prefix + "h_Ele_tight_mtw_met", "Ele tight mtw met", 20, 0, "GeV", linY, true, 0, 200, 0, 200);
+    */
 
   }
 
