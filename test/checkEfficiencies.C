@@ -100,8 +100,6 @@ void GetEfficiency(TString era,
   float eff_value = 1e2 * numerator / denominator;
   float eff_error = eff_value * sqrt(1./numerator + 1./denominator);
 
-  printf("%f %f\n", eff_value, eff_error);
-
   if (era.EqualTo("old"))
     {
       old_graph->SetPoint     (element, element, eff_value);
