@@ -389,11 +389,33 @@ public :
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
    vector<float>   *std_vector_lepton_isTightMuon;
+   Float_t         susyMstop;
+   Float_t         susyMLSP;
+   Float_t         pfType1Metphi;
+   Float_t         pfType1Met;
    Float_t         metPfType1Phi;
    Float_t         metPfType1;
    Float_t         bPogSF;
    Float_t         bPogSFUp;
    Float_t         bPogSFDown;
+   Float_t         bPogSF_CMVAL;
+   Float_t         bPogSF_CMVAL_Up;
+   Float_t         bPogSF_CMVAL_Down;
+   Float_t         bPogSF_CMVAM;
+   Float_t         bPogSF_CMVAM_Up;
+   Float_t         bPogSF_CMVAM_Down;
+   Float_t         bPogSF_CMVAT;
+   Float_t         bPogSF_CMVAT_Up;
+   Float_t         bPogSF_CMVAT_Down;
+   Float_t         bPogSF_CSVL;
+   Float_t         bPogSF_CSVL_Up;
+   Float_t         bPogSF_CSVL_Down;
+   Float_t         bPogSF_CSVM;
+   Float_t         bPogSF_CSVM_Up;
+   Float_t         bPogSF_CSVM_Down;
+   Float_t         bPogSF_CSVT;
+   Float_t         bPogSF_CSVT_Up;
+   Float_t         bPogSF_CSVT_Down;
    Float_t         bTPSF;
    Float_t         bTPSFUp;
    Float_t         bTPSFDown;
@@ -447,6 +469,7 @@ public :
    Float_t         yll;
    Float_t         mtw2;
    Float_t         mtw1;
+   Float_t         isJsonOk;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -814,11 +837,33 @@ public :
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
+   TBranch        *b_susyMstop;   //!
+   TBranch        *b_susyMLSP;   //!
+   TBranch        *b_pfType1Metphi;   //!
+   TBranch        *b_pfType1Met;   //!
    TBranch        *b_metPfType1Phi;   //!
    TBranch        *b_metPfType1;   //!
    TBranch        *b_bPogSF;   //!
    TBranch        *b_bPogSFUp;   //!
    TBranch        *b_bPogSFDown;   //!
+   TBranch        *b_bPogSF_CMVAL;   //!
+   TBranch        *b_bPogSF_CMVAL_Up;   //!
+   TBranch        *b_bPogSF_CMVAL_Down;   //!
+   TBranch        *b_bPogSF_CMVAM;   //!
+   TBranch        *b_bPogSF_CMVAM_Up;   //!
+   TBranch        *b_bPogSF_CMVAM_Down;   //!
+   TBranch        *b_bPogSF_CMVAT;   //!
+   TBranch        *b_bPogSF_CMVAT_Up;   //!
+   TBranch        *b_bPogSF_CMVAT_Down;   //!
+   TBranch        *b_bPogSF_CSVL;   //!
+   TBranch        *b_bPogSF_CSVL_Up;   //!
+   TBranch        *b_bPogSF_CSVL_Down;   //!
+   TBranch        *b_bPogSF_CSVM;   //!
+   TBranch        *b_bPogSF_CSVM_Up;   //!
+   TBranch        *b_bPogSF_CSVM_Down;   //!
+   TBranch        *b_bPogSF_CSVT;   //!
+   TBranch        *b_bPogSF_CSVT_Up;   //!
+   TBranch        *b_bPogSF_CSVT_Down;   //!
    TBranch        *b_bTPSF;   //!
    TBranch        *b_bTPSFUp;   //!
    TBranch        *b_bTPSFDown;   //!
@@ -872,6 +917,7 @@ public :
    TBranch        *b_yll;   //!
    TBranch        *b_mtw2;   //!
    TBranch        *b_mtw1;   //!
+   TBranch        *b_isJsonOk;   //!
 
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
@@ -1465,11 +1511,33 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
+   fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
+   fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
+   fChain->SetBranchAddress("pfType1Metphi", &pfType1Metphi, &b_pfType1Metphi);
+   fChain->SetBranchAddress("pfType1Met", &pfType1Met, &b_pfType1Met);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);
    fChain->SetBranchAddress("metPfType1", &metPfType1, &b_metPfType1);
    fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);
    fChain->SetBranchAddress("bPogSFUp", &bPogSFUp, &b_bPogSFUp);
    fChain->SetBranchAddress("bPogSFDown", &bPogSFDown, &b_bPogSFDown);
+   fChain->SetBranchAddress("bPogSF_CMVAL", &bPogSF_CMVAL, &b_bPogSF_CMVAL);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Up", &bPogSF_CMVAL_Up, &b_bPogSF_CMVAL_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Down", &bPogSF_CMVAL_Down, &b_bPogSF_CMVAL_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAM", &bPogSF_CMVAM, &b_bPogSF_CMVAM);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Up", &bPogSF_CMVAM_Up, &b_bPogSF_CMVAM_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Down", &bPogSF_CMVAM_Down, &b_bPogSF_CMVAM_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAT", &bPogSF_CMVAT, &b_bPogSF_CMVAT);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Up", &bPogSF_CMVAT_Up, &b_bPogSF_CMVAT_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Down", &bPogSF_CMVAT_Down, &b_bPogSF_CMVAT_Down);
+   fChain->SetBranchAddress("bPogSF_CSVL", &bPogSF_CSVL, &b_bPogSF_CSVL);
+   fChain->SetBranchAddress("bPogSF_CSVL_Up", &bPogSF_CSVL_Up, &b_bPogSF_CSVL_Up);
+   fChain->SetBranchAddress("bPogSF_CSVL_Down", &bPogSF_CSVL_Down, &b_bPogSF_CSVL_Down);
+   fChain->SetBranchAddress("bPogSF_CSVM", &bPogSF_CSVM, &b_bPogSF_CSVM);
+   fChain->SetBranchAddress("bPogSF_CSVM_Up", &bPogSF_CSVM_Up, &b_bPogSF_CSVM_Up);
+   fChain->SetBranchAddress("bPogSF_CSVM_Down", &bPogSF_CSVM_Down, &b_bPogSF_CSVM_Down);
+   fChain->SetBranchAddress("bPogSF_CSVT", &bPogSF_CSVT, &b_bPogSF_CSVT);
+   fChain->SetBranchAddress("bPogSF_CSVT_Up", &bPogSF_CSVT_Up, &b_bPogSF_CSVT_Up);
+   fChain->SetBranchAddress("bPogSF_CSVT_Down", &bPogSF_CSVT_Down, &b_bPogSF_CSVT_Down);
    fChain->SetBranchAddress("bTPSF", &bTPSF, &b_bTPSF);
    fChain->SetBranchAddress("bTPSFUp", &bTPSFUp, &b_bTPSFUp);
    fChain->SetBranchAddress("bTPSFDown", &bTPSFDown, &b_bTPSFDown);
@@ -1523,6 +1591,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("yll", &yll, &b_yll);
    fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
    fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
+   fChain->SetBranchAddress("isJsonOk", &isJsonOk, &b_isJsonOk);
    Notify();
 }
 
