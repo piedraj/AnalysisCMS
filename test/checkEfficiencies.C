@@ -40,6 +40,12 @@ void checkEfficiencies()
   GetEfficiency("old", graph_element,   "latino_ttDM0001pseudo0100");
   GetEfficiency("new", graph_element++, "latino_ttDM0001pseudo00100");
 
+  GetEfficiency("old", graph_element,   "latino_ttDM0010pseudo0100");
+  GetEfficiency("new", graph_element++, "latino_ttDM0010pseudo00100");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0050pseudo0200");
+  GetEfficiency("new", graph_element++, "latino_ttDM0050pseudo00200");
+
   GetEfficiency("old", graph_element,   "latino_ttDM0150pseudo0200");
   GetEfficiency("new", graph_element++, "latino_ttDM0150pseudo00200");
 
@@ -49,8 +55,38 @@ void checkEfficiencies()
   GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0010");
   GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00010");
 
+  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0050");
+  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00050");
+
   GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0100");
   GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00100");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0200");
+  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00200");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0300");
+  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00300");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0500");
+  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00500");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0010scalar0050");
+  GetEfficiency("new", graph_element++, "latino_ttDM0010scalar00050");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0010scalar0100");
+  GetEfficiency("new", graph_element++, "latino_ttDM0010scalar00100");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0050");
+  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00050");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0200");
+  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00200");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0300");
+  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00300");
+
+  GetEfficiency("old", graph_element,   "latino_ttDM0500scalar0500");
+  GetEfficiency("new", graph_element++, "latino_ttDM0500scalar00500");
 
 
   // Draw
@@ -73,6 +109,12 @@ void checkEfficiencies()
   mg->Add(new_graph);
 
   mg->Draw("ap");
+
+  mg->GetXaxis()->SetTitle("ttDM sample");
+  mg->GetYaxis()->SetTitle("efficiency (%)");
+
+  mg->GetXaxis()->SetTitleOffset(1.6);
+  mg->GetYaxis()->SetTitleOffset(1.6);
 
   output->SaveAs("output.png");
 }
@@ -97,8 +139,10 @@ void GetEfficiency(TString era,
   Long64_t numerator   = latino->Draw("metPfType1", pass_num);
   Long64_t denominator = latino->Draw("metPfType1", pass_den);
 
-  float eff_value = 1e2 * numerator / denominator;
-  float eff_error = eff_value * sqrt(1./numerator + 1./denominator);
+  float eff_value = float(numerator) / denominator;
+  float eff_error = 1e2 * sqrt(eff_value*(1 - eff_value) / denominator);
+  
+  eff_value *= 1e2;
 
   if (era.EqualTo("old"))
     {
@@ -110,4 +154,11 @@ void GetEfficiency(TString era,
       new_graph->SetPoint     (element, element, eff_value);
       new_graph->SetPointError(element,    1e-9, eff_error);
     }
+
+
+  // Close
+  //----------------------------------------------------------------------------
+  delete latino;
+
+  file->Close();
 }
