@@ -35,8 +35,8 @@ void checkEfficiencies()
   old_graph = new TGraphErrors();
   new_graph = new TGraphErrors();
 
-  old_efficiency = new TEfficiency("old_efficiency", ";ttDM sample;efficiency (%)", 18, -0.5, 18);
-  new_efficiency = new TEfficiency("new_efficiency", ";ttDM sample;efficiency (%)", 18, -0.5, 18);
+  old_efficiency = new TEfficiency("old_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
+  new_efficiency = new TEfficiency("new_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
 
   int graph_element = 0;
 
