@@ -1,4 +1,4 @@
-// Constants and data members
+// Constants
 //------------------------------------------------------------------------------
 const TCut all   = "metPfType1 > -999";
 const TCut lep1  = "std_vector_lepton_pt[0] > 30";
@@ -14,11 +14,19 @@ const TCut m2l   = "mll > 20";
 
 const TString path = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/";
 
+
+// Data members
+//------------------------------------------------------------------------------
 TGraphErrors* old_graph;
 TGraphErrors* new_graph;
 
 TEfficiency* old_efficiency;
 TEfficiency* new_efficiency;
+
+int          old_sum_denominator;
+int          old_sum_numerator;
+int          new_sum_denominator;
+int          new_sum_numerator;
 
 
 // Functions
@@ -42,6 +50,11 @@ void checkEfficiencies()
 
   old_efficiency = new TEfficiency("old_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
   new_efficiency = new TEfficiency("new_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
+
+  old_sum_denominator = 0;
+  old_sum_numerator   = 0;
+  new_sum_denominator = 0;
+  new_sum_numerator   = 0;
 
   int graph_element = 0;
 
@@ -206,6 +219,26 @@ void checkEfficiencies()
   c3->GetFrame()->DrawClone();
 
   c3->SaveAs("diff.png");
+
+
+  // Grand total
+  //----------------------------------------------------------------------------
+  float old_eff_value = float(old_sum_numerator) / old_sum_denominator;
+  float old_eff_error = 1e2 * sqrt(old_eff_value*(1. - old_eff_value) / old_sum_denominator);
+
+  float new_eff_value = float(new_sum_numerator) / new_sum_denominator;
+  float new_eff_error = 1e2 * sqrt(new_eff_value*(1. - new_eff_value) / new_sum_denominator);
+
+  old_eff_value *= 1e2;
+  new_eff_value *= 1e2;
+
+  float rel_dif_value = 2e2 * (old_eff_value - new_eff_value) / (old_eff_value + new_eff_value);
+
+  printf("\n");
+  printf(" old efficiency      = (%5.2f +- %4.2f)%% (%6d / %6d)\n", old_eff_value, old_eff_error, old_sum_numerator, old_sum_denominator);
+  printf(" new efficiency      = (%5.2f +- %4.2f)%% (%6d / %6d)\n", new_eff_value, new_eff_error, new_sum_numerator, new_sum_denominator);
+  printf(" relative difference = %.2f%%\n", rel_dif_value);
+  printf("\n");
 }
 
 
@@ -247,6 +280,9 @@ void GetEfficiency(TString era,
 
       old_efficiency->SetTotalEvents (element+1, denominator);
       old_efficiency->SetPassedEvents(element+1, numerator);
+
+      old_sum_denominator += denominator;
+      old_sum_numerator   += numerator;
     }
   else
     {
@@ -257,6 +293,9 @@ void GetEfficiency(TString era,
 
       new_efficiency->SetTotalEvents (element+1, denominator);
       new_efficiency->SetPassedEvents(element+1, numerator);
+
+      new_sum_denominator += denominator;
+      new_sum_numerator   += numerator;
     }
 
 
