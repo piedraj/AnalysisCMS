@@ -320,13 +320,12 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= trigger * metFilter;
 
-  //  if (!_ismc && _sample.Contains("2016B")) _event_weight *= isJsonOk;
-
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
+
 
   // Includes btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -514,7 +513,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     Jet goodjet;
 
     goodjet.index    = i;
-    goodjet.cmvav2   = (_is74X) ? 1. : std_vector_jet_cmvav2  ->at(i);
+    goodjet.cmvav2   = (_is74X) ? 1. : std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 

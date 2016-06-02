@@ -529,6 +529,12 @@ void HistogramReader::CrossSection(TString level,
 				   TString channel,
 				   TString process)
 {
+  if (_luminosity_fb < 0)
+    {
+      printf("\n [HistogramReader::CrossSection] Warning: reading negative luminosity\n\n");
+    }
+
+
   // Get the signal and the backgrounds
   //----------------------------------------------------------------------------
   _mchist.clear();
