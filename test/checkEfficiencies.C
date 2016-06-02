@@ -232,12 +232,16 @@ void checkEfficiencies()
   old_eff_value *= 1e2;
   new_eff_value *= 1e2;
 
-  float rel_dif_value = 2e2 * (old_eff_value - new_eff_value) / (old_eff_value + new_eff_value);
+  float rel_dif_value = old_eff_value / new_eff_value;
+  float rel_dif_error = rel_dif_value * sqrt((old_eff_error/old_eff_value)*(old_eff_error/old_eff_value) + (new_eff_error/new_eff_value)*(new_eff_error/new_eff_value));
+
+  rel_dif_value = 1e2 * fabs(1. - rel_dif_value);
+  rel_dif_error = 1e2 * rel_dif_error;
 
   printf("\n");
   printf(" old efficiency      = (%5.2f +- %4.2f)%% (%6d / %6d)\n", old_eff_value, old_eff_error, old_sum_numerator, old_sum_denominator);
   printf(" new efficiency      = (%5.2f +- %4.2f)%% (%6d / %6d)\n", new_eff_value, new_eff_error, new_sum_numerator, new_sum_denominator);
-  printf(" relative difference = %.2f%%\n", rel_dif_value);
+  printf(" relative difference = (%5.2f +- %4.2f)%%\n", rel_dif_value, rel_dif_error);
   printf("\n");
 }
 
