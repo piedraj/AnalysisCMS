@@ -12,6 +12,9 @@ const TString path = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/0
 TGraphErrors* old_graph;
 TGraphErrors* new_graph;
 
+TEfficiency* old_efficiency;
+TEfficiency* new_efficiency;
+
 
 // Functions
 //------------------------------------------------------------------------------
@@ -32,66 +35,71 @@ void checkEfficiencies()
   old_graph = new TGraphErrors();
   new_graph = new TGraphErrors();
 
+  old_efficiency = new TEfficiency("old_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
+  new_efficiency = new TEfficiency("new_efficiency", ";ttDM sample;efficiency", 18, -0.5, 18);
+
   int graph_element = 0;
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001pseudo0010");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001pseudo00010");
+  printf("\n");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001pseudo0100");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001pseudo00100");
+  GetEfficiency("old", graph_element,   "ttDM0001pseudo0010");
+  GetEfficiency("new", graph_element++, "ttDM0001pseudo00010");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0010pseudo0100");
-  GetEfficiency("new", graph_element++, "latino_ttDM0010pseudo00100");
+  GetEfficiency("old", graph_element,   "ttDM0001pseudo0100");
+  GetEfficiency("new", graph_element++, "ttDM0001pseudo00100");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0050pseudo0200");
-  GetEfficiency("new", graph_element++, "latino_ttDM0050pseudo00200");
+  GetEfficiency("old", graph_element,   "ttDM0010pseudo0100");
+  GetEfficiency("new", graph_element++, "ttDM0010pseudo00100");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0150pseudo0200");
-  GetEfficiency("new", graph_element++, "latino_ttDM0150pseudo00200");
+  GetEfficiency("old", graph_element,   "ttDM0050pseudo0200");
+  GetEfficiency("new", graph_element++, "ttDM0050pseudo00200");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0150pseudo0500");
-  GetEfficiency("new", graph_element++, "latino_ttDM0150pseudo00500");
+  GetEfficiency("old", graph_element,   "ttDM0150pseudo0200");
+  GetEfficiency("new", graph_element++, "ttDM0150pseudo00200");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0010");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00010");
+  GetEfficiency("old", graph_element,   "ttDM0150pseudo0500");
+  GetEfficiency("new", graph_element++, "ttDM0150pseudo00500");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0050");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00050");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0010");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00010");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0100");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00100");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0050");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00050");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0200");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00200");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0100");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00100");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0300");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00300");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0200");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00200");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0001scalar0500");
-  GetEfficiency("new", graph_element++, "latino_ttDM0001scalar00500");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0300");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00300");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0010scalar0050");
-  GetEfficiency("new", graph_element++, "latino_ttDM0010scalar00050");
+  GetEfficiency("old", graph_element,   "ttDM0001scalar0500");
+  GetEfficiency("new", graph_element++, "ttDM0001scalar00500");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0010scalar0100");
-  GetEfficiency("new", graph_element++, "latino_ttDM0010scalar00100");
+  GetEfficiency("old", graph_element,   "ttDM0010scalar0050");
+  GetEfficiency("new", graph_element++, "ttDM0010scalar00050");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0050");
-  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00050");
+  GetEfficiency("old", graph_element,   "ttDM0010scalar0100");
+  GetEfficiency("new", graph_element++, "ttDM0010scalar00100");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0200");
-  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00200");
+  GetEfficiency("old", graph_element,   "ttDM0050scalar0050");
+  GetEfficiency("new", graph_element++, "ttDM0050scalar00050");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0050scalar0300");
-  GetEfficiency("new", graph_element++, "latino_ttDM0050scalar00300");
+  GetEfficiency("old", graph_element,   "ttDM0050scalar0200");
+  GetEfficiency("new", graph_element++, "ttDM0050scalar00200");
 
-  GetEfficiency("old", graph_element,   "latino_ttDM0500scalar0500");
-  GetEfficiency("new", graph_element++, "latino_ttDM0500scalar00500");
+  GetEfficiency("old", graph_element,   "ttDM0050scalar0300");
+  GetEfficiency("new", graph_element++, "ttDM0050scalar00300");
+
+  GetEfficiency("old", graph_element,   "ttDM0500scalar0500");
+  GetEfficiency("new", graph_element++, "ttDM0500scalar00500");
 
 
-  // Draw
+  // Draw TGraph
   //----------------------------------------------------------------------------
-  TCanvas* output = new TCanvas("output", "output");
+  TCanvas* c1 = new TCanvas("c1", "c1");
 
   old_graph->SetLineWidth  (2);
   old_graph->SetLineColor  (kRed+1);
@@ -112,11 +120,35 @@ void checkEfficiencies()
 
   mg->GetXaxis()->SetTitle("ttDM sample");
   mg->GetYaxis()->SetTitle("efficiency (%)");
-
   mg->GetXaxis()->SetTitleOffset(1.6);
   mg->GetYaxis()->SetTitleOffset(1.6);
 
-  output->SaveAs("output.png");
+  c1->SaveAs("graphs.png");
+
+
+  // Draw TEfficiency
+  //----------------------------------------------------------------------------
+  TCanvas* c2 = new TCanvas("c2", "c2");
+
+  old_efficiency->SetLineWidth  (2);
+  old_efficiency->SetLineColor  (kRed+1);
+  old_efficiency->SetMarkerColor(kRed+1);
+  old_efficiency->SetMarkerStyle(kOpenCircle);
+
+  new_efficiency->SetLineWidth  (2);
+  new_efficiency->SetLineColor  (kBlack);
+  new_efficiency->SetMarkerColor(kBlack);
+  new_efficiency->SetMarkerStyle(kFullCircle);
+
+  old_efficiency->Draw("ap");
+  new_efficiency->Draw("p,same");
+
+  c2->Update();
+
+  old_efficiency->GetPaintedGraph()->GetXaxis()->SetTitleOffset(1.6);
+  old_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(1.6);
+
+  c2->SaveAs("efficiencies.png");
 }
 
 
@@ -127,7 +159,7 @@ void GetEfficiency(TString era,
 		   int     element,
 		   TString sample)
 {
-  TFile* file = new TFile(path + sample + ".root");
+  TFile* file = new TFile(path + "latino_" + sample + ".root");
 
   TCanvas* canvas = new TCanvas("canvas " + sample, "canvas " + sample);
   
@@ -136,23 +168,38 @@ void GetEfficiency(TString era,
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  Long64_t numerator   = latino->Draw("metPfType1", pass_num);
-  Long64_t denominator = latino->Draw("metPfType1", pass_den);
+  int numerator   = latino->Draw("metPfType1", pass_num);
+  int denominator = latino->Draw("metPfType1", pass_den);
 
   float eff_value = float(numerator) / denominator;
   float eff_error = 1e2 * sqrt(eff_value*(1. - eff_value) / denominator);
   
   eff_value *= 1e2;
 
+  printf(" %-20s efficiency = (%5.2f +- %4.2f)%% (%4d / %4d)\n",
+	 sample.Data(),
+	 eff_value,
+	 eff_error,
+	 numerator,
+	 denominator);
+
   if (era.EqualTo("old"))
     {
       old_graph->SetPoint     (element, element, eff_value);
       old_graph->SetPointError(element,    1e-9, eff_error);
+
+      old_efficiency->SetTotalEvents (element+1, denominator);
+      old_efficiency->SetPassedEvents(element+1, numerator);
     }
   else
     {
+      printf("\n");
+
       new_graph->SetPoint     (element, element, eff_value);
       new_graph->SetPointError(element,    1e-9, eff_error);
+
+      new_efficiency->SetTotalEvents (element+1, denominator);
+      new_efficiency->SetPassedEvents(element+1, numerator);
     }
 
 
