@@ -154,6 +154,58 @@ void checkEfficiencies()
   old_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(1.8);
 
   c2->SaveAs("efficiencies.png");
+
+
+  // Draw TGraph differences
+  //----------------------------------------------------------------------------
+  TCanvas* c3 = new TCanvas("c3", "c3");
+
+  TH1F* hdiff = new TH1F("hdiff", ";(old - new) / error; entries / bin", 10, -3, 3);
+
+  hdiff->SetFillStyle(1001);
+  hdiff->SetFillColor(kGray+1);
+  hdiff->SetLineColor(kGray+1);
+
+  for (int i=0; i<old_graph->GetN(); i++)
+    {
+      double x;
+
+      double old_value;
+      double new_value;
+
+      old_graph->GetPoint(i, x, old_value);
+      new_graph->GetPoint(i, x, new_value);
+
+      float old_error = old_graph->GetErrorY(i);
+      float new_error = new_graph->GetErrorY(i);
+
+      float dif_value = old_value - new_value;
+      float dif_error = sqrt(old_error*old_error + new_error*new_error);
+
+      hdiff->Fill(dif_value/dif_error);
+    }
+
+  hdiff->Draw("hist");
+
+
+  // Fit
+  //----------------------------------------------------------------------------
+  TF1* g1 = new TF1("g1", "gaus", -3, 3);
+
+  g1->SetParameters(18, 0, 1);
+
+  g1->SetLineColor(kRed+1);
+
+  hdiff->Fit(g1);
+
+  g1->Draw("same");
+
+  hdiff->GetXaxis()->SetTitleOffset(1.6);
+  hdiff->GetYaxis()->SetTitleOffset(1.6);
+
+  c3->GetFrame()->DrawClone();
+
+  c3->SaveAs("diff.png");
 }
 
 
