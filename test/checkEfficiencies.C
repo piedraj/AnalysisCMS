@@ -1,11 +1,15 @@
 // Constants and data members
 //------------------------------------------------------------------------------
-const TCut all  = "metPfType1 > -999";
-const TCut lep1 = "std_vector_lepton_pt[0] > 30";
-const TCut lep2 = "std_vector_lepton_pt[1] > 10";
-const TCut lep3 = "std_vector_lepton_pt[2] < 10";
-const TCut njet = "njet > 1";
-const TCut met  = "metPfType1 > 50";
+const TCut all   = "metPfType1 > -999";
+const TCut lep1  = "std_vector_lepton_pt[0] > 30";
+const TCut lep2  = "std_vector_lepton_pt[1] > 10";
+const TCut lep3  = "std_vector_lepton_pt[2] < 10";
+const TCut njet  = "njet > 1";
+const TCut met   = "metPfType1 > 50";
+const TCut mm    = "std_vector_lepton_flavour[0]*std_vector_lepton_flavour[1] == -13*13";
+const TCut ee    = "std_vector_lepton_flavour[0]*std_vector_lepton_flavour[1] == -11*11";
+const TCut em    = "std_vector_lepton_flavour[0]*std_vector_lepton_flavour[1] == -11*13";
+const TCut zveto = em || "(mll < 76.188 && mll > 106.188)";
 
 const TString path = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/03Mar_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/";
 
@@ -146,7 +150,7 @@ void checkEfficiencies()
   c2->Update();
 
   old_efficiency->GetPaintedGraph()->GetXaxis()->SetTitleOffset(1.6);
-  old_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(1.6);
+  old_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(1.8);
 
   c2->SaveAs("efficiencies.png");
 }
@@ -164,7 +168,7 @@ void GetEfficiency(TString era,
   TCanvas* canvas = new TCanvas("canvas " + sample, "canvas " + sample);
   
   TCut pass_den = all;
-  TCut pass_num = pass_den && lep1 && lep2 && lep3 && njet && met;
+  TCut pass_num = pass_den && lep1 && lep2 && lep3 && njet && met && (ee || mm || em) && zveto;
 
   TTree* latino = (TTree*)file->Get("latino");
 
