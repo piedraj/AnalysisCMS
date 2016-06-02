@@ -140,7 +140,7 @@ void GetEfficiency(TString era,
   Long64_t denominator = latino->Draw("metPfType1", pass_den);
 
   float eff_value = float(numerator) / denominator;
-  float eff_error = 1e2 * sqrt(eff_value*(1 - eff_value) / denominator);
+  float eff_error = 1e2 * sqrt(eff_value*(1. - eff_value) / denominator);
   
   eff_value *= 1e2;
 
