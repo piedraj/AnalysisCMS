@@ -118,7 +118,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (AnalysisLeptons[iLep1].v.Pt() < 10.) continue;
 
-	for (int iMu2 = iLep1+1; iLep2 < AnalysisLeptons.size(); iLep2++) {
+	for (int iLep2 = iLep1+1; iLep2 < AnalysisLeptons.size(); iLep2++) {
 	  
 	  if (AnalysisLeptons[iLep2].v.Pt() < 10.) continue;
 	  if ((AnalysisLeptons[iLep1].flavour + AnalysisLeptons[iLep2].flavour) != 0.) continue;
@@ -139,9 +139,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (_ismc) {
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
-      _event_weight_loose = puW * baseW * genWeight;
-      _event_weight_tight = puW * baseW * genWeight;
-      _event_weight_tight_2l = puW * baseW * genWeight;
+      _event_weight_loose = puW * genWeight;
+      _event_weight_tight = puW * genWeight;
+      _event_weight_tight_2l = puW * genWeight;
 
       if (filename.Contains("WJetsToLNu")) {
 
@@ -149,17 +149,33 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	  _event_weight_loose *= 0.081;
 
-	  if (Lepton1.type == Tight) _event_weight_tight *= 0.075;
+	  if (Lepton1.type == Tight) {
 
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.075;
+	    _event_weight_tight *= 0.075;
+	    	  
+	  }
+
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	    _event_weight_tight_2l *= 0.075;
+	    
+	  }
 
 	} else if (_channel == e) {
 
 	  _event_weight_loose *= 0.0057;
+	  
+	  if (Lepton1.type == Tight) {
 
-	  if (Lepton1.type == Tight) _event_weight_tight *= 0.0018;
+	    _event_weight_tight *= 0.0018;
+	    
+	  }
 
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.0018;
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	    _event_weight_tight_2l *= 0.0018;
+	    
+	  }
 
 	}
 	
@@ -168,18 +184,34 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	if (_channel == m) {
 	    
 	  _event_weight_loose *= 0.085;
+	  
+	  if (Lepton1.type == Tight) {
 
-	  if (Lepton1.type == Tight) _event_weight_tight *= 0.084;
+	    _event_weight_tight *= 0.084;
+	    
+	  }
 
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.084;
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	    _event_weight_tight_2l *= 0.084;
+
+	  }
 
 	} else if (_channel == e) {
 
 	  _event_weight_loose *= 0.0015;
+	  
+	  if (Lepton1.type == Tight) {
 
-	  if (Lepton1.type == Tight) _event_weight_tight *= 0.0014;
+	    _event_weight_tight *= 0.0014;
+	    
+	  }
 
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) _event_weight_tight_2l *= 0.0014;
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+
+	    _event_weight_tight_2l *= 0.0014;
+	    
+	  }
 
 	}
       }
