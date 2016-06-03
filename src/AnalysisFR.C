@@ -139,9 +139,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (_ismc) {
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
-      _event_weight_loose = puW * genWeight;
-      _event_weight_tight = puW * genWeight;
-      _event_weight_tight_2l = puW * genWeight;
+      _event_weight_loose = puW * baseW * genWeight;
+      _event_weight_tight = puW * baseW * genWeight;
+      _event_weight_tight_2l = puW * baseW * genWeight;
 
       if (filename.Contains("WJetsToLNu")) {
 
