@@ -27,6 +27,7 @@ Set a CMSSW release.
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
 
     git clone https://github.com/YOUR_USERNAME/AnalysisCMS
+    git clone https://github.com/scodella/BTagSFUtil
 
 Create an empty Git repository or reinitialize an existing one.
 

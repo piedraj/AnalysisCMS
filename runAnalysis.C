@@ -1,9 +1,11 @@
+//#include "src/AnalysisControl.C"
 //#include "src/AnalysisFR.C"
 //#include "src/AnalysisMonoH.C"
-#include "src/AnalysisTop.C"
-//#include "src/AnalysisTTDM.C"
-//#include "src/AnalysisStop.C"
+#include "src/AnalysisStop.C"
 //#include "src/AnalysisTop.C"
+//#include "src/AnalysisTTDM.C"
+//#include "src/AnalysisWW.C"
+//#include "src/AnalysisWZ.C"
 
 
 void runAnalysis(TString filename,
@@ -15,12 +17,16 @@ void runAnalysis(TString filename,
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  //  AnalysisMonoH analysis(latino); analysis.Loop("MonoH", filename, lumi_fb);
-      AnalysisTop   analysis(latino, systematic); analysis.Loop("Top",   filename, lumi_fb);
-  //  AnalysisTTDM  analysis(latino); analysis.Loop("TTDM",  filename, lumi_fb_blind);
-  //  AnalysisWW    analysis(latino); analysis.Loop("WW",    filename, lumi_fb);
-  //  AnalysisWZ    analysis(latino); analysis.Loop("WZ",    filename, lumi_fb);
-  //  AnalysisStop  analysis(latino, systematic); analysis.Loop("Stop",  filename, lumi_fb);
+  float baseW_lumi_fb = 1.0;  // baseW has been computed for 1.0 fb-1
+
+  //  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
+  //  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
+  //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
+  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
+  //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
+  //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
+  //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
+  //  AnalysisWZ      analysis(latino, systematic); analysis.Loop("WZ",      filename, baseW_lumi_fb);
 }
 
 # ifndef __CINT__

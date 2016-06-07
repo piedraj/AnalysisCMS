@@ -186,9 +186,10 @@ void HistogramReader::Draw(TString hname,
 
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
-    if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
-
     _mchist.push_back((TH1D*)dummy->Clone());
+
+    if (_luminosity_fb > 0) _mchist[i]->Scale(_luminosity_fb);
+    if (_mcscale[i]    > 0) _mchist[i]->Scale(_mcscale[i]);
 
     SetHistogram(_mchist[i], _mccolor[i], 1001, kDot, kSolid, 0, ngroup, moveoverflow, xmin, xmax);
     
@@ -209,6 +210,8 @@ void HistogramReader::Draw(TString hname,
     TH1D* dummy = (TH1D*)_signalfile[i]->Get(hname);
 
     _signalhist.push_back((TH1D*)dummy->Clone());
+
+    if (_luminosity_fb > 0) _signalhist[i]->Scale(_luminosity_fb);
 
     SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
     
@@ -526,6 +529,12 @@ void HistogramReader::CrossSection(TString level,
 				   TString channel,
 				   TString process)
 {
+  if (_luminosity_fb < 0)
+    {
+      printf("\n [HistogramReader::CrossSection] Warning: reading negative luminosity\n\n");
+    }
+
+
   // Get the signal and the backgrounds
   //----------------------------------------------------------------------------
   _mchist.clear();
@@ -546,9 +555,9 @@ void HistogramReader::CrossSection(TString level,
       {
 	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 
-	if (_mcscale[i] > 0) dummy->Scale(_mcscale[i]);
-
 	_mchist.push_back((TH1D*)dummy->Clone());
+
+	if (_mcscale[i] > 0) _mchist[i]->Scale(_mcscale[i]);
       }
   }
 
@@ -576,13 +585,13 @@ void HistogramReader::CrossSection(TString level,
   // Cross-section calculation
   //----------------------------------------------------------------------------  
   float efficiency   = counterSignal / 1980800.;
-  float crossSection = (counterData - counterBkg) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float crossSection = (counterData - counterBkg) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
   float mu           = (counterData - counterBkg) / (counterSignalLum);
 
 
   // Statistical error
   //----------------------------------------------------------------------------  
-  float xsErrorStat = sqrt(counterData) / (1e3 * lumi_fb * efficiency * WZ23lnu);
+  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
   float muErrorStat = sqrt(counterData) / (counterSignalLum); 
  
   printf(" mu(%s) = %.2f $\\pm$ %.2f (stat.) $\\pm$ %.2f (lumi.) \\\\\n",
@@ -876,12 +885,14 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   if (hist_yield < 0)
     {
-      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f. Will use yield = 0\n\n",
 	     hist->GetName(),
 	     hist_yield);
+
+      hist_yield = 0;
     }
 
-  return fabs(hist_yield);
+  return hist_yield;
 }
 
 

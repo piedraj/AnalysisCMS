@@ -27,8 +27,8 @@ const float   zmax = 106;  // [GeV]
 
 const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 20, 30, 40, 45, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 20, 30, 40, 45,  75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 50, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 50, 75};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -219,11 +219,8 @@ void getDYScale(TString analysis = "Top",
 	}
     }
 
-  if (printResults)
-    {
-	 printf("\n");
+  if (printResults) printf("\n");
 
-    }
 
   // Cosmetics
   //----------------------------------------------------------------------------

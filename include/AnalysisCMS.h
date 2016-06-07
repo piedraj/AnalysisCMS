@@ -73,8 +73,6 @@ class AnalysisCMS : public AnalysisBase
   void    GetTrkMET         (float    module,
 			     float    phi);
 
-  bool    IsIsolatedLepton  (int      k);
-
   float   MuonIsolation     (int      k);
 
   void    OpenMinitree      ();
@@ -124,6 +122,14 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetRecoWeightsLHE (TH1F*    hist);
 
+  void    GetStopVar        ();
+
+  double  ComputeMT2        (TLorentzVector VisibleA,
+			     TLorentzVector VisibleB, 
+			     TLorentzVector Invisible,
+			     int            MT2Type = 0,
+			     double         MT2Precision = 0.);
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -138,6 +144,7 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
+  bool                   _is74X;
   bool                   _passdphiveto;
   bool                   _systematic_btag_do;
   bool                   _systematic_btag_up;
@@ -220,6 +227,55 @@ class AnalysisCMS : public AnalysisBase
   float                  _sumjpt12;
   float                  _trkpmet;
 
+
+  // Variables ported from AnalysisStop
+  //----------------------------------------------------------------------------
+  float                  _dyll;
+  float                  _ptbll;
+  float                  _mt2ll;
+  float                  _dphimetptbll;
+  float                  _dphimetjet;
+  float                  _mllbb;
+  float                  _meff;
+  float                  _mt2bb;
+  float                  _mt2lblb;
+  float                  _mlb1;
+  float                  _mlb2;
+
+  float                  _mt2lblbcomb;
+  float                  _mt2bbtrue;
+  float                  _mt2lblbtrue;
+  float                  _mt2lblbmatch;
+
+  float                  _mlb1comb;
+  float                  _mlb2comb;
+  float                  _mlb1true;
+  float                  _mlb2true;
+
+  float                  _bjet1pt;
+  float                  _bjet1eta;
+  float                  _bjet1phi;
+  float                  _bjet1mass;
+  float                  _bjet1csvv2ivf;
+  float                  _bjet2pt;
+  float                  _bjet2eta;
+  float                  _bjet2phi;
+  float                  _bjet2mass;
+  float                  _bjet2csvv2ivf;
+  float                  _tjet1pt;
+  float                  _tjet1eta;
+  float                  _tjet1phi;
+  float                  _tjet1mass;
+  float                  _tjet1csvv2ivf;
+  float                  _tjet1assignment;
+  float                  _tjet2pt;
+  float                  _tjet2eta;
+  float                  _tjet2phi;
+  float                  _tjet2mass;
+  float                  _tjet2csvv2ivf;
+  float                  _tjet2assignment;
+
+
   Long64_t               _nentries;
 
   unsigned int           _jetbin;
@@ -251,6 +307,17 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_pt2l         [nchannel][ncut][njetbin+1];
   TH1D*                  h_sumjpt12     [nchannel][ncut][njetbin+1];
   TH1D*                  h_sumpt12      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dyll         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mllbb        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetjet   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_meff         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ptbll        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetptbll [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2ll        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2bb        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mlb1         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mlb2         [nchannel][ncut][njetbin+1];
 
 
   // TH1 histograms with minitree variables
@@ -315,6 +382,9 @@ class AnalysisCMS : public AnalysisBase
   // TH2 histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
+  TH2D*                  h_2ht           [nchannel][ncut][njetbin+1];
+  TH2D*                  h_dym           [nchannel][ncut][njetbin+1];
+
 };
 
 #endif
