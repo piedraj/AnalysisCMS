@@ -137,6 +137,10 @@ void getDYScale(TString analysis = "TTDM",
       h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
       h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
       h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+
+      h2_dy[i]->Scale(lumi_fb);
+      h2_wz[i]->Scale(lumi_fb);
+      h2_zz[i]->Scale(lumi_fb);
     }
 
 
