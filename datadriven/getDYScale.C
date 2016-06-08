@@ -25,10 +25,10 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 7;
+const int     nmetcut = 9;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 50, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 50, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60, 70,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 70, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -109,15 +109,20 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
-// Results for MET > 45 GeV and 2.318 fb-1,
+// Results for 2.318 fb-1 and MET > 45 GeV
 //
-//    ee SF(est/DY)  1.281 +- 0.149
-//    mm SF(est/DY)  1.436 +- 0.122
+//    SF(ee,est/DY)  1.344 +- 0.047
+//    SF(mm,est/DY)  1.405 +- 0.036
+//
+// Results for 2.318 fb-1, MET > 45 GeV and nbjet20cmvav2l > 0
+//
+//    SF(ee,est/DY)  1.351 +- 0.086
+//    SF(mm,est/DY)  1.379 +- 0.061
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "TTDM",
+void getDYScale(TString analysis = "Control",
 		TString level    = "01_Routin",
-		double  lumi_fb  = 1.324)
+		double  lumi_fb  = 2.318)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -238,12 +243,12 @@ void getDYScale(TString analysis = "TTDM",
       line->Draw("same");
 
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
-      mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
+      mgraph[k]->GetYaxis()->SetTitleOffset(2.0);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.26);
-      mgraph[k]->SetMaximum(+0.45);
+      mgraph[k]->SetMinimum(-0.05);
+      mgraph[k]->SetMaximum(+0.65);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -276,7 +281,7 @@ void getDYScale(TString analysis = "TTDM",
   line->Draw("same");
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
-  mgraph[2]->GetYaxis()->SetTitleOffset(1.7);
+  mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
   mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
