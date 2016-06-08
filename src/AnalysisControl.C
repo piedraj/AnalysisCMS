@@ -118,7 +118,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     bool btag   = (_nbjet20cmvav2l > 0);
     bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    bool metcut = (_channel == em || MET.Et() > 50.);
+    bool metcut = (MET.Et() > 50.);
 
     FillLevelHistograms(Control_01_Routin,     pass);
     FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
