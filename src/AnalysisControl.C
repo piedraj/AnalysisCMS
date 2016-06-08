@@ -111,12 +111,15 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (Lepton2.v.Pt() > 20.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 12.);
-    pass &= (_nbjet20cmvav2l > 0);
     pass &= (_njet > 1);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || MET.Et() > 40.);
 
-    FillLevelHistograms(Control_01_Top, pass);
+    bool btag   = (_nbjet20cmvav2l > 0);
+    bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    bool metcut = (_channel == em || MET.Et() > 40.);
+
+    FillLevelHistograms(Control_01_Routin,     pass);
+    FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
+    FillLevelHistograms(Control_03_Top,        pass && btag && zveto && metcut);
 
 
     // AN-15-325, latinos
@@ -138,8 +141,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || mpmet > 40.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_02_WW0j, pass && _njet == 0);
-    FillLevelHistograms(Control_03_WW1j, pass && _njet == 1);
+    FillLevelHistograms(Control_04_WW, pass);
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
