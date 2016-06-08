@@ -68,6 +68,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
+    if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis                                                                                                                             
+
     if (Lepton1.v.Pt() < 10.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
@@ -107,19 +109,21 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass = true;
 
     pass &= opposite_sign;
-    pass &= (Lepton1.v.Pt() > 20.);
-    pass &= (Lepton2.v.Pt() > 20.);
+    pass &= (Lepton1.v.Pt() > 30.);
+    pass &= (Lepton2.v.Pt() > 10.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
-    pass &= (_m2l > 12.);
+    pass &= (_m2l > 20.);
     pass &= (_njet > 1);
+    pass &= (_dphillmet > 1.2);
 
     bool btag   = (_nbjet20cmvav2l > 0);
     bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    bool metcut = (_channel == em || MET.Et() > 40.);
+    bool metcut = (_channel == em || MET.Et() > 50.);
 
     FillLevelHistograms(Control_01_Routin,     pass);
     FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
-    FillLevelHistograms(Control_03_Top,        pass && btag && zveto && metcut);
+    FillLevelHistograms(Control_03_Top,        pass && zveto && metcut);
+  //FillLevelHistograms(Control_03_Top,        pass && btag && zveto && metcut);
 
 
     // AN-15-325, latinos
