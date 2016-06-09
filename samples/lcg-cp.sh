@@ -6,9 +6,9 @@ if [ $# -lt 1 ]; then
     echo "  "
     echo "  "
     echo "  "
-    echo "  >>> 74x files"
+    echo "  >>> 80x files"
     echo "  "
-    echo "  ./lcg-cp.sh 21Oct_25ns_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/"
+    echo "  ./lcg-cp.sh 20May2016_Run2016B_PromptReco/l1loose"
     echo "  "
     echo "  "
     echo "  "
@@ -37,6 +37,12 @@ if [ $# -lt 1 ]; then
     echo "  "
     echo "  "
     echo "  "
+    echo "  >>> 74x files"
+    echo "  "
+    echo "  ./lcg-cp.sh 21Oct_25ns_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/"
+    echo "  "
+    echo "  "
+    echo "  "
     echo "  >>> The previous command should have created the lcg-cp-batch.sh file. Check it, then launch it."
     echo "  "
     echo "  source lcg-cp-batch.sh"
@@ -46,8 +52,8 @@ fi
 
 
 export  FOLDER=$1
-export  GRIDUI_PATH='srm://srm01.ifca.es/cms/store/group'
-#export GRIDUI_PATH='/gpfs/csic_projects'
+#export GRIDUI_PATH='srm://srm01.ifca.es/cms/store/group'
+export  GRIDUI_PATH='/gpfs/csic_projects'
 
 rm -rf lcg-cp-batch.sh
 

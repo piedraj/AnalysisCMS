@@ -139,10 +139,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (_ismc) {
 
       Double_t genWeight = GEN_weight_SM/abs(GEN_weight_SM);
+
       _event_weight_loose = puW * baseW * genWeight;
       _event_weight_tight = puW * baseW * genWeight;
       _event_weight_tight_2l = puW * baseW * genWeight;
 
+      /*
       if (filename.Contains("WJetsToLNu")) {
 
 	if (_channel == m) {
@@ -215,7 +217,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	}
       }
-
+      */
     } else  {
 
       _event_weight_loose = 1.0;
@@ -228,7 +230,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
 
-	  passTrigger= true;
+	  passTrigger= false; // WATCH!
 
 	}
 	else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
@@ -242,8 +244,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
 
-	  passTrigger = true;
-	   
+	  passTrigger = false; // WATCH!
+
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
 
 	  passTrigger = true;
@@ -295,7 +297,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     pass = (MET.Et() > 20.);
     pass &= (_mtw > 20.);
     pass &= (_nlepton >= 2);
-    pass &= (Lepton1.v.Pt() > 35.);
+    //    pass &= (Lepton1.v.Pt() > 35.);
     pass &= _m2l > 0;
 
     if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
