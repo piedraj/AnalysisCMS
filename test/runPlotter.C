@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -41,6 +41,7 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
+  if (analysis.EqualTo("Stop"))    lumi = 0.226; // fb^-1
 
   Bool_t scale = linY;
 
@@ -116,7 +117,7 @@ void runPlotter(TString level,
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
+  //    plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
@@ -154,7 +155,14 @@ void runPlotter(TString level,
       //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
+  if (analysis.EqualTo("Stop"))
 
+    {
+     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
+     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
+     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+
+    }
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -175,7 +183,7 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -197,7 +205,7 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;   
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -211,13 +219,13 @@ void runPlotter(TString level,
 
 	  TString title = (i < lastchannel) ? lchannel[i] : "cms";
 
-	  plotter.SetTitle(title);*
+	  plotter.SetTitle(title);
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
-
+	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY);
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
@@ -278,21 +286,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
-
-	  // Stop histograms
-	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("Stop"))
-	    {
-	      plotter.Draw(prefix + "dyll"	 + suffix, "h_dyll",       -1, 2, "GeV",  scale); 
-	      plotter.Draw(prefix + "dphimetjet"	 + suffix, "h_dphimetjet",   5, 2, "rad",  scale); 
-	      plotter.Draw(prefix + "dphimetptbll" + suffix, "h_dphimetptbll", 5, 2, "rad",  scale); 
-	      plotter.Draw(prefix + "mllbb"	 + suffix, "h_mllbb",2, 0, "GeV",  scale); 
-	      plotter.Draw(prefix + "meff"	 + suffix, "h_meff",2, 0, "GeV",  scale); 
-	      plotter.Draw(prefix + "ptbll"	 + suffix, "h_ptbll",2, 0, "GeV",  scale); 
-	      plotter.Draw(prefix + "mt2ll"	 + suffix, "h_mt2ll",2, 0, "GeV",  scale); 
-	      plotter.Draw(prefix + "mt2bb"	 + suffix, "h_mt2bb",2, 0, "GeV",  scale); 
-	      plotter.Draw(prefix + "mt2lblb"	 + suffix, "h_mt2lblb",2, 0, "GeV",  scale); 
-	    }
 
 
 	  // WW and MonoH histograms
