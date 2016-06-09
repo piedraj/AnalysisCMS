@@ -315,7 +315,6 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
-
   _event_weight = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
