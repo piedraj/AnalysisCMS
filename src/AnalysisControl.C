@@ -68,7 +68,11 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (Lepton1.v.Pt() < 10.) continue;
+    if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis                                                                                                                             
+
+    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
+
+    if (Lepton1.v.Pt() < 30.) continue;
     if (Lepton2.v.Pt() < 10.) continue;
 
     _nelectron = 0;
@@ -83,8 +87,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
-    bool opposite_sign = (Lepton1.flavour * Lepton2.flavour < 0);
-
     bool pass;
 
 
@@ -92,12 +94,9 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = true;
 
-    pass &= opposite_sign;
-    pass &= (Lepton1.v.Pt() > 20.);
-    pass &= (Lepton2.v.Pt() > 20.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 12.);
-    pass &= (_nbjet20cmvav2l == 0);
+    pass &= (_nbjet30csvv2m == 0);
 
     FillLevelHistograms(Control_00_ZJets, pass);
 
@@ -106,30 +105,28 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = true;
 
-    pass &= opposite_sign;
-    pass &= (Lepton1.v.Pt() > 20.);
-    pass &= (Lepton2.v.Pt() > 20.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
-    pass &= (_m2l > 12.);
-    pass &= (_nbjet20cmvav2l > 0);
+    pass &= (_m2l > 20.);
     pass &= (_njet > 1);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || MET.Et() > 40.);
+    pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(Control_01_Top, pass);
+    bool btag   = (_nbjet30csvv2m > 0);
+    bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    bool metcut = (MET.Et() > 50.);
+
+    FillLevelHistograms(Control_01_Routin,     pass);
+    FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
+    FillLevelHistograms(Control_03_Top,        pass && zveto && metcut);
+    FillLevelHistograms(Control_04_TopBtag,    pass && zveto && metcut && btag);
 
 
-    // AN-15-325, latinos
-    // WW cross section measurement at sqrt(s) = 13 TeV
+    // WW
     //--------------------------------------------------------------------------
     pass = true;
 
-    pass &= opposite_sign;
-    pass &= (Lepton1.v.Pt() > 20.);
-    pass &= (Lepton2.v.Pt() > 20.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 12.);
-    pass &= (_nbjet20cmvav2l == 0);
+    pass &= (_nbjet30csvv2m == 0);
     pass &= (MET.Et() > 20.);
     pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
@@ -138,8 +135,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || mpmet > 40.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_02_WW0j, pass && _njet == 0);
-    FillLevelHistograms(Control_03_WW1j, pass && _njet == 1);
+    FillLevelHistograms(Control_05_WW, pass);
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);

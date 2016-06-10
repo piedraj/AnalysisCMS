@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; then
     echo "  "
     echo "  ./submit-jobs.sh samples/samples_data.txt       nominal"
     echo "  ./submit-jobs.sh samples/samples_datadriven.txt nominal"
