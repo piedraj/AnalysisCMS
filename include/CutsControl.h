@@ -9,7 +9,8 @@ enum {
   Control_01_Routin,
   Control_02_RoutinBtag,
   Control_03_Top,
-  Control_04_WW,
+  Control_04_TopBtag,
+  Control_05_WW,
   ncut  // This line should be always last
 };
 
@@ -18,7 +19,8 @@ const TString scut[ncut] = {
   "Control/01_Routin",
   "Control/02_RoutinBtag",
   "Control/03_Top",
-  "Control/04_WW"
+  "Control/04_TopBtag",
+  "Control/05_WW"
 };
 
 #endif

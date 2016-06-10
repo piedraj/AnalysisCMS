@@ -135,8 +135,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_lep2phi       [ichannel][icut][ijet]->Fill(_lep2phi,        _event_weight);
   h_lep2pt        [ichannel][icut][ijet]->Fill(_lep2pt,         _event_weight);
   h_mc            [ichannel][icut][ijet]->Fill(_mc,             _event_weight);
-  h_metPfType1    [ichannel][icut][ijet]->Fill(metPfType1,      _event_weight);
-  h_metPfType1Phi [ichannel][icut][ijet]->Fill(metPfType1Phi,   _event_weight);
+  h_metPfType1    [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
+  h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
   h_metTtrk       [ichannel][icut][ijet]->Fill(metTtrk,         _event_weight);
   h_metTtrkPhi    [ichannel][icut][ijet]->Fill(metTtrkPhi,      _event_weight);
   h_mpmet         [ichannel][icut][ijet]->Fill(_mpmet,          _event_weight);
@@ -161,9 +161,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(metPfType1, _m2l,    _event_weight);
-  h_2ht           [ichannel][icut][ijet]->Fill(_ht,        _htjets, _event_weight);
-  h_dym           [ichannel][icut][ijet]->Fill(_mllbb,     _dyll,   _event_weight);
+  h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
+  h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
+  h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
 
   // Non-prompt systematic uncertainties
@@ -335,7 +335,7 @@ void AnalysisCMS::ApplyWeights()
       float sf_btag = 1.0;
 
       if (!_is74X) {
-	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop"))
+	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
 	  {
 	    sf_btag = bPogSF_CSVM;
 	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
