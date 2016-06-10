@@ -901,10 +901,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   ApplyWeights();
  
-  if (_is74X) 
-    GetMET(pfType1Met, pfType1Metphi);
-  else
-    GetMET(metPfType1, metPfType1Phi);
+  if (_is74X) {
+    metPfType1 = pfType1Met;
+    metPfType1Phi = pfType1Metphi;
+  }
+  GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
 
