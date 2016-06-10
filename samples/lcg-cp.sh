@@ -8,6 +8,7 @@ if [ $# -lt 1 ]; then
     echo "  "
     echo "  >>> 80x files"
     echo "  "
+    echo "  ./lcg-cp.sh 13May2016_25ns_Spring16_MC/MCl1loose"
     echo "  ./lcg-cp.sh 20May2016_Run2016B_PromptReco/l1loose"
     echo "  "
     echo "  "
