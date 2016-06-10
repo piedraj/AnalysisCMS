@@ -2,15 +2,9 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/samples_data.txt       nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_datadriven.txt nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_mc.txt         nominal"
-    echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/samples_monoh.txt      nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_ttdm.txt       nominal"
-    echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/samples_fakes_data.txt nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_fakes_mc.txt   nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/samples_data_2015D_74X_eos.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/samples_mc_74X_eos.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/samples_stop_74X_eos.txt       nominal"
     echo "  "
     exit -1
 fi
