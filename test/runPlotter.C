@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -40,8 +40,8 @@ void runPlotter(TString level,
   float lumi = lumi_fb;
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
-  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
-  if (analysis.EqualTo("Stop"))    lumi = 0.226; // fb^-1
+  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
+  if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
 
   Bool_t scale = linY;
 
@@ -117,7 +117,7 @@ void runPlotter(TString level,
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-  //    plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
+      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
@@ -156,13 +156,13 @@ void runPlotter(TString level,
     }
 
   if (analysis.EqualTo("Stop"))
-
     {
      plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
      plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
-
     }
+
+
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -225,7 +225,7 @@ void runPlotter(TString level,
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
-	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY);
+
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
@@ -359,12 +359,8 @@ void runPlotter(TString level,
 int main(int argc, char ** argv)
 {
   if (argc < 2) {
-    
-    
 
     printf("\n rm -rf %s\n\n", outputdir.Data());
-  
-    
 
     for (int i=0; i<ncut; i++) printf(" ./runPlotter %s\n", scut[i].Data());
 

@@ -199,18 +199,9 @@ void getDYScale(TString analysis = "Control",
 
       GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
       GetScale(mm, scale[mm], scale_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
-      
+
       scale[em]     = sqrt(scale[ee] * scale[mm]);
       scale_err[em] = 0.5 * scale[em] * sqrt(pow(scale_err[ee]/scale[ee],2) + pow(scale_err[mm]/scale[mm],2));
-	if (printResutls)
-         {
-         printf("\n--------------------------------------------------------\n");
-         printf("\n  SF(em) = sqrt (SF(ee)*SF(mm))\n");
-         printf("\n  SF(em,est/DY)  %6.3f +- %-5.3f\n",           SF_em,  err_SF_em);
-         }
-
-
-
 
       for (int k=ee; k<=em; k++)
 	{
@@ -439,8 +430,6 @@ void GetScale(int    ch,
   scale_value = n_in_est / n_in_dy;
   scale_error = errRatio(n_in_est, err_in_est, n_in_dy, err_in_dy);
 
- float Nout_est = scale_value * n_out_dy; 
- float err_Nout_est = Nout_est * sqrt( (scale_error*scale_error) / (scale_value*scale_value) + (err_out_dy*err_out_dy) / (n_out_dy*n_out_dy) );
 
   // Print the results
   //----------------------------------------------------------------------------
@@ -454,8 +443,6 @@ void GetScale(int    ch,
       printf(" Nin(ZZ)       %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
       printf(" Nin(DY)       %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
       printf(" Nin(est)      %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
-      printf(" Nout(DY)       %6.1f +- %-5.1f\n",                     n_out_dy,     err_out_dy);
-      printf(" Nout(est)      %6.1f +- %-5.1f\n",                     Nout_est,     err_Nout_est);
       printf("----------------------------\n");
       printf(" R(%s,est)     %6.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
       printf(" R(%s,DY)      %6.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);

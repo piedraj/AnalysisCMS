@@ -14,9 +14,8 @@
 #include "BTagWorkingPoints76X.h"
 
 
-const double lumi_fb_2016B       = 0.218;
-const double lumi_fb_blind_2015D = 1.324;
-const double lumi_fb_blind       = 1.371;
+const double lumi_fb_blind_dm    = 1.324;
+const double lumi_fb_blind_susy  = 0.226;
 const double lumi_fb             = 2.318;
 const double lumi_error_percent  = 2.7;
 
@@ -95,10 +94,6 @@ const Color_t color_HZ        = kOrange+1;
 
 // Branching ratios
 //------------------------------------------------------------------------------
-
-const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
-const double metvar_bins_draw[] = {20, 25, 30, 45, 100};  // [GeV]
-
 const double W2e     = 0.1075;
 const double W2m     = 0.1057;
 const double W2tau   = 0.1125;
@@ -156,8 +151,11 @@ const TString lchannel[nchannel] = {
 };
 
 
-// MET filters
+// MET related
 //------------------------------------------------------------------------------
+const double metvar_bins     [] = {20, 25, 30, 45, 1000};  // [GeV]
+const double metvar_bins_draw[] = {20, 25, 30, 45,  100};  // [GeV]
+
 enum {
   HBHENoiseFilter,
   HBHENoiseIsoFilter,
