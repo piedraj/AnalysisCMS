@@ -25,10 +25,10 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 9;
+const int     nmetcut = 8;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60, 70,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 70, 100};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -258,8 +258,8 @@ void getDYScale(TString analysis = "Control",
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.05);
-      mgraph[k]->SetMaximum(+0.65);
+      mgraph[k]->SetMinimum(-0.02);
+      mgraph[k]->SetMaximum(+0.35);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
