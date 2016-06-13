@@ -39,7 +39,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
+  if (analysis.EqualTo("Control")) lumi = lumi_fb;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
   if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
 
