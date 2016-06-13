@@ -158,9 +158,11 @@ void runPlotter(TString level,
   if (analysis.EqualTo("Stop"))
 
     {
-     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
-     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
-     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+     plotter.AddSignal("T2tb_mStop875to1125_mLSP0to475", "m_{Stop}875-1125 m_{LSP}0-475",  color_Signal);  
+     plotter.AddSignal("T2tb_mStop200to625_mLSP50to475", "m_{Stop}200-625 m_{LSP}50-475",  color_Signal-4);  
+     //plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
+     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-7);  
+     //plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
 
     }
   // Draw events by cut
