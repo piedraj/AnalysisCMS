@@ -30,14 +30,13 @@ void runAnalysis(TString filename,
 
 }
 
-
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
   if (argc != 3)
     {
       printf("\n ./runAnalysis <filename> <systematic>\n");
-      printf("\n The output will be saved in\n\n");
+      //printf("\n The output will be saved in\n\n");
       printf("            minitrees/<systematic>\n");
       printf("            rootfiles/<systematic>\n");
       printf("            txt/<systematic>\n\n");

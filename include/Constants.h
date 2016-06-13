@@ -95,6 +95,10 @@ const Color_t color_HZ        = kOrange+1;
 
 // Branching ratios
 //------------------------------------------------------------------------------
+
+const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
+const double metvar_bins_draw[] = {20, 25, 30, 45, 100};  // [GeV]
+
 const double W2e     = 0.1075;
 const double W2m     = 0.1057;
 const double W2tau   = 0.1125;
