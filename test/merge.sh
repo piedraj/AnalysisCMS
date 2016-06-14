@@ -14,6 +14,9 @@ pushd $FOLDER
 
 hadd -f -k 00_Fakes.root     DD_Run*.root
 hadd -f -k 01_Data.root      Run*.root
+#hadd -f -k 01_DataDoubleEG.root        Run*DoubleEG*.root
+#hadd -f -k 01_DataDoubleMuon.root      Run*DoubleMuon*.root
+#hadd -f -k 01_DataMuonEG.root          Run*MuonEG*.root
 hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
 hadd -f -k 03_ZZ.root        ZZTo4L.root ZZTo2L2Nu.root ZZTo2L2Q*.root
 hadd -f -k 04_TTTo2L2Nu.root TTTo2L2Nu.root
