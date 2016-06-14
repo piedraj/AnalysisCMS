@@ -112,6 +112,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
+    if (!_ismc && run > 257599) continue;  // Luminosity for any blinded analysis  
+  
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 20.) continue;

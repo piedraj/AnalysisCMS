@@ -28,7 +28,8 @@ class AnalysisTop : public AnalysisCMS
 
   // Analysis histograms
   //----------------------------------------------------------------------------
-  TH2F*                  h_2ht[nchannel][ncut][njetbin+1];
+  TH2F*                  h_2ht    [nchannel][ncut][njetbin+1];
+  TH2D*                  h_met_m2l[nchannel][ncut][njetbin+1];
 };
 
 #endif

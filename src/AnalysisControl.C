@@ -68,7 +68,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis                                                                                                                             
+    //    if (!_ismc && run > 257599) continue;  // Luminosity for any SUSY blinded analysis
+    //    if (!_ismc && run > 258750) continue;  // Luminosity for any DM   blinded analysis
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -108,11 +109,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 20.);
     pass &= (_njet > 1);
-    pass &= (_dphillmet > 1.2);
 
     bool btag   = (_nbjet30csvv2m > 0);
     bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    bool metcut = (MET.Et() > 50.);
+    bool metcut = (MET.Et() > 50. && _dphillmet > 1.2);
 
     FillLevelHistograms(Control_01_Routin,     pass);
     FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
