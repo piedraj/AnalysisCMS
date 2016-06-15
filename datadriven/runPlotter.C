@@ -1,11 +1,27 @@
 #include "../test/HistogramReader.h"
 
+
 // Constants
 //------------------------------------------------------------------------------
 const TString inputdir  = "../rootfiles/nominal/FR";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
+
+
+// Functions
+//------------------------------------------------------------------------------
+void DrawLeptonPlots(
+		     TString lepton,
+		     float   lumi,
+		     float   jetet);
+
+
+TString         _level;
+TString         _option;
+
+HistogramReader* plotter;
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -18,83 +34,74 @@ enum {linY, logY};
 void runPlotter(TString level,
 		TString option = "hist")
 {
+  _level = level;
+  _option = option;
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  HistogramReader plotter(inputdir, outputdir);
+  plotter = new HistogramReader(inputdir, outputdir);
 
-    float lumi = lumi_fb;
-    //  float lumi = 0.003124;
-    //  float lumi = 0.19368;
-
-  plotter.SetStackOption(option);
-  plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    ( false);
+  plotter->SetStackOption(option);
+  plotter->SetPublicStyle( false);
+  plotter->SetSavePdf    ( false);
 
   if (option.Contains("nostack"))
     {
-      plotter.SetDrawRatio(false);
+      plotter->SetDrawRatio(false);
     }
   else
     {
-      plotter.SetLuminosity(lumi);
-      plotter.SetDrawRatio (true);
+      plotter->SetDrawRatio (true);
     }
 
-  plotter.AddData("01_Data", "data", color_Data);
+  plotter->AddData("01_Data", "data", color_Data);
 
-  plotter.AddProcess("06_TT", "tt", color_TTTo2L2Nu);
-  plotter.AddProcess("07_ZJets", "Z+jets", color_ZJets);
-  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+  plotter->AddProcess("06_TT", "tt", color_TTTo2L2Nu);
+  plotter->AddProcess("07_ZJets", "Z+jets", color_ZJets);
+  plotter->AddProcess("08_WJets", "W+jets", color_WJets);
 
   gSystem->mkdir(outputdir + level, kTRUE);
 
-  float muonjetet = 35.;
-  float elejetet = 20.;
 
-  TString prefix = level + "/h_";
+  DrawLeptonPlots("Ele",  0.00314, 35.);
+  DrawLeptonPlots("Muon", 0.19465,   20.);
+ }
 
-  TString muonsuffix = Form("_%.0fGev", muonjetet);
-  TString elesuffix = Form("_%.0fGev", elejetet);
+void DrawLeptonPlots(
+		     TString lepton,
+		     float   lumi,
+		     float   jetet)
+{
+  plotter->SetLuminosity(lumi);
+
+  TString prefix = _level + "/h_" + lepton + "_";
+  TString suffix = Form("_%.0fGev", jetet);
 
   // Draw distributions
   //----------------------------------------------------------------------------
-  if (!option.Contains("nostack")) plotter.SetDrawYield(true);
+  if (!_option.Contains("nostack")) plotter->SetDrawYield(true);
 
-  if (level.Contains("ZRegion")) {
+  if (_level.Contains("ZRegion")) {
 
-    plotter.Draw(prefix + "Muon_loose_m2l" + muonsuffix, "Loose muons m2l",     20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Muon_tight_m2l" + muonsuffix, "Tight muons m2l",     20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_m2l" + elesuffix,  "Loose electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_m2l" + elesuffix,  "Tight electrons m2l", 20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l",     20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l",     20, 0, "GeV", linY, true, 0, 200);
 
-    plotter.Draw(prefix + "Muon_loose_m2l" + muonsuffix, "Loose muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Muon_tight_m2l" + muonsuffix, "Tight muons m2l log",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_m2l" + elesuffix,  "Loose electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_m2l" + elesuffix,  "Tight electrons m2l log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l log",     20, 0, "GeV", logY, true, 0, 200);
 
   } else {
 
-    plotter.Draw(prefix + "Muon_loose_pt" + muonsuffix, "Loose muons pt",     20, 0, "GeV", linY, true, 35., 200);
-    plotter.Draw(prefix + "Muon_tight_pt" + muonsuffix, "Tight muons pt",     20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_pt" + elesuffix,  "Loose electrons pt", 20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_pt" + elesuffix,  "Tight electrons pt", 20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "loose_pt" + suffix, "Loose pt",     20, 0, "GeV", linY, true, 35., 200);
+    plotter->Draw(prefix + "tight_pt" + suffix, "Tight pt",     20, 0, "GeV", linY, true, 0, 200);
 
-    plotter.Draw(prefix + "Muon_loose_pt" + muonsuffix, "Loose muons pt log",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Muon_tight_pt" + muonsuffix, "Tight muons p logt",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_pt" + elesuffix,  "Loose electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_pt" + elesuffix,  "Tight electrons pt log", 20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "loose_pt" + suffix, "Loose pt log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "tight_pt" + suffix, "Tight p logt",     20, 0, "GeV", logY, true, 0, 200);
 
-    plotter.Draw(prefix + "Muon_loose_mtw" + muonsuffix, "Loose muons mtw",     20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Muon_tight_mtw" + muonsuffix, "Tight muons mtw",     20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_mtw" + elesuffix,  "Loose electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_mtw" + elesuffix,  "Tight electrons mtw", 20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw",     20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw",     20, 0, "GeV", linY, true, 0, 200);
 
-    plotter.Draw(prefix + "Muon_loose_mtw" + muonsuffix, "Loose muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Muon_tight_mtw" + muonsuffix, "Tight muons mtw log",     20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_loose_mtw" + elesuffix,  "Loose electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
-    plotter.Draw(prefix + "Ele_tight_mtw" + elesuffix,  "Tight electrons mtw log", 20, 0, "GeV", logY, true, 0, 200);
-
+    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw log",     20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw log",     20, 0, "GeV", logY, true, 0, 200);
   }
 
   // Copy index.php in every directory

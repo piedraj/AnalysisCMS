@@ -10,10 +10,11 @@ int   _Zlepton1type;
 int   _Zlepton2type;
 int   _Zdecayflavour;
 
-const float _luminosity = 2.263;  // fb
+//const float _luminosity = 2.263;  // fb
+const float _luminosity = lumi_fb;  // fb
 
-const Double_t muonjetet[njetet] = { 25., 35., 45.}; 
-const Double_t elejetet[njetet] = { 10., 20., 30.}; 
+const Double_t muonjetet[njetet] = { 10., 20., 30.}; 
+const Double_t elejetet[njetet] = { 25., 35., 45.}; 
 
 const int pTbin = 8;
 const Double_t pTbins[pTbin+1] = { 10., 15., 20., 25., 30., 35.,40., 45., 50.};
@@ -131,11 +132,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
-    if (_channel == e && Lepton1.v.Pt() <= 13) continue;
-    if (_channel == m && Lepton1.v.Pt() <= 10) continue;
+    //if (_channel == e && Lepton1.v.Pt() <= 13) continue;
+    //if (_channel == m && Lepton1.v.Pt() <= 10) continue;
 
-    //    if (_channel == e && Lepton1.v.Pt() >= 25) continue;
-    //    if (_channel == m && Lepton1.v.Pt() >= 20) continue;
+        if (_channel == e && Lepton1.v.Pt() <= 25) continue;
+        if (_channel == m && Lepton1.v.Pt() <= 20) continue;
 
     if (_channel == e && Lepton1.v.Eta() >= 2.5 ) continue;
     if (_channel == m && Lepton1.v.Eta() >= 2.4 ) continue;

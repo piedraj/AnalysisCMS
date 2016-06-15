@@ -8,8 +8,8 @@ void getLumiEff()
   TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
   TFile*  wjets  = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
 
-  float muonjetet = 35.;
-  float elejetet = 20.;
+  float muonjetet = 20.;
+  float elejetet = 35.;
 
   TString muonsuffix = Form("_%.0fGev", muonjetet);
   TString elesuffix = Form("_%.0fGev", elejetet);
