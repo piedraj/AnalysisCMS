@@ -16,7 +16,7 @@
 
 const double lumi_fb_2016B       = 0.804;
 const double lumi_fb_blind_dm    = 1.324;
-const double lumi_fb_blind_susy  = 0.226;
+const double lumi_fb_blind_susy  = 0.157;
 const double lumi_fb             = 2.318;
 const double lumi_error_percent  = 2.7;
 
