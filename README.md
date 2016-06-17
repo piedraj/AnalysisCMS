@@ -265,17 +265,17 @@ Log in to lxplus.
 
     bash -l
 
-Go to the *Prerequisite* section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
+Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
 
     export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 
-Do this only if you want to update the brilcalc version
+_Do this only if you want to update the brilcalc version._
 
     pip uninstall brilws
 
     pip install --install-option="--prefix=$HOME/.local" brilws
 
-Get the luminosity values that you need
+Get the luminosity values that you need.
 
     brilcalc lumi -b "STABLE BEAMS" -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
     brilcalc lumi -b "STABLE BEAMS" --hltpath "HLT_Mu8_TrkIsoVVL_v*" -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
