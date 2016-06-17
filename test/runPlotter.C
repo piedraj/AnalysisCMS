@@ -40,7 +40,8 @@ void runPlotter(TString level,
   float lumi = lumi_fb;
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
-  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
+  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
+  if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
 
   Bool_t scale = linY;
 
@@ -77,7 +78,6 @@ void runPlotter(TString level,
   //    }
   //  else
   //    plotter.SetDataNorm(false);
-
 
 
   // Get the data
@@ -155,6 +155,13 @@ void runPlotter(TString level,
       //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
+  if (analysis.EqualTo("Stop"))
+    {
+     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
+     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
+     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+    }
+
 
   // Draw events by cut
   //----------------------------------------------------------------------------
@@ -176,7 +183,7 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -198,7 +205,7 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("WW") && j != njetbin) continue;   
+      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -213,7 +220,6 @@ void runPlotter(TString level,
 	  TString title = (i < lastchannel) ? lchannel[i] : "cms";
 
 	  plotter.SetTitle(title);
-
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
@@ -232,6 +238,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
+
+	  if (!allplots) continue;
+
 	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                // Not in minitrees
 	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                // Not in minitrees
@@ -241,9 +250,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-
-	  if (!allplots) continue;
-
 	  plotter.Draw(prefix + "dphijet1met"    + suffix, "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijet2met"    + suffix, "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijj"         + suffix, "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale);
@@ -353,7 +359,7 @@ void runPlotter(TString level,
 int main(int argc, char ** argv)
 {
   if (argc < 2) {
-    
+
     printf("\n rm -rf %s\n\n", outputdir.Data());
 
     for (int i=0; i<ncut; i++) printf(" ./runPlotter %s\n", scut[i].Data());

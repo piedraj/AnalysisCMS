@@ -1,10 +1,11 @@
-void getFakeRate() {
+void getFakeRate()
+{
+  
+    gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
     TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
     TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
     TFile*  wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
-
-    //    TFile*  jasper = new TFile("MuFR_RunII_25ns_jet20_226pb_76X.root","read");
 
     // Muon FR pt
 
@@ -89,7 +90,6 @@ void getFakeRate() {
     // Electron FR
 
     /*
-
     TH1D* h_Ele_loose_pt_eta_bin = (TH1D*) data -> Get("h_Ele_loose_pt_eta_bin");
     TH1D* h_Ele_tight_pt_eta_bin = (TH1D*) data -> Get("h_Ele_tight_pt_eta_bin");
 
@@ -109,12 +109,10 @@ void getFakeRate() {
 
     h_Ele_FR_pt_eta -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., "");
     h_Ele_FR_pt_eta -> Draw("colztext");
-
     */
 
     // Ele FR pt
 
-    
     TH1D* h_Ele_loose_pt_bin = (TH1D*) data -> Get ("h_Ele_loose_pt_bin");
     TH1D* h_Ele_tight_pt_bin = (TH1D*) data -> Get ("h_Ele_tight_pt_bin");
 
@@ -154,7 +152,6 @@ void getFakeRate() {
     h_Ele_FR_pt_corrWZ -> SetLineColor(2);
     
     /*
-    
     TH1D* h_loose_relative = (TH1D*) h_Ele_loose_pt_bin -> Clone();
     TH1D* h_tight_relative = (TH1D*) h_Ele_tight_pt_bin -> Clone();
 
@@ -167,38 +164,111 @@ void getFakeRate() {
 
     h_tight_relative -> Divide(h_Ele_tight_pt_bin, h_Ele_tight_pt_bin_corrWZ, 1., 1., "");
     h_tight_relative -> Draw();
-
     */
-    /*
-    THStack* MC_loose = new THStack("MC loose", "MC loose");
 
-    h_zjets_Ele_loose_pt_bin -> SetFillColor(kRed);
-    h_zjets_Ele_loose_pt_bin -> SetFillStyle(1001);
+    TH1D* h_Muon_loose_pt_stack = (TH1D*) data -> Get ("h_Muon_loose_pt_stack");
+    TH1D* h_Muon_tight_pt_stack = (TH1D*) data -> Get ("h_Muon_tight_pt_stack");
+    TH1D* h_Ele_loose_pt_stack = (TH1D*) data -> Get ("h_Ele_loose_pt_stack");
+    TH1D* h_Ele_tight_pt_stack = (TH1D*) data -> Get ("h_Ele_tight_pt_stack");
 
-    h_wjets_Ele_loose_pt_bin -> SetFillColor(kBlue);
-    h_wjets_Ele_loose_pt_bin -> SetFillStyle(1001);
+    TH1D* h_zjets_Muon_loose_pt_stack = (TH1D*) zjets -> Get ("h_Muon_loose_pt_stack");
+    TH1D* h_zjets_Muon_tight_pt_stack = (TH1D*) zjets -> Get ("h_Muon_tight_pt_stack");
+    TH1D* h_zjets_Ele_loose_pt_stack = (TH1D*) zjets -> Get ("h_Ele_loose_pt_stack");
+    TH1D* h_zjets_Ele_tight_pt_stack = (TH1D*) zjets -> Get ("h_Ele_tight_pt_stack");
 
-    MC_loose -> Add(h_zjets_Ele_loose_pt_bin);
-    MC_loose -> Add(h_wjets_Ele_loose_pt_bin);
+    TH1D* h_wjets_Muon_loose_pt_stack = (TH1D*) wjets -> Get ("h_Muon_loose_pt_stack");
+    TH1D* h_wjets_Muon_tight_pt_stack = (TH1D*) wjets -> Get ("h_Muon_tight_pt_stack");
+    TH1D* h_wjets_Ele_loose_pt_stack = (TH1D*) wjets -> Get ("h_Ele_loose_pt_stack");
+    TH1D* h_wjets_Ele_tight_pt_stack = (TH1D*) wjets -> Get ("h_Ele_tight_pt_stack");
+    
+    THStack* MC_Muon_loose = new THStack("MC muon loose", "MC muon loose");
 
-    TCanvas* Analysis_loose = new TCanvas("Loose analysis", "loose analysis");
+    h_zjets_Muon_loose_pt_stack -> SetFillColor(kGreen+2);
+    h_zjets_Muon_loose_pt_stack -> SetFillStyle(1001);
+    h_zjets_Muon_loose_pt_stack -> Rebin(2);
 
-    h_Ele_loose_pt_bin -> Draw();
-    MC_loose -> Draw("same");
+    h_wjets_Muon_loose_pt_stack -> SetFillColor(kGray+1);
+    h_wjets_Muon_loose_pt_stack -> SetFillStyle(1001);
+    h_wjets_Muon_loose_pt_stack -> Rebin(2);
 
-    THStack* MC_tight = new THStack("MC tight", "MC tight");
+    MC_Muon_loose -> Add(h_wjets_Muon_loose_pt_stack);
+    MC_Muon_loose -> Add(h_zjets_Muon_loose_pt_stack);
 
-    h_zjets_Ele_tight_pt_bin -> SetFillColor(kRed);
-    h_wjets_Ele_tight_pt_bin -> SetFillColor(kBlue);
+    TCanvas* Muon_Analysis_loose = new TCanvas("Muon loose analysis", "Muon loose analysis");
 
-    MC_tight -> Add(h_zjets_Ele_tight_pt_bin);
-    MC_tight -> Add(h_wjets_Ele_tight_pt_bin);
+    Muon_Analysis_loose -> SetLogy();
+    h_Muon_loose_pt_stack -> SetMarkerStyle(kFullCircle);
 
-    TCanvas* Analysis_tight = new TCanvas("Tight analysis", "tight analysis");
+    h_Muon_loose_pt_stack -> Draw("ep");
+    h_Muon_loose_pt_stack -> Rebin(2);
+    MC_Muon_loose -> Draw("hist, same");
+    h_Muon_loose_pt_stack -> Draw("ep, same");
 
-    h_Ele_tight_pt_bin -> Draw();
-    MC_tight -> Draw("same");
-    */
+    THStack* MC_Muon_tight = new THStack("MC muon tight", "MC muon tight");
+
+    h_zjets_Muon_tight_pt_stack -> SetFillColor(kGreen+2);
+    h_zjets_Muon_tight_pt_stack -> SetFillStyle(1001);
+    h_zjets_Muon_tight_pt_stack -> Rebin(2);
+
+    h_wjets_Muon_tight_pt_stack -> SetFillColor(kGray+1);
+    h_wjets_Muon_tight_pt_stack -> SetFillStyle(1001);
+    h_wjets_Muon_tight_pt_stack -> Rebin(2);
+
+    MC_Muon_tight -> Add(h_wjets_Muon_tight_pt_stack);
+    MC_Muon_tight -> Add(h_zjets_Muon_tight_pt_stack);
+
+    TCanvas* Muon_Analysis_tight = new TCanvas("Muon tight analysis", "Muon tight analysis");
+
+    Muon_Analysis_tight -> SetLogy();
+    h_Muon_tight_pt_stack -> SetMarkerStyle(kFullCircle);
+    h_Muon_tight_pt_stack -> Draw("ep");
+    h_Muon_tight_pt_stack -> Rebin(2);
+    MC_Muon_tight -> Draw("hist,same");
+    h_Muon_tight_pt_stack -> Draw("ep, same");
+
+    THStack* MC_Ele_loose = new THStack("MC ele loose", "MC ele loose");
+
+    h_zjets_Ele_loose_pt_stack -> SetFillColor(kGreen+2);
+    h_zjets_Ele_loose_pt_stack -> SetFillStyle(1001);
+    h_zjets_Ele_loose_pt_stack -> Rebin(2);
+
+    h_wjets_Ele_loose_pt_stack -> SetFillColor(kGray+1);
+    h_wjets_Ele_loose_pt_stack -> SetFillStyle(1001);
+    h_wjets_Ele_loose_pt_stack -> Rebin(2);
+
+    MC_Ele_loose -> Add(h_wjets_Ele_loose_pt_stack);
+    MC_Ele_loose -> Add(h_zjets_Ele_loose_pt_stack);
+
+    TCanvas* Ele_Analysis_loose = new TCanvas("Ele loose analysis", "Ele loose analysis");
+
+    Ele_Analysis_loose -> SetLogy();
+    h_Ele_loose_pt_stack -> SetMarkerStyle(kFullCircle);
+    h_Ele_loose_pt_stack -> Draw("ep");
+    h_Ele_loose_pt_stack -> Rebin(2);
+    MC_Ele_loose -> Draw("hist, same");
+    h_Ele_loose_pt_stack -> Draw("ep, same");
+
+    THStack* MC_Ele_tight = new THStack("MC ele tight", "MC ele tight");
+
+    h_zjets_Ele_tight_pt_stack -> SetFillColor(kGreen+2);
+    h_zjets_Ele_tight_pt_stack -> SetFillStyle(1001);
+    h_zjets_Ele_tight_pt_stack -> Rebin(2);
+
+    h_wjets_Ele_tight_pt_stack -> SetFillColor(kGray+1);
+    h_wjets_Ele_tight_pt_stack -> SetFillStyle(1001);
+    h_wjets_Ele_tight_pt_stack -> Rebin(2);
+
+    MC_Ele_tight -> Add(h_wjets_Ele_tight_pt_stack);
+    MC_Ele_tight -> Add(h_zjets_Ele_tight_pt_stack);
+
+    TCanvas* Ele_Analysis_tight = new TCanvas("Ele tight analysis", "Ele tight analysis");
+
+    Ele_Analysis_tight -> SetLogy();
+    h_Ele_tight_pt_stack -> SetMarkerStyle(kFullCircle);
+    h_Ele_tight_pt_stack -> Draw("ep");
+    h_Ele_tight_pt_stack -> Rebin(2);
+    MC_Ele_tight -> Draw("hist,same");
+    h_Ele_tight_pt_stack -> Draw("ep, same");
 
     // Electron FR eta
     
@@ -236,21 +306,6 @@ void getFakeRate() {
     h_Ele_FR_eta_corrWZ -> Draw("same");
 
     h_Ele_FR_eta_corrWZ -> SetLineColor(2);
-    
-
-
-        // Jasper comparison
-    /*    
-    TCanvas* Comparison = new TCanvas("Comparison", "Comparison");
-
-    //    h_Muon_FR_pt_corrected -> Draw();
-    h_Muon_FR_pt_corrWZ -> SetLineColor(2);
-
-    TH2D* h_Muon_FR_jasper = (TH2D*) jasper -> Get ("FR_pT_eta_EWKcorr");
-    TH1D* h_Muon_FR_pt_jasper = (TH1D*) h_Muon_FR_jasper ->ProjectionX("h_Muon_FR_pt_jasper");
-
-    h_Muon_FR_pt_jasper -> Draw("same");
-    */
 
 }
 

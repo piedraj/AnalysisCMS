@@ -239,6 +239,41 @@ class AnalysisCMS : public AnalysisBase
   float                  _meff;
   float                  _mt2bb;
   float                  _mt2lblb;
+  float                  _mlb1;
+  float                  _mlb2;
+
+  float                  _mt2lblbcomb;
+  float                  _mt2bbtrue;
+  float                  _mt2lblbtrue;
+  float                  _mt2lblbmatch;
+
+  float                  _mlb1comb;
+  float                  _mlb2comb;
+  float                  _mlb1true;
+  float                  _mlb2true;
+
+  float                  _bjet1pt;
+  float                  _bjet1eta;
+  float                  _bjet1phi;
+  float                  _bjet1mass;
+  float                  _bjet1csvv2ivf;
+  float                  _bjet2pt;
+  float                  _bjet2eta;
+  float                  _bjet2phi;
+  float                  _bjet2mass;
+  float                  _bjet2csvv2ivf;
+  float                  _tjet1pt;
+  float                  _tjet1eta;
+  float                  _tjet1phi;
+  float                  _tjet1mass;
+  float                  _tjet1csvv2ivf;
+  float                  _tjet1assignment;
+  float                  _tjet2pt;
+  float                  _tjet2eta;
+  float                  _tjet2phi;
+  float                  _tjet2mass;
+  float                  _tjet2csvv2ivf;
+  float                  _tjet2assignment;
 
 
   Long64_t               _nentries;
@@ -281,6 +316,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_mt2ll        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2bb        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mlb1         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_mlb2         [nchannel][ncut][njetbin+1];
 
 
   // TH1 histograms with minitree variables

@@ -18,9 +18,9 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
-
+ 
   Setup(analysis, filename, luminosity);
-
+ 
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -45,6 +45,17 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	TString suffix = "_" + schannel[i];
 
 	DefineHistograms(i, j, k, suffix);
+
+	h_mt2lblbcomb       [i][j][k] = new TH1D("h_mt2lblbcomb"      + suffix, "", 3000,    0, 3000);
+	h_mt2bbtrue         [i][j][k] = new TH1D("h_mt2bbtrue"        + suffix, "", 3000,    0, 3000);
+	h_mt2lblbtrue       [i][j][k] = new TH1D("h_mt2lblbtrue"      + suffix, "", 3000,    0, 3000);
+	h_mt2lblbmatch      [i][j][k] = new TH1D("h_mt2lblbmatch"     + suffix, "", 3000,    0, 3000);
+	h_mlb1comb          [i][j][k] = new TH1D("h_mlb1comb"         + suffix, "", 3000,    0, 3000);
+	h_mlb2comb          [i][j][k] = new TH1D("h_mlb2comb"         + suffix, "", 3000,    0, 3000);
+	h_mlb1true          [i][j][k] = new TH1D("h_mlb1true"         + suffix, "", 3000,    0, 3000);
+	h_mlb2true          [i][j][k] = new TH1D("h_mlb2true"         + suffix, "", 3000,    0, 3000);
+	h_mt2lblbvsmlbtrue  [i][j][k] = new TH2D("h_mt2lblbvsmlbtrue" + suffix, "",  100,    0, 1000,  100,    0, 1000);
+	
       }
     }
   }
@@ -69,8 +80,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     EventSetup(2.4);
 
-    float EventBTagSF = 1.;
     if (_ismc) {
+
+      float EventBTagSF = 1.;
+
       for (int ijet = 0; ijet<_njet; ijet++) {
       
 	int ThisIndex = AnalysisJets[ijet].index;
@@ -96,9 +109,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       }
 
     }
-    
+
     // Analysis
     //--------------------------------------------------------------------------
+    if (!_ismc && run > 257599) continue;  // Luminosity for any blinded analysis  
+  
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 20.) continue;
@@ -136,6 +151,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Stop_00_Zveto, pass);
 
+    if (pass && _saveminitree) minitree->Fill();
+
     pass &= (MET.Et() > 40.);
     
     FillLevelHistograms(Stop_00_Met40, pass); 
@@ -158,7 +175,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     bool pass1_2_jet = _htjets > 150.;
     FillLevelHistograms( Stop_00_htjets150, pass && pass1_2_jet);
 
-    
+
 
 
     //--------------------------------------------------------------------------
@@ -208,7 +225,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
   }
 
-
   EndJob();
 }
 
@@ -221,6 +237,17 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 					  int ijet)
 {
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
+
+  h_mt2lblbcomb      [ichannel][icut][ijet]->Fill(_mt2lblbcomb,    _event_weight);
+  h_mt2bbtrue        [ichannel][icut][ijet]->Fill(_mt2bbtrue,      _event_weight);
+  h_mt2lblbtrue      [ichannel][icut][ijet]->Fill(_mt2lblbtrue,    _event_weight);
+  h_mt2lblbmatch     [ichannel][icut][ijet]->Fill(_mt2lblbmatch,   _event_weight);
+  h_mlb1comb         [ichannel][icut][ijet]->Fill(_mlb1comb,       _event_weight);
+  h_mlb2comb         [ichannel][icut][ijet]->Fill(_mlb2comb,       _event_weight);
+  h_mlb1true         [ichannel][icut][ijet]->Fill(_mlb1true,       _event_weight);
+  h_mlb2true         [ichannel][icut][ijet]->Fill(_mlb2true,       _event_weight);
+  h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb1true, _mt2lblbtrue,       _event_weight);
+  h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
 }
 
 
@@ -235,8 +262,8 @@ void AnalysisStop::FillLevelHistograms(int  icut,
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
-  //  FillAnalysisHistograms(_channel, icut, _jetbin);
-  //  FillAnalysisHistograms(_channel, icut, njetbin);
+  FillAnalysisHistograms(_channel, icut, _jetbin);
+  FillAnalysisHistograms(_channel, icut, njetbin);
 }
 
 void AnalysisStop::GetStopCrossSection(float StopMass)

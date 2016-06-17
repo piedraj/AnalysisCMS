@@ -1,16 +1,18 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./submit-jobs-interactive.sh samples/samples_data.txt       nominal"
-    echo "  ./submit-jobs-interactive.sh samples/samples_datadriven.txt nominal"
-    echo "  ./submit-jobs-interactive.sh samples/samples_mc.txt         nominal"
+    echo "  >>> 76x files"
     echo "  "
-    echo "  ./submit-jobs-interactive.sh samples/samples_monoh.txt      nominal"
-    echo "  ./submit-jobs-interactive.sh samples/samples_ttdm.txt       nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_data.txt       nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_datadriven.txt nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_mc.txt         nominal"
     echo "  "
-    echo "  ./submit-jobs-interactive.sh samples/samples_fakes_data.txt nominal"
-    echo "  ./submit-jobs-interactive.sh samples/samples_fakes_mc.txt   nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_monoh.txt      nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_ttdm.txt       nominal"
+    echo "  "
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_data_fakes.txt nominal"
+    echo "  ./submit-jobs-interactive.sh samples/76x/samples_mc_fakes.txt   nominal"
     echo "  "
     exit -1
 fi

@@ -25,10 +25,10 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 7;
+const int     nmetcut = 8;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 25, 30, 50, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 25, 30, 50, 75};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -58,7 +58,8 @@ float    errRatio  (float         a,
 
 void     SetGraph  (TGraphErrors* g,
 		    Color_t       color,
-		    Style_t       style);
+		    Style_t       mstyle,
+		    Style_t       lstyle = kSolid);
 
 TLegend* DrawLegend(Float_t       x1,
 		    Float_t       y1,
@@ -109,15 +110,20 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
-// Results for MET > 45 GeV and 2.318 fb-1,
+// Results for 2.318 fb-1 and MET > 45 GeV
 //
-//    ee SF(est/DY)  1.281 +- 0.149
-//    mm SF(est/DY)  1.436 +- 0.122
+//    SF(ee,est/DY)  1.344 +- 0.047
+//    SF(mm,est/DY)  1.405 +- 0.036
+//
+// Results for 2.318 fb-1, MET > 45 GeV and nbjet20cmvav2l > 0
+//
+//    SF(ee,est/DY)  1.351 +- 0.086
+//    SF(mm,est/DY)  1.379 +- 0.061
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "TTDM",
+void getDYScale(TString analysis = "Control",
 		TString level    = "01_Routin",
-		double  lumi_fb  = 1.324)
+		double  lumi_fb  = 2.318)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -137,6 +143,10 @@ void getDYScale(TString analysis = "TTDM",
       h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
       h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
       h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+
+      h2_dy[i]->Scale(lumi_fb);
+      h2_wz[i]->Scale(lumi_fb);
+      h2_zz[i]->Scale(lumi_fb);
     }
 
 
@@ -160,15 +170,18 @@ void getDYScale(TString analysis = "TTDM",
 
   // Do the work
   //----------------------------------------------------------------------------
-  TGraphErrors* graph_R_data[2];
-  TGraphErrors* graph_R_dy  [2];
-  TGraphErrors* graph_scale [2];
+  TGraphErrors* graph_R_data[2];  // ee, mm
+  TGraphErrors* graph_R_dy  [2];  // ee, mm
+  TGraphErrors* graph_scale [3];  // ee, mm, em
 
-  for (int k=ee; k<=mm; k++)
+  for (int k=ee; k<=em; k++)
     {
+      graph_scale[k] = new TGraphErrors();
+
+      if (k == em) continue;
+
       graph_R_data[k] = new TGraphErrors();
       graph_R_dy  [k] = new TGraphErrors();
-      graph_scale [k] = new TGraphErrors();
     }
 
   for (int j=0; j<nmetcut-1; j++)
@@ -182,20 +195,26 @@ void getDYScale(TString analysis = "TTDM",
 	  printf("\n %.0f < MET < %.0f GeV\n", metcut[j], metcut[j+1]);
 	}
 
-      float scale[2], scale_err[2], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
+      float scale[3], scale_err[3], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
 
       GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
       GetScale(mm, scale[mm], scale_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
 
-      for (int k=ee; k<=mm; k++)
-	{
-	  graph_R_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
-	  graph_R_dy  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy  [k]);
-	  graph_scale [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), scale [k]);
+      scale[em]     = sqrt(scale[ee] * scale[mm]);
+      scale_err[em] = 0.5 * scale[em] * sqrt(pow(scale_err[ee]/scale[ee],2) + pow(scale_err[mm]/scale[mm],2));
 
+      for (int k=ee; k<=em; k++)
+	{
+	  graph_scale[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), scale[k]);
+	  graph_scale[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), scale_err[k]);
+
+	  if (k == em) continue;
+
+	  graph_R_data[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
 	  graph_R_data[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_data_err[k]);
-	  graph_R_dy  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err  [k]);
-	  graph_scale [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), scale_err [k]);
+
+	  graph_R_dy[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy[k]);
+	  graph_R_dy[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err[k]);
 	}
     }
 
@@ -204,12 +223,13 @@ void getDYScale(TString analysis = "TTDM",
 
   // Cosmetics
   //----------------------------------------------------------------------------
-  SetGraph(graph_R_data[ee], kBlack, kFullCircle);
-  SetGraph(graph_R_data[mm], kBlack, kFullCircle);
-  SetGraph(graph_R_dy[ee],   kRed+1, kOpenSquare);
-  SetGraph(graph_R_dy[mm],   kRed+1, kOpenSquare);
-  SetGraph(graph_scale[ee],  kBlack, kOpenSquare);
-  SetGraph(graph_scale[mm],  kRed+1, kFullCircle);
+  SetGraph(graph_R_data[ee], kBlack,  kFullCircle);
+  SetGraph(graph_R_data[mm], kBlack,  kFullCircle);
+  SetGraph(graph_R_dy[ee],   kRed+1,  kOpenSquare);
+  SetGraph(graph_R_dy[mm],   kRed+1,  kOpenSquare);
+  SetGraph(graph_scale[ee],  kBlack,  kOpenSquare);
+  SetGraph(graph_scale[mm],  kRed+1,  kFullCircle);
+  SetGraph(graph_scale[em],  kGray+1, kOpenTriangleUp, kDotted);
 
 
   // Draw R
@@ -230,16 +250,16 @@ void getDYScale(TString analysis = "TTDM",
       TLine* line = new TLine(canvas[k]->GetUxmin(), 0.0, canvas[k]->GetUxmax(), 0.0);
   
       line->SetLineWidth(2);
-      line->SetLineStyle(3);
+      line->SetLineStyle(kDotted);
       line->Draw("same");
 
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
-      mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
+      mgraph[k]->GetYaxis()->SetTitleOffset(2.0);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.26);
-      mgraph[k]->SetMaximum(+0.45);
+      mgraph[k]->SetMinimum(-0.02);
+      mgraph[k]->SetMaximum(+0.35);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -258,6 +278,7 @@ void getDYScale(TString analysis = "TTDM",
 
   mgraph[2] = new TMultiGraph();
 
+  mgraph[2]->Add(graph_scale[em]);
   mgraph[2]->Add(graph_scale[ee]);
   mgraph[2]->Add(graph_scale[mm]);
 
@@ -268,16 +289,17 @@ void getDYScale(TString analysis = "TTDM",
   TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
   
   line->SetLineWidth(2);
-  line->SetLineStyle(3);
+  line->SetLineStyle(kDotted);
   line->Draw("same");
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
-  mgraph[2]->GetYaxis()->SetTitleOffset(1.7);
+  mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
   mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
   DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+  DrawLegend(0.22, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
 
   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
 
@@ -459,13 +481,15 @@ float errRatio(float a, float err_a, float b, float err_b)
 //------------------------------------------------------------------------------
 void SetGraph(TGraphErrors* g,
 	      Color_t       color,
-	      Style_t       style)
+	      Style_t       mstyle,
+	      Style_t       lstyle)
 {
   g->SetLineColor  (color);
+  g->SetLineStyle  (lstyle);
   g->SetLineWidth  (2);
   g->SetMarkerColor(color);
+  g->SetMarkerStyle(mstyle);
   g->SetMarkerSize (1.2);
-  g->SetMarkerStyle(style);
 }
 
 

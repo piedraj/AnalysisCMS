@@ -23,7 +23,7 @@ void GetTriggerEfficiency(TString sample);
 // checkTriggers
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkTriggers(TString data = "2015D")
+void checkTriggers(TString data = "2016B")
 {
   if (data.Contains("2015D"))
     {
