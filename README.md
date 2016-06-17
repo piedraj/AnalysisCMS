@@ -269,11 +269,16 @@ Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-l
 
     export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 
-_Do this only if you want to update the brilcalc version._
+Do this the first time. Do it also if you want to update the brilcalc version.
 
     pip uninstall brilws
 
     pip install --install-option="--prefix=$HOME/.local" brilws
+
+Check your brilcalc version.
+
+    brilcalc --version
+    2.0.5
 
 Get the luminosity values that you need.
 
