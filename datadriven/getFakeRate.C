@@ -2,34 +2,174 @@ void getFakeRate()
 {
   
     gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+    
+    float elejetet  = 35.;
+    float muonjetet = 20.;
 
     TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
     TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
     TFile*  wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
 
-    // Muon FR pt
+    // ===================================================================================================
+    // Electron Fake Rate
+    // ===================================================================================================
 
-    TH1D* h_Muon_loose_pt_bin = (TH1D*) data -> Get ("h_Muon_loose_pt_bin");
-    TH1D* h_Muon_tight_pt_bin = (TH1D*) data -> Get ("h_Muon_tight_pt_bin");
+    // Electron pt
 
-    TH1D* h_zjets_Muon_loose_pt_bin = (TH1D*) zjets -> Get ("h_Muon_loose_pt_bin");
-    TH1D* h_zjets_Muon_tight_pt_bin = (TH1D*) zjets -> Get ("h_Muon_tight_pt_bin");
+    TString elesuffix  = Form("_%.0fGev", elejetet);
+    /*
+    TH1D* h_Ele_loose_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_loose_pt_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_tight_pt_bin" + elesuffix);
 
-    TH1D* h_wjets_Muon_loose_pt_bin = (TH1D*) wjets -> Get ("h_Muon_loose_pt_bin");
-    TH1D* h_wjets_Muon_tight_pt_bin = (TH1D*) wjets -> Get ("h_Muon_tight_pt_bin");
+    TH1D* h_Ele_loose_pt_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_loose_pt_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_tight_pt_bin" + elesuffix);
 
-    TH1D* h_Muon_FR_pt        = (TH1D*) h_Muon_tight_pt_bin -> Clone();
-    TH1D* h_Muon_FR_pt_corrWZ = (TH1D*) h_Muon_tight_pt_bin -> Clone();
+    TH1D* h_Ele_loose_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_loose_pt_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_tight_pt_bin" + elesuffix);
+
+    TH1D* h_Ele_FR_pt = (TH1D*) h_Ele_tight_pt_bin -> Clone();
+    TH1D* h_Ele_FR_pt_EWK = (TH1D*) h_Ele_tight_pt_bin -> Clone();
+
+    TCanvas* Ele_pt = new TCanvas("Ele pt", "Ele pt", 450, 550);
+
+    Ele_pt -> SetGridx(1);
+    Ele_pt -> SetGridy(1);
+
+    h_Ele_FR_pt -> Divide(h_Ele_tight_pt_bin , h_Ele_loose_pt_bin , 1., 1., "");
+
+    h_Ele_FR_pt -> Draw();
+
+    h_Ele_FR_pt -> SetLineColor(4);
+    h_Ele_FR_pt -> SetAxisRange(0,1,"Y");
+
+    h_Ele_FR_pt -> SetTitle("Ele Fake Rate with and without EWK correction");
+    h_Ele_FR_pt -> SetXTitle("Ele pt");
+    h_Ele_FR_pt -> SetYTitle("Ele FR");
+
+    h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -1);
+    h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -1);
+
+    h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_zjets, -1);
+    h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -1);
+
+    h_Ele_FR_pt_EWK -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin, 1., 1., " ");
+    h_Ele_FR_pt_EWK -> Draw("same");
+
+    h_Ele_FR_pt_EWK -> SetLineColor(2);    
+    */
+    // Electron eta    
+    /*
+    TH1D* h_Ele_loose_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_loose_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_tight_eta_bin" + elesuffix);
+
+    TH1D* h_Ele_loose_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_loose_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_tight_eta_bin" + elesuffix);
+
+    TH1D* h_Ele_loose_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_loose_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_tight_eta_bin" + elesuffix);
+
+    TH1D* h_Ele_FR_eta = (TH1D*) h_Ele_tight_eta_bin -> Clone();
+    TH1D* h_Ele_FR_eta_EWK = (TH1D*) h_Ele_tight_eta_bin -> Clone();
+
+    TCanvas* Ele_eta = new TCanvas("Ele eta", "Ele eta", 450, 550);
+
+    Ele_eta -> SetGridx(1);
+    Ele_eta -> SetGridy(1);
+
+    h_Ele_FR_eta -> Divide(h_Ele_tight_eta_bin , h_Ele_loose_eta_bin , 1., 1., "");
+
+    h_Ele_FR_eta -> Draw();
+
+    h_Ele_FR_eta -> SetLineColor(4);
+    h_Ele_FR_eta -> SetAxisRange(0,1,"Y");
+
+    h_Ele_FR_eta -> SetTitle("Ele Fake Rate with and without EWK correction");
+    h_Ele_FR_eta -> SetXTitle("Ele eta");
+    h_Ele_FR_eta -> SetYTitle("Ele FR");
+
+    h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -1);
+    h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -1);
+
+    h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_zjets, -1);
+    h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_wjets, -1);
+
+    h_Ele_FR_eta_EWK -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin, 1., 1., " ");
+    h_Ele_FR_eta_EWK -> Draw("same");
+
+    h_Ele_FR_eta_EWK -> SetLineColor(2);    
+    */
+    // Electron FR TH2D histograms
+    TFile *EleFR = new TFile("EleFR_Run2016B_25ns_jet35_21Jun.root","recreate");
+
+    TH1D* h_Ele_loose_pt_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin" + elesuffix);
+
+    TH1D* h_Ele_loose_pt_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin" + elesuffix);
+
+    TH1D* h_Ele_loose_pt_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
+    TH1D* h_Ele_tight_pt_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin" + elesuffix);
+
+    TH2D* FR_pT_eta         = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone();
+    TH2D* FR_pT_eta_EWKcorr = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone();
+
+    FR_pT_eta -> Divide(h_Ele_tight_pt_eta_bin , h_Ele_loose_pt_eta_bin , 1., 1., "");
+    FR_pT_eta -> Write("FR_pT_eta");
+
+    h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_zjets, -1);
+    h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_wjets, -1);
+
+    h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_zjets, -1);
+    h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_wjets, -1);
+
+    FR_pT_eta_EWKcorr -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., " ");
+    FR_pT_eta_EWKcorr -> Write("FR_pT_eta_EWKcorr");
+
+    EleFR -> Close();
+
+    // ===================================================================================================
+    // Electron Prompt Rate
+    // ===================================================================================================
+
+    // Electron PR TH2D histograms
+    TFile *ElePR = new TFile("ElePR_Run2016B_25ns_jet35_21Jun.root","recreate");
+
+    TH1D* h_Ele_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_eta_PR");
+    TH1D* h_Ele_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_eta_PR");
+
+    TH2D* Ele_PR_pT_eta = (TH2D*) h_Ele_tight_pt_eta_PR -> Clone();
+
+    Ele_PR_pT_eta -> Divide(h_Ele_tight_pt_eta_PR, h_Ele_loose_pt_eta_PR, 1., 1., "");
+    Ele_PR_pT_eta -> Write("PR_pT_eta");
+    
+    ElePR -> Close();
+
+    // ===================================================================================================
+    // Muon Fake Rate
+    // ===================================================================================================
+
+    // Muon pt
+    TString muonsuffix = Form("_%.0fGev", muonjetet);
+    /*
+    TH1D* h_Muon_loose_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_loose_pt_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_tight_pt_bin" + muonsuffix);    
+
+    TH1D* h_Muon_loose_pt_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_loose_pt_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_tight_pt_bin" + muonsuffix);
+
+    TH1D* h_Muon_loose_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_loose_pt_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_tight_pt_bin" + muonsuffix);
+
+    TH1D* h_Muon_FR_pt = (TH1D*) h_Muon_tight_pt_bin -> Clone();
+    TH1D* h_Muon_FR_pt_EWK = (TH1D*) h_Muon_tight_pt_bin -> Clone();
 
     TCanvas* Muon_pt = new TCanvas("Muon pt", "Muon pt", 450, 550);
 
-    Muon_pt->SetGridx(1);
-    Muon_pt->SetGridy(1);
+    Muon_pt -> SetGridx(1);
+    Muon_pt -> SetGridy(1);
 
     h_Muon_FR_pt -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., "");
 
-    h_Muon_FR_pt -> GetYaxis() -> SetNdivisions(510);
-    
     h_Muon_FR_pt -> Draw();
 
     h_Muon_FR_pt -> SetLineColor(4);
@@ -39,36 +179,40 @@ void getFakeRate()
     h_Muon_FR_pt -> SetXTitle("Muon pt");
     h_Muon_FR_pt -> SetYTitle("Muon FR");
 
-    h_Muon_loose_pt_bin -> Add(h_zjets_Muon_loose_pt_bin, -1);
-    h_Muon_loose_pt_bin -> Add(h_wjets_Muon_loose_pt_bin, -1);
+    h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -1);
+    h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -1);
 
-    h_Muon_tight_pt_bin -> Add(h_zjets_Muon_tight_pt_bin, -1);
-    h_Muon_tight_pt_bin -> Add(h_wjets_Muon_tight_pt_bin, -1);
+    h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_zjets, -1);
+    h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -1);
 
-    h_Muon_FR_pt_corrWZ -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., " ");
-    h_Muon_FR_pt_corrWZ -> Draw("same");
+    h_Muon_FR_pt_EWK -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., " ");
+    h_Muon_FR_pt_EWK -> Draw("same");
 
-    h_Muon_FR_pt_corrWZ -> SetLineColor(2);
+    h_Muon_FR_pt_EWK -> SetLineColor(2);    
+    */
+    // Muon eta
+    /*
+    TH1D* h_Muon_loose_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_loose_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_tight_eta_bin" + muonsuffix);    
 
-    // Muon FR eta
+    TH1D* h_Muon_loose_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_loose_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_tight_eta_bin" + muonsuffix);
 
-    TH1D* h_Muon_loose_eta_bin = (TH1D*) data -> Get ("h_Muon_loose_eta_bin");
-    TH1D* h_Muon_tight_eta_bin = (TH1D*) data -> Get ("h_Muon_tight_eta_bin");
+    TH1D* h_Muon_loose_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_loose_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_tight_eta_bin" + muonsuffix);
 
-    TH1D* h_zjets_Muon_loose_eta_bin = (TH1D*) zjets -> Get ("h_Muon_loose_eta_bin");
-    TH1D* h_zjets_Muon_tight_eta_bin = (TH1D*) zjets -> Get ("h_Muon_tight_eta_bin");
+    TH1D* h_Muon_FR_eta = (TH1D*) h_Muon_tight_eta_bin -> Clone();
+    TH1D* h_Muon_FR_eta_EWK = (TH1D*) h_Muon_tight_eta_bin -> Clone();
 
-    TH1D* h_wjets_Muon_loose_eta_bin = (TH1D*) wjets -> Get ("h_Muon_loose_eta_bin");
-    TH1D* h_wjets_Muon_tight_eta_bin = (TH1D*) wjets -> Get ("h_Muon_tight_eta_bin");
+    TCanvas* Muon_eta = new TCanvas("Muon eta", "Muon eta", 450, 550);
 
-    TH1D* h_Muon_FR_eta        = (TH1D*) h_Muon_tight_eta_bin -> Clone();
-    TH1D* h_Muon_FR_eta_corrWZ = (TH1D*) h_Muon_tight_eta_bin -> Clone();
-
-    TCanvas* Muon_eta = new TCanvas("Muon eta", "Muon eta");
+    Muon_eta -> SetGridx(1);
+    Muon_eta -> SetGridy(1);
 
     h_Muon_FR_eta -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., "");
 
     h_Muon_FR_eta -> Draw();
+
     h_Muon_FR_eta -> SetLineColor(4);
     h_Muon_FR_eta -> SetAxisRange(0,1,"Y");
 
@@ -76,236 +220,64 @@ void getFakeRate()
     h_Muon_FR_eta -> SetXTitle("Muon eta");
     h_Muon_FR_eta -> SetYTitle("Muon FR");
 
-    h_Muon_loose_eta_bin -> Add(h_zjets_Muon_loose_eta_bin, -1);
-    h_Muon_loose_eta_bin -> Add(h_wjets_Muon_loose_eta_bin, -1);
+    h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -1);
+    h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -1);
 
-    h_Muon_tight_eta_bin -> Add(h_zjets_Muon_tight_eta_bin, -1);
-    h_Muon_tight_eta_bin -> Add(h_wjets_Muon_tight_eta_bin, -1);
+    h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_zjets, -1);
+    h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -1);
 
-    h_Muon_FR_eta_corrWZ -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., " ");
-    h_Muon_FR_eta_corrWZ -> Draw("same");
+    h_Muon_FR_eta_EWK -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., " ");
+    h_Muon_FR_eta_EWK -> Draw("same");
 
-    h_Muon_FR_eta_corrWZ -> SetLineColor(2);
-
-    // Electron FR
-
-    /*
-    TH1D* h_Ele_loose_pt_eta_bin = (TH1D*) data -> Get("h_Ele_loose_pt_eta_bin");
-    TH1D* h_Ele_tight_pt_eta_bin = (TH1D*) data -> Get("h_Ele_tight_pt_eta_bin");
-
-    TH1D* h_zjets_Ele_loose_pt_eta_bin = (TH1D*) zjets -> Get("h_Ele_loose_pt_eta_bin");
-    TH1D* h_zjets_Ele_tight_pt_eta_bin = (TH1D*) zjets -> Get("h_Ele_tight_pt_eta_bin");
-
-    TH1D* h_wjets_Ele_loose_pt_eta_bin = (TH1D*) wjets -> Get("h_Ele_loose_pt_eta_bin");
-    TH1D* h_wjets_Ele_tight_pt_eta_bin = (TH1D*) wjets -> Get("h_Ele_tight_pt_eta_bin");
-
-    TH1D* h_Ele_FR_pt_eta = (TH1D*) h_Ele_tight_pt_eta_bin -> Clone();
-
-    h_Ele_loose_pt_eta_bin -> Add(h_zjets_Ele_loose_pt_eta_bin, -1);
-    h_Ele_loose_pt_eta_bin -> Add(h_wjets_Ele_loose_pt_eta_bin, -1);
-
-    h_Ele_tight_pt_eta_bin -> Add(h_zjets_Ele_tight_pt_eta_bin, -1);
-    h_Ele_tight_pt_eta_bin -> Add(h_wjets_Ele_tight_pt_eta_bin, -1);
-
-    h_Ele_FR_pt_eta -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., "");
-    h_Ele_FR_pt_eta -> Draw("colztext");
+    h_Muon_FR_eta_EWK -> SetLineColor(2);    
     */
 
-    // Ele FR pt
+    // Muon FR TH2D histograms
+    TFile *MuFR = new TFile("MuFR_Run2016B_25ns_jet20_21Jun.root","recreate");
 
-    TH1D* h_Ele_loose_pt_bin = (TH1D*) data -> Get ("h_Ele_loose_pt_bin");
-    TH1D* h_Ele_tight_pt_bin = (TH1D*) data -> Get ("h_Ele_tight_pt_bin");
+    TH1D* h_Muon_loose_pt_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_eta_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin" + muonsuffix);    
 
-    TH1D* h_Ele_loose_pt_bin_corrWZ = (TH1D*) data -> Get ("h_Ele_loose_pt_bin");
-    TH1D* h_Ele_tight_pt_bin_corrWZ = (TH1D*) data -> Get ("h_Ele_tight_pt_bin");
+    TH1D* h_Muon_loose_pt_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_eta_bin_zjets = (TH1D*) zjets -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin" + muonsuffix);
 
-    TH1D* h_zjets_Ele_loose_pt_bin = (TH1D*) zjets -> Get ("h_Ele_loose_pt_bin");
-    TH1D* h_zjets_Ele_tight_pt_bin = (TH1D*) zjets -> Get ("h_Ele_tight_pt_bin");
+    TH1D* h_Muon_loose_pt_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin" + muonsuffix);
+    TH1D* h_Muon_tight_pt_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin" + muonsuffix);
 
-    TH1D* h_wjets_Ele_loose_pt_bin = (TH1D*) wjets -> Get ("h_Ele_loose_pt_bin");
-    TH1D* h_wjets_Ele_tight_pt_bin = (TH1D*) wjets -> Get ("h_Ele_tight_pt_bin");
+    TH2D* h_Muon_FR_pt_eta     = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone();
+    TH2D* h_Muon_FR_pt_eta_EWK = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone();
 
-    TH1D* h_Ele_FR_pt        = (TH1D*) h_Ele_tight_pt_bin -> Clone();
-    TH1D* h_Ele_FR_pt_corrWZ = (TH1D*) h_Ele_tight_pt_bin -> Clone();
+    h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., "");
+    h_Muon_FR_pt_eta -> Write("FR_pT_eta");
 
-    TCanvas* Ele_pt = new TCanvas("Ele pt", "Ele pt");
+    h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_zjets, -1);
+    h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_wjets, -1);
 
-    h_Ele_FR_pt -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin, 1., 1., "");
+    h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_zjets, -1);
+    h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_wjets, -1);
 
-    h_Ele_FR_pt -> Draw();
-    h_Ele_FR_pt -> SetLineColor(4);
-    h_Ele_FR_pt -> SetAxisRange(0,0.5,"Y");
+    h_Muon_FR_pt_eta_EWK -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., " ");
+    h_Muon_FR_pt_eta_EWK -> Write("FR_pT_eta_EWKcorr");
 
-    h_Ele_FR_pt -> SetTitle("Ele Fake Rate with and without EWK correction");
-    h_Ele_FR_pt -> SetXTitle("Ele pt");
-    h_Ele_FR_pt -> SetYTitle("Ele FR");
+    MuFR -> Close();
 
-    h_Ele_loose_pt_bin_corrWZ -> Add(h_zjets_Ele_loose_pt_bin, -1);
-    h_Ele_loose_pt_bin_corrWZ -> Add(h_wjets_Ele_loose_pt_bin, -1);
+    // ===================================================================================================
+    // Muon Prompt Rate
+    // ===================================================================================================
 
-    h_Ele_tight_pt_bin_corrWZ -> Add(h_zjets_Ele_tight_pt_bin, -1);
-    h_Ele_tight_pt_bin_corrWZ -> Add(h_wjets_Ele_tight_pt_bin, -1);
+    // Muon PR TH2D histograms
+    TFile *MuPR = new TFile("MuPR_Run2016B_25ns_jet35_21Jun.root","recreate");
 
-    h_Ele_FR_pt_corrWZ -> Divide(h_Ele_tight_pt_bin_corrWZ, h_Ele_loose_pt_bin_corrWZ, 1., 1., " ");
-    h_Ele_FR_pt_corrWZ -> Draw("same");
+    TH1D* h_Muon_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_loose_pt_eta_PR");
+    TH1D* h_Muon_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_tight_pt_eta_PR");
 
-    h_Ele_FR_pt_corrWZ -> SetLineColor(2);
-    
-    /*
-    TH1D* h_loose_relative = (TH1D*) h_Ele_loose_pt_bin -> Clone();
-    TH1D* h_tight_relative = (TH1D*) h_Ele_tight_pt_bin -> Clone();
+    TH2D* Muon_PR_pT_eta = (TH2D*) h_Muon_tight_pt_eta_PR -> Clone();
 
-    TCanvas* Ele_loose_pt_relative = new TCanvas("Ele pt loose relative", "Ele pt loose relative");
+    Muon_PR_pT_eta -> Divide(h_Muon_tight_pt_eta_PR, h_Muon_loose_pt_eta_PR, 1., 1., "");
+    Muon_PR_pT_eta -> Write("PR_pT_eta");
 
-    h_loose_relative -> Divide(h_Ele_loose_pt_bin, h_Ele_loose_pt_bin_corrWZ, 1., 1., "");
-    h_loose_relative -> Draw();
-
-    TCanvas* Ele_tight_pt_relative = new TCanvas("Ele pt tight relative", "Ele pt tight relative");
-
-    h_tight_relative -> Divide(h_Ele_tight_pt_bin, h_Ele_tight_pt_bin_corrWZ, 1., 1., "");
-    h_tight_relative -> Draw();
-    */
-
-    TH1D* h_Muon_loose_pt_stack = (TH1D*) data -> Get ("h_Muon_loose_pt_stack");
-    TH1D* h_Muon_tight_pt_stack = (TH1D*) data -> Get ("h_Muon_tight_pt_stack");
-    TH1D* h_Ele_loose_pt_stack = (TH1D*) data -> Get ("h_Ele_loose_pt_stack");
-    TH1D* h_Ele_tight_pt_stack = (TH1D*) data -> Get ("h_Ele_tight_pt_stack");
-
-    TH1D* h_zjets_Muon_loose_pt_stack = (TH1D*) zjets -> Get ("h_Muon_loose_pt_stack");
-    TH1D* h_zjets_Muon_tight_pt_stack = (TH1D*) zjets -> Get ("h_Muon_tight_pt_stack");
-    TH1D* h_zjets_Ele_loose_pt_stack = (TH1D*) zjets -> Get ("h_Ele_loose_pt_stack");
-    TH1D* h_zjets_Ele_tight_pt_stack = (TH1D*) zjets -> Get ("h_Ele_tight_pt_stack");
-
-    TH1D* h_wjets_Muon_loose_pt_stack = (TH1D*) wjets -> Get ("h_Muon_loose_pt_stack");
-    TH1D* h_wjets_Muon_tight_pt_stack = (TH1D*) wjets -> Get ("h_Muon_tight_pt_stack");
-    TH1D* h_wjets_Ele_loose_pt_stack = (TH1D*) wjets -> Get ("h_Ele_loose_pt_stack");
-    TH1D* h_wjets_Ele_tight_pt_stack = (TH1D*) wjets -> Get ("h_Ele_tight_pt_stack");
-    
-    THStack* MC_Muon_loose = new THStack("MC muon loose", "MC muon loose");
-
-    h_zjets_Muon_loose_pt_stack -> SetFillColor(kGreen+2);
-    h_zjets_Muon_loose_pt_stack -> SetFillStyle(1001);
-    h_zjets_Muon_loose_pt_stack -> Rebin(2);
-
-    h_wjets_Muon_loose_pt_stack -> SetFillColor(kGray+1);
-    h_wjets_Muon_loose_pt_stack -> SetFillStyle(1001);
-    h_wjets_Muon_loose_pt_stack -> Rebin(2);
-
-    MC_Muon_loose -> Add(h_wjets_Muon_loose_pt_stack);
-    MC_Muon_loose -> Add(h_zjets_Muon_loose_pt_stack);
-
-    TCanvas* Muon_Analysis_loose = new TCanvas("Muon loose analysis", "Muon loose analysis");
-
-    Muon_Analysis_loose -> SetLogy();
-    h_Muon_loose_pt_stack -> SetMarkerStyle(kFullCircle);
-
-    h_Muon_loose_pt_stack -> Draw("ep");
-    h_Muon_loose_pt_stack -> Rebin(2);
-    MC_Muon_loose -> Draw("hist, same");
-    h_Muon_loose_pt_stack -> Draw("ep, same");
-
-    THStack* MC_Muon_tight = new THStack("MC muon tight", "MC muon tight");
-
-    h_zjets_Muon_tight_pt_stack -> SetFillColor(kGreen+2);
-    h_zjets_Muon_tight_pt_stack -> SetFillStyle(1001);
-    h_zjets_Muon_tight_pt_stack -> Rebin(2);
-
-    h_wjets_Muon_tight_pt_stack -> SetFillColor(kGray+1);
-    h_wjets_Muon_tight_pt_stack -> SetFillStyle(1001);
-    h_wjets_Muon_tight_pt_stack -> Rebin(2);
-
-    MC_Muon_tight -> Add(h_wjets_Muon_tight_pt_stack);
-    MC_Muon_tight -> Add(h_zjets_Muon_tight_pt_stack);
-
-    TCanvas* Muon_Analysis_tight = new TCanvas("Muon tight analysis", "Muon tight analysis");
-
-    Muon_Analysis_tight -> SetLogy();
-    h_Muon_tight_pt_stack -> SetMarkerStyle(kFullCircle);
-    h_Muon_tight_pt_stack -> Draw("ep");
-    h_Muon_tight_pt_stack -> Rebin(2);
-    MC_Muon_tight -> Draw("hist,same");
-    h_Muon_tight_pt_stack -> Draw("ep, same");
-
-    THStack* MC_Ele_loose = new THStack("MC ele loose", "MC ele loose");
-
-    h_zjets_Ele_loose_pt_stack -> SetFillColor(kGreen+2);
-    h_zjets_Ele_loose_pt_stack -> SetFillStyle(1001);
-    h_zjets_Ele_loose_pt_stack -> Rebin(2);
-
-    h_wjets_Ele_loose_pt_stack -> SetFillColor(kGray+1);
-    h_wjets_Ele_loose_pt_stack -> SetFillStyle(1001);
-    h_wjets_Ele_loose_pt_stack -> Rebin(2);
-
-    MC_Ele_loose -> Add(h_wjets_Ele_loose_pt_stack);
-    MC_Ele_loose -> Add(h_zjets_Ele_loose_pt_stack);
-
-    TCanvas* Ele_Analysis_loose = new TCanvas("Ele loose analysis", "Ele loose analysis");
-
-    Ele_Analysis_loose -> SetLogy();
-    h_Ele_loose_pt_stack -> SetMarkerStyle(kFullCircle);
-    h_Ele_loose_pt_stack -> Draw("ep");
-    h_Ele_loose_pt_stack -> Rebin(2);
-    MC_Ele_loose -> Draw("hist, same");
-    h_Ele_loose_pt_stack -> Draw("ep, same");
-
-    THStack* MC_Ele_tight = new THStack("MC ele tight", "MC ele tight");
-
-    h_zjets_Ele_tight_pt_stack -> SetFillColor(kGreen+2);
-    h_zjets_Ele_tight_pt_stack -> SetFillStyle(1001);
-    h_zjets_Ele_tight_pt_stack -> Rebin(2);
-
-    h_wjets_Ele_tight_pt_stack -> SetFillColor(kGray+1);
-    h_wjets_Ele_tight_pt_stack -> SetFillStyle(1001);
-    h_wjets_Ele_tight_pt_stack -> Rebin(2);
-
-    MC_Ele_tight -> Add(h_wjets_Ele_tight_pt_stack);
-    MC_Ele_tight -> Add(h_zjets_Ele_tight_pt_stack);
-
-    TCanvas* Ele_Analysis_tight = new TCanvas("Ele tight analysis", "Ele tight analysis");
-
-    Ele_Analysis_tight -> SetLogy();
-    h_Ele_tight_pt_stack -> SetMarkerStyle(kFullCircle);
-    h_Ele_tight_pt_stack -> Draw("ep");
-    h_Ele_tight_pt_stack -> Rebin(2);
-    MC_Ele_tight -> Draw("hist,same");
-    h_Ele_tight_pt_stack -> Draw("ep, same");
-
-    // Electron FR eta
-    
-    TH1D* h_Ele_loose_eta_bin = (TH1D*) data -> Get ("h_Ele_loose_eta_bin");
-    TH1D* h_Ele_tight_eta_bin = (TH1D*) data -> Get ("h_Ele_tight_eta_bin");
-
-    TH1D* h_zjets_Ele_loose_eta_bin = (TH1D*) zjets -> Get ("h_Ele_loose_eta_bin");
-    TH1D* h_zjets_Ele_tight_eta_bin = (TH1D*) zjets -> Get ("h_Ele_tight_eta_bin");
-
-    TH1D* h_wjets_Ele_loose_eta_bin = (TH1D*) wjets -> Get ("h_Ele_loose_eta_bin");
-    TH1D* h_wjets_Ele_tight_eta_bin = (TH1D*) wjets -> Get ("h_Ele_tight_eta_bin");
-
-    TH1D* h_Ele_FR_eta        = (TH1D*) h_Ele_tight_eta_bin -> Clone();
-    TH1D* h_Ele_FR_eta_corrWZ = (TH1D*) h_Ele_tight_eta_bin -> Clone();
-
-    TCanvas* Ele_eta = new TCanvas("Ele eta", "Ele eta");
-
-    h_Ele_FR_eta -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin, 1., 1., "");
-
-    h_Ele_FR_eta -> Draw();
-    h_Ele_FR_eta -> SetLineColor(4);
-    h_Ele_FR_eta -> SetAxisRange(0,0.5,"Y");
-
-    h_Ele_FR_eta -> SetTitle("Ele Fake Rate with and without EWK correction");
-    h_Ele_FR_eta -> SetXTitle("Ele eta");
-    h_Ele_FR_eta -> SetYTitle("Ele FR");
-
-    h_Ele_loose_eta_bin -> Add(h_zjets_Ele_loose_eta_bin, -1);
-    h_Ele_loose_eta_bin -> Add(h_wjets_Ele_loose_eta_bin, -1);
-
-    h_Ele_tight_eta_bin -> Add(h_zjets_Ele_tight_eta_bin, -1);
-    h_Ele_tight_eta_bin -> Add(h_wjets_Ele_tight_eta_bin, -1);
-
-    h_Ele_FR_eta_corrWZ -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin, 1., 1., " ");
-    h_Ele_FR_eta_corrWZ -> Draw("same");
-
-    h_Ele_FR_eta_corrWZ -> SetLineColor(2);
+    MuPR -> Close();
 
 }
+
 

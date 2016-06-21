@@ -67,6 +67,11 @@ class AnalysisFR: public AnalysisCMS
   TH2D* h_Ele_loose_pt_m2l[ncut][njetet];
   TH2D* h_Ele_tight_pt_m2l[ncut][njetet];
 
+  TH2D* h_Ele_loose_pt_eta_PR;
+  TH2D* h_Ele_tight_pt_eta_PR;
+  TH2D* h_Muon_loose_pt_eta_PR;
+  TH2D* h_Muon_tight_pt_eta_PR;
+
 };
 
 #endif 
