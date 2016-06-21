@@ -192,8 +192,8 @@ public :
    Float_t         predmet;
    Float_t         redmet;
    
-   //UInt_t          run;  // 76x
-   Float_t         run;  // 74x
+   UInt_t          run;  // 76x
+ //Float_t         run;  // 74x
    
    UInt_t          lumi;
    UInt_t          event;
