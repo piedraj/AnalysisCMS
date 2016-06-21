@@ -42,11 +42,13 @@ void runPlotter(TString level,
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
   if (analysis.EqualTo("Stop"))    lumi = -1; // fb^-1
+  if (analysis.EqualTo("Top"))     lumi = 2.301; //fb^-1  From run 256630 to run 260627; 
 
   Bool_t scale = linY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
+  if (analysis.EqualTo("Top"))  scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -83,14 +85,15 @@ void runPlotter(TString level,
   // Get the data
   //----------------------------------------------------------------------------
   
-  //plotter.AddData("01_Data", "data", color_Data);
-  plotter.AddData("01_Data_74", "data_74", color_Data);
-  plotter.AddProcess("02_Data_76", "data_76", kRed);
+  plotter.AddData("01_Data", "data", color_Data);
+  /* plotter.AddData("01_Data_74", "data_74", color_Data);
+   plotter.AddProcess("02_Data_76", "data_76", kRed);
+  */
 
   // Add processes
   //----------------------------------------------------------------------------
   
-/*
+
  if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
@@ -121,7 +124,7 @@ void runPlotter(TString level,
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-  //    plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
+      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
@@ -169,7 +172,7 @@ void runPlotter(TString level,
      //plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
 
     }
-*/
+
 
   // Draw events by cut
   //----------------------------------------------------------------------------

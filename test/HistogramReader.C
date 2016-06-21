@@ -495,7 +495,7 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0., 1.);
+      ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
 
       uncertainty->Draw("e2,same");
 
