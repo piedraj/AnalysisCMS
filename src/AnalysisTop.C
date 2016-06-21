@@ -23,7 +23,10 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
 
   // Define histograms
-  //----------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+
+  root_output->cd();  
+
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {

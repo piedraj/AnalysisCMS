@@ -12,8 +12,8 @@ FOLDER="$1"
 
 pushd $FOLDER
 
-hadd -f -k 00_Fakes.root     DD_Run*.root
-hadd -f -k 01_Data.root      Run*.root
+hadd -f -k 00_Fakes.root     DD_Run2015D*.root
+hadd -f -k 01_Data.root      Run2015D*.root
 hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
 hadd -f -k 03_ZZ.root        ZZTo4L.root ZZTo2L2Nu.root ZZTo2L2Q*.root
 hadd -f -k 04_TTTo2L2Nu.root TTTo2L2Nu.root
