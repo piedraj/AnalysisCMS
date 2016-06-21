@@ -122,8 +122,8 @@ int          bin_metmax;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
-		TString level    = "01_Routin",
-		double  lumi_fb  = 2.318)
+		TString level    = "02_Routin",
+		double  lumi_fb  = 2.301)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
