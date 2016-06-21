@@ -289,7 +289,6 @@ Get the 2015 luminosity.
 
     brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt
 
-    #Summary: 
     +-------+------+-------+-------+-------------------+------------------+
     | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
     +-------+------+-------+-------+-------------------+------------------+

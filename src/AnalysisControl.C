@@ -93,6 +93,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // Has 2 leptons
     //--------------------------------------------------------------------------
+    pass = true;
+
     FillLevelHistograms(Control_00_Has2Leptons, pass);    
 
 
