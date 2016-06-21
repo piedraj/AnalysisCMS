@@ -191,7 +191,8 @@ public :
    Float_t         pho_sietaieta;
    Float_t         predmet;
    Float_t         redmet;
-   Float_t         run;  // UInt_t for 76x latino trees
+   UInt_t          run; // 76X 
+   //Float_t         run;  //74X
    UInt_t          lumi;
    UInt_t          event;
    Float_t         softbjpb;

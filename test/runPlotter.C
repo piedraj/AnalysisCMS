@@ -41,7 +41,7 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
-  if (analysis.EqualTo("Stop"))    lumi = 0.226; // fb^-1
+  if (analysis.EqualTo("Stop"))    lumi = -1; // fb^-1
 
   Bool_t scale = linY;
 
@@ -82,12 +82,16 @@ void runPlotter(TString level,
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
-
+  
+  //plotter.AddData("01_Data", "data", color_Data);
+  plotter.AddData("01_Data_74", "data_74", color_Data);
+  plotter.AddProcess("02_Data_76", "data_76", kRed);
 
   // Add processes
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ"))
+  
+/*
+ if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("06_WW",       "WW",       color_WW);
@@ -165,6 +169,8 @@ void runPlotter(TString level,
      //plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
 
     }
+*/
+
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -248,7 +254,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitre
 
 	  if (!allplots) continue;
 

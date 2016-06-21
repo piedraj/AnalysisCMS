@@ -28,12 +28,15 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
+//const int     nmetcut = 7;
 const int     nmetcut = 12;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 45, 50, 60, 70, 80, 90, -1};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 45, 50, 60, 70,  80, 90,  -1};  // [GeV]
+//const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 45, 50, 60, 70, 80, 90, -1};  // [GeV]
 const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100};  // [GeV]
+//const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 45, 100};  // [GeV]
 
-const bool    includeVZ            = false;
+const bool    includeVZ            = true;
 const bool    printResults         = true;
 const bool    R_study              = true; 
 const bool    show_R_study_Results = true; 
@@ -138,10 +141,10 @@ void Test_getDYScale(TString analysis = "Top")
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  TFile* file_data = new TFile("../rootfiles2/nominal/" + analysis + "/01_Data.root",     "read");
-  TFile* file_dy   = new TFile("../rootfiles2/nominal/" + analysis + "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../rootfiles2/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../rootfiles2/nominal/" + analysis + "/03_ZZ.root",       "read");
+  TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",     "read");
+  TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root",    "read");
+  TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
+  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_ZZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
@@ -152,6 +155,11 @@ void Test_getDYScale(TString analysis = "Top")
       h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
       h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
       h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
+
+      h2_dy[i]->Scale(lumi_fb);
+      h2_wz[i]->Scale(lumi_fb);
+      h2_zz[i]->Scale(lumi_fb);
+
     }
 
 
@@ -220,15 +228,21 @@ void Test_getDYScale(TString analysis = "Top")
       GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
       GetScale(mm, scale[mm], scale_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
 
-
-
       for (int k=ee; k<=mm; k++)
 	{
-	  graph_R_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
+	  
+      
+          graph_R_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
 	  graph_R_dy  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy  [k]);
 	  graph_scale [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), scale [k]);
           graph_R_zz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_zz_value  [j][k]);
           graph_R_wz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_wz_value  [j][k]);
+
+	  std::cout << "___________________________duda _____________________________" << std::endl;
+          std::cout << schannel[k] << "\t j " << j << std::endl;
+          std::cout << "R_dy" << R_dy[k] << "\t  R_dy_err " << R_dy_err[k] << std::endl;
+          std::cout << "___________________________duda _____________________________" << std::endl;
+
 
 	  graph_R_data[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_data_err[k]);
 	  graph_R_dy  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err  [k]);
@@ -284,9 +298,37 @@ void Test_getDYScale(TString analysis = "Top")
    R_c[2] = new TCanvas("R out/in_DY", "R out/in_DY");
    Rgraph[2] = new TMultiGraph();
 
-   Rgraph[2]-> Add (graph_R_dy  [ee]);
-   Rgraph[2]-> Add (graph_R_dy  [mm]);
+   
+   Rgraph[2] -> Add (graph_R_dy[ee]);
+   Rgraph[2]-> Add (graph_R_dy[mm]);
+
+   // Make the fit
+   //----------------------------------------
+   TF1 *ff[2];
+   ff[ee]= new TF1("ff_ee", "pol0",0.,100.);
+   ff[mm]= new TF1("ff_mm", "pol0",0.,100.);
+
+   graph_R_dy[ee] -> Fit (ff[ee],"rwln");
+   std::cout << "prob = " << ff[ee]->GetProb() << "\t chi2 = " << ff[ee]-> GetChisquare() << " \t NDF = " << ff[ee] -> GetNDF() << std::endl;  
+
+   graph_R_dy[mm] -> Fit (ff[mm],"rwln"); 
+   std::cout << "prob = " << ff[mm]->GetProb() << "\t chi2 = " << ff[mm]-> GetChisquare() << " \t NDF = " << ff[mm] -> GetNDF() << std::endl;
+   //-----------------------------------------
+   
+
    Rgraph[2]->Draw("ap");
+
+   // Plot the Fit
+   // ---------------------------------------
+   ff[mm]->Draw("same");
+   ff[ee]->Draw("same");
+  
+   ff[ee]->SetLineWidth(1);
+   ff[ee]->SetLineColor(kBlue);
+
+   ff[mm]->SetLineWidth(1);
+   ff[mm]->SetLineColor(kRed);
+   //-----------------------------------------
 
    Rgraph[2]->GetXaxis()->SetTitleOffset(1.5);
    Rgraph[2]->GetYaxis()->SetTitleOffset(1.7);
@@ -581,8 +623,17 @@ void GetScale(int    ch,
       printf(" Nin(WZ)     %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
       printf(" Nin(ZZ)     %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
       printf(" Nin(DY)     %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
-      printf(" Nin(R)    %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
-      printf(" Nout(R)    %6.1f +- %-5.1f\n",                     n_out_est,    err_out_est);
+      printf(" Nin(est)    %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+     printf(" Nout(est)    %6.1f +- %-5.1f\n",                     n_in_est*R_dy_value,  -999.  );
+     printf(" Nout(DY)    %6.1f +- %-5.1f\n",                       n_out_dy, err_out_dy   );
+//      printf(" Nout_up(est)    %6.1f +- %-5.1f\n",                  n_in_est*0.151,    -999.);
+//      printf(" Nout_down(est)    %6.1f +- %-5.1f\n",                n_in_est*0.122,    -999.);
+//err_out_est);
+      printf("----------------------------\n");
+
+//       printf(" Nout(est)-Nout_up(est)    %6.1f +- %-5.1f\n", n_in_est*0.179 - n_in_est*0.151, -999.); 
+//       printf(" Nout(est)-Nout_down(est)    %6.1f +- %-5.1f\n", n_in_est*0.179 - n_in_est*0.122, -999.); 
+
       printf("----------------------------\n");
       printf(" R(est)      %6.3f +- %-5.3f\n",                      R_data_value, R_data_error);
       printf(" R(DY)       %6.3f +- %-5.3f\n",                      R_dy_value,   R_dy_error);
@@ -608,9 +659,9 @@ float errAB2(float a, float err_a, float b, float err_b)
 //------------------------------------------------------------------------------
 float errRatio(float a, float err_a, float b, float err_b)
 {
-  float ratio = a/b;
+  float ratio =fabs(a/b);
 
-  float err = (a/b) * sqrt((err_a*err_a)/(a*a) + (err_b*err_b)/(b*b));
+  float err = ratio * sqrt((err_a*err_a)/(a*a) + (err_b*err_b)/(b*b));
 
   return err;
 }
