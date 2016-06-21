@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -39,10 +39,10 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
-  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_2015D;
-  if (analysis.EqualTo("Stop"))    lumi = -1; // fb^-1
   if (analysis.EqualTo("Top"))     lumi = 2.301; //fb^-1  From run 256630 to run 260627; 
+  if (analysis.EqualTo("Control")) lumi = lumi_fb_2015D;
+  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
+  if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
 
   Bool_t scale = linY;
 
@@ -163,14 +163,19 @@ void runPlotter(TString level,
     }
 
   if (analysis.EqualTo("Stop"))
-
     {
+<<<<<<< HEAD
      plotter.AddSignal("T2tb_mStop875to1125_mLSP0to475", "m_{Stop}875-1125 m_{LSP}0-475",  color_Signal);  
      plotter.AddSignal("T2tb_mStop200to625_mLSP50to475", "m_{Stop}200-625 m_{LSP}50-475",  color_Signal-4);  
      //plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
      plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-7);  
      //plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
 
+=======
+     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
+     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
+     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+>>>>>>> upstream/master
     }
 
 
@@ -236,7 +241,7 @@ void runPlotter(TString level,
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
-	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY);
+
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
@@ -249,6 +254,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
+
+	  if (!allplots) continue;
+
 	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                // Not in minitrees
 	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                // Not in minitrees
@@ -257,10 +265,14 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+<<<<<<< HEAD
 	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitre
 
 	  if (!allplots) continue;
 
+=======
+	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
+>>>>>>> upstream/master
 	  plotter.Draw(prefix + "dphijet1met"    + suffix, "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijet2met"    + suffix, "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijj"         + suffix, "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale);
@@ -370,12 +382,8 @@ void runPlotter(TString level,
 int main(int argc, char ** argv)
 {
   if (argc < 2) {
-    
-    
 
     printf("\n rm -rf %s\n\n", outputdir.Data());
-  
-    
 
     for (int i=0; i<ncut; i++) printf(" ./runPlotter %s\n", scut[i].Data());
 

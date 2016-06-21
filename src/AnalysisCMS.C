@@ -219,7 +219,7 @@ void AnalysisCMS::Summary(TString analysis,
 
       TH1D* h_counter = h_counterRaw[j][i][njetbin];
 
-      if (title.Contains("predicted")) h_counter = h_counterLum[j][i][njetbin];
+      if (title.Contains("weighed")) h_counter = h_counterLum[j][i][njetbin];
 
       float yield = h_counter->Integral();
       float error = sqrt(h_counter->GetSumw2()->GetSum());
@@ -236,8 +236,8 @@ void AnalysisCMS::Summary(TString analysis,
   
   txt_summary << "\n";
 
-  if (title.Contains("raw") && (_ismc || _sample.Contains("DD_")))
-    Summary(analysis, "11.2", "predicted yields");
+  if (title.Contains("raw"))
+    Summary(analysis, "11.2", "weighed yields");
 }
 
 
