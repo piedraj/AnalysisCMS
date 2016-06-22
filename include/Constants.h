@@ -14,10 +14,11 @@
 #include "BTagWorkingPoints76X.h"
 
 
-const double lumi_fb_2016B       = 0.804;
-const double lumi_fb_blind_dm    = 1.324;
-const double lumi_fb_blind_susy  = 0.157;
-const double lumi_fb             = 2.318;
+const double lumi_fb_2016B       = 0.804;  // In progress
+const double lumi_fb_blind_susy  = 0.141;  // From run 256630 to run 257599
+const double lumi_fb_blind_dm    = 1.324;  // From run 256630 to run 258750
+const double lumi_fb_2015D       = 2.301;  // From run 256630 to run 260627
+const double lumi_fb             = 2.318;  // 2015C + 2015D
 const double lumi_error_percent  = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;

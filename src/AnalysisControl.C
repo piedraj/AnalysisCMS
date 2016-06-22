@@ -73,8 +73,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
-    if (Lepton1.v.Pt() < 30.) continue;
-    if (Lepton2.v.Pt() < 10.) continue;
+    if (Lepton1.v.Pt() < 20.) continue;
+    if (Lepton2.v.Pt() < 20.) continue;
 
     _nelectron = 0;
 
@@ -91,6 +91,13 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     bool pass;
 
 
+    // Has 2 leptons
+    //--------------------------------------------------------------------------
+    pass = true;
+
+    FillLevelHistograms(Control_00_Has2Leptons, pass);    
+
+
     // Z+jets
     //--------------------------------------------------------------------------
     pass = true;
@@ -99,7 +106,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_m2l > 12.);
     pass &= (_nbjet30csvv2m == 0);
 
-    FillLevelHistograms(Control_00_ZJets, pass);
+    FillLevelHistograms(Control_01_ZJets, pass);
 
 
     // Top
@@ -114,10 +121,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     bool metcut = (MET.Et() > 50. && _dphillmet > 1.2);
 
-    FillLevelHistograms(Control_01_Routin,     pass);
-    FillLevelHistograms(Control_02_RoutinBtag, pass && btag);
-    FillLevelHistograms(Control_03_Top,        pass && zveto && metcut);
-    FillLevelHistograms(Control_04_TopBtag,    pass && zveto && metcut && btag);
+    FillLevelHistograms(Control_02_Routin,     pass);
+    FillLevelHistograms(Control_03_RoutinBtag, pass && btag);
+    FillLevelHistograms(Control_04_Top,        pass && zveto && metcut);
+    FillLevelHistograms(Control_05_TopBtag,    pass && zveto && metcut && btag);
 
 
     // WW
@@ -135,7 +142,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || mpmet > 40.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_05_WW, pass);
+    FillLevelHistograms(Control_06_WW, pass);
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
