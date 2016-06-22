@@ -12,6 +12,7 @@ if [ $# -lt 1 ]; then
 ##  echo "  ./lcg-cp.sh 20May2016_Run2016B_PromptReco/l1loose"  # Superseeded
     echo "  ./lcg-cp.sh 07Jun2016_Run2016B_PromptReco/l1loose"
     echo "  ./lcg-cp.sh 07Jun2016_spring16__mAODv2/MCl1loose"
+    echo "  ./lcg-cp.sh 07Jun2016_Run2016B_PromptReco/l2loose16__hadd"
     echo "  "
     echo "  "
     echo "  "
