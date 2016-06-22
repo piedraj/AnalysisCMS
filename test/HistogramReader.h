@@ -154,16 +154,16 @@ class HistogramReader
   void     WriteYields        (TH1*           hist,
 			       TString        label);
 
-  void     AddRocSignal       (TString filename);
+  void     AddRocSignal       (TString        filename);
 
-  void     AddRocBackground   (TString filename);
+  void     AddRocBackground   (TString        filename);
 
-  void     Roc                (TString hname,
-			       TString xtitle  = "",
-			       Int_t   npoints = 100,
-			       TString units   = "NULL",
-			       Float_t xmin    = -999,
-			       Float_t xmax    = -999);
+  void     Roc                (TString        hname,
+			       TString        xtitle  = "",
+			       Int_t          npoints = 100,
+			       TString        units   = "NULL",
+			       Float_t        xmin    = -999,
+			       Float_t        xmax    = -999);
     
  private :
 

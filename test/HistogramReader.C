@@ -2,6 +2,7 @@
 
 using namespace std;
 
+
 //------------------------------------------------------------------------------
 // HistogramReader
 //------------------------------------------------------------------------------
@@ -1199,7 +1200,6 @@ void HistogramReader::AddRocSignal( TString filename)
     }
 
   _roc_signals.push_back(fullname);
-  cout<<fullname<<endl;
 }
 
 
@@ -1217,7 +1217,6 @@ void HistogramReader::AddRocBackground( TString filename)
     }
 
   _roc_backgrounds.push_back(fullname);
-  cout<<fullname<<endl;
 }
 
 
@@ -1231,7 +1230,6 @@ void HistogramReader::Roc(TString hname,
 			  Float_t xmin,
 			  Float_t xmax)
 {  
-
   //Recalling Signal files and histograms
   TFile* fSig[_roc_signals.size()];
   TH1F*  hSig[_roc_signals.size()]; 
@@ -1304,15 +1302,15 @@ void HistogramReader::Roc(TString hname,
   rocGraph->SetTitle("ROC Curve - " + xtitle);
   rocGraph->GetXaxis()->SetRangeUser(0.,1.);
   rocGraph->GetYaxis()->SetRangeUser(0.,1.);
-  rocGraph->GetXaxis()->SetTitle("Signal Efficiency");
-  rocGraph->GetYaxis()->SetTitle("Background Rejection");
+  rocGraph->GetXaxis()->SetTitle("signal efficiency");
+  rocGraph->GetYaxis()->SetTitle("background rejection");
   rocGraph->GetYaxis()->SetTitleOffset(1.4);
 
   TString myxtitle = xtitle;
   if (units != "NULL")
     myxtitle = xtitle + " [" + units + "]";
 
-  significanceGraph->SetTitle("Significance Curve - " + xtitle);
+  significanceGraph->SetTitle("significance curve - " + xtitle);
   significanceGraph->GetXaxis()->SetRangeUser(xmin, xmax);
   significanceGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
   significanceGraph->GetXaxis()->SetTitle(myxtitle);

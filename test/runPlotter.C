@@ -39,7 +39,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb;
 
-  if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
+  if (analysis.EqualTo("Control")) lumi = lumi_fb_2016D;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
   if (analysis.EqualTo("Top"))     lumi = lumi_fb_2015D;
   if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
@@ -68,18 +68,6 @@ void runPlotter(TString level,
       plotter.SetLuminosity(lumi);
       plotter.SetDrawRatio (true);
     }
-
-
-  // Normalize MC to data
-  //----------------------------------------------------------------------------
-  //  if (analysis.EqualTo("Control"))
-  //    {
-  //      printf("\n [runPlotter] Warning: normalizing MC to data\n\n");
-  //      
-  //      plotter.SetDataNorm(true);
-  //    }
-  //  else
-  //    plotter.SetDataNorm(false);
 
 
   // Get the data
@@ -141,20 +129,20 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
-      //plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
+      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
     {
-      //plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
-      //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
   if (analysis.EqualTo("Stop"))
@@ -164,24 +152,28 @@ void runPlotter(TString level,
      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
     }
 
-  //ROC curve
-  if (analysis.EqualTo("WW")){
-    plotter.AddRocSignal("06_WW");
+
+  // ROC curve inputs
+  //----------------------------------------------------------------------------
+  if (analysis.EqualTo("WW"))
+    {
+      plotter.AddRocSignal("06_WW");
     
-    plotter.AddRocBackground("04_TTTo2L2Nu");
-    plotter.AddRocBackground("00_Fakes");
-    plotter.AddRocBackground("02_WZTo3LNu");
-    plotter.AddRocBackground("03_ZZ");
-    plotter.AddRocBackground("05_ST");
-    plotter.AddRocBackground("07_ZJets");
-    plotter.AddRocBackground("09_TTV");
-    plotter.AddRocBackground("10_HWW");
-    plotter.AddRocBackground("11_Wg");
-    plotter.AddRocBackground("12_Zg");
-    plotter.AddRocBackground("13_VVV");
-    plotter.AddRocBackground("14_HZ");
-    plotter.AddRocBackground("15_WgStar");
-  }
+      plotter.AddRocBackground("04_TTTo2L2Nu");
+      plotter.AddRocBackground("00_Fakes");
+      plotter.AddRocBackground("02_WZTo3LNu");
+      plotter.AddRocBackground("03_ZZ");
+      plotter.AddRocBackground("05_ST");
+      plotter.AddRocBackground("07_ZJets");
+      plotter.AddRocBackground("09_TTV");
+      plotter.AddRocBackground("10_HWW");
+      plotter.AddRocBackground("11_Wg");
+      plotter.AddRocBackground("12_Zg");
+      plotter.AddRocBackground("13_VVV");
+      plotter.AddRocBackground("14_HZ");
+      plotter.AddRocBackground("15_WgStar");
+    }
+
 
   // Draw events by cut
   //----------------------------------------------------------------------------
@@ -241,6 +233,7 @@ void runPlotter(TString level,
 
 	  plotter.SetTitle(title);
 
+
 	  // Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
@@ -259,18 +252,21 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
 
+
 	  // WW ROC Curve
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
-	      plotter.Roc(prefix + "ht" + suffix, "Ht", 1000, "GeV", 150,1000);
+	      plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
 	    }
 	  
+
 	  if (!allplots) continue;
 
+
 	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
-	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                // Not in minitrees
-	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                // Not in minitrees
+	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                 // Not in minitrees
+	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                 // Not in minitrees
 	  plotter.Draw(prefix + "mllbb"          + suffix, "m_{" + sll + "bb}",                 10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "meff"           + suffix, "m_{eff}",                           10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
