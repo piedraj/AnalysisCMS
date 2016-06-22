@@ -41,12 +41,14 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016B;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
+  if (analysis.EqualTo("Top"))     lumi = lumi_fb_2015D;
   if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
 
   Bool_t scale = linY;
 
   if (analysis.EqualTo("MonoH")) scale = linY;
   if (analysis.EqualTo("Stop"))  scale = logY;
+  if (analysis.EqualTo("Top"))   scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -261,7 +263,7 @@ void runPlotter(TString level,
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	    {
-	      plotter.Roc(prefix + "ht" + suffix, "Ht", 1000, "GeV", 0,1000);
+	      plotter.Roc(prefix + "ht" + suffix, "Ht", 1000, "GeV", 150,1000);
 	    }
 	  
 	  if (!allplots) continue;
