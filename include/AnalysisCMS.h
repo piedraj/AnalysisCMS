@@ -139,8 +139,6 @@ class AnalysisCMS : public AnalysisBase
   std::vector<Lepton>    AnalysisLeptons;
   Lepton                 Lepton1;
   Lepton                 Lepton2;
-  Lepton                 Lepton3;
-  Lepton                 Lepton4;
   TLorentzVector         MET;
   TLorentzVector         trkMET;
 
@@ -205,12 +203,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2eta;
   float                  _lep2phi;
   float                  _lep2pt;
-  float                  _lep3eta;
-  float                  _lep3phi;
-  float                  _lep3pt;
-  float                  _lep4eta;
-  float                  _lep4phi;
-  float                  _lep4pt;
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;

@@ -464,10 +464,6 @@ void AnalysisCMS::GetLeptons()
     if (i == 0) Lepton1 = lep;
     if (i == 1) Lepton2 = lep;
 
-    // Added for ZH->4l Control Region in monoH Analysis
-    //--------------------------------------------------------------------------
-    if (i == 2) Lepton3 = lep;
-    if (i == 3) Lepton4 = lep;
   }
 
   _nlepton = AnalysisLeptons.size();
@@ -480,15 +476,6 @@ void AnalysisCMS::GetLeptons()
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
 
-    // Added for ZH->4l Control Region in monoH Analysis
-    //--------------------------------------------------------------------------
-  _lep3eta = Lepton3.v.Eta();
-  _lep3phi = Lepton3.v.Phi();
-  _lep3pt  = Lepton3.v.Pt();
-
-  _lep4eta = Lepton4.v.Eta();
-  _lep4phi = Lepton4.v.Phi();
-  _lep4pt  = Lepton4.v.Pt();
 }
 
 
@@ -660,15 +647,12 @@ void AnalysisCMS::GetZHCRVar()
   _mll24 = -1.;
   _mll34 = -1.;
 
-  if (Lepton3.v.Pt() > 0.){
-    _mll13 = (Lepton1.v + Lepton3.v).M();
-    _mll23 = (Lepton2.v + Lepton3.v).M();
-  }
-  
-  if (Lepton4.v.Pt() > 0.){
-    _mll14 = (Lepton1.v + Lepton4.v).M();
-    _mll24 = (Lepton2.v + Lepton4.v).M();
-    _mll34 = (Lepton3.v + Lepton4.v).M();
+  if (_nlepton > 3){
+    _mll13 = (AnalysisLeptons[0].v + AnalysisLeptons[2].v).M();
+    _mll23 = (AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
+    _mll14 = (AnalysisLeptons[0].v + AnalysisLeptons[3].v).M();
+    _mll24 = (AnalysisLeptons[1].v + AnalysisLeptons[3].v).M();
+    _mll34 = (AnalysisLeptons[2].v + AnalysisLeptons[3].v).M();
   }
 }
 
