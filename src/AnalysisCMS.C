@@ -463,6 +463,7 @@ void AnalysisCMS::GetLeptons()
 
     if (i == 0) Lepton1 = lep;
     if (i == 1) Lepton2 = lep;
+
   }
 
   _nlepton = AnalysisLeptons.size();
@@ -474,6 +475,7 @@ void AnalysisCMS::GetLeptons()
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+
 }
 
 
@@ -633,6 +635,26 @@ void AnalysisCMS::GetStarVar()
   _mllstar    = (L1Star + L2Star).M();
 }
 
+
+//------------------------------------------------------------------------------
+// GetZHCRVar
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetZHCRVar()
+{
+  _mll13 = -1.;
+  _mll23 = -1.;
+  _mll14 = -1.;
+  _mll24 = -1.;
+  _mll34 = -1.;
+
+  if (_nlepton > 3){
+    _mll13 = (AnalysisLeptons[0].v + AnalysisLeptons[2].v).M();
+    _mll23 = (AnalysisLeptons[1].v + AnalysisLeptons[2].v).M();
+    _mll14 = (AnalysisLeptons[0].v + AnalysisLeptons[3].v).M();
+    _mll24 = (AnalysisLeptons[1].v + AnalysisLeptons[3].v).M();
+    _mll34 = (AnalysisLeptons[2].v + AnalysisLeptons[3].v).M();
+  }
+}
 
 //------------------------------------------------------------------------------
 // GetDeltaPhi

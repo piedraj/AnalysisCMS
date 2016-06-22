@@ -57,7 +57,8 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 	h_deltarlep2jet1   [i][j][k] = new TH1D("h_deltarlep2jet1"  + suffix, "",  100, 0.,     5);
 	h_deltarlep2jet2   [i][j][k] = new TH1D("h_deltarlep2jet2"  + suffix, "",  100, 0.,     5);
        	h_mllstar          [i][j][k] = new TH1D("h_mllstar"         + suffix, "", 3000, 0.,  3000);
-	//h_mr             [i][j][k] = new TH1D("h_mr"              + suffix, "", 2000, 0.,  2000);
+       	//h_mnunu            [i][j][k] = new TH1D("h_mnunu"           + suffix, "",   10, 0.,    10);
+	h_mr             [i][j][k] = new TH1D("h_mr"              + suffix, "", 2000, 0.,  2000);
 
 	//h_met_m2l         [i][j][k] = new TH2D("h_met_m2l"        + suffix, "", 200,  0,  2000,  100,   0, 200);
 	//h_met_deltaphill  [i][j][k] = new TH2D("h_met_deltaphill" + suffix, "", 200,  0,  2000,  100,   0,   5);     
@@ -119,7 +120,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     bool pass_zveto = (_nelectron == 1 || fabs(mll - Z_MASS) > 15.);
     FillLevelHistograms(MonoH_03_ZVeto, pass && pass_zveto);
 
-    pass &= (_mpmet > 20. || (_nelectron == 1 && _mpmet > 45.));
+    pass &= (_mpmet > 45. || (_nelectron == 1 && _mpmet > 45.));
     FillLevelHistograms(MonoH_04_MpMet, pass && pass_zveto);
 
     pass &= (_passdphiveto);
@@ -133,12 +134,24 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
     if (_saveminitree && pass && pass_zveto) minitree->Fill();
 
+    //ZH->4l Control Region
+    if (AnalysisLeptons[2].v.Pt() > 0 || AnalysisLeptons[3].v.Pt() > 0 ){
+      cout<<"I passed! :)"<<endl;
+      
+      bool passZHCR = ( (fabs(_mll13 - Z_MASS) < 15. || fabs(_mll23 - Z_MASS) < 15. || fabs(_mll14 - Z_MASS) < 15. || fabs(_mll24 - Z_MASS) < 15. || fabs(_mll34 - Z_MASS) < 15.) && AnalysisLeptons[2].v.Pt() > 20. && AnalysisLeptons[3].v.Pt() > 20.);
+      
+      FillLevelHistograms(MonoH_08_ZHCR, passZHCR);
+      cout<<"Lepton 3 pT = "<<std_vector_lepton_pt->at(2)<<endl;
+      cout<<"Lepton 4 pT = "<<std_vector_lepton_pt->at(3)<<endl;
+      cout<<"-------------------------------------------"<<endl;
+    }
+
     //    pass &= (!_foundsoftmuon);
     //    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
 
     // monoH cuts                                                         
-    bool pass_monoh = (pass && pass_zveto);
-    bool pass_drll = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
+    // bool pass_monoh = (pass && pass_zveto);
+    // bool pass_drll = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
 
     // FillLevelHistograms(MonoH_103_CR, pass_monoh && !pass_drll);
 
@@ -151,29 +164,29 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     // pass_monoh &= (mpmet > 60.);
     // FillLevelHistograms(MonoH_102_MpMet, pass_monoh);
 
-    pass_monoh &= (_mpmet > 100.);
-    FillLevelHistograms(MonoH_09_mpmet100, pass_monoh);
+    // pass_monoh &= (_mpmet > 100.);
+    // FillLevelHistograms(MonoH_09_mpmet100, pass_monoh);
 
-    pass_monoh &= (mth > 200.);
-    FillLevelHistograms(MonoH_10_mth200, pass_monoh);
+    // pass_monoh &= (mth > 200.);
+    // FillLevelHistograms(MonoH_10_mth200, pass_monoh);
 
-    pass_monoh &= (Lepton1.v.DeltaPhi(MET) > 2.6);
-    FillLevelHistograms(MonoH_11_dphil1met, pass_monoh);
+    // pass_monoh &= (Lepton1.v.DeltaPhi(MET) > 2.6);
+    // FillLevelHistograms(MonoH_11_dphil1met, pass_monoh);
 
-    pass_monoh &= (Lepton2.v.DeltaPhi(MET) > 2.6);
-    FillLevelHistograms(MonoH_12_dphil2met, pass_monoh);
+    // pass_monoh &= (Lepton2.v.DeltaPhi(MET) > 2.6);
+    // FillLevelHistograms(MonoH_12_dphil2met, pass_monoh);
 
-    pass_monoh &= (drll < 0.8);
-    FillLevelHistograms(MonoH_13_deltarll, pass_monoh);
+    // pass_monoh &= (drll < 0.8);
+    // FillLevelHistograms(MonoH_13_deltarll, pass_monoh);
 
-    pass_monoh &= (mtw1 > 160.);
-    FillLevelHistograms(MonoH_14_mtw1, pass_monoh);
+    // pass_monoh &= (mtw1 > 160.);
+    // FillLevelHistograms(MonoH_14_mtw1, pass_monoh);
 
-    pass_monoh &= (mtw2 > 100.);
-    FillLevelHistograms(MonoH_15_mtw2, pass_monoh);
+    // pass_monoh &= (mtw2 > 100.);
+    // FillLevelHistograms(MonoH_15_mtw2, pass_monoh);
 
-    pass_monoh &= (metTtrk > 100.);
-    FillLevelHistograms(MonoH_16_trkmet, pass_monoh);
+    // pass_monoh &= (metTtrk > 100.);
+    // FillLevelHistograms(MonoH_16_trkmet, pass_monoh);
 
   }
 
@@ -189,23 +202,31 @@ void AnalysisMonoH::FillAnalysisHistograms(int ichannel,
 					   int ijet)
 {
 
-  //float m_r = sqrt(pow(Lepton1.v(3)+Lepton2.v(3),2)-pow(Lepton1.v(2)+Lepton2.v(2),2));
+  float m_r = sqrt(pow(Lepton1.v(3)+Lepton2.v(3),2)-pow(Lepton1.v(2)+Lepton2.v(2),2));
   
   h_fullpmet        [ichannel][icut][ijet]->Fill(_fullpmet,         _event_weight);
   h_trkpmet         [ichannel][icut][ijet]->Fill(_trkpmet,          _event_weight);
   h_deltarl1met     [ichannel][icut][ijet]->Fill(_deltarl1met,      _event_weight);
   h_deltarl2met     [ichannel][icut][ijet]->Fill(_deltarl2met,      _event_weight);
   h_deltarllmet     [ichannel][icut][ijet]->Fill(_deltarllmet,      _event_weight);
-  h_deltarjet1met   [ichannel][icut][ijet]->Fill(_deltarjet1met,    _event_weight);
-  h_deltarjet2met   [ichannel][icut][ijet]->Fill(_deltarjet2met,    _event_weight);
-  h_deltarjj        [ichannel][icut][ijet]->Fill(_deltarjj,         _event_weight);
-  h_deltarjjmet     [ichannel][icut][ijet]->Fill(_deltarjjmet,      _event_weight);                         
-  h_deltarlep1jet1  [ichannel][icut][ijet]->Fill(_deltarlep1jet1,   _event_weight);                                                                             
-  h_deltarlep1jet2  [ichannel][icut][ijet]->Fill(_deltarlep1jet2,   _event_weight);                                                                              
-  h_deltarlep2jet1  [ichannel][icut][ijet]->Fill(_deltarlep2jet1,   _event_weight);                                                                              
-  h_deltarlep2jet2  [ichannel][icut][ijet]->Fill(_deltarlep2jet2,   _event_weight);  
+
+  if (_njet > 0){
+    h_deltarjet1met   [ichannel][icut][ijet]->Fill(_deltarjet1met,    _event_weight);
+    h_deltarlep2jet1  [ichannel][icut][ijet]->Fill(_deltarlep2jet1,   _event_weight); 
+    h_deltarlep1jet1  [ichannel][icut][ijet]->Fill(_deltarlep1jet1,   _event_weight); 
+  }                                                          
+  
+  if (_njet > 1){
+    h_deltarjet2met   [ichannel][icut][ijet]->Fill(_deltarjet2met,    _event_weight);
+    h_deltarjj        [ichannel][icut][ijet]->Fill(_deltarjj,         _event_weight);
+    h_deltarjjmet     [ichannel][icut][ijet]->Fill(_deltarjjmet,      _event_weight);
+    h_deltarlep1jet2  [ichannel][icut][ijet]->Fill(_deltarlep1jet2,   _event_weight); 
+    h_deltarlep2jet2  [ichannel][icut][ijet]->Fill(_deltarlep2jet2,   _event_weight);  
+  }
+
   h_mllstar         [ichannel][icut][ijet]->Fill(_mllstar,          _event_weight);
-  //h_mr            [ichannel][icut][ijet]->Fill(m_r,               _event_weight);
+  //h_mnunu           [ichannel][icut][ijet]->Fill(_mnunu,            _event_weight);
+  h_mr              [ichannel][icut][ijet]->Fill(m_r,               _event_weight);
 
   //h_met_m2l        [ichannel][icut][ijet] ->Fill(pfType1Met,   _m2l,        _event_weight); 
   //h_met_deltaphill [ichannel][icut][ijet] ->Fill(pfType1Met, dphill,        _event_weight);  

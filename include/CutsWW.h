@@ -13,20 +13,17 @@ enum {
   WW_05_DPhiVeto,
   WW_06_Ptll,
   WW_07_BVetoLoose,
-  WW_08_BVetoMedium,
-  WW_09_BVetoTight,
-  WW_10_BVetoLooseOld,
-  WW_11_BVetoMediumOld,
-  WW_12_BVetoTightOld,
-  WW_13_SoftMuLoose,
-  WW_14_SoftMuMedium,
-  WW_15_SoftMuTight,
-  WW_50_TopCR,
-  WW_60_DYttCR,
-  WW_70_DYCR,
-  WW_71_DYCR_NoMpMet,
-  WW_72_DYCR_JustPtll,
-  //  WW_09_Ht,
+  WW_08_Ht,
+  /* WW_08_BVetoMedium, */
+  /* WW_09_BVetoTight, */
+  /* WW_10_BVetoLooseOld, */
+  /* WW_11_BVetoMediumOld, */
+  /* WW_12_BVetoTightOld, */
+  /* WW_50_TopCR, */
+  /* WW_60_DYttCR, */
+  /* WW_70_DYCR, */
+  /* WW_71_DYCR_NoMpMet, */
+  /* WW_72_DYCR_JustPtll, */
   //  WW_10_DY,
   //  WW_11_ZWindow,
   //  WW_12_ZWindowPtll,
@@ -63,19 +60,17 @@ const TString scut[ncut] = {
   "WW/05_DPhiVeto",
   "WW/06_Ptll",
   "WW/07_BVetoLoose",
-  "WW/08_BVetoMedium",
-  "WW/09_BVetoTight",
-  "WW/10_BVetoLooseOld",
-  "WW/11_BVetoMediumOld",
-  "WW/12_BVetoTightOld",
-  "WW/13_SoftMuLoose",
-  "WW/14_SoftMuMedium",
-  "WW/15_SoftMuTight",
-  "WW/50_TopCR",
-  "WW/60_DYttCR",
-  "WW/70_DYCR",
-  "WW/71_DYCR_NoMpMet",
-  "WW/72_DYCR_JustPtll",
+  "WW/08_Ht",
+  /* "WW/08_BVetoMedium", */
+  /* "WW/09_BVetoTight", */
+  /* "WW/10_BVetoLooseOld", */
+  /* "WW/11_BVetoMediumOld", */
+  /* "WW/12_BVetoTightOld", */
+  /* "WW/50_TopCR", */
+  /* "WW/60_DYttCR", */
+  /* "WW/70_DYCR", */
+  /* "WW/71_DYCR_NoMpMet", */
+  /* "WW/72_DYCR_JustPtll", */
   //  "WW/09_Ht",
   //  "WW/10_DY",
   //  "WW/11_ZWindow",

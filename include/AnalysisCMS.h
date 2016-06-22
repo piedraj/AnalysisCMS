@@ -118,6 +118,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetStarVar        ();
 
+  void    GetZHCRVar        ();
+
   TH1F*   GetGenWeightsLHE  ();
 
   void    GetRecoWeightsLHE (TH1F*    hist);
@@ -227,6 +229,11 @@ class AnalysisCMS : public AnalysisBase
   float                  _sumjpt12;
   float                  _trkpmet;
 
+  float                  _mll13;
+  float                  _mll23;
+  float                  _mll14;
+  float                  _mll24;
+  float                  _mll34;
 
   // Variables ported from AnalysisStop
   //----------------------------------------------------------------------------
