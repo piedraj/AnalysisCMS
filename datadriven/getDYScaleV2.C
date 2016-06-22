@@ -1,5 +1,6 @@
 // Constants
 //------------------------------------------------------------------------------
+
 enum {
   ee,
   mm,
@@ -22,16 +23,25 @@ const TString lchannel[nchannel] = {
   "ll"
 };
 
+// Constants
+//------------------------------------------------------------------------------
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 8;
+//const int     nmetcut = 7;
+const int     nmetcut = 12;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 100};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 45, 50, 60, 70,  80, 90,  -1};  // [GeV]
+//const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 45, 50, 60, 70, 80, 90, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 45, 50, 60, 70, 80, 90, 100};  // [GeV]
+//const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 45, 100};  // [GeV]
 
-const bool    includeVZ    = true;
-const bool    printResults = true;
+const bool    includeVZ            = true;
+const bool    printResults         = true;
+const bool    R_study              = true; 
+const bool    show_R_study_Results = true; 
+
+const double  lumi_fb  = 2.318;
 
 const TString outputdir = "figures";
 
@@ -58,8 +68,7 @@ float    errRatio  (float         a,
 
 void     SetGraph  (TGraphErrors* g,
 		    Color_t       color,
-		    Style_t       mstyle,
-		    Style_t       lstyle = kSolid);
+		    Style_t       style);
 
 TLegend* DrawLegend(Float_t       x1,
 		    Float_t       y1,
@@ -88,6 +97,10 @@ TH2D*        h2_zz  [ll];  // ee, mm, em
 
 TCanvas*     canvas[3];    // R_ee, R_mm, scale
 TMultiGraph* mgraph[3];    // R_ee, R_mm, scale
+TCanvas*     R_c   [3];    // R_dy_* ; R_**_ee; R_**_mm; *=> ee, mm; ** zz, wz, dy  
+TMultiGraph* Rgraph[3];    // R_dy_* ; R_**_ee; R_**_mm; *=> ee, mm; ** zz, wz, dy
+      
+float R_zz_value[nmetcut][2],   R_zz_error[nmetcut][2], R_wz_value[nmetcut][2],   R_wz_error[nmetcut][2];     
 
 float        k_value[2];   // ee, mm
 float        k_error[2];   // ee, mm
@@ -96,7 +109,7 @@ int          bin_zmin;
 int          bin_zmax;
 int          bin_metmin;
 int          bin_metmax;
-
+int          cutt; 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -110,20 +123,19 @@ int          bin_metmax;
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
-// Results for 2.318 fb-1 and MET > 45 GeV
+// Results for MET > 40 GeV and 2.318 fb-1,
 //
-//    SF(ee,est/DY)  1.344 +- 0.047
-//    SF(mm,est/DY)  1.405 +- 0.036
+//    ee SF(est/DY) = 1.284 +- 0.117
+//    mm SF(est/DY) = 1.225 +- 0.079
 //
-// Results for 2.318 fb-1, MET > 45 GeV and nbjet20cmvav2l > 0
+// Results for MET > 40 GeV and 2.318 fb-1
+// when the peaking backgrounds are not considered,
 //
-//    SF(ee,est/DY)  1.351 +- 0.086
-//    SF(mm,est/DY)  1.379 +- 0.061
+//    ee SF(est/DY)  1.305 +- 0.118
+//    mm SF(est/DY)  1.242 +- 0.079
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin",
-		double  lumi_fb  = 2.301)
+void getDYScaleV2(TString analysis = "Top")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -139,14 +151,15 @@ void getDYScale(TString analysis = "Control",
   //----------------------------------------------------------------------------
   for (int i=ee; i<ll; i++)
     {
-      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+      h2_data[i] = (TH2D*)file_data->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
+      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/02_Routin/h_metPfType1_m2l_" + schannel[i]);
 
       h2_dy[i]->Scale(lumi_fb);
       h2_wz[i]->Scale(lumi_fb);
       h2_zz[i]->Scale(lumi_fb);
+
     }
 
 
@@ -155,8 +168,8 @@ void getDYScale(TString analysis = "Control",
   TH1D* h_m2l_ee = (TH1D*)h2_data[ee]->ProjectionY("h_m2l_ee");
   TH1D* h_m2l_mm = (TH1D*)h2_data[mm]->ProjectionY("h_m2l_mm");
 
-  bin_zmin = h_m2l_ee->FindBin(zmin);    // [zmin, zmax)
-  bin_zmax = h_m2l_ee->FindBin(zmax)-1;  // [zmin, zmax)
+  bin_zmin = h_m2l_ee->FindBin(zmin);
+  bin_zmax = h_m2l_ee->FindBin(zmax)-1;
 
   float n_ee = h_m2l_ee->Integral(bin_zmin, bin_zmax);
   float n_mm = h_m2l_mm->Integral(bin_zmin, bin_zmax);
@@ -170,24 +183,37 @@ void getDYScale(TString analysis = "Control",
 
   // Do the work
   //----------------------------------------------------------------------------
-  TGraphErrors* graph_R_data[2];  // ee, mm
-  TGraphErrors* graph_R_dy  [2];  // ee, mm
-  TGraphErrors* graph_scale [3];  // ee, mm, em
+  TGraphErrors* graph_R_data[2];
+  TGraphErrors* graph_R_dy  [2];
+  TGraphErrors* graph_scale [2];
 
-  for (int k=ee; k<=em; k++)
+ // if (R_study)
+ // {
+   TGraphErrors* graph_R_zz  [2];
+   TGraphErrors* graph_R_wz  [2];
+
+   //for (int k=ee; k<=mm; k++)
+   // {
+    //graph_R_zz [k] = new TGraphErrors();
+    //graph_R_wz [k] = new TGraphErrors();
+   // }
+ // }
+
+
+  for (int k=ee; k<=mm; k++)
     {
-      graph_scale[k] = new TGraphErrors();
-
-      if (k == em) continue;
-
       graph_R_data[k] = new TGraphErrors();
       graph_R_dy  [k] = new TGraphErrors();
+      graph_scale [k] = new TGraphErrors();
+
+      graph_R_zz [k] = new TGraphErrors();
+      graph_R_wz [k] = new TGraphErrors();
     }
 
   for (int j=0; j<nmetcut-1; j++)
     {
-      bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])     : -1;  // [metmin, metmax)
-      bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1])-1 : -1;  // [metmin, metmax)
+      bin_metmin = (metcut[j]   > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j])     : -1;
+      bin_metmax = (metcut[j+1] > 0) ? h2_data[ee]->GetXaxis()->FindBin(metcut[j+1])-1 : -1;
 
       if (printResults)
 	{
@@ -195,42 +221,188 @@ void getDYScale(TString analysis = "Control",
 	  printf("\n %.0f < MET < %.0f GeV\n", metcut[j], metcut[j+1]);
 	}
 
-      float scale[3], scale_err[3], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
-
+      float scale[2], scale_err[2], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
+ //     float R_zz_value[2],   R_zz_error[2], R_wz_value[2],   R_wz_error[2];     
+      cutt = j; 
+ 
       GetScale(ee, scale[ee], scale_err[ee], R_data[ee], R_data_err[ee], R_dy[ee], R_dy_err[ee]);
       GetScale(mm, scale[mm], scale_err[mm], R_data[mm], R_data_err[mm], R_dy[mm], R_dy_err[mm]);
 
-      scale[em]     = sqrt(scale[ee] * scale[mm]);
-      scale_err[em] = 0.5 * scale[em] * sqrt(pow(scale_err[ee]/scale[ee],2) + pow(scale_err[mm]/scale[mm],2));
-
-      for (int k=ee; k<=em; k++)
+      for (int k=ee; k<=mm; k++)
 	{
-	  graph_scale[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), scale[k]);
-	  graph_scale[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), scale_err[k]);
+	  
+      
+          graph_R_data[k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
+	  graph_R_dy  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy  [k]);
+	  graph_scale [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), scale [k]);
+          graph_R_zz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_zz_value  [j][k]);
+          graph_R_wz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_wz_value  [j][k]);
 
-	  if (k == em) continue;
+	  std::cout << "___________________________duda _____________________________" << std::endl;
+          std::cout << schannel[k] << "\t j " << j << std::endl;
+          std::cout << "R_dy" << R_dy[k] << "\t  R_dy_err " << R_dy_err[k] << std::endl;
+          std::cout << "___________________________duda _____________________________" << std::endl;
 
-	  graph_R_data[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_data[k]);
+
 	  graph_R_data[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_data_err[k]);
-
-	  graph_R_dy[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy[k]);
-	  graph_R_dy[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err[k]);
+	  graph_R_dy  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err  [k]);
+	  graph_scale [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), scale_err [k]);
+          graph_R_zz  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_zz_error  [j][k]);
+          graph_R_wz  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_wz_error  [j][k]);
 	}
-    }
+	
+    // if (R_study)
+    //   {
+//	float R_zz_value[2],   R_zz_error[2], R_wz_value[2],   R_wz_error[2];
+//
+//	for (int k=ee; k<=mm; k++)
+//        {
+//	  graph_R_zz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_zz_value  [k]);
+//	  graph_R_wz  [k]->SetPoint(j, 0.5* (metdraw[j+1] + metdraw[j]), R_wz_value  [k]);
+//         
+//          graph_R_zz  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_zz_error  [k]);
+//          graph_R_wz  [k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_wz_error  [k]);
+//        }
+      // }
 
-  if (printResults) printf("\n");
+    }
 
 
   // Cosmetics
   //----------------------------------------------------------------------------
-  SetGraph(graph_R_data[ee], kBlack,  kFullCircle);
-  SetGraph(graph_R_data[mm], kBlack,  kFullCircle);
-  SetGraph(graph_R_dy[ee],   kRed+1,  kOpenSquare);
-  SetGraph(graph_R_dy[mm],   kRed+1,  kOpenSquare);
-  SetGraph(graph_scale[ee],  kBlack,  kOpenSquare);
-  SetGraph(graph_scale[mm],  kRed+1,  kFullCircle);
-  SetGraph(graph_scale[em],  kGray+1, kOpenTriangleUp, kDotted);
+  SetGraph(graph_R_data[ee], kBlack, kFullCircle);
+  SetGraph(graph_R_data[mm], kBlack, kFullCircle);
+  SetGraph(graph_R_dy[ee],   kRed+1, kOpenSquare);
+  SetGraph(graph_R_dy[mm],   kRed+1, kOpenSquare);
+  SetGraph(graph_scale[ee],  kBlack, kOpenSquare);
+  SetGraph(graph_scale[mm],  kRed+1, kFullCircle);
 
+  //  R study
+  // ---------------------------------------------------------------------------
+
+  if (R_study)
+  {// (Draw R study)
+
+
+   // -------------------------------------------------------------------------
+   // R_dy_ee, R_dy_mm graph
+   // -------------------------------------------------------------------------
+  
+   // cosmetics;
+
+   SetGraph (graph_R_dy  [ee], kBlue+2, kOpenCircle);
+   SetGraph (graph_R_dy  [mm], kRed+2, kFullCircle);
+
+   // draw; 
+
+   R_c[2] = new TCanvas("R out/in_DY", "R out/in_DY");
+   Rgraph[2] = new TMultiGraph();
+
+   
+   Rgraph[2] -> Add (graph_R_dy[ee]);
+   Rgraph[2]-> Add (graph_R_dy[mm]);
+
+   // Make the fit
+   //----------------------------------------
+   TF1 *ff[2];
+   ff[ee]= new TF1("ff_ee", "pol0",0.,100.);
+   ff[mm]= new TF1("ff_mm", "pol0",0.,100.);
+
+   graph_R_dy[ee] -> Fit (ff[ee],"rwln");
+   std::cout << "prob = " << ff[ee]->GetProb() << "\t chi2 = " << ff[ee]-> GetChisquare() << " \t NDF = " << ff[ee] -> GetNDF() << std::endl;  
+
+   graph_R_dy[mm] -> Fit (ff[mm],"rwln"); 
+   std::cout << "prob = " << ff[mm]->GetProb() << "\t chi2 = " << ff[mm]-> GetChisquare() << " \t NDF = " << ff[mm] -> GetNDF() << std::endl;
+   //-----------------------------------------
+   
+
+   Rgraph[2]->Draw("ap");
+
+   // Plot the Fit
+   // ---------------------------------------
+   ff[mm]->Draw("same");
+   ff[ee]->Draw("same");
+  
+   ff[ee]->SetLineWidth(1);
+   ff[ee]->SetLineColor(kBlue);
+
+   ff[mm]->SetLineWidth(1);
+   ff[mm]->SetLineColor(kRed);
+   //-----------------------------------------
+
+   Rgraph[2]->GetXaxis()->SetTitleOffset(1.5);
+   Rgraph[2]->GetYaxis()->SetTitleOffset(1.7);
+   Rgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+   Rgraph[2]->GetYaxis()->SetTitle("R^{out/in}_{DY} = N^{out} / N^{in}");
+ 
+   //Rgraph[2]->SetMinimum(0.);
+  // Rgraph[2]->SetMaximum(0.4);
+
+   DrawLegend(0.22, 0.83, (TObject*)graph_R_dy[ee], " ee DY");
+   DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [mm], "mm  DY");
+
+   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
+
+   R_c[2]->Modified();
+   R_c[2]->Update();
+   R_c[2]->SaveAs(outputdir + "/MC_Routin_DY.png");
+
+   //----------------------------------------------------------------------------
+   // R_zz_* , R_wz_*, R_dy_* graph
+   // ---------------------------------------------------------------------------
+
+    //cosmetics;
+   
+    for (int n = ee; n <= mm; n++)
+    {
+    SetGraph(graph_R_zz[n],   kBlue+2, kFullSquare);
+    SetGraph(graph_R_wz[n],   kMagenta+2, kFullCross);
+    SetGraph (graph_R_dy[n], kBlack, kFullCircle);
+    }
+  
+    // Draw;
+
+    for (int m=0; m<=1; m++)
+    {
+    R_c[m] = new TCanvas("R out/in_MC"+ schannel[m], "R out/in_MC study");
+    Rgraph[m] = new TMultiGraph();
+    Rgraph[m]-> Add (graph_R_dy  [m]);
+    Rgraph[m]-> Add (graph_R_zz  [m]);
+    Rgraph[m]-> Add (graph_R_wz  [m]);
+
+    Rgraph[m]->Draw("ap");
+   
+    Rgraph[m]->GetXaxis()->SetTitleOffset(1.5);
+    Rgraph[m]->GetYaxis()->SetTitleOffset(1.7);
+    Rgraph[m]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+    Rgraph[m]->GetYaxis()->SetTitle("R^{out/in}_{MC} = N^{out} / N^{in}");
+
+    //Rgraph[m]->SetMinimum(0.);
+    //Rgraph[m]->SetMaximum(0.45);
+
+    DrawLegend(0.80, 0.77, (TObject*)graph_R_dy[m], schannel[m] + " DY");
+    DrawLegend(0.80, 0.83, (TObject*)graph_R_zz[m], schannel[m] + " ZZ");
+    DrawLegend(0.80, 0.77, (TObject*)graph_R_wz[m], schannel[m] + " WZ");
+
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
+
+    R_c[m]->Modified();
+    R_c[m]->Update();
+    R_c[m]->SaveAs(outputdir + "/MC_Routin_" + schannel[m] + ".png");
+
+   } 
+
+  }
+
+
+  // Cosmetics
+  //----------------------------------------------------------------------------
+  SetGraph(graph_R_data[ee], kBlack, kFullCircle);
+  SetGraph(graph_R_data[mm], kBlack, kFullCircle);
+  SetGraph(graph_R_dy[ee],   kRed+1, kOpenSquare);
+  SetGraph(graph_R_dy[mm],   kRed+1, kOpenSquare);
+  SetGraph(graph_scale[ee],  kBlack, kOpenSquare);
+  SetGraph(graph_scale[mm],  kRed+1, kFullCircle);
 
   // Draw R
   //----------------------------------------------------------------------------
@@ -245,21 +417,13 @@ void getDYScale(TString analysis = "Control",
 
       mgraph[k]->Draw("ap");
 
-      canvas[k]->Update();
-
-      TLine* line = new TLine(canvas[k]->GetUxmin(), 0.0, canvas[k]->GetUxmax(), 0.0);
-  
-      line->SetLineWidth(2);
-      line->SetLineStyle(kDotted);
-      line->Draw("same");
-
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
-      mgraph[k]->GetYaxis()->SetTitleOffset(2.0);
+      mgraph[k]->GetYaxis()->SetTitleOffset(1.7);
       mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.02);
-      mgraph[k]->SetMaximum(+0.35);
+      mgraph[k]->SetMinimum(-0.01);
+      mgraph[k]->SetMaximum(+0.4);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -278,7 +442,6 @@ void getDYScale(TString analysis = "Control",
 
   mgraph[2] = new TMultiGraph();
 
-  mgraph[2]->Add(graph_scale[em]);
   mgraph[2]->Add(graph_scale[ee]);
   mgraph[2]->Add(graph_scale[mm]);
 
@@ -289,17 +452,16 @@ void getDYScale(TString analysis = "Control",
   TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
   
   line->SetLineWidth(2);
-  line->SetLineStyle(kDotted);
+  line->SetLineStyle(3);
   line->Draw("same");
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
-  mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
+  mgraph[2]->GetYaxis()->SetTitleOffset(1.7);
   mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
   DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
-  DrawLegend(0.22, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
 
   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
 
@@ -408,7 +570,7 @@ void GetScale(int    ch,
   // Include the peaking backgrounds
   //----------------------------------------------------------------------------
   if (includeVZ)
-    {
+     {
       n_in_est -= (n_in_wz + n_in_zz);
   
       err_in_est = sqrt(err_in_est*err_in_est + err_in_wz*err_in_wz + err_in_zz*err_in_zz);
@@ -416,7 +578,7 @@ void GetScale(int    ch,
       n_out_est -= (n_out_wz + n_out_zz);
 
       err_out_est = sqrt(err_out_est*err_out_est + err_out_wz*err_out_wz + err_out_zz*err_out_zz);
-    }
+      }
 
 
   // Compute R and the scale factor
@@ -429,24 +591,53 @@ void GetScale(int    ch,
 
   scale_value = n_in_est / n_in_dy;
   scale_error = errRatio(n_in_est, err_in_est, n_in_dy, err_in_dy);
+ 
+ if (R_study)
+  {
+   R_zz_value[cutt][ch] = n_out_zz / n_in_zz ; 
+   R_zz_error[cutt][ch] = errRatio(n_out_zz, err_out_zz, n_in_zz, err_in_zz);	
 
+   R_wz_value [cutt][ch] = n_out_wz / n_in_wz ; 
+   R_wz_error [cutt][ch] = errRatio(n_out_wz, err_out_wz, n_in_wz, err_in_wz);	
+
+  if (show_R_study_Results)
+  {
+  printf("\n");
+  printf(" R(DY) %s       %6.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,           R_dy_error);
+  printf(" R(ZZ) %s       %6.3f +- %-5.3f\n", schannel[ch].Data(), R_zz_value[cutt][ch], R_zz_error[cutt][ch]);
+  printf(" R(WZ) %s       %6.3f +- %-5.3f\n", schannel[ch].Data(), R_wz_value[cutt][ch], R_wz_error[cutt][ch]);
+ 
+  }
+	
+  }
 
   // Print the results
   //----------------------------------------------------------------------------
   if (printResults)
     {
       printf("\n");
-      printf(" k(%s)         %6.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
-      printf(" Nin(%s)       %6.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
-      printf(" Nin(em)       %6.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
-      printf(" Nin(WZ)       %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
-      printf(" Nin(ZZ)       %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
-      printf(" Nin(DY)       %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
-      printf(" Nin(est)      %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+      printf(" k(%s)       %6.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
+      printf(" Nin(%s)     %6.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
+      printf(" NoutData(%s)    %6.0f +- %-5.0f\n", schannel[ch].Data(), n_out_ll,     err_out_ll);
+      printf(" Nin(em)     %6.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
+      printf(" Nin(WZ)     %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
+      printf(" Nin(ZZ)     %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
+      printf(" Nin(DY)     %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
+      printf(" Nin(est)    %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+     printf(" Nout(est)    %6.1f +- %-5.1f\n",                     n_in_est*R_dy_value,  -999.  );
+     printf(" Nout(DY)    %6.1f +- %-5.1f\n",                       n_out_dy, err_out_dy   );
+//      printf(" Nout_up(est)    %6.1f +- %-5.1f\n",                  n_in_est*0.151,    -999.);
+//      printf(" Nout_down(est)    %6.1f +- %-5.1f\n",                n_in_est*0.122,    -999.);
+//err_out_est);
       printf("----------------------------\n");
-      printf(" R(%s,est)     %6.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
-      printf(" R(%s,DY)      %6.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
-      printf(" SF(%s,est/DY) %6.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
+
+//       printf(" Nout(est)-Nout_up(est)    %6.1f +- %-5.1f\n", n_in_est*0.179 - n_in_est*0.151, -999.); 
+//       printf(" Nout(est)-Nout_down(est)    %6.1f +- %-5.1f\n", n_in_est*0.179 - n_in_est*0.122, -999.); 
+
+      printf("----------------------------\n");
+      printf(" R(est)      %6.3f +- %-5.3f\n",                      R_data_value, R_data_error);
+      printf(" R(DY)       %6.3f +- %-5.3f\n",                      R_dy_value,   R_dy_error);
+      printf(" SF(est/DY)  %6.3f +- %-5.3f\n",                      scale_value,  scale_error);
       printf("\n");
     }
 }
@@ -468,7 +659,7 @@ float errAB2(float a, float err_a, float b, float err_b)
 //------------------------------------------------------------------------------
 float errRatio(float a, float err_a, float b, float err_b)
 {
-  float ratio = fabs(a/b);
+  float ratio =fabs(a/b);
 
   float err = ratio * sqrt((err_a*err_a)/(a*a) + (err_b*err_b)/(b*b));
 
@@ -481,15 +672,13 @@ float errRatio(float a, float err_a, float b, float err_b)
 //------------------------------------------------------------------------------
 void SetGraph(TGraphErrors* g,
 	      Color_t       color,
-	      Style_t       mstyle,
-	      Style_t       lstyle)
+	      Style_t       style)
 {
   g->SetLineColor  (color);
-  g->SetLineStyle  (lstyle);
-  g->SetLineWidth  (2);
+//  g->SetLineWidth  (2);
   g->SetMarkerColor(color);
-  g->SetMarkerStyle(mstyle);
-  g->SetMarkerSize (1.2);
+  g->SetMarkerSize (0.8);
+  g->SetMarkerStyle(style);
 }
 
 

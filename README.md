@@ -254,3 +254,43 @@ Do not forget unmounting eos once everything has been copied.
 Check that the input folder has be copied at the following gridui path.
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
+
+
+10. brilcalc
+====
+
+Log in to lxplus.
+
+    ssh -Y piedra@lxplus.cern.ch -o ServerAliveInterval=240
+
+    bash -l
+
+Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
+
+    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
+
+Do this the first time. Do it also if you want to update the brilcalc version.
+
+    pip uninstall brilws
+
+    pip install --install-option="--prefix=$HOME/.local" brilws
+
+Check your brilcalc version.
+
+    brilcalc --version
+    2.0.5
+
+Get the 2016 luminosity.
+
+    brilcalc lumi -b "STABLE BEAMS" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
+    brilcalc lumi -b "STABLE BEAMS" --hltpath "HLT_Mu8_TrkIsoVVL_v*" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
+
+Get the 2015 luminosity.
+
+    brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt
+
+    +-------+------+-------+-------+-------------------+------------------+
+    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+-------+-------+-------------------+------------------+
+    | 47    | 115  | 33208 | 33208 | 2.398             | 2.318            |
+    +-------+------+-------+-------+-------------------+------------------+
