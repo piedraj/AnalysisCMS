@@ -154,7 +154,17 @@ class HistogramReader
   void     WriteYields        (TH1*           hist,
 			       TString        label);
 
+  void     AddRocSignal       (TString filename);
 
+  void     AddRocBackground   (TString filename);
+
+  void     Roc                (TString hname,
+			       TString xtitle  = "",
+			       Int_t   npoints = 100,
+			       TString units   = "NULL",
+			       Float_t xmin    = -999,
+			       Float_t xmax    = -999);
+    
  private :
 
   Bool_t                _datanorm;
@@ -191,6 +201,9 @@ class HistogramReader
   std::vector<TString>  _signallabel;
 
   std::ofstream         _yields_table;
+
+  std::vector<TString> _roc_signals;
+  std::vector<TString> _roc_backgrounds;
 };
 
 #endif
