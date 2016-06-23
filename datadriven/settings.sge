@@ -11,7 +11,7 @@
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 pushd $HOME/CMSSW_8_0_5/src
 eval `scramv1 runtime -sh`
-scram b -j 10
+### scram b -j 10
 popd
 
 

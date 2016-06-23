@@ -3,7 +3,7 @@
 
 #include "AnalysisCMS.h"
 
-const int njetet = 3; 
+const int njetet = 8; 
 
 class AnalysisFR: public AnalysisCMS
 {
@@ -71,6 +71,16 @@ class AnalysisFR: public AnalysisCMS
   TH2D* h_Ele_tight_pt_eta_PR;
   TH2D* h_Muon_loose_pt_eta_PR;
   TH2D* h_Muon_tight_pt_eta_PR;
+
+  TH1D* h_Ele_loose_pt_PR;
+  TH1D* h_Ele_tight_pt_PR;
+  TH1D* h_Muon_loose_pt_PR;
+  TH1D* h_Muon_tight_pt_PR;
+
+  TH1D* h_Ele_loose_eta_PR;
+  TH1D* h_Ele_tight_eta_PR;
+  TH1D* h_Muon_loose_eta_PR;
+  TH1D* h_Muon_tight_eta_PR;
 
 };
 

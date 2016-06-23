@@ -16,7 +16,6 @@ void DrawLeptonPlots(
 		     float   lumi,
 		     float   jetet);
 
-
 TString         _level;
 TString         _option;
 
@@ -56,15 +55,14 @@ void runPlotter(TString level,
 
   plotter->AddData("01_Data", "data", color_Data);
 
-  plotter->AddProcess("06_TT", "tt", color_TTTo2L2Nu);
+  //  plotter->AddProcess("06_TT", "tt", color_TTTo2L2Nu);
   plotter->AddProcess("07_ZJets", "Z+jets", color_ZJets);
   plotter->AddProcess("08_WJets", "W+jets", color_WJets);
 
   gSystem->mkdir(outputdir + level, kTRUE);
 
-
-  DrawLeptonPlots("Ele",  0.00314, 35.);
-  DrawLeptonPlots("Muon", 0.19465,   20.);
+    DrawLeptonPlots("Ele",  0.02143, 35.);
+  DrawLeptonPlots("Muon", 0.06052, 20.);
  }
 
 void DrawLeptonPlots(
