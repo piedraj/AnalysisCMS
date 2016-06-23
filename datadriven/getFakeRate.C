@@ -36,7 +36,7 @@ void getFakeRate()
 
     h_Ele_FR_pt -> Divide(h_Ele_tight_pt_bin , h_Ele_loose_pt_bin , 1., 1., "");
 
-    //    h_Ele_FR_pt -> Draw();
+    h_Ele_FR_pt -> Draw();
 
     h_Ele_FR_pt -> SetLineColor(4);
     h_Ele_FR_pt -> SetAxisRange(0,1,"Y");
@@ -52,7 +52,7 @@ void getFakeRate()
     h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -1);
 
     h_Ele_FR_pt_EWK -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin, 1., 1., " ");
-    //    h_Ele_FR_pt_EWK -> Draw("same");
+    h_Ele_FR_pt_EWK -> Draw("same");
 
     h_Ele_FR_pt_EWK -> SetLineColor(2);    
 
@@ -79,7 +79,7 @@ void getFakeRate()
 
     h_Ele_FR_eta -> Divide(h_Ele_tight_eta_bin , h_Ele_loose_eta_bin , 1., 1., "");
 
-    //    h_Ele_FR_eta -> Draw();
+    h_Ele_FR_eta -> Draw();
 
     h_Ele_FR_eta -> SetLineColor(4);
     h_Ele_FR_eta -> SetAxisRange(0,1,"Y");
@@ -103,7 +103,6 @@ void getFakeRate()
 
     // Electron FR TH2D histograms
 
-    //    TFile *EleFR = new TFile("EleFR_Run2016B_25ns_jet35_21Jun.root","recreate");
     TFile *EleFR = new TFile(Form("EleFR_Run2016B_25ns_jet%0.f_21Jun.root", elejetet),"recreate");
 
     TH2D* h_Ele_loose_pt_eta_bin = (TH2D*) data -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
@@ -150,7 +149,7 @@ void getFakeRate()
 
     h_Ele_PR_pt -> Divide(h_Ele_tight_pt_PR, h_Ele_loose_pt_PR, 1., 1., "");
     h_Ele_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
-    //    h_Ele_PR_pt -> Draw();
+    h_Ele_PR_pt -> Draw();
 
     //    Ele_PR_pt -> SaveAs(Form("Ele_PR_pt_%.0fGev.png", elejetet));
 
@@ -168,13 +167,13 @@ void getFakeRate()
 
     h_Ele_PR_eta -> Divide(h_Ele_tight_eta_PR, h_Ele_loose_eta_PR, 1., 1., "");
     h_Ele_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
-    //    h_Ele_PR_eta -> Draw();
+    h_Ele_PR_eta -> Draw();
 
     TLine* line = new TLine(1.479, Ele_PR_eta -> GetUymin(), 1.479, Ele_PR_eta -> GetUymax());
   
     line -> SetLineWidth(2);
     line -> SetLineStyle(kDotted);
-    //    line -> Draw("same");
+    line -> Draw("same");
 
     //    Ele_PR_eta -> SaveAs(Form("Ele_PR_eta_%.0fGev.png", elejetet));
 
@@ -233,7 +232,7 @@ void getFakeRate()
     h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -1);
 
     h_Muon_FR_pt_EWK -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., " ");
-    //    h_Muon_FR_pt_EWK -> Draw("same");
+    h_Muon_FR_pt_EWK -> Draw("same");
 
     h_Muon_FR_pt_EWK -> SetLineColor(2);    
     
@@ -260,7 +259,7 @@ void getFakeRate()
 
     h_Muon_FR_eta -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., "");
 
-    //    h_Muon_FR_eta -> Draw();
+    h_Muon_FR_eta -> Draw();
 
     h_Muon_FR_eta -> SetLineColor(4);
     h_Muon_FR_eta -> SetAxisRange(0,1,"Y");
@@ -276,7 +275,7 @@ void getFakeRate()
     h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -1);
 
     h_Muon_FR_eta_EWK -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., " ");
-    //    h_Muon_FR_eta_EWK -> Draw("same");
+    h_Muon_FR_eta_EWK -> Draw("same");
 
     h_Muon_FR_eta_EWK -> SetLineColor(2);    
     
@@ -329,7 +328,7 @@ void getFakeRate()
 
     h_Muon_PR_pt -> Divide(h_Muon_tight_pt_PR, h_Muon_loose_pt_PR, 1., 1., "");
     h_Muon_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
-    //    h_Muon_PR_pt -> Draw();
+    h_Muon_PR_pt -> Draw();
 
     //    Muon_PR_pt -> SaveAs(Form("Muon_PR_pt_%.0fGev.png", muonjetet));
 
@@ -347,7 +346,7 @@ void getFakeRate()
 
     h_Muon_PR_eta -> Divide(h_Muon_tight_eta_PR, h_Muon_loose_eta_PR, 1., 1., "");
     h_Muon_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
-    //    h_Muon_PR_eta -> Draw();
+    h_Muon_PR_eta -> Draw();
 
     //    Muon_PR_eta -> SaveAs(Form("Muon_PR_eta_%.0fGev.png", muonjetet));
 
