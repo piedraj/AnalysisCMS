@@ -240,6 +240,7 @@ Then log in to lxplus, mount eos and choose the input folder.
     bash -l
 
     /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount eos
+
     rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/07Jun2016_spring16__mAODv2/MCl2loose__hadd__bSFLepEff__l2tight $USER@pool03.ifca.es:
 
 <!---
