@@ -922,7 +922,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   ApplyWeights();
  
-  if (_is74X) 
+  if (_is74X)
     GetMET(pfType1Met, pfType1Metphi);
   else
     GetMET(metPfType1, metPfType1Phi);
@@ -1256,7 +1256,8 @@ void AnalysisCMS::GetGenPtllWeight()
 
   // Data-driven
   //----------------------------------------------------------------------------
-  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);
+  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
+  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
 
 
   // From resummed calculations
