@@ -305,6 +305,10 @@ void AnalysisCMS::Setup(TString analysis,
   list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
   list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
 
+  list_vectors_weights_wh3l      = new TH1F("list_vectors_weights_wh3l",      "", 200, 0, 200);
+  list_vectors_weights_wh3l_ossf = new TH1F("list_vectors_weights_wh3l_ossf", "", 200, 0, 200);
+  list_vectors_weights_wh3l_sssf = new TH1F("list_vectors_weights_wh3l_sssf", "", 200, 0, 200);
+
 
   return;
 }
