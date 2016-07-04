@@ -282,10 +282,34 @@ Check your brilcalc version.
     brilcalc --version
     2.0.5
 
-Get the 2016 luminosity.
+Get the 2016 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis) TWiki one should use the following.
 
-    brilcalc lumi -b "STABLE BEAMS" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
-    brilcalc lumi -b "STABLE BEAMS" --hltpath "HLT_Mu8_TrkIsoVVL_v*" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
+    brilcalc lumi -b "STABLE BEAMS" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+
+    +-------+------+-------+-------+-------------------+------------------+
+    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+-------+-------+-------------------+------------------+
+    | 28    | 83   | 40530 | 40525 | 4.167             | 3.997            |
+    +-------+------+-------+-------+-------------------+------------------+
+    #Check JSON:
+    #(run,ls) in json but not in results: [(273158, 10)]
+
+If we want to get the luminosity for specific HLT paths.
+
+    brilcalc lumi -b "STABLE BEAMS" --hltpath "HLT_Mu8_TrkIsoVVL_v*" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+
+Get the 2016 luminosity. Taken from an email by Javier Fernandez to the latino mailing list.
+
+    brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+
+    #Summary: 
+    +-------+------+-------+-------+-------------------+------------------+
+    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+-------+-------+-------------------+------------------+
+    | 28    | 83   | 40546 | 40541 | 4.182             | 4.011            |
+    +-------+------+-------+-------+-------------------+------------------+
+    #Check JSON:
+    #(run,ls) in json but not in results: []
 
 Get the 2015 luminosity.
 
