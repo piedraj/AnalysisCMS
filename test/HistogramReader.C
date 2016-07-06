@@ -362,10 +362,14 @@ void HistogramReader::Draw(TString hname,
       theMin = 1e-5;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
-  else
+  else if (!_stackoption.Contains("nostack"))
     {
       theMax *= 1.7;
     }
+  // else 
+  //   {
+  //     theMax *= 1.7;
+  //   }
 
   hfirst->SetMinimum(theMin);
   hfirst->SetMaximum(theMax);
