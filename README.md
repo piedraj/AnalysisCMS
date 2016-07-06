@@ -239,16 +239,19 @@ Then log in to lxplus, mount eos and choose the input folder.
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
 
-    alias eosusermount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount'
-    eosusermount eos
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount eos
 
-    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/07Jun2016_Run2016B_PromptReco/l2loose16bis__hadd__l2tight $USER@pool03.ifca.es:
-    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/07Jun2016_spring16__mAODv2/MCl2loose16__hadd__l2tight     $USER@pool03.ifca.es:
+l2tight data for ICHEP 2016.
+
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight $USER@pool03.ifca.es:
+
+l2tight MC for ICHEP 2016.
+
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/07Jun2016_spring16_mAODv2/MCl2loose__hadd__bSFL2pTEff__l2tight $USER@pool03.ifca.es:
 
 Do not forget unmounting eos once everything has been copied.
 
-    alias eosuserumount='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount'
-    eosuserumount eos
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eos
     rmdir eos
 
 Check that the input folder has be copied at the following gridui path.
@@ -280,10 +283,13 @@ Check your brilcalc version.
     brilcalc --version
     2.0.5
 
-Get the 2016 luminosity.
+Get the 2016 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis) TWiki one should use the following.
 
-    brilcalc lumi -b "STABLE BEAMS" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
-    brilcalc lumi -b "STABLE BEAMS" --hltpath "HLT_Mu8_TrkIsoVVL_v*" -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
+    brilcalc lumi -b "STABLE BEAMS" \
+                  --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json \
+                  -u /fb \
+                  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt \
+                  --hltpath "HLT_Mu8_TrkIsoVVL_v*"
 
 Get the 2015 luminosity.
 
@@ -294,3 +300,4 @@ Get the 2015 luminosity.
     +-------+------+-------+-------+-------------------+------------------+
     | 47    | 115  | 33208 | 33208 | 2.398             | 2.318            |
     +-------+------+-------+-------+-------------------+------------------+
+

@@ -305,6 +305,10 @@ void AnalysisCMS::Setup(TString analysis,
   list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
   list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
 
+  list_vectors_weights_wh3l      = new TH1F("list_vectors_weights_wh3l",      "", 200, 0, 200);
+  list_vectors_weights_wh3l_ossf = new TH1F("list_vectors_weights_wh3l_ossf", "", 200, 0, 200);
+  list_vectors_weights_wh3l_sssf = new TH1F("list_vectors_weights_wh3l_sssf", "", 200, 0, 200);
+
 
   return;
 }
@@ -922,7 +926,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   ApplyWeights();
  
-  if (_is74X) 
+  if (_is74X)
     GetMET(pfType1Met, pfType1Metphi);
   else
     GetMET(metPfType1, metPfType1Phi);
@@ -1256,7 +1260,8 @@ void AnalysisCMS::GetGenPtllWeight()
 
   // Data-driven
   //----------------------------------------------------------------------------
-  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);
+  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
+  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
 
 
   // From resummed calculations
