@@ -4,14 +4,14 @@
 //#include "CutsControl.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
-#include "CutsTop.h"
-//#include "CutsStop.h"
+//#include "CutsTop.h"
+#include "CutsStop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
-//#include "BTagWorkingPoints74X.h"
-#include "BTagWorkingPoints76X.h"
+#include "BTagWorkingPoints74X.h"
+//#include "BTagWorkingPoints76X.h"
 
 
 const double lumi_fb_2016B       = 0.804;  // In progress

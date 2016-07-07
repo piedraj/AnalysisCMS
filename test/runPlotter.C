@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -42,7 +42,7 @@ void runPlotter(TString level,
   if (analysis.EqualTo("Top"))     lumi = 2.301; //fb^-1  From run 256630 to run 260627; 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2015D;
   if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_blind_dm;
-  if (analysis.EqualTo("Stop"))    lumi = lumi_fb_blind_susy;
+  if (analysis.EqualTo("Stop"))    lumi = -1; // lumi = lumi_fb_blind_susy;
 
   Bool_t scale = linY;
 
@@ -85,15 +85,20 @@ void runPlotter(TString level,
   // Get the data
   //----------------------------------------------------------------------------
   
-  plotter.AddData("01_Data", "data", color_Data);
+  //plotter.AddData("01_Data", "data", color_Data);
   /* plotter.AddData("01_Data_74", "data_74", color_Data);
    plotter.AddProcess("02_Data_76", "data_76", kRed);
   */
 
+   plotter.AddData("02_Zjet_10to50_76",    "Zjet 10to50 76",   color_Data);
+   //plotter.AddData("02_ZJets_76",    "Z+jets_76",   color_Data);
+
   // Add processes
   //----------------------------------------------------------------------------
-  
 
+   plotter.AddProcess("01_Zjet_10to50_74",    "Zjet 10to50 74",   color_ZJets);  
+
+/*
  if (analysis.EqualTo("WZ"))
     {
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
@@ -124,7 +129,7 @@ void runPlotter(TString level,
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
+ //     plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
@@ -137,7 +142,7 @@ void runPlotter(TString level,
 	}
       else
 	{
-	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+ 	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
@@ -164,20 +169,15 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Stop"))
     {
-<<<<<<< HEAD
      plotter.AddSignal("T2tb_mStop875to1125_mLSP0to475", "m_{Stop}875-1125 m_{LSP}0-475",  color_Signal);  
      plotter.AddSignal("T2tb_mStop200to625_mLSP50to475", "m_{Stop}200-625 m_{LSP}50-475",  color_Signal-4);  
      //plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
      plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-7);  
      //plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
 
-=======
-     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
-     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
-     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
->>>>>>> upstream/master
     }
 
+*/
 
   // Draw events by cut
   //----------------------------------------------------------------------------
@@ -265,14 +265,10 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
 	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-<<<<<<< HEAD
 	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitre
 
 	  if (!allplots) continue;
 
-=======
-	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
->>>>>>> upstream/master
 	  plotter.Draw(prefix + "dphijet1met"    + suffix, "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijet2met"    + suffix, "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphijj"         + suffix, "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale);
