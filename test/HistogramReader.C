@@ -1,5 +1,7 @@
 #include "HistogramReader.h"
 
+using namespace std;
+
 
 //------------------------------------------------------------------------------
 // HistogramReader
@@ -360,7 +362,7 @@ void HistogramReader::Draw(TString hname,
       theMin = 1e-5;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
-  else
+  else if (!_stackoption.Contains("nostack"))
     {
       theMax *= 1.7;
     }
@@ -1181,4 +1183,167 @@ void HistogramReader::WriteYields(TH1*    hist,
   }
 
   _yields_table << Form(" \\\\\n");
+}
+
+
+//------------------------------------------------------------------------------
+// ROC Signals
+//------------------------------------------------------------------------------
+void HistogramReader::AddRocSignal( TString filename)
+{
+  TString fullname = _inputdir + "/" + filename + ".root";
+  
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  _roc_signals.push_back(fullname);
+}
+
+
+//------------------------------------------------------------------------------
+// ROC Backgrounds
+//------------------------------------------------------------------------------
+void HistogramReader::AddRocBackground( TString filename)
+{
+  TString fullname = _inputdir + "/" + filename + ".root";
+  
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  _roc_backgrounds.push_back(fullname);
+}
+
+
+//------------------------------------------------------------------------------
+// ROC Calculation
+//------------------------------------------------------------------------------
+void HistogramReader::Roc(TString hname,
+			  TString xtitle,
+			  Int_t   npoints,
+			  TString units,
+			  Float_t xmin,
+			  Float_t xmax)
+{  
+  //Recalling Signal files and histograms
+  TFile* fSig[_roc_signals.size()];
+  TH1F*  hSig[_roc_signals.size()]; 
+  TH1F*  hSigTot; 
+  for (int i = 0; i < _roc_signals.size(); ++i){
+    fSig[i] = new TFile(_roc_signals.at(i));
+    hSig[i] = (TH1F*) fSig[i] -> Get(hname);
+  }
+
+  //Recalling Background files and histograms
+  TFile* fBkg[_roc_backgrounds.size()];
+  TH1F*  hBkg[_roc_backgrounds.size()];
+  for (int j = 0; j < _roc_backgrounds.size(); ++j){
+    fBkg[j] = new TFile(_roc_backgrounds.at(j));
+    hBkg[j] = (TH1F*) fBkg[j] -> Get(hname);
+  }
+
+  float step = (xmax - xmin) / npoints;
+
+  TGraph* rocGraph = new TGraph();
+  TGraph* significanceGraph = new TGraph();
+
+  float sigEff = 0.;
+  float bkgEff = 0.;
+  float sigYield = 0.;
+  float bkgYield = 0.;
+  float sigTot = 0.;
+  float bkgTot = 0.;
+  float significance = 0.;
+  float sigMax = 0.;
+  float xOfTheMax = 0.;
+
+  //Calculating Yields and Efficiencies
+  for (int s = 0; s < npoints; ++s){
+    for (int sig = 0; sig < _roc_signals.size(); ++sig){
+      sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
+      sigTot   += hSig[sig] -> Integral();
+    }    
+    for (int bkg = 0; bkg < _roc_backgrounds.size(); ++bkg){
+      bkgYield += hBkg[bkg] -> Integral(0., hBkg[bkg] -> FindBin(xmin + s*step));
+      bkgTot   += hBkg[bkg] -> Integral();
+    }
+    if (sigTot != 0)
+      sigEff = sigYield / sigTot;
+    if (bkgTot != 0)
+      bkgEff = bkgYield / bkgTot;
+    significance = sigYield / (sigYield + bkgYield);
+    if (significance > sigMax){
+      sigMax = significance;
+      xOfTheMax = xmin + s*step;
+    }
+    rocGraph         ->SetPoint(s, sigEff, 1 - bkgEff);
+    significanceGraph->SetPoint(s, xmin + s*step, significance);
+  }
+
+  cout<<"My guess is that you should cut at "<<xOfTheMax<<endl;
+
+  //Cosmetics  
+  // TStyle* RocStyle = new TStyle("RocStyle", "RocStyle");
+  // gStyle = RocStyle;
+
+  // RocStyle->SetTitleAlign     (   22);
+  // RocStyle->SetTitleBorderSize(    0);
+  // RocStyle->SetTitleFillColor (   10);
+  // RocStyle->SetTitleFont      (   42);
+  // RocStyle->SetTitleFontSize  (0.045);
+  // RocStyle->SetTitleX         (0.500);
+  // RocStyle->SetTitleY         (0.950);
+
+  rocGraph->SetTitle("ROC Curve - " + xtitle);
+  rocGraph->GetXaxis()->SetRangeUser(0.,1.);
+  rocGraph->GetYaxis()->SetRangeUser(0.,1.);
+  rocGraph->GetXaxis()->SetTitle("signal efficiency");
+  rocGraph->GetYaxis()->SetTitle("background rejection");
+  rocGraph->GetYaxis()->SetTitleOffset(1.4);
+
+  TString myxtitle = xtitle;
+  if (units != "NULL")
+    myxtitle = xtitle + " [" + units + "]";
+
+  significanceGraph->SetTitle("significance curve - " + xtitle);
+  significanceGraph->GetXaxis()->SetRangeUser(xmin, xmax);
+  significanceGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
+  significanceGraph->GetXaxis()->SetTitle(myxtitle);
+  significanceGraph->GetYaxis()->SetTitle("S / (S + B)");
+  significanceGraph->GetYaxis()->SetTitleOffset(1.4);
+
+  //Printing and Saving
+  TCanvas *c1 = new TCanvas("c1","c1", 550, 600);
+  c1->cd();
+  TPad* pad1 = new TPad("pad1", "pad1", 0., 0., 1.0, 1.0);
+  pad1->SetLeftMargin(0.15);
+  pad1->SetBottomMargin(0.15);
+  pad1->SetTopMargin(0.15);
+  pad1->Draw();
+  pad1->cd();
+  rocGraph->Draw("AP");
+  //c1->Print(variable + "ROC.pdf","pdf");
+  if (_savepdf) c1->SaveAs(_outputdir + hname + "_ROC.pdf");
+  if (_savepng) c1->SaveAs(_outputdir + hname + "_ROC.png");
+
+
+  //  gSystem->Exec("mv " + variable + "ROC.pdf " + );
+
+  TCanvas *c2 = new TCanvas("c2","c2", 600, 600);
+  c2->cd();
+  TPad* pad2 = new TPad("pad2", "pad2", 0., 0., 1.0, 1.0);
+  pad2->SetLeftMargin(0.15);
+  pad2->SetBottomMargin(0.15);
+  pad2->SetTopMargin(0.15);
+  pad2->Draw();
+  pad2->cd();
+  significanceGraph->Draw("AP");
+  //c2->Print(variable + "Significance.pdf","pdf");
+  if (_savepdf) c2->SaveAs(_outputdir + hname + "_Significance.pdf");
+  if (_savepng) c2->SaveAs(_outputdir + hname + "_Significance.png");
 }

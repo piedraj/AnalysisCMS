@@ -1,0 +1,18 @@
+#!/bin/sh
+#$ -P l.gaes
+#$ -S /bin/bash
+#$ -cwd
+#$ -t 1-1
+#$ -N gardener
+#$ -o jobs/job_$JOB_ID-$TASK_ID.out
+#$ -j y
+
+
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+pushd $HOME/CMSSW_8_0_5/src
+eval `scramv1 runtime -sh`
+### scram b -j 10
+popd
+
+
+`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID '{ if (NR==line) print "gardener.py fakeWeights "$1,"output_"line".root" }'`

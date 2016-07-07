@@ -190,11 +190,9 @@ public :
    Float_t         pho_phIso;
    Float_t         pho_sietaieta;
    Float_t         predmet;
-   Float_t         redmet;
-   
-   //UInt_t          run;  // 76x
-   Float_t         run;  // 74x
-   
+   Float_t         redmet;   
+   UInt_t          run;  // 76x
+ //Float_t         run;  // 74x
    UInt_t          lumi;
    UInt_t          event;
    Float_t         softbjpb;
@@ -204,6 +202,26 @@ public :
    Float_t         softssvhb;
    Float_t         softssvhe;
    Float_t         softtche;
+
+
+   // 3lepton variables
+   Float_t         njet_3l;
+   Float_t         flagOSSF;
+   Float_t         eta1;
+   Float_t         eta2;
+   Float_t         eta3;
+   Float_t         zveto_3l;
+   Float_t         pfmet;
+   Float_t         chlll;
+   Float_t         drllmin3l;
+   Float_t         mlll;
+   Float_t         mllmin3l;
+   Float_t         phi3;
+   Float_t         phi2;
+   Float_t         phi1;
+   Float_t         pt3;
+   Float_t         nbjet_3l;
+
    vector<float>   *std_vector_GEN_weight;
    vector<float>   *std_vector_LHE_weight;
    vector<float>   *std_vector_LHElepton_eta;
@@ -922,6 +940,27 @@ public :
    TBranch        *b_mtw1;   //!
    TBranch        *b_isJsonOk;   //!
 
+
+   // 3lepton variables
+   TBranch        *b_njet_3l;   //!
+   TBranch        *b_flagOSSF;   //!
+   TBranch        *b_eta1;   //!
+   TBranch        *b_eta2;   //!
+   TBranch        *b_eta3;   //!
+   TBranch        *b_zveto_3l;   //!
+   TBranch        *b_pfmet;   //!
+   TBranch        *b_chlll;   //!
+   TBranch        *b_drllmin3l;   //!
+   TBranch        *b_mlll;   //!
+   TBranch        *b_mllmin3l;   //!
+   TBranch        *b_phi3;   //!
+   TBranch        *b_phi2;   //!
+   TBranch        *b_phi1;   //!
+   TBranch        *b_pt3;   //!
+   TBranch        *b_nbjet_3l;   //!
+
+
+
    AnalysisBase(TTree *tree=0);
    virtual ~AnalysisBase();
    virtual Int_t    Cut(Long64_t entry);
@@ -1595,6 +1634,27 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
    fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
    fChain->SetBranchAddress("isJsonOk", &isJsonOk, &b_isJsonOk);
+
+
+   // 3lepton variables
+   fChain->SetBranchAddress("njet_3l", &njet_3l, &b_njet_3l);
+   fChain->SetBranchAddress("flagOSSF", &flagOSSF, &b_flagOSSF);
+   fChain->SetBranchAddress("eta1", &eta1, &b_eta1);
+   fChain->SetBranchAddress("eta2", &eta2, &b_eta2);
+   fChain->SetBranchAddress("eta3", &eta3, &b_eta3);
+   fChain->SetBranchAddress("zveto_3l", &zveto_3l, &b_zveto_3l);
+   fChain->SetBranchAddress("pfmet", &pfmet, &b_pfmet);
+   fChain->SetBranchAddress("chlll", &chlll, &b_chlll);
+   fChain->SetBranchAddress("drllmin3l", &drllmin3l, &b_drllmin3l);
+   fChain->SetBranchAddress("mlll", &mlll, &b_mlll);
+   fChain->SetBranchAddress("mllmin3l", &mllmin3l, &b_mllmin3l);
+   fChain->SetBranchAddress("phi3", &phi3, &b_phi3);
+   fChain->SetBranchAddress("phi2", &phi2, &b_phi2);
+   fChain->SetBranchAddress("phi1", &phi1, &b_phi1);
+   fChain->SetBranchAddress("pt3", &pt3, &b_pt3);
+   fChain->SetBranchAddress("nbjet_3l", &nbjet_3l, &b_nbjet_3l);
+
+
    Notify();
 }
 

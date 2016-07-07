@@ -135,7 +135,7 @@ int          cutt;
 //    mm SF(est/DY)  1.242 +- 0.079
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void Test_getDYScale(TString analysis = "Top")
+void getDYScaleV2(TString analysis = "Top")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 

@@ -43,8 +43,8 @@
 const int _nqcd = 9;
 const int _npdf = 100;
 
-const TString _gendir = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/22Jan_25ns_mAODv2_MC/MCl2loose__hadd__bSFL2pTEff__l2tight/";
-const TString _recdir = "../rootfiles/nominal/TTDM/";
+const TString _gendir = "/gpfs/csic_users/piedra/work/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/";
+const TString _recdir = "/gpfs/csic_users/piedra/work/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/";
 
 const bool _savefigures = false;
 
@@ -53,7 +53,7 @@ const bool _savefigures = false;
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString     sample,
 		   TString     label,
-		   TString     jetbin);
+		   TString     level);
 
 void DrawLatex    (Font_t      tfont,
 		   Float_t     x,
@@ -200,6 +200,32 @@ void getPdfQcd()
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
+  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l");
+  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l");
+  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l");
+  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l");
+  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l");
+  GetPdfQcdSyst("WZZ",                     "", "wh3l");
+  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l");
+
+  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l_ossf");
+  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l_ossf");
+  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l_ossf");
+  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l_ossf");
+  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l_ossf");
+  GetPdfQcdSyst("WZZ",                     "", "wh3l_ossf");
+  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l_ossf");
+
+  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l_sssf");
+  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l_sssf");
+  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l_sssf");
+  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l_sssf");
+  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l_sssf");
+  GetPdfQcdSyst("WZZ",                     "", "wh3l_sssf");
+  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l_sssf");
+
+
+  /*
   GetPdfQcdSyst("WWTo2L2Nu", "WW", "0jet");
   GetPdfQcdSyst("WWTo2L2Nu", "WW", "1jet");
 
@@ -220,6 +246,7 @@ void getPdfQcd()
 
   GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "0jet");
   GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "1jet");
+  */
 }
 
 
@@ -228,12 +255,12 @@ void getPdfQcd()
 //------------------------------------------------------------------------------
 void GetPdfQcdSyst(TString sample,
 		   TString label,
-		   TString jetbin)
+		   TString level)
 {
   TFile* file = new TFile(_recdir + sample + ".root", "read");
 
   TH1F* h_weights_gen = (TH1F*)file->Get("list_vectors_weights_gen");
-  TH1F* h_weights_rec = (TH1F*)file->Get("list_vectors_weights_" + jetbin);
+  TH1F* h_weights_rec = (TH1F*)file->Get("list_vectors_weights_" + level);
 
 
   // Produce the QCD uncertainties
@@ -263,7 +290,7 @@ void GetPdfQcdSyst(TString sample,
 
   // Draw the PDF distribution
   //----------------------------------------------------------------------------
-  TCanvas* canvas = new TCanvas(sample + "_" + jetbin, sample + "_" + jetbin);
+  TCanvas* canvas = new TCanvas(sample + "_" + level, sample + "_" + level);
 
   h_pdfratio->SetFillColor(kRed+1);
   h_pdfratio->SetFillStyle(  1001);
@@ -276,14 +303,14 @@ void GetPdfQcdSyst(TString sample,
 
   h_pdfratio->GetXaxis()->SetTitleOffset(2.0);
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, label + " " + jetbin);
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, label + " " + level);
 
   canvas->GetFrame()->DrawClone();
 
   if (_savefigures)
     {
-      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".pdf");
-      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + jetbin + ".png");
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + level + ".pdf");
+      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + level + ".png");
     }
 
 
@@ -311,7 +338,7 @@ void GetPdfQcdSyst(TString sample,
 
   // Print the final uncertainties
   //----------------------------------------------------------------------------
-  printf("\n %s %s acceptance uncertainties\n", sample.Data(), jetbin.Data());
+  printf("\n %s %s acceptance uncertainties\n", sample.Data(), level.Data());
   printf("-----------------------------------------\n");
   printf(" nominal acceptance * eff      %4.2f%%\n", 1e2 * h_weights_rec->GetBinContent(1) / h_weights_gen->GetBinContent(1));
   printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
