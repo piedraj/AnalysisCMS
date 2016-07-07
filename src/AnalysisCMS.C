@@ -12,8 +12,8 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _saveminitree = false;
   _eventdump    = false;
 
-  _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
-  _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
+ // _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
+ // _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
   _systematic_idiso_do   = (systematic.Contains("Idisodo"))   ? true : false;
   _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
   _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
@@ -338,7 +338,7 @@ void AnalysisCMS::ApplyWeights()
     {
       float sf_btag = 1.0;
 
-      if (!_is74X) {
+/*      if (!_is74X) {
 	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
 	  {
 	    sf_btag = bPogSF_CSVM;
@@ -352,7 +352,7 @@ void AnalysisCMS::ApplyWeights()
 	    if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
 	  }
       }
-
+*/
       float sf_trigger = effTrigW; // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
 

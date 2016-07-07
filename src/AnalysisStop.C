@@ -112,7 +112,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-     if (!_ismc && run > 257599) continue;  // Luminosity for any blinded analysis  
+    if (!_ismc && run > 274240) continue;  // Luminosity for any blinded analysis  
   
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -156,7 +156,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 40.);
     
     FillLevelHistograms(Stop_00_Met40, pass); 
-   
+/*   
     //-------------------------------------------------------------------------
     // Basics + _ht > 260 + Has2Leptons    
 
@@ -222,7 +222,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     bool pass3 = pass && pass_met50;
 
     FillLevelHistograms(Stop_00_Met50, pass3);
-    //--------------------------------------------------------------------------
+ */   //--------------------------------------------------------------------------
   }
 
   EndJob();
