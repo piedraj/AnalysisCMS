@@ -61,8 +61,8 @@ void runPlotter(TString level,
 
   gSystem->mkdir(outputdir + level, kTRUE);
 
-    DrawLeptonPlots("Ele",  0.02143, 35.);
-  DrawLeptonPlots("Muon", 0.06052, 20.);
+    DrawLeptonPlots("Ele",  0.02444, 35.);
+    DrawLeptonPlots("Muon", 0.07578, 25.);
  }
 
 void DrawLeptonPlots(
