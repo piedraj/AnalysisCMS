@@ -1,6 +1,8 @@
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
+bool highpt = false;
+
 int bin_zmin;
 int bin_zmax;
 
@@ -20,7 +22,7 @@ void getLumiEff()
   TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
   TFile*  wjets  = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
 
-  float muonjetet = 20.;
+  float muonjetet = 25.;
   float elejetet = 35.;
 
   TString muonsuffix = Form("_%.0fGev", muonjetet);
@@ -33,22 +35,21 @@ void getLumiEff()
   TH2D* h2_Muon_loose_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
   TH2D* h2_Muon_tight_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
 
-  /*
-  bin_ele_ptmin = -1;
-  bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
-  */
-       
-  bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
-  bin_ele_ptmax = -1;
-  
-  /*
-  bin_muon_ptmin = -1;  
-  bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
-  */
-  
-  bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
-  bin_muon_ptmax = -1;
-    
+  if (!highpt) {
+    bin_ele_ptmin = -1;
+    bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
+  } else {    
+    bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
+    bin_ele_ptmax = -1;
+  }  
+
+  if (!highpt) {
+    bin_muon_ptmin = -1;  
+    bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
+  } else {
+    bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
+    bin_muon_ptmax = -1;
+  }
 
   TH1D* h_Ele_loose_m2l_ZRegion  = (TH1D*) h2_Ele_loose_pt_m2l_ZRegion  -> ProjectionX("Ele loose m2l data",  bin_ele_ptmin,  bin_ele_ptmax);
   TH1D* h_Ele_tight_m2l_ZRegion  = (TH1D*) h2_Ele_tight_pt_m2l_ZRegion  -> ProjectionX("Ele tight m2l data",  bin_ele_ptmin,  bin_ele_ptmax);
@@ -62,22 +63,21 @@ void getLumiEff()
   TH2D* h2_Muon_loose_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
   TH2D* h2_Muon_tight_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
   
-  /*
-  bin_ele_ptmin = -1;
-  bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
-  */
+  if (!highpt) {
+    bin_ele_ptmin = -1;
+    bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
+  } else {
+    bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
+    bin_ele_ptmax = -1;
+  }
   
-  bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
-  bin_ele_ptmax = -1;
-  
-  /*
-  bin_muon_ptmin = -1;
-  bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
-  */
-  
-  bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
-  bin_muon_ptmax = -1;
-  
+  if (!highpt) {
+    bin_muon_ptmin = -1;
+    bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
+  } else {
+    bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
+    bin_muon_ptmax = -1;
+  }
 
   TH1D* h_Ele_loose_m2l_ZRegion_zjets  = (TH1D*) h2_Ele_loose_pt_m2l_ZRegion_zjets  -> ProjectionX("Ele loose m2l zjets",  bin_ele_ptmin,  bin_ele_ptmax);
   TH1D* h_Ele_tight_m2l_ZRegion_zjets  = (TH1D*) h2_Ele_tight_pt_m2l_ZRegion_zjets  -> ProjectionX("Ele tight m2l zjets",  bin_ele_ptmin,  bin_ele_ptmax);
@@ -91,22 +91,22 @@ void getLumiEff()
   TH2D* h2_Muon_loose_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
   TH2D* h2_Muon_tight_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
 
-  /*
-  bin_ele_ptmin = -1;
-  bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
-  */
-  
-  bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
-  bin_ele_ptmax = -1;
-  
-  /*   
-  bin_muon_ptmin = -1; 
-  bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
-  */
-  
-  bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
-  bin_muon_ptmax = -1;
-  
+  if (!highpt) {
+    bin_ele_ptmin = -1;
+    bin_ele_ptmax = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.) - 1;
+  } else {
+    bin_ele_ptmin = h2_Ele_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(25.);
+    bin_ele_ptmax = -1;
+  }
+
+  if (!highpt) {   
+    bin_muon_ptmin = -1; 
+    bin_muon_ptmax = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.) - 1;
+  } else {
+    bin_muon_ptmin = h2_Muon_tight_pt_m2l_ZRegion -> ProjectionY() -> FindBin(20.);
+    bin_muon_ptmax = -1;
+  }  
+
   TH1D* h_Ele_loose_m2l_ZRegion_wjets  = (TH1D*) h2_Ele_loose_pt_m2l_ZRegion_wjets  -> ProjectionX("Ele loose m2l wjets",  bin_ele_ptmin,  bin_ele_ptmax);
   TH1D* h_Ele_tight_m2l_ZRegion_wjets  = (TH1D*) h2_Ele_tight_pt_m2l_ZRegion_wjets  -> ProjectionX("Ele tight m2l wjets",  bin_ele_ptmin,  bin_ele_ptmax);
   TH1D* h_Muon_loose_m2l_ZRegion_wjets = (TH1D*) h2_Muon_loose_pt_m2l_ZRegion_wjets -> ProjectionX("Muon loose m2l wjets", bin_muon_ptmin, bin_muon_ptmax);
@@ -188,34 +188,3 @@ void getLumiEff()
   printf("Effective luminosity in muons tight = %f pb \n \n", lum_muon_tight);
 
 }
-
-
-
-
-
-
-// BACKUP
-
-  /*
-  TH1D* h_Muon_loose_m2l_ZRegion = (TH1D*) data -> Get("FR/03_ZRegion/h_Muon_loose_m2l" + muonsuffix);
-  TH1D* h_Muon_tight_m2l_ZRegion = (TH1D*) data -> Get("FR/03_ZRegion/h_Muon_tight_m2l" + muonsuffix);
-  TH1D* h_Ele_loose_m2l_ZRegion = (TH1D*) data -> Get("FR/03_ZRegion/h_Ele_loose_m2l" + elesuffix);
-  TH1D* h_Ele_tight_m2l_ZRegion = (TH1D*) data -> Get("FR/03_ZRegion/h_Ele_tight_m2l" + elesuffix);
-  
-
-  TH1D* h_Muon_loose_m2l_ZRegion_tt = (TH1D*) tt -> Get("FR/03_ZRegion/h_Muon_loose_m2l" + muonsuffix);
-  TH1D* h_Muon_tight_m2l_ZRegion_tt = (TH1D*) tt -> Get("FR/03_ZRegion/h_Muon_tight_m2l" + muonsuffix);
-  TH1D* h_Ele_loose_m2l_ZRegion_tt = (TH1D*) tt -> Get("FR/03_ZRegion/h_Ele_loose_m2l" + elesuffix);
-  TH1D* h_Ele_tight_m2l_ZRegion_tt = (TH1D*) tt -> Get("FR/03_ZRegion/h_Ele_tight_m2l" + elesuffix);
-  
-  TH1D* h_Muon_loose_m2l_ZRegion_zjets = (TH1D*) zjets -> Get("FR/03_ZRegion/h_Muon_loose_m2l" + muonsuffix);
-  TH1D* h_Muon_tight_m2l_ZRegion_zjets = (TH1D*) zjets -> Get("FR/03_ZRegion/h_Muon_tight_m2l" + muonsuffix);
-  TH1D* h_Ele_loose_m2l_ZRegion_zjets = (TH1D*) zjets -> Get("FR/03_ZRegion/h_Ele_loose_m2l" + elesuffix);
-  TH1D* h_Ele_tight_m2l_ZRegion_zjets = (TH1D*) zjets -> Get("FR/03_ZRegion/h_Ele_tight_m2l" + elesuffix);
-
-  TH1D* h_Muon_loose_m2l_ZRegion_wjets = (TH1D*) wjets -> Get("FR/03_ZRegion/h_Muon_loose_m2l" + muonsuffix);
-  TH1D* h_Muon_tight_m2l_ZRegion_wjets = (TH1D*) wjets -> Get("FR/03_ZRegion/h_Muon_tight_m2l" + muonsuffix);
-  TH1D* h_Ele_loose_m2l_ZRegion_wjets = (TH1D*) wjets -> Get("FR/03_ZRegion/h_Ele_loose_m2l" + elesuffix);
-  TH1D* h_Ele_tight_m2l_ZRegion_wjets = (TH1D*) wjets -> Get("FR/03_ZRegion/h_Ele_tight_m2l" + elesuffix);
-  */
-

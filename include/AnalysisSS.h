@@ -1,14 +1,14 @@
-#ifndef AnalysisHWW_h
-#define AnalysisHWW_h
+#ifndef AnalysisSS_h
+#define AnalysisSS_h
 
 #include "AnalysisCMS.h"
 
 
-class AnalysisHWW : public AnalysisCMS
+class AnalysisSS : public AnalysisCMS
 {
  public :
 
-  AnalysisHWW(TTree* tree, TString systematic);
+  AnalysisSS(TTree* tree, TString systematic);
 
   void FillLevelHistograms   (int     icut,
 			      bool    pass);

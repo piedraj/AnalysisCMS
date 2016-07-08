@@ -10,11 +10,10 @@ int   _Zlepton1index;
 int   _Zlepton2index;
 int   _Zdecayflavour;
 
-//const float _luminosity = 2.263;  // fb
 const float _luminosity = lumi_fb_2016B;  // fb
 
-const Double_t muonjetet[njetet] = { 10., 15., 20., 25., 30., 35., 45.}; 
-const Double_t elejetet[njetet] = {10., 15., 20.,  25., 30., 35., 45.}; 
+const Double_t muonjetet[njetet] = {10., 15., 20., 25., 30., 35., 45.}; 
+const Double_t elejetet[njetet] = {10., 15., 20., 25., 30., 35., 45.}; 
 
 const int pTbin = 8;
 const Double_t pTbins[pTbin+1] = { 10., 15., 20., 25., 30., 35.,40., 45., 50.};
@@ -61,13 +60,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "h_Muon_tight_PR", etabin, etabins);
 
   for (int i = 0; i < ncut; i++) {
+    
+    TString directory = scut[i];
 
-      TString directory = scut[i];
-
-      root_output->cd();
-      gDirectory->mkdir(directory);
-      root_output->cd(directory);
-
+    root_output->cd();
+    gDirectory->mkdir(directory);
+    root_output->cd(directory);
+      
     for (int j = 0; j < njetet; j++) {
 
       TString muonsuffix = Form("_%.0fGev", muonjetet[j]);
@@ -144,7 +143,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_channel == e && Lepton1.v.Eta() >= 2.5 ) continue;
     if (_channel == m && Lepton1.v.Eta() >= 2.4 ) continue;
-
+    
     if (AnalysisLeptons.size() >= 2) { 
 
       for (int iLep1 = 0; iLep1 < AnalysisLeptons.size(); iLep1++) {
@@ -169,7 +168,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	}
       }
     }
-
+    
     bool passTrigger = true;
 
     if (_ismc) {
@@ -186,35 +185,35 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       if (_channel == m) {
 
-	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) { //Lumi HLT_Mu8_TrkIsoVVL_v*: 1.386 pb
+	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) { //HLT_Mu8_TrkIsoVVL_v*
 
 	  passTrigger= true;
 
-	  _event_weight = (_luminosity*1000)/3.250;
+	  _event_weight = (_luminosity*1000)/4.15;
 
 	}
-	else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) { //Lumi Lumi HLT_Mu17_TrkIsoVVL_v*: 201.951 pb
+	else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) { //HLT_Mu17_TrkIsoVVL_v*
 
 	  passTrigger = true;
 
-	  _event_weight = (_luminosity*1000)/30.578;
+	  _event_weight = (_luminosity*1000)/75.78;
 
 	}
       }
 
       if (_channel == e) {
 	
-	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) { //Lumi HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 11.204 pb;
+	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) { //HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
 	  passTrigger = true;
 
-	  _event_weight = (_luminosity*1000)/1.557;
+	  _event_weight = (_luminosity*1000)/3.72;
 	  
-	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) { //Lumi HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*: 3.201
+	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) { //HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
 	  passTrigger = true;
 	  
-	  _event_weight = (_luminosity*1000)/9.672;
+	  _event_weight = (_luminosity*1000)/24.44;
 	  
 	}
       }
@@ -354,20 +353,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	} 
       }
-
-      pass = (std_vector_lepton_pt->at(2) < 10.);
-      pass &= (_m2l > 12.);
-      pass &= (_nbjet30csvv2m == 0);
-      pass &= (MET.Et() > 20.);
-      pass &= (mpmet > 20.);
-      pass &= (_pt2l > 30.);
-      pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-      pass &= (_channel == em || MET.Et() > 40.);
-      pass &= (_channel == em || mpmet > 40.);
-      pass &= (_channel == em || _pt2l > 45.);
-
-      FillLevelHistograms(FR_05_ControlRegion, i, pass);
-
     }
   }
 

@@ -9,7 +9,6 @@ enum {
   FR_02_WRegionQCD,
   FR_03_ZRegion,
   FR_04_ZRegionQCD,
-  FR_05_ControlRegion,
   ncut  // This line should be always last                                                                                                                  
 };
 
@@ -19,7 +18,6 @@ const TString scut[ncut] = {
   "FR/02_WRegionQCD",
   "FR/03_ZRegion",
   "FR/04_ZRegionQCD",
-  "FR/05_ControlRegion",
 };
 
 #endif 
