@@ -76,7 +76,7 @@ void metFilters(TString sample = "NONE",
 
   // Read
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("../rootfiles/TTDM/" + sample + ".root");
+  TFile* file = new TFile("../rootfiles/nominal/TTDM/" + sample + ".root");
 
   for (int i=0; i<nfilter; i++) {
 

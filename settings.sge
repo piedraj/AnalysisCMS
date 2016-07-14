@@ -4,12 +4,13 @@
 #$ -cwd
 #$ -t 1-1
 #$ -N AnalysisCMS
-#$ -o job_$JOB_ID-$TASK_ID.out
+#$ -o jobs/job_$JOB_ID-$TASK_ID.out
 #$ -j y
+
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scramv1 runtime -sh`
 
 stat ./runAnalysis
 
-`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID '{ if (NR==line) print "./runAnalysis "$1 }'`
+`cat $SAMPLES | grep latino | grep -v "#" | awk -v line=$SGE_TASK_ID -v syst=$SYSTEMATIC '{ if (NR==line) print "./runAnalysis "$1,syst }'`

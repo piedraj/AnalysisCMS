@@ -8,7 +8,7 @@ class AnalysisTop : public AnalysisCMS
 {
  public :
 
-  AnalysisTop(TTree* tree = 0);
+  AnalysisTop(TTree* tree, TString systematic);
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,
@@ -22,9 +22,14 @@ class AnalysisTop : public AnalysisCMS
 			      float   luminosity);
 
 
+  // Data members
+  //----------------------------------------------------------------------------
+
+
   // Analysis histograms
   //----------------------------------------------------------------------------
-  TH1D*                  h_test[nchannel][ncut][njetbin+1];
+  TH2F*                  h_2ht    [nchannel][ncut][njetbin+1];
+  TH2D*                  h_met_m2l[nchannel][ncut][njetbin+1];
 };
 
 #endif

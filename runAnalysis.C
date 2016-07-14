@@ -1,11 +1,15 @@
+//#include "src/AnalysisControl.C"
+#include "src/AnalysisFR.C"
 //#include "src/AnalysisMonoH.C"
+//#include "src/AnalysisSS.C"
+//#include "src/AnalysisStop.C"
 //#include "src/AnalysisTop.C"
 //#include "src/AnalysisTTDM.C"
 //#include "src/AnalysisWW.C"
-#include "src/AnalysisWZ.C"
+//#include "src/AnalysisWZ.C"
 
-
-void runAnalysis(TString filename)
+void runAnalysis(TString filename,
+		 TString systematic)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -13,25 +17,35 @@ void runAnalysis(TString filename)
 
   TTree* latino = (TTree*)file->Get("latino");
 
-  //  AnalysisMonoH mh(latino); mh.Loop("MonoH", filename, lumi_fb);
-  //  AnalysisTop   tt(latino); tt.Loop("Top",   filename, lumi_fb);
-  //  AnalysisTTDM  dm(latino); dm.Loop("TTDM",  filename, lumi_fb);
-  //  AnalysisWW    ww(latino); ww.Loop("WW",    filename, lumi_fb);
-  AnalysisWZ    wz(latino); wz.Loop("WZ",    filename, lumi_fb);
+  float baseW_lumi_fb = 1.0;  // baseW has been computed for 1.0 fb-1
+
+  //  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
+  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
+  //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
+  //  AnalysisSS      analysis(latino, systematic); analysis.Loop("SS",      filename, baseW_lumi_fb);
+  //  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
+  //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
+  //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
+  //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
+  //  AnalysisWZ      analysis(latino, systematic); analysis.Loop("WZ",      filename, baseW_lumi_fb);
 }
 
 
 # ifndef __CINT__
 int main(int argc, char ** argv)
 {
-  if (argc != 2)
+  if (argc != 3)
     {
-      printf("\n ./runAnalysis <filename>\n\n");
+      printf("\n ./runAnalysis <filename> <systematic>\n");
+      printf("\n The output will be saved in\n\n");
+      printf("            minitrees/<systematic>\n");
+      printf("            rootfiles/<systematic>\n");
+      printf("            txt/<systematic>\n\n");
       
       return -1;
     }
 
-  runAnalysis(argv[1]);
+  runAnalysis(argv[1], argv[2]);
 
   return 0;
 }

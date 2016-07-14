@@ -2,7 +2,7 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh ../rootfiles/TTDM"
+    echo "  ./merge.sh ../rootfiles/nominal/TTDM"
     echo "  "
     exit -1
 fi

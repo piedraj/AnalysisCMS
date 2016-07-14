@@ -1,39 +1,116 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-
+//#include "CutsControl.h"
+#include "CutsFR.h"
 //#include "CutsMonoH.h"
+//#include "CutsSS.h"
+//#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
-#include "CutsWZ.h"
+//#include "CutsWZ.h"
+
+//#include "BTagWorkingPoints74X.h"
+#include "BTagWorkingPoints76X.h"
 
 
-//const float lumi_fb = 1.269;
-//const float lumi_fb = 1.324;  // Used in the ttdm synchronization
-const float lumi_fb = 2.120;
-
+const double lumi_fb_2016        = 4.337;  // 2016B
+const double lumi_fb_blind_susy  = 0.141;  // From run 256630 to run 257599 --> Update to 2016
+const double lumi_fb_blind_dm    = 1.324;  // From run 256630 to run 258750 --> Update to 2016
+const double lumi_fb_2015D       = 2.301;  // From run 256630 to run 260627
+const double lumi_fb_2015        = 2.318;  // 2015C + 2015D
+const double lumi_error_percent  = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;
 const int Z_FLAVOUR        = 23;
 
-const float ELECTRON_MASS =  0.000511;  // [GeV]
-const float MUON_MASS     =  0.106;     // [GeV]
-const float TAU_MASS      =  1.777;     // [GeV]
-const float Z_MASS        = 91.188;     // [GeV]
+const double ELECTRON_MASS =   0.000511;  // [GeV]
+const double MUON_MASS     =   0.106;     // [GeV]
+const double TAU_MASS      =   1.777;     // [GeV]
+const double Z_MASS        =  91.188;     // [GeV]
+const double H_MASS        = 125.0;       // [GeV]
 
 
-const double metvar_bins[] = {20, 25, 30, 45, 1000};  // [GeV]
+// Systematic uncertainties
+//------------------------------------------------------------------------------
+enum {
+  nominal,
+  JESMaxdo,
+  JESMaxup,
+  LepElepTdo,
+  LepElepTup,
+  LepMupTdo,
+  LepMupTup,
+  METdo,
+  METup,
+  Btagdo,
+  Btagup,
+  Idisodo,
+  Idisoup,
+  Triggerdo,
+  Triggerup,
+  nsystematic  // This line should be always last
+};
+
+const TString ssystematic[nsystematic] = {
+  "nominal",
+  "JESMaxdo",
+  "JESMaxup",
+  "LepElepTdo",
+  "LepElepTup",
+  "LepMupTdo",
+  "LepMupTup",
+  "METdo",
+  "METup",
+  "Btagdo",
+  "Btagup",
+  "Idisodo",
+  "Idisoup",
+  "Triggerdo",
+  "Triggerup"
+};
+
+
+// Process colors
+//------------------------------------------------------------------------------
+const Color_t color_Signal    = kRed;
+const Color_t color_Fakes     = kGray+1;
+const Color_t color_Data      = kBlack;
+const Color_t color_WZTo3LNu  = kOrange-2;
+const Color_t color_ZZ        = kOrange+3;
+const Color_t color_TTTo2L2Nu = kYellow;
+const Color_t color_ST        = kYellow+3;
+const Color_t color_WW        = kAzure-9;
+const Color_t color_ZJets     = kGreen+2;
+const Color_t color_WJets     = kGray+1;
+const Color_t color_TTV       = kGreen-6;
+const Color_t color_HWW       = kAzure-7;
+const Color_t color_Wg        = kBlue;
+const Color_t color_WgStar    = kBlue+2;
+const Color_t color_Zg        = kTeal;
+const Color_t color_VVV       = kYellow-6;
+const Color_t color_HZ        = kOrange+1;
+
+
+// Branching ratios
+//------------------------------------------------------------------------------
+const double W2e     = 0.1075;
+const double W2m     = 0.1057;
+const double W2tau   = 0.1125;
+const double Z2ll    = 0.033658;
+const double WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
 
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
 
-const int nchannel = 9;
-
 enum {
+  e,
+  m,
+  l, 
   ee,
   mm,
   em,
@@ -42,10 +119,14 @@ enum {
   eem,
   emm,
   mmm,
-  lll
+  lll,
+  nchannel  // This line should be always last
 };
 
 const TString schannel[nchannel] = {
+  "e",
+  "m",
+  "l",
   "ee",
   "mm",
   "em",
@@ -58,27 +139,26 @@ const TString schannel[nchannel] = {
 };
 
 const TString lchannel[nchannel] = {
+  "e",
+  "#mu",
+  "l",
   "ee",
   "#mu#mu",
   "e#mu",
-  "all",
+  "ll",
   "eee",
   "ee#mu",
   "e#mu#mu",
   "#mu#mu#mu",
-  "all"
+  "lll"
 };
 
 
-// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation74X
-// https://twiki.cern.ch/twiki/bin/view/CMS/BtagRecommendation76X
-const float csvv2ivf_looseWP  = 0.605;  // 0.460 for 76X
-const float csvv2ivf_mediumWP = 0.89;   // 0.800 for 76X
-const float csvv2ivf_tightWP  = 0.97;   // 0.935 for 76X
-
-
-// MET filters
+// MET related
 //------------------------------------------------------------------------------
+const double metvar_bins     [] = {20, 25, 30, 45, 1000};  // [GeV]
+const double metvar_bins_draw[] = {20, 25, 30, 45,  100};  // [GeV]
+
 enum {
   HBHENoiseFilter,
   HBHENoiseIsoFilter,
@@ -90,7 +170,7 @@ enum {
   muonBadTrackFilter,
   noFilter,
   allFilter,
-  nfilter
+  nfilter  // This line should be always last
 };
 
 const TString sfilter[nfilter] = {
@@ -105,6 +185,5 @@ const TString sfilter[nfilter] = {
   "noFilter",
   "allFilter"
 };
-
 
 #endif

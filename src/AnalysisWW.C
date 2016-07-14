@@ -5,7 +5,10 @@
 //------------------------------------------------------------------------------
 // AnalysisWW
 //------------------------------------------------------------------------------
-AnalysisWW::AnalysisWW(TTree* tree) : AnalysisCMS(tree) {}
+AnalysisWW::AnalysisWW(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
+{
+  SetSaveMinitree(false);
+}
 
 
 //------------------------------------------------------------------------------
@@ -20,8 +23,6 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
-
   for (int j=0; j<ncut; j++) {
 
     for (int k=0; k<=njetbin; k++) {
@@ -42,16 +43,11 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
 	DefineHistograms(i, j, k, suffix);
 
-	h_dphilmet1[i][j][k] = new TH1D("h_dphilmet1"   + suffix, "", 1000, 0,   10);
-	h_dphilmet2[i][j][k] = new TH1D("h_dphilmet2"   + suffix, "", 1000, 0,   10);
-	h_metphi   [i][j][k] = new TH1D("h_metphi"      + suffix, "", 1000, 0,   10);
-	h_lepphi1  [i][j][k] = new TH1D("h_lepphi1"     + suffix, "", 1000, 0,   10);
-	h_lepphi2  [i][j][k] = new TH1D("h_lepphi2"     + suffix, "", 1000, 0,   10);
-	h_fullpmet [i][j][k] = new TH1D("h_fullpmet"    + suffix, "", 1000, 0, 1000);
-	h_trkpmet  [i][j][k] = new TH1D("h_trkpmet"     + suffix, "", 1000, 0, 1000);
-	h_jetpt1   [i][j][k] = new TH1D("h_jetpt1"      + suffix, "", 1000, 0, 1000);
-
-	h_metvar_m2l[i][j][k] = new TH2D("h_metvar_m2l" + suffix, "", 4, metvar_bins, 2000, 0, 200);
+	h_fullpmet[i][j][k] = new TH1D("h_fullpmet" + suffix, "", 3000, 0, 3000);
+	h_trkpmet [i][j][k] = new TH1D("h_trkpmet"  + suffix, "", 3000, 0, 3000);
+	h_htjets  [i][j][k] = new TH1D("h_htjets"   + suffix, "", 3000, 0, 3000);
+	h_htnojets[i][j][k] = new TH1D("h_htnojets" + suffix, "", 3000, 0, 3000);
+	h_mllstar [i][j][k] = new TH1D("h_mllstar"  + suffix, "", 3000, 0, 3000);
       }
     }
   }
@@ -76,12 +72,13 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!trigger) continue;
-
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 20.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
+
+    // This requirement should be applied on a loose lepton
+    if (_nlepton > 2 && AnalysisLeptons[2].v.Pt() > 10.) continue;
 
     _nelectron = 0;
 
@@ -108,27 +105,56 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 20.);
     FillLevelHistograms(WW_02_PfMet, pass);
 
-    bool pass_zwindow = (fabs(mll - Z_MASS) > 15.);
-    bool pass_zveto   = (_nelectron == 1 || _nelectron != 1 && _metvar > 45. && pass_zwindow);
+    bool pass_zwindow = (_nelectron == 1 || fabs(mll - Z_MASS) > 15.);
+    FillLevelHistograms(WW_03_ZVeto, pass && pass_zwindow);
 
-    FillLevelHistograms(WW_03_ZVeto, pass && pass_zveto);
+    pass &= ((_nelectron == 1 && _mpmet > 20) || (_nelectron != 1 && _mpmet > 45));
+    FillLevelHistograms(WW_04_MpMet, pass && pass_zwindow);
 
-    //    pass &= (_mpmet > 20.);
-    //    FillLevelHistograms(WW_04_MpMet, pass && pass_zveto);
+    pass &= (_passdphiveto);
+    FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zwindow);
 
-    //    pass &= (_passdphiveto);
-    //    FillLevelHistograms(WW_05_DPhiVeto, pass && pass_zveto);
-
-    bool pass_ptll = (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
+    bool pass_ptll = ((_nelectron == 1 && ptll > 30) || (_nelectron != 1 && ptll > 45));
 
     pass &= pass_ptll;
-    FillLevelHistograms(WW_06_Ptll, pass && pass_zveto);
+    FillLevelHistograms(WW_06_Ptll, pass && pass_zwindow);
 
-    pass &= (_nbjet15loose == 0);
-    FillLevelHistograms(WW_07_BVeto, pass && pass_zveto);
+    bool passBvetoLoose = pass && (_nbjet20cmvav2l == 0);
+    FillLevelHistograms(WW_07_BVetoLoose, passBvetoLoose && pass_zwindow);
 
-    pass &= (!_foundsoftmuon);
-    FillLevelHistograms(WW_08_SoftMu, pass && pass_zveto);
+    bool passHt = passBvetoLoose && (_ht < 200);
+    FillLevelHistograms(WW_08_Ht, passHt && pass_zwindow);
+
+    // bool passBvetoMedium = pass && (_nbjet20cmvav2m == 0);
+    // FillLevelHistograms(WW_08_BVetoMedium, passBvetoMedium && pass_zwindow);
+
+    // bool passBvetoTight = pass && (_nbjet20cmvav2t == 0);
+    // FillLevelHistograms(WW_09_BVetoTight, passBvetoTight && pass_zwindow);
+
+    // bool passBvetoLooseOld = pass && (_nbjet15csvv2l == 0);
+    // FillLevelHistograms(WW_10_BVetoLooseOld, passBvetoLooseOld && pass_zwindow);
+
+    // bool passBvetoMediumOld = pass && (_nbjet15csvv2m == 0);
+    // FillLevelHistograms(WW_11_BVetoMediumOld, passBvetoMediumOld && pass_zwindow);
+
+    // bool passBvetoTightOld = pass && (_nbjet15csvv2t == 0);
+    // FillLevelHistograms(WW_12_BVetoTightOld, passBvetoTightOld && pass_zwindow);
+
+    // bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20cmvav2l > 0);
+    // FillLevelHistograms(WW_50_TopCR, pass_topCR);
+
+    // bool pass_dyttCR = (_nbjet20cmvav2l == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
+    // FillLevelHistograms(WW_60_DYttCR, pass_dyttCR);
+
+    // //    bool pass_dyCR = (_nbjet20cmvav2l == 0 && !pass_zwindow);
+    // bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _mpmet > 20 && _nbjet20cmvav2l == 0);
+    // FillLevelHistograms(WW_70_DYCR, pass_dyCR);
+
+    // bool pass_dyCR_nompmet = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _nbjet20cmvav2l == 0);
+    // FillLevelHistograms(WW_71_DYCR_NoMpMet, pass_dyCR_nompmet);
+
+    // bool pass_dyCR_justptll = (!pass_zwindow && ptll > 45 && _nbjet20cmvav2l == 0);
+    // FillLevelHistograms(WW_72_DYCR_JustPtll, pass_dyCR_nompmet);
 
     //    bool pass_ht = (_ht < 250.);
     //    FillLevelHistograms(WW_09_Ht, pass && pass_zveto && pass_ht);
@@ -151,19 +177,19 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
 	FillLevelHistograms(WW_18_ZWindow25 + j, pass_zwindow && jet);
       }
 
-    //    pass_zwindow &= (_mpmet > 20.);
+    //    pass_zwindow &= (mpmet > 20.);
     //    FillLevelHistograms(WW_13_ZWindowMpMet, pass_zwindow);
 
     pass_zwindow &= (MET.Et() > 20.);
     FillLevelHistograms(WW_14_ZWindowPfMet, pass_zwindow);
 
-    pass_zwindow &= (_nbjet15loose == 0);
+    pass_zwindow &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(WW_15_ZWindowBVeto, pass_zwindow);
 
     pass_zwindow &= (!_foundsoftmuon);
     FillLevelHistograms(WW_16_ZWindowSoftMu, pass_zwindow);
 
-    pass_zwindow &= (_mpmet > 20.);
+    pass_zwindow &= (mpmet > 20.);
     FillLevelHistograms(WW_17_ZCR, pass_zwindow);
     */
 
@@ -182,7 +208,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     pass_monoh &= pass_drll;
     FillLevelHistograms(WW_101_MonoH_DRll, pass_monoh);
     
-    pass_monoh &= (_mpmet > 60.);
+    pass_monoh &= (mpmet > 60.);
     FillLevelHistograms(WW_102_MonoH_MpMet, pass_monoh);
     */
   }
@@ -199,16 +225,11 @@ void AnalysisWW::FillAnalysisHistograms(int ichannel,
 					int icut,
 					int ijet)
 {
-  h_dphilmet1[ichannel][icut][ijet]->Fill(dphilmet1,                    _event_weight);
-  h_dphilmet2[ichannel][icut][ijet]->Fill(dphilmet2,                    _event_weight);
-  h_metphi   [ichannel][icut][ijet]->Fill(MET.Phi(),                    _event_weight);
-  h_fullpmet [ichannel][icut][ijet]->Fill(_fullpmet,                    _event_weight);
-  h_trkpmet  [ichannel][icut][ijet]->Fill(_trkpmet,                     _event_weight);
-  h_jetpt1   [ichannel][icut][ijet]->Fill(std_vector_jet_pt->at(0),     _event_weight);
-  h_lepphi1  [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(0), _event_weight);
-  h_lepphi2  [ichannel][icut][ijet]->Fill(std_vector_lepton_phi->at(1), _event_weight);
-
-  h_metvar_m2l[ichannel][icut][ijet]->Fill(_metvar, _m2l, _event_weight);
+  h_fullpmet[ichannel][icut][ijet]->Fill(_fullpmet, _event_weight);
+  h_trkpmet [ichannel][icut][ijet]->Fill(_trkpmet,  _event_weight);
+  h_htjets  [ichannel][icut][ijet]->Fill(_htjets,   _event_weight);
+  h_htnojets[ichannel][icut][ijet]->Fill(_htnojets, _event_weight);
+  h_mllstar [ichannel][icut][ijet]->Fill(_mllstar,  _event_weight);
 
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 }

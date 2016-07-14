@@ -1,10 +1,38 @@
 #include"../include/Constants.h"
 
 
-void PrintFakes(TString schannel, TString scut);
+enum {
+  nominalYield,
+  elUp,
+  elDown,
+  elStatUp,
+  elStatDown,
+  muUp,
+  muDown,
+  muStatUp,
+  muStatDown,
+  nvalue
+};
+
+const TString svalue[nvalue] = {
+  "nominal yield",
+  "electron jet \\pt up",
+  "electron jet \\pt down",
+  "electron stat. up",
+  "electron stat. down",
+  "muon jet \\pt up",
+  "muon jet \\pt down",
+  "muon stat. up",
+  "muon stat. down"
+};
 
 
-TFile* _inputfile;
+float _value     [nchannel][nvalue];
+float _error     [nchannel][nvalue];
+float _elSyst    [nchannel];
+float _muSyst    [nchannel];
+float _elStatSyst[nchannel];
+float _muStatSyst[nchannel];
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,7 +48,7 @@ void getFakes(TString level = "NONE")
 
     for (int i=0; i<ncut; i++)
       printf(" root -l -b -q \"getFakes.C(\\\"%s\\\")\"\n", scut[i].Data());
-
+    
     printf("\n");
 
     return;
@@ -34,47 +62,56 @@ void getFakes(TString level = "NONE")
 
   if (analysis.EqualTo("NONE")) return;
 
-  _inputfile = new TFile("../rootfiles/" + analysis + "/00_Fakes.root", "read");
+  TFile* inputfile = new TFile("../rootfiles/nominal/" + analysis + "/00_Fakes.root", "read");
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
-  for (int j=firstchannel; j<=lastchannel; j++)
-    PrintFakes(level, schannel[j]);
+  
+  // Get yields
+  //----------------------------------------------------------------------------
+  for (int i=firstchannel; i<lastchannel; i++)
+    {
+      TH1D* h_fakes = (TH1D*)inputfile->Get(Form("%s/h_fakes_%s", level.Data(), schannel[i].Data()));
+      
+      for (int j=0; j<nvalue; j++)
+	{
+	  _value[i][j] = h_fakes->GetBinContent(j+1);
+	  _error[i][j] = sqrt(h_fakes->GetSumw2()->At(j+1));
+	}
+
+      _elSyst[i] = 1e2 * fabs(_value[i][elUp] - _value[i][elDown]) / (2. * _value[i][nominalYield]);
+      _muSyst[i] = 1e2 * fabs(_value[i][muUp] - _value[i][muDown]) / (2. * _value[i][nominalYield]);
+
+      _elStatSyst[i] = 1e2 * fabs(_value[i][elStatUp] - _value[i][elStatDown]) / (2. * _value[i][nominalYield]);
+      _muStatSyst[i] = 1e2 * fabs(_value[i][muStatUp] - _value[i][muStatDown]) / (2. * _value[i][nominalYield]);
+    }
+
+
+  // Print yields
+  //----------------------------------------------------------------------------
+  printf("\n");
+  
+  for (int j=0; j<nvalue; j++)
+    {
+      printf(" %22s", svalue[j].Data());
+      
+      for (int i=firstchannel; i<lastchannel; i++)
+	{
+	  printf(" & %6.2f $\\pm$ %5.2f", _value[i][j], _error[i][j]);
+	}
+
+      printf(" \\\\\n");
+    }
+
+
+  // Print systematic uncertainties
+  //----------------------------------------------------------------------------
+  printf("\\hline\n");
+  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
 
   printf("\n");
-}
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// PrintFakes
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void PrintFakes(TString scut, TString schannel)
-{
-  TH1D* h_fakes = (TH1D*)_inputfile->Get(Form("%s/h_fakes_%s", scut.Data(), schannel.Data()));
-
-  float nominal  = h_fakes->GetBinContent(1);
-  float up       = h_fakes->GetBinContent(2);
-  float down     = h_fakes->GetBinContent(3);
-  float statUp   = h_fakes->GetBinContent(4);
-  float statDown = h_fakes->GetBinContent(5);
-
-  float nominalError  = sqrt(h_fakes->GetSumw2()->At(1));
-  float upError       = sqrt(h_fakes->GetSumw2()->At(2));
-  float downError     = sqrt(h_fakes->GetSumw2()->At(3));
-  float statUpError   = sqrt(h_fakes->GetSumw2()->At(4));
-  float statDownError = sqrt(h_fakes->GetSumw2()->At(5));
-
-  // This error estimation might be too large
-  float delta      = sqrt(pow((up-down),2) + pow((statUp-statDown),2));
-  float systematic = 1e2 * delta / nominal;
-
-  printf("\n %s (%s)\n", scut.Data(), schannel.Data());
-  printf("-----------------------------\n");
-  printf("    nominal yield: %.2f +- %.2f\n", nominal,  nominalError);
-  printf("      jet pt   up: %.2f +- %.2f\n", up,       upError);
-  printf("      jet pt down: %.2f +- %.2f\n", down,     downError);
-  printf("        stat   up: %.2f +- %.2f\n", statUp,   statUpError);
-  printf("        stat down: %.2f +- %.2f\n", statDown, statDownError);
-  printf(" systematic error: %.2f%%\n", systematic); 
 }
