@@ -172,12 +172,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       _event_weight = baseW * puW * GEN_weight_SM / abs(GEN_weight_SM);
 
-
-      // WARNING temporary patch
-      if (filename.Contains("DYJetsToLL_M-10to50")) _event_weight = 0.829752445221 * puW * GEN_weight_SM / abs(GEN_weight_SM);
-      if (filename.Contains("DYJetsToLL_M-50"))     _event_weight = 0.318902641535 * puW * GEN_weight_SM / abs(GEN_weight_SM);
-
-
     } else {
 
       _event_weight = 1.0;
