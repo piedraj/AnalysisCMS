@@ -1,12 +1,18 @@
 //#include "src/AnalysisControl.C"
+<<<<<<< HEAD
 //#include "src/AnalysisFR.C"
 //#include "src/AnalysisMonoH.C"
 #include "src/AnalysisStop.C"
+=======
+#include "src/AnalysisFR.C"
+//#include "src/AnalysisMonoH.C"
+//#include "src/AnalysisSS.C"
+//#include "src/AnalysisStop.C"
+>>>>>>> upstream/master
 //#include "src/AnalysisTop.C"
 //#include "src/AnalysisTTDM.C"
 //#include "src/AnalysisWW.C"
 //#include "src/AnalysisWZ.C"
-
 
 void runAnalysis(TString filename,
 		 TString systematic)

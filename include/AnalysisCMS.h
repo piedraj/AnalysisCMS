@@ -303,6 +303,7 @@ class AnalysisCMS : public AnalysisBase
   TH1F*                  list_vectors_weights_gen;
   TH1F*                  list_vectors_weights_0jet;
   TH1F*                  list_vectors_weights_1jet;
+  TH1F*                  list_vectors_weights_2jet;
   TH1F*                  list_vectors_weights_wh3l;
   TH1F*                  list_vectors_weights_wh3l_ossf;
   TH1F*                  list_vectors_weights_wh3l_sssf;

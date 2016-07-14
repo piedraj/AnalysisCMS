@@ -86,7 +86,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
 
     pass_2l &= (Lepton1.v.Pt() > 20);
-    pass_2l &= (Lepton2.v.Pt() > 20);
+    pass_2l &= (Lepton2.v.Pt() > 10);
 
     bool pass;
 
@@ -131,9 +131,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
+    pass &= (abs(std_vector_lepton_flavour->at(1)) == 13 || std_vector_lepton_pt->at(1) > 13.);
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_m2l > 12.);
-    pass &= (_nbjet30csvv2m == 0);
+    pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
     pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
@@ -146,6 +147,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
+    if (pass && _njet >= 2 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_2jet);
 
 
     // WH

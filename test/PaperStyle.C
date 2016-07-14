@@ -1,3 +1,11 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// CMS Publications Committee: New CMS standards for plot decorations
+// https://ghm.web.cern.ch/ghm/plots/
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 void PaperStyle()
 {
   TStyle* PaperStyle = new TStyle("PaperStyle", "PaperStyle");

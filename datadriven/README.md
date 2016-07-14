@@ -10,13 +10,39 @@ for the mm channel) is computed with these two equations.
     k_ee  = 0.5 * sqrt(n_ee / n_mm);
     scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 
+
+# AnalysisFR
+
+This macro creates the histograms needed to add the fake weights to the latino
+trees afterwards. It also creates 5 control regions to be able to calculate from
+data the effective luminosity associated to the Z+jets process (luminosity
+calculated in the ZRegion and then applied in the ZRegionQCD) and to 
+the W+jets process (luminosity calculated in the WRegion and then applied in the 
+WRegionQCD). The region defined to calculate the fakes is the QCDRegion.
+
+This macro creates 1D and 2D histograms that can be read by getLumiEff.C and
+getFakeRate.C. It creates sets of histograms for different jet energies.
+
+Two different ways are possible to use this macro. You can either run the code
+once without any data weight, and then use the getLumiEff.C macro to determine
+the effective luminosity from the Z-peak, and then run once again AnalysisFR.C
+with these weights; or you can run the code only once using the luminosity of
+the triggers given by brilcalc directly. 
+
+
 # getLumiEff.C
 
-This macro is an easy way to calculate the effective luminosity without needing to
-use brilcalc. It calculates the number of electrons and muons (loose and tight) in
-the Z window for different processes (data, Z+jets, W+jets, tt) and computes the
-effective luminosity in each case. This effective luminosity can then be 
-used in AnalysisFR.C instead of the brilcalc values, to weight the data or the MC.
+This macro is an easy way to calculate the effective luminosity without needing
+to use brilcalc's results. It calculates the number of electrons and muons
+(loose and tight) in the Z window for different processes (data, Z+jets, W+jets)
+and computes the effective luminosity in each case. This effective luminosity
+can then be used in AnalysisFR.C instead of the brilcalc values, to weight the
+data or the MC.
+
+For now, this macro is designed to be working for an analysis of two triggers,
+one at low pt and another one at high pt. To get the effective luminosity of a
+given trigger, just change the value of the boolean highpt to true, or false. 
+
 
 # getFakeRate.C
 
@@ -26,14 +52,19 @@ representing the fake and prompt rates with respect to the pt or the eta value o
 leptons, and some rootfiles with 2D histograms that can be used directly within the 
 latino framework in order to compute the fake weights to include to the data. 
 
-The fake rate is calculated and represented for different jet pt values, and on the
-different histograms created, an electroweak correction (given by the Z+jets, W+jets
-and tt processes) is applied. 
+Two main ways to use the code are possible. You can first set the boolean called draw to 
+true, change the value of elejetet and muonjetet as required and see the output of the code 
+directly on the screen (all the 1D histograms will pop up directly and display the results
+with and without electroweak correction). You can also set draw to false and then, the 
+result of the execution of the code will be a set of rootfiles corresponding to the FR 
+and the PR of electrons and muons, for all the different jet energies used as input.
+
 
 # Apply the FR weights to the data
 
 It is now possible to submit to gridui the gardener jobs that apply the fake weights
 to the data. To do so, first download the latino code to your gridui account and
-run the command below.
+then run the command below.
 
     ./submit-jobs.sh
+
