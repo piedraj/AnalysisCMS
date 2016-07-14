@@ -10,7 +10,7 @@ void getFakeRate()
     float elejetet;
     float muonjetet;
 
-    bool draw = false;
+    bool draw = true;
     bool savepng = false;
 
     if (draw) {
