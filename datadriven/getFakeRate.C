@@ -55,7 +55,7 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Ele_FR_pt = (TH1D*) h_Ele_tight_pt_bin -> Clone();
     TH1D* h_Ele_FR_pt_EWK = (TH1D*) h_Ele_tight_pt_bin -> Clone();
       
-    if(draw) {
+    if (draw) {
 
       TCanvas* Ele_pt = new TCanvas("Ele pt", "Ele pt", 450, 550);
   
@@ -421,9 +421,5 @@ void getFakeRate(bool draw    = true,
     Muon_PR_pT_eta -> Write("h_Muon_signal_pt_eta_bin");
 
     MuPR -> Close();
-
-    }
-
+  }
 }
-
-

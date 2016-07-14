@@ -303,7 +303,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       pass =  (MET.Et() > 20.);
       pass &= (_mtw > 20.);
       pass &= (_nlepton >= 2);
-      pass &= _m2l > 0;
+      pass &= (_m2l > 0);
 
       if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
@@ -331,7 +331,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       pass =  (MET.Et() < 20.);
       pass &= (_mtw < 20.);
       pass &= (_nlepton >= 2);
-      pass &= _m2l > 0;
+      pass &= (_m2l > 0);
       
       if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
@@ -380,7 +380,7 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
     if (_channel == m) {
 
       h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
       h_Muon_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
      
       h_Muon_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
@@ -389,7 +389,7 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
     } else if (_channel == e) {
 
       h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
       h_Ele_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
       
       h_Ele_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
@@ -402,7 +402,7 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
     if (_channel == m) {
 
       h_Muon_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Muon_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
       h_Muon_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
       
       h_Muon_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
@@ -411,7 +411,7 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
     } else if (_channel == e) {
 
       h_Ele_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Ele_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
       h_Ele_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
 	
       h_Ele_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
