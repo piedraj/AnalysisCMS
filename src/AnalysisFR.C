@@ -464,13 +464,4 @@ bool AnalysisFR::PassJetSelection()
 
   return pass;
 }
-
-
-/*
-
-  On May 12th, 2016 we checked with brillcalc that the luminosities for the used triggers are correct.
-  This test was performed with brillcalc version 10.7. For each trigger the following line was executed:
-
-  brilcalc lumi --hltpath HLT_Mu8_TrkIsoVVL_v* -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt
-
-*/
+k
