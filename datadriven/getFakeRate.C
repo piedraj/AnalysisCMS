@@ -13,7 +13,7 @@ TFile* zjets;
 
 
 void getFakeRate(bool draw    = true,
-		 bool savepng = false)
+		 bool savepng = true)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
