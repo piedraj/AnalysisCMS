@@ -1,41 +1,44 @@
-void getFakeRate()
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// getFakeRate
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+const Double_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
+const Double_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
+
+
+TFile* data;
+TFile* wjets;
+TFile* zjets;
+
+
+void getFakeRate(bool draw    = true,
+		 bool savepng = false)
 {
-  
-    gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-    int njetet;
-    const Double_t muonjetarray[8] = {10., 15., 20., 25., 30., 35., 45.};
-    const Double_t elejetarray[8] = {10., 15., 20., 25., 30., 35., 45.};
+  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root",  "read");
+  wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root", "read");
+  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root", "read");
 
-    float elejetet;
-    float muonjetet;
+  float elejetet;
+  float muonjetet;
 
-    bool draw = false;
-    bool savepng = false;
+  int njetet = (draw) ? 1 : 8;
+
+  for (int i=0; i<njetet; i++) {
 
     if (draw) {
-      njetet = 1;
+      elejetet  = elejetarray [5];
+      muonjetet = muonjetarray[3];
     } else {
-      njetet = 8;
+      elejetet  = elejetarray [i];
+      muonjetet = muonjetarray[i];
     }
 
-    for (int i=0; i < njetet; i++) {
 
-      if(draw) {
-	elejetet = 35.;
-	muonjetet = 25.;
-      } else {
-	elejetet = elejetarray[i];
-	muonjetet = muonjetarray[i];
-      }
-
-    TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
-    TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
-    TFile*  wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
-
-    // ===================================================================================================
-    // Electron Fake Rate
-    // ===================================================================================================
+    // Electron fake rate
+    //--------------------------------------------------------------------------
 
     // Electron pt    
     TString elesuffix  = Form("_%.0fGev", elejetet);
