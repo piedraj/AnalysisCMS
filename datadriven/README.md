@@ -14,18 +14,15 @@ for the mm channel) is computed with these two equations.
 # AnalysisFR
 
 This macro creates the histograms needed to add the fake weights to the latino
-trees afterwards. It also creates 5 control regions to be able to calculate from
-data the effective luminosity associated to the Z+jets process (luminosity
+trees afterwards. It also creates several control regions to be able to calculate
+from data the effective luminosity associated to the Z+jets process (luminosity
 calculated in the ZRegion and then applied in the ZRegionQCD) and to 
 the W+jets process (luminosity calculated in the WRegion and then applied in the 
 WRegionQCD). The region defined to calculate the fakes is the QCDRegion.
 
-This macro creates 1D and 2D histograms that can be read by getLumiEff.C and
-getFakeRate.C. It creates sets of histograms for different jet energies.
-
 Two different ways are possible to use this macro. You can either run the code
-once without any data weight, and then use the getLumiEff.C macro to determine
-the effective luminosity from the Z-peak, and then run once again AnalysisFR.C
+once without any data weight, then use the getLumiEff.C macro to determine the
+effective luminosity from the Z-peak, and then run once again AnalysisFR.C
 with these weights; or you can run the code only once using the luminosity of
 the triggers given by brilcalc directly. 
 
