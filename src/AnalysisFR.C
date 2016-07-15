@@ -164,6 +164,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       _event_weight = baseW * puW * GEN_weight_SM / abs(GEN_weight_SM);
 
+      if (_sample.Contains("DYJetsToLL")) _event_weight *= (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)));
+
       passTrigger = true;
 
     } else {

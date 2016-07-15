@@ -196,9 +196,9 @@ void getLumiEff()
   printf("Effective luminosity in muons     tight = %f pb\n", 1e3 * lum_muon_tight);
   printf("\n");
 
-  printf(" Z-peak data/MC in electrons loose = %.2f\n", lum_ele_loose);
-  printf(" Z-peak data/MC in electrons tight = %.2f\n", lum_ele_tight);
-  printf(" Z-peak data/MC in muons     loose = %.2f\n", lum_muon_loose);
-  printf(" Z-peak data/MC in muons     tight = %.2f\n", lum_muon_tight);
+  printf(" Z-peak data/MC in electrons loose = %.3f\n", lum_ele_loose);
+  printf(" Z-peak data/MC in electrons tight = %.3f\n", lum_ele_tight);
+  printf(" Z-peak data/MC in muons     loose = %.3f\n", lum_muon_loose);
+  printf(" Z-peak data/MC in muons     tight = %.3f\n", lum_muon_tight);
   printf("\n");
 }
