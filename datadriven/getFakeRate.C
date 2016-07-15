@@ -13,7 +13,7 @@ TFile* zjets;
 
 
 bool Wsubtraction = true;
-bool Zsubtraction = false;
+bool Zsubtraction = true;
 
 
 void getFakeRate(bool draw    = true,
