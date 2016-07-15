@@ -443,12 +443,45 @@ bool AnalysisFR::PassJetSelection()
 }
 
 
-// [2016/07/14]
+/*
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+   [2016/07/14]
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+   +-----------------------+-------+------+-------+-------------------+------------------+
+   | hltpath               | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +----------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29156 | 4.281             | 4.088            |
+   | HLT_Mu8_TrkIsoVVL_v4 | 5     | 18   | 11319 | 0.322             | 0.303            |
+   +----------------------+-------+------+-------+-------------------+------------------+
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+   +-----------------------+-------+------+-------+-------------------+------------------+
+   | hltpath               | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +-----------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29156 | 55.363            | 52.949           |
+   | HLT_Mu17_TrkIsoVVL_v3 | 5     | 18   | 11319 | 39.864            | 38.273           |
+   +-----------------------+-------+------+-------+-------------------+------------------+
+
+
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29156 | 3.173             | 3.047            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7536  | 0.674             | 0.646            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 2     | 6    | 3783  | 0.290             | 0.279            |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+
+
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29156 | 17.520            | 16.781           |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7536  | 3.242             | 3.110            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 2     | 6    | 3783  | 1.325             | 1.274            |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+
+*/

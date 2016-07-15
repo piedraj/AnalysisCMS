@@ -6,7 +6,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const int njetet = 8; 
+const int njetet = 7; 
 const Double_t muonjetet[njetet] = {10, 15, 20, 25, 30, 35, 45}; 
 const Double_t elejetet [njetet] = {10, 15, 20, 25, 30, 35, 45}; 
 
@@ -54,60 +54,58 @@ class AnalysisFR: public AnalysisCMS
   // Analysis histograms
   //----------------------------------------------------------------------------
   TH2D* h_Muon_loose_pt_eta_bin[ncut][njetet];
+  TH1D* h_Muon_loose_pt_bin    [ncut][njetet];
+  TH1D* h_Muon_loose_eta_bin   [ncut][njetet];
+
   TH2D* h_Muon_tight_pt_eta_bin[ncut][njetet];
-
-  TH1D* h_Muon_loose_pt_bin[ncut][njetet];
-  TH1D* h_Muon_tight_pt_bin[ncut][njetet];
-
-  TH1D* h_Muon_loose_eta_bin[ncut][njetet];
-  TH1D* h_Muon_tight_eta_bin[ncut][njetet];
+  TH1D* h_Muon_tight_pt_bin    [ncut][njetet];
+  TH1D* h_Muon_tight_eta_bin   [ncut][njetet];
 
   TH2D* h_Ele_loose_pt_eta_bin[ncut][njetet];
+  TH1D* h_Ele_loose_pt_bin    [ncut][njetet];
+  TH1D* h_Ele_loose_eta_bin   [ncut][njetet];
+
   TH2D* h_Ele_tight_pt_eta_bin[ncut][njetet];
-
-  TH1D* h_Ele_loose_pt_bin[ncut][njetet];
-  TH1D* h_Ele_tight_pt_bin[ncut][njetet];
-
-  TH1D* h_Ele_loose_eta_bin[ncut][njetet];
-  TH1D* h_Ele_tight_eta_bin[ncut][njetet];
+  TH1D* h_Ele_tight_pt_bin    [ncut][njetet];
+  TH1D* h_Ele_tight_eta_bin   [ncut][njetet];
 
   TH1D* h_Muon_loose_pt[ncut][njetet];
   TH1D* h_Muon_tight_pt[ncut][njetet];
-  TH1D* h_Ele_loose_pt[ncut][njetet];
-  TH1D* h_Ele_tight_pt[ncut][njetet];
+  TH1D* h_Ele_loose_pt [ncut][njetet];
+  TH1D* h_Ele_tight_pt [ncut][njetet];
 
   TH1D* h_Muon_loose_mtw[ncut][njetet];
   TH1D* h_Muon_tight_mtw[ncut][njetet];
-  TH1D* h_Ele_loose_mtw[ncut][njetet];
-  TH1D* h_Ele_tight_mtw[ncut][njetet];
+  TH1D* h_Ele_loose_mtw [ncut][njetet];
+  TH1D* h_Ele_tight_mtw [ncut][njetet];
 
   TH1D* h_Muon_loose_m2l[ncut][njetet];
   TH1D* h_Muon_tight_m2l[ncut][njetet];
-  TH1D* h_Ele_loose_m2l[ncut][njetet];
-  TH1D* h_Ele_tight_m2l[ncut][njetet];
+  TH1D* h_Ele_loose_m2l [ncut][njetet];
+  TH1D* h_Ele_tight_m2l [ncut][njetet];
 
   TH2D* h_Muon_loose_pt_m2l[ncut][njetet];
   TH2D* h_Muon_tight_pt_m2l[ncut][njetet];
-  TH2D* h_Ele_loose_pt_m2l[ncut][njetet];
-  TH2D* h_Ele_tight_pt_m2l[ncut][njetet];
+  TH2D* h_Ele_loose_pt_m2l [ncut][njetet];
+  TH2D* h_Ele_tight_pt_m2l [ncut][njetet];
 
 
   // Prompt rate histograms
   //----------------------------------------------------------------------------
-  TH2D* h_Ele_loose_pt_eta_PR;
-  TH2D* h_Ele_tight_pt_eta_PR;
   TH2D* h_Muon_loose_pt_eta_PR;
   TH2D* h_Muon_tight_pt_eta_PR;
+  TH2D* h_Ele_loose_pt_eta_PR;
+  TH2D* h_Ele_tight_pt_eta_PR;
 
-  TH1D* h_Ele_loose_pt_PR;
-  TH1D* h_Ele_tight_pt_PR;
   TH1D* h_Muon_loose_pt_PR;
   TH1D* h_Muon_tight_pt_PR;
+  TH1D* h_Ele_loose_pt_PR;
+  TH1D* h_Ele_tight_pt_PR;
 
-  TH1D* h_Ele_loose_eta_PR;
-  TH1D* h_Ele_tight_eta_PR;
   TH1D* h_Muon_loose_eta_PR;
   TH1D* h_Muon_tight_eta_PR;
+  TH1D* h_Ele_loose_eta_PR;
+  TH1D* h_Ele_tight_eta_PR;
 };
 
 #endif 
