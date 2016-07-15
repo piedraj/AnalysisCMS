@@ -175,7 +175,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       // Muons
       //------------------------------------------------------------------------
-      if (_channel == m) {
+      if (_sample.Contains("DoubleMuon") && _channel == m) {
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
@@ -194,7 +194,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       // Electrons
       //------------------------------------------------------------------------
-      if (_channel == e) {
+      if (_sample.Contains("DoubleEG") && _channel == e) {
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
@@ -214,7 +214,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Prompt rate from MC
     //--------------------------------------------------------------------------
-    if (filename.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
+    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
       
       float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
       float Zlep2eta = AnalysisLeptons[_Zlepton2index].v.Eta();

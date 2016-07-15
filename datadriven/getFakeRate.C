@@ -12,6 +12,10 @@ TFile* wjets;
 TFile* zjets;
 
 
+bool Wsubtraction = true;
+bool Zsubtraction = false;
+
+
 void getFakeRate(bool draw    = true,
 		 bool savepng = true)
 {
@@ -39,9 +43,7 @@ void getFakeRate(bool draw    = true,
 
     // Electron fake rate
     //--------------------------------------------------------------------------
-
-    // Electron pt    
-    TString elesuffix  = Form("_%.0fGev", elejetet);
+    TString elesuffix = Form("_%.0fGev", elejetet);
 
     TH1D* h_Ele_loose_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_loose_pt_bin" + elesuffix);
     TH1D* h_Ele_tight_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Ele_tight_pt_bin" + elesuffix);
@@ -52,8 +54,8 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Ele_loose_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_loose_pt_bin" + elesuffix);
     TH1D* h_Ele_tight_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_tight_pt_bin" + elesuffix);
 
-    TH1D* h_Ele_FR_pt = (TH1D*) h_Ele_tight_pt_bin -> Clone();
-    TH1D* h_Ele_FR_pt_EWK = (TH1D*) h_Ele_tight_pt_bin -> Clone();
+    TH1D* h_Ele_FR_pt     = (TH1D*) h_Ele_tight_pt_bin -> Clone("h_Ele_FR_pt");
+    TH1D* h_Ele_FR_pt_EWK = (TH1D*) h_Ele_tight_pt_bin -> Clone("h_Ele_FR_pt_EWK");
       
     if (draw) {
 
@@ -62,24 +64,24 @@ void getFakeRate(bool draw    = true,
       Ele_pt -> SetGridx(1);
       Ele_pt -> SetGridy(1);
 
-      h_Ele_FR_pt -> Divide(h_Ele_tight_pt_bin , h_Ele_loose_pt_bin , 1., 1., "");
+      h_Ele_FR_pt -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin);
 
       h_Ele_FR_pt -> Draw();
 
       h_Ele_FR_pt -> SetLineColor(4);
-      h_Ele_FR_pt -> SetAxisRange(0,1,"Y");
+      h_Ele_FR_pt -> SetAxisRange(0, 1, "Y");
 
       h_Ele_FR_pt -> SetTitle("Electron fake rate");
       h_Ele_FR_pt -> SetXTitle("pt");
       h_Ele_FR_pt -> SetYTitle("FR");
 
-      h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -1);
-      h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -1);
+      if (Wsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -1);
 
-      h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_zjets, -1);
-      h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_zjets, -1);
+      if (Wsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -1);
 
-      h_Ele_FR_pt_EWK -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin, 1., 1., " ");
+      h_Ele_FR_pt_EWK -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin);
       h_Ele_FR_pt_EWK -> Draw("same");
     
       h_Ele_FR_pt_EWK -> SetLineColor(2);    
@@ -99,8 +101,8 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Ele_loose_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_loose_eta_bin" + elesuffix);
     TH1D* h_Ele_tight_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Ele_tight_eta_bin" + elesuffix);
 
-    TH1D* h_Ele_FR_eta = (TH1D*) h_Ele_tight_eta_bin -> Clone();
-    TH1D* h_Ele_FR_eta_EWK = (TH1D*) h_Ele_tight_eta_bin -> Clone();
+    TH1D* h_Ele_FR_eta     = (TH1D*) h_Ele_tight_eta_bin -> Clone("h_Ele_FR_eta");
+    TH1D* h_Ele_FR_eta_EWK = (TH1D*) h_Ele_tight_eta_bin -> Clone("h_Ele_FR_eta_EWK");
 
     if (draw) {
 
@@ -109,7 +111,7 @@ void getFakeRate(bool draw    = true,
       Ele_eta -> SetGridx(1);
       Ele_eta -> SetGridy(1);
 
-      h_Ele_FR_eta -> Divide(h_Ele_tight_eta_bin , h_Ele_loose_eta_bin , 1., 1., "");
+      h_Ele_FR_eta -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin);
 
       h_Ele_FR_eta -> Draw();
 
@@ -120,18 +122,18 @@ void getFakeRate(bool draw    = true,
       h_Ele_FR_eta -> SetXTitle("eta");
       h_Ele_FR_eta -> SetYTitle("FR");
 
-      h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -1);
-      h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -1);
+      if (Wsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -1);
 
-      h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_zjets, -1);
-      h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_zjets, -1);
+      if (Wsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_wjets, -1);
 
-      h_Ele_FR_eta_EWK -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin, 1., 1., " ");
+      h_Ele_FR_eta_EWK -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin);
       h_Ele_FR_eta_EWK -> Draw("same");
 
       h_Ele_FR_eta_EWK -> SetLineColor(2);    
 
-      if(savepng) Ele_eta -> SaveAs(Form("Ele_FR_eta_%.0fGev.png", elejetet));
+      if (savepng) Ele_eta -> SaveAs(Form("Ele_FR_eta_%.0fGev.png", elejetet));
 
     }
 
@@ -148,20 +150,20 @@ void getFakeRate(bool draw    = true,
     TH2D* h_Ele_loose_pt_eta_bin_wjets = (TH2D*) wjets -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
     TH2D* h_Ele_tight_pt_eta_bin_wjets = (TH2D*) wjets -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin" + elesuffix);
 
-    TH2D* FR_pT_eta         = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone();
-    TH2D* FR_pT_eta_EWKcorr = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone();
+    TH2D* h_Ele_FR_pT_eta         = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone("h_Ele_FR_pT_eta");
+    TH2D* h_Ele_FR_pT_eta_EWKcorr = (TH2D*) h_Ele_tight_pt_eta_bin -> Clone("h_Ele_FR_pT_eta_EWKcorr");
 
-    FR_pT_eta -> Divide(h_Ele_tight_pt_eta_bin , h_Ele_loose_pt_eta_bin , 1., 1., "");
-    FR_pT_eta -> Write("FR_pT_eta");
+    h_Ele_FR_pT_eta -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin);
+    h_Ele_FR_pT_eta -> Write("FR_pT_eta");
 
-    h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_zjets, -1);
-    h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_zjets, -1);
+    if (Wsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_wjets, -1);
 
-    h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_zjets, -1);
-    h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_zjets, -1);
+    if (Wsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_wjets, -1);
 
-    FR_pT_eta_EWKcorr -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin, 1., 1., " ");
-    FR_pT_eta_EWKcorr -> Write("FR_pT_eta_EWKcorr");
+    h_Ele_FR_pT_eta_EWKcorr -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin);
+    h_Ele_FR_pT_eta_EWKcorr -> Write("FR_pT_eta_EWKcorr");
 
     EleFR -> Close();
 
@@ -177,13 +179,13 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Ele_loose_pt_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_PR");
       TH1D* h_Ele_tight_pt_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_PR");
 
-      TH1D* h_Ele_PR_pt = (TH1D*) h_Ele_tight_pt_PR -> Clone();
+      TH1D* h_Ele_PR_pt = (TH1D*) h_Ele_tight_pt_PR -> Clone("h_Ele_PR_pt");
     
       h_Ele_PR_pt -> SetTitle("Electron prompt rate");
       h_Ele_PR_pt -> SetXTitle("pt");
       h_Ele_PR_pt -> SetYTitle("PR");
       
-      h_Ele_PR_pt -> Divide(h_Ele_tight_pt_PR, h_Ele_loose_pt_PR, 1., 1., "");
+      h_Ele_PR_pt -> Divide(h_Ele_tight_pt_PR, h_Ele_loose_pt_PR);
       h_Ele_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Ele_PR_pt -> Draw();
       
@@ -199,13 +201,13 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Ele_loose_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_eta_PR");
       TH1D* h_Ele_tight_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_eta_PR");
     
-      TH1D* h_Ele_PR_eta = (TH1D*) h_Ele_tight_eta_PR -> Clone();
+      TH1D* h_Ele_PR_eta = (TH1D*) h_Ele_tight_eta_PR -> Clone("h_Ele_PR_eta");
 
       h_Ele_PR_eta -> SetTitle("Electron prompt rate");
       h_Ele_PR_eta -> SetXTitle("eta");
       h_Ele_PR_eta -> SetYTitle("PR");
       
-      h_Ele_PR_eta -> Divide(h_Ele_tight_eta_PR, h_Ele_loose_eta_PR, 1., 1., "");
+      h_Ele_PR_eta -> Divide(h_Ele_tight_eta_PR, h_Ele_loose_eta_PR);
       h_Ele_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Ele_PR_eta -> Draw();
 
@@ -227,10 +229,10 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Ele_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_eta_PR");
     TH1D* h_Ele_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_eta_PR");
 
-    TH2D* Ele_PR_pt_eta = (TH2D*) h_Ele_tight_pt_eta_PR -> Clone();
+    TH2D* Ele_PR_pt_eta = (TH2D*) h_Ele_tight_pt_eta_PR -> Clone("h_Ele_signal_pt_eta_bin");
 
-    Ele_PR_pt_eta -> Divide(h_Ele_tight_pt_eta_PR, h_Ele_loose_pt_eta_PR, 1., 1., "");
-    Ele_PR_pt_eta -> Write("h_Ele_signal_pt_eta_bin");
+    Ele_PR_pt_eta -> Divide(h_Ele_tight_pt_eta_PR, h_Ele_loose_pt_eta_PR);
+    Ele_PR_pt_eta -> Write();
 
     ElePR -> Close();
 
@@ -252,15 +254,15 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_loose_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_loose_pt_bin" + muonsuffix);
       TH1D* h_Muon_tight_pt_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_tight_pt_bin" + muonsuffix);
     
-      TH1D* h_Muon_FR_pt = (TH1D*) h_Muon_tight_pt_bin -> Clone();
-      TH1D* h_Muon_FR_pt_EWK = (TH1D*) h_Muon_tight_pt_bin -> Clone();
+      TH1D* h_Muon_FR_pt     = (TH1D*) h_Muon_tight_pt_bin -> Clone("h_Muon_FR_pt");
+      TH1D* h_Muon_FR_pt_EWK = (TH1D*) h_Muon_tight_pt_bin -> Clone("h_Muon_FR_pt_EWK");
 
       TCanvas* Muon_pt = new TCanvas("Muon FR pt", "Muon FR pt", 450, 550);
 
       Muon_pt -> SetGridx(1);
       Muon_pt -> SetGridy(1);
 
-      h_Muon_FR_pt -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., "");
+      h_Muon_FR_pt -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin);
 
       h_Muon_FR_pt -> Draw();
       
@@ -271,19 +273,18 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_pt -> SetXTitle("pt");
       h_Muon_FR_pt -> SetYTitle("FR");
 
-      h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -1);
-      h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -1);
+      if (Wsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -1);
 
-      h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_zjets, -1);
-      h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_zjets, -1);
+      if (Wsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -1);
       
-      h_Muon_FR_pt_EWK -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin, 1., 1., " ");
+      h_Muon_FR_pt_EWK -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin);
       h_Muon_FR_pt_EWK -> Draw("same");
 
       h_Muon_FR_pt_EWK -> SetLineColor(2);    
     
-      if(savepng) Muon_pt -> SaveAs(Form("Muon_FR_pt_%.0fGev.png", muonjetet));
-
+      if (savepng) Muon_pt -> SaveAs(Form("Muon_FR_pt_%.0fGev.png", muonjetet));
     }
 
     // Muon eta
@@ -299,15 +300,15 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_loose_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_loose_eta_bin" + muonsuffix);
       TH1D* h_Muon_tight_eta_bin_wjets = (TH1D*) wjets -> Get("FR/00_QCD/h_Muon_tight_eta_bin" + muonsuffix);
 
-      TH1D* h_Muon_FR_eta = (TH1D*) h_Muon_tight_eta_bin -> Clone();
-      TH1D* h_Muon_FR_eta_EWK = (TH1D*) h_Muon_tight_eta_bin -> Clone();
+      TH1D* h_Muon_FR_eta     = (TH1D*) h_Muon_tight_eta_bin -> Clone("h_Muon_FR_eta");
+      TH1D* h_Muon_FR_eta_EWK = (TH1D*) h_Muon_tight_eta_bin -> Clone("h_Muon_FR_eta_EWK");
 
       TCanvas* Muon_eta = new TCanvas("Muon FR eta", "Muon FR eta", 450, 550);
 
       Muon_eta -> SetGridx(1);
       Muon_eta -> SetGridy(1);
 
-      h_Muon_FR_eta -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., "");
+      h_Muon_FR_eta -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin);
 
       h_Muon_FR_eta -> Draw();
 
@@ -318,13 +319,13 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_eta -> SetXTitle("eta");
       h_Muon_FR_eta -> SetYTitle("FR");
 
-      h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -1);
-      h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -1);
+      if (Wsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -1);
 
-      h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_zjets, -1);
-      h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_zjets, -1);
+      if (Wsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -1);
 
-      h_Muon_FR_eta_EWK -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin, 1., 1., " ");
+      h_Muon_FR_eta_EWK -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin);
       h_Muon_FR_eta_EWK -> Draw("same");
       
       h_Muon_FR_eta_EWK -> SetLineColor(2);    
@@ -345,19 +346,19 @@ void getFakeRate(bool draw    = true,
     TH2D* h_Muon_loose_pt_eta_bin_wjets = (TH2D*) wjets -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin" + muonsuffix);
     TH2D* h_Muon_tight_pt_eta_bin_wjets = (TH2D*) wjets -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin" + muonsuffix);
 
-    TH2D* h_Muon_FR_pt_eta     = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone();
-    TH2D* h_Muon_FR_pt_eta_EWK = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone();
+    TH2D* h_Muon_FR_pt_eta     = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone("h_Muon_FR_pt_eta");
+    TH2D* h_Muon_FR_pt_eta_EWK = (TH2D*) h_Muon_tight_pt_eta_bin -> Clone("h_Muon_FR_pt_eta_EWK");
 
-    h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., "");
+    h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin);
     h_Muon_FR_pt_eta -> Write("FR_pT_eta");
 
-    h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_zjets, -1);
-    h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_zjets, -1);
+    if (Wsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_wjets, -1);
 
-    h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_zjets, -1);
-    h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_zjets, -1);
+    if (Wsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_wjets, -1);
 
-    h_Muon_FR_pt_eta_EWK -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin, 1., 1., " ");
+    h_Muon_FR_pt_eta_EWK -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin);
     h_Muon_FR_pt_eta_EWK -> Write("FR_pT_eta_EWKcorr");
 
     MuFR -> Close();
@@ -374,13 +375,13 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_loose_pt_PR = (TH1D*) zjets -> Get("h_Muon_loose_pt_PR");
       TH1D* h_Muon_tight_pt_PR = (TH1D*) zjets -> Get("h_Muon_tight_pt_PR");
       
-      TH1D* h_Muon_PR_pt = (TH1D*) h_Muon_tight_pt_PR -> Clone();
+      TH1D* h_Muon_PR_pt = (TH1D*) h_Muon_tight_pt_PR -> Clone("h_Muon_PR_pt");
     
       h_Muon_PR_pt -> SetTitle("Muon prompt rate");
       h_Muon_PR_pt -> SetXTitle("pt");
       h_Muon_PR_pt -> SetYTitle("PR");
 
-      h_Muon_PR_pt -> Divide(h_Muon_tight_pt_PR, h_Muon_loose_pt_PR, 1., 1., "");
+      h_Muon_PR_pt -> Divide(h_Muon_tight_pt_PR, h_Muon_loose_pt_PR);
       h_Muon_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Muon_PR_pt -> Draw();
 
@@ -397,13 +398,13 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_loose_eta_PR = (TH1D*) zjets -> Get("h_Muon_loose_eta_PR");
       TH1D* h_Muon_tight_eta_PR = (TH1D*) zjets -> Get("h_Muon_tight_eta_PR");
 
-      TH1D* h_Muon_PR_eta = (TH1D*) h_Muon_tight_eta_PR -> Clone();
+      TH1D* h_Muon_PR_eta = (TH1D*) h_Muon_tight_eta_PR -> Clone("h_Muon_PR_eta");
 
       h_Muon_PR_eta -> SetTitle("Muon prompt rate");
       h_Muon_PR_eta -> SetXTitle("eta");
       h_Muon_PR_eta -> SetYTitle("PR");
 
-      h_Muon_PR_eta -> Divide(h_Muon_tight_eta_PR, h_Muon_loose_eta_PR, 1., 1., "");
+      h_Muon_PR_eta -> Divide(h_Muon_tight_eta_PR, h_Muon_loose_eta_PR);
       h_Muon_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Muon_PR_eta -> Draw();
 
@@ -417,10 +418,10 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Muon_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_loose_pt_eta_PR");
     TH1D* h_Muon_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_tight_pt_eta_PR");
 
-    TH2D* Muon_PR_pT_eta = (TH2D*) h_Muon_tight_pt_eta_PR -> Clone();
+    TH2D* Muon_PR_pT_eta = (TH2D*) h_Muon_tight_pt_eta_PR -> Clone("h_Muon_signal_pt_eta_bin");
 
-    Muon_PR_pT_eta -> Divide(h_Muon_tight_pt_eta_PR, h_Muon_loose_pt_eta_PR, 1., 1., "");
-    Muon_PR_pT_eta -> Write("h_Muon_signal_pt_eta_bin");
+    Muon_PR_pT_eta -> Divide(h_Muon_tight_pt_eta_PR, h_Muon_loose_pt_eta_PR);
+    Muon_PR_pT_eta -> Write();
 
     MuPR -> Close();
   }
