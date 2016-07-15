@@ -57,7 +57,7 @@ void getFakeRate(bool draw    = true,
       
     if (draw) {
 
-      TCanvas* Ele_pt = new TCanvas("Ele pt", "Ele pt", 450, 550);
+      TCanvas* Ele_pt = new TCanvas("Electron FR pt", "Electron FR pt", 450, 550);
   
       Ele_pt -> SetGridx(1);
       Ele_pt -> SetGridy(1);
@@ -69,9 +69,9 @@ void getFakeRate(bool draw    = true,
       h_Ele_FR_pt -> SetLineColor(4);
       h_Ele_FR_pt -> SetAxisRange(0,1,"Y");
 
-      h_Ele_FR_pt -> SetTitle("Ele Fake Rate with and without EWK correction");
-      h_Ele_FR_pt -> SetXTitle("Ele pt");
-      h_Ele_FR_pt -> SetYTitle("Ele FR");
+      h_Ele_FR_pt -> SetTitle("Electron fake rate");
+      h_Ele_FR_pt -> SetXTitle("pt");
+      h_Ele_FR_pt -> SetYTitle("FR");
 
       h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -1);
       h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -1);
@@ -102,9 +102,9 @@ void getFakeRate(bool draw    = true,
     TH1D* h_Ele_FR_eta = (TH1D*) h_Ele_tight_eta_bin -> Clone();
     TH1D* h_Ele_FR_eta_EWK = (TH1D*) h_Ele_tight_eta_bin -> Clone();
 
-    if(draw) {
+    if (draw) {
 
-      TCanvas* Ele_eta = new TCanvas("Ele eta", "Ele eta", 450, 550);
+      TCanvas* Ele_eta = new TCanvas("Electron FR eta", "Electron FR eta", 450, 550);
 
       Ele_eta -> SetGridx(1);
       Ele_eta -> SetGridy(1);
@@ -116,9 +116,9 @@ void getFakeRate(bool draw    = true,
       h_Ele_FR_eta -> SetLineColor(4);
       h_Ele_FR_eta -> SetAxisRange(0,1,"Y");
 
-      h_Ele_FR_eta -> SetTitle("Ele Fake Rate with and without EWK correction");
-      h_Ele_FR_eta -> SetXTitle("Ele eta");
-      h_Ele_FR_eta -> SetYTitle("Ele FR");
+      h_Ele_FR_eta -> SetTitle("Electron fake rate");
+      h_Ele_FR_eta -> SetXTitle("eta");
+      h_Ele_FR_eta -> SetYTitle("FR");
 
       h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -1);
       h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -1);
@@ -166,22 +166,22 @@ void getFakeRate(bool draw    = true,
     EleFR -> Close();
 
     // ===================================================================================================
-    // Electron Prompt Rate
+    // Electron prompt rate
     // ===================================================================================================
 
-    if(draw) {
+    if (draw) {
 
       // Electron PR pt
-      TCanvas* Ele_PR_pt = new TCanvas("Ele PR pt", "Ele PR pt", 450, 550);
+      TCanvas* Ele_PR_pt = new TCanvas("Electron PR pt", "Electron PR pt", 450, 550);
     
       TH1D* h_Ele_loose_pt_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_PR");
       TH1D* h_Ele_tight_pt_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_PR");
 
       TH1D* h_Ele_PR_pt = (TH1D*) h_Ele_tight_pt_PR -> Clone();
     
-      h_Ele_PR_pt -> SetTitle("Ele Prompt Rate");
-      h_Ele_PR_pt -> SetXTitle("Ele pt");
-      h_Ele_PR_pt -> SetYTitle("Ele PR");
+      h_Ele_PR_pt -> SetTitle("Electron prompt rate");
+      h_Ele_PR_pt -> SetXTitle("pt");
+      h_Ele_PR_pt -> SetYTitle("PR");
       
       h_Ele_PR_pt -> Divide(h_Ele_tight_pt_PR, h_Ele_loose_pt_PR, 1., 1., "");
       h_Ele_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
@@ -191,23 +191,25 @@ void getFakeRate(bool draw    = true,
 
     }
 
-    if(draw) {
+    if (draw) {
 
       // Electron PR eta
-      TCanvas* Ele_PR_eta = new TCanvas("Ele PR eta", "Ele PR eta", 450, 550);
+      TCanvas* Ele_PR_eta = new TCanvas("Electron PR eta", "Electron PR eta", 450, 550);
 
       TH1D* h_Ele_loose_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_eta_PR");
       TH1D* h_Ele_tight_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_eta_PR");
     
       TH1D* h_Ele_PR_eta = (TH1D*) h_Ele_tight_eta_PR -> Clone();
 
-      h_Ele_PR_eta -> SetTitle("Ele Prompt Rate");
-      h_Ele_PR_eta -> SetXTitle("Ele eta");
-      h_Ele_PR_eta -> SetYTitle("Ele PR");
+      h_Ele_PR_eta -> SetTitle("Electron prompt rate");
+      h_Ele_PR_eta -> SetXTitle("eta");
+      h_Ele_PR_eta -> SetYTitle("PR");
       
       h_Ele_PR_eta -> Divide(h_Ele_tight_eta_PR, h_Ele_loose_eta_PR, 1., 1., "");
       h_Ele_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Ele_PR_eta -> Draw();
+
+      Ele_PR_eta->Update();
 
       TLine* line = new TLine(1.479, Ele_PR_eta -> GetUymin(), 1.479, Ele_PR_eta -> GetUymax());
   
@@ -220,7 +222,7 @@ void getFakeRate(bool draw    = true,
     }
 
     // Electron PR TH2D histograms
-    TFile *ElePR = new TFile("ElePR_Run2016B_25ns_21Jun.root","recreate");
+    TFile* ElePR = new TFile("ElePR_Run2016B_25ns_21Jun.root","recreate");
 
     TH1D* h_Ele_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_eta_PR");
     TH1D* h_Ele_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_eta_PR");
@@ -233,13 +235,13 @@ void getFakeRate(bool draw    = true,
     ElePR -> Close();
 
     // ===================================================================================================
-    // Muon Fake Rate
+    // Muon fake rate
     // ===================================================================================================
 
     // Muon pt
     TString muonsuffix = Form("_%.0fGev", muonjetet);
     
-    if(draw) {
+    if (draw) {
 
       TH1D* h_Muon_loose_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_loose_pt_bin" + muonsuffix);
       TH1D* h_Muon_tight_pt_bin = (TH1D*) data -> Get("FR/00_QCD/h_Muon_tight_pt_bin" + muonsuffix);    
@@ -253,7 +255,7 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_FR_pt = (TH1D*) h_Muon_tight_pt_bin -> Clone();
       TH1D* h_Muon_FR_pt_EWK = (TH1D*) h_Muon_tight_pt_bin -> Clone();
 
-      TCanvas* Muon_pt = new TCanvas("Muon pt", "Muon pt", 450, 550);
+      TCanvas* Muon_pt = new TCanvas("Muon FR pt", "Muon FR pt", 450, 550);
 
       Muon_pt -> SetGridx(1);
       Muon_pt -> SetGridy(1);
@@ -265,9 +267,9 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_pt -> SetLineColor(4);
       h_Muon_FR_pt -> SetAxisRange(0,1,"Y");
 
-      h_Muon_FR_pt -> SetTitle("Muon Fake Rate with and without EWK correction");
-      h_Muon_FR_pt -> SetXTitle("Muon pt");
-      h_Muon_FR_pt -> SetYTitle("Muon FR");
+      h_Muon_FR_pt -> SetTitle("Muon fake rate");
+      h_Muon_FR_pt -> SetXTitle("pt");
+      h_Muon_FR_pt -> SetYTitle("FR");
 
       h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -1);
       h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -1);
@@ -300,7 +302,7 @@ void getFakeRate(bool draw    = true,
       TH1D* h_Muon_FR_eta = (TH1D*) h_Muon_tight_eta_bin -> Clone();
       TH1D* h_Muon_FR_eta_EWK = (TH1D*) h_Muon_tight_eta_bin -> Clone();
 
-      TCanvas* Muon_eta = new TCanvas("Muon eta", "Muon eta", 450, 550);
+      TCanvas* Muon_eta = new TCanvas("Muon FR eta", "Muon FR eta", 450, 550);
 
       Muon_eta -> SetGridx(1);
       Muon_eta -> SetGridy(1);
@@ -312,9 +314,9 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_eta -> SetLineColor(4);
       h_Muon_FR_eta -> SetAxisRange(0,1,"Y");
 
-      h_Muon_FR_eta -> SetTitle("Muon Fake Rate with and without EWK correction");
-      h_Muon_FR_eta -> SetXTitle("Muon eta");
-      h_Muon_FR_eta -> SetYTitle("Muon FR");
+      h_Muon_FR_eta -> SetTitle("Muon fake rate");
+      h_Muon_FR_eta -> SetXTitle("eta");
+      h_Muon_FR_eta -> SetYTitle("FR");
 
       h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -1);
       h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -1);
@@ -361,10 +363,10 @@ void getFakeRate(bool draw    = true,
     MuFR -> Close();
 
     // ===================================================================================================
-    // Muon Prompt Rate
+    // Muon prompt rate
     // ===================================================================================================
 
-    if(draw) {
+    if (draw) {
 
       // Muon PR pt
       TCanvas* Muon_PR_pt = new TCanvas("Muon PR pt", "Muon PR pt", 450, 550);
@@ -374,9 +376,9 @@ void getFakeRate(bool draw    = true,
       
       TH1D* h_Muon_PR_pt = (TH1D*) h_Muon_tight_pt_PR -> Clone();
     
-      h_Muon_PR_pt -> SetTitle("Muon Prompt Rate");
-      h_Muon_PR_pt -> SetXTitle("Muon pt");
-      h_Muon_PR_pt -> SetYTitle("Muon PR");
+      h_Muon_PR_pt -> SetTitle("Muon prompt rate");
+      h_Muon_PR_pt -> SetXTitle("pt");
+      h_Muon_PR_pt -> SetYTitle("PR");
 
       h_Muon_PR_pt -> Divide(h_Muon_tight_pt_PR, h_Muon_loose_pt_PR, 1., 1., "");
       h_Muon_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
@@ -387,7 +389,7 @@ void getFakeRate(bool draw    = true,
     }
 
 
-    if(draw) {
+    if (draw) {
 
       // Muon PR eta
       TCanvas* Muon_PR_eta = new TCanvas("Muon PR eta", "Muon PR eta", 450, 550);
@@ -397,9 +399,9 @@ void getFakeRate(bool draw    = true,
 
       TH1D* h_Muon_PR_eta = (TH1D*) h_Muon_tight_eta_PR -> Clone();
 
-      h_Muon_PR_eta -> SetTitle("Muon Prompt Rate");
-      h_Muon_PR_eta -> SetXTitle("Muon eta");
-      h_Muon_PR_eta -> SetYTitle("Muon PR");
+      h_Muon_PR_eta -> SetTitle("Muon prompt rate");
+      h_Muon_PR_eta -> SetXTitle("eta");
+      h_Muon_PR_eta -> SetYTitle("PR");
 
       h_Muon_PR_eta -> Divide(h_Muon_tight_eta_PR, h_Muon_loose_eta_PR, 1., 1., "");
       h_Muon_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
