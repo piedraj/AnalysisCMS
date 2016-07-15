@@ -20,6 +20,6 @@ When the data points are available, a data / MC ratio can be drawn.
 
     plotter.SetDrawRatio(true);
 
-If you want to plot the ROC and Significance curves for a variable:
+If you want to plot the ROC and Significance curves for a variable.
 
-   plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
+    plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);

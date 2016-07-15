@@ -2,6 +2,13 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
+    echo "  >>> 80x files"
+    echo "  "
+    echo "  ./submit-jobs.sh samples/80x/samples_data_l1loose.txt nominal"
+    echo "  ./submit-jobs.sh samples/80x/samples_mc_l1loose.txt   nominal"
+    echo "  "
+    echo "  "
+    echo "  "
     echo "  >>> 76x files"
     echo "  "
     echo "  ./submit-jobs.sh samples/76x/samples_data.txt       nominal"

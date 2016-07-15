@@ -1,11 +1,12 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
-//#include "CutsFR.h"
+//#include "CutsControl.h"
+#include "CutsFR.h"
 //#include "CutsMonoH.h"
-//#include "CutsTop.h"
+//#include "CutsSS.h"
 //#include "CutsStop.h"
+//#include "CutsTop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
@@ -14,12 +15,11 @@
 #include "BTagWorkingPoints76X.h"
 
 
-const double lumi_fb_2016B       = 0.804;  // In progress
-const double lumi_fb_blind_susy  = 0.141;  // From run 256630 to run 257599
-const double lumi_fb_blind_dm    = 1.324;  // From run 256630 to run 258750
-const double lumi_fb_2015D       = 2.301;  // From run 256630 to run 260627
-const double lumi_fb             = 2.318;  // 2015C + 2015D
-const double lumi_error_percent  = 2.7;
+const double lumi_fb_2016       = 4.337;  // 2016B
+const double lumi_fb_2016_susy  = 0.868;  // From run 271036 to run 274240
+const double lumi_fb_2015_dm    = 1.324;  // From run 256630 to run 258750 --> Update to 2016
+const double lumi_fb_2015       = 2.318;  // 2015C + 2015D
+const double lumi_error_percent = 2.7;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
