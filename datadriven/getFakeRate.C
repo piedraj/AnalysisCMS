@@ -1,21 +1,19 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-// getFakeRate
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const Double_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Double_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
-
 
 TFile* data;
 TFile* wjets;
 TFile* zjets;
 
-
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// root -l getFakeRate.C
+//
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getFakeRate(bool draw    = true,
 		 bool savepng = true)
 {
