@@ -2,14 +2,6 @@
 #include "../include/AnalysisFR.h"
 
 
-const Double_t muonjetet[njetet] = {10, 15, 20, 25, 30, 35, 45}; 
-const Double_t elejetet [njetet] = {10, 15, 20, 25, 30, 35, 45}; 
-
-const Double_t ptbins[nptbin+1] = {10, 15, 20, 25, 30, 35, 40, 45, 50};
-
-const Double_t etabins[netabin+1] = {0, 0.5, 1.0, 1.5, 2.0, 2.5};
-
-
 //------------------------------------------------------------------------------
 // AnalysisFR
 //------------------------------------------------------------------------------
@@ -122,11 +114,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
-    if (_channel == e && Lepton1.v.Pt() <= 13) continue;
-    if (_channel == m && Lepton1.v.Pt() <= 10) continue;
+    _leptonPtMin  = (_channel == e) ?  13 :  10;
+    _leptonEtaMax = (_channel == e) ? 2.5 : 2.4;
 
-    if (_channel == e && Lepton1.v.Eta() >= 2.5) continue;
-    if (_channel == m && Lepton1.v.Eta() >= 2.4) continue;
+    if (Lepton1.v.Pt()        < _leptonPtMin)  continue;
+    if (fabs(Lepton1.v.Eta()) > _leptonEtaMax) continue;
 
 
     // Make Z candidate
@@ -147,7 +139,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	  
 	  float inv_mass = (AnalysisLeptons[iLep1].v + AnalysisLeptons[iLep2].v).M();
 
-	  if (_m2l < 00 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
+	  if (_m2l < 0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
 
 	    _m2l = inv_mass;
 
@@ -166,11 +158,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Get the event weight
     //--------------------------------------------------------------------------
-    bool passTrigger = true;
+    bool passTrigger;
 
     if (_ismc) {
 
       _event_weight = baseW * puW * GEN_weight_SM / abs(GEN_weight_SM);
+
+      passTrigger = true;
 
     } else {
 
@@ -185,19 +179,15 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  passTrigger= true;
-
-	  // [2016/07/14]
-	  // brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
 	  _event_weight = (1e3 / 4.391);
+
+	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
 
-	  passTrigger = true;
-
-	  // [2016/07/14]
-	  // brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
 	  _event_weight = (1e3 / 91.222);
+
+	  passTrigger = true;
 	}
       }
 
@@ -208,19 +198,15 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  passTrigger = true;
-
-	  // [2016/07/14]
-	  // brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
 	  _event_weight = (1e3 / 3.972);
+
+	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  passTrigger = true;
-	  
-	  // [2016/07/14]
-	  // brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
 	  _event_weight = (1e3 / 21.165);
+
+	  passTrigger = true;
 	}
       }
     }
@@ -264,14 +250,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Preselection
     //--------------------------------------------------------------------------
-    if (!passTrigger)             continue;    
-    if (!PassJetSelection())      continue;
-    if (AnalysisJets.size() < 1 ) continue;
+    if (!passTrigger)        continue;    
+    if (!PassJetSelection()) continue;
 
     for (int i=0; i<njetet; i++) {
 
-      if      (_channel == e) _inputJetEt = elejetet [i];
-      else if (_channel == m) _inputJetEt = muonjetet[i];
+      _inputJetEt = (_channel == e) ? elejetet[i] : muonjetet[i];
 
       if (AnalysisJets[0].v.Pt() < _inputJetEt) continue; 
 
@@ -282,74 +266,70 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       bool pass;
   
-      pass =  (MET.Et() < 20.);
-      pass &= (_mtw < 20.);
-      pass &= (_nlepton == 1);
+      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw < 20);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
-      pass =  (MET.Et() > 20.);
-      pass &= (_mtw > 20.);
-      pass &= (_nlepton == 1);
+      pass = (_nlepton == 1 && MET.Et() > 20 && _mtw > 20);
       
       FillLevelHistograms(FR_01_WRegion, i, pass);
 
-      pass =  (MET.Et() < 20.);
-      pass &= (_mtw > 20.);
-      pass &= (_nlepton == 1);
+      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw > 20);
 
       FillLevelHistograms(FR_02_WRegionQCD, i, pass);
 
-      pass =  (MET.Et() > 20.);
-      pass &= (_mtw > 20.);
-      pass &= (_nlepton >= 2);
-      pass &= (_m2l > 0);
 
-      if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
+      // ZRegion
+      //------------------------------------------------------------------------
+      if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 0) {
+
+	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-	h_Ele_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);     
-	h_Ele_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	  h_Ele_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);     
+	  h_Ele_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
 
-	if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	  h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	  h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	    h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
+	    h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	  }
 	}
+	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 
-      } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
+	  h_Muon_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
+	  h_Muon_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
 
-	h_Muon_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	h_Muon_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	  h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	  h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-	} 
+	    h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
+	    h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	  } 
+	}
       }
 
-      pass =  (MET.Et() < 20.);
-      pass &= (_mtw < 20.);
-      pass &= (_nlepton >= 2);
-      pass &= (_m2l > 0);
-      
-      if (pass && fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
+
+      // ZRegionQCD
+      //------------------------------------------------------------------------
+      if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 0) {
+
+	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-	h_Ele_loose_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
-     
-	if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+	  h_Ele_loose_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
+	  
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	  h_Ele_tight_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	    h_Ele_tight_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	  }
 	}
-
-      } else if (pass && fabs(_Zdecayflavour) == MUON_FLAVOUR) {
+	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
+	    
+	  h_Muon_loose_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
 	
-	h_Muon_loose_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
-	
-	if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
+	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	  h_Muon_tight_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
-	} 
+	    h_Muon_tight_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
+	  } 
+	}
       }
     }
   }
@@ -375,26 +355,23 @@ void AnalysisFR::FillLevelHistograms(int icut, int i, bool pass)
 //------------------------------------------------------------------------------                                                                        
 void AnalysisFR::FillAnalysisHistograms(int icut, int i)
 {
-  if (Lepton1.type == Loose || Lepton1.type == Tight) {
+  if (_channel == m) {
 
-    if (_channel == m) {
-
-      h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Muon_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
+    h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
+    h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Muon_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
      
-      h_Muon_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Muon_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
+    h_Muon_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+    h_Muon_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
 
-    } else if (_channel == e) {
+  } else if (_channel == e) {
 
-      h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Ele_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
+    h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
+    h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Ele_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
       
-      h_Ele_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Ele_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
-    }
+    h_Ele_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+    h_Ele_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
   }
     
   if (Lepton1.type == Tight) {
@@ -442,7 +419,7 @@ bool AnalysisFR::PassJetSelection()
     float eta = std_vector_jet_eta->at(j);
     float phi = std_vector_jet_phi->at(j);
 
-    if (pt <= 10) continue;
+    if (pt < 10.) continue;
 
     TLorentzVector tlv;
 
@@ -450,7 +427,7 @@ bool AnalysisFR::PassJetSelection()
       
     jet_.v = tlv;
 
-    float dR = tlv.DeltaR(AnalysisLeptons[0].v);
+    float dR = tlv.DeltaR(Lepton1.v);
 
     if (dR > 1) {
 
@@ -462,3 +439,14 @@ bool AnalysisFR::PassJetSelection()
 
   return pass;
 }
+
+
+// [2016/07/14]
+
+// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+
+// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+
+// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+
+// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"

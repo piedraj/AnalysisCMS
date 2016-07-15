@@ -4,9 +4,17 @@
 #include "AnalysisCMS.h"
 
 
-const int njetet  = 8; 
-const int nptbin  = 8;
+// Constants
+//------------------------------------------------------------------------------
+const int njetet = 8; 
+const Double_t muonjetet[njetet] = {10, 15, 20, 25, 30, 35, 45}; 
+const Double_t elejetet [njetet] = {10, 15, 20, 25, 30, 35, 45}; 
+
+const int nptbin = 8;
+const Double_t ptbins[nptbin+1] = {10, 15, 20, 25, 30, 35, 40, 45, 50};
+
 const int netabin = 5;
+const Double_t etabins[netabin+1] = {0, 0.5, 1.0, 1.5, 2.0, 2.5};
 
 
 class AnalysisFR: public AnalysisCMS
@@ -33,6 +41,8 @@ class AnalysisFR: public AnalysisCMS
   //----------------------------------------------------------------------------
   float _event_weight; 
   float _inputJetEt;
+  float _leptonPtMin;
+  float _leptonEtaMax;
 
   int   _Zlepton1type;
   int   _Zlepton2type;
@@ -81,6 +91,9 @@ class AnalysisFR: public AnalysisCMS
   TH2D* h_Ele_loose_pt_m2l[ncut][njetet];
   TH2D* h_Ele_tight_pt_m2l[ncut][njetet];
 
+
+  // Prompt rate histograms
+  //----------------------------------------------------------------------------
   TH2D* h_Ele_loose_pt_eta_PR;
   TH2D* h_Ele_tight_pt_eta_PR;
   TH2D* h_Muon_loose_pt_eta_PR;
