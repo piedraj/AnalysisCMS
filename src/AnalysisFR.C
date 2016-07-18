@@ -21,24 +21,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   Setup(analysis, filename, luminosity);
 
 
-  // Define prompt rate histograms
-  //----------------------------------------------------------------------------
-  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-    
-  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
-  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
-  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
-  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
-    
-  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
-  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
-  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
-  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
-
-
   // Define fake rate histograms
   //----------------------------------------------------------------------------
   for (int i=0; i<ncut; i++) {
@@ -94,6 +76,24 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   }
 
   root_output -> cd();
+
+
+  // Define prompt rate histograms
+  //----------------------------------------------------------------------------
+  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+    
+  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
+  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
+  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
+  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
+    
+  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
+  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
+  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
+  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
 
 
   // Loop over events
@@ -254,9 +254,18 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     // Preselection
     //--------------------------------------------------------------------------
-    if (!passTrigger)        continue;    
+    if (!passTrigger) continue;
+
     if (!PassJetSelection()) continue;
 
+
+    // Get W transverse mass
+    //--------------------------------------------------------------------------
+    GetMt(Lepton1, _mtw);
+
+
+    // Get histograms for different jet pt thresholds
+    //--------------------------------------------------------------------------
     for (int i=0; i<njetet; i++) {
 
       _inputJetEt = (_channel == e) ? elejetet[i] : muonjetet[i];
@@ -264,26 +273,31 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (AnalysisJets[0].v.Pt() < _inputJetEt) continue; 
 
 
-      // Selection
-      //------------------------------------------------------------------------
-      GetMt(Lepton1, _mtw);
-
       bool pass;
   
+
+      // QCD region
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() < 20 && _mtw < 20);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
+
+      // W region
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() > 20 && _mtw > 20);
       
       FillLevelHistograms(FR_01_WRegion, i, pass);
 
+
+      // W region "QCD"
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() < 20 && _mtw > 20);
 
       FillLevelHistograms(FR_02_WRegionQCD, i, pass);
 
 
-      // ZRegion
+      // Z region
       //------------------------------------------------------------------------
       if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 0) {
 
@@ -312,7 +326,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
 
 
-      // ZRegionQCD
+      // Z region "QCD"
       //------------------------------------------------------------------------
       if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 0) {
 
