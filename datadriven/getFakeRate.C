@@ -19,6 +19,10 @@ void getFakeRate(bool draw    = true,
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
+  if (savepng) gSystem->mkdir("png", kTRUE);
+
+  gSystem->mkdir("rootfiles", kTRUE);
+
   data  = new TFile ("../rootfiles/nominal/FR/01_Data.root",  "read");
   wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root", "read");
   zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root", "read");
@@ -84,7 +88,7 @@ void getFakeRate(bool draw    = true,
     
       h_Ele_FR_pt_EWK -> SetLineColor(2);    
     
-      if (savepng) Ele_pt -> SaveAs(Form("Ele_FR_pt_%.0fGev.png", elejetet));
+      if (savepng) Ele_pt -> SaveAs(Form("png/Ele_FR_pt_%.0fGev.png", elejetet));
     
     }
 
@@ -131,13 +135,13 @@ void getFakeRate(bool draw    = true,
 
       h_Ele_FR_eta_EWK -> SetLineColor(2);    
 
-      if (savepng) Ele_eta -> SaveAs(Form("Ele_FR_eta_%.0fGev.png", elejetet));
+      if (savepng) Ele_eta -> SaveAs(Form("png/Ele_FR_eta_%.0fGev.png", elejetet));
 
     }
 
     // Electron FR TH2D histograms
 
-    TFile *EleFR = new TFile(Form("EleFR_Run2016B_25ns_jet%0.f_21Jun.root", elejetet),"recreate");
+    TFile *EleFR = new TFile(Form("rootfiles/EleFR_Run2016B_25ns_jet%0.f_21Jun.root", elejetet),"recreate");
 
     TH2D* h_Ele_loose_pt_eta_bin = (TH2D*) data -> Get("FR/00_QCD/h_Ele_loose_pt_eta_bin" + elesuffix);
     TH2D* h_Ele_tight_pt_eta_bin = (TH2D*) data -> Get("FR/00_QCD/h_Ele_tight_pt_eta_bin" + elesuffix);
@@ -187,7 +191,7 @@ void getFakeRate(bool draw    = true,
       h_Ele_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Ele_PR_pt -> Draw();
       
-      if(savepng) Ele_PR_pt -> SaveAs(Form("Ele_PR_pt_%.0fGev.png", elejetet));
+      if(savepng) Ele_PR_pt -> SaveAs(Form("png/Ele_PR_pt_%.0fGev.png", elejetet));
 
     }
 
@@ -217,12 +221,12 @@ void getFakeRate(bool draw    = true,
       line -> SetLineStyle(kDotted);
       line -> Draw("same");
 
-      if(savepng) Ele_PR_eta -> SaveAs(Form("Ele_PR_eta_%.0fGev.png", elejetet));
+      if(savepng) Ele_PR_eta -> SaveAs(Form("png/Ele_PR_eta_%.0fGev.png", elejetet));
 
     }
 
     // Electron PR TH2D histograms
-    TFile* ElePR = new TFile("ElePR_Run2016B_25ns_21Jun.root","recreate");
+    TFile* ElePR = new TFile("rootfiles/ElePR_Run2016B_25ns_21Jun.root","recreate");
 
     TH1D* h_Ele_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_loose_pt_eta_PR");
     TH1D* h_Ele_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Ele_tight_pt_eta_PR");
@@ -282,7 +286,7 @@ void getFakeRate(bool draw    = true,
 
       h_Muon_FR_pt_EWK -> SetLineColor(2);    
     
-      if (savepng) Muon_pt -> SaveAs(Form("Muon_FR_pt_%.0fGev.png", muonjetet));
+      if (savepng) Muon_pt -> SaveAs(Form("png/Muon_FR_pt_%.0fGev.png", muonjetet));
     }
 
     // Muon eta
@@ -328,12 +332,12 @@ void getFakeRate(bool draw    = true,
       
       h_Muon_FR_eta_EWK -> SetLineColor(2);    
       
-      if(savepng) Muon_eta -> SaveAs(Form("Muon_FR_eta_%.0fGev.png", muonjetet));
+      if(savepng) Muon_eta -> SaveAs(Form("png/Muon_FR_eta_%.0fGev.png", muonjetet));
 
     }
 
     // Muon FR TH2D histograms
-    TFile *MuFR = new TFile(Form("MuFR_Run2016B_25ns_jet%.0f_21Jun.root", muonjetet),"recreate");
+    TFile *MuFR = new TFile(Form("rootfiles/MuFR_Run2016B_25ns_jet%.0f_21Jun.root", muonjetet),"recreate");
 
     TH2D* h_Muon_loose_pt_eta_bin = (TH2D*) data -> Get("FR/00_QCD/h_Muon_loose_pt_eta_bin" + muonsuffix);
     TH2D* h_Muon_tight_pt_eta_bin = (TH2D*) data -> Get("FR/00_QCD/h_Muon_tight_pt_eta_bin" + muonsuffix);    
@@ -383,7 +387,7 @@ void getFakeRate(bool draw    = true,
       h_Muon_PR_pt -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Muon_PR_pt -> Draw();
 
-      if(savepng) Muon_PR_pt -> SaveAs(Form("Muon_PR_pt_%.0fGev.png", muonjetet));
+      if(savepng) Muon_PR_pt -> SaveAs(Form("png/Muon_PR_pt_%.0fGev.png", muonjetet));
 
     }
 
@@ -406,12 +410,12 @@ void getFakeRate(bool draw    = true,
       h_Muon_PR_eta -> GetYaxis() -> SetRangeUser(0.5, 1.1);
       h_Muon_PR_eta -> Draw();
 
-      if(savepng) Muon_PR_eta -> SaveAs(Form("Muon_PR_eta_%.0fGev.png", muonjetet));
+      if(savepng) Muon_PR_eta -> SaveAs(Form("png/Muon_PR_eta_%.0fGev.png", muonjetet));
 
     }
 
     // Muon PR TH2D histograms
-    TFile *MuPR = new TFile("MuPR_Run2016B_25ns_21Jun.root","recreate");
+    TFile *MuPR = new TFile("rootfiles/MuPR_Run2016B_25ns_21Jun.root","recreate");
 
     TH1D* h_Muon_loose_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_loose_pt_eta_PR");
     TH1D* h_Muon_tight_pt_eta_PR = (TH1D*) zjets -> Get("h_Muon_tight_pt_eta_PR");
