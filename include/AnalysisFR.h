@@ -51,23 +51,22 @@ class AnalysisFR: public AnalysisCMS
   int   _Zdecayflavour;
 
 
-  // Analysis histograms
+  // Declare fake rate histograms
   //----------------------------------------------------------------------------
   TH2D* h_Muon_loose_pt_eta_bin[ncut][njetet];
-  TH1D* h_Muon_loose_pt_bin    [ncut][njetet];
-  TH1D* h_Muon_loose_eta_bin   [ncut][njetet];
-
   TH2D* h_Muon_tight_pt_eta_bin[ncut][njetet];
-  TH1D* h_Muon_tight_pt_bin    [ncut][njetet];
-  TH1D* h_Muon_tight_eta_bin   [ncut][njetet];
+  TH2D* h_Ele_loose_pt_eta_bin [ncut][njetet];
+  TH2D* h_Ele_tight_pt_eta_bin [ncut][njetet];
 
-  TH2D* h_Ele_loose_pt_eta_bin[ncut][njetet];
-  TH1D* h_Ele_loose_pt_bin    [ncut][njetet];
-  TH1D* h_Ele_loose_eta_bin   [ncut][njetet];
+  TH1D* h_Muon_loose_pt_bin[ncut][njetet];
+  TH1D* h_Muon_tight_pt_bin[ncut][njetet];
+  TH1D* h_Ele_loose_pt_bin [ncut][njetet];
+  TH1D* h_Ele_tight_pt_bin [ncut][njetet];
 
-  TH2D* h_Ele_tight_pt_eta_bin[ncut][njetet];
-  TH1D* h_Ele_tight_pt_bin    [ncut][njetet];
-  TH1D* h_Ele_tight_eta_bin   [ncut][njetet];
+  TH1D* h_Muon_loose_eta_bin[ncut][njetet];
+  TH1D* h_Muon_tight_eta_bin[ncut][njetet];
+  TH1D* h_Ele_loose_eta_bin [ncut][njetet];
+  TH1D* h_Ele_tight_eta_bin [ncut][njetet];
 
   TH1D* h_Muon_loose_pt[ncut][njetet];
   TH1D* h_Muon_tight_pt[ncut][njetet];
@@ -90,7 +89,7 @@ class AnalysisFR: public AnalysisCMS
   TH2D* h_Ele_tight_pt_m2l [ncut][njetet];
 
 
-  // Prompt rate histograms
+  // Declare prompt rate histograms
   //----------------------------------------------------------------------------
   TH2D* h_Muon_loose_pt_eta_PR;
   TH2D* h_Muon_tight_pt_eta_PR;

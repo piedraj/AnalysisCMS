@@ -21,29 +21,34 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   Setup(analysis, filename, luminosity);
 
 
-  // Define histograms
+  // Define prompt rate histograms
   //----------------------------------------------------------------------------
-  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "h_Ele_loose_PR",  nptbin, ptbins, netabin, etabins);
-  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "h_Ele_tight_PR",  nptbin, ptbins, netabin, etabins);
-  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "h_Muon_loose_PR", nptbin, ptbins, netabin, etabins);
-  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "h_Muon_tight_PR", nptbin, ptbins, netabin, etabins);
+  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+    
+  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
+  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
+  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
+  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
+    
+  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
+  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
+  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
+  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
 
-  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "h_Ele_loose_PR",  nptbin, ptbins);
-  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "h_Ele_tight_PR",  nptbin, ptbins);
-  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "h_Muon_loose_PR", nptbin, ptbins);
-  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "h_Muon_tight_PR", nptbin, ptbins);
 
-  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "h_Ele_loose_PR",  netabin, etabins);
-  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "h_Ele_tight_PR",  netabin, etabins);
-  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "h_Muon_loose_PR", netabin, etabins);
-  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "h_Muon_tight_PR", netabin, etabins);
-
+  // Define fake rate histograms
+  //----------------------------------------------------------------------------
   for (int i=0; i<ncut; i++) {
     
     TString directory = scut[i];
 
     root_output->cd();
+
     gDirectory->mkdir(directory);
+
     root_output->cd(directory);
       
     for (int j=0; j<njetet; j++) {
@@ -51,43 +56,40 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       TString muonsuffix = Form("_%.0fGev", muonjetet[j]);
       TString elesuffix  = Form("_%.0fGev", elejetet[j]);
     
-      h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "h_Muon_loose_pt_eta_bin", nptbin, ptbins, netabin, etabins);
-      h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "h_Muon_tight_pt_eta_bin", nptbin, ptbins, netabin, etabins);
+      h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
+      h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
+      h_Ele_loose_pt_eta_bin [i][j] = new TH2D("h_Ele_loose_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
+      h_Ele_tight_pt_eta_bin [i][j] = new TH2D("h_Ele_tight_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
       
-      h_Muon_loose_pt_bin[i][j] = new TH1D("h_Muon_loose_pt_bin" + muonsuffix, "h_Muon_loose_pt_bin", nptbin, ptbins);
-      h_Muon_tight_pt_bin[i][j] = new TH1D("h_Muon_tight_pt_bin" + muonsuffix, "h_Muon_tight_pt_bin", nptbin, ptbins);
+      h_Muon_loose_pt_bin[i][j] = new TH1D("h_Muon_loose_pt_bin" + muonsuffix, "", nptbin, ptbins);
+      h_Muon_tight_pt_bin[i][j] = new TH1D("h_Muon_tight_pt_bin" + muonsuffix, "", nptbin, ptbins);
+      h_Ele_loose_pt_bin [i][j] = new TH1D("h_Ele_loose_pt_bin"  + elesuffix,  "", nptbin, ptbins);
+      h_Ele_tight_pt_bin [i][j] = new TH1D("h_Ele_tight_pt_bin"  + elesuffix,  "", nptbin, ptbins);
       
-      h_Muon_loose_eta_bin[i][j] = new TH1D("h_Muon_loose_eta_bin" + muonsuffix, "h_Muon_loose_eta_bin", netabin, etabins);
-      h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "h_Muon_tight_eta_bin", netabin, etabins);
+      h_Muon_loose_eta_bin[i][j] = new TH1D("h_Muon_loose_eta_bin" + muonsuffix, "", netabin, etabins);
+      h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "", netabin, etabins);
+      h_Ele_loose_eta_bin [i][j] = new TH1D("h_Ele_loose_eta_bin"  + elesuffix,  "", netabin, etabins);
+      h_Ele_tight_eta_bin [i][j] = new TH1D("h_Ele_tight_eta_bin"  + elesuffix,  "", netabin, etabins);
 
-      h_Ele_loose_pt_eta_bin[i][j] = new TH2D("h_Ele_loose_pt_eta_bin" + elesuffix, "h_Ele_loose_pt_eta_bin", nptbin, ptbins, netabin, etabins);
-      h_Ele_tight_pt_eta_bin[i][j] = new TH2D("h_Ele_tight_pt_eta_bin" + elesuffix, "h_Ele_tight_pt_eta_bin", nptbin, ptbins, netabin, etabins);
+      h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "", 1000, 0, 200);
 
-      h_Ele_loose_pt_bin[i][j] = new TH1D("h_Ele_loose_pt_bin" + elesuffix, "h_Ele_loose_pt_bin", nptbin, ptbins);
-      h_Ele_tight_pt_bin[i][j] = new TH1D("h_Ele_tight_pt_bin" + elesuffix, "h_Ele_tight_pt_bin", nptbin, ptbins);
+      h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "", 1000, 0, 200);
 
-      h_Ele_loose_eta_bin[i][j] = new TH1D("h_Ele_loose_eta_bin" + elesuffix, "h_Ele_loose_eta_bin", netabin, etabins);
-      h_Ele_tight_eta_bin[i][j] = new TH1D("h_Ele_tight_eta_bin" + elesuffix, "h_Ele_tight_eta_bin", netabin, etabins);
-
-      h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "h_Muon_loose_pt", 1000, 0, 200);
-      h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "h_Muon_tight_pt", 1000, 0, 200);
-      h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "h_Ele_loose_pt",  1000, 0, 200);
-      h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "h_Ele_tight_pt",  1000, 0, 200);
-
-      h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "h_Muon_loose_mtw", 1000, 0, 200);
-      h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "h_Muon_tight_mtw", 1000, 0, 200);
-      h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "h_Ele_loose_mtw",  1000, 0, 200);
-      h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "h_Ele_tight_mtw",  1000, 0, 200);
-
-      h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "h_Muon_loose_m2l", 1000, 0, 200);
-      h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "h_Muon_tight_m2l", 1000, 0, 200);
-      h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "h_Ele_loose_m2l",  1000, 0, 200);
-      h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "h_Ele_tight_m2l",  1000, 0, 200);
+      h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "", 1000, 0, 200);
       
-      h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "h_Muon_loose_pt_m2l", 200, 0, 200, nptbin, ptbins);
-      h_Muon_tight_pt_m2l[i][j] = new TH2D("h_Muon_tight_pt_m2l" + muonsuffix, "h_Muon_tight_pt_m2l", 200, 0, 200, nptbin, ptbins);
-      h_Ele_loose_pt_m2l [i][j] = new TH2D("h_Ele_loose_pt_m2l"  + elesuffix,  "h_Ele_loose_pt_m2l",  200, 0, 200, nptbin, ptbins);
-      h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "h_Ele_tight_pt_m2l",  200, 0, 200, nptbin, ptbins);
+      h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
+      h_Muon_tight_pt_m2l[i][j] = new TH2D("h_Muon_tight_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
+      h_Ele_loose_pt_m2l [i][j] = new TH2D("h_Ele_loose_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
+      h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
     }
   }
 
