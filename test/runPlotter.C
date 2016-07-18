@@ -108,7 +108,7 @@ void runPlotter(TString level,
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
+      //      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
  //     plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
@@ -117,12 +117,12 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 
 	}
       else
 	{
- 	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+	  	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
