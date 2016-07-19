@@ -227,7 +227,23 @@ Commit your changes.
 A detailed example of a CMS Note written in LaTeX using the *cms-tdr* document class can be found in the [svn-instructions.pdf](https://github.com/piedraj/AnalysisCMS/raw/master/svn-instructions.pdf) file.
 
 
-9. Copy latino trees from cernbox to gridui
+9. EOS
+====
+
+To access files at eos/cms.
+
+    eosmount  eos
+    eosumount eos
+    rmdir eos
+
+To access files at eos/user.
+
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount  eos
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eos
+    rmdir eos
+
+
+10. Copy latino trees from cernbox to gridui
 ====
 
 First of all add your lxplus pub key in [ipa](https://ipa.ifca.es/).
@@ -238,28 +254,14 @@ Then log in to lxplus, mount eos and choose the input folder.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
-
-    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount eos
-
-l2tight data for ICHEP 2016.
-
     rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight $USER@pool03.ifca.es:
-
-l2tight MC for ICHEP 2016.
-
-    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/07Jun2016_spring16_mAODv2/MCl2loose__hadd__bSFL2pTEff__l2tight $USER@pool03.ifca.es:
-
-Do not forget unmounting eos once everything has been copied.
-
-    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eos
-    rmdir eos
 
 Check that the input folder has be copied at the following gridui path.
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
 
 
-10. brilcalc
+11. brilcalc
 ====
 
 Log in to lxplus.
