@@ -164,7 +164,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
-      _event_weight = baseW * puW * GEN_weight_SM / abs(GEN_weight_SM);
+      _event_weight = baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
 
       if (_sample.Contains("DYJetsToLL")) _event_weight *= (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)));
 
@@ -183,13 +183,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 4.391);
+	  //_event_weight = (1e3 / 4.391);
 
 	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 91.222);
+	  //_event_weight = (1e3 / 91.222);
 
 	  passTrigger = true;
 	}
@@ -202,13 +202,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 3.972);
+	  //_event_weight = (1e3 / 3.972);
 
 	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 21.165);
+	  //_event_weight = (1e3 / 21.165);
 
 	  passTrigger = true;
 	}
@@ -252,16 +252,17 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
 
 
+    // Get the jets and the W transverse mass
+    //--------------------------------------------------------------------------
+    GetAwayJets();
+    GetMt(Lepton1, _mtw);
+
+
     // Preselection
     //--------------------------------------------------------------------------
     if (!passTrigger) continue;
 
-    if (!PassJetSelection()) continue;
-
-
-    // Get W transverse mass
-    //--------------------------------------------------------------------------
-    GetMt(Lepton1, _mtw);
+    if (AnalysisJets.size() < 1) continue;
 
 
     // Get histograms for different jet pt thresholds
@@ -417,12 +418,10 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
 
 
 //------------------------------------------------------------------------------
-// PassJetSelection
+// GetAwayJets
 //------------------------------------------------------------------------------
-bool AnalysisFR::PassJetSelection()
+void AnalysisFR::GetAwayJets()
 {
-  bool pass = false;
-
   AnalysisJets.clear();
    
   int jetsize = std_vector_jet_pt->size();
@@ -447,15 +446,8 @@ bool AnalysisFR::PassJetSelection()
 
     float dR = tlv.DeltaR(Lepton1.v);
 
-    if (dR > 1) {
-
-      pass = true;
-
-      AnalysisJets.push_back(jet_);
-    }
+    if (dR > 1) AnalysisJets.push_back(jet_);
   }
-
-  return pass;
 }
 
 

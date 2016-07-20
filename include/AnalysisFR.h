@@ -34,7 +34,7 @@ class AnalysisFR: public AnalysisCMS
 			      TString sample,
 			      float   luminosity);
 
-  bool PassJetSelection      ();
+  void GetAwayJets           ();
 
 
   // Data members

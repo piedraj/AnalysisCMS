@@ -8,6 +8,9 @@ TFile* zjets;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
+Double_t effectiveLumi_Ele  = 1.;
+Double_t effectiveLumi_Muon = 1.;
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -30,7 +33,7 @@ void getFakeRate(bool draw    = true,
   float elejetet;
   float muonjetet;
 
-  int njetet = (draw) ? 1 : 8;
+  int njetet = (draw) ? 1 : 7;
 
   for (int i=0; i<njetet; i++) {
 
@@ -77,11 +80,10 @@ void getFakeRate(bool draw    = true,
       h_Ele_FR_pt -> SetXTitle("pt");
       h_Ele_FR_pt -> SetYTitle("FR");
 
-      if (Zsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -1);
-      if (Wsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -1);
-
-      if (Zsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_zjets, -1);
-      if (Wsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_zjets, -effectiveLumi_Ele);
+      if (Wsubtraction) h_Ele_loose_pt_bin -> Add(h_Ele_loose_pt_bin_wjets, -effectiveLumi_Ele);
+      if (Zsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_zjets, -effectiveLumi_Ele);
+      if (Wsubtraction) h_Ele_tight_pt_bin -> Add(h_Ele_tight_pt_bin_wjets, -effectiveLumi_Ele);
 
       h_Ele_FR_pt_EWK -> Divide(h_Ele_tight_pt_bin, h_Ele_loose_pt_bin);
       h_Ele_FR_pt_EWK -> Draw("same");
@@ -124,11 +126,10 @@ void getFakeRate(bool draw    = true,
       h_Ele_FR_eta -> SetXTitle("eta");
       h_Ele_FR_eta -> SetYTitle("FR");
 
-      if (Zsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -1);
-      if (Wsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -1);
-
-      if (Zsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_zjets, -1);
-      if (Wsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_zjets, -effectiveLumi_Ele);
+      if (Wsubtraction) h_Ele_loose_eta_bin -> Add(h_Ele_loose_eta_bin_wjets, -effectiveLumi_Ele);
+      if (Zsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_zjets, -effectiveLumi_Ele);
+      if (Wsubtraction) h_Ele_tight_eta_bin -> Add(h_Ele_tight_eta_bin_wjets, -effectiveLumi_Ele);
 
       h_Ele_FR_eta_EWK -> Divide(h_Ele_tight_eta_bin, h_Ele_loose_eta_bin);
       h_Ele_FR_eta_EWK -> Draw("same");
@@ -158,11 +159,10 @@ void getFakeRate(bool draw    = true,
     h_Ele_FR_pT_eta -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin);
     h_Ele_FR_pT_eta -> Write("FR_pT_eta");
 
-    if (Zsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_zjets, -1);
-    if (Wsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_wjets, -1);
-
-    if (Zsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_zjets, -1);
-    if (Wsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_zjets, -effectiveLumi_Ele);
+    if (Wsubtraction) h_Ele_loose_pt_eta_bin -> Add(h_Ele_loose_pt_eta_bin_wjets, -effectiveLumi_Ele);
+    if (Zsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_zjets, -effectiveLumi_Ele);
+    if (Wsubtraction) h_Ele_tight_pt_eta_bin -> Add(h_Ele_tight_pt_eta_bin_wjets, -effectiveLumi_Ele);
 
     h_Ele_FR_pT_eta_EWKcorr -> Divide(h_Ele_tight_pt_eta_bin, h_Ele_loose_pt_eta_bin);
     h_Ele_FR_pT_eta_EWKcorr -> Write("FR_pT_eta_EWKcorr");
@@ -275,11 +275,10 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_pt -> SetXTitle("pt");
       h_Muon_FR_pt -> SetYTitle("FR");
 
-      if (Zsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -1);
-      if (Wsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -1);
-
-      if (Zsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_zjets, -1);
-      if (Wsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_zjets, -effectiveLumi_Muon);
+      if (Wsubtraction) h_Muon_loose_pt_bin -> Add(h_Muon_loose_pt_bin_wjets, -effectiveLumi_Muon);
+      if (Zsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_zjets, -effectiveLumi_Muon);
+      if (Wsubtraction) h_Muon_tight_pt_bin -> Add(h_Muon_tight_pt_bin_wjets, -effectiveLumi_Muon);
       
       h_Muon_FR_pt_EWK -> Divide(h_Muon_tight_pt_bin, h_Muon_loose_pt_bin);
       h_Muon_FR_pt_EWK -> Draw("same");
@@ -321,11 +320,10 @@ void getFakeRate(bool draw    = true,
       h_Muon_FR_eta -> SetXTitle("eta");
       h_Muon_FR_eta -> SetYTitle("FR");
 
-      if (Zsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -1);
-      if (Wsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -1);
-
-      if (Zsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_zjets, -1);
-      if (Wsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -1);
+      if (Zsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_zjets, -effectiveLumi_Muon);
+      if (Wsubtraction) h_Muon_loose_eta_bin -> Add(h_Muon_loose_eta_bin_wjets, -effectiveLumi_Muon);
+      if (Zsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_zjets, -effectiveLumi_Muon);
+      if (Wsubtraction) h_Muon_tight_eta_bin -> Add(h_Muon_tight_eta_bin_wjets, -effectiveLumi_Muon);
 
       h_Muon_FR_eta_EWK -> Divide(h_Muon_tight_eta_bin, h_Muon_loose_eta_bin);
       h_Muon_FR_eta_EWK -> Draw("same");
@@ -354,11 +352,10 @@ void getFakeRate(bool draw    = true,
     h_Muon_FR_pt_eta -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin);
     h_Muon_FR_pt_eta -> Write("FR_pT_eta");
 
-    if (Zsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_zjets, -1);
-    if (Wsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_wjets, -1);
-
-    if (Zsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_zjets, -1);
-    if (Wsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_wjets, -1);
+    if (Zsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_zjets, -effectiveLumi_Muon);
+    if (Wsubtraction) h_Muon_loose_pt_eta_bin -> Add(h_Muon_loose_pt_eta_bin_wjets, -effectiveLumi_Muon);
+    if (Zsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_zjets, -effectiveLumi_Muon);
+    if (Wsubtraction) h_Muon_tight_pt_eta_bin -> Add(h_Muon_tight_pt_eta_bin_wjets, -effectiveLumi_Muon);
 
     h_Muon_FR_pt_eta_EWK -> Divide(h_Muon_tight_pt_eta_bin, h_Muon_loose_pt_eta_bin);
     h_Muon_FR_pt_eta_EWK -> Write("FR_pT_eta_EWKcorr");

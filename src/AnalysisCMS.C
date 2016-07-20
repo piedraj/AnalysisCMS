@@ -422,6 +422,8 @@ void AnalysisCMS::GetLeptons()
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
 
+    if (!std_vector_lepton_isLooseLepton->at(i)) continue;
+
     if (pt < 0.) continue;
 
     bool reject_lepton = false;
