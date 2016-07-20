@@ -168,6 +168,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       if (_sample.Contains("DYJetsToLL")) _event_weight *= (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)));
 
+      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.232;  // Obtained with getLumiEff.C
+      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.128;  // Obtained with getLumiEff.C
+
       passTrigger = true;
 
     } else {

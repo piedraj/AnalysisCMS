@@ -9,9 +9,6 @@ bool savepng      = true;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
-Double_t effectiveLumi_Ele  = 1.;
-Double_t effectiveLumi_Muon = 1.;
-
 TFile* data;
 TFile* wjets;
 TFile* zjets;
@@ -102,8 +99,6 @@ void DrawFR(TString  flavour,
 	    TString  variable,
 	    Double_t jetet)
 {
-  Double_t effectiveLumi = (flavour.EqualTo("Ele")) ? effectiveLumi_Ele : effectiveLumi_Muon;
-  
   TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
   TString suffix = Form("%s_bin_%.0fGev", variable.Data(), jetet);
 
@@ -125,10 +120,10 @@ void DrawFR(TString  flavour,
       
   h_FR->Divide(h_tight_data, h_loose_data);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -effectiveLumi);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -effectiveLumi);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -effectiveLumi);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -effectiveLumi);
+  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -1.);
+  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -1.);
+  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -1.);
+  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -1.);
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
 
@@ -212,8 +207,6 @@ void DrawPR(TString  flavour,
 void WriteFR(TString  flavour,
 	     Double_t jetet)
 {
-  Double_t effectiveLumi = (flavour.EqualTo("Ele")) ? effectiveLumi_Ele : effectiveLumi_Muon;
-  
   TString suffix = Form("pt_eta_bin_%.0fGev", jetet);
 
   
@@ -234,10 +227,10 @@ void WriteFR(TString  flavour,
       
   h_FR->Divide(h_tight_data, h_loose_data);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -effectiveLumi);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -effectiveLumi);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -effectiveLumi);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -effectiveLumi);
+  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -1.);
+  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -1.);
+  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -1.);
+  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -1.);
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
 
