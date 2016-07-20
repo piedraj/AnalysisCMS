@@ -232,15 +232,15 @@ A detailed example of a CMS Note written in LaTeX using the *cms-tdr* document c
 
 To access files at eos/cms.
 
-    eosmount  eos
-    eosumount eos
-    rmdir eos
+    eosmount  eoscms
+    eosumount eoscms
+    rmdir eoscms
 
 To access files at eos/user.
 
-    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount  eos
-    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eos
-    rmdir eos
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse mount  eosuser
+    /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eosuser
+    rmdir eosuser
 
 
 10. Copy latino trees from cernbox to gridui
