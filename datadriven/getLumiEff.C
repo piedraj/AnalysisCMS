@@ -1,7 +1,7 @@
 const float zmin =  76;  // [GeV]
 const float zmax = 106;  // [GeV]
 
-bool highpt = true;
+bool highpt = false;
 
 int bin_zmin;
 int bin_zmax;
