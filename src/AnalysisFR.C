@@ -164,9 +164,12 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
-      _event_weight = baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      Float_t corrected_baseW = baseW; 
 
-      if (_sample.Contains("DYJetsToLL")) _event_weight *= (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)));
+      if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
+      if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
+
+      _event_weight = corrected_baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
 
       passTrigger = true;
 
@@ -255,9 +258,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     // Normalization based on getLumiEff.C results
     //--------------------------------------------------------------------------
     if (_ismc) {
-
-      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.23243;
-      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.12820;
+      
+      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.221;
+      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.150;
     }
 
 

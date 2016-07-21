@@ -4,8 +4,9 @@
 const Double_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Double_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
 
-bool draw         = false;
+bool draw         = true;
 bool savepng      = true;
+bool setgrid      = false;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
@@ -16,18 +17,34 @@ TFile* zjets;
 
 // Functions
 //------------------------------------------------------------------------------
-void DrawFR (TString  flavour,
-	     TString  variable,
-	     Double_t jetet);
+void     DrawFR     (TString    flavour,
+		     TString    variable,
+		     Double_t   jetet);
 
-void DrawPR (TString  flavour,
-	     TString  variable);
+void     DrawPR    (TString     flavour,
+		    TString     variable);
 
-void WriteFR(TString  flavour,
-	     Double_t jetet);
+void     WriteFR   (TString     flavour,
+		    Double_t    jetet);
 
-void WritePR(TString  flavour);
+void     WritePR   (TString     flavour);
 
+void     DrawLatex (Font_t      tfont,
+		    Float_t     x,
+		    Float_t     y,
+		    Float_t     tsize,
+		    Short_t     align,
+		    const char* text,
+		    Bool_t      setndc = true);
+
+TLegend* DrawLegend(Float_t     x1,
+		    Float_t     y1,
+		    TH1*        hist,
+		    TString     label,
+		    TString     option  = "p",
+		    Float_t     tsize   = 0.035,
+		    Float_t     xoffset = 0.184,
+		    Float_t     yoffset = 0.043);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -132,12 +149,12 @@ void DrawFR(TString  flavour,
   //----------------------------------------------------------------------------
   TCanvas* canvas = new TCanvas(title, title, 450, 550);
       
-  canvas->SetGridx(1);
-  canvas->SetGridy(1);
+  canvas->SetGridx(setgrid);
+  canvas->SetGridy(setgrid);
 
-  h_FR->Draw();
+  h_FR->Draw("ep");
 
-  h_FR_EWK->Draw("same");
+  h_FR_EWK->Draw("ep,same");
 
 
   // Cosmetics
@@ -145,12 +162,21 @@ void DrawFR(TString  flavour,
   h_FR->SetAxisRange(0, 1, "Y");
   h_FR->SetLineColor(kBlack);
   h_FR->SetLineWidth(2);
-  h_FR->SetTitle(title);
+  h_FR->SetMarkerColor(kBlack);
+  h_FR->SetMarkerStyle(kFullCircle);
+  h_FR->SetTitle("");
   h_FR->SetXTitle(variable);
-  h_FR->SetYTitle("FR");
+  h_FR->SetYTitle("fake rate");
+
+  h_FR->GetXaxis()->SetTitleOffset(1.5);
+  h_FR->GetYaxis()->SetTitleOffset(1.8);
 
   h_FR_EWK->SetLineColor(kRed+1);
   h_FR_EWK->SetLineWidth(2);
+  h_FR_EWK->SetMarkerColor(kRed+1);
+  h_FR_EWK->SetMarkerStyle(kFullCircle);
+
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
 
 
   // Save
@@ -179,10 +205,10 @@ void DrawPR(TString  flavour,
   //----------------------------------------------------------------------------
   TCanvas* canvas = new TCanvas(title, title, 450, 550);
       
-  canvas->SetGridx(1);
-  canvas->SetGridy(1);
+  canvas->SetGridx(setgrid);
+  canvas->SetGridy(setgrid);
 
-  h_PR->Draw();
+  h_PR->Draw("ep");
 
 
   // Cosmetics
@@ -190,9 +216,16 @@ void DrawPR(TString  flavour,
   h_PR->SetAxisRange(0, 1, "Y");
   h_PR->SetLineColor(kBlack);
   h_PR->SetLineWidth(2);
-  h_PR->SetTitle(title);
+  h_PR->SetMarkerColor(kBlack);
+  h_PR->SetMarkerStyle(kFullCircle);
+  h_PR->SetTitle("");
   h_PR->SetXTitle(variable);
-  h_PR->SetYTitle("PR");
+  h_PR->SetYTitle("prompt rate");
+
+  h_PR->GetXaxis()->SetTitleOffset(1.5);
+  h_PR->GetYaxis()->SetTitleOffset(1.8);
+
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
 
 
   // Save
@@ -266,4 +299,58 @@ void WritePR(TString flavour)
   h_PR->Write();
   
   file->Close();
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLatex
+//------------------------------------------------------------------------------
+void DrawLatex(Font_t      tfont,
+	       Float_t     x,
+	       Float_t     y,
+	       Float_t     tsize,
+	       Short_t     align,
+	       const char* text,
+	       Bool_t      setndc)
+{
+  TLatex* tl = new TLatex(x, y, text);
+
+  tl->SetNDC      (setndc);
+  tl->SetTextAlign( align);
+  tl->SetTextFont ( tfont);
+  tl->SetTextSize ( tsize);
+
+  tl->Draw("same");
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLegend
+//------------------------------------------------------------------------------
+TLegend* DrawLegend(Float_t x1,
+		    Float_t y1,
+		    TH1*    hist,
+		    TString label,
+		    TString option,
+		    Float_t tsize,
+		    Float_t xoffset,
+		    Float_t yoffset)
+{
+  TLegend* legend = new TLegend(x1,
+				y1,
+				x1 + xoffset,
+				y1 + yoffset);
+  
+  legend->SetBorderSize(    0);
+  legend->SetFillColor (    0);
+  legend->SetTextAlign (   12);
+  legend->SetTextFont  (   42);
+  legend->SetTextSize  (tsize);
+
+  TString final_label = Form(" %s", label.Data());
+
+  legend->AddEntry(hist, final_label.Data(), option.Data());
+  legend->Draw();
+
+  return legend;
 }
