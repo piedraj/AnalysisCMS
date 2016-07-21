@@ -21,29 +21,16 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   Setup(analysis, filename, luminosity);
 
 
-  // Define histograms
+  // Define fake rate histograms
   //----------------------------------------------------------------------------
-  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "h_Ele_loose_PR",  nptbin, ptbins, netabin, etabins);
-  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "h_Ele_tight_PR",  nptbin, ptbins, netabin, etabins);
-  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "h_Muon_loose_PR", nptbin, ptbins, netabin, etabins);
-  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "h_Muon_tight_PR", nptbin, ptbins, netabin, etabins);
-
-  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "h_Ele_loose_PR",  nptbin, ptbins);
-  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "h_Ele_tight_PR",  nptbin, ptbins);
-  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "h_Muon_loose_PR", nptbin, ptbins);
-  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "h_Muon_tight_PR", nptbin, ptbins);
-
-  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "h_Ele_loose_PR",  netabin, etabins);
-  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "h_Ele_tight_PR",  netabin, etabins);
-  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "h_Muon_loose_PR", netabin, etabins);
-  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "h_Muon_tight_PR", netabin, etabins);
-
   for (int i=0; i<ncut; i++) {
     
     TString directory = scut[i];
 
     root_output->cd();
+
     gDirectory->mkdir(directory);
+
     root_output->cd(directory);
       
     for (int j=0; j<njetet; j++) {
@@ -51,47 +38,62 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       TString muonsuffix = Form("_%.0fGev", muonjetet[j]);
       TString elesuffix  = Form("_%.0fGev", elejetet[j]);
     
-      h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "h_Muon_loose_pt_eta_bin", nptbin, ptbins, netabin, etabins);
-      h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "h_Muon_tight_pt_eta_bin", nptbin, ptbins, netabin, etabins);
+      h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
+      h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
+      h_Ele_loose_pt_eta_bin [i][j] = new TH2D("h_Ele_loose_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
+      h_Ele_tight_pt_eta_bin [i][j] = new TH2D("h_Ele_tight_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
       
-      h_Muon_loose_pt_bin[i][j] = new TH1D("h_Muon_loose_pt_bin" + muonsuffix, "h_Muon_loose_pt_bin", nptbin, ptbins);
-      h_Muon_tight_pt_bin[i][j] = new TH1D("h_Muon_tight_pt_bin" + muonsuffix, "h_Muon_tight_pt_bin", nptbin, ptbins);
+      h_Muon_loose_pt_bin[i][j] = new TH1D("h_Muon_loose_pt_bin" + muonsuffix, "", nptbin, ptbins);
+      h_Muon_tight_pt_bin[i][j] = new TH1D("h_Muon_tight_pt_bin" + muonsuffix, "", nptbin, ptbins);
+      h_Ele_loose_pt_bin [i][j] = new TH1D("h_Ele_loose_pt_bin"  + elesuffix,  "", nptbin, ptbins);
+      h_Ele_tight_pt_bin [i][j] = new TH1D("h_Ele_tight_pt_bin"  + elesuffix,  "", nptbin, ptbins);
       
-      h_Muon_loose_eta_bin[i][j] = new TH1D("h_Muon_loose_eta_bin" + muonsuffix, "h_Muon_loose_eta_bin", netabin, etabins);
-      h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "h_Muon_tight_eta_bin", netabin, etabins);
+      h_Muon_loose_eta_bin[i][j] = new TH1D("h_Muon_loose_eta_bin" + muonsuffix, "", netabin, etabins);
+      h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "", netabin, etabins);
+      h_Ele_loose_eta_bin [i][j] = new TH1D("h_Ele_loose_eta_bin"  + elesuffix,  "", netabin, etabins);
+      h_Ele_tight_eta_bin [i][j] = new TH1D("h_Ele_tight_eta_bin"  + elesuffix,  "", netabin, etabins);
 
-      h_Ele_loose_pt_eta_bin[i][j] = new TH2D("h_Ele_loose_pt_eta_bin" + elesuffix, "h_Ele_loose_pt_eta_bin", nptbin, ptbins, netabin, etabins);
-      h_Ele_tight_pt_eta_bin[i][j] = new TH2D("h_Ele_tight_pt_eta_bin" + elesuffix, "h_Ele_tight_pt_eta_bin", nptbin, ptbins, netabin, etabins);
+      h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "", 1000, 0, 200);
 
-      h_Ele_loose_pt_bin[i][j] = new TH1D("h_Ele_loose_pt_bin" + elesuffix, "h_Ele_loose_pt_bin", nptbin, ptbins);
-      h_Ele_tight_pt_bin[i][j] = new TH1D("h_Ele_tight_pt_bin" + elesuffix, "h_Ele_tight_pt_bin", nptbin, ptbins);
+      h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "", 1000, 0, 200);
 
-      h_Ele_loose_eta_bin[i][j] = new TH1D("h_Ele_loose_eta_bin" + elesuffix, "h_Ele_loose_eta_bin", netabin, etabins);
-      h_Ele_tight_eta_bin[i][j] = new TH1D("h_Ele_tight_eta_bin" + elesuffix, "h_Ele_tight_eta_bin", netabin, etabins);
-
-      h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "h_Muon_loose_pt", 1000, 0, 200);
-      h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "h_Muon_tight_pt", 1000, 0, 200);
-      h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "h_Ele_loose_pt",  1000, 0, 200);
-      h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "h_Ele_tight_pt",  1000, 0, 200);
-
-      h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "h_Muon_loose_mtw", 1000, 0, 200);
-      h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "h_Muon_tight_mtw", 1000, 0, 200);
-      h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "h_Ele_loose_mtw",  1000, 0, 200);
-      h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "h_Ele_tight_mtw",  1000, 0, 200);
-
-      h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "h_Muon_loose_m2l", 1000, 0, 200);
-      h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "h_Muon_tight_m2l", 1000, 0, 200);
-      h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "h_Ele_loose_m2l",  1000, 0, 200);
-      h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "h_Ele_tight_m2l",  1000, 0, 200);
+      h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "", 1000, 0, 200);
+      h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "", 1000, 0, 200);
+      h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "", 1000, 0, 200);
+      h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "", 1000, 0, 200);
       
-      h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "h_Muon_loose_pt_m2l", 200, 0, 200, nptbin, ptbins);
-      h_Muon_tight_pt_m2l[i][j] = new TH2D("h_Muon_tight_pt_m2l" + muonsuffix, "h_Muon_tight_pt_m2l", 200, 0, 200, nptbin, ptbins);
-      h_Ele_loose_pt_m2l [i][j] = new TH2D("h_Ele_loose_pt_m2l"  + elesuffix,  "h_Ele_loose_pt_m2l",  200, 0, 200, nptbin, ptbins);
-      h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "h_Ele_tight_pt_m2l",  200, 0, 200, nptbin, ptbins);
+      h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
+      h_Muon_tight_pt_m2l[i][j] = new TH2D("h_Muon_tight_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
+      h_Ele_loose_pt_m2l [i][j] = new TH2D("h_Ele_loose_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
+      h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
     }
   }
 
   root_output -> cd();
+
+
+  // Define prompt rate histograms
+  //----------------------------------------------------------------------------
+  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
+  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
+    
+  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
+  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
+  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
+  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
+    
+  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
+  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
+  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
+  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
 
 
   // Loop over events
@@ -162,7 +164,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
-      _event_weight = baseW * puW * GEN_weight_SM / abs(GEN_weight_SM);
+      _event_weight = baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+
+      if (_sample.Contains("DYJetsToLL")) _event_weight *= (1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582)));
 
       passTrigger = true;
 
@@ -179,13 +183,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 4.391);
+	  _event_weight = (1e3 / 4.813);
 
 	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 91.222);
+	  _event_weight = (1e3 / 138.175);
 
 	  passTrigger = true;
 	}
@@ -198,13 +202,13 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 3.972);
+	  _event_weight = (1e3 / 5.226);
 
 	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 21.165);
+	  _event_weight = (1e3 / 27.132);
 
 	  passTrigger = true;
 	}
@@ -248,11 +252,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
 
 
+    // Normalization based on getLumiEff.C results
+    //--------------------------------------------------------------------------
+    if (_ismc) {
+
+      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.23243;
+      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.12820;
+    }
+
+
+    // Get the jets and the W transverse mass
+    //--------------------------------------------------------------------------
+    GetAwayJets();
+    GetMt(Lepton1, _mtw);
+
+
     // Preselection
     //--------------------------------------------------------------------------
-    if (!passTrigger)        continue;    
-    if (!PassJetSelection()) continue;
+    if (!passTrigger) continue;
 
+    if (AnalysisJets.size() < 1) continue;
+
+
+    // Get histograms for different jet pt thresholds
+    //--------------------------------------------------------------------------
     for (int i=0; i<njetet; i++) {
 
       _inputJetEt = (_channel == e) ? elejetet[i] : muonjetet[i];
@@ -260,26 +283,31 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (AnalysisJets[0].v.Pt() < _inputJetEt) continue; 
 
 
-      // Selection
-      //------------------------------------------------------------------------
-      GetMt(Lepton1, _mtw);
-
       bool pass;
   
+
+      // QCD region
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() < 20 && _mtw < 20);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
+
+      // W region
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() > 20 && _mtw > 20);
       
       FillLevelHistograms(FR_01_WRegion, i, pass);
 
+
+      // W region "QCD"
+      //------------------------------------------------------------------------
       pass = (_nlepton == 1 && MET.Et() < 20 && _mtw > 20);
 
       FillLevelHistograms(FR_02_WRegionQCD, i, pass);
 
 
-      // ZRegion
+      // Z region
       //------------------------------------------------------------------------
       if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 0) {
 
@@ -308,7 +336,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
 
 
-      // ZRegionQCD
+      // Z region "QCD"
       //------------------------------------------------------------------------
       if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 0) {
 
@@ -399,12 +427,10 @@ void AnalysisFR::FillAnalysisHistograms(int icut, int i)
 
 
 //------------------------------------------------------------------------------
-// PassJetSelection
+// GetAwayJets
 //------------------------------------------------------------------------------
-bool AnalysisFR::PassJetSelection()
+void AnalysisFR::GetAwayJets()
 {
-  bool pass = false;
-
   AnalysisJets.clear();
    
   int jetsize = std_vector_jet_pt->size();
@@ -429,24 +455,61 @@ bool AnalysisFR::PassJetSelection()
 
     float dR = tlv.DeltaR(Lepton1.v);
 
-    if (dR > 1) {
-
-      pass = true;
-
-      AnalysisJets.push_back(jet_);
-    }
+    if (dR > 1) AnalysisJets.push_back(jet_);
   }
-
-  return pass;
 }
 
 
-// [2016/07/14]
+/*
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+   [2016/07/20]
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+   export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
 
-// brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   +----------------------+-------+------+-------+-------------------+------------------+
+   | hltpath              | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +----------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29160 | 4.283             | 4.091            |
+   | HLT_Mu8_TrkIsoVVL_v4 | 13    | 49   | 26096 | 0.756             | 0.722            |
+   +----------------------+-------+------+-------+-------------------+------------------+
+
+
+
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+
+   +-----------------------+-------+------+-------+-------------------+------------------+
+   | hltpath               | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +-----------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29160 | 55.456            | 53.039           |
+   | HLT_Mu17_TrkIsoVVL_v3 | 13    | 49   | 26096 | 88.241            | 85.136           |
+   +-----------------------+-------+------+-------+-------------------+------------------+
+
+
+
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 3.180             | 3.054            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 0.675             | 0.646            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 0.822             | 0.794            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 0.758             | 0.732            |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+
+
+
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 17.554            | 16.815           |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 3.247             | 3.112            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 3.938             | 3.805            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 3.517             | 3.400            |
+   +---------------------------------------------+-------+------+-------+-------------------+------------------+
+
+*/
