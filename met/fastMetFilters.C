@@ -1,12 +1,10 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const TString path = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/";
+const TString _path = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/";
 
-const Bool_t  _savepdf = true;
-const Bool_t  _savepng = false;
-const Float_t _xoffset = 0.184;
-const Float_t _yoffset = 0.043;
+const Bool_t _savepdf = true;
+const Bool_t _savepng = false;
 
 
 // Functions
@@ -25,8 +23,8 @@ TLegend* DrawLegend(Float_t     x1,
 		    TString     label,
 		    TString     option  = "p",
 		    Float_t     tsize   = 0.035,
-		    Float_t     xoffset = _xoffset,
-		    Float_t     yoffset = _yoffset);
+		    Float_t     xoffset = 0.184,
+		    Float_t     yoffset = 0.043);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +38,10 @@ void fastMetFilters(TString dataset = "DoubleEG")
 
   TChain* tree = new TChain("latino", "latino");
 
-  tree->Add(path + "21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(path + "05Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(path + "08Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(path + "08Jul2016_Run2016C_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016C_PromptReco_" + dataset + ".root");
+  tree->Add(_path + "21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_path + "05Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_path + "08Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_path + "08Jul2016_Run2016C_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016C_PromptReco_" + dataset + ".root");
 
   TH1D* before = new TH1D("before", "", 40, 0, 2000);
   TH1D* after  = new TH1D("after",  "", 40, 0, 2000);
@@ -64,8 +62,9 @@ void fastMetFilters(TString dataset = "DoubleEG")
   before->Draw("hist");
   after ->Draw("ep,same");
 
-  Float_t nbefore = before->Integral(-1,-1);
-  Float_t nafter  = after ->Integral(-1,-1);
+  Float_t nbefore    = before->Integral(-1,-1);
+  Float_t nafter     = after ->Integral(-1,-1);
+  Float_t efficiency = 1e2*nafter/nbefore;
 
 
   // Legend
@@ -76,10 +75,11 @@ void fastMetFilters(TString dataset = "DoubleEG")
   before->SetXTitle("E_{T}^{miss} [GeV]");
   before->SetYTitle(Form("events / %.0f GeV", before->GetBinWidth(0)));
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, dataset + " dataset");
+  DrawLatex(42, 0.190, 0.945, 0.045, 11, dataset);
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
 
   DrawLegend(0.55, 0.83, before, "before filters", "f");
-  DrawLegend(0.55, 0.77, after,  Form("after filters (%.2f%%)", 1e2*nafter/nbefore),   "ep");
+  DrawLegend(0.55, 0.77, after,  Form("after filters (%.2f%%)", efficiency),   "ep");
 
 
   // Save
