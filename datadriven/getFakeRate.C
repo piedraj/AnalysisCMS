@@ -4,7 +4,7 @@
 const Double_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Double_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
 
-bool draw         = true;
+bool draw         = false;
 bool savepng      = true;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
