@@ -34,16 +34,17 @@ TLegend* DrawLegend(Float_t     x1,
 // metFilters
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void metFilters(TString dataset = "DoubleEG")
+void metFilters(TString dataset   = "DoubleEG",
+		TString selection = "l2loose__hadd__EpTCorr__l2tight__wwSel")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   TChain* tree = new TChain("latino", "latino");
 
-  tree->Add(_lxplus + "21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "05Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016C_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016C_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "21Jun2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "05Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "08Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "08Jul2016_Run2016C_PromptReco/" + selection + "/latino_Run2016C_PromptReco_" + dataset + ".root");
 
   TH1D* before = new TH1D("before", "", 20, 0, 1000);
   TH1D* after  = new TH1D("after",  "", 20, 0, 1000);
