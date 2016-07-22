@@ -350,8 +350,7 @@ void AnalysisCMS::ApplyWeights()
       if (!_is74X) {
 	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
 	  {
-	    //	    sf_btag = bPogSF_CSVM;
-	    sf_btag = bPogSF;
+	    sf_btag = bPogSF_CSVM;
 	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
 	    if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
 	  }
@@ -1269,23 +1268,8 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-
-  // Data-driven
-  //----------------------------------------------------------------------------
   //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
   _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
-
-  // From resummed calculations
-  //----------------------------------------------------------------------------
-  //  float p0 = 1.02852e+00;
-  //  float p1 = 9.49640e-02;
-  //  float p2 = 1.90422e+01;
-  //  float p3 = 1.04487e+01;
-  //  float p4 = 7.58834e-02;
-  //  float p5 = 5.61146e+01;
-  //  float p6 = 4.11653e+01;
-  //
-  //  _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
 }
 
 

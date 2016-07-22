@@ -156,10 +156,10 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_trigger_up;
 
   TString                _analysis;
+  TString                _dataperiod;
   TString                _filename;
   TString                _sample;
   TString                _systematic;
-  TString                _dataperiod;
 
   float                  _channel;
   float                  _deltarjet1met;
