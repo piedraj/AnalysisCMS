@@ -288,9 +288,16 @@ void AnalysisCMS::Setup(TString analysis,
   gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
+  _dataperiod = "";
 
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
+  if (_filename.Contains("21Jun2016_Run2016B")) _dataperiod = "_21Jun2016_Run2016B";
+  if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016_Run2016B";
+  if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
+  if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
+
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".root", "recreate");
+
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + "_eventdump.txt");
 
 
   OpenMinitree();
@@ -324,7 +331,8 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight *= trigger * metFilter;
+  //  _event_weight *= trigger * metFilter;
+  _event_weight *= trigger;
 
   if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
     
@@ -342,7 +350,8 @@ void AnalysisCMS::ApplyWeights()
       if (!_is74X) {
 	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
 	  {
-	    sf_btag = bPogSF_CSVM;
+	    //	    sf_btag = bPogSF_CSVM;
+	    sf_btag = bPogSF;
 	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
 	    if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
 	  }
@@ -375,10 +384,10 @@ void AnalysisCMS::ApplyWeights()
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
+  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
 
-  if (_sample.EqualTo("Wg_AMCNLOFXFX"))
+  if (_sample.EqualTo("Wg_MADGRAPHMLM"))
     {
       _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
     }
@@ -1003,7 +1012,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + ".txt");
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".txt");
 
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
@@ -1265,7 +1274,6 @@ void AnalysisCMS::GetGenPtllWeight()
   //----------------------------------------------------------------------------
   //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
   _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
-
 
   // From resummed calculations
   //----------------------------------------------------------------------------
