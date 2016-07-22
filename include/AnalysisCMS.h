@@ -159,6 +159,7 @@ class AnalysisCMS : public AnalysisBase
   TString                _filename;
   TString                _sample;
   TString                _systematic;
+  TString                _dataperiod;
 
   float                  _channel;
   float                  _deltarjet1met;
