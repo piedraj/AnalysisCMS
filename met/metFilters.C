@@ -5,7 +5,7 @@ const TString _gridui = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbo
 const TString _lxplus = "eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/";
 
 
-const Bool_t _savepdf = false;
+const Bool_t _savepdf = true;
 const Bool_t _savepng = true;
 
 
@@ -52,8 +52,33 @@ void metFilters(TString dataset = "DoubleEG")
 
   c1->SetLogy();
 
-  tree->Draw("metPfType1>>before", "trigger");
-  tree->Draw("metPfType1>>after",  "trigger * metFilter");
+
+  //----------------------------------------------------------------------------
+  //
+  //  yes: apply for ICHEP
+  //  no:  do not apply for ICHEP
+  //  --:  not available up to 08Jul latino trees
+  //
+  //  [ 0,yes] Flag_HBHENoiseFilter
+  //  [ 1,yes] Flag_HBHENoiseIsoFilter
+  //  [ 2, no] Flag_CSCTightHalo2015Filter
+  //  [ 3,yes] Flag_EcalDeadCellTriggerPrimitiveFilter
+  //  [ 4,yes] Flag_goodVertices
+  //  [ 5,yes] Flag_eeBadScFilter
+  //  [ 6, no] Flag_chargedHadronTrackResolutionFilter
+  //  [ 7, no] Flag_muonBadTrackFilter
+  //  [--,yes] Flag_globalTightHalo2016Filter
+  //  [--,yes] Flag_badChargedHadronFilter
+  //  [--,yes] Flag_badMuonFilter
+  //
+  //----------------------------------------------------------------------------
+
+
+  TCut triggerCut   = "trigger";
+  TCut metFilterCut = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[3]*std_vector_trigger_special[4]*std_vector_trigger_special[5]";
+
+  tree->Draw("metPfType1>>before", triggerCut);
+  tree->Draw("metPfType1>>after",  triggerCut && metFilterCut);
 
   before->SetFillColor(kGray);
   before->SetFillStyle(1001);
