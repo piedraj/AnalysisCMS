@@ -6,7 +6,7 @@ const TString _lxplus = "eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/"
 
 
 const Bool_t _savepdf = true;
-const Bool_t _savepng = true;
+const Bool_t _savepng = false;
 
 
 // Functions
@@ -35,7 +35,7 @@ TLegend* DrawLegend(Float_t     x1,
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void metFilters(TString dataset   = "DoubleEG",
-		TString selection = "l2loose__hadd__EpTCorr__l2tight__wwSel")
+		TString selection = "l2loose__hadd__EpTCorr__l2tight")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
