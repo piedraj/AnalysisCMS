@@ -38,7 +38,7 @@ void checkTriggers()
 	  TString label = (TString)xaxis->GetBinLabel(j);
 
 	  if (label.Length() < 1) continue;
-	
+
 	  if (triggers[i].EqualTo(label)) printf(" found [%d] %s\n", i, label.Data());
 	}
     }
