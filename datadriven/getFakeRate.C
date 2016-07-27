@@ -117,7 +117,7 @@ void DrawFR(TString  flavour,
 	    Double_t jetet)
 {
   TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
-  TString suffix = Form("%s_bin_%.0fGev", variable.Data(), jetet);
+  TString suffix = Form("%s_bin_%.0fGeV", variable.Data(), jetet);
 
   
   // Read loose and tight histograms
@@ -181,7 +181,7 @@ void DrawFR(TString  flavour,
 
   // Save
   //----------------------------------------------------------------------------
-  if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGev.png", flavour.Data(), variable.Data(), jetet));
+  if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
 }
 
 
@@ -240,7 +240,7 @@ void DrawPR(TString  flavour,
 void WriteFR(TString  flavour,
 	     Double_t jetet)
 {
-  TString suffix = Form("pt_eta_bin_%.0fGev", jetet);
+  TString suffix = Form("pt_eta_bin_%.0fGeV", jetet);
 
   
   // Read loose and tight histograms

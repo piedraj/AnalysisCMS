@@ -35,8 +35,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       
     for (int j=0; j<njetet; j++) {
 
-      TString muonsuffix = Form("_%.0fGev", muonjetet[j]);
-      TString elesuffix  = Form("_%.0fGev", elejetet[j]);
+      TString muonsuffix = Form("_%.0fGeV", muonjetet[j]);
+      TString elesuffix  = Form("_%.0fGeV", elejetet[j]);
     
       h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);

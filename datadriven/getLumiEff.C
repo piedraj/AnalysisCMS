@@ -31,8 +31,8 @@ void getLumiEff()
   float muonjetet = 25.;
   float elejetet = 35.;
 
-  TString muonsuffix = Form("_%.0fGev", muonjetet);
-  TString elesuffix = Form("_%.0fGev", elejetet);
+  TString muonsuffix = Form("_%.0fGeV", muonjetet);
+  TString elesuffix = Form("_%.0fGeV", elejetet);
 
   // DATA
 
