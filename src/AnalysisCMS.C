@@ -295,9 +295,13 @@ void AnalysisCMS::Setup(TString analysis,
   if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
   if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
 
-  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".root", "recreate");
+  _isdatadriven = "";
 
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + "_eventdump.txt");
+  if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
+
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
 
 
   OpenMinitree();
@@ -333,8 +337,8 @@ void AnalysisCMS::ApplyWeights()
 
   //  _event_weight *= trigger * metFilter;
   _event_weight *= trigger;
-
-  if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
+  
+  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
@@ -436,7 +440,7 @@ void AnalysisCMS::GetLeptons()
 
     bool reject_lepton = false;
     
-    if (i > 1 && !_sample.Contains("DD_") && _analysis.EqualTo("WZ"))
+    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
       {
 	if (!found_third_tight_lepton)
 	  {
@@ -857,7 +861,7 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  if (!_sample.Contains("DD_"))
+  if (!_filename.Contains("fakeW"))
     {
       _fake_weight            = 1.;
       _fake_weight_elUp       = 1.;
