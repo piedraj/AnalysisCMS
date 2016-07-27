@@ -18,20 +18,6 @@ if [ $# -lt 2 ]; then
     echo "  ./submit-jobs.sh samples/76x/samples_datadriven.txt nominal"
     echo "  ./submit-jobs.sh samples/76x/samples_mc.txt         nominal"
     echo "  "
-    echo "  ./submit-jobs.sh samples/76x/samples_monoh.txt      nominal"
-    echo "  ./submit-jobs.sh samples/76x/samples_ttdm.txt       nominal"
-    echo "  "
-    echo "  ./submit-jobs.sh samples/76x/samples_data_fakes.txt nominal"
-    echo "  ./submit-jobs.sh samples/76x/samples_mc_fakes.txt   nominal"
-    echo "  "
-    echo "  "
-    echo "  "
-    echo "  >>> 74x files"
-    echo "  "
-    echo "  ./submit-jobs.sh samples/74x/samples_data_2015D.txt nominal"
-    echo "  ./submit-jobs.sh samples/74x/samples_mc.txt         nominal"
-    echo "  ./submit-jobs.sh samples/74x/samples_stop.txt       nominal"
-    echo "  "
     exit -1
 fi
 

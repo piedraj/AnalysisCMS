@@ -164,14 +164,32 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
+      passTrigger = true;
+
       Float_t corrected_baseW = baseW; 
 
       if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
       if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
-      _event_weight = corrected_baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      _base_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
 
-      passTrigger = true;
+      _event_weight = _base_weight;
+
+
+      // Muons
+      //------------------------------------------------------------------------
+      if (_channel == m)
+	{
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 4.813 : _event_weight *= 138.175;
+	}
+
+      
+      // Electrons
+      //------------------------------------------------------------------------
+      if (_channel == e)
+	{
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 5.226 : _event_weight *= 27.132;
+	}
 
     } else {
 
@@ -186,13 +204,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 4.813);
-
 	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
-
-	  _event_weight = (1e3 / 138.175);
 
 	  passTrigger = true;
 	}
@@ -205,13 +219,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 5.226);
-
 	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
-
-	  _event_weight = (1e3 / 27.132);
 
 	  passTrigger = true;
 	}
@@ -228,39 +238,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
 
-	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 	  
-	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
 
       }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 	
-	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 
-	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
       }
-    }
-
-
-    // Normalization based on getLumiEff.C results
-    //--------------------------------------------------------------------------
-    if (_ismc) {
-      
-      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.221;
-      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.150;
     }
 
 

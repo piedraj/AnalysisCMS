@@ -5,8 +5,8 @@ const TString _gridui = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbo
 const TString _lxplus = "eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/";
 
 
-const Bool_t _savepdf = false;
-const Bool_t _savepng = true;
+const Bool_t _savepdf = true;
+const Bool_t _savepng = false;
 
 
 // Functions
@@ -34,16 +34,17 @@ TLegend* DrawLegend(Float_t     x1,
 // metFilters
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void metFilters(TString dataset = "DoubleEG")
+void metFilters(TString dataset   = "DoubleEG",
+		TString selection = "l2loose__hadd__EpTCorr__l2tight")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   TChain* tree = new TChain("latino", "latino");
 
-  tree->Add(_lxplus + "21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "05Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016C_PromptReco/l2loose__hadd__EpTCorr__l2tight/latino_Run2016C_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "21Jun2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "05Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "08Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
+  tree->Add(_lxplus + "08Jul2016_Run2016C_PromptReco/" + selection + "/latino_Run2016C_PromptReco_" + dataset + ".root");
 
   TH1D* before = new TH1D("before", "", 20, 0, 1000);
   TH1D* after  = new TH1D("after",  "", 20, 0, 1000);
@@ -52,8 +53,33 @@ void metFilters(TString dataset = "DoubleEG")
 
   c1->SetLogy();
 
-  tree->Draw("metPfType1>>before", "trigger");
-  tree->Draw("metPfType1>>after",  "trigger * metFilter");
+
+  //----------------------------------------------------------------------------
+  //
+  //  yes: apply for ICHEP
+  //  no:  do not apply for ICHEP
+  //  --:  not available up to 08Jul latino trees
+  //
+  //  [ 0,yes] Flag_HBHENoiseFilter
+  //  [ 1,yes] Flag_HBHENoiseIsoFilter
+  //  [ 2, no] Flag_CSCTightHalo2015Filter
+  //  [ 3,yes] Flag_EcalDeadCellTriggerPrimitiveFilter
+  //  [ 4,yes] Flag_goodVertices
+  //  [ 5,yes] Flag_eeBadScFilter
+  //  [ 6, no] Flag_chargedHadronTrackResolutionFilter
+  //  [ 7, no] Flag_muonBadTrackFilter
+  //  [--,yes] Flag_globalTightHalo2016Filter
+  //  [--,yes] Flag_badChargedHadronFilter
+  //  [--,yes] Flag_badMuonFilter
+  //
+  //----------------------------------------------------------------------------
+
+
+  TCut triggerCut   = "trigger";
+  TCut metFilterCut = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[3]*std_vector_trigger_special[4]*std_vector_trigger_special[5]";
+
+  tree->Draw("metPfType1>>before", triggerCut);
+  tree->Draw("metPfType1>>after",  triggerCut && metFilterCut);
 
   before->SetFillColor(kGray);
   before->SetFillStyle(1001);
