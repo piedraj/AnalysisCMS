@@ -171,7 +171,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
       if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
-      _event_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      _base_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+
+      _event_weight = _base_weight;
 
 
       // Muons
@@ -236,28 +238,28 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
 
-	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 	  
-	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
 
       }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 	
-	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 
-	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
       }
     }
