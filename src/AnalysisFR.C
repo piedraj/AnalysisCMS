@@ -164,14 +164,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
+      passTrigger = true;
+
       Float_t corrected_baseW = baseW; 
 
       if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
       if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
-      _event_weight = corrected_baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      _event_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
 
-      passTrigger = true;
+
+      // Muons
+      //------------------------------------------------------------------------
+      if (_channel == m)
+	{
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 4.813 : _event_weight *= 138.175;
+	}
+
+      
+      // Electrons
+      //------------------------------------------------------------------------
+      if (_channel == e)
+	{
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 5.226 : _event_weight *= 27.132;
+	}
 
     } else {
 
@@ -186,13 +202,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  //_event_weight = (1e3 / 4.813);
-
 	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
-
-	  //_event_weight = (1e3 / 138.175);
 
 	  passTrigger = true;
 	}
@@ -205,13 +217,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  //_event_weight = (1e3 / 5.226);
-
 	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
-
-	  //_event_weight = (1e3 / 27.132);
 
 	  passTrigger = true;
 	}
