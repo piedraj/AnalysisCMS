@@ -234,7 +234,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
       
       float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
-      float Zlep2eta = AnalysisLeptons[_Zlepton2index].v.Eta();
+      float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
 
@@ -387,44 +387,46 @@ void AnalysisFR::FillLevelHistograms(int icut, int i, bool pass)
 //------------------------------------------------------------------------------                                                                        
 void AnalysisFR::FillAnalysisHistograms(int icut, int i)
 {
+  float lep1eta = fabs(Lepton1.v.Eta());
+
   if (_channel == m) {
 
-    h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-    h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-    h_Muon_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-     
-    h_Muon_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-    h_Muon_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
+    h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+    h_Muon_loose_mtw    [icut][i]->Fill(_mtw,            _event_weight);
+    h_Muon_loose_pt     [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Muon_loose_pt_bin [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Muon_loose_eta_bin[icut][i]->Fill(lep1eta,         _event_weight);
 
   } else if (_channel == e) {
 
-    h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-    h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-    h_Ele_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-      
-    h_Ele_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-    h_Ele_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
+    h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+    h_Ele_loose_mtw    [icut][i]->Fill(_mtw,            _event_weight);
+    h_Ele_loose_pt     [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Ele_loose_pt_bin [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Ele_loose_eta_bin[icut][i]->Fill(lep1eta,         _event_weight);
   }
     
   if (Lepton1.type == Tight) {
    
     if (_channel == m) {
 
-      h_Muon_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Muon_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Muon_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-      
-      h_Muon_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Muon_tight_mtw[icut][i]->Fill(_mtw,           _event_weight);	
+      h_Muon_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+      h_Muon_tight_mtw    [icut][i]->Fill(_mtw,           _event_weight);	
+      h_Muon_tight_pt     [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_tight_pt_bin [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_tight_eta_bin[icut][i]->Fill(lep1eta,        _event_weight);
 
     } else if (_channel == e) {
 
-      h_Ele_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Ele_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Ele_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-	
-      h_Ele_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Ele_tight_mtw[icut][i]->Fill(_mtw,           _event_weight);
+      h_Ele_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+      h_Ele_tight_mtw    [icut][i]->Fill(_mtw,           _event_weight);
+      h_Ele_tight_pt     [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_tight_pt_bin [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_tight_eta_bin[icut][i]->Fill(lep1eta,        _event_weight);
     }
   }
 }
