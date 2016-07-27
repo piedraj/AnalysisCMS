@@ -35,8 +35,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       
     for (int j=0; j<njetet; j++) {
 
-      TString muonsuffix = Form("_%.0fGev", muonjetet[j]);
-      TString elesuffix  = Form("_%.0fGev", elejetet[j]);
+      TString muonsuffix = Form("_%.0fGeV", muonjetet[j]);
+      TString elesuffix  = Form("_%.0fGeV", elejetet[j]);
     
       h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
@@ -164,14 +164,32 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
     if (_ismc) {
 
+      passTrigger = true;
+
       Float_t corrected_baseW = baseW; 
 
       if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
       if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
-      _event_weight = corrected_baseW * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      _base_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
 
-      passTrigger = true;
+      _event_weight = _base_weight;
+
+
+      // Muons
+      //------------------------------------------------------------------------
+      if (_channel == m)
+	{
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 4.813 : _event_weight *= 138.175;
+	}
+
+      
+      // Electrons
+      //------------------------------------------------------------------------
+      if (_channel == e)
+	{
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 5.226 : _event_weight *= 27.132;
+	}
 
     } else {
 
@@ -186,13 +204,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  _event_weight = (1e3 / 4.813);
-
 	  passTrigger= true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
-
-	  _event_weight = (1e3 / 138.175);
 
 	  passTrigger = true;
 	}
@@ -205,13 +219,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 	
 	if (Lepton1.v.Pt() <= 25. && std_vector_trigger->at(31)) {  // HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
 
-	  _event_weight = (1e3 / 5.226);
-
 	  passTrigger = true;
 	  
 	} else if (Lepton1.v.Pt() > 25. && std_vector_trigger->at(33)) {  // HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*
-
-	  _event_weight = (1e3 / 27.132);
 
 	  passTrigger = true;
 	}
@@ -224,43 +234,34 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
       
       float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
-      float Zlep2eta = AnalysisLeptons[_Zlepton2index].v.Eta();
+      float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
 
-	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 	  
-	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
 
       }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 	
-	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
 
-	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
-	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
-	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
+	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
+	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
+	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
       }
-    }
-
-
-    // Normalization based on getLumiEff.C results
-    //--------------------------------------------------------------------------
-    if (_ismc) {
-      
-      if (_channel == m && Lepton1.v.Pt() > 20.) _event_weight *= 0.221;
-      if (_channel == e && Lepton1.v.Pt() > 25.) _event_weight *= 0.150;
     }
 
 
@@ -386,44 +387,46 @@ void AnalysisFR::FillLevelHistograms(int icut, int i, bool pass)
 //------------------------------------------------------------------------------                                                                        
 void AnalysisFR::FillAnalysisHistograms(int icut, int i)
 {
+  float lep1eta = fabs(Lepton1.v.Eta());
+
   if (_channel == m) {
 
-    h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-    h_Muon_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-    h_Muon_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-     
-    h_Muon_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-    h_Muon_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
+    h_Muon_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+    h_Muon_loose_mtw    [icut][i]->Fill(_mtw,            _event_weight);
+    h_Muon_loose_pt     [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Muon_loose_pt_bin [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Muon_loose_eta_bin[icut][i]->Fill(lep1eta,         _event_weight);
 
   } else if (_channel == e) {
 
-    h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-    h_Ele_loose_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-    h_Ele_loose_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-      
-    h_Ele_loose_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-    h_Ele_loose_mtw[icut][i]->Fill(_mtw,           _event_weight);
+    h_Ele_loose_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+    h_Ele_loose_mtw    [icut][i]->Fill(_mtw,            _event_weight);
+    h_Ele_loose_pt     [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Ele_loose_pt_bin [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
+    h_Ele_loose_eta_bin[icut][i]->Fill(lep1eta,         _event_weight);
   }
     
   if (Lepton1.type == Tight) {
    
     if (_channel == m) {
 
-      h_Muon_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Muon_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Muon_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-      
-      h_Muon_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Muon_tight_mtw[icut][i]->Fill(_mtw,           _event_weight);	
+      h_Muon_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+      h_Muon_tight_mtw    [icut][i]->Fill(_mtw,           _event_weight);	
+      h_Muon_tight_pt     [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_tight_pt_bin [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Muon_tight_eta_bin[icut][i]->Fill(lep1eta,        _event_weight);
 
     } else if (_channel == e) {
 
-      h_Ele_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), Lepton1.v.Eta(), _event_weight);
-      h_Ele_tight_pt_bin    [icut][i]->Fill(Lepton1.v.Pt(),  _event_weight);
-      h_Ele_tight_eta_bin   [icut][i]->Fill(Lepton1.v.Eta(), _event_weight);
-	
-      h_Ele_tight_pt [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
-      h_Ele_tight_mtw[icut][i]->Fill(_mtw,           _event_weight);
+      h_Ele_tight_pt_eta_bin[icut][i]->Fill(Lepton1.v.Pt(), lep1eta, _event_weight);
+
+      h_Ele_tight_mtw    [icut][i]->Fill(_mtw,           _event_weight);
+      h_Ele_tight_pt     [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_tight_pt_bin [icut][i]->Fill(Lepton1.v.Pt(), _event_weight);
+      h_Ele_tight_eta_bin[icut][i]->Fill(lep1eta,        _event_weight);
     }
   }
 }

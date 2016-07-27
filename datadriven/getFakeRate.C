@@ -19,10 +19,12 @@ TFile* zjets;
 //------------------------------------------------------------------------------
 void     DrawFR     (TString    flavour,
 		     TString    variable,
+		     TString    xtitle,
 		     Double_t   jetet);
 
 void     DrawPR    (TString     flavour,
-		    TString     variable);
+		    TString     variable,
+		    TString     xtitle);
 
 void     WriteFR   (TString     flavour,
 		    Double_t    jetet);
@@ -71,10 +73,10 @@ void getFakeRate()
 
   if (draw)
     {
-      DrawPR("Ele",  "pt");
-      DrawPR("Ele",  "eta");
-      DrawPR("Muon", "pt");
-      DrawPR("Muon", "eta");
+      DrawPR("Ele",  "pt" , "p_{T} [GeV]");
+      DrawPR("Muon", "pt" , "p_{T} [GeV]");
+      DrawPR("Ele",  "eta", "|#eta|");
+      DrawPR("Muon", "eta", "|#eta|");
     }
 
 
@@ -92,10 +94,10 @@ void getFakeRate()
       elejetet  = elejetarray [5];
       muonjetet = muonjetarray[3];
 
-      DrawFR("Ele",  "pt",  elejetet);
-      DrawFR("Ele",  "eta", elejetet);
-      DrawFR("Muon", "pt",  muonjetet);
-      DrawFR("Muon", "eta", muonjetet);
+      DrawFR("Ele",  "pt",  "p_{T} [GeV]", elejetet);
+      DrawFR("Muon", "pt",  "p_{T} [GeV]", muonjetet);
+      DrawFR("Ele",  "eta", "|#eta|",      elejetet);
+      DrawFR("Muon", "eta", "|#eta|",      muonjetet);
 
     } else {
 
@@ -114,10 +116,11 @@ void getFakeRate()
 //------------------------------------------------------------------------------
 void DrawFR(TString  flavour,
 	    TString  variable,
+	    TString  xtitle,
 	    Double_t jetet)
 {
   TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
-  TString suffix = Form("%s_bin_%.0fGev", variable.Data(), jetet);
+  TString suffix = Form("%s_bin_%.0fGeV", variable.Data(), jetet);
 
   
   // Read loose and tight histograms
@@ -165,7 +168,7 @@ void DrawFR(TString  flavour,
   h_FR->SetMarkerColor(kBlack);
   h_FR->SetMarkerStyle(kFullCircle);
   h_FR->SetTitle("");
-  h_FR->SetXTitle(variable);
+  h_FR->SetXTitle(xtitle);
   h_FR->SetYTitle("fake rate");
 
   h_FR->GetXaxis()->SetTitleOffset(1.5);
@@ -181,7 +184,7 @@ void DrawFR(TString  flavour,
 
   // Save
   //----------------------------------------------------------------------------
-  if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGev.png", flavour.Data(), variable.Data(), jetet));
+  if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
 }
 
 
@@ -189,7 +192,8 @@ void DrawFR(TString  flavour,
 // DrawPR
 //------------------------------------------------------------------------------
 void DrawPR(TString  flavour,
-	    TString  variable)
+	    TString  variable,
+	    TString  xtitle)
 {
   TString title = Form("%s prompt rate %s", flavour.Data(), variable.Data());
 
@@ -219,7 +223,7 @@ void DrawPR(TString  flavour,
   h_PR->SetMarkerColor(kBlack);
   h_PR->SetMarkerStyle(kFullCircle);
   h_PR->SetTitle("");
-  h_PR->SetXTitle(variable);
+  h_PR->SetXTitle(xtitle);
   h_PR->SetYTitle("prompt rate");
 
   h_PR->GetXaxis()->SetTitleOffset(1.5);
@@ -240,7 +244,7 @@ void DrawPR(TString  flavour,
 void WriteFR(TString  flavour,
 	     Double_t jetet)
 {
-  TString suffix = Form("pt_eta_bin_%.0fGev", jetet);
+  TString suffix = Form("pt_eta_bin_%.0fGeV", jetet);
 
   
   // Read loose and tight histograms

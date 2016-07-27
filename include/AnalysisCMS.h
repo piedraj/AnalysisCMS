@@ -157,6 +157,7 @@ class AnalysisCMS : public AnalysisBase
 
   TString                _analysis;
   TString                _dataperiod;
+  TString                _isdatadriven;
   TString                _filename;
   TString                _sample;
   TString                _systematic;
