@@ -75,7 +75,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
   }
 
-  root_output -> cd();
+  root_output->cd();
 
 
   // Define prompt rate histograms

@@ -39,8 +39,8 @@ class AnalysisFR: public AnalysisCMS
 
   // Data members
   //----------------------------------------------------------------------------
-  float _base_weight; 
-  float _event_weight; 
+  float _base_weight;
+  float _event_weight;
   float _inputJetEt;
   float _leptonPtMin;
   float _leptonEtaMax;
