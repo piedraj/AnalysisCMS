@@ -107,7 +107,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
-      //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",      color_ST);
 
@@ -129,9 +129,9 @@ void runPlotter(TString level,
     {
            plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
            plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
-           //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
+         //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
            plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
-           //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
+         //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
            plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
            plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
            plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
@@ -156,7 +156,7 @@ void runPlotter(TString level,
   // if (analysis.EqualTo("WW"))
   //   {
   //     plotter.AddRocSignal("06_WW");
-    
+  //
   //     plotter.AddRocBackground("04_TTTo2L2Nu");
   //     plotter.AddRocBackground("00_Fakes");
   //     plotter.AddRocBackground("02_WZTo3LNu");
@@ -251,7 +251,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
 
 
-	  // WW ROC Curve
+	  // WW ROC
 	  //--------------------------------------------------------------------
 	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
 	  //   {
