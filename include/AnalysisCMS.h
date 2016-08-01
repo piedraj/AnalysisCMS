@@ -21,6 +21,7 @@ struct Lepton
   int            index;
   int            type;
   int            flavour;
+  float          idisoW;
   float          iso;
   TLorentzVector v;
 };

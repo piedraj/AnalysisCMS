@@ -67,7 +67,10 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "", 1000, 0, 200);
-      
+
+
+      // Define effective luminosity estimation histograms
+      //------------------------------------------------------------------------
       h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
       h_Muon_tight_pt_m2l[i][j] = new TH2D("h_Muon_tight_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
       h_Ele_loose_pt_m2l [i][j] = new TH2D("h_Ele_loose_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
@@ -127,6 +130,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     _m2l = -999;
 
+    _l2tight_weight = 1.;
+
     if (AnalysisLeptons.size() >= 2) { 
 
       for (int iLep1=0; iLep1<AnalysisLeptons.size(); iLep1++) {
@@ -147,6 +152,11 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	    _Zlepton1type = AnalysisLeptons[iLep1].type;  
 	    _Zlepton2type = AnalysisLeptons[iLep2].type;
+
+	    if (_Zlepton1type == Tight && _Zlepton2type == Tight)
+	      {
+		_l2tight_weight = (AnalysisLeptons[iLep1].idisoW * AnalysisLeptons[iLep2].idisoW);
+	      }
 
 	    _Zlepton1index = iLep1;
 	    _Zlepton2index = iLep2;
@@ -322,8 +332,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	    h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	    h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	    h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
+	    h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
 	  }
 	}
 	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
@@ -333,8 +343,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	    h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	    h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
+	    h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
+	    h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
 	  } 
 	}
       }

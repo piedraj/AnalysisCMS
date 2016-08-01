@@ -41,6 +41,7 @@ class AnalysisFR: public AnalysisCMS
   //----------------------------------------------------------------------------
   float _base_weight;
   float _event_weight;
+  float _l2tight_weight;  // Needs l2Sel
   float _inputJetEt;
   float _leptonPtMin;
   float _leptonEtaMax;
@@ -84,6 +85,9 @@ class AnalysisFR: public AnalysisCMS
   TH1D* h_Ele_loose_m2l [ncut][njetet];
   TH1D* h_Ele_tight_m2l [ncut][njetet];
 
+
+  // Declare effective luminosity estimation histograms
+  //----------------------------------------------------------------------------
   TH2D* h_Muon_loose_pt_m2l[ncut][njetet];
   TH2D* h_Muon_tight_pt_m2l[ncut][njetet];
   TH2D* h_Ele_loose_pt_m2l [ncut][njetet];
