@@ -274,7 +274,7 @@ void WriteFR(TString  flavour,
 
   // Write
   //----------------------------------------------------------------------------
-  TFile *file = new TFile(Form("rootfiles/%sFR_Run2016B_25ns_jet%0.f.root", flavour.Data(), jetet), "recreate");
+  TFile *file = new TFile(Form("rootfiles/%sFR_Run2016_HWW6p3_jet%0.f.root", flavour.Data(), jetet), "recreate");
 
   h_FR    ->Write("FR_pT_eta");
   h_FR_EWK->Write("FR_pT_eta_EWKcorr");
@@ -298,7 +298,7 @@ void WritePR(TString flavour)
 
   // Write
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("rootfiles/" + flavour + "PR_Run2016B_25ns.root","recreate");
+  TFile* file = new TFile("rootfiles/" + flavour + "PR_Run2016_HWW6p3.root","recreate");
 
   h_PR->Write();
   
