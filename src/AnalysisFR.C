@@ -204,7 +204,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	if (Lepton1.v.Pt() <= 20. && std_vector_trigger->at(22)) {  // HLT_Mu8_TrkIsoVVL_v*
 
-	  passTrigger= true;
+	  passTrigger = true;
 
 	} else if (Lepton1.v.Pt() > 20. && std_vector_trigger->at(23)) {  // HLT_Mu17_TrkIsoVVL_v*
 
