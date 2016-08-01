@@ -14,6 +14,7 @@ if [ $# -lt 2 ]; then
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt         nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_datadriven_l2tight.txt nominal"
     echo "  "		 
+    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_monoh_l2tight.txt nominal"		 
     echo "  "		 
     echo "  "		 
     echo "  >>> 76x files-lxplus"
