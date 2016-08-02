@@ -136,14 +136,14 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
     //ZH->4l Control Region
     if (AnalysisLeptons[2].v.Pt() > 0 || AnalysisLeptons[3].v.Pt() > 0 ){
-      cout<<"I passed! :)"<<endl;
+      //cout<<"I passed! :)"<<endl;
       
       bool passZHCR = ( (fabs(_mll13 - Z_MASS) < 15. || fabs(_mll23 - Z_MASS) < 15. || fabs(_mll14 - Z_MASS) < 15. || fabs(_mll24 - Z_MASS) < 15. || fabs(_mll34 - Z_MASS) < 15.) && AnalysisLeptons[2].v.Pt() > 20. && AnalysisLeptons[3].v.Pt() > 20.);
       
       FillLevelHistograms(MonoH_08_ZHCR, passZHCR);
-      cout<<"Lepton 3 pT = "<<std_vector_lepton_pt->at(2)<<endl;
-      cout<<"Lepton 4 pT = "<<std_vector_lepton_pt->at(3)<<endl;
-      cout<<"-------------------------------------------"<<endl;
+      // cout<<"Lepton 3 pT = "<<std_vector_lepton_pt->at(2)<<endl;
+      // cout<<"Lepton 4 pT = "<<std_vector_lepton_pt->at(3)<<endl;
+      // cout<<"-------------------------------------------"<<endl;
     }
 
     //    pass &= (!_foundsoftmuon);

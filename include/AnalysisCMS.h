@@ -21,6 +21,7 @@ struct Lepton
   int            index;
   int            type;
   int            flavour;
+  float          idisoW;
   float          iso;
   TLorentzVector v;
 };
@@ -156,6 +157,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_trigger_up;
 
   TString                _analysis;
+  TString                _dataperiod;
+  TString                _isdatadriven;
   TString                _filename;
   TString                _sample;
   TString                _systematic;

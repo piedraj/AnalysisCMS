@@ -288,9 +288,20 @@ void AnalysisCMS::Setup(TString analysis,
   gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
-  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
+  _dataperiod = "";
 
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + "_eventdump.txt");
+  if (_filename.Contains("21Jun2016_Run2016B")) _dataperiod = "_21Jun2016_Run2016B";
+  if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016_Run2016B";
+  if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
+  if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
+
+  _isdatadriven = "";
+
+  if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
+
+  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
 
 
   OpenMinitree();
@@ -324,9 +335,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight *= trigger * metFilter;
-
-  if (!_ismc && _sample.Contains("DD_")) _event_weight *= _fake_weight;
+  _event_weight *= trigger;  // _event_weight *= trigger * metFilter;
+  
+  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
@@ -375,10 +386,10 @@ void AnalysisCMS::ApplyWeights()
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 2.0;  // k_factor = 2.0 +- 0.5
+  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
 
-  if (_sample.EqualTo("Wg_AMCNLOFXFX"))
+  if (_sample.EqualTo("Wg_MADGRAPHMLM"))
     {
       _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
     }
@@ -421,12 +432,15 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
+    float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
+
+    if (!std_vector_lepton_isLooseLepton->at(i)) continue;
 
     if (pt < 0.) continue;
 
     bool reject_lepton = false;
     
-    if (i > 1 && !_sample.Contains("DD_") && _analysis.EqualTo("WZ"))
+    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
       {
 	if (!found_third_tight_lepton)
 	  {
@@ -444,6 +458,7 @@ void AnalysisCMS::GetLeptons()
     lep.index   = i;
     lep.type    = type;
     lep.flavour = flavour;
+    lep.idisoW  = idisoW;
       
     float mass = -999;
 
@@ -847,7 +862,7 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  if (!_sample.Contains("DD_"))
+  if (!_filename.Contains("fakeW"))
     {
       _fake_weight            = 1.;
       _fake_weight_elUp       = 1.;
@@ -1001,7 +1016,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + ".txt");
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".txt");
 
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
@@ -1258,24 +1273,8 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-
-  // Data-driven
-  //----------------------------------------------------------------------------
   //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
   _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
-
-
-  // From resummed calculations
-  //----------------------------------------------------------------------------
-  //  float p0 = 1.02852e+00;
-  //  float p1 = 9.49640e-02;
-  //  float p2 = 1.90422e+01;
-  //  float p3 = 1.04487e+01;
-  //  float p4 = 7.58834e-02;
-  //  float p5 = 5.61146e+01;
-  //  float p6 = 4.11653e+01;
-  //
-  //  _gen_ptll_weight = p0 - p1*TMath::Erf((gen_ptll-p2)/p3) + p4*TMath::Erf((gen_ptll-p5)/p6);
 }
 
 
