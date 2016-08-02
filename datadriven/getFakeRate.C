@@ -1,8 +1,11 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const Double_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
-const Double_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
+
+const Float_t muonscale = -1.;
+const Float_t elescale  = -1.;
 
 bool draw         = true;
 bool savepng      = true;
@@ -20,14 +23,16 @@ TFile* zjets;
 void     DrawFR     (TString    flavour,
 		     TString    variable,
 		     TString    xtitle,
-		     Double_t   jetet);
+		     Float_t    lepscale,
+		     Float_t    jetet);
 
 void     DrawPR    (TString     flavour,
 		    TString     variable,
 		    TString     xtitle);
 
 void     WriteFR   (TString     flavour,
-		    Double_t    jetet);
+		    Float_t     lepscale,
+		    Float_t     jetet);
 
 void     WritePR   (TString     flavour);
 
@@ -82,8 +87,8 @@ void getFakeRate()
 
   // Fake rate
   //----------------------------------------------------------------------------
-  float elejetet;
-  float muonjetet;
+  Float_t elejetet;
+  Float_t muonjetet;
 
   int njetet = (draw) ? 1 : 7;
 
@@ -94,10 +99,10 @@ void getFakeRate()
       elejetet  = elejetarray [5];
       muonjetet = muonjetarray[3];
 
-      DrawFR("Ele",  "pt",  "p_{T} [GeV]", elejetet);
-      DrawFR("Muon", "pt",  "p_{T} [GeV]", muonjetet);
-      DrawFR("Ele",  "eta", "|#eta|",      elejetet);
-      DrawFR("Muon", "eta", "|#eta|",      muonjetet);
+      DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);
+      DrawFR("Muon", "pt",  "p_{T} [GeV]", muonscale, muonjetet);
+      DrawFR("Ele",  "eta", "|#eta|",      elescale,  elejetet);
+      DrawFR("Muon", "eta", "|#eta|",      muonscale, muonjetet);
 
     } else {
 
@@ -105,8 +110,8 @@ void getFakeRate()
       muonjetet = muonjetarray[i];
     }
 
-    WriteFR("Ele",  elejetet);
-    WriteFR("Muon", muonjetet);
+    WriteFR("Ele",  elescale,  elejetet);
+    WriteFR("Muon", muonscale, muonjetet);
   }
 }
 
@@ -114,10 +119,11 @@ void getFakeRate()
 //------------------------------------------------------------------------------
 // DrawFR
 //------------------------------------------------------------------------------
-void DrawFR(TString  flavour,
-	    TString  variable,
-	    TString  xtitle,
-	    Double_t jetet)
+void DrawFR(TString flavour,
+	    TString variable,
+	    TString xtitle,
+	    Float_t lepscale,
+	    Float_t jetet)
 {
   TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
   TString suffix = Form("%s_bin_%.0fGeV", variable.Data(), jetet);
@@ -140,10 +146,10 @@ void DrawFR(TString  flavour,
       
   h_FR->Divide(h_tight_data, h_loose_data);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -1.);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -1.);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -1.);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -1.);
+  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
+  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
+  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, lepscale);
+  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, lepscale);
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
 
@@ -241,8 +247,9 @@ void DrawPR(TString  flavour,
 //------------------------------------------------------------------------------
 // WriteFR
 //------------------------------------------------------------------------------
-void WriteFR(TString  flavour,
-	     Double_t jetet)
+void WriteFR(TString flavour,
+	     Float_t lepscale,
+	     Float_t jetet)
 {
   TString suffix = Form("pt_eta_bin_%.0fGeV", jetet);
 
@@ -264,17 +271,17 @@ void WriteFR(TString  flavour,
       
   h_FR->Divide(h_tight_data, h_loose_data);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, -1.);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, -1.);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, -1.);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, -1.);
+  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
+  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
+  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, lepscale);
+  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, lepscale);
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
 
 
   // Write
   //----------------------------------------------------------------------------
-  TFile *file = new TFile(Form("rootfiles/%sFR_Run2016B_25ns_jet%0.f.root", flavour.Data(), jetet), "recreate");
+  TFile *file = new TFile(Form("rootfiles/%sFR_Run2016_HWW6p3_jet%0.f.root", flavour.Data(), jetet), "recreate");
 
   h_FR    ->Write("FR_pT_eta");
   h_FR_EWK->Write("FR_pT_eta_EWKcorr");
@@ -298,7 +305,7 @@ void WritePR(TString flavour)
 
   // Write
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("rootfiles/" + flavour + "PR_Run2016B_25ns.root","recreate");
+  TFile* file = new TFile("rootfiles/" + flavour + "PR_Run2016_HWW6p3.root","recreate");
 
   h_PR->Write();
   

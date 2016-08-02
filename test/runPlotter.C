@@ -44,7 +44,7 @@ void runPlotter(TString level,
 
   Bool_t scale = linY;
 
-  if (analysis.EqualTo("MonoH")) scale = linY;
+  if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
   if (analysis.EqualTo("Top"))   scale = logY;
 
@@ -107,19 +107,19 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
-      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",      color_ST);
 
-      if (datadriven)
-	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+       if (datadriven)
+       	{
+       	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 
-	}
-      else
-	{
-	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
-	}
+       	}
+       else
+      	{
+       	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+       	}
     }
 
 
@@ -127,14 +127,14 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
+           plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
+           plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
+         //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
+           plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
+         //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
+           plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
+           plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
+           plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
@@ -153,24 +153,24 @@ void runPlotter(TString level,
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WW"))
-    {
-      plotter.AddRocSignal("06_WW");
-    
-      plotter.AddRocBackground("04_TTTo2L2Nu");
-      plotter.AddRocBackground("00_Fakes");
-      plotter.AddRocBackground("02_WZTo3LNu");
-      plotter.AddRocBackground("03_ZZ");
-      plotter.AddRocBackground("05_ST");
-      plotter.AddRocBackground("07_ZJets");
-      plotter.AddRocBackground("09_TTV");
-      plotter.AddRocBackground("10_HWW");
-      plotter.AddRocBackground("11_Wg");
-      plotter.AddRocBackground("12_Zg");
-      plotter.AddRocBackground("13_VVV");
-      plotter.AddRocBackground("14_HZ");
-      plotter.AddRocBackground("15_WgStar");
-    }
+  // if (analysis.EqualTo("WW"))
+  //   {
+  //     plotter.AddRocSignal("06_WW");
+  //
+  //     plotter.AddRocBackground("04_TTTo2L2Nu");
+  //     plotter.AddRocBackground("00_Fakes");
+  //     plotter.AddRocBackground("02_WZTo3LNu");
+  //     plotter.AddRocBackground("03_ZZ");
+  //     plotter.AddRocBackground("05_ST");
+  //     plotter.AddRocBackground("07_ZJets");
+  //     plotter.AddRocBackground("09_TTV");
+  //     plotter.AddRocBackground("10_HWW");
+  //     plotter.AddRocBackground("11_Wg");
+  //     plotter.AddRocBackground("12_Zg");
+  //     plotter.AddRocBackground("13_VVV");
+  //     plotter.AddRocBackground("14_HZ");
+  //     plotter.AddRocBackground("15_WgStar");
+  //   }
 
 
   // Draw events by cut
@@ -251,12 +251,12 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
 
 
-	  // WW ROC Curve
+	  // WW ROC
 	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
-	    {
-	      plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
-	    }
+	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
+	  //   {
+	  //     plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
+	  //   }
 	  
 
 	  if (!allplots) continue;

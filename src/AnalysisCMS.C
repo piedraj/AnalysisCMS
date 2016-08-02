@@ -335,8 +335,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  //  _event_weight *= trigger * metFilter;
-  _event_weight *= trigger;
+  _event_weight *= trigger;  // _event_weight *= trigger * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
@@ -433,6 +432,7 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
+    float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
 
@@ -458,6 +458,7 @@ void AnalysisCMS::GetLeptons()
     lep.index   = i;
     lep.type    = type;
     lep.flavour = flavour;
+    lep.idisoW  = idisoW;
       
     float mass = -999;
 

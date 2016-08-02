@@ -12,7 +12,7 @@ FOLDER="$1"
 
 pushd $FOLDER
 
-hadd -f -k 00_Fakes.root     DD_Run*.root
+hadd -f -k 00_Fakes.root     fakeW*.root
 hadd -f -k 01_Data.root      Run*.root
 hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
 hadd -f -k 03_ZZ.root        ZZTo2L2Nu.root ZZTo2L2Q*.root WZTo2L2Q__part*.root  #ZZTo4L.root -- Now this should be called VZ
