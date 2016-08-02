@@ -323,7 +323,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       // Z region
       //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 0) {
+      if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 20) {
 
 	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
@@ -352,24 +352,28 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       // Z region "QCD"
       //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 0) {
+      if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 20) {
 
 	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
  
-	  h_Ele_loose_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
+	  h_Ele_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
+	  h_Ele_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
 	  
 	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	    h_Ele_tight_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	    h_Ele_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	    h_Ele_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
 	  }
 	}
 	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
 	    
-	  h_Muon_loose_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
+	  h_Muon_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	  h_Muon_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
 	
 	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
 
-	    h_Muon_tight_m2l[FR_04_ZRegionQCD][i] -> Fill(_m2l, _event_weight);
+	    h_Muon_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
+	    h_Muon_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
 	  } 
 	}
       }
