@@ -170,13 +170,20 @@ void DrawFR(TString flavour,
   //----------------------------------------------------------------------------
   if (variable.EqualTo("pt"))
     {
-      for (int i=0; i<=h_FR_EWK->GetNbinsX(); i++)
+      printf("\n");
+
+      for (int i=1; i<=h_FR_EWK->GetNbinsX(); i++)
 	{
-	  float ptvalue = h_FR_EWK->GetBinCenter(i);
+	  float ptvalue = h_FR_EWK->GetBinLowEdge(i);
 	
-	  printf(" bin[%d] pt: %f fr: %f +- %f\n", i, ptvalue, h_FR_EWK->GetBinContent(i), h_FR_EWK->GetBinError(i));
-  
+	  printf(" bin[%d]   pt: %.0f GeV   fr: %.3f +- %.3f\n",
+		 i,
+		 ptvalue,
+		 h_FR_EWK->GetBinContent(i),
+		 h_FR_EWK->GetBinError(i));
 	}
+
+      printf("\n");
     }
 
 
