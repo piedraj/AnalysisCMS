@@ -12,7 +12,8 @@
 //#include "CutsWZ.h"
 
 //#include "BTagWorkingPoints74X.h"
-#include "BTagWorkingPoints76X.h"
+//#include "BTagWorkingPoints76X.h"
+#include "BTagWorkingPoints80X.h"
 
 
 const double lumi_fb_2016       = 6.324;  // 2016B + 2016C
