@@ -166,6 +166,20 @@ void DrawFR(TString flavour,
   h_FR_EWK->Draw("ep,same");
 
 
+  // Print bin values and errors
+  //----------------------------------------------------------------------------
+  if (variable.EqualTo("pt"))
+    {
+      for (int i=0; i<=h_FR_EWK->GetNbinsX(); i++)
+	{
+	  float ptvalue = h_FR_EWK->GetBinCenter(i);
+	
+	  printf(" bin[%d] pt: %f fr: %f +- %f\n", i, ptvalue, h_FR_EWK->GetBinContent(i), h_FR_EWK->GetBinError(i));
+  
+	}
+    }
+
+
   // Cosmetics
   //----------------------------------------------------------------------------
   h_FR->SetAxisRange(0, 1, "Y");
