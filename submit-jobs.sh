@@ -2,21 +2,11 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  >>> 80x files"
+    echo "  rm -rf jobs"
+    echo "  rm -rf rootfiles"
     echo "  "
     echo "  ./submit-jobs.sh samples/80x/samples_data_l1loose.txt nominal"
     echo "  ./submit-jobs.sh samples/80x/samples_mc_l1loose.txt   nominal"
-    echo "  "
-    echo "  ./submit-jobs.sh samples/80x/samples_data_l2tight.txt nominal"
-    echo "  ./submit-jobs.sh samples/80x/samples_mc_l2tight.txt   nominal"
-    echo "  "
-    echo "  "
-    echo "  "
-    echo "  >>> 76x files"
-    echo "  "
-    echo "  ./submit-jobs.sh samples/76x/samples_data.txt       nominal"
-    echo "  ./submit-jobs.sh samples/76x/samples_datadriven.txt nominal"
-    echo "  ./submit-jobs.sh samples/76x/samples_mc.txt         nominal"
     echo "  "
     exit -1
 fi
