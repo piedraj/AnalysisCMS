@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -40,9 +40,10 @@ void runPlotter(TString level,
   float lumi = lumi_fb_2016;
 
   if (analysis.EqualTo("Control")) lumi = lumi_fb_2016;
-  if (analysis.EqualTo("Top"))     lumi = lumi_fb_2015D;
+  if (analysis.EqualTo("Top"))     lumi = lumi_fb_2016;
   if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2015_dm;
-  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
+  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016;
+  //if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
@@ -101,17 +102,21 @@ void runPlotter(TString level,
     }
   else
     {
+
       plotter.AddProcess("14_HZ",       "HZ",       color_HZ);
       plotter.AddProcess("10_HWW",      "HWW",      color_HWW);
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      //      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
- //     plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
+      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
+      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
     //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",      color_ST);
+
+
+
 
        if (datadriven)
        	{

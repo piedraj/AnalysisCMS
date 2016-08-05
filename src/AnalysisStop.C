@@ -112,7 +112,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!_ismc && run > 274240) continue;  // Luminosity for any blinded analysis  
+    //if (!_ismc && run > 274240) continue;  // Luminosity for any blinded analysis  
   
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -133,12 +133,17 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;
     _pt2l = ptll;
 
+    
 
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
 
     FillLevelHistograms(Stop_00_Has2Leptons, pass);    
+
+    pass &= _mt2ll < 100; // GeV    
+
+    FillLevelHistograms(Stop_00_2LMt2upper100, pass);
 
    
     // Basics Stop
@@ -193,7 +198,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	 
       pass1_2_jet &= MET.Et() > 50.;
       FillLevelHistograms( Stop_00_htjets150Met50, pass && pass1_2_jet);
-
+*/
     //-------------------------------------------------------------------------
     // Basics + Has1BJet
    
@@ -208,6 +213,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Stop_02_Has1BJet, pass2);
 
+/*
     FillLevelHistograms(Stop_02_Has2BJet, pass2 && (_nbjet30csvv2m>=2));
 
     pass2 &= _htjets > 150.;    
