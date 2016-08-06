@@ -89,7 +89,7 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_HZJ_HToWW_M125.root
 
 # Added by Jonatan on August 5th, 2016
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_ZZTo2L2Nu.root
+## Too big for the 1nh queue ## root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_ZZTo2L2Nu.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WJetsToLNu.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_TTWJetsToLNu.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3_v3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_GluGluHToWWTo2L2NuAMCNLO_M125.root
