@@ -107,12 +107,6 @@ Alternatively one can login to a node and run interactively. *Do this only if yo
 
     exit
 
-<!---
-Notice that input files can be accessed directly from eos when working from lxplus.
-
-    ./runAnalysis root://eoscms.cern.ch//eos/cms/store/user/kbutanov/HWWwidthRun2/7September/25ns/latino_WZTo3LNu.root nominal
--->
-
 
 4. Draw
 ====
@@ -254,7 +248,8 @@ Then log in to lxplus, mount eos and choose the input folder.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
-    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH eos/user/j/jlauwers/HWW2015/21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight $USER@pool03.ifca.es:
+    cd eos/user/j/jlauwers/HWW2015
+    rsync --chmod=Du=rwx,Dg=rwx,Fu=rw,Fg=rw -azH 21Jun2016_Run2016B_PromptReco/l2loose__hadd__EpTCorr__l2tight $USER@pool03.ifca.es:
 
 Check that the input folder has be copied at the following gridui path.
 
