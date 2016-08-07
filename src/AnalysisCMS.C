@@ -1284,9 +1284,9 @@ void AnalysisCMS::GetGenPtllWeight()
 //------------------------------------------------------------------------------
 TH1F* AnalysisCMS::GetGenWeightsLHE()
 {
-  TFile* f = new TFile(_filename, "read");
+  TFile* file = TFile::Open(_filename);
 
-  TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
+  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
 
   root_output->cd();
 

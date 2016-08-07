@@ -1,8 +1,8 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-//#include "CutsControl.h"
-#include "CutsFR.h"
+#include "CutsControl.h"
+//#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsSS.h"
 //#include "CutsStop.h"
@@ -12,7 +12,8 @@
 //#include "CutsWZ.h"
 
 //#include "BTagWorkingPoints74X.h"
-#include "BTagWorkingPoints76X.h"
+//#include "BTagWorkingPoints76X.h"
+#include "BTagWorkingPoints80X.h"
 
 
 const double lumi_fb_2016       = 6.324;  // 2016B + 2016C
