@@ -39,7 +39,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2015_dm;
+  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2016;
   if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
@@ -107,13 +107,13 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
-      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+      //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",      color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  //plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 
 	}
       else
@@ -139,8 +139,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
-      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      //plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
   if (analysis.EqualTo("Stop"))

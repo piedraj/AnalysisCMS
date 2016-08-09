@@ -68,7 +68,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
+    //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
+
 
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
 
@@ -113,7 +114,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (MET.Et() > 50.); 
 
-    //if (_saveminitree && pass ) minitree->Fill();
+    if (_saveminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_nobtag, pass);
 
@@ -135,7 +136,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_nbjet30csvv2m > 0);
 
-    if ( _saveminitree && pass ) minitree->Fill();
+    //if ( _saveminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_05_tt, pass);
 
