@@ -23,6 +23,7 @@ struct Lepton
   int            flavour;
   float          iso;
   TLorentzVector v;
+  TLorentzVector v_gen;
 };
 
 struct Jet
@@ -202,9 +203,15 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep1eta;
   float                  _lep1phi;
   float                  _lep1pt;
+  float                  _lep1eta_gen;
+  float                  _lep1phi_gen;
+  float                  _lep1pt_gen;
   float                  _lep2eta;
   float                  _lep2phi;
   float                  _lep2pt;
+  float                  _lep2eta_gen;
+  float                  _lep2phi_gen;
+  float                  _lep2pt_gen;
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
@@ -368,6 +375,12 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_lep2eta       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep2phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1eta_gen       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1phi_gen       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1pt_gen        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2eta_gen       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2phi_gen       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2pt_gen        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mc            [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1    [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1Phi [nchannel][ncut][njetbin+1];

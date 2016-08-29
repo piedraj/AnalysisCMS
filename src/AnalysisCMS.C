@@ -134,6 +134,12 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_lep2eta       [ichannel][icut][ijet]->Fill(_lep2eta,        _event_weight);
   h_lep2phi       [ichannel][icut][ijet]->Fill(_lep2phi,        _event_weight);
   h_lep2pt        [ichannel][icut][ijet]->Fill(_lep2pt,         _event_weight);
+  h_lep1eta_gen       [ichannel][icut][ijet]->Fill(_lep1eta_gen,        _event_weight);
+  h_lep1phi_gen       [ichannel][icut][ijet]->Fill(_lep1phi_gen,        _event_weight);
+  h_lep1pt_gen        [ichannel][icut][ijet]->Fill(_lep1pt_gen,         _event_weight);
+  h_lep2eta_gen       [ichannel][icut][ijet]->Fill(_lep2eta_gen,        _event_weight);
+  h_lep2phi_gen       [ichannel][icut][ijet]->Fill(_lep2phi_gen,        _event_weight);
+  h_lep2pt_gen        [ichannel][icut][ijet]->Fill(_lep2pt_gen,         _event_weight);
   h_mc            [ichannel][icut][ijet]->Fill(_mc,             _event_weight);
   h_metPfType1    [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
   h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
@@ -433,6 +439,9 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
+    float eta_gen = std_vector_leptonGen_eta->at(i);
+    float phi_gen = std_vector_leptonGen_phi->at(i);
+    float pt_gen  = std_vector_leptonGen_pt->at(i);
 
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
 
@@ -472,11 +481,13 @@ void AnalysisCMS::GetLeptons()
 	lep.iso = MuonIsolation(i);
       }
 
-    TLorentzVector tlv;
+    TLorentzVector tlv, tlv_gen;
     
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
+    tlv_gen.SetPtEtaPhiM(pt_gen, eta_gen, phi_gen, mass);
     
     lep.v = tlv;
+    lep.v_gen = tlv_gen;
 
     AnalysisLeptons.push_back(lep);
 
@@ -493,6 +504,19 @@ void AnalysisCMS::GetLeptons()
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+
+
+   // gen-variables by ferrero
+  _lep1eta_gen = Lepton1.v_gen.Eta();
+  _lep1phi_gen = Lepton1.v_gen.Phi();
+  _lep1pt_gen  = Lepton1.v_gen.Pt();
+
+  _lep2eta_gen = Lepton2.v_gen.Eta();
+  _lep2phi_gen = Lepton2.v_gen.Phi();
+  _lep2pt_gen  = Lepton2.v_gen.Pt();
+
+
+
 }
 
 
@@ -1091,16 +1115,22 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_drll          [ichannel][icut][ijet] = new TH1D("h_drll"           + suffix, "",  100,    0,    5);
   h_lep1eta       [ichannel][icut][ijet] = new TH1D("h_lep1eta"        + suffix, "",   60,   -3,    3);
   h_lep2eta       [ichannel][icut][ijet] = new TH1D("h_lep2eta"        + suffix, "",   60,   -3,    3);
+  h_lep1eta_gen       [ichannel][icut][ijet] = new TH1D("h_lep1eta_gen"        + suffix, "",   60,   -3,    3);
+  h_lep2eta_gen       [ichannel][icut][ijet] = new TH1D("h_lep2eta_gen"        + suffix, "",   60,   -3,    3);
   h_jet1eta       [ichannel][icut][ijet] = new TH1D("h_jet1eta"        + suffix, "",  100,   -5,    5);
   h_jet2eta       [ichannel][icut][ijet] = new TH1D("h_jet2eta"        + suffix, "",  100,   -5,    5);
   h_lep1phi       [ichannel][icut][ijet] = new TH1D("h_lep1phi"        + suffix, "",  200, -3.2,  3.2);
   h_lep2phi       [ichannel][icut][ijet] = new TH1D("h_lep2phi"        + suffix, "",  200, -3.2,  3.2);
+  h_lep1phi_gen       [ichannel][icut][ijet] = new TH1D("h_lep1phi_gen"        + suffix, "",  200, -3.2,  3.2);
+  h_lep2phi_gen       [ichannel][icut][ijet] = new TH1D("h_lep2phi_gen"        + suffix, "",  200, -3.2,  3.2);
   h_jet1phi       [ichannel][icut][ijet] = new TH1D("h_jet1phi"        + suffix, "",  200, -3.2,  3.2);
   h_jet2phi       [ichannel][icut][ijet] = new TH1D("h_jet2phi"        + suffix, "",  200, -3.2,  3.2);
   h_metPfType1Phi [ichannel][icut][ijet] = new TH1D("h_metPfType1Phi"  + suffix, "",  200, -3.2,  3.2);
   h_metTtrkPhi    [ichannel][icut][ijet] = new TH1D("h_metTtrkPhi"     + suffix, "",  200, -3.2,  3.2);
   h_lep1pt        [ichannel][icut][ijet] = new TH1D("h_lep1pt"         + suffix, "", 3000,    0, 3000);
   h_lep2pt        [ichannel][icut][ijet] = new TH1D("h_lep2pt"         + suffix, "", 3000,    0, 3000);
+  h_lep1pt_gen        [ichannel][icut][ijet] = new TH1D("h_lep1pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_lep2pt_gen        [ichannel][icut][ijet] = new TH1D("h_lep2pt_gen"         + suffix, "", 3000,    0, 3000);
   h_jet1pt        [ichannel][icut][ijet] = new TH1D("h_jet1pt"         + suffix, "", 3000,    0, 3000);
   h_jet2pt        [ichannel][icut][ijet] = new TH1D("h_jet2pt"         + suffix, "", 3000,    0, 3000);
   h_jet1mass      [ichannel][icut][ijet] = new TH1D("h_jet1mass"       + suffix, "",  100,    0,  100);
