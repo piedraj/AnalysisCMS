@@ -164,6 +164,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30cmvav2t[ichannel][icut][ijet]->Fill(_nbjet30cmvav2t, _event_weight);
   h_njet          [ichannel][icut][ijet]->Fill(_njet,           _event_weight);
 
+  h_top1eta_gen       [ichannel][icut][ijet]->Fill(_top1eta_gen,        _event_weight);
+  h_top1phi_gen       [ichannel][icut][ijet]->Fill(_top1phi_gen,        _event_weight);
+  h_top1pt_gen        [ichannel][icut][ijet]->Fill(_top1pt_gen,         _event_weight);
+  h_top2eta_gen       [ichannel][icut][ijet]->Fill(_top2eta_gen,        _event_weight);
+  h_top2phi_gen       [ichannel][icut][ijet]->Fill(_top2phi_gen,        _event_weight);
+  h_top2pt_gen        [ichannel][icut][ijet]->Fill(_top2pt_gen,         _event_weight);
+  h_m2t_gen           [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
+  h_dphitt_gen        [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
+
+
 
   // TH2 histograms
   //----------------------------------------------------------------------------
@@ -443,6 +453,7 @@ void AnalysisCMS::GetLeptons()
     float phi_gen = std_vector_leptonGen_phi->at(i);
     float pt_gen  = std_vector_leptonGen_pt->at(i);
 
+
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
 
     if (pt < 0.) continue;
@@ -516,6 +527,72 @@ void AnalysisCMS::GetLeptons()
   _lep2pt_gen  = Lepton2.v_gen.Pt();
 
 
+}
+
+
+//------------------------------------------------------------------------------
+// GetTops
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTops() {
+
+  int vector_parton_size = std_vector_partonGen_pt->size(); 
+
+    _top1eta_gen = -999;
+    _top1phi_gen = -999;
+    _top1pt_gen  = -999;
+    _top2eta_gen = -999;
+    _top2phi_gen = -999;
+    _top2pt_gen  = -999;
+    _m2t_gen     = -999; 
+    _dphitt_gen  = -999;
+
+    float eta1 = -999;
+    float phi1 = -999;
+    float pt1  = -999;  
+
+    int ntop = 0; 
+
+  for (int i=0; i<vector_parton_size; i++) {
+
+    float parton_pt            = std_vector_partonGen_pt->at(i);
+    float parton_eta           = std_vector_partonGen_eta->at(i);
+    float parton_phi           = std_vector_partonGen_phi->at(i);
+    float parton_pid           = std_vector_partonGen_pid->at(i);
+    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
+
+    if( parton_pid != 6 && parton_isHardProcess != 1 ) continue; 
+
+    ntop += 1; 
+
+    if ( ntop == 2 ) {
+
+	_top1eta_gen = eta1      ; 
+	_top1phi_gen = phi1      ; 
+	_top1pt_gen  = pt1       ; 
+	_top2eta_gen = parton_eta;  
+	_top2phi_gen = parton_phi;  
+	_top2pt_gen  = parton_pt ;  
+
+        TLorentzVector t1, t2; 
+
+        t1.SetPtEtaPhiM( pt1      , eta1      , phi1      , 173. );
+	t2.SetPtEtaPhiM( parton_pt, parton_eta, parton_phi, 173. );
+
+	_m2t_gen = (t1+t2).M();  
+	_dphitt_gen = t1.DeltaPhi(t2);
+	
+	break;	
+
+    }
+
+     eta1 = parton_eta; 
+     phi1 = parton_phi;
+     pt1  = parton_pt ; 
+
+  }
+
+//std::cout << "m2t = " << _m2t_gen << std::endl;
+//std::cout << "dphitt = " << _dphitt_gen << std::endl;
 
 }
 
@@ -974,6 +1051,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
+  GetTops();
+
   GetJets(jet_eta_max);
 
   GetDeltaPhi();
@@ -1159,6 +1238,16 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet30cmvav2m[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2m" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30cmvav2t[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2t" + suffix, "",    7, -0.5,  6.5);
   h_njet          [ichannel][icut][ijet] = new TH1D("h_njet"           + suffix, "",    7, -0.5,  6.5);
+
+  h_top1pt_gen        [ichannel][icut][ijet] = new TH1D("h_top1pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_top1eta_gen       [ichannel][icut][ijet] = new TH1D("h_top1eta_gen"        + suffix, "",   60,   -3,    3);  
+  h_top1phi_gen       [ichannel][icut][ijet] = new TH1D("h_top1phi_gen"        + suffix, "",  200, -3.2,  3.2);
+  h_top2pt_gen        [ichannel][icut][ijet] = new TH1D("h_top2pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_top2eta_gen       [ichannel][icut][ijet] = new TH1D("h_top2eta_gen"        + suffix, "",   60,   -3,    3);  
+  h_top2phi_gen       [ichannel][icut][ijet] = new TH1D("h_top2phi_gen"        + suffix, "",  200, -3.2,  3.2);
+
+  h_m2t_gen           [ichannel][icut][ijet] = new TH1D("h_m2t_gen"            + suffix, "", 3000,    0, 3000);
+  h_dphitt_gen        [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"         + suffix, "",  100,    0,  3.2);
 
 
   // TH2 histograms

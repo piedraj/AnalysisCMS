@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
-const TString inputdir  = "../rootfiles/nominal/";
+const TString inputdir  = "../rootfiles/GEN/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -25,7 +25,7 @@ enum {linY, logY};
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString level,
-		TString option = "hist")
+		TString option = "nostack,hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -60,12 +60,14 @@ void runPlotter(TString level,
   if (option.Contains("nostack"))
     {
       plotter.SetDrawRatio(false);
+      plotter.AddProcess("TTTo2L2Nu_ext1__part0", "tt", kBlack);
+      plotter.AddSignal ("ttDM0001scalar00010", "m_{#chi}1 m_{S}10", color_Signal);
     }
   else
     {
       plotter.SetLuminosity(lumi);
       plotter.SetDrawRatio (true);
-    }
+
 
 
   // Get the data
@@ -150,6 +152,7 @@ void runPlotter(TString level,
      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
     }
 
+}
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
@@ -249,6 +252,21 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "lep1pt_gen"         + suffix, "leading lepton p_{T} GEN",               5, 0, "GeV",  scale, true, 0,  150);
+	  plotter.Draw(prefix + "lep2pt_gen"         + suffix, "trailing lepton p_{T} GEN",              5, 0, "GeV",  scale, true, 0,  150);
+	  plotter.Draw(prefix + "lep1eta_gen"        + suffix, "leading lepton #eta GEN",               -1, 1, "NULL", scale);
+	  plotter.Draw(prefix + "lep2eta_gen"        + suffix, "trailing lepton #eta GEN",              -1, 1, "NULL", scale);
+	  plotter.Draw(prefix + "lep1phi_gen"        + suffix, "leading lepton #phi GEN",                5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "lep2phi_gen"        + suffix, "trailing lepton #phi GEN",               5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "top1pt_gen"         + suffix, "leading top p_{T} GEN",               5, 0, "GeV",  scale, true, 0,  450);
+	  plotter.Draw(prefix + "top2pt_gen"         + suffix, "trailing top p_{T} GEN",              5, 0, "GeV",  scale, true, 0,  450);
+	  plotter.Draw(prefix + "top1eta_gen"        + suffix, "leading top #eta GEN",               -1, 1, "NULL", scale);
+	  plotter.Draw(prefix + "top2eta_gen"        + suffix, "trailing top #eta GEN",              -1, 1, "NULL", scale);
+	  plotter.Draw(prefix + "top1phi_gen"        + suffix, "leading top #phi GEN",                5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "top2phi_gen"        + suffix, "trailing top #phi GEN",               5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "dphitt_gen"         + suffix, "#Delta#phi(top1,top2) GEN",           5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "m2t_gen"            + suffix, "m_{tt} GEN"               ,           5, 0, "GeV", scale, true, 0, 5000);
+
 
 
 	  // WW ROC Curve
