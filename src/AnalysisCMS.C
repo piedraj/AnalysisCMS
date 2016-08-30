@@ -170,9 +170,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_top2eta_gen       [ichannel][icut][ijet]->Fill(_top2eta_gen,        _event_weight);
   h_top2phi_gen       [ichannel][icut][ijet]->Fill(_top2phi_gen,        _event_weight);
   h_top2pt_gen        [ichannel][icut][ijet]->Fill(_top2pt_gen,         _event_weight);
-  h_m2t_gen           [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
-  h_dphitt_gen        [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
-
+  h_m2t_gen           [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
+  h_dphitt_gen        [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
+  h_detatt_gen        [ichannel][icut][ijet]->Fill(_detatt_gen,         _event_weight);
 
 
   // TH2 histograms
@@ -545,6 +545,7 @@ void AnalysisCMS::GetTops() {
     _top2pt_gen  = -999;
     _m2t_gen     = -999; 
     _dphitt_gen  = -999;
+    _detatt_gen  = -999;
 
     float eta1 = -999;
     float phi1 = -999;
@@ -564,7 +565,9 @@ void AnalysisCMS::GetTops() {
 
     ntop += 1; 
 
-    if ( ntop == 2 ) {
+    if ( ntop > 1 ) {
+
+	if( fabs(eta1 - parton_eta) < 0.5  &&  fabs(phi1 - parton_phi) < 0.2 ) continue;
 
 	_top1eta_gen = eta1      ; 
 	_top1phi_gen = phi1      ; 
@@ -579,7 +582,8 @@ void AnalysisCMS::GetTops() {
 	t2.SetPtEtaPhiM( parton_pt, parton_eta, parton_phi, 173. );
 
 	_m2t_gen = (t1+t2).M();  
-	_dphitt_gen = t1.DeltaPhi(t2);
+	_dphitt_gen = fabs(t1.DeltaPhi(t2));
+	_detatt_gen = fabs(t1.Eta()-t2.Eta());
 	
 	break;	
 
@@ -591,8 +595,10 @@ void AnalysisCMS::GetTops() {
 
   }
 
-//std::cout << "m2t = " << _m2t_gen << std::endl;
-//std::cout << "dphitt = " << _dphitt_gen << std::endl;
+//std::cout << "\n" << std::endl;
+//std::cout << "eta1 = " << _top1eta_gen << "  --  eta2 = " << _top2eta_gen << std::endl;
+//std::cout << "phi1 = " << _top1phi_gen << "  --  phi2 = " << _top2phi_gen << std::endl;
+
 
 }
 
@@ -1248,7 +1254,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   h_m2t_gen           [ichannel][icut][ijet] = new TH1D("h_m2t_gen"            + suffix, "", 3000,    0, 3000);
   h_dphitt_gen        [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"         + suffix, "",  100,    0,  3.2);
-
+  h_detatt_gen        [ichannel][icut][ijet] = new TH1D("h_detatt_gen"         + suffix, "",  100,    0,   10);
 
   // TH2 histograms
   //----------------------------------------------------------------------------

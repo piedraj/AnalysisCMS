@@ -258,14 +258,15 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta_gen"        + suffix, "trailing lepton #eta GEN",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi_gen"        + suffix, "leading lepton #phi GEN",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi_gen"        + suffix, "trailing lepton #phi GEN",               5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "top1pt_gen"         + suffix, "leading top p_{T} GEN",               5, 0, "GeV",  scale, true, 0,  450);
-	  plotter.Draw(prefix + "top2pt_gen"         + suffix, "trailing top p_{T} GEN",              5, 0, "GeV",  scale, true, 0,  450);
+	  plotter.Draw(prefix + "top1pt_gen"         + suffix, "leading top p_{T} GEN",               10, 0, "GeV",  scale, true, 0,  450);
+	  plotter.Draw(prefix + "top2pt_gen"         + suffix, "trailing top p_{T} GEN",              10, 0, "GeV",  scale, true, 0,  450);
 	  plotter.Draw(prefix + "top1eta_gen"        + suffix, "leading top #eta GEN",               -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "top2eta_gen"        + suffix, "trailing top #eta GEN",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "top1phi_gen"        + suffix, "leading top #phi GEN",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "top2phi_gen"        + suffix, "trailing top #phi GEN",               5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphitt_gen"         + suffix, "#Delta#phi(top1,top2) GEN",           5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "m2t_gen"            + suffix, "m_{tt} GEN"               ,           5, 0, "GeV", scale, true, 0, 5000);
+	  plotter.Draw(prefix + "detatt_gen"         + suffix, "#Delta#eta(top1,top2) GEN",           5, 1, "NULL", scale);
+	  plotter.Draw(prefix + "m2t_gen"            + suffix, "m_{tt} GEN"               ,          20, 0, "GeV", linY, true, 0, 1000);
 
 
 

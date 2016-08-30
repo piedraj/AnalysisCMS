@@ -187,7 +187,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _dphilep2jet2;
   float                  _dphillmet;
   float                  _dphillstar;
-  float			 _dphitt_gen; 
+  float			 _dphitt_gen;
+  float                  _detatt_gen; 
   float                  _event_weight;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
@@ -368,6 +369,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_dphilmet1     [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet2     [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphitt_gen    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_detatt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll          [nchannel][ncut][njetbin+1];
   TH1D*                  h_ht            [nchannel][ncut][njetbin+1];
   TH1D*                  h_htjets        [nchannel][ncut][njetbin+1];
