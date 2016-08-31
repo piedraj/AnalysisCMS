@@ -18,6 +18,8 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
   _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
   _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
+  _systematic_reco_do    = (systematic.Contains("Recodo"))    ? true : false;
+  _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
 
   _systematic = systematic;
 }
@@ -344,7 +346,7 @@ void AnalysisCMS::ApplyWeights()
   _event_weight *= _luminosity * baseW * puW;
 
 
-  // Includes btag, trigger and idiso systematic uncertainties
+  // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
@@ -365,14 +367,18 @@ void AnalysisCMS::ApplyWeights()
 	  }
       }
 
-      float sf_trigger = effTrigW; // To be updated for WZ
+      float sf_trigger = effTrigW;  // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
+      float sf_reco    = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1);
+
+      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
+      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
       if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
-      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
-      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
+      if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
+      if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -380,20 +386,22 @@ void AnalysisCMS::ApplyWeights()
 
 	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
 	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  
+	  sf_reco = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1) * std_vector_lepton_recoW->at(2);
+
+	  if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1)   * std_vector_lepton_recoW_Up->at(2);
+	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
-      _event_weight *= sf_btag * sf_trigger * sf_idiso;
+      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
     }
 
-  if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WWTo2L2Nu"))      _event_weight *= nllW;
+  if (_sample.EqualTo("WgStarLNuEE"))    _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu"))  _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("Wg_MADGRAPHMLM")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  if (_sample.EqualTo("Wg_MADGRAPHMLM"))
-    {
-      _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
-    }
-  else if (!_is74X)
+  if (!_is74X)
     {
       _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
