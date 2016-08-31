@@ -86,14 +86,19 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass_2l &= (Lepton2.v.Pt() > 20.);
     pass_2l &= (_m2l > 20.);
 
-    bool pass;
+    bool pass = true;
+
+
+    // No cuts
+    //--------------------------------------------------------------------------
+    FillLevelHistograms(Control_00_NoCuts, pass);    
 
 
     // Has 2 leptons
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
-    FillLevelHistograms(Control_00_Has2Leptons, pass_2l);    
+    FillLevelHistograms(Control_01_Has2Leptons, pass);
 
 
     // Z+jets
@@ -103,7 +108,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_nbjet30csvv2m == 0);
 
-    FillLevelHistograms(Control_01_ZJets, pass);
+    FillLevelHistograms(Control_02_ZJets, pass);
 
 
     // Top
@@ -117,10 +122,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     bool metcut = (MET.Et() > 50. && _dphillmet > 1.2);
 
-    FillLevelHistograms(Control_02_Routin,     pass);
-    FillLevelHistograms(Control_03_RoutinBtag, pass && btag);
-    FillLevelHistograms(Control_04_Top,        pass && zveto && metcut);
-    FillLevelHistograms(Control_05_TopBtag,    pass && zveto && metcut && btag);
+    FillLevelHistograms(Control_03_Routin,     pass);
+    FillLevelHistograms(Control_04_RoutinBtag, pass && btag);
+    FillLevelHistograms(Control_05_Top,        pass && zveto && metcut);
+    FillLevelHistograms(Control_06_TopBtag,    pass && zveto && metcut && btag);
 
 
     // WW
@@ -138,7 +143,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || mpmet > 40.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_06_WW, pass);
+    FillLevelHistograms(Control_07_WW, pass);
 
     if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
     if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
