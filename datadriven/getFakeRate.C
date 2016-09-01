@@ -6,8 +6,8 @@ const Bool_t verbose = true;
 const Float_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
 
-const Float_t muonscale = -0.78;
-const Float_t elescale  = -0.784;
+const Float_t muonscale = -1.;
+const Float_t elescale  = -1.;
 
 bool draw         = true;
 bool savepng      = false;

@@ -85,6 +85,10 @@ class AnalysisFR: public AnalysisCMS
   TH1D* h_Ele_loose_m2l [ncut][njetet];
   TH1D* h_Ele_tight_m2l [ncut][njetet];
 
+  TH1D* h_Muon_loose_met[ncut][njetet];
+  TH1D* h_Muon_tight_met[ncut][njetet];
+  TH1D* h_Ele_loose_met [ncut][njetet];
+  TH1D* h_Ele_tight_met [ncut][njetet];
 
   // Declare effective luminosity estimation histograms
   //----------------------------------------------------------------------------
