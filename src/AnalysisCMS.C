@@ -328,6 +328,10 @@ void AnalysisCMS::Setup(TString analysis,
   if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016_Run2016B";
   if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
   if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
+  if (_filename.Contains("11Jul2016_Run2016C")) _dataperiod = "_11Jul2016_Run2016C";
+  if (_filename.Contains("15Jul2016_Run2016C")) _dataperiod = "_15Jul2016_Run2016C";
+  if (_filename.Contains("15Jul2016_Run2016D")) _dataperiod = "_15Jul2016_Run2016D";
+  if (_filename.Contains("26Jul2016_Run2016D")) _dataperiod = "_26Jul2016_Run2016D";
 
   _isdatadriven = "";
 
