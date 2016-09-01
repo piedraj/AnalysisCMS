@@ -78,6 +78,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    OpenMinitree      ();
 
+  bool    PassTrigger       ();
+
   void    PrintProgress     (Long64_t counter,
 			     Long64_t total);
 

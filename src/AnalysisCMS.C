@@ -26,6 +26,38 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
 
 //------------------------------------------------------------------------------
+// PassTrigger
+//------------------------------------------------------------------------------
+bool AnalysisCMS::PassTrigger()
+{
+  if (!std_vector_trigger) return true;
+
+  // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
+  // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
+  // HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*                      # 11
+  // HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*                    # 13
+  // HLT_IsoTkMu22_v*                                         # 42
+  // HLT_IsoMu22_v*                                           # 43
+  // HLT_Ele27_WPLoose_Gsf_v*                                 # 47
+  // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
+  // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
+
+  bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
+  bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
+  bool pass_SingleMuon     = (std_vector_trigger->at(42) || std_vector_trigger->at(43));
+  bool pass_SingleElectron = (std_vector_trigger->at(47) || std_vector_trigger->at(56));
+  bool pass_DoubleEG       = (std_vector_trigger->at(46));
+
+  if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
+  else if (_sample.Contains("DoubleMuon"))     return (!pass_MuonEG &&  pass_DoubleMuon);
+  else if (_sample.Contains("SingleMuon"))     return (!pass_MuonEG && !pass_DoubleMuon &&  pass_SingleMuon);
+  else if (_sample.Contains("DoubleEG"))       return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon &&  pass_DoubleEG);
+  else if (_sample.Contains("SingleElectron")) return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon && !pass_DoubleEG && pass_SingleElectron);
+  else                                         return true;
+}
+
+
+//------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
 float AnalysisCMS::MuonIsolation(int k)
@@ -337,13 +369,14 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight *= trigger;  // _event_weight *= trigger * metFilter;
+  _event_weight *= PassTrigger();  // _event_weight *= PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW * std_vector_lepton_recoW -> at(0) * std_vector_lepton_recoW -> at(1);
+
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -369,7 +402,8 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger = effTrigW;  // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
       float sf_reco    = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1);
-      
+
+
       if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
       if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
@@ -377,7 +411,7 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
       if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
-      if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);      
+      if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -390,10 +424,16 @@ void AnalysisCMS::ApplyWeights()
 
 	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
 	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  
+	  sf_reco = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1) * std_vector_lepton_recoW->at(2);
+
+	  if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1)   * std_vector_lepton_recoW_Up->at(2);
+	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
       //      _event_weight *= sf_btag * sf_trigger * sf_idiso;
       _event_weight *= sf_trigger * sf_idiso * sf_reco;
+
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))      _event_weight *= nllW;
