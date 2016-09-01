@@ -52,6 +52,8 @@ enum {
   Idisoup,
   Triggerdo,
   Triggerup,
+  Recodo,
+  Recoup,
   nsystematic  // This line should be always last
 };
 
@@ -70,7 +72,9 @@ const TString ssystematic[nsystematic] = {
   "Idisodo",
   "Idisoup",
   "Triggerdo",
-  "Triggerup"
+  "Triggerup",
+  "Recodo",
+  "Recoup"
 };
 
 
