@@ -341,8 +341,7 @@ void AnalysisCMS::ApplyWeights()
     
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;
-
+  _event_weight *= _luminosity * baseW * puW * std_vector_lepton_recoW -> at(0) * std_vector_lepton_recoW -> at(1);
 
   // Includes btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -382,7 +381,8 @@ void AnalysisCMS::ApplyWeights()
 	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
 	}
 
-      _event_weight *= sf_btag * sf_trigger * sf_idiso;
+      //      _event_weight *= sf_btag * sf_trigger * sf_idiso;
+      _event_weight *= sf_trigger * sf_idiso;
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
@@ -1284,9 +1284,9 @@ void AnalysisCMS::GetGenPtllWeight()
 //------------------------------------------------------------------------------
 TH1F* AnalysisCMS::GetGenWeightsLHE()
 {
-  TFile* f = new TFile(_filename, "read");
+  TFile* file = TFile::Open(_filename);
 
-  TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
+  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
 
   root_output->cd();
 
