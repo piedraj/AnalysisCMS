@@ -113,8 +113,6 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  printf("\n >>> Warning: applying a weight of 12.3/6.324 on the fake background <<<\n\n");
-
 	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, 12.3/6.324);
 	}
       else

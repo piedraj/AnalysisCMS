@@ -1035,7 +1035,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".txt");
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
