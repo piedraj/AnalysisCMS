@@ -111,15 +111,16 @@ void runPlotter(TString level,
       plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
       plotter.AddProcess("05_ST",        "tW",      color_ST);
 
-       if (datadriven)
-       	{
-       	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+      if (datadriven)
+	{
+	  printf("\n >>> Warning: applying a weight of 12.3/6.324 on the fake background <<<\n\n");
 
-       	}
-       else
-      	{
-       	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
-       	}
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, 12.3/6.324);
+	}
+      else
+	{
+	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+	}
     }
 
 
@@ -127,14 +128,14 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-           plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
-           plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
-         //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
-           plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
-         //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
-           plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
-           plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
-           plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
+      plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
+      plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
+    //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
+      plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
+    //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
+      plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
+      plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
+      plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
