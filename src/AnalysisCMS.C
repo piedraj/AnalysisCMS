@@ -895,11 +895,8 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muDown     = 1.;
       _fake_weight_muStatUp   = 1.;
       _fake_weight_muStatDown = 1.;
-
-      return;
     }
-
-  if (_analysis.EqualTo("WZ"))
+  else if (_analysis.EqualTo("WZ"))
     {
       _fake_weight            = fakeW3l;
       _fake_weight_elUp       = fakeW3lElUp;
@@ -910,11 +907,8 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muDown     = fakeW3lMuDown;
       _fake_weight_muStatUp   = fakeW3lstatMuUp;
       _fake_weight_muStatDown = fakeW3lstatMuDown;
-
-      return;
     }
-
-  if (_njet == 0)
+  else if (_njet == 0)
     {
       _fake_weight            = fakeW2l0j;
       _fake_weight_elUp       = fakeW2l0jElUp;
@@ -958,12 +952,6 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup(float jet_eta_max)
 {
-  GetGenPtllWeight();
-
-  GetFakeWeights();
-
-  ApplyWeights();
- 
   GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
@@ -972,6 +960,15 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetJets(jet_eta_max);
 
+  GetGenPtllWeight();
+
+  GetFakeWeights();
+
+  ApplyWeights();
+
+
+  // Additional analysis variables
+  //----------------------------------------------------------------------------
   GetDeltaPhi();
 
   GetDeltaR(); 
@@ -1292,8 +1289,7 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
-  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
+  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
 }
 
 
