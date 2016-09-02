@@ -377,7 +377,7 @@ void AnalysisCMS::ApplyWeights()
     
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW * std_vector_lepton_recoW -> at(0) * std_vector_lepton_recoW -> at(1);
+  _event_weight *= _luminosity * baseW * puW;
 
 
   // Include btag, trigger and idiso systematic uncertainties
@@ -434,8 +434,7 @@ void AnalysisCMS::ApplyWeights()
 	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
-      //      _event_weight *= sf_btag * sf_trigger * sf_idiso;
-      _event_weight *= sf_trigger * sf_idiso * sf_reco;
+      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
 
     }
 

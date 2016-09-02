@@ -482,54 +482,48 @@ void AnalysisFR::GetAwayJets()
 
 /*
 
-   [2016/07/20] Total luminosity = 6.274/fb
+   [2016/09/02] Total luminosity = 12.892/fb
 
    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*" 
 
    +----------------------+-------+------+-------+-------------------+------------------+
    | hltpath              | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +----------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29160 | 4.283             | 4.091            |
-   | HLT_Mu8_TrkIsoVVL_v4 | 13    | 49   | 26096 | 0.756             | 0.722            |
+   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29182 | 4.285             | 4.092            |
+   | HLT_Mu8_TrkIsoVVL_v4 | 30    | 111  | 69602 | 1.842             | 1.766            |
    +----------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*" 
 
    +-----------------------+-------+------+-------+-------------------+------------------+
    | hltpath               | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +-----------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29160 | 55.456            | 53.039           |
-   | HLT_Mu17_TrkIsoVVL_v3 | 13    | 49   | 26096 | 88.241            | 85.136           |
+   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29182 | 55.504            | 53.084           |
+   | HLT_Mu17_TrkIsoVVL_v3 | 30    | 111  | 69602 | 114.926           | 110.757          |
    +-----------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*" 
 
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
    | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 3.180             | 3.054            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29182 | 3.184             | 3.057            |
    | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 0.675             | 0.646            |
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 0.822             | 0.794            |
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 0.758             | 0.732            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 8540  | 0.751             | 0.725            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 23    | 83   | 53518 | 4.240             | 4.084            |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*" 
 
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
    | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 17.554            | 16.815           |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29182 | 17.578            | 16.838           |
    | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 3.247             | 3.112            |
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 3.938             | 3.805            |
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 3.517             | 3.400            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 8540  | 3.584             | 3.459            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 23    | 83   | 53518 | 19.652            | 18.937           |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
 
 */

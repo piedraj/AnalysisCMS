@@ -86,7 +86,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_supercut &= (abs(Lepton1.flavour) == 13 || Lepton2.v.Pt() > 13.);
     pass_supercut &= (std_vector_lepton_pt -> at(2) < 10.);
 
-    pass_supercut &= (_m2l > 20.);
+    pass_supercut &= (_m2l > 60.);
 
     bool pass;
 
