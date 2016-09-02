@@ -309,8 +309,6 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
 
-  _is74X = (_filename.Contains("21Oct")) ? true : false;
-
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
@@ -324,10 +322,14 @@ void AnalysisCMS::Setup(TString analysis,
 
   _dataperiod = "";
 
-  if (_filename.Contains("21Jun2016_Run2016B")) _dataperiod = "_21Jun2016_Run2016B";
-  if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016_Run2016B";
-  if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
-  if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
+  if (_filename.Contains("21Jun2016_Run2016B")) _dataperiod = "_21Jun2016";
+  if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016";
+  if (_filename.Contains("11Jul2016_Run2016C")) _dataperiod = "_11Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016C")) _dataperiod = "_15Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016D")) _dataperiod = "_15Jul2016";
+  if (_filename.Contains("26Jul2016_Run2016D")) _dataperiod = "_26Jul2016";
 
   _isdatadriven = "";
 
@@ -384,20 +386,21 @@ void AnalysisCMS::ApplyWeights()
     {
       float sf_btag = 1.0;
 
-      if (!_is74X) {
-	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
-	  {
-	    sf_btag = bPogSF_CSVM;
-	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
-	    if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
-	  }
-	else
-	  {
-	    sf_btag = bPogSF_CMVAL;
-	    if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-	    if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
-	  }
-      }
+      if (_analysis.EqualTo("Top")  ||
+	  _analysis.EqualTo("TTDM") ||
+	  _analysis.EqualTo("Stop") ||
+	  _analysis.EqualTo("Control"))
+	{
+	  sf_btag = bPogSF_CSVM;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
+	}
+      else
+	{
+	  sf_btag = bPogSF_CMVAL;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
+	}
 
       float sf_trigger = effTrigW;  // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
@@ -441,12 +444,9 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("WgStarLNuMuMu"))  _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
   if (_sample.EqualTo("Wg_MADGRAPHMLM")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  if (!_is74X)
-    {
-      _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
-      if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
-    }
+  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
   _event_weight *= _gen_ptll_weight;
 
@@ -582,7 +582,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     Jet goodjet;
 
     goodjet.index    = i;
-    goodjet.cmvav2   = (_is74X) ? 1. : std_vector_jet_cmvav2->at(i);
+    goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
@@ -865,43 +865,25 @@ void AnalysisCMS::GetPtWW()
 
 //------------------------------------------------------------------------------                                                               
 // GetSoftMuon
+// https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetSoftMuon()
 {
   _foundsoftmuon = false;
 
-  if (_is74X) {
-
-    for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); ++i)
-      {
-        if (std_vector_jet_pt->at(i)       < 10.) continue;
-        if (std_vector_jet_pt->at(i)       > 30.) continue;
-        if (std_vector_jet_softMuPt->at(i) <  3.) continue;
-
-        _foundsoftmuon = true;
-
-        break;
-      }
-
-  } else {
-
-    // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
-    for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
+  for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
       
-      if (std_vector_softMuPt->at(i)  < 3.)               continue;
-      if (std_vector_softMuD0->at(i)  < 0.2)              continue;
-      if (std_vector_softMuDz->at(i)  < 0.5)              continue;
-      if (std_vector_softMuIso->at(i) < 0.15)             continue;
-      if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
-      if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
+    if (std_vector_softMuPt->at(i)  < 3.)               continue;
+    if (std_vector_softMuD0->at(i)  < 0.2)              continue;
+    if (std_vector_softMuDz->at(i)  < 0.5)              continue;
+    if (std_vector_softMuIso->at(i) < 0.15)             continue;
+    if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
+    if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
       
-      _foundsoftmuon = true;
-    
-      break;
-    }
-
+    _foundsoftmuon = true;
+      
+    break;
   }
-
 }
 
 
@@ -990,10 +972,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   ApplyWeights();
  
-  if (_is74X)
-    GetMET(pfType1Met, pfType1Metphi);
-  else
-    GetMET(metPfType1, metPfType1Phi);
+  GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
 
