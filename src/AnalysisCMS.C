@@ -371,7 +371,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight *= PassTrigger();  // _event_weight *= PassTrigger() * metFilter;
+  _event_weight *= trigger;  // _event_weight *= PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
@@ -884,19 +884,7 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  if (!_filename.Contains("fakeW"))
-    {
-      _fake_weight            = 1.;
-      _fake_weight_elUp       = 1.;
-      _fake_weight_elDown     = 1.;
-      _fake_weight_elStatUp   = 1.;
-      _fake_weight_elStatDown = 1.;
-      _fake_weight_muUp       = 1.;
-      _fake_weight_muDown     = 1.;
-      _fake_weight_muStatUp   = 1.;
-      _fake_weight_muStatDown = 1.;
-    }
-  else if (_analysis.EqualTo("WZ"))
+  if (_analysis.EqualTo("WZ"))
     {
       _fake_weight            = fakeW3l;
       _fake_weight_elUp       = fakeW3lElUp;
@@ -908,41 +896,17 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muStatUp   = fakeW3lstatMuUp;
       _fake_weight_muStatDown = fakeW3lstatMuDown;
     }
-  else if (_njet == 0)
-    {
-      _fake_weight            = fakeW2l0j;
-      _fake_weight_elUp       = fakeW2l0jElUp;
-      _fake_weight_elDown     = fakeW2l0jElDown;
-      _fake_weight_elStatUp   = fakeW2l0jstatElUp;
-      _fake_weight_elStatDown = fakeW2l0jstatElDown;
-      _fake_weight_muUp       = fakeW2l0jMuUp;
-      _fake_weight_muDown     = fakeW2l0jMuDown;
-      _fake_weight_muStatUp   = fakeW2l0jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l0jstatMuDown;
-    }
-  else if (_njet == 1)
-    {
-      _fake_weight            = fakeW2l1j;
-      _fake_weight_elUp       = fakeW2l1jElUp;
-      _fake_weight_elDown     = fakeW2l1jElDown;
-      _fake_weight_elStatUp   = fakeW2l1jstatElUp;
-      _fake_weight_elStatDown = fakeW2l1jstatElDown;
-      _fake_weight_muUp       = fakeW2l1jMuUp;
-      _fake_weight_muDown     = fakeW2l1jMuDown;
-      _fake_weight_muStatUp   = fakeW2l1jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l1jstatMuDown;
-    }
   else
     {
-      _fake_weight            = fakeW2l2j;
-      _fake_weight_elUp       = fakeW2l2jElUp;
-      _fake_weight_elDown     = fakeW2l2jElDown;
-      _fake_weight_elStatUp   = fakeW2l2jstatElUp;
-      _fake_weight_elStatDown = fakeW2l2jstatElDown;
-      _fake_weight_muUp       = fakeW2l2jMuUp;
-      _fake_weight_muDown     = fakeW2l2jMuDown;
-      _fake_weight_muStatUp   = fakeW2l2jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l2jstatMuDown;
+      _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
+      _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
+      _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
+      _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
+      _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
+      _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
+      _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
+      _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
+      _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
     }
 }
 
