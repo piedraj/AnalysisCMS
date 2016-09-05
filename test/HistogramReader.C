@@ -378,7 +378,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;  // x position of the data on the top left
   Float_t y0     = 0.843;  // y position of the data on the top left
-  Float_t xdelta = 0.228;  // x width between columns
+  Float_t xdelta = 0.170;  //0.228;  // x width between columns
   Float_t ydelta = 0.050;  // y width between rows
   Int_t   nx     = 0;      // column number
   Int_t   ny     = 0;      // row    number
@@ -423,9 +423,10 @@ void HistogramReader::Draw(TString hname,
   
   // Search signals legend
   //----------------------------------------------------------------------------
+  ny = 0;
   for (int i=0; i<_signalhist.size(); i++)
     {
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
+      DrawLegend(x0 + (nx+1)*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
       ny++;
     }
 
