@@ -113,8 +113,6 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  printf("\n >>> Warning: applying a weight of 12.3/6.324 on the fake background <<<\n\n");
-
 	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, 12.3/6.324);
 	}
       else
@@ -194,7 +192,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("WW")   &&
+	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -216,7 +217,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;   
+      if (!analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("WW")   &&
+	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
