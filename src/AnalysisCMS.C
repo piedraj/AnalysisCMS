@@ -406,7 +406,6 @@ void AnalysisCMS::ApplyWeights()
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
       float sf_reco    = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1);
 
-
       if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
       if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
