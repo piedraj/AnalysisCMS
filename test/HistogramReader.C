@@ -378,7 +378,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t x0     = 0.220;  // x position of the data on the top left
   Float_t y0     = 0.843;  // y position of the data on the top left
-  Float_t xdelta = 0.170;  //0.228;  // x width between columns
+  Float_t xdelta = 0.228;  // x width between columns
+  if ( _inputdir.Contains("mono")) xdelta = 0.170;
   Float_t ydelta = 0.050;  // y width between rows
   Int_t   nx     = 0;      // column number
   Int_t   ny     = 0;      // row    number
