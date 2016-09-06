@@ -378,8 +378,97 @@ void AnalysisCMS::ApplyWeights()
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
+  
+  int ptzone = -1;
+  int etazone = -1;
 
+  if(Lepton1.flavour * Lepton2.flavour == -121)
+{
+  if(Lepton1.v.Pt() > 10. && Lepton1.v.Pt() < 20.) ptzone = 1;
+  else if (Lepton1.v.Pt() > 20. && Lepton1.v.Pt() < 30.) ptzone = 2;
+  else if (Lepton1.v.Pt() > 30. && Lepton1.v.Pt() < 40.) ptzone = 3;
+  else if (Lepton1.v.Pt() > 40. && Lepton1.v.Pt() < 50.) ptzone = 4;
+  else if (Lepton1.v.Pt() > 50. && Lepton1.v.Pt() < 2000.) ptzone = 5;
 
+  if (Lepton1.v.Eta() > -2.500 && Lepton1.v.Eta() < -2.000) etazone = 1;
+  else if (Lepton1.v.Eta() > -2.000 && Lepton1.v.Eta() < -1.566) etazone = 2;
+  else if (Lepton1.v.Eta() > -1.566 && Lepton1.v.Eta() < -1.444) etazone = 3;
+  else if (Lepton1.v.Eta() > -1.444 && Lepton1.v.Eta() < -0.800) etazone = 4;
+  else if (Lepton1.v.Eta() > -0.800 && Lepton1.v.Eta() < 0.000) etazone = 5;
+  else if (Lepton1.v.Eta() > 0.000 && Lepton1.v.Eta() < 0.800) etazone = 6;
+  else if (Lepton1.v.Eta() > 0.800 && Lepton1.v.Eta() < 1.444) etazone = 7;
+  else if (Lepton1.v.Eta() > 1.444 && Lepton1.v.Eta() < 1.566) etazone = 8;
+  else if (Lepton1.v.Eta() > 1.566 && Lepton1.v.Eta() < 2.000) etazone = 9;
+  else if (Lepton1.v.Eta() > 2.000 && Lepton1.v.Eta() < 2.500) etazone = 10;
+
+  if(ptzone == 1) {
+
+    if(etazone == 1) _event_weight *= 0.991;
+    else if (etazone == 2) _event_weight *= 0.809;
+    else if (etazone == 3) _event_weight *= 1.000;
+    else if (etazone == 4) _event_weight *= 1.013;
+    else if (etazone == 5) _event_weight *= 0.960;
+    else if (etazone == 6) _event_weight *= 0.992;
+    else if (etazone == 7) _event_weight *= 1.067;
+    else if (etazone == 8) _event_weight *= 1.200;
+    else if (etazone == 9) _event_weight *= 0.855;
+    else if (etazone == 10) _event_weight *= 0.895;
+
+  } else if (ptzone == 2) {
+
+    if(etazone == 1) _event_weight *= 0.866;
+    else if (etazone == 2) _event_weight *= 0.804;
+    else if (etazone == 3) _event_weight *= 0.930;
+    else if (etazone == 4) _event_weight *= 0.932;
+    else if (etazone == 5) _event_weight *= 0.934;
+    else if (etazone == 6) _event_weight *= 0.965;
+    else if (etazone == 7) _event_weight *= 0.970;
+    else if (etazone == 8) _event_weight *= 0.962;
+    else if (etazone == 9) _event_weight *= 0.808;
+    else if (etazone == 10) _event_weight *= 0.818;
+
+  } else if (ptzone == 3) {
+
+    if(etazone == 1) _event_weight *= 0.854;
+    else if (etazone == 2) _event_weight *= 0.830;
+    else if (etazone == 3) _event_weight *= 0.931;
+    else if (etazone == 4) _event_weight *= 0.957;
+    else if (etazone == 5) _event_weight *= 0.937;
+    else if (etazone == 6) _event_weight *= 0.955;
+    else if (etazone == 7) _event_weight *= 0.946;
+    else if (etazone == 8) _event_weight *= 0.918;
+    else if (etazone == 9) _event_weight *= 0.855;
+    else if (etazone == 10) _event_weight *= 0.830;
+
+  } else if (ptzone == 4) {
+
+    if(etazone == 1) _event_weight *= 0.848;
+    else if (etazone == 2) _event_weight *= 0.854;
+    else if (etazone == 3) _event_weight *= 0.935;
+    else if (etazone == 4) _event_weight *= 0.960;
+    else if (etazone == 5) _event_weight *= 0.935;
+    else if (etazone == 6) _event_weight *= 0.960;
+    else if (etazone == 7) _event_weight *= 0.955;
+    else if (etazone == 8) _event_weight *= 0.913;
+    else if (etazone == 9) _event_weight *= 0.869;
+    else if (etazone == 10) _event_weight *= 0.831;
+
+  } else if (ptzone == 5) {
+
+    if(etazone == 1) _event_weight *= 0.838;
+    else if (etazone == 2) _event_weight *= 0.859;
+    else if (etazone == 3) _event_weight *= 0.951;
+    else if (etazone == 4) _event_weight *= 0.960;
+    else if (etazone == 5) _event_weight *= 0.942;
+    else if (etazone == 6) _event_weight *= 0.956;
+    else if (etazone == 7) _event_weight *= 0.953;
+    else if (etazone == 8) _event_weight *= 0.899;
+    else if (etazone == 9) _event_weight *= 0.880;
+    else if (etazone == 10) _event_weight *= 0.835;
+
+  }
+  }
+  
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
@@ -433,7 +522,8 @@ void AnalysisCMS::ApplyWeights()
 	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
-      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
+      //_event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
+_event_weight *= sf_trigger * sf_idiso * sf_reco;
 
     }
 

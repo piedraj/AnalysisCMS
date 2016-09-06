@@ -102,8 +102,15 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_m2l > 60.);
     pass &= (Lepton1.flavour * Lepton2.flavour == -13 * 13);
+    pass &= (Lepton1.v.Pt() > 30. && Lepton2.v.Pt() > 20.);
 
     FillLevelHistograms(DY_02_DYmm, pass);
+
+    pass &= (_m2l > 60.);
+    pass &= (Lepton1.flavour * Lepton2.flavour == -11 * 13);
+    pass &= (Lepton1.v.Pt() > 30. && Lepton2.v.Pt() > 20.);
+
+    FillLevelHistograms(DY_03_DYem, pass);
 
   }
 
