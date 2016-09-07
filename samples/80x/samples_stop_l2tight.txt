@@ -1,4 +1,4 @@
-root://eoscms.cern.ch//eos/cms/store/user/scodella/LatinosSkims/RunII/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-150to250.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/LatinosSkims/RunII/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-250to350.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/LatinosSkims/RunII/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-350to400.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/LatinosSkims/RunII/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-400to1200.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-150to250.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-250to350.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-350to400.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_T2tt_mStop-400to1200.root
