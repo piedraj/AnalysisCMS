@@ -190,7 +190,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 4.813 : _event_weight *= 138.175;
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84;
 	}
 
       
@@ -198,7 +198,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == e)
 	{
-	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 5.226 : _event_weight *= 27.132;
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 8.51 : _event_weight *= 42.34;
 	}
 
     } else {
@@ -306,77 +306,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
-
-      // W region
-      //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() > 20 && _mtw > 20);
-      
-      FillLevelHistograms(FR_01_WRegion, i, pass);
-
-
-      // W region "QCD"
-      //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw > 20);
-
-      FillLevelHistograms(FR_02_WRegionQCD, i, pass);
-
-
-      // Z region
-      //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 20) {
-
-	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
- 
-	  h_Ele_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);     
-	  h_Ele_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
-	    h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  }
-	}
-	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-
-	  h_Muon_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	  h_Muon_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
-	    h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  } 
-	}
-      }
-
-
-      // Z region "QCD"
-      //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 20) {
-
-	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
- 
-	  h_Ele_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
-	  h_Ele_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-	  
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Ele_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	    h_Ele_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  }
-	}
-	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-	    
-	  h_Muon_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	  h_Muon_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-	
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Muon_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	    h_Muon_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  } 
-	}
-      }
     }
   }
 
