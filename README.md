@@ -1,20 +1,25 @@
 0. Analysis documentation
 ====
 
-These twiki pages contain the CMS synchronization status of the WW and WZ cross section analyses at 13 TeV. There we can find the datasets used in each analysis, trigger bits, lepton selections and analysis cuts.
+AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
-    https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables
-    https://twiki.cern.ch/twiki/bin/view/CMS/WZ13TeV
-    https://twiki.cern.ch/twiki/bin/view/CMS/ReviewSMP16002
-    http://www.hep.uniovi.es/nachos/WZ/ValidationPlots_v2_2090pb/
+    https://github.com/latinos/LatinoTrees
+    https://github.com/latinos/LatinoAnalysis
+    https://github.com/latinos/PlotsConfigurations
 
 
-1. First time only
+1. Everything begins here.
 ====
 
-Log in to gridui.
+Log in to gridui or lxplus.
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
+    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+
+    bash -l
+
+Execute this line only in gridui.
+
     source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 Set a CMSSW release.
@@ -158,9 +163,11 @@ And they should appear here,
     https://amanjong.web.cern.ch/amanjong/
     https://bchazinq.web.cern.ch/bchazinq/
     https://cprieels.web.cern.ch/cprieels/
+    https://fernanpe.web.cern.ch/fernanpe/
     https://jgarciaf.web.cern.ch/jgarciaf/
     https://ntrevisa.web.cern.ch/ntrevisa/
     https://piedra.web.cern.ch/piedra/
+    http://rocio.web.cern.ch/rocio/
 
 
 7. It is commit time
