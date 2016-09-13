@@ -1,8 +1,8 @@
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleEG.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleMuon.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_MuonEG.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_SingleElectron.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_SingleMuon.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_v2_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleEG.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_v2_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleMuon.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_v2_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_MuonEG.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_v2_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_SingleElectron.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/21Jun2016_v2_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_SingleMuon.root
 
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/05Jul2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleEG.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/05Jul2016_Run2016B_PromptReco/l1loose__EpTCorr__fakeSel__hadd/latino_Run2016B_PromptReco_DoubleMuon.root
