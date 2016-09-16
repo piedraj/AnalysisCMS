@@ -58,7 +58,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
   // Loop over events
   //----------------------------------------------------------------------------
-  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+  for (Long64_t jentry=0; jentry<_nentries; jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
 

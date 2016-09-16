@@ -191,8 +191,7 @@ public :
    Float_t         pho_sietaieta;
    Float_t         predmet;
    Float_t         redmet;   
-   UInt_t          run;  // 76x
- //Float_t         run;  // 74x
+   UInt_t          run;
    UInt_t          lumi;
    UInt_t          event;
    Float_t         softbjpb;
@@ -221,6 +220,7 @@ public :
    Float_t         phi1;
    Float_t         pt3;
    Float_t         nbjet_3l;
+
 
    vector<float>   *std_vector_GEN_weight;
    vector<float>   *std_vector_LHE_weight;
@@ -966,7 +966,6 @@ public :
    TBranch        *b_phi1;   //!
    TBranch        *b_pt3;   //!
    TBranch        *b_nbjet_3l;   //!
-
 
 
    AnalysisBase(TTree *tree=0);
