@@ -38,14 +38,14 @@ bool AnalysisCMS::PassTrigger()
   // HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*                    # 13
   // HLT_IsoTkMu22_v*                                         # 42
   // HLT_IsoMu22_v*                                           # 43
-  // HLT_Ele27_WPLoose_Gsf_v*                                 # 47
+  // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
   // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
   // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
 
   bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
   bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
   bool pass_SingleMuon     = (std_vector_trigger->at(42) || std_vector_trigger->at(43));
-  bool pass_SingleElectron = (std_vector_trigger->at(47) || std_vector_trigger->at(56));
+  bool pass_SingleElectron = (std_vector_trigger->at(0)  || std_vector_trigger->at(56));
   bool pass_DoubleEG       = (std_vector_trigger->at(46));
 
   if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
