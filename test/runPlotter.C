@@ -39,8 +39,8 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2015_dm;
-  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
+  if (analysis.EqualTo("TTDM"))    lumi = lumi_fb_2015_dm;
+  if (analysis.EqualTo("Stop"))    lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
@@ -82,7 +82,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStat",   "W#gamma*", color_WgStar);
       plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
       if (datadriven)
@@ -113,7 +113,7 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, 12.3/6.324);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 	}
       else
 	{
