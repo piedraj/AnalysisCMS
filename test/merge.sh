@@ -15,7 +15,7 @@ pushd $FOLDER
 hadd -f -k 00_Fakes.root     fakeW*.root
 hadd -f -k 01_Data.root      Run*.root
 hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
-hadd -f -k 03_ZZ.root        ZZTo2L2Nu.root ZZTo2L2Q*.root WZTo2L2Q__part*.root  # Should be called VZ
+hadd -f -k 03_VZ.root        ZZTo2L2Q*.root WZTo2L2Q__part*.root
 hadd -f -k 04_TTTo2L2Nu.root TTTo2L2Nu_ext1__part*.root
 hadd -f -k 05_ST.root        ST_tW_antitop.root ST_tW_top.root
 hadd -f -k 06_WW.root        WWTo2L2Nu.root GluGluWWTo2L2Nu_MCFM.root
