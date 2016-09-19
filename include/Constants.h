@@ -1,25 +1,26 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-//#include "CutsControl.h"
+#include "CutsControl.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsSS.h"
 //#include "CutsStop.h"
 //#include "CutsTop.h"
-#include "CutsTTDM.h"
+//#include "CutsTTDM.h"
 //#include "CutsWW.h"
 //#include "CutsWZ.h"
 
 //#include "BTagWorkingPoints74X.h"
-#include "BTagWorkingPoints76X.h"
+//#include "BTagWorkingPoints76X.h"
+#include "BTagWorkingPoints80X.h"
 
 
-const double lumi_fb_2016       = 6.324;  // 2016B + 2016C
-const double lumi_fb_2016_susy  = 0.868;  // From run 271036 to run 274240
-const double lumi_fb_2015_dm    = 1.324;  // From run 256630 to run 258750 --> Update to 2016
-const double lumi_fb_2015       = 2.318;  // 2015C + 2015D
-const double lumi_error_percent = 2.7;
+const double lumi_fb_2016       = 12.3;    // 2016B + 2016C + 2016D
+const double lumi_fb_2016_susy  =  0.868;  // From run 271036 to run 274240
+const double lumi_fb_2015_dm    =  1.324;  // From run 256630 to run 258750 --> Update to 2016
+const double lumi_fb_2015       =  2.318;  // 2015C + 2015D
+const double lumi_error_percent =  6.2;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -51,6 +52,8 @@ enum {
   Idisoup,
   Triggerdo,
   Triggerup,
+  Recodo,
+  Recoup,
   nsystematic  // This line should be always last
 };
 
@@ -69,7 +72,9 @@ const TString ssystematic[nsystematic] = {
   "Idisodo",
   "Idisoup",
   "Triggerdo",
-  "Triggerup"
+  "Triggerup",
+  "Recodo",
+  "Recoup"
 };
 
 

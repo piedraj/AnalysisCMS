@@ -3,15 +3,12 @@
 if [ $# -lt 2 ]; then
     echo "  "
     echo "  rm -rf jobs"
-    echo "  rm -rf rootfiles/"
+    echo "  rm -rf rootfiles"
     echo "  "
-    echo "  >>> 80x files"
-    echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l1loose.txt       nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l1loose.txt         nominal"
-    echo "  "		 
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2loose_fakeW.txt nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt         nominal"
+<<<<<<< HEAD
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_datadriven_l2tight.txt nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight.txt       nominal"
     echo "  "		 
@@ -37,10 +34,10 @@ if [ $# -lt 2 ]; then
     echo "  ./submit-jobs-lxplus.sh samples/74x/samples_mc.txt                 nominal"
     echo "  ./submit-jobs-lxplus.sh samples/74x/samples_stop.txt               nominal"
     echo "  "
+=======
+>>>>>>> 7a6f55a231f0c47e727700f89644a21b7cf02eed
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/samples_data_2015D_74X_eos.txt nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_mc_74X_eos.txt         nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/samples_stop_74X_eos.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_monoh_l2tight.txt      nominal"
     echo "  "
     exit -1
 fi

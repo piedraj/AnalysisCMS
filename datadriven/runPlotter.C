@@ -67,7 +67,7 @@ void DrawLeptonPlots(TString lepton,
   plotter->SetLuminosity(lumi);
 
   TString prefix = _level + "/h_" + lepton + "_";
-  TString suffix = Form("_%.0fGev", jetet);
+  TString suffix = Form("_%.0fGeV", jetet);
 
 
   // Draw distributions

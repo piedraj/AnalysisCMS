@@ -191,8 +191,7 @@ public :
    Float_t         pho_sietaieta;
    Float_t         predmet;
    Float_t         redmet;   
-   UInt_t          run;  // 76x
- //Float_t         run;  // 74x
+   UInt_t          run;
    UInt_t          lumi;
    UInt_t          event;
    Float_t         softbjpb;
@@ -221,6 +220,7 @@ public :
    Float_t         phi1;
    Float_t         pt3;
    Float_t         nbjet_3l;
+
 
    vector<float>   *std_vector_GEN_weight;
    vector<float>   *std_vector_LHE_weight;
@@ -464,6 +464,9 @@ public :
    vector<float>   *std_vector_lepton_idisoLooseW_Up;
    vector<float>   *std_vector_lepton_idisoLooseW_Down;
    vector<float>   *std_vector_lepton_idisoLooseW_Syst;
+   vector<float>   *std_vector_lepton_recoW;
+   vector<float>   *std_vector_lepton_recoW_Up;
+   vector<float>   *std_vector_lepton_recoW_Down;
    Float_t         mcoll;
    Float_t         mcollWW;
    Float_t         vht_pt;
@@ -913,6 +916,9 @@ public :
    TBranch        *b_std_vector_lepton_idisoLooseW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoLooseW_Down;   //!
    TBranch        *b_std_vector_lepton_idisoLooseW_Syst;   //!
+   TBranch        *b_std_vector_lepton_recoW;   //!
+   TBranch        *b_std_vector_lepton_recoW_Up;   //!
+   TBranch        *b_std_vector_lepton_recoW_Down;   //!
    TBranch        *b_mcoll;   //!
    TBranch        *b_mcollWW;   //!
    TBranch        *b_vht_pt;   //!
@@ -960,7 +966,6 @@ public :
    TBranch        *b_phi1;   //!
    TBranch        *b_pt3;   //!
    TBranch        *b_nbjet_3l;   //!
-
 
 
    AnalysisBase(TTree *tree=0);
@@ -1185,6 +1190,9 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_idisoLooseW_Up = 0;
    std_vector_lepton_idisoLooseW_Down = 0;
    std_vector_lepton_idisoLooseW_Syst = 0;
+   std_vector_lepton_recoW = 0;
+   std_vector_lepton_recoW_Up = 0;
+   std_vector_lepton_recoW_Down = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1609,6 +1617,9 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Up", &std_vector_lepton_idisoLooseW_Up, &b_std_vector_lepton_idisoLooseW_Up);
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Down", &std_vector_lepton_idisoLooseW_Down, &b_std_vector_lepton_idisoLooseW_Down);
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Syst", &std_vector_lepton_idisoLooseW_Syst, &b_std_vector_lepton_idisoLooseW_Syst);
+   fChain->SetBranchAddress("std_vector_lepton_recoW", &std_vector_lepton_recoW, &b_std_vector_lepton_recoW);
+   fChain->SetBranchAddress("std_vector_lepton_recoW_Up", &std_vector_lepton_recoW_Up, &b_std_vector_lepton_recoW_Up);
+   fChain->SetBranchAddress("std_vector_lepton_recoW_Down", &std_vector_lepton_recoW_Down, &b_std_vector_lepton_recoW_Down);
    fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
    fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
    fChain->SetBranchAddress("vht_pt", &vht_pt, &b_vht_pt);

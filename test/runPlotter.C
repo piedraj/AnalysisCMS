@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
-const TString inputdir  = "../rootfiles/top-reco/";
+const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -25,7 +25,7 @@ enum {linY, logY};
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString level,
-		TString option = "nostack,hist")
+		TString option = "hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -39,12 +39,12 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2016;
+  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2015_dm;
   if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
-  if (analysis.EqualTo("MonoH")) scale = linY;
+  if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
   if (analysis.EqualTo("Top"))   scale = logY;
 
@@ -60,14 +60,12 @@ void runPlotter(TString level,
   if (option.Contains("nostack"))
     {
       plotter.SetDrawRatio(false);
-      plotter.AddProcess("TTTo2L2Nu_ext1__part0", "tt", kBlack);
-      plotter.AddSignal ("ttDM0001scalar00010", "m_{#chi}1 m_{S}10", color_Signal);
     }
   else
     {
       plotter.SetLuminosity(lumi);
       plotter.SetDrawRatio (true);
-
+    }
 
 
   // Get the data
@@ -83,8 +81,8 @@ void runPlotter(TString level,
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStat",   "W#gamma*", color_WgStar);
-      plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+      plotter.AddProcess("03_VZ",       "VZ",       color_ZZ);
+    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
       if (datadriven)
@@ -94,29 +92,28 @@ void runPlotter(TString level,
 	}
       else
 	{
-	  plotter.AddProcess("07_ZJets",    "Z+jets", color_ZJets);
-	  plotter.AddProcess("04_TTTo2L2Nu", "tt",    color_TTTo2L2Nu);
-	  plotter.AddProcess("05_ST",       "tW",     color_ST);
+	  plotter.AddProcess("07_ZJets",     "Z+jets", color_ZJets);
+	  plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+	  plotter.AddProcess("05_ST",        "tW",     color_ST);
 	}
     }
   else
     {
-      plotter.AddProcess("14_HZ",       "HZ",       color_HZ);
-      plotter.AddProcess("10_HWW",      "HWW",      color_HWW);
-      plotter.AddProcess("06_WW",       "WW",       color_WW);
-      plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
-      plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
-      //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
-      plotter.AddProcess("05_ST",        "tW",      color_ST);
+      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
+      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
+      plotter.AddProcess("06_WW",        "WW",       color_WW);
+      plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
+      plotter.AddProcess("03_VZ",        "VZ",       color_ZZ);
+      plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
+      plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
+    //plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, 1.00);
+      plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
 	{
-	  //plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
-
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 	}
       else
 	{
@@ -129,20 +126,20 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("MonoH"))
     {
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP600_MA0300_13TeV",  "m_{Z'} 600",  color_Signal-4);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP800_MA0300_13TeV",  "m_{Z'} 800",  color_Signal-3);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1000_MA0300_13TeV", "m_{Z'} 1000", color_Signal-2);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1200_MA0300_13TeV", "m_{Z'} 1200", color_Signal-1);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1400_MA0300_13TeV", "m_{Z'} 1400", color_Signal);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP1700_MA0300_13TeV", "m_{Z'} 1700", color_Signal+1);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2000_MA0300_13TeV", "m_{Z'} 2000", color_Signal+2);
-      //      plotter.AddSignal("Higgs_Zp2HDM_ww_MZP2500_MA0300_13TeV", "m_{Z'} 2500", color_Signal+3);
+      plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
+      plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
+    //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
+      plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
+    //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
+      plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
+      plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
+      plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
     }
 
   if (analysis.EqualTo("TTDM"))
     {
-      //plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
-      //plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      plotter.AddSignal("ttDM0001scalar0010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar0500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
   if (analysis.EqualTo("Stop"))
@@ -152,28 +149,27 @@ void runPlotter(TString level,
      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
     }
 
-}
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WW"))
-    {
-      plotter.AddRocSignal("06_WW");
-    
-      plotter.AddRocBackground("04_TTTo2L2Nu");
-      plotter.AddRocBackground("00_Fakes");
-      plotter.AddRocBackground("02_WZTo3LNu");
-      plotter.AddRocBackground("03_ZZ");
-      plotter.AddRocBackground("05_ST");
-      plotter.AddRocBackground("07_ZJets");
-      plotter.AddRocBackground("09_TTV");
-      plotter.AddRocBackground("10_HWW");
-      plotter.AddRocBackground("11_Wg");
-      plotter.AddRocBackground("12_Zg");
-      plotter.AddRocBackground("13_VVV");
-      plotter.AddRocBackground("14_HZ");
-      plotter.AddRocBackground("15_WgStar");
-    }
+  // if (analysis.EqualTo("WW"))
+  //   {
+  //     plotter.AddRocSignal("06_WW");
+  //
+  //     plotter.AddRocBackground("04_TTTo2L2Nu");
+  //     plotter.AddRocBackground("00_Fakes");
+  //     plotter.AddRocBackground("02_WZTo3LNu");
+  //     plotter.AddRocBackground("03_ZZ");
+  //     plotter.AddRocBackground("05_ST");
+  //     plotter.AddRocBackground("07_ZJets");
+  //     plotter.AddRocBackground("09_TTV");
+  //     plotter.AddRocBackground("10_HWW");
+  //     plotter.AddRocBackground("11_Wg");
+  //     plotter.AddRocBackground("12_Zg");
+  //     plotter.AddRocBackground("13_VVV");
+  //     plotter.AddRocBackground("14_HZ");
+  //     plotter.AddRocBackground("15_WgStar");
+  //   }
 
 
   // Draw events by cut
@@ -196,7 +192,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;
+      if (!analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("WW")   &&
+	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -211,6 +210,7 @@ void runPlotter(TString level,
   // Draw distributions
   //----------------------------------------------------------------------------
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
+  if (analysis.EqualTo("MonoH"))   plotter.SetDrawYield(false);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
   float m2l_xmax   = (level.Contains("WZ")) ? 120 : 300;  // [GeV]
@@ -218,7 +218,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top") && !analysis.EqualTo("Stop") && !analysis.EqualTo("WW") && j != njetbin) continue;   
+      if (!analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("WW")   &&
+	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -252,30 +255,14 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "lep1pt_gen"         + suffix, "leading lepton p_{T} GEN",               5, 0, "GeV",  scale, true, 0,  150);
-	  plotter.Draw(prefix + "lep2pt_gen"         + suffix, "trailing lepton p_{T} GEN",              5, 0, "GeV",  scale, true, 0,  150);
-	  plotter.Draw(prefix + "lep1eta_gen"        + suffix, "leading lepton #eta GEN",               -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "lep2eta_gen"        + suffix, "trailing lepton #eta GEN",              -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "lep1phi_gen"        + suffix, "leading lepton #phi GEN",                5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "lep2phi_gen"        + suffix, "trailing lepton #phi GEN",               5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "top1pt_gen"         + suffix, "leading top p_{T} GEN",               10, 0, "GeV",  scale, true, 0,  450);
-	  plotter.Draw(prefix + "top2pt_gen"         + suffix, "trailing top p_{T} GEN",              10, 0, "GeV",  scale, true, 0,  450);
-	  plotter.Draw(prefix + "top1eta_gen"        + suffix, "leading top #eta GEN",               -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "top2eta_gen"        + suffix, "trailing top #eta GEN",              -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "top1phi_gen"        + suffix, "leading top #phi GEN",                5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "top2phi_gen"        + suffix, "trailing top #phi GEN",               5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "dphitt_gen"         + suffix, "#Delta#phi(top1,top2) GEN",           5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "detatt_gen"         + suffix, "#Delta#eta(top1,top2) GEN",           5, 1, "NULL", scale);
-	  plotter.Draw(prefix + "m2t_gen"            + suffix, "m_{tt} GEN"               ,          20, 0, "GeV", linY, true, 0, 1000);
-	  plotter.Draw(prefix + "topReco_gen"            + suffix, "number of solutions"               ,            -1, 0, "NULL", scale, true, 0, 10 );
 
 
-	  // WW ROC Curve
+	  // WW ROC
 	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
-	    {
-	      plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
-	    }
+	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
+	  //   {
+	  //     plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
+	  //   }
 	  
 
 	  if (!allplots) continue;

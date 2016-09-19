@@ -21,6 +21,7 @@ struct Lepton
   int            index;
   int            type;
   int            flavour;
+  float          idisoW;
   float          iso;
   TLorentzVector v;
   TLorentzVector v_gen;
@@ -80,6 +81,8 @@ class AnalysisCMS : public AnalysisBase
   float   MuonIsolation     (int      k);
 
   void    OpenMinitree      ();
+
+  bool    PassTrigger       ();
 
   void    PrintProgress     (Long64_t counter,
 			     Long64_t total);
@@ -150,7 +153,6 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
-  bool                   _is74X;
   bool                   _passdphiveto;
   bool                   _systematic_btag_do;
   bool                   _systematic_btag_up;
@@ -158,6 +160,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_idiso_up;
   bool                   _systematic_trigger_do;
   bool                   _systematic_trigger_up;
+  bool                   _systematic_reco_do;
+  bool                   _systematic_reco_up;
 
   TString                _analysis;
   TString                _dataperiod;

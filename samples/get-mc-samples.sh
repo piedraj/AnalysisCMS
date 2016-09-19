@@ -2,8 +2,12 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./get-mc-samples.sh samples.py eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/07Jun2016_spring16_mAODv2_6p3fbm1/MCl2loose__hadd__bSFL2pTEff__l2tight > samples_mc_l2tight.txt"
+    echo "  ln -s /afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/PlotsConfigurations/Configurations/ControlRegions/WW/samples.py"
     echo "  "
+    echo "  ./get-mc-samples.sh \\"
+    echo "  samples.py \\"
+    echo "  root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight \\"
+    echo "  > samples_mc_l2tight.txt"
     echo "  "
     exit -1
 fi
