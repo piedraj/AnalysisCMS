@@ -490,9 +490,9 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
-    float eta_gen = std_vector_leptonGen_eta->at(i);
-    float phi_gen = std_vector_leptonGen_phi->at(i);
-    float pt_gen  = std_vector_leptonGen_pt->at(i);
+    float eta_gen = 0.      ; if( _ismc ) eta_gen = std_vector_leptonGen_eta->at(i);
+    float phi_gen = 3.141592; if( _ismc ) phi_gen = std_vector_leptonGen_phi->at(i);
+    float pt_gen  = 100.    ; if( _ismc ) pt_gen  = std_vector_leptonGen_pt->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
@@ -569,6 +569,7 @@ void AnalysisCMS::GetLeptons()
   _lep2phi_gen = Lepton2.v_gen.Phi();
   _lep2pt_gen  = Lepton2.v_gen.Pt();
 
+
 }
 
 //------------------------------------------------------------------------------
@@ -577,7 +578,7 @@ void AnalysisCMS::GetLeptons()
 
 void AnalysisCMS::GetTops() {
 
-  int vector_parton_size = std_vector_partonGen_pt->size(); 
+
 
     _top1eta_gen = -999;
     _top1phi_gen = -999;
@@ -589,11 +590,15 @@ void AnalysisCMS::GetTops() {
     _dphitt_gen  = -999;
     _detatt_gen  = -999;
 
+  if( !_ismc ) return; 
+
     float eta1 = -999;
     float phi1 = -999;
     float pt1  = -999;  
 
     int ntop = 0; 
+
+  int vector_parton_size = std_vector_partonGen_pt->size(); 
 
   for (int i=0; i<vector_parton_size; i++) {
 
