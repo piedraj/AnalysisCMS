@@ -2,6 +2,7 @@
 #include "../include/AnalysisTTDM.h"
 
 
+
 //------------------------------------------------------------------------------
 // AnalysisTTDM
 //------------------------------------------------------------------------------
@@ -53,7 +54,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   // Loop over events
   //----------------------------------------------------------------------------
-  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+
+    if ( _nentries > 10000 )  _nentries = 10000;  
+    for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+    //for (Long64_t jentry=0; jentry<100;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
 
@@ -68,7 +72,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
+    //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
+
 
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
 
@@ -113,13 +118,14 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (MET.Et() > 50.); 
 
-    //if (_saveminitree && pass ) minitree->Fill();
+    if (_saveminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_nobtag, pass);
 
     pass &= (_nbjet30csvv2m > 0);
 
     FillLevelHistograms(TTDM_03_Preselection, pass);
+
 
 
     // TT Control Region
@@ -135,7 +141,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_nbjet30csvv2m > 0);
 
-    if ( _saveminitree && pass ) minitree->Fill();
+    //if ( _saveminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_05_tt, pass);
 

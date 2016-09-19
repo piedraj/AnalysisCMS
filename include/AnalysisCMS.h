@@ -24,6 +24,7 @@ struct Lepton
   float          idisoW;
   float          iso;
   TLorentzVector v;
+  TLorentzVector v_gen;
 };
 
 struct Jet
@@ -66,7 +67,10 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets           (float    jet_eta_max);
 
-  void    GetLeptons        ();
+  void    GetLeptons        ();  
+
+  void    GetTops           (); 
+  void    GetTopReco        ();
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -188,6 +192,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _dphilep2jet2;
   float                  _dphillmet;
   float                  _dphillstar;
+  float			 _dphitt_gen;
+  float                  _detatt_gen; 
   float                  _event_weight;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
@@ -203,12 +209,19 @@ class AnalysisCMS : public AnalysisBase
   float                  _ht;
   float                  _htjets;
   float                  _htnojets;
+  float 		 _detall; 	
   float                  _lep1eta;
   float                  _lep1phi;
   float                  _lep1pt;
+  float                  _lep1eta_gen;
+  float                  _lep1phi_gen;
+  float                  _lep1pt_gen;
   float                  _lep2eta;
   float                  _lep2phi;
   float                  _lep2pt;
+  float                  _lep2eta_gen;
+  float                  _lep2phi_gen;
+  float                  _lep2pt_gen;
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;
@@ -217,6 +230,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _mtw;
   float                  _m2l;
   float                  _m3l;
+  float			 _m2t_gen;
   float                  _nbjet15csvv2l;
   float                  _nbjet15csvv2m;
   float                  _nbjet15csvv2t;
@@ -234,6 +248,13 @@ class AnalysisCMS : public AnalysisBase
   float                  _pt2l;
   float                  _sumjpt12;
   float                  _trkpmet;
+  float                  _top1eta_gen;
+  float                  _top1phi_gen;
+  float                  _top1pt_gen;
+  float                  _top2eta_gen;
+  float                  _top2phi_gen;
+  float                  _top2pt_gen;
+  float			 _topReco;
 
   float                  _mll13;
   float                  _mll23;
@@ -354,6 +375,8 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_dphillstar    [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet1     [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphilmet2     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphitt_gen    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_detatt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll          [nchannel][ncut][njetbin+1];
   TH1D*                  h_ht            [nchannel][ncut][njetbin+1];
   TH1D*                  h_htjets        [nchannel][ncut][njetbin+1];
@@ -366,12 +389,19 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_jet2mass      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_detall        [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1eta       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1eta_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1phi_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep1pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep2eta       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep2phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2eta_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2phi_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_lep2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mc            [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1    [nchannel][ncut][njetbin+1];
   TH1D*                  h_metPfType1Phi [nchannel][ncut][njetbin+1];
@@ -382,6 +412,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_mtw1          [nchannel][ncut][njetbin+1];
   TH1D*                  h_mtw2          [nchannel][ncut][njetbin+1];
   TH1D*                  h_m2l           [nchannel][ncut][njetbin+1];
+  TH1D*                  h_m2t_gen       [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15csvv2l [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15csvv2m [nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet15csvv2t [nchannel][ncut][njetbin+1];
@@ -395,6 +426,13 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_nbjet30cmvav2m[nchannel][ncut][njetbin+1];
   TH1D*                  h_nbjet30cmvav2t[nchannel][ncut][njetbin+1];
   TH1D*                  h_njet          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top1eta_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top1phi_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top1pt_gen    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top2eta_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
 
 
   // TH2 histograms

@@ -1,6 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
+#include "../top-reco/src/MassVariations.cc"
 
 
 //------------------------------------------------------------------------------
@@ -162,12 +163,19 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_jet2mass      [ichannel][icut][ijet]->Fill(jetmass2,        _event_weight);
   h_jet2phi       [ichannel][icut][ijet]->Fill(jetphi2,         _event_weight);
   h_jet2pt        [ichannel][icut][ijet]->Fill(jetpt2,          _event_weight);
+  h_detall        [ichannel][icut][ijet]->Fill(_detall,         _event_weight);
   h_lep1eta       [ichannel][icut][ijet]->Fill(_lep1eta,        _event_weight);
   h_lep1phi       [ichannel][icut][ijet]->Fill(_lep1phi,        _event_weight);
   h_lep1pt        [ichannel][icut][ijet]->Fill(_lep1pt,         _event_weight);
   h_lep2eta       [ichannel][icut][ijet]->Fill(_lep2eta,        _event_weight);
   h_lep2phi       [ichannel][icut][ijet]->Fill(_lep2phi,        _event_weight);
   h_lep2pt        [ichannel][icut][ijet]->Fill(_lep2pt,         _event_weight);
+  h_lep1eta_gen       [ichannel][icut][ijet]->Fill(_lep1eta_gen,        _event_weight);
+  h_lep1phi_gen       [ichannel][icut][ijet]->Fill(_lep1phi_gen,        _event_weight);
+  h_lep1pt_gen        [ichannel][icut][ijet]->Fill(_lep1pt_gen,         _event_weight);
+  h_lep2eta_gen       [ichannel][icut][ijet]->Fill(_lep2eta_gen,        _event_weight);
+  h_lep2phi_gen       [ichannel][icut][ijet]->Fill(_lep2phi_gen,        _event_weight);
+  h_lep2pt_gen        [ichannel][icut][ijet]->Fill(_lep2pt_gen,         _event_weight);
   h_mc            [ichannel][icut][ijet]->Fill(_mc,             _event_weight);
   h_metPfType1    [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
   h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
@@ -191,6 +199,17 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30cmvav2m[ichannel][icut][ijet]->Fill(_nbjet30cmvav2m, _event_weight);
   h_nbjet30cmvav2t[ichannel][icut][ijet]->Fill(_nbjet30cmvav2t, _event_weight);
   h_njet          [ichannel][icut][ijet]->Fill(_njet,           _event_weight);
+
+  h_top1eta_gen       [ichannel][icut][ijet]->Fill(_top1eta_gen,        _event_weight);
+  h_top1phi_gen       [ichannel][icut][ijet]->Fill(_top1phi_gen,        _event_weight);
+  h_top1pt_gen        [ichannel][icut][ijet]->Fill(_top1pt_gen,         _event_weight);
+  h_top2eta_gen       [ichannel][icut][ijet]->Fill(_top2eta_gen,        _event_weight);
+  h_top2phi_gen       [ichannel][icut][ijet]->Fill(_top2phi_gen,        _event_weight);
+  h_top2pt_gen        [ichannel][icut][ijet]->Fill(_top2pt_gen,         _event_weight);
+  h_m2t_gen           [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
+  h_dphitt_gen        [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
+  h_detatt_gen        [ichannel][icut][ijet]->Fill(_detatt_gen,         _event_weight);
+  h_topReco	      [ichannel][icut][ijet]->Fill(_topReco,            _event_weight);
 
 
   // TH2 histograms
@@ -374,6 +393,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
+
+  if (_ismc && _filename.Contains("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
     
   if (!_ismc) return;
 
@@ -469,6 +490,9 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
+    float eta_gen = 0.      ; if( _ismc ) eta_gen = std_vector_leptonGen_eta->at(i);
+    float phi_gen = 3.141592; if( _ismc ) phi_gen = std_vector_leptonGen_phi->at(i);
+    float pt_gen  = 100.    ; if( _ismc ) pt_gen  = std_vector_leptonGen_pt->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
@@ -510,11 +534,13 @@ void AnalysisCMS::GetLeptons()
 	lep.iso = MuonIsolation(i);
       }
 
-    TLorentzVector tlv;
+    TLorentzVector tlv, tlv_gen;
     
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-    
+    tlv_gen.SetPtEtaPhiM(pt_gen, eta_gen, phi_gen, mass);
+
     lep.v = tlv;
+    lep.v_gen = tlv_gen;
 
     AnalysisLeptons.push_back(lep);
 
@@ -531,9 +557,97 @@ void AnalysisCMS::GetLeptons()
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+
+  _detall = fabs( _lep1eta - _lep2eta );
+
+   // gen-variables by ferrero
+  _lep1eta_gen = Lepton1.v_gen.Eta();
+  _lep1phi_gen = Lepton1.v_gen.Phi();
+  _lep1pt_gen  = Lepton1.v_gen.Pt();
+
+  _lep2eta_gen = Lepton2.v_gen.Eta();
+  _lep2phi_gen = Lepton2.v_gen.Phi();
+  _lep2pt_gen  = Lepton2.v_gen.Pt();
+
+
 }
 
+//------------------------------------------------------------------------------
+// GetTops
+//------------------------------------------------------------------------------
 
+void AnalysisCMS::GetTops() {
+
+
+
+    _top1eta_gen = -999;
+    _top1phi_gen = -999;
+    _top1pt_gen  = -999;
+    _top2eta_gen = -999;
+    _top2phi_gen = -999;
+    _top2pt_gen  = -999;
+    _m2t_gen     = -999; 
+    _dphitt_gen  = -999;
+    _detatt_gen  = -999;
+
+  if( !_ismc ) return; 
+
+    float eta1 = -999;
+    float phi1 = -999;
+    float pt1  = -999;  
+
+    int ntop = 0; 
+
+  int vector_parton_size = std_vector_partonGen_pt->size(); 
+
+  for (int i=0; i<vector_parton_size; i++) {
+
+    float parton_pt            = std_vector_partonGen_pt->at(i);
+    float parton_eta           = std_vector_partonGen_eta->at(i);
+    float parton_phi           = std_vector_partonGen_phi->at(i);
+    float parton_pid           = std_vector_partonGen_pid->at(i);
+    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
+
+    if( parton_pid != 6 && parton_isHardProcess != 1 ) continue; 
+
+    ntop += 1; 
+
+    if ( ntop > 1 ) {
+
+	if( fabs(eta1 - parton_eta) < 0.5  &&  fabs(phi1 - parton_phi) < 0.2 ) continue;
+
+	_top1eta_gen = eta1      ; 
+	_top1phi_gen = phi1      ; 
+	_top1pt_gen  = pt1       ; 
+	_top2eta_gen = parton_eta;  
+	_top2phi_gen = parton_phi;  
+	_top2pt_gen  = parton_pt ;  
+
+        TLorentzVector t1, t2; 
+
+        t1.SetPtEtaPhiM( pt1      , eta1      , phi1      , 173. );
+	t2.SetPtEtaPhiM( parton_pt, parton_eta, parton_phi, 173. );
+
+	_m2t_gen = (t1+t2).M();  
+	_dphitt_gen = fabs(t1.DeltaPhi(t2));
+	_detatt_gen = fabs(t1.Eta()-t2.Eta());
+	
+	break;	
+
+    }
+
+     eta1 = parton_eta; 
+     phi1 = parton_phi;
+     pt1  = parton_pt ; 
+
+  }
+
+//std::cout << "\n" << std::endl;
+//std::cout << "eta1 = " << _top1eta_gen << "  --  eta2 = " << _top2eta_gen << std::endl;
+//std::cout << "phi1 = " << _top1phi_gen << "  --  phi2 = " << _top2phi_gen << std::endl;
+
+
+}
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
@@ -604,6 +718,43 @@ void AnalysisCMS::GetJets(float jet_eta_max)
   _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 }
 
+
+// top-reco --------------------------------------------
+
+
+void AnalysisCMS::GetTopReco(){
+
+	//if (AnalysisJets.size() < 2) cout << " \n\n not enough jets !!! \n\n" << endl;
+
+  	MassVariations theMass;
+
+  	std::vector<TLorentzVector> myjets;
+  	std::vector<TLorentzVector> nu1, nu2;
+
+	//nu1.clear(); 
+	//nu2.clear();
+
+  	TVector2 myMET(metPfType1, metPfType1Phi);
+
+  	std::vector<Float_t> unc;
+
+	for( int i = 0; i < AnalysisJets.size(); i++ ){
+
+  	 	myjets.push_back(AnalysisJets.at(i).v);
+
+		unc.push_back(0.05);
+
+	}
+
+  	theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+	_topReco = nu1.size();
+
+	//cout << "\n\n\n" << _topReco << "\n\n\n" << endl; 
+
+}
+
+//------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // GetJetPtSum
@@ -919,6 +1070,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
+  GetTops();
+  GetTopReco();
+
   GetJets(jet_eta_max);
 
   GetGenPtllWeight();
@@ -1067,18 +1221,25 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphilmet1     [ichannel][icut][ijet] = new TH1D("h_dphilmet1"      + suffix, "",  100,    0,  3.2);
   h_dphilmet2     [ichannel][icut][ijet] = new TH1D("h_dphilmet2"      + suffix, "",  100,    0,  3.2);
   h_drll          [ichannel][icut][ijet] = new TH1D("h_drll"           + suffix, "",  100,    0,    5);
+  h_detall        [ichannel][icut][ijet] = new TH1D("h_detall"         + suffix, "",  100,    0,   10);
   h_lep1eta       [ichannel][icut][ijet] = new TH1D("h_lep1eta"        + suffix, "",   60,   -3,    3);
   h_lep2eta       [ichannel][icut][ijet] = new TH1D("h_lep2eta"        + suffix, "",   60,   -3,    3);
+  h_lep1eta_gen       [ichannel][icut][ijet] = new TH1D("h_lep1eta_gen"        + suffix, "",   60,   -3,    3);
+  h_lep2eta_gen       [ichannel][icut][ijet] = new TH1D("h_lep2eta_gen"        + suffix, "",   60,   -3,    3);
   h_jet1eta       [ichannel][icut][ijet] = new TH1D("h_jet1eta"        + suffix, "",  100,   -5,    5);
   h_jet2eta       [ichannel][icut][ijet] = new TH1D("h_jet2eta"        + suffix, "",  100,   -5,    5);
   h_lep1phi       [ichannel][icut][ijet] = new TH1D("h_lep1phi"        + suffix, "",  200, -3.2,  3.2);
   h_lep2phi       [ichannel][icut][ijet] = new TH1D("h_lep2phi"        + suffix, "",  200, -3.2,  3.2);
+  h_lep1phi_gen       [ichannel][icut][ijet] = new TH1D("h_lep1phi_gen"        + suffix, "",  200, -3.2,  3.2);
+  h_lep2phi_gen       [ichannel][icut][ijet] = new TH1D("h_lep2phi_gen"        + suffix, "",  200, -3.2,  3.2);
   h_jet1phi       [ichannel][icut][ijet] = new TH1D("h_jet1phi"        + suffix, "",  200, -3.2,  3.2);
   h_jet2phi       [ichannel][icut][ijet] = new TH1D("h_jet2phi"        + suffix, "",  200, -3.2,  3.2);
   h_metPfType1Phi [ichannel][icut][ijet] = new TH1D("h_metPfType1Phi"  + suffix, "",  200, -3.2,  3.2);
   h_metTtrkPhi    [ichannel][icut][ijet] = new TH1D("h_metTtrkPhi"     + suffix, "",  200, -3.2,  3.2);
   h_lep1pt        [ichannel][icut][ijet] = new TH1D("h_lep1pt"         + suffix, "", 3000,    0, 3000);
   h_lep2pt        [ichannel][icut][ijet] = new TH1D("h_lep2pt"         + suffix, "", 3000,    0, 3000);
+  h_lep1pt_gen        [ichannel][icut][ijet] = new TH1D("h_lep1pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_lep2pt_gen        [ichannel][icut][ijet] = new TH1D("h_lep2pt_gen"         + suffix, "", 3000,    0, 3000);
   h_jet1pt        [ichannel][icut][ijet] = new TH1D("h_jet1pt"         + suffix, "", 3000,    0, 3000);
   h_jet2pt        [ichannel][icut][ijet] = new TH1D("h_jet2pt"         + suffix, "", 3000,    0, 3000);
   h_jet1mass      [ichannel][icut][ijet] = new TH1D("h_jet1mass"       + suffix, "",  100,    0,  100);
@@ -1107,6 +1268,19 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet30cmvav2m[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2m" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30cmvav2t[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2t" + suffix, "",    7, -0.5,  6.5);
   h_njet          [ichannel][icut][ijet] = new TH1D("h_njet"           + suffix, "",    7, -0.5,  6.5);
+
+  h_top1pt_gen        [ichannel][icut][ijet] = new TH1D("h_top1pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_top1eta_gen       [ichannel][icut][ijet] = new TH1D("h_top1eta_gen"        + suffix, "",   60,   -3,    3);  
+  h_top1phi_gen       [ichannel][icut][ijet] = new TH1D("h_top1phi_gen"        + suffix, "",  200, -3.2,  3.2);
+  h_top2pt_gen        [ichannel][icut][ijet] = new TH1D("h_top2pt_gen"         + suffix, "", 3000,    0, 3000);
+  h_top2eta_gen       [ichannel][icut][ijet] = new TH1D("h_top2eta_gen"        + suffix, "",   60,   -3,    3);  
+  h_top2phi_gen       [ichannel][icut][ijet] = new TH1D("h_top2phi_gen"        + suffix, "",  200, -3.2,  3.2);
+
+  h_m2t_gen           [ichannel][icut][ijet] = new TH1D("h_m2t_gen"            + suffix, "", 3000,    0, 3000);
+  h_dphitt_gen        [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"         + suffix, "",  100,    0,  3.2);
+  h_detatt_gen        [ichannel][icut][ijet] = new TH1D("h_detatt_gen"         + suffix, "",  100,    0,   10);
+
+  h_topReco           [ichannel][icut][ijet] = new TH1D("h_topReco"           + suffix, "",  10,    0,   10);
 
 
   // TH2 histograms
