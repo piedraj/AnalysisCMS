@@ -168,7 +168,7 @@ And they should appear here,
     https://jgarciaf.web.cern.ch/jgarciaf/
     https://ntrevisa.web.cern.ch/ntrevisa/
     https://piedra.web.cern.ch/piedra/
-    http://rocio.web.cern.ch/rocio/
+    https://rocio.web.cern.ch/rocio/
 
 
 7. It is commit time
