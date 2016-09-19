@@ -163,6 +163,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_jet2mass      [ichannel][icut][ijet]->Fill(jetmass2,        _event_weight);
   h_jet2phi       [ichannel][icut][ijet]->Fill(jetphi2,         _event_weight);
   h_jet2pt        [ichannel][icut][ijet]->Fill(jetpt2,          _event_weight);
+  h_detall        [ichannel][icut][ijet]->Fill(_detall,         _event_weight);
   h_lep1eta       [ichannel][icut][ijet]->Fill(_lep1eta,        _event_weight);
   h_lep1phi       [ichannel][icut][ijet]->Fill(_lep1phi,        _event_weight);
   h_lep1pt        [ichannel][icut][ijet]->Fill(_lep1pt,         _event_weight);
@@ -554,6 +555,8 @@ void AnalysisCMS::GetLeptons()
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
 
+  _detall = fabs( _lep1eta - _lep2eta );
+
    // gen-variables by ferrero
   _lep1eta_gen = Lepton1.v_gen.Eta();
   _lep1phi_gen = Lepton1.v_gen.Phi();
@@ -713,7 +716,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
 
 void AnalysisCMS::GetTopReco(){
 
-	if (AnalysisJets.size() < 2) cout << " \n\n not enough jets !!! \n\n" << endl;
+	//if (AnalysisJets.size() < 2) cout << " \n\n not enough jets !!! \n\n" << endl;
 
   	MassVariations theMass;
 
@@ -739,7 +742,7 @@ void AnalysisCMS::GetTopReco(){
 
 	_topReco = nu1.size();
 
-	cout << "\n\n\n" << _topReco << "\n\n\n" << endl; 
+	//cout << "\n\n\n" << _topReco << "\n\n\n" << endl; 
 
 }
 
@@ -1210,6 +1213,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphilmet1     [ichannel][icut][ijet] = new TH1D("h_dphilmet1"      + suffix, "",  100,    0,  3.2);
   h_dphilmet2     [ichannel][icut][ijet] = new TH1D("h_dphilmet2"      + suffix, "",  100,    0,  3.2);
   h_drll          [ichannel][icut][ijet] = new TH1D("h_drll"           + suffix, "",  100,    0,    5);
+  h_detall        [ichannel][icut][ijet] = new TH1D("h_detall"         + suffix, "",  100,    0,   10);
   h_lep1eta       [ichannel][icut][ijet] = new TH1D("h_lep1eta"        + suffix, "",   60,   -3,    3);
   h_lep2eta       [ichannel][icut][ijet] = new TH1D("h_lep2eta"        + suffix, "",   60,   -3,    3);
   h_lep1eta_gen       [ichannel][icut][ijet] = new TH1D("h_lep1eta_gen"        + suffix, "",   60,   -3,    3);
@@ -1268,7 +1272,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphitt_gen        [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"         + suffix, "",  100,    0,  3.2);
   h_detatt_gen        [ichannel][icut][ijet] = new TH1D("h_detatt_gen"         + suffix, "",  100,    0,   10);
 
-  h_topReco           [ichannel][icut][ijet] = new TH1D("h_topReco_gen"         + suffix, "",  10,    0,   10);
+  h_topReco           [ichannel][icut][ijet] = new TH1D("h_topReco"           + suffix, "",  10,    0,   10);
 
 
   // TH2 histograms

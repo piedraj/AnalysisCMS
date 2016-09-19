@@ -209,6 +209,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _ht;
   float                  _htjets;
   float                  _htnojets;
+  float 		 _detall; 	
   float                  _lep1eta;
   float                  _lep1phi;
   float                  _lep1pt;
@@ -388,6 +389,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_jet2mass      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet2pt        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_detall        [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1eta       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1phi       [nchannel][ncut][njetbin+1];
   TH1D*                  h_lep1pt        [nchannel][ncut][njetbin+1];
