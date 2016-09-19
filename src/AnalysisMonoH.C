@@ -86,10 +86,16 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
+    //if (Lepton1.flavour * Lepton2.flavour > 0) continue;
+    //if (Lepton1.v.Pt() < 20.) continue;
+    //if (Lepton2.v.Pt() < 20.) continue;
 
-    if (Lepton1.v.Pt() < 20.) continue;
-    if (Lepton2.v.Pt() < 20.) continue;
+    // Let's trust our ntuples
+    //--------------------------------------------------------------------------
+    if (std_vector_lepton_flavour->at(0)*std_vector_lepton_flavour->at(1) > 0) continue;
+    if (std_vector_lepton_pt->at(0) < 20.) continue; 
+    if (std_vector_lepton_pt->at(1) < 20.) continue; 
+    if (std_vector_lepton_pt->at(2) > 10.) continue; 
 
     _nelectron = 0;
 
@@ -129,6 +135,8 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
     FillLevelHistograms(MonoH_06_Ptll, pass && pass_zveto);
 
+    bool passTopCR = pass && _nbjet20cmvav2l == 1;
+
     pass &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
@@ -145,6 +153,8 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
       // cout<<"Lepton 4 pT = "<<std_vector_lepton_pt->at(3)<<endl;
       // cout<<"-------------------------------------------"<<endl;
     }
+
+    FillLevelHistograms(MonoH_09_TopCR, passTopCR && pass_zveto);
 
     //    pass &= (!_foundsoftmuon);
     //    FillLevelHistograms(MonoH_08_SoftMu, pass && pass_zveto);
