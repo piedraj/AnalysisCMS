@@ -67,7 +67,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets           (float    jet_eta_max);
 
-  void    GetLeptons        ();
+  void    GetLeptons        ();  
 
   void    GetTops           (); 
   void    GetTopReco        ();
@@ -431,6 +431,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
+
 
   // TH2 histograms
   //----------------------------------------------------------------------------
