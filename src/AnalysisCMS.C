@@ -393,6 +393,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
+
+  if (_ismc && _filename.Contains("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
     
   if (!_ismc) return;
 
@@ -450,10 +452,11 @@ void AnalysisCMS::ApplyWeights()
       _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
     }
 
-  if (_sample.EqualTo("WWTo2L2Nu"))      _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))    _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu"))  _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
-  if (_sample.EqualTo("Wg_MADGRAPHMLM")) _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+  if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
+  if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
+  if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
   _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
