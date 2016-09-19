@@ -1,7 +1,6 @@
 #define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
 
-
 //------------------------------------------------------------------------------
 // AnalysisFR
 //------------------------------------------------------------------------------
@@ -19,25 +18,24 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   if (fChain == 0) return;
 
   Setup(analysis, filename, luminosity);
-
-
+  
   // Define fake rate histograms
   //----------------------------------------------------------------------------
   for (int i=0; i<ncut; i++) {
     
     TString directory = scut[i];
-
+    
     root_output->cd();
-
+    
     gDirectory->mkdir(directory);
-
+    
     root_output->cd(directory);
-      
+    
     for (int j=0; j<njetet; j++) {
-
+      
       TString muonsuffix = Form("_%.0fGeV", muonjetet[j]);
       TString elesuffix  = Form("_%.0fGeV", elejetet[j]);
-    
+      
       h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Ele_loose_pt_eta_bin [i][j] = new TH2D("h_Ele_loose_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
@@ -52,23 +50,23 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "", netabin, etabins);
       h_Ele_loose_eta_bin [i][j] = new TH1D("h_Ele_loose_eta_bin"  + elesuffix,  "", netabin, etabins);
       h_Ele_tight_eta_bin [i][j] = new TH1D("h_Ele_tight_eta_bin"  + elesuffix,  "", netabin, etabins);
-
+	
       h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "", 1000, 0, 200);
-
+      
       h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "", 1000, 0, 200);
-
+	
       h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "", 1000, 0, 200);
-
-
+      
+      
       // Define effective luminosity estimation histograms
       //------------------------------------------------------------------------
       h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
@@ -77,95 +75,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
     }
   }
-
+  
   root_output->cd();
-
-
-  // Define prompt rate histograms
-  //----------------------------------------------------------------------------
-  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-    
-  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
-  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
-  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
-  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
-    
-  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
-  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
-  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
-  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
-
-
+  
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
+    
     Long64_t ientry = LoadTree(jentry);
-
+    
     if (ientry < 0) break;
-
+    
     fChain->GetEntry(jentry);
-
+    
     PrintProgress(jentry, _nentries);
-
+    
     EventSetup();
-
-    _Zlepton1type  = Loose;
-    _Zlepton2type  = Loose;
-    _Zdecayflavour = 0;
-
+    
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
-
+    
     _leptonPtMin  = (_channel == e) ?  13 :  10;
     _leptonEtaMax = (_channel == e) ? 2.5 : 2.4;
 
     if (Lepton1.v.Pt()        < _leptonPtMin)  continue;
     if (fabs(Lepton1.v.Eta()) > _leptonEtaMax) continue;
-
-
-    // Make Z candidate
-    //--------------------------------------------------------------------------
-    _m2l = -999;
-
-    _l2tight_weight = 1.;
-
-    if (AnalysisLeptons.size() >= 2) { 
-
-      for (int iLep1=0; iLep1<AnalysisLeptons.size(); iLep1++) {
-	
-	if (AnalysisLeptons[iLep1].v.Pt() < 10.) continue;
-
-	for (int iLep2=iLep1+1; iLep2<AnalysisLeptons.size(); iLep2++) {
-	  
-	  if (AnalysisLeptons[iLep2].v.Pt() < 10.) continue;
-
-	  if ((AnalysisLeptons[iLep1].flavour + AnalysisLeptons[iLep2].flavour) != 0.) continue;
-	  
-	  float inv_mass = (AnalysisLeptons[iLep1].v + AnalysisLeptons[iLep2].v).M();
-
-	  if (_m2l < 0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
-
-	    _m2l = inv_mass;
-
-	    _Zlepton1type = AnalysisLeptons[iLep1].type;  
-	    _Zlepton2type = AnalysisLeptons[iLep2].type;
-
-	    if (_Zlepton1type == Tight && _Zlepton2type == Tight)
-	      {
-		_l2tight_weight = (AnalysisLeptons[iLep1].idisoW * AnalysisLeptons[iLep2].idisoW);
-	      }
-
-	    _Zlepton1index = iLep1;
-	    _Zlepton2index = iLep2;
-
-	    _Zdecayflavour = AnalysisLeptons[iLep1].flavour; 
-	  }
-	}
-      }
-    }
 
 
     // Get the event weight
@@ -239,42 +172,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
 
 
-    // Prompt rate from MC
-    //--------------------------------------------------------------------------
-    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
-      
-      float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
-      float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
-      
-      if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
-
-	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
-
-	if (_Zlepton2type == Tight) {
-	  
-	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
-	}
-
-      }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-	
-	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
-
-	if (_Zlepton2type == Tight) {
-
-	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
-	}
-      }
-    }
-
-
     // Get the jets and the W transverse mass
     //--------------------------------------------------------------------------
     GetAwayJets();
@@ -297,18 +194,16 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (AnalysisJets[0].v.Pt() < _inputJetEt) continue; 
 
 
-      bool pass;
-  
-
       // QCD region
       //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw < 20);
+      bool pass;
+      pass = (_nlepton == 1);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
     }
   }
-
+  
 
   EndJob();
 }

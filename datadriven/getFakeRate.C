@@ -10,14 +10,16 @@ const Float_t muonscale = -1.;
 const Float_t elescale  = -1.;
 
 bool draw         = true;
-bool savepng      = false;
+bool savepng      = true;
 bool setgrid      = false;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
-TFile* data;
-TFile* wjets;
-TFile* zjets;
+TFile* dataFR;
+TFile* wjetsFR;
+TFile* zjetsFR;
+
+TFile* zjetsPR;
 
 
 // Functions
@@ -66,11 +68,14 @@ void getFakeRate()
 
   if (savepng) gSystem->mkdir("png", kTRUE);
 
-  gSystem->mkdir("rootfiles", kTRUE);
+  gSystem->mkdir("rootfilesFR", kTRUE);
+  gSystem->mkdir("rootfilesPR", kTRUE);
 
-  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root",  "read");
-  wjets = new TFile ("../rootfiles/nominal/FR/08_WJets.root", "read");
-  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root", "read");
+  dataFR  = new TFile ("../rootfilesFR/nominal/FR/01_Data.root",  "read");
+  wjetsFR = new TFile ("../rootfilesFR/nominal/FR/08_WJets.root", "read");
+  zjetsFR = new TFile ("../rootfilesFR/nominal/FR/07_ZJets.root", "read");
+
+  zjetsPR = new TFile ("../rootfilesPR/nominal/PR/07_ZJets.root", "read");
 
 
   // Prompt rate
@@ -133,12 +138,12 @@ void DrawFR(TString flavour,
   
   // Read loose and tight histograms
   //----------------------------------------------------------------------------
-  TH1D* h_loose_data  = (TH1D*)data ->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_loose_zjets = (TH1D*)zjets->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_loose_wjets = (TH1D*)wjets->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_tight_data  = (TH1D*)data ->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH1D* h_tight_zjets = (TH1D*)zjets->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH1D* h_tight_wjets = (TH1D*)wjets->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_loose_data  = (TH1D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_loose_zjets = (TH1D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_loose_wjets = (TH1D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_tight_data  = (TH1D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_tight_zjets = (TH1D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_tight_wjets = (TH1D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
 
 
   // Prepare fake rate histograms
@@ -208,14 +213,14 @@ void DrawFR(TString flavour,
   h_FR_EWK->SetMarkerColor(kRed+1);
   h_FR_EWK->SetMarkerStyle(kFullCircle);
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
 
 
   // Save and write
   //----------------------------------------------------------------------------
   if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
 
-  TFile* file = new TFile(Form("rootfiles/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
+  TFile* file = new TFile(Form("rootfilesFR/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
 
   h_FR->Write();
   h_FR_EWK->Write();
@@ -233,8 +238,8 @@ void DrawPR(TString  flavour,
 {
   TString title = Form("%s prompt rate %s", flavour.Data(), variable.Data());
 
-  TH1D* h_loose_zjets = (TH1D*)zjets->Get("h_" + flavour + "_loose_" + variable + "_PR");
-  TH1D* h_tight_zjets = (TH1D*)zjets->Get("h_" + flavour + "_tight_" + variable + "_PR");
+  TH1D* h_loose_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_loose_" + variable + "_PR");
+  TH1D* h_tight_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_tight_" + variable + "_PR");
 
   TH1D* h_PR = (TH1D*)h_tight_zjets->Clone("h_" + flavour + "_PR_" + variable);
       
@@ -286,12 +291,12 @@ void WriteFR(TString flavour,
   
   // Read loose and tight histograms
   //----------------------------------------------------------------------------
-  TH2D* h_loose_data  = (TH2D*)data ->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_loose_zjets = (TH2D*)zjets->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_loose_wjets = (TH2D*)wjets->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_tight_data  = (TH2D*)data ->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH2D* h_tight_zjets = (TH2D*)zjets->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH2D* h_tight_wjets = (TH2D*)wjets->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_loose_data  = (TH2D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_loose_zjets = (TH2D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_loose_wjets = (TH2D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_tight_data  = (TH2D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_tight_zjets = (TH2D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_tight_wjets = (TH2D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
 
 
   // Prepare fake rate histograms
@@ -311,7 +316,7 @@ void WriteFR(TString flavour,
 
   // Write
   //----------------------------------------------------------------------------
-  TFile *file = new TFile(Form("rootfiles/%sFR_Run2016_HWW6p3_jet%0.f.root", flavour.Data(), jetet), "recreate");
+  TFile *file = new TFile(Form("rootfilesFR/%sFR_Run2016_HWW12fb_jet%0.f.root", flavour.Data(), jetet), "recreate");
 
   h_FR    ->Write("FR_pT_eta");
   h_FR_EWK->Write("FR_pT_eta_EWKcorr");
@@ -325,8 +330,8 @@ void WriteFR(TString flavour,
 //------------------------------------------------------------------------------
 void WritePR(TString flavour)
 {
-  TH2D* h_loose_zjets = (TH2D*)zjets->Get("h_" + flavour + "_loose_pt_eta_PR");
-  TH2D* h_tight_zjets = (TH2D*)zjets->Get("h_" + flavour + "_tight_pt_eta_PR");
+  TH2D* h_loose_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_loose_pt_eta_PR");
+  TH2D* h_tight_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_tight_pt_eta_PR");
 
   TH2D* h_PR = (TH2D*)h_tight_zjets->Clone("h_" + flavour + "_signal_pt_eta_bin");
       
@@ -335,7 +340,7 @@ void WritePR(TString flavour)
 
   // Write
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("rootfiles/" + flavour + "PR_Run2016_HWW6p3.root","recreate");
+  TFile* file = new TFile("rootfilesPR/" + flavour + "PR_Run2016_HWW12fb.root","recreate");
 
   h_PR->Write();
   

@@ -46,12 +46,6 @@ class AnalysisFR: public AnalysisCMS
   float _leptonPtMin;
   float _leptonEtaMax;
 
-  int   _Zlepton1type;
-  int   _Zlepton2type;
-  int   _Zlepton1index;
-  int   _Zlepton2index;
-  int   _Zdecayflavour;
-
 
   // Declare fake rate histograms
   //----------------------------------------------------------------------------
@@ -97,23 +91,6 @@ class AnalysisFR: public AnalysisCMS
   TH2D* h_Ele_loose_pt_m2l [ncut][njetet];
   TH2D* h_Ele_tight_pt_m2l [ncut][njetet];
 
-
-  // Declare prompt rate histograms
-  //----------------------------------------------------------------------------
-  TH2D* h_Muon_loose_pt_eta_PR;
-  TH2D* h_Muon_tight_pt_eta_PR;
-  TH2D* h_Ele_loose_pt_eta_PR;
-  TH2D* h_Ele_tight_pt_eta_PR;
-
-  TH1D* h_Muon_loose_pt_PR;
-  TH1D* h_Muon_tight_pt_PR;
-  TH1D* h_Ele_loose_pt_PR;
-  TH1D* h_Ele_tight_pt_PR;
-
-  TH1D* h_Muon_loose_eta_PR;
-  TH1D* h_Muon_tight_eta_PR;
-  TH1D* h_Ele_loose_eta_PR;
-  TH1D* h_Ele_tight_eta_PR;
 };
 
 #endif 
