@@ -190,8 +190,9 @@ void HistogramReader::Draw(TString hname,
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    if (_luminosity_fb > 0) _mchist[i]->Scale(_luminosity_fb);
-    if (_mcscale[i]    > 0) _mchist[i]->Scale(_mcscale[i]);
+    if (_luminosity_fb > 0 && _mcscale[i] > -999) _mchist[i]->Scale(_luminosity_fb);
+
+    if (_mcscale[i] > 0) _mchist[i]->Scale(_mcscale[i]);
 
     SetHistogram(_mchist[i], _mccolor[i], 1001, kDot, kSolid, 0, ngroup, moveoverflow, xmin, xmax);
     

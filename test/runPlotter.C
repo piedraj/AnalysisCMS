@@ -87,7 +87,7 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);  // -999 is needed to not scale by luminosity
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -108,12 +108,12 @@ void runPlotter(TString level,
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
     //plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, 1.00);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
       plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);  // -999 is needed to not scale by luminosity
 	}
       else
 	{
