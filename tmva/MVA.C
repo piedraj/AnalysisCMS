@@ -42,9 +42,9 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal     = "ttDM0001scalar00010",
-	 bool    doMVATrain = true,
-	 bool    doMVARead  = true)
+void MVA(TString signal     = "check", //
+	 bool    doMVATrain = 0,
+	 bool    doMVARead  = 1)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -65,20 +65,22 @@ void MVA(TString signal     = "ttDM0001scalar00010",
   //----------------------------------------------------------------------------
   if (doMVARead)
     {
-      MVARead(signal, signal);
 
-      MVARead(signal, "01_Data");
-      MVARead(signal, "14_HZ");
-      MVARead(signal, "10_HWW");
-      MVARead(signal, "06_WW");
-      MVARead(signal, "02_WZTo3LNu");
-      MVARead(signal, "03_ZZ");
-      MVARead(signal, "11_Wg");
-      MVARead(signal, "07_ZJets");
-      MVARead(signal, "09_TTV");
-      MVARead(signal, "04_TTTo2L2Nu");
-      MVARead(signal, "05_ST");
-      MVARead(signal, "00_Fakes");
+      MVARead(signal, "01_Data_application");
+      //MVARead(signal, signal);
+
+      //MVARead(signal, "01_Data");
+      //MVARead(signal, "14_HZ");
+      //MVARead(signal, "10_HWW");
+      //MVARead(signal, "06_WW");
+      //MVARead(signal, "02_WZTo3LNu");
+      //MVARead(signal, "03_ZZ");
+      //MVARead(signal, "11_Wg");
+      //MVARead(signal, "07_ZJets");
+      //MVARead(signal, "09_TTV");
+      MVARead(signal, "04_TTTo2L2Nu_application");
+      //MVARead(signal, "05_ST");
+      //MVARead(signal, "00_Fakes");
     }
 }
 
@@ -94,15 +96,16 @@ void MVATrain(TString signal)
   // Factory
   //----------------------------------------------------------------------------
   TMVA::Factory* factory = new TMVA::Factory(signal, outputfile,    
-					     "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");
+					    // "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");
+						"!V:!Silent:Color:DrawProgressBar:AnalysisType=Classification");
 
 
   // Get the trees
   //----------------------------------------------------------------------------
   _mctree.clear();
 
-  AddProcess("signal", signal);
-  AddProcess("background", "TTTo2L2Nu");
+  AddProcess("signal", "04_TTTo2L2Nu_training");
+  AddProcess("background", "01_Data_training");
 
   //  AddProcess("background", "14_HZ");
   //  AddProcess("background", "10_HWW");
@@ -121,7 +124,7 @@ void MVATrain(TString signal)
 
   for (UInt_t i=0; i<_mctree.size(); i++) factory->AddBackgroundTree(_mctree[i], weight);
 
-  factory->SetWeightExpression("eventW");
+  //factory->SetWeightExpression("eventW");
 
 
   // Add variables
@@ -132,7 +135,7 @@ void MVATrain(TString signal)
   factory->AddVariable("channel",        "", "", 'F');
   factory->AddVariable("metPfType1",     "", "", 'F');
   factory->AddVariable("m2l",            "", "", 'F');
-  //factory->AddVariable("njet",           "", "", 'F');
+  factory->AddVariable("njet",           "", "", 'F');
   //factory->AddVariable("nbjet30csvv2m",  "", "", 'F');
   factory->AddVariable("lep1pt",         "", "", 'F');
   factory->AddVariable("lep2pt",         "", "", 'F');
@@ -156,27 +159,24 @@ void MVATrain(TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree("", "NormMode=EqualNumEvents:nTrain_Signal=1000:nTest_Signal=1000:nTrain_Background=1000:nTest_Background=1000:SplitMode=Alternate:!V");
+  factory->PrepareTrainingAndTestTree("", "NormMode=EqualNumEvents:nTrain_Signal=460:nTest_Signal=460:nTrain_Background=460:nTest_Background=460:!V");
 
 
   // Book MVA
   //----------------------------------------------------------------------------
   factory->BookMethod(TMVA::Types::kMLP, "MLP01",
-		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=25,10:TestRate=2");
-  //factory->BookMethod(TMVA::Types::kMLP, "MLP02",
-  //		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=15,10:TestRate=2");
-  //factory->BookMethod(TMVA::Types::kMLP, "MLP03",
-  // 		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=10,9:TestRate=2");
-  //factory->BookMethod(TMVA::Types::kMLP, "MLP04",
-  //		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=10,5:TestRate=2");
-  factory->BookMethod(TMVA::Types::kMLP, "MLP05",
-		      "H:!V:NeuronType=sigmoid:NCycles=400:VarTransform=Norm:HiddenLayers=6,5:TestRate=2");
-  factory->BookMethod(TMVA::Types::kMLP, "MLP06",
-  		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=20,10:TestRate=2");
-  factory->BookMethod(TMVA::Types::kMLP, "MLP07",
-  		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=20,20:TestRate=2");
-  //factory->BookMethod(TMVA::Types::kMLP, "MLP08",
-  //		      "H:!V:NeuronType=sigmoid:NCycles=200:VarTransform=Norm:HiddenLayers=10,10:TestRate=2");
+  	      	      "H:!V:NeuronType=sigmoid:NCycles=50:VarTransform=Norm:HiddenLayers=10,5:TestRate=3:LearningRate=0.005");  // 22 in-var / 300 training evts / 50 cycles
+
+  factory->BookMethod(TMVA::Types::kMLP, "MLP02",
+  		      "H:!V:NeuronType=sigmoid:NCycles=40:VarTransform=Norm:HiddenLayers=20,10:TestRate=3:LearningRate=0.005");  // 22 in-var / 700 training events / 40 cycles
+  
+  factory->BookMethod(TMVA::Types::kMLP, "MLP03",
+  		      "H:!V:NeuronType=sigmoid:NCycles=30:VarTransform=Norm:HiddenLayers=20,20:TestRate=3:LearningRate=0.005");  // 22 in-var / 920 training events / 30 cycles
+
+
+  factory->BookMethod(TMVA::Types::kBDT, "BDT04", "NTrees=50:MaxDepth=2" );
+  factory->BookMethod(TMVA::Types::kBDT, "BDT05", "NTrees=50:MaxDepth=3" );
+
 
 
   // Train, test and evaluate MVA
@@ -199,6 +199,8 @@ void MVATrain(TString signal)
 //------------------------------------------------------------------------------
 void MVARead(TString signal, TString filename)
 {
+
+  cout << "\n\n\n" << filename << "\n\n\n" << endl; 
 
   TMVA::Reader* reader   = new TMVA::Reader("!Color:!Silent");    
 
@@ -226,13 +228,18 @@ void MVARead(TString signal, TString filename)
   float dphijet2met;
   float dphillmet;
   float eventW;
-  float mva01; float mva05; float mva06; float mva07; 
+
+  float mva01; 
+  float mva02; 
+  float mva03;
+  float mva04;
+  float mva05;  
 
 
   reader->AddVariable("channel",        &channel);
   reader->AddVariable("metPfType1",     &metPfType1);
   reader->AddVariable("m2l",            &m2l);
-  //reader->AddVariable("njet",           &njet);
+  reader->AddVariable("njet",           &njet);
   //reader->AddVariable("nbjet20cmvav2l", &nbjet20cmvav2l);
   reader->AddVariable("lep1pt",         &lep1pt);
   reader->AddVariable("lep2pt",         &lep2pt);
@@ -257,22 +264,28 @@ void MVARead(TString signal, TString filename)
   // Book MVA methods
   //----------------------------------------------------------------------------
   reader->BookMVA("01", weightsdir + signal + "_MLP01.weights.xml");
-  reader->BookMVA("05", weightsdir + signal + "_MLP05.weights.xml");
-  reader->BookMVA("06", weightsdir + signal + "_MLP06.weights.xml");
-  reader->BookMVA("07", weightsdir + signal + "_MLP07.weights.xml");
+  reader->BookMVA("02", weightsdir + signal + "_MLP02.weights.xml");
+  reader->BookMVA("03", weightsdir + signal + "_MLP03.weights.xml");
+  reader->BookMVA("04", weightsdir + signal + "_BDT04.weights.xml");
+  reader->BookMVA("05", weightsdir + signal + "_BDT05.weights.xml");
 
   // Get MVA response
   //----------------------------------------------------------------------------
-  TH1D* h_mva = new TH1D("h_mva_" + signal, "", 100, -0.05, 1.05);
+  TH1D* h_mva01 = new TH1D("h_mva01_" + signal, "", 100, -0.05, 1.05);
+  TH1D* h_mva02 = new TH1D("h_mva02_" + signal, "", 100, -0.05, 1.05);
+  TH1D* h_mva03 = new TH1D("h_mva03_" + signal, "", 100, -0.05, 1.05);
+  TH1D* h_mva04 = new TH1D("h_mva04_" + signal, "", 100, -1, 1.05);
+  TH1D* h_mva05 = new TH1D("h_mva05_" + signal, "", 100, -1, 1.05);
 
   TFile* input = TFile::Open(inputdir + filename + ".root", "update");
 
   TTree* theTree = (TTree*)input->Get("latino");
 
   TBranch* b_mva01 = theTree->Branch("mva01_" + signal, &mva01, "mva/F" );
+  TBranch* b_mva02 = theTree->Branch("mva02_" + signal, &mva02, "mva/F" );
+  TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
+  TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
   TBranch* b_mva05 = theTree->Branch("mva05_" + signal, &mva05, "mva/F" );
-  TBranch* b_mva06 = theTree->Branch("mva06_" + signal, &mva06, "mva/F" );
-  TBranch* b_mva07 = theTree->Branch("mva07_" + signal, &mva07, "mva/F" );
 
   theTree->SetBranchAddress("channel",        &channel);
   theTree->SetBranchAddress("metPfType1",     &metPfType1);
@@ -306,16 +319,25 @@ void MVARead(TString signal, TString filename)
     theTree->GetEntry(ievt);
 
     mva01 = reader->EvaluateMVA("01");
-    mva05 = reader->EvaluateMVA("05");  
-    mva06 = reader->EvaluateMVA("06");
-    mva07 = reader->EvaluateMVA("07");
+    mva02 = reader->EvaluateMVA("02");  
+    mva03 = reader->EvaluateMVA("03");
+    mva04 = reader->EvaluateMVA("04");
+    mva05 = reader->EvaluateMVA("05");
 
     b_mva01->Fill();
+    b_mva02->Fill();
+    b_mva03->Fill();
+    b_mva04->Fill();
     b_mva05->Fill();
-    b_mva06->Fill();
-    b_mva07->Fill();
+
 
     //if (njet > 1) h_mva->Fill(mva, eventW);
+    h_mva01->Fill(mva01, eventW);
+    h_mva02->Fill(mva02, eventW);
+    h_mva03->Fill(mva03, eventW);
+    h_mva04->Fill(mva04, eventW);
+    h_mva05->Fill(mva05, eventW);
+
   }
 
 
@@ -327,11 +349,19 @@ void MVARead(TString signal, TString filename)
 
   TFile* target = TFile::Open(applicationdir + signal + "__" + filename + ".root", "recreate");
 
-  h_mva->Write();
+  h_mva01->Write();
+  h_mva02->Write();
+  h_mva03->Write();
+  h_mva04->Write();
+  h_mva05->Write();
   
   target->Close();
 
-  h_mva->Delete();
+  h_mva01->Delete();
+  h_mva02->Delete();
+  h_mva03->Delete();
+  h_mva04->Delete();
+  h_mva05->Delete();
 
   delete reader;
 }
