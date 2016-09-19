@@ -4,12 +4,12 @@ void SplitMiniTree() {
 	TTree* tree = (TTree*) origin -> Get( "latino" );
 
 
-	TFile* f_training = new TFile("../minitrees/nominal/TTDM/training.root", "RECREATE");
+	TFile* f_training = new TFile("../minitrees/nominal/TTDM/04_TTTo2L2Nu_training.root", "RECREATE");
 
 	TTree* t_training = tree -> CloneTree(0);
 
 
-	TFile* f_application = new TFile("../minitrees/nominal/TTDM/application.root", "RECREATE");
+	TFile* f_application = new TFile("../minitrees/nominal/TTDM/04_TTTo2L2Nu_application.root", "RECREATE");
 
 	TTree* t_application = tree -> CloneTree(0);
 
@@ -18,7 +18,7 @@ void SplitMiniTree() {
 
 		tree -> GetEntry(ievt);
 
-		if ( ievt < 460 ) {
+		if ( ievt < 920 ) {
 
 			t_training    -> Fill();
 

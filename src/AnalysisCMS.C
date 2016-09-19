@@ -1,6 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
+#include "../top-reco/src/MassVariations.cc"
 
 
 //------------------------------------------------------------------------------
@@ -173,6 +174,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_m2t_gen           [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
   h_dphitt_gen        [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
   h_detatt_gen        [ichannel][icut][ijet]->Fill(_detatt_gen,         _event_weight);
+  h_topReco	      [ichannel][icut][ijet]->Fill(_topReco,            _event_weight);
 
 
   // TH2 histograms
@@ -526,7 +528,6 @@ void AnalysisCMS::GetLeptons()
   _lep2phi_gen = Lepton2.v_gen.Phi();
   _lep2pt_gen  = Lepton2.v_gen.Pt();
 
-
 }
 
 
@@ -665,13 +666,51 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     AnalysisJets.push_back(goodjet);
   }
 
-
   // Define the jet bin
   //----------------------------------------------------------------------------
   _njet = AnalysisJets.size();
 
   _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 }
+
+
+// top-reco --------------------------------------------
+
+
+void AnalysisCMS::GetTopReco(){
+
+	if (AnalysisJets.size() < 2) cout << " \n\n not enough jets !!! \n\n" << endl;
+
+  	MassVariations theMass;
+
+  	std::vector<TLorentzVector> myjets;
+  	std::vector<TLorentzVector> nu1, nu2;
+
+	//nu1.clear(); 
+	//nu2.clear();
+
+  	TVector2 myMET(metPfType1, metPfType1Phi);
+
+  	std::vector<Float_t> unc;
+
+	for( int i = 0; i < AnalysisJets.size(); i++ ){
+
+  	 	myjets.push_back(AnalysisJets.at(i).v);
+
+		unc.push_back(0.05);
+
+	}
+
+  	theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+	_topReco = nu1.size();
+
+	cout << "\n\n\n" << _topReco << "\n\n\n" << endl; 
+
+}
+
+//------------------------------------------------------
+
 
 
 //------------------------------------------------------------------------------
@@ -1061,6 +1100,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetJets(jet_eta_max);
 
+  GetTopReco();
+
   GetDeltaPhi();
 
   GetDeltaR(); 
@@ -1255,6 +1296,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_m2t_gen           [ichannel][icut][ijet] = new TH1D("h_m2t_gen"            + suffix, "", 3000,    0, 3000);
   h_dphitt_gen        [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"         + suffix, "",  100,    0,  3.2);
   h_detatt_gen        [ichannel][icut][ijet] = new TH1D("h_detatt_gen"         + suffix, "",  100,    0,   10);
+
+  h_topReco           [ichannel][icut][ijet] = new TH1D("h_topReco_gen"         + suffix, "",  10,    0,   10);
 
   // TH2 histograms
   //----------------------------------------------------------------------------

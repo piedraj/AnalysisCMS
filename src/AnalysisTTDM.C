@@ -2,6 +2,7 @@
 #include "../include/AnalysisTTDM.h"
 
 
+
 //------------------------------------------------------------------------------
 // AnalysisTTDM
 //------------------------------------------------------------------------------
@@ -53,7 +54,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   // Loop over events
   //----------------------------------------------------------------------------
-  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+
+    if ( _nentries > 10000 )  _nentries = 10000;  
+    for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+    //for (Long64_t jentry=0; jentry<100;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
 
@@ -121,6 +125,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet30csvv2m > 0);
 
     FillLevelHistograms(TTDM_03_Preselection, pass);
+
 
 
     // TT Control Region

@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
-const TString inputdir  = "../rootfiles/GEN/";
+const TString inputdir  = "../rootfiles/top-reco/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -267,7 +267,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphitt_gen"         + suffix, "#Delta#phi(top1,top2) GEN",           5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "detatt_gen"         + suffix, "#Delta#eta(top1,top2) GEN",           5, 1, "NULL", scale);
 	  plotter.Draw(prefix + "m2t_gen"            + suffix, "m_{tt} GEN"               ,          20, 0, "GeV", linY, true, 0, 1000);
-
+	  plotter.Draw(prefix + "topReco_gen"            + suffix, "number of solutions"               ,            -1, 0, "NULL", scale, true, 0, 10 );
 
 
 	  // WW ROC Curve

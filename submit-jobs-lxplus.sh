@@ -13,6 +13,7 @@ if [ $# -lt 2 ]; then
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt       nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt         nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_datadriven_l2tight.txt nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight.txt       nominal"
     echo "  "		 
     echo "  "		 
     echo "  "		 

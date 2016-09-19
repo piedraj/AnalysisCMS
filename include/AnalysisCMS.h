@@ -69,6 +69,7 @@ class AnalysisCMS : public AnalysisBase
   void    GetLeptons        ();
 
   void    GetTops           (); 
+  void    GetTopReco        ();
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -248,6 +249,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2eta_gen;
   float                  _top2phi_gen;
   float                  _top2pt_gen;
+  float			 _topReco;
 
   float                  _mll13;
   float                  _mll23;
@@ -424,7 +426,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2eta_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
-
+  TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
 
   // TH2 histograms
   //----------------------------------------------------------------------------
