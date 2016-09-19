@@ -81,8 +81,8 @@ void runPlotter(TString level,
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStat",   "W#gamma*", color_WgStar);
-      plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+      plotter.AddProcess("03_VZ",       "VZ",       color_ZZ);
+    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
       if (datadriven)
@@ -92,28 +92,28 @@ void runPlotter(TString level,
 	}
       else
 	{
-	  plotter.AddProcess("07_ZJets",    "Z+jets", color_ZJets);
-	  plotter.AddProcess("04_TTTo2L2Nu", "tt",    color_TTTo2L2Nu);
-	  plotter.AddProcess("05_ST",       "tW",     color_ST);
+	  plotter.AddProcess("07_ZJets",     "Z+jets", color_ZJets);
+	  plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+	  plotter.AddProcess("05_ST",        "tW",     color_ST);
 	}
     }
   else
     {
-      plotter.AddProcess("14_HZ",       "HZ",       color_HZ);
-      plotter.AddProcess("10_HWW",      "HWW",      color_HWW);
-      plotter.AddProcess("06_WW",       "WW",       color_WW);
-      plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
-      plotter.AddProcess("03_ZZ",       "ZZ",       color_ZZ);
-      plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
-      plotter.AddProcess("15_WgStar",   "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",    "Z+jets",   color_ZJets);
-    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",      color_TTTo2L2Nu, 1.00);
-      plotter.AddProcess("05_ST",        "tW",      color_ST);
+      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
+      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
+      plotter.AddProcess("06_WW",        "WW",       color_WW);
+      plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
+      plotter.AddProcess("03_VZ",        "VZ",       color_ZZ);
+      plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
+      plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
+    //plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, 1.00);
+      plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, 12.3/6.324);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes);
 	}
       else
 	{

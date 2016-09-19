@@ -1,13 +1,4 @@
 #!/bin/sh
-#$ -P l.gaes
-#$ -S /bin/bash
-#$ -cwd
-#$ -t 1-1
-#$ -N AnalysisCMS
-#$ -o jobs/job_$LSB_JOBINDEX.out
-#$ -j y
-
-#export JOB_SPOOL_DIR=$WORKDIRECTORY/jobs
 
 echo $WORKDIRECTORY
 echo $SAMPLES
@@ -15,7 +6,6 @@ echo $SYSTEMATIC
 
 cd $WORKDIRECTORY/
 
-#source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scramv1 runtime -sh`
 
 stat ./runAnalysis
