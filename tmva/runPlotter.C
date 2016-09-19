@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const int     ngroup    = 2;
-const TString inputdir  = "output/application/";
+const TString inputdir  = "output/application";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -20,7 +20,7 @@ enum {linY, logY};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString signal,
 		TString label,
-		TString option = "hist")
+		TString option = "nostack,hist")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -39,7 +39,7 @@ void runPlotter(TString signal,
     }
   else
     {
-      plotter.SetLuminosity(lumi_fb_blind);
+      plotter.SetLuminosity(lumi_fb_2016);
 
       plotter.AddData   (signal + "__01_Data",      "data",       color_Data);
       plotter.AddProcess(signal + "__14_HZ",        "HZ",         color_HZ);
@@ -49,10 +49,10 @@ void runPlotter(TString signal,
       plotter.AddProcess(signal + "__03_ZZ",        "ZZ",         color_ZZ);
       plotter.AddProcess(signal + "__11_Wg",        "W#gamma",    color_Wg);
       plotter.AddProcess(signal + "__07_ZJets",     "Z+jets",     color_ZJets);
-      plotter.AddProcess(signal + "__09_TTV",       "ttV",        color_TTV);
+      //plotter.AddProcess(signal + "__09_TTV",       "ttV",        color_TTV);
       plotter.AddProcess(signal + "__04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
       plotter.AddProcess(signal + "__05_ST",        "tW",         color_ST);
-      plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
+      //plotter.AddProcess(signal + "__00_Fakes",     "non-prompt", color_Fakes);
       plotter.AddSignal (signal + "__" + signal,    label,        color_Signal);
     }
 
@@ -61,15 +61,25 @@ void runPlotter(TString signal,
   //----------------------------------------------------------------------------
   gSystem->mkdir(outputdir, kTRUE);
 
-  plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva01_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva02_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva03_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva04_" + signal, "MVA output", ngroup, 2, "NULL", linY);
+  plotter.Draw("h_mva05_" + signal, "MVA output", ngroup, 2, "NULL", linY);
 
   if (!option.Contains("nostack"))
-    plotter.Draw("h_mva_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+    plotter.Draw("h_mva01_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+    plotter.Draw("h_mva02_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+    plotter.Draw("h_mva03_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+    plotter.Draw("h_mva04_" + signal, "MVA output", ngroup, 2, "NULL", logY);
+    plotter.Draw("h_mva05_" + signal, "MVA output", ngroup, 2, "NULL", logY);
 
 
   // Optimization
   //----------------------------------------------------------------------------
-  float score_x = plotter.GetBestSignalScoreX("h_mva_" + signal, "S/sqrt(B)", ngroup);
+  float score_01 = plotter.GetBestSignalScoreX("h_mva01_" + signal, "S/sqrt(B)", ngroup);
+  float score_02 = plotter.GetBestSignalScoreX("h_mva02_" + signal, "S/sqrt(B)", ngroup);
+  float score_03 = plotter.GetBestSignalScoreX("h_mva03_" + signal, "S/sqrt(B)", ngroup);
 
 
   // Copy index.php in every directory
