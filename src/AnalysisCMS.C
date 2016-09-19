@@ -452,10 +452,6 @@ void AnalysisCMS::ApplyWeights()
 
 //------------------------------------------------------------------------------
 // GetLeptons
-//
-// Leptons have pt >= 8 GeV after l2Sel
-// Leptons are tight after l2Sel
-//
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
