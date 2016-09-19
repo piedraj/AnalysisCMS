@@ -375,6 +375,8 @@ void AnalysisCMS::ApplyWeights()
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
     
+  if (_ismc && _filename.Contains("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
+    
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
