@@ -50,14 +50,14 @@ Then, do a git remote in order to check if the upstream appears.
 *Do this only if you want to create a tag.*
 
     pushd AnalysisCMS
-    git tag -a 20160318_electron -m 'Second AnalysisCMS tag'
-    git push origin 20160318_electron
+    git tag -a 20160919_tau -m 'Third AnalysisCMS tag'
+    git push origin 20160919_tau
     popd
 
 *Do this only if you want to use a tag.*
 
     pushd AnalysisCMS
-    git checkout tags/20160318_electron
+    git checkout tags/20160919_tau
     popd
 
 <!---
@@ -84,9 +84,9 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
     ./make
 
-It is recommended to test the code. The following example reads a latino tree and produces the corresponding histograms.
+It is recommended to first test the code.
 
-    ./runAnalysis /full/path/latino_WZTo3LNu.root nominal
+    ./runAnalysis
 
 Submit jobs to the gridui batch system. It is encouraged to first read the [Basic Grid Engine Usage](https://grid.ifca.es/wiki/Cluster/Usage/GridEngine) documentation.
 
@@ -109,7 +109,7 @@ Alternatively one can login to a node and run interactively. *Do this only if yo
     cmsenv
     cd AnalysisCMS
 
-    ./submit-jobs-interactive.sh
+    ./runAnalysis
 
     exit
 
