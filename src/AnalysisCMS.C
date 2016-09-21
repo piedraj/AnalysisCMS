@@ -746,7 +746,7 @@ void AnalysisCMS::GetTopReco(){
 
 	}
 
-  	theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+  	theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
 
 	_topReco = nu1.size();
 
