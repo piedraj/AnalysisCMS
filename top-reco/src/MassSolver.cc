@@ -9,7 +9,7 @@
 
 MassSolver::MassSolver() 
 {
-    cout << "MassSolver_class: constructor executing!" << endl;
+    //cout << "MassSolver_class: constructor executing!" << endl;
     return;
 }
 
