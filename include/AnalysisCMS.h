@@ -24,7 +24,6 @@ struct Lepton
   float          idisoW;
   float          iso;
   TLorentzVector v;
-  TLorentzVector v_gen;
 };
 
 struct Jet
@@ -67,9 +66,10 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetJets           (float    jet_eta_max);
 
-  void    GetLeptons        ();  
+  void    GetLeptons        ();
 
   void    GetTops           (); 
+
   void    GetTopReco        ();
 
   void    GetMET            (float    module,
@@ -116,9 +116,6 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetMpMet          ();
 
-  void    GetMt             (Lepton   lep,
-			     float&   transverse_mass);
-
   void    GetPtWW           ();
 
   void    GetSoftMuon       ();
@@ -129,14 +126,17 @@ class AnalysisCMS : public AnalysisBase
 
   TH1F*   GetGenWeightsLHE  ();
 
-  void    GetRecoWeightsLHE (TH1F*    hist);
-
   void    GetStopVar        ();
+
+  void    GetRecoWeightsLHE (TH1F*          hist);
+
+  void    GetMt             (Lepton         lep,
+			     float&         transverse_mass);
 
   double  ComputeMT2        (TLorentzVector VisibleA,
 			     TLorentzVector VisibleB, 
 			     TLorentzVector Invisible,
-			     int            MT2Type = 0,
+			     int            MT2Type      = 0,
 			     double         MT2Precision = 0.);
 
 

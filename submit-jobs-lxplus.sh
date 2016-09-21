@@ -2,8 +2,6 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  rm -rf jobs"
-    echo "  "
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt        nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2loose_fakeW.txt  nominal"
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt          nominal"

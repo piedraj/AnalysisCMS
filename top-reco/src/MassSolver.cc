@@ -9,8 +9,8 @@
 
 MassSolver::MassSolver() 
 {
-    //cout << "MassSolver_class: constructor executing!" << endl;
-    return;
+  //  cout << "MassSolver_class: constructor executing!" << endl;
+  return;
 }
 
 //The code is based on the following two publications:
@@ -41,7 +41,6 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
         return false;
     for( unsigned int i = 0 ; i < pnux.size() ; i++ )
     {
-//         cout << pnux[i]<<" "<<pnubx[i]<<endl;
 	TLorentzVector nu1_vec , nu2_vec;
         nu1_vec.SetXYZM( pnux[i] , pnuy[i] , pnuz[i] , 0 );
         nu2_vec.SetXYZM( pnubx[i] , pnuby[i] , pnubz[i] , 0 );

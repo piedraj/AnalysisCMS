@@ -170,12 +170,12 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_lep2eta       [ichannel][icut][ijet]->Fill(_lep2eta,        _event_weight);
   h_lep2phi       [ichannel][icut][ijet]->Fill(_lep2phi,        _event_weight);
   h_lep2pt        [ichannel][icut][ijet]->Fill(_lep2pt,         _event_weight);
-  h_lep1eta_gen       [ichannel][icut][ijet]->Fill(_lep1eta_gen,        _event_weight);
-  h_lep1phi_gen       [ichannel][icut][ijet]->Fill(_lep1phi_gen,        _event_weight);
-  h_lep1pt_gen        [ichannel][icut][ijet]->Fill(_lep1pt_gen,         _event_weight);
-  h_lep2eta_gen       [ichannel][icut][ijet]->Fill(_lep2eta_gen,        _event_weight);
-  h_lep2phi_gen       [ichannel][icut][ijet]->Fill(_lep2phi_gen,        _event_weight);
-  h_lep2pt_gen        [ichannel][icut][ijet]->Fill(_lep2pt_gen,         _event_weight);
+  h_lep1eta_gen   [ichannel][icut][ijet]->Fill(_lep1eta_gen,    _event_weight);
+  h_lep1phi_gen   [ichannel][icut][ijet]->Fill(_lep1phi_gen,    _event_weight);
+  h_lep1pt_gen    [ichannel][icut][ijet]->Fill(_lep1pt_gen,     _event_weight);
+  h_lep2eta_gen   [ichannel][icut][ijet]->Fill(_lep2eta_gen,    _event_weight);
+  h_lep2phi_gen   [ichannel][icut][ijet]->Fill(_lep2phi_gen,    _event_weight);
+  h_lep2pt_gen    [ichannel][icut][ijet]->Fill(_lep2pt_gen,     _event_weight);
   h_mc            [ichannel][icut][ijet]->Fill(_mc,             _event_weight);
   h_metPfType1    [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
   h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
@@ -200,16 +200,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30cmvav2t[ichannel][icut][ijet]->Fill(_nbjet30cmvav2t, _event_weight);
   h_njet          [ichannel][icut][ijet]->Fill(_njet,           _event_weight);
 
-  h_top1eta_gen       [ichannel][icut][ijet]->Fill(_top1eta_gen,        _event_weight);
-  h_top1phi_gen       [ichannel][icut][ijet]->Fill(_top1phi_gen,        _event_weight);
-  h_top1pt_gen        [ichannel][icut][ijet]->Fill(_top1pt_gen,         _event_weight);
-  h_top2eta_gen       [ichannel][icut][ijet]->Fill(_top2eta_gen,        _event_weight);
-  h_top2phi_gen       [ichannel][icut][ijet]->Fill(_top2phi_gen,        _event_weight);
-  h_top2pt_gen        [ichannel][icut][ijet]->Fill(_top2pt_gen,         _event_weight);
-  h_m2t_gen           [ichannel][icut][ijet]->Fill(_m2t_gen,            _event_weight);
-  h_dphitt_gen        [ichannel][icut][ijet]->Fill(_dphitt_gen,         _event_weight);
-  h_detatt_gen        [ichannel][icut][ijet]->Fill(_detatt_gen,         _event_weight);
-  h_topReco	      [ichannel][icut][ijet]->Fill(_topReco,            _event_weight);
+  h_top1eta_gen   [ichannel][icut][ijet]->Fill(_top1eta_gen,    _event_weight);
+  h_top1phi_gen   [ichannel][icut][ijet]->Fill(_top1phi_gen,    _event_weight);
+  h_top1pt_gen    [ichannel][icut][ijet]->Fill(_top1pt_gen,     _event_weight);
+  h_top2eta_gen   [ichannel][icut][ijet]->Fill(_top2eta_gen,    _event_weight);
+  h_top2phi_gen   [ichannel][icut][ijet]->Fill(_top2phi_gen,    _event_weight);
+  h_top2pt_gen    [ichannel][icut][ijet]->Fill(_top2pt_gen,     _event_weight);
+  h_m2t_gen       [ichannel][icut][ijet]->Fill(_m2t_gen,        _event_weight);
+  h_dphitt_gen    [ichannel][icut][ijet]->Fill(_dphitt_gen,     _event_weight);
+  h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
+  h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
 
 
   // TH2 histograms
@@ -394,8 +394,6 @@ void AnalysisCMS::ApplyWeights()
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
-  if (_ismc && _filename.Contains("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
-    
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
@@ -477,6 +475,19 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
+  // GEN
+  //----------------------------------------------------------------------------
+  _lep1eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(0) : -999;
+  _lep1phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(0) : -999;
+  _lep1pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(0)  : -999;
+
+  _lep2eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(1) : -999;
+  _lep2phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(1) : -999;
+  _lep2pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(1)  : -999;
+
+
+  // RECO
+  //----------------------------------------------------------------------------
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
@@ -490,9 +501,6 @@ void AnalysisCMS::GetLeptons()
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
-    float eta_gen = 0.      ; if( _ismc ) eta_gen = std_vector_leptonGen_eta->at(i);
-    float phi_gen = 3.141592; if( _ismc ) phi_gen = std_vector_leptonGen_phi->at(i);
-    float pt_gen  = 100.    ; if( _ismc ) pt_gen  = std_vector_leptonGen_pt->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
     if (!std_vector_lepton_isLooseLepton->at(i)) continue;
@@ -534,13 +542,11 @@ void AnalysisCMS::GetLeptons()
 	lep.iso = MuonIsolation(i);
       }
 
-    TLorentzVector tlv, tlv_gen;
+    TLorentzVector tlv;
     
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-    tlv_gen.SetPtEtaPhiM(pt_gen, eta_gen, phi_gen, mass);
 
     lep.v = tlv;
-    lep.v_gen = tlv_gen;
 
     AnalysisLeptons.push_back(lep);
 
@@ -558,96 +564,10 @@ void AnalysisCMS::GetLeptons()
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
 
-  _detall = fabs( _lep1eta - _lep2eta );
-
-   // gen-variables by ferrero
-  _lep1eta_gen = Lepton1.v_gen.Eta();
-  _lep1phi_gen = Lepton1.v_gen.Phi();
-  _lep1pt_gen  = Lepton1.v_gen.Pt();
-
-  _lep2eta_gen = Lepton2.v_gen.Eta();
-  _lep2phi_gen = Lepton2.v_gen.Phi();
-  _lep2pt_gen  = Lepton2.v_gen.Pt();
-
-
+  _detall = fabs(_lep1eta - _lep2eta);
 }
 
-//------------------------------------------------------------------------------
-// GetTops
-//------------------------------------------------------------------------------
 
-void AnalysisCMS::GetTops() {
-
-
-
-    _top1eta_gen = -999;
-    _top1phi_gen = -999;
-    _top1pt_gen  = -999;
-    _top2eta_gen = -999;
-    _top2phi_gen = -999;
-    _top2pt_gen  = -999;
-    _m2t_gen     = -999; 
-    _dphitt_gen  = -999;
-    _detatt_gen  = -999;
-
-  if( !_ismc ) return; 
-
-    float eta1 = -999;
-    float phi1 = -999;
-    float pt1  = -999;  
-
-    int ntop = 0; 
-
-  int vector_parton_size = std_vector_partonGen_pt->size(); 
-
-  for (int i=0; i<vector_parton_size; i++) {
-
-    float parton_pt            = std_vector_partonGen_pt->at(i);
-    float parton_eta           = std_vector_partonGen_eta->at(i);
-    float parton_phi           = std_vector_partonGen_phi->at(i);
-    float parton_pid           = std_vector_partonGen_pid->at(i);
-    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
-
-    if( parton_pid != 6 && parton_isHardProcess != 1 ) continue; 
-
-    ntop += 1; 
-
-    if ( ntop > 1 ) {
-
-	if( fabs(eta1 - parton_eta) < 0.5  &&  fabs(phi1 - parton_phi) < 0.2 ) continue;
-
-	_top1eta_gen = eta1      ; 
-	_top1phi_gen = phi1      ; 
-	_top1pt_gen  = pt1       ; 
-	_top2eta_gen = parton_eta;  
-	_top2phi_gen = parton_phi;  
-	_top2pt_gen  = parton_pt ;  
-
-        TLorentzVector t1, t2; 
-
-        t1.SetPtEtaPhiM( pt1      , eta1      , phi1      , 173. );
-	t2.SetPtEtaPhiM( parton_pt, parton_eta, parton_phi, 173. );
-
-	_m2t_gen = (t1+t2).M();  
-	_dphitt_gen = fabs(t1.DeltaPhi(t2));
-	_detatt_gen = fabs(t1.Eta()-t2.Eta());
-	
-	break;	
-
-    }
-
-     eta1 = parton_eta; 
-     phi1 = parton_phi;
-     pt1  = parton_pt ; 
-
-  }
-
-//std::cout << "\n" << std::endl;
-//std::cout << "eta1 = " << _top1eta_gen << "  --  eta2 = " << _top2eta_gen << std::endl;
-//std::cout << "phi1 = " << _top1phi_gen << "  --  phi2 = " << _top2phi_gen << std::endl;
-
-
-}
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
@@ -719,42 +639,30 @@ void AnalysisCMS::GetJets(float jet_eta_max)
 }
 
 
-// top-reco --------------------------------------------
+//------------------------------------------------------------------------------
+// GetTopReco
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTopReco()
+{
+  MassVariations theMass;
 
+  std::vector<TLorentzVector> myjets, nu1, nu2;
+  std::vector<Float_t> unc;
 
-void AnalysisCMS::GetTopReco(){
+  TVector2 myMET(metPfType1, metPfType1Phi);
 
-	//if (AnalysisJets.size() < 2) cout << " \n\n not enough jets !!! \n\n" << endl;
+  for (int i=0; i<AnalysisJets.size(); i++) {
 
-  	MassVariations theMass;
+    myjets.push_back(AnalysisJets.at(i).v);
 
-  	std::vector<TLorentzVector> myjets;
-  	std::vector<TLorentzVector> nu1, nu2;
+    unc.push_back(0.05);
+  }
 
-	//nu1.clear(); 
-	//nu2.clear();
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
 
-  	TVector2 myMET(metPfType1, metPfType1Phi);
-
-  	std::vector<Float_t> unc;
-
-	for( int i = 0; i < AnalysisJets.size(); i++ ){
-
-  	 	myjets.push_back(AnalysisJets.at(i).v);
-
-		unc.push_back(0.05);
-
-	}
-
-  	theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
-
-	_topReco = nu1.size();
-
-	//cout << "\n\n\n" << _topReco << "\n\n\n" << endl; 
-
+  _topReco = nu1.size();
 }
 
-//------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // GetJetPtSum
@@ -1071,6 +979,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetLeptons();
 
   GetTops();
+
   GetTopReco();
 
   GetJets(jet_eta_max);
@@ -1928,4 +1837,69 @@ void AnalysisCMS::GetStopVar()
 
   }
 
+}
+
+
+//------------------------------------------------------------------------------
+// GetTops
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTops()
+{
+  _top1eta_gen = -999;
+  _top1phi_gen = -999;
+  _top1pt_gen  = -999;
+  _top2eta_gen = -999;
+  _top2phi_gen = -999;
+  _top2pt_gen  = -999;
+  _m2t_gen     = -999; 
+  _dphitt_gen  = -999;
+  _detatt_gen  = -999;
+
+  if (!_ismc) return; 
+
+  float eta1 = -999;
+  float phi1 = -999;
+  float pt1  = -999;  
+
+  int ntop = 0; 
+
+  for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
+
+    float parton_pt            = std_vector_partonGen_pt->at(i);
+    float parton_eta           = std_vector_partonGen_eta->at(i);
+    float parton_phi           = std_vector_partonGen_phi->at(i);
+    float parton_pid           = std_vector_partonGen_pid->at(i);
+    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
+
+    if (parton_pid != 6 && parton_isHardProcess != 1) continue; 
+
+    ntop += 1; 
+
+    if (ntop > 1) {
+
+      if (fabs(eta1 - parton_eta) < 0.5 && fabs(phi1 - parton_phi) < 0.2) continue;
+
+      _top1eta_gen = eta1; 
+      _top1phi_gen = phi1; 
+      _top1pt_gen  = pt1; 
+      _top2eta_gen = parton_eta;  
+      _top2phi_gen = parton_phi;  
+      _top2pt_gen  = parton_pt;
+      
+      TLorentzVector t1, t2; 
+
+      t1.SetPtEtaPhiM(pt1,       eta1,       phi1,       173.);
+      t2.SetPtEtaPhiM(parton_pt, parton_eta, parton_phi, 173.);
+
+      _m2t_gen    = (t1+t2).M();  
+      _dphitt_gen = fabs(t1.DeltaPhi(t2));
+      _detatt_gen = fabs(t1.Eta() - t2.Eta());
+	
+      break;
+    }
+
+    eta1 = parton_eta;
+    phi1 = parton_phi;
+    pt1  = parton_pt;
+  }
 }
