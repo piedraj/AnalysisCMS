@@ -84,7 +84,7 @@ void runPlotter(TString level,
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStat",   "W#gamma*", color_WgStar);
-      plotter.AddProcess("03_VZ",       "VZ",       color_ZZ);
+      plotter.AddProcess("03_VZ",       "VZ",       color_VZ);
     //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
@@ -106,7 +106,7 @@ void runPlotter(TString level,
       plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
       plotter.AddProcess("06_WW",        "WW",       color_WW);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
-      plotter.AddProcess("03_VZ",        "VZ",       color_ZZ);
+      plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
@@ -163,7 +163,7 @@ void runPlotter(TString level,
   //     plotter.AddRocBackground("04_TTTo2L2Nu");
   //     plotter.AddRocBackground("00_Fakes");
   //     plotter.AddRocBackground("02_WZTo3LNu");
-  //     plotter.AddRocBackground("03_ZZ");
+  //     plotter.AddRocBackground("03_VZ");
   //     plotter.AddRocBackground("05_ST");
   //     plotter.AddRocBackground("07_ZJets");
   //     plotter.AddRocBackground("09_TTV");
