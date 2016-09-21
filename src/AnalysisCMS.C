@@ -1209,7 +1209,7 @@ void AnalysisCMS::OpenMinitree()
 
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
 
 
   // Minitree branches
