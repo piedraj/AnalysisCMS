@@ -244,7 +244,7 @@ To access files at eos/user.
     /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eosuser
     rmdir eosuser
 
-Check the eos quota
+Check the eos quota.
 
     eos quota /eos/cms/store/group/phys_higgs
 
