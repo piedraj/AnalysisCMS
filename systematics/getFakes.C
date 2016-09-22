@@ -90,15 +90,19 @@ void getFakes(TString level = "NONE")
 
   // Print yields
   //----------------------------------------------------------------------------
-  printf("\n");
-  
+  printf("\n %22s", " ");
+
+  for (int i=firstchannel; i<lastchannel; i++) printf(" & %19s", schannel[i].Data());
+
+  printf(" \\\\\n");
+
   for (int j=0; j<nvalue; j++)
     {
       printf(" %22s", svalue[j].Data());
       
       for (int i=firstchannel; i<lastchannel; i++)
 	{
-	  printf(" & %6.2f $\\pm$ %5.2f", _value[i][j], _error[i][j]);
+	  printf(" & %7.2f $\\pm$ %5.2f", _value[i][j], _error[i][j]);
 	}
 
       printf(" \\\\\n");
@@ -108,10 +112,11 @@ void getFakes(TString level = "NONE")
   // Print systematic uncertainties
   //----------------------------------------------------------------------------
   printf("\\hline\n");
-  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
-  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
-  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
-  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", " ");                       for (int i=firstchannel; i<lastchannel; i++) printf(" & %19s", schannel[i].Data());   printf(" \\\\\n");
+  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
 
   printf("\n");
 }
