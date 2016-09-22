@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
-const Bool_t allplots   = true;
+const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -39,7 +39,6 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("TTDM")) lumi = lumi_fb_2016;
   if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
@@ -47,7 +46,6 @@ void runPlotter(TString level,
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
   if (analysis.EqualTo("Top"))   scale = logY;
-  if (analysis.EqualTo("TTDM"))  scale = linY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -61,14 +59,12 @@ void runPlotter(TString level,
   if (option.Contains("nostack"))
     {
       plotter.SetDrawRatio(false);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt", kBlack);
-      plotter.AddSignal ("ttDM0001scalar00010", "m_{#chi}1 m_{S}10", color_Signal);
     }
   else
     {
       plotter.SetLuminosity(lumi);
       plotter.SetDrawRatio (true);
-    
+    }    
 
 
   // Get the data
@@ -90,7 +86,8 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);  // -999 is needed to not scale by luminosity
+	  // -999 is needed to not scale by luminosity
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -116,7 +113,8 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);  // -999 is needed to not scale by luminosity
+	  // -999 is needed to not scale by luminosity
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);
 	}
       else
 	{
@@ -139,20 +137,21 @@ void runPlotter(TString level,
       plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
     }
 
+
   if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
+
   if (analysis.EqualTo("Stop"))
     {
-     plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
-     plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
-     plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+      plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
+      plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
+      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
     }
 
-}   // else
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
@@ -261,7 +260,8 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
-	  plotter.Draw(prefix + "topReco"        + suffix, "tt reco number of sol",             -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
+
 
 	  // WW ROC
 	  //--------------------------------------------------------------------
@@ -327,10 +327,10 @@ void runPlotter(TString level,
 	      plotter.Draw(prefix + "fullpmet" + suffix, "projected E_{T}^{miss}",       10, 0, "GeV", scale, false, 0, 100);
 	      plotter.Draw(prefix + "trkpmet"  + suffix, "projected track E_{T}^{miss}",  2, 0, "GeV", scale, false, 0, 100);
 	      plotter.Draw(prefix + "mllstar"  + suffix, "m2l^{*}",                      10, 0, "GeV", scale, false, 0, 300);
-
 	    }
 
-	  if (analysis.EqualTo("MonoH")){
+	  if (analysis.EqualTo("MonoH"))
+	    {
 	      plotter.Draw(prefix + "deltarl1met"    + suffix, "#DeltaR(lep1,E_{T}^{miss})", 2, 1, "NULL", scale, false, 0, 4);
 	      plotter.Draw(prefix + "deltarl2met"    + suffix, "#DeltaR(lep2,E_{T}^{miss})", 2, 1, "NULL", scale, false, 0, 4);
 	      plotter.Draw(prefix + "deltarllmet"    + suffix, "#DeltaR(ll,E_{T}^{miss})",   2, 1, "NULL", scale, false, 0, 4);
@@ -358,6 +358,7 @@ void runPlotter(TString level,
 	    }
 	}
     }
+
 
   // Cross-section
   //----------------------------------------------------------------------------
