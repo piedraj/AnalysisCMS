@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = true;
 
-const TString inputdir  = "../rootfiles/nominal/";
+const TString inputdir  = "../rootfiles/160920_new-presel/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
