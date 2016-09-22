@@ -244,6 +244,13 @@ To access files at eos/user.
     /afs/cern.ch/project/eos/installation/0.3.84-aquamarine.user/bin/eos.select -b fuse umount eosuser
     rmdir eosuser
 
+Check the eos quota
+
+    eos quota /eos/cms/store/group/phys_higgs
+
+    group      logi bytes  aval logib  filled[%]
+    zh         171.07 TB   250.00 TB   68.43
+
 
 10. Copy latino trees from cernbox to gridui
 ====
