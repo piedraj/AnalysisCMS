@@ -1531,18 +1531,18 @@ void AnalysisCMS::GetStopVar()
 	if (combinatorialMT2lblb < _mt2lblb) { 
 	 
 	  _mt2lblbcomb = _mt2lblb;
-	  _mt2lblb = combinatorialMT2lblb;
+	  _mt2lblb     = combinatorialMT2lblb;
 
-	  _tjet1pt = AnalysisJets[bjetindex[1]].v.Pt();
-	  _tjet1eta = AnalysisJets[bjetindex[1]].v.Eta();
-	  _tjet1phi = AnalysisJets[bjetindex[1]].v.Phi();
-	  _tjet1mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
+	  _tjet1pt       = AnalysisJets[bjetindex[1]].v.Pt();
+	  _tjet1eta      = AnalysisJets[bjetindex[1]].v.Eta();
+	  _tjet1phi      = AnalysisJets[bjetindex[1]].v.Phi();
+	  _tjet1mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
 	  _tjet1csvv2ivf = AnalysisJets[bjetindex[1]].csvv2ivf;
 
-	  _tjet2pt = AnalysisJets[bjetindex[0]].v.Pt();
-	  _tjet2eta = AnalysisJets[bjetindex[0]].v.Eta();
-	  _tjet2phi = AnalysisJets[bjetindex[0]].v.Phi();
-	  _tjet2mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
+	  _tjet2pt       = AnalysisJets[bjetindex[0]].v.Pt();
+	  _tjet2eta      = AnalysisJets[bjetindex[0]].v.Eta();
+	  _tjet2phi      = AnalysisJets[bjetindex[0]].v.Phi();
+	  _tjet2mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
 	  _tjet2csvv2ivf = AnalysisJets[bjetindex[0]].csvv2ivf;
 
 	  _mlb1 = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
