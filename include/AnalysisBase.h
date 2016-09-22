@@ -224,27 +224,27 @@ public :
 
    vector<float>   *std_vector_GEN_weight;
    vector<float>   *std_vector_LHE_weight;
-   vector<float>   *std_vector_LHElepton_eta;
-   vector<float>   *std_vector_LHElepton_id;
-   vector<float>   *std_vector_LHElepton_phi;
-   vector<float>   *std_vector_LHElepton_pt;
-   vector<float>   *std_vector_LHEneutrino_eta;
-   vector<float>   *std_vector_LHEneutrino_id;
-   vector<float>   *std_vector_LHEneutrino_phi;
-   vector<float>   *std_vector_LHEneutrino_pt;
-   vector<float>   *std_vector_LHEparton_eta;
-   vector<float>   *std_vector_LHEparton_id;
-   vector<float>   *std_vector_LHEparton_phi;
-   vector<float>   *std_vector_LHEparton_pt;
+   //   vector<float>   *std_vector_LHElepton_eta;
+   //   vector<float>   *std_vector_LHElepton_id;
+   //   vector<float>   *std_vector_LHElepton_phi;
+   //   vector<float>   *std_vector_LHElepton_pt;
+   //   vector<float>   *std_vector_LHEneutrino_eta;
+   //   vector<float>   *std_vector_LHEneutrino_id;
+   //   vector<float>   *std_vector_LHEneutrino_phi;
+   //   vector<float>   *std_vector_LHEneutrino_pt;
+   //   vector<float>   *std_vector_LHEparton_eta;
+   //   vector<float>   *std_vector_LHEparton_id;
+   //   vector<float>   *std_vector_LHEparton_phi;
+   //   vector<float>   *std_vector_LHEparton_pt;
    vector<float>   *std_vector_VBoson_eta;
    vector<float>   *std_vector_VBoson_mass;
    vector<float>   *std_vector_VBoson_phi;
    vector<float>   *std_vector_VBoson_pid;
    vector<float>   *std_vector_VBoson_pt;
-   vector<float>   *std_vector_dressedLeptonGen_eta;
-   vector<float>   *std_vector_dressedLeptonGen_phi;
-   vector<float>   *std_vector_dressedLeptonGen_pid;
-   vector<float>   *std_vector_dressedLeptonGen_pt;
+   //   vector<float>   *std_vector_dressedLeptonGen_eta;
+   //   vector<float>   *std_vector_dressedLeptonGen_phi;
+   //   vector<float>   *std_vector_dressedLeptonGen_pid;
+   //   vector<float>   *std_vector_dressedLeptonGen_pt;
    vector<float>   *std_vector_jetGen_eta;
    vector<float>   *std_vector_jetGen_phi;
    vector<float>   *std_vector_jetGen_pt;
@@ -270,12 +270,12 @@ public :
    vector<float>   *std_vector_partonGen_phi;
    vector<float>   *std_vector_partonGen_pid;
    vector<float>   *std_vector_partonGen_pt;
-   vector<float>   *std_vector_photon_eta;
-   vector<float>   *std_vector_photon_phi;
-   vector<float>   *std_vector_photon_pt;
-   vector<float>   *std_vector_photonid_eta;
-   vector<float>   *std_vector_photonid_phi;
-   vector<float>   *std_vector_photonid_pt;
+   //   vector<float>   *std_vector_photon_eta;
+   //   vector<float>   *std_vector_photon_phi;
+   //   vector<float>   *std_vector_photon_pt;
+   //   vector<float>   *std_vector_photonid_eta;
+   //   vector<float>   *std_vector_photonid_phi;
+   //   vector<float>   *std_vector_photonid_pt;
    vector<float>   *std_vector_softMuD0;
    vector<float>   *std_vector_softMuDz;
    vector<float>   *std_vector_softMuEta;
@@ -284,13 +284,13 @@ public :
    vector<float>   *std_vector_softMuPhi;
    vector<float>   *std_vector_softMuPt;
    vector<float>   *std_vector_softMuTMLastStationAngTight;
-   vector<float>   *std_vector_tau_eta;
-   vector<float>   *std_vector_tau_phi;
-   vector<float>   *std_vector_tau_pt;
-   vector<float>   *std_vector_trackjet_eta;
-   vector<float>   *std_vector_trackjet_phi;
-   vector<float>   *std_vector_trackjet_probabilityB;
-   vector<float>   *std_vector_trackjet_pt;
+   //   vector<float>   *std_vector_tau_eta;
+   //   vector<float>   *std_vector_tau_phi;
+   //   vector<float>   *std_vector_tau_pt;
+   //   vector<float>   *std_vector_trackjet_eta;
+   //   vector<float>   *std_vector_trackjet_phi;
+   //   vector<float>   *std_vector_trackjet_probabilityB;
+   //   vector<float>   *std_vector_trackjet_pt;
    vector<float>   *std_vector_trigger_special;
    vector<float>   *std_vector_trigger;
    Float_t         tightmu;
@@ -299,38 +299,38 @@ public :
    Float_t         triggerFakeRate;
    Float_t         itpu;
    Float_t         nvtx;
-   Float_t         ootpum1;
-   Float_t         ootpum2;
-   Float_t         ootpum3;
-   Float_t         ootpum4;
-   Float_t         ootpum5;
-   Float_t         ootpup1;
-   Float_t         ootpup2;
-   Float_t         ootpup3;
+   //   Float_t         ootpum1;
+   //   Float_t         ootpum2;
+   //   Float_t         ootpum3;
+   //   Float_t         ootpum4;
+   //   Float_t         ootpum5;
+   //   Float_t         ootpup1;
+   //   Float_t         ootpup2;
+   //   Float_t         ootpup3;
    Float_t         trpu;
    Int_t           bveto_ip;
-   vector<float>   *std_vector_electron_ooEmooP;
-   vector<float>   *std_vector_jet_puid;
-   vector<float>   *std_vector_muon_NTkLayers;
+   //   vector<float>   *std_vector_electron_ooEmooP;
+   //   vector<float>   *std_vector_jet_puid;
+   //   vector<float>   *std_vector_muon_NTkLayers;
    vector<float>   *std_vector_jet_cmvav2;
-   vector<float>   *std_vector_muon_Chi2LocalPos;
+   //   vector<float>   *std_vector_muon_Chi2LocalPos;
    vector<float>   *std_vector_jet_phi;
    vector<float>   *std_vector_jet_mass;
-   vector<float>   *std_vector_muon_NValidPixelHitsInTrk;
-   vector<float>   *std_vector_electron_passConversionVeto;
-   vector<float>   *std_vector_puppijet_eta;
-   vector<float>   *std_vector_muon_NValidHitsSATrk;
-   vector<float>   *std_vector_electron_ecalPFClusterIso;
-   vector<float>   *std_vector_jet_tche;
-   vector<float>   *std_vector_muon_NValidHitsInTrk;
+   //   vector<float>   *std_vector_muon_NValidPixelHitsInTrk;
+   //   vector<float>   *std_vector_electron_passConversionVeto;
+   //   vector<float>   *std_vector_puppijet_eta;
+   //   vector<float>   *std_vector_muon_NValidHitsSATrk;
+   //   vector<float>   *std_vector_electron_ecalPFClusterIso;
+   //   vector<float>   *std_vector_jet_tche;
+   //   vector<float>   *std_vector_muon_NValidHitsInTrk;
    vector<float>   *std_vector_jet_csvv2ivf;
-   vector<float>   *std_vector_jet_tchp;
-   vector<float>   *std_vector_electron_dEtaIn;
+   //   vector<float>   *std_vector_jet_tchp;
+   //   vector<float>   *std_vector_electron_dEtaIn;
    vector<float>   *std_vector_muon_TrkKink;
    vector<float>   *std_vector_muon_NormChi2GTrk;
-   vector<float>   *std_vector_electron_full5x5_sigmaIetaIeta;
-   vector<float>   *std_vector_jet_ssvhe;
-   vector<float>   *std_vector_puppijet_phi;
+   //   vector<float>   *std_vector_electron_full5x5_sigmaIetaIeta;
+   //   vector<float>   *std_vector_jet_ssvhe;
+   //   vector<float>   *std_vector_puppijet_phi;
    vector<float>   *std_vector_jet_eta;
    vector<float>   *std_vector_jet_pt;
    vector<float>   *std_vector_muon_NValidFractInTrk;
@@ -348,15 +348,15 @@ public :
    vector<float>   *std_vector_jet_QGlikelihood;
    vector<float>   *std_vector_muon_NumOfMatchedStations;
    vector<float>   *std_vector_jet_softMuPhi;
-   vector<float>   *std_vector_electron_hcalPFClusterIso;
+   //   vector<float>   *std_vector_electron_hcalPFClusterIso;
    vector<float>   *std_vector_jet_bjpb;
    vector<float>   *std_vector_jet_pfcsv;
-   vector<float>   *std_vector_electron_dPhiIn;
-   vector<float>   *std_vector_electron_hOverE;
+   //   vector<float>   *std_vector_electron_dPhiIn;
+   //   vector<float>   *std_vector_electron_hOverE;
    vector<float>   *std_vector_jet_NumberSoftMu;
    vector<float>   *std_vector_jet_HadronFlavour;
-   vector<float>   *std_vector_electron_scEta;
-   vector<float>   *std_vector_electron_expectedMissingInnerHits;
+   //   vector<float>   *std_vector_electron_scEta;
+   //   vector<float>   *std_vector_electron_expectedMissingInnerHits;
    Float_t         metFilter;
    Float_t         jetpt1;
    Float_t         jetpt2;
@@ -676,27 +676,27 @@ public :
    TBranch        *b_softtche;   //!
    TBranch        *b_std_vector_GEN_weight;   //!
    TBranch        *b_std_vector_LHE_weight;   //!
-   TBranch        *b_std_vector_LHElepton_eta;   //!
-   TBranch        *b_std_vector_LHElepton_id;   //!
-   TBranch        *b_std_vector_LHElepton_phi;   //!
-   TBranch        *b_std_vector_LHElepton_pt;   //!
-   TBranch        *b_std_vector_LHEneutrino_eta;   //!
-   TBranch        *b_std_vector_LHEneutrino_id;   //!
-   TBranch        *b_std_vector_LHEneutrino_phi;   //!
-   TBranch        *b_std_vector_LHEneutrino_pt;   //!
-   TBranch        *b_std_vector_LHEparton_eta;   //!
-   TBranch        *b_std_vector_LHEparton_id;   //!
-   TBranch        *b_std_vector_LHEparton_phi;   //!
-   TBranch        *b_std_vector_LHEparton_pt;   //!
+   //   TBranch        *b_std_vector_LHElepton_eta;   //!
+   //   TBranch        *b_std_vector_LHElepton_id;   //!
+   //   TBranch        *b_std_vector_LHElepton_phi;   //!
+   //   TBranch        *b_std_vector_LHElepton_pt;   //!
+   //   TBranch        *b_std_vector_LHEneutrino_eta;   //!
+   //   TBranch        *b_std_vector_LHEneutrino_id;   //!
+   //   TBranch        *b_std_vector_LHEneutrino_phi;   //!
+   //   TBranch        *b_std_vector_LHEneutrino_pt;   //!
+   //   TBranch        *b_std_vector_LHEparton_eta;   //!
+   //   TBranch        *b_std_vector_LHEparton_id;   //!
+   //   TBranch        *b_std_vector_LHEparton_phi;   //!
+   //   TBranch        *b_std_vector_LHEparton_pt;   //!
    TBranch        *b_std_vector_VBoson_eta;   //!
    TBranch        *b_std_vector_VBoson_mass;   //!
    TBranch        *b_std_vector_VBoson_phi;   //!
    TBranch        *b_std_vector_VBoson_pid;   //!
    TBranch        *b_std_vector_VBoson_pt;   //!
-   TBranch        *b_std_vector_dressedLeptonGen_eta;   //!
-   TBranch        *b_std_vector_dressedLeptonGen_phi;   //!
-   TBranch        *b_std_vector_dressedLeptonGen_pid;   //!
-   TBranch        *b_std_vector_dressedLeptonGen_pt;   //!
+   //   TBranch        *b_std_vector_dressedLeptonGen_eta;   //!
+   //   TBranch        *b_std_vector_dressedLeptonGen_phi;   //!
+   //   TBranch        *b_std_vector_dressedLeptonGen_pid;   //!
+   //   TBranch        *b_std_vector_dressedLeptonGen_pt;   //!
    TBranch        *b_std_vector_jetGen_eta;   //!
    TBranch        *b_std_vector_jetGen_phi;   //!
    TBranch        *b_std_vector_jetGen_pt;   //!
@@ -722,12 +722,12 @@ public :
    TBranch        *b_std_vector_partonGen_phi;   //!
    TBranch        *b_std_vector_partonGen_pid;   //!
    TBranch        *b_std_vector_partonGen_pt;   //!
-   TBranch        *b_std_vector_photon_eta;   //!
-   TBranch        *b_std_vector_photon_phi;   //!
-   TBranch        *b_std_vector_photon_pt;   //!
-   TBranch        *b_std_vector_photonid_eta;   //!
-   TBranch        *b_std_vector_photonid_phi;   //!
-   TBranch        *b_std_vector_photonid_pt;   //!
+   //   TBranch        *b_std_vector_photon_eta;   //!
+   //   TBranch        *b_std_vector_photon_phi;   //!
+   //   TBranch        *b_std_vector_photon_pt;   //!
+   //   TBranch        *b_std_vector_photonid_eta;   //!
+   //   TBranch        *b_std_vector_photonid_phi;   //!
+   //   TBranch        *b_std_vector_photonid_pt;   //!
    TBranch        *b_std_vector_softMuD0;   //!
    TBranch        *b_std_vector_softMuDz;   //!
    TBranch        *b_std_vector_softMuEta;   //!
@@ -736,13 +736,13 @@ public :
    TBranch        *b_std_vector_softMuPhi;   //!
    TBranch        *b_std_vector_softMuPt;   //!
    TBranch        *b_std_vector_softMuTMLastStationAngTight;   //!
-   TBranch        *b_std_vector_tau_eta;   //!
-   TBranch        *b_std_vector_tau_phi;   //!
-   TBranch        *b_std_vector_tau_pt;   //!
-   TBranch        *b_std_vector_trackjet_eta;   //!
-   TBranch        *b_std_vector_trackjet_phi;   //!
-   TBranch        *b_std_vector_trackjet_probabilityB;   //!
-   TBranch        *b_std_vector_trackjet_pt;   //!
+   //   TBranch        *b_std_vector_tau_eta;   //!
+   //   TBranch        *b_std_vector_tau_phi;   //!
+   //   TBranch        *b_std_vector_tau_pt;   //!
+   //   TBranch        *b_std_vector_trackjet_eta;   //!
+   //   TBranch        *b_std_vector_trackjet_phi;   //!
+   //   TBranch        *b_std_vector_trackjet_probabilityB;   //!
+   //   TBranch        *b_std_vector_trackjet_pt;   //!
    TBranch        *b_std_vector_trigger_special;   //!
    TBranch        *b_std_vector_trigger;   //!
    TBranch        *b_tightmu;   //!
@@ -751,38 +751,38 @@ public :
    TBranch        *b_triggerFakeRate;   //!
    TBranch        *b_itpu;   //!
    TBranch        *b_nvtx;   //!
-   TBranch        *b_ootpum1;   //!
-   TBranch        *b_ootpum2;   //!
-   TBranch        *b_ootpum3;   //!
-   TBranch        *b_ootpum4;   //!
-   TBranch        *b_ootpum5;   //!
-   TBranch        *b_ootpup1;   //!
-   TBranch        *b_ootpup2;   //!
-   TBranch        *b_ootpup3;   //!
+   //   TBranch        *b_ootpum1;   //!
+   //   TBranch        *b_ootpum2;   //!
+   //   TBranch        *b_ootpum3;   //!
+   //   TBranch        *b_ootpum4;   //!
+   //   TBranch        *b_ootpum5;   //!
+   //   TBranch        *b_ootpup1;   //!
+   //   TBranch        *b_ootpup2;   //!
+   //   TBranch        *b_ootpup3;   //!
    TBranch        *b_trpu;   //!
    TBranch        *b_bveto_ip;   //!
-   TBranch        *b_std_vector_electron_ooEmooP;   //!
-   TBranch        *b_std_vector_jet_puid;   //!
-   TBranch        *b_std_vector_muon_NTkLayers;   //!
+   //   TBranch        *b_std_vector_electron_ooEmooP;   //!
+   //   TBranch        *b_std_vector_jet_puid;   //!
+   //   TBranch        *b_std_vector_muon_NTkLayers;   //!
    TBranch        *b_std_vector_jet_cmvav2;   //!
-   TBranch        *b_std_vector_muon_Chi2LocalPos;   //!
+   //   TBranch        *b_std_vector_muon_Chi2LocalPos;   //!
    TBranch        *b_std_vector_jet_phi;   //!
    TBranch        *b_std_vector_jet_mass;   //!
-   TBranch        *b_std_vector_muon_NValidPixelHitsInTrk;   //!
-   TBranch        *b_std_vector_electron_passConversionVeto;   //!
-   TBranch        *b_std_vector_puppijet_eta;   //!
-   TBranch        *b_std_vector_muon_NValidHitsSATrk;   //!
-   TBranch        *b_std_vector_electron_ecalPFClusterIso;   //!
-   TBranch        *b_std_vector_jet_tche;   //!
-   TBranch        *b_std_vector_muon_NValidHitsInTrk;   //!
+   //   TBranch        *b_std_vector_muon_NValidPixelHitsInTrk;   //!
+   //   TBranch        *b_std_vector_electron_passConversionVeto;   //!
+   //   TBranch        *b_std_vector_puppijet_eta;   //!
+   //   TBranch        *b_std_vector_muon_NValidHitsSATrk;   //!
+   //   TBranch        *b_std_vector_electron_ecalPFClusterIso;   //!
+   //   TBranch        *b_std_vector_jet_tche;   //!
+   //   TBranch        *b_std_vector_muon_NValidHitsInTrk;   //!
    TBranch        *b_std_vector_jet_csvv2ivf;   //!
-   TBranch        *b_std_vector_jet_tchp;   //!
-   TBranch        *b_std_vector_electron_dEtaIn;   //!
+   //   TBranch        *b_std_vector_jet_tchp;   //!
+   //   TBranch        *b_std_vector_electron_dEtaIn;   //!
    TBranch        *b_std_vector_muon_TrkKink;   //!
    TBranch        *b_std_vector_muon_NormChi2GTrk;   //!
-   TBranch        *b_std_vector_electron_full5x5_sigmaIetaIeta;   //!
-   TBranch        *b_std_vector_jet_ssvhe;   //!
-   TBranch        *b_std_vector_puppijet_phi;   //!
+   //   TBranch        *b_std_vector_electron_full5x5_sigmaIetaIeta;   //!
+   //   TBranch        *b_std_vector_jet_ssvhe;   //!
+   //   TBranch        *b_std_vector_puppijet_phi;   //!
    TBranch        *b_std_vector_jet_eta;   //!
    TBranch        *b_std_vector_jet_pt;   //!
    TBranch        *b_std_vector_muon_NValidFractInTrk;   //!
@@ -800,15 +800,15 @@ public :
    TBranch        *b_std_vector_jet_QGlikelihood;   //!
    TBranch        *b_std_vector_muon_NumOfMatchedStations;   //!
    TBranch        *b_std_vector_jet_softMuPhi;   //!
-   TBranch        *b_std_vector_electron_hcalPFClusterIso;   //!
+   //   TBranch        *b_std_vector_electron_hcalPFClusterIso;   //!
    TBranch        *b_std_vector_jet_bjpb;   //!
    TBranch        *b_std_vector_jet_pfcsv;   //!
-   TBranch        *b_std_vector_electron_dPhiIn;   //!
-   TBranch        *b_std_vector_electron_hOverE;   //!
+   //   TBranch        *b_std_vector_electron_dPhiIn;   //!
+   //   TBranch        *b_std_vector_electron_hOverE;   //!
    TBranch        *b_std_vector_jet_NumberSoftMu;   //!
    TBranch        *b_std_vector_jet_HadronFlavour;   //!
-   TBranch        *b_std_vector_electron_scEta;   //!
-   TBranch        *b_std_vector_electron_expectedMissingInnerHits;   //!
+   //   TBranch        *b_std_vector_electron_scEta;   //!
+   //   TBranch        *b_std_vector_electron_expectedMissingInnerHits;   //!
    TBranch        *b_metFilter;   //!
    TBranch        *b_jetpt1;   //!
    TBranch        *b_jetpt2;   //!
@@ -1035,27 +1035,27 @@ void AnalysisBase::Init(TTree *tree)
    // Set object pointer
    std_vector_GEN_weight = 0;
    std_vector_LHE_weight = 0;
-   std_vector_LHElepton_eta = 0;
-   std_vector_LHElepton_id = 0;
-   std_vector_LHElepton_phi = 0;
-   std_vector_LHElepton_pt = 0;
-   std_vector_LHEneutrino_eta = 0;
-   std_vector_LHEneutrino_id = 0;
-   std_vector_LHEneutrino_phi = 0;
-   std_vector_LHEneutrino_pt = 0;
-   std_vector_LHEparton_eta = 0;
-   std_vector_LHEparton_id = 0;
-   std_vector_LHEparton_phi = 0;
-   std_vector_LHEparton_pt = 0;
+   //   std_vector_LHElepton_eta = 0;
+   //   std_vector_LHElepton_id = 0;
+   //   std_vector_LHElepton_phi = 0;
+   //   std_vector_LHElepton_pt = 0;
+   //   std_vector_LHEneutrino_eta = 0;
+   //   std_vector_LHEneutrino_id = 0;
+   //   std_vector_LHEneutrino_phi = 0;
+   //   std_vector_LHEneutrino_pt = 0;
+   //   std_vector_LHEparton_eta = 0;
+   //   std_vector_LHEparton_id = 0;
+   //   std_vector_LHEparton_phi = 0;
+   //   std_vector_LHEparton_pt = 0;
    std_vector_VBoson_eta = 0;
    std_vector_VBoson_mass = 0;
    std_vector_VBoson_phi = 0;
    std_vector_VBoson_pid = 0;
    std_vector_VBoson_pt = 0;
-   std_vector_dressedLeptonGen_eta = 0;
-   std_vector_dressedLeptonGen_phi = 0;
-   std_vector_dressedLeptonGen_pid = 0;
-   std_vector_dressedLeptonGen_pt = 0;
+   //   std_vector_dressedLeptonGen_eta = 0;
+   //   std_vector_dressedLeptonGen_phi = 0;
+   //   std_vector_dressedLeptonGen_pid = 0;
+   //   std_vector_dressedLeptonGen_pt = 0;
    std_vector_jetGen_eta = 0;
    std_vector_jetGen_phi = 0;
    std_vector_jetGen_pt = 0;
@@ -1081,12 +1081,12 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_partonGen_phi = 0;
    std_vector_partonGen_pid = 0;
    std_vector_partonGen_pt = 0;
-   std_vector_photon_eta = 0;
-   std_vector_photon_phi = 0;
-   std_vector_photon_pt = 0;
-   std_vector_photonid_eta = 0;
-   std_vector_photonid_phi = 0;
-   std_vector_photonid_pt = 0;
+   //   std_vector_photon_eta = 0;
+   //   std_vector_photon_phi = 0;
+   //   std_vector_photon_pt = 0;
+   //   std_vector_photonid_eta = 0;
+   //   std_vector_photonid_phi = 0;
+   //   std_vector_photonid_pt = 0;
    std_vector_softMuD0 = 0;
    std_vector_softMuDz = 0;
    std_vector_softMuEta = 0;
@@ -1095,37 +1095,37 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_softMuPhi = 0;
    std_vector_softMuPt = 0;
    std_vector_softMuTMLastStationAngTight = 0;
-   std_vector_tau_eta = 0;
-   std_vector_tau_phi = 0;
-   std_vector_tau_pt = 0;
-   std_vector_trackjet_eta = 0;
-   std_vector_trackjet_phi = 0;
-   std_vector_trackjet_probabilityB = 0;
-   std_vector_trackjet_pt = 0;
+   //   std_vector_tau_eta = 0;
+   //   std_vector_tau_phi = 0;
+   //   std_vector_tau_pt = 0;
+   //   std_vector_trackjet_eta = 0;
+   //   std_vector_trackjet_phi = 0;
+   //   std_vector_trackjet_probabilityB = 0;
+   //   std_vector_trackjet_pt = 0;
    std_vector_trigger_special = 0;
    std_vector_trigger = 0;
-   std_vector_electron_ooEmooP = 0;
-   std_vector_jet_puid = 0;
-   std_vector_muon_NTkLayers = 0;
+   //   std_vector_electron_ooEmooP = 0;
+   //   std_vector_jet_puid = 0;
+   //   std_vector_muon_NTkLayers = 0;
    std_vector_jet_cmvav2 = 0;
-   std_vector_muon_Chi2LocalPos = 0;
+   //   std_vector_muon_Chi2LocalPos = 0;
    std_vector_jet_phi = 0;
    std_vector_jet_mass = 0;
-   std_vector_muon_NValidPixelHitsInTrk = 0;
-   std_vector_electron_passConversionVeto = 0;
-   std_vector_puppijet_eta = 0;
-   std_vector_muon_NValidHitsSATrk = 0;
-   std_vector_electron_ecalPFClusterIso = 0;
-   std_vector_jet_tche = 0;
-   std_vector_muon_NValidHitsInTrk = 0;
+   //   std_vector_muon_NValidPixelHitsInTrk = 0;
+   //   std_vector_electron_passConversionVeto = 0;
+   //   std_vector_puppijet_eta = 0;
+   //   std_vector_muon_NValidHitsSATrk = 0;
+   //   std_vector_electron_ecalPFClusterIso = 0;
+   //   std_vector_jet_tche = 0;
+   //   std_vector_muon_NValidHitsInTrk = 0;
    std_vector_jet_csvv2ivf = 0;
-   std_vector_jet_tchp = 0;
-   std_vector_electron_dEtaIn = 0;
+   //   std_vector_jet_tchp = 0;
+   //   std_vector_electron_dEtaIn = 0;
    std_vector_muon_TrkKink = 0;
    std_vector_muon_NormChi2GTrk = 0;
-   std_vector_electron_full5x5_sigmaIetaIeta = 0;
-   std_vector_jet_ssvhe = 0;
-   std_vector_puppijet_phi = 0;
+   //   std_vector_electron_full5x5_sigmaIetaIeta = 0;
+   //   std_vector_jet_ssvhe = 0;
+   //   std_vector_puppijet_phi = 0;
    std_vector_jet_eta = 0;
    std_vector_jet_pt = 0;
    std_vector_muon_NValidFractInTrk = 0;
@@ -1143,15 +1143,15 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_jet_QGlikelihood = 0;
    std_vector_muon_NumOfMatchedStations = 0;
    std_vector_jet_softMuPhi = 0;
-   std_vector_electron_hcalPFClusterIso = 0;
+   //   std_vector_electron_hcalPFClusterIso = 0;
    std_vector_jet_bjpb = 0;
    std_vector_jet_pfcsv = 0;
-   std_vector_electron_dPhiIn = 0;
-   std_vector_electron_hOverE = 0;
+   //   std_vector_electron_dPhiIn = 0;
+   //   std_vector_electron_hOverE = 0;
    std_vector_jet_NumberSoftMu = 0;
    std_vector_jet_HadronFlavour = 0;
-   std_vector_electron_scEta = 0;
-   std_vector_electron_expectedMissingInnerHits = 0;
+   //   std_vector_electron_scEta = 0;
+   //   std_vector_electron_expectedMissingInnerHits = 0;
    std_vector_lepton_chargedHadronIso = 0;
    std_vector_lepton_photonIso = 0;
    std_vector_lepton_closejet_PartonFlavour = 0;
@@ -1377,27 +1377,27 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("softtche", &softtche, &b_softtche);
    fChain->SetBranchAddress("std_vector_GEN_weight", &std_vector_GEN_weight, &b_std_vector_GEN_weight);
    fChain->SetBranchAddress("std_vector_LHE_weight", &std_vector_LHE_weight, &b_std_vector_LHE_weight);
-   fChain->SetBranchAddress("std_vector_LHElepton_eta", &std_vector_LHElepton_eta, &b_std_vector_LHElepton_eta);
-   fChain->SetBranchAddress("std_vector_LHElepton_id", &std_vector_LHElepton_id, &b_std_vector_LHElepton_id);
-   fChain->SetBranchAddress("std_vector_LHElepton_phi", &std_vector_LHElepton_phi, &b_std_vector_LHElepton_phi);
-   fChain->SetBranchAddress("std_vector_LHElepton_pt", &std_vector_LHElepton_pt, &b_std_vector_LHElepton_pt);
-   fChain->SetBranchAddress("std_vector_LHEneutrino_eta", &std_vector_LHEneutrino_eta, &b_std_vector_LHEneutrino_eta);
-   fChain->SetBranchAddress("std_vector_LHEneutrino_id", &std_vector_LHEneutrino_id, &b_std_vector_LHEneutrino_id);
-   fChain->SetBranchAddress("std_vector_LHEneutrino_phi", &std_vector_LHEneutrino_phi, &b_std_vector_LHEneutrino_phi);
-   fChain->SetBranchAddress("std_vector_LHEneutrino_pt", &std_vector_LHEneutrino_pt, &b_std_vector_LHEneutrino_pt);
-   fChain->SetBranchAddress("std_vector_LHEparton_eta", &std_vector_LHEparton_eta, &b_std_vector_LHEparton_eta);
-   fChain->SetBranchAddress("std_vector_LHEparton_id", &std_vector_LHEparton_id, &b_std_vector_LHEparton_id);
-   fChain->SetBranchAddress("std_vector_LHEparton_phi", &std_vector_LHEparton_phi, &b_std_vector_LHEparton_phi);
-   fChain->SetBranchAddress("std_vector_LHEparton_pt", &std_vector_LHEparton_pt, &b_std_vector_LHEparton_pt);
+   //   fChain->SetBranchAddress("std_vector_LHElepton_eta", &std_vector_LHElepton_eta, &b_std_vector_LHElepton_eta);
+   //   fChain->SetBranchAddress("std_vector_LHElepton_id", &std_vector_LHElepton_id, &b_std_vector_LHElepton_id);
+   //   fChain->SetBranchAddress("std_vector_LHElepton_phi", &std_vector_LHElepton_phi, &b_std_vector_LHElepton_phi);
+   //   fChain->SetBranchAddress("std_vector_LHElepton_pt", &std_vector_LHElepton_pt, &b_std_vector_LHElepton_pt);
+   //   fChain->SetBranchAddress("std_vector_LHEneutrino_eta", &std_vector_LHEneutrino_eta, &b_std_vector_LHEneutrino_eta);
+   //   fChain->SetBranchAddress("std_vector_LHEneutrino_id", &std_vector_LHEneutrino_id, &b_std_vector_LHEneutrino_id);
+   //   fChain->SetBranchAddress("std_vector_LHEneutrino_phi", &std_vector_LHEneutrino_phi, &b_std_vector_LHEneutrino_phi);
+   //   fChain->SetBranchAddress("std_vector_LHEneutrino_pt", &std_vector_LHEneutrino_pt, &b_std_vector_LHEneutrino_pt);
+   //   fChain->SetBranchAddress("std_vector_LHEparton_eta", &std_vector_LHEparton_eta, &b_std_vector_LHEparton_eta);
+   //   fChain->SetBranchAddress("std_vector_LHEparton_id", &std_vector_LHEparton_id, &b_std_vector_LHEparton_id);
+   //   fChain->SetBranchAddress("std_vector_LHEparton_phi", &std_vector_LHEparton_phi, &b_std_vector_LHEparton_phi);
+   //   fChain->SetBranchAddress("std_vector_LHEparton_pt", &std_vector_LHEparton_pt, &b_std_vector_LHEparton_pt);
    fChain->SetBranchAddress("std_vector_VBoson_eta", &std_vector_VBoson_eta, &b_std_vector_VBoson_eta);
    fChain->SetBranchAddress("std_vector_VBoson_mass", &std_vector_VBoson_mass, &b_std_vector_VBoson_mass);
    fChain->SetBranchAddress("std_vector_VBoson_phi", &std_vector_VBoson_phi, &b_std_vector_VBoson_phi);
    fChain->SetBranchAddress("std_vector_VBoson_pid", &std_vector_VBoson_pid, &b_std_vector_VBoson_pid);
    fChain->SetBranchAddress("std_vector_VBoson_pt", &std_vector_VBoson_pt, &b_std_vector_VBoson_pt);
-   fChain->SetBranchAddress("std_vector_dressedLeptonGen_eta", &std_vector_dressedLeptonGen_eta, &b_std_vector_dressedLeptonGen_eta);
-   fChain->SetBranchAddress("std_vector_dressedLeptonGen_phi", &std_vector_dressedLeptonGen_phi, &b_std_vector_dressedLeptonGen_phi);
-   fChain->SetBranchAddress("std_vector_dressedLeptonGen_pid", &std_vector_dressedLeptonGen_pid, &b_std_vector_dressedLeptonGen_pid);
-   fChain->SetBranchAddress("std_vector_dressedLeptonGen_pt", &std_vector_dressedLeptonGen_pt, &b_std_vector_dressedLeptonGen_pt);
+   //   fChain->SetBranchAddress("std_vector_dressedLeptonGen_eta", &std_vector_dressedLeptonGen_eta, &b_std_vector_dressedLeptonGen_eta);
+   //   fChain->SetBranchAddress("std_vector_dressedLeptonGen_phi", &std_vector_dressedLeptonGen_phi, &b_std_vector_dressedLeptonGen_phi);
+   //   fChain->SetBranchAddress("std_vector_dressedLeptonGen_pid", &std_vector_dressedLeptonGen_pid, &b_std_vector_dressedLeptonGen_pid);
+   //   fChain->SetBranchAddress("std_vector_dressedLeptonGen_pt", &std_vector_dressedLeptonGen_pt, &b_std_vector_dressedLeptonGen_pt);
    fChain->SetBranchAddress("std_vector_jetGen_eta", &std_vector_jetGen_eta, &b_std_vector_jetGen_eta);
    fChain->SetBranchAddress("std_vector_jetGen_phi", &std_vector_jetGen_phi, &b_std_vector_jetGen_phi);
    fChain->SetBranchAddress("std_vector_jetGen_pt", &std_vector_jetGen_pt, &b_std_vector_jetGen_pt);
@@ -1423,12 +1423,12 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_partonGen_phi", &std_vector_partonGen_phi, &b_std_vector_partonGen_phi);
    fChain->SetBranchAddress("std_vector_partonGen_pid", &std_vector_partonGen_pid, &b_std_vector_partonGen_pid);
    fChain->SetBranchAddress("std_vector_partonGen_pt", &std_vector_partonGen_pt, &b_std_vector_partonGen_pt);
-   fChain->SetBranchAddress("std_vector_photon_eta", &std_vector_photon_eta, &b_std_vector_photon_eta);
-   fChain->SetBranchAddress("std_vector_photon_phi", &std_vector_photon_phi, &b_std_vector_photon_phi);
-   fChain->SetBranchAddress("std_vector_photon_pt", &std_vector_photon_pt, &b_std_vector_photon_pt);
-   fChain->SetBranchAddress("std_vector_photonid_eta", &std_vector_photonid_eta, &b_std_vector_photonid_eta);
-   fChain->SetBranchAddress("std_vector_photonid_phi", &std_vector_photonid_phi, &b_std_vector_photonid_phi);
-   fChain->SetBranchAddress("std_vector_photonid_pt", &std_vector_photonid_pt, &b_std_vector_photonid_pt);
+   //   fChain->SetBranchAddress("std_vector_photon_eta", &std_vector_photon_eta, &b_std_vector_photon_eta);
+   //   fChain->SetBranchAddress("std_vector_photon_phi", &std_vector_photon_phi, &b_std_vector_photon_phi);
+   //   fChain->SetBranchAddress("std_vector_photon_pt", &std_vector_photon_pt, &b_std_vector_photon_pt);
+   //   fChain->SetBranchAddress("std_vector_photonid_eta", &std_vector_photonid_eta, &b_std_vector_photonid_eta);
+   //   fChain->SetBranchAddress("std_vector_photonid_phi", &std_vector_photonid_phi, &b_std_vector_photonid_phi);
+   //   fChain->SetBranchAddress("std_vector_photonid_pt", &std_vector_photonid_pt, &b_std_vector_photonid_pt);
    fChain->SetBranchAddress("std_vector_softMuD0", &std_vector_softMuD0, &b_std_vector_softMuD0);
    fChain->SetBranchAddress("std_vector_softMuDz", &std_vector_softMuDz, &b_std_vector_softMuDz);
    fChain->SetBranchAddress("std_vector_softMuEta", &std_vector_softMuEta, &b_std_vector_softMuEta);
@@ -1437,13 +1437,13 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_softMuPhi", &std_vector_softMuPhi, &b_std_vector_softMuPhi);
    fChain->SetBranchAddress("std_vector_softMuPt", &std_vector_softMuPt, &b_std_vector_softMuPt);
    fChain->SetBranchAddress("std_vector_softMuTMLastStationAngTight", &std_vector_softMuTMLastStationAngTight, &b_std_vector_softMuTMLastStationAngTight);
-   fChain->SetBranchAddress("std_vector_tau_eta", &std_vector_tau_eta, &b_std_vector_tau_eta);
-   fChain->SetBranchAddress("std_vector_tau_phi", &std_vector_tau_phi, &b_std_vector_tau_phi);
-   fChain->SetBranchAddress("std_vector_tau_pt", &std_vector_tau_pt, &b_std_vector_tau_pt);
-   fChain->SetBranchAddress("std_vector_trackjet_eta", &std_vector_trackjet_eta, &b_std_vector_trackjet_eta);
-   fChain->SetBranchAddress("std_vector_trackjet_phi", &std_vector_trackjet_phi, &b_std_vector_trackjet_phi);
-   fChain->SetBranchAddress("std_vector_trackjet_probabilityB", &std_vector_trackjet_probabilityB, &b_std_vector_trackjet_probabilityB);
-   fChain->SetBranchAddress("std_vector_trackjet_pt", &std_vector_trackjet_pt, &b_std_vector_trackjet_pt);
+   //   fChain->SetBranchAddress("std_vector_tau_eta", &std_vector_tau_eta, &b_std_vector_tau_eta);
+   //   fChain->SetBranchAddress("std_vector_tau_phi", &std_vector_tau_phi, &b_std_vector_tau_phi);
+   //   fChain->SetBranchAddress("std_vector_tau_pt", &std_vector_tau_pt, &b_std_vector_tau_pt);
+   //   fChain->SetBranchAddress("std_vector_trackjet_eta", &std_vector_trackjet_eta, &b_std_vector_trackjet_eta);
+   //   fChain->SetBranchAddress("std_vector_trackjet_phi", &std_vector_trackjet_phi, &b_std_vector_trackjet_phi);
+   //   fChain->SetBranchAddress("std_vector_trackjet_probabilityB", &std_vector_trackjet_probabilityB, &b_std_vector_trackjet_probabilityB);
+   //   fChain->SetBranchAddress("std_vector_trackjet_pt", &std_vector_trackjet_pt, &b_std_vector_trackjet_pt);
    fChain->SetBranchAddress("std_vector_trigger_special", &std_vector_trigger_special, &b_std_vector_trigger_special);
    fChain->SetBranchAddress("std_vector_trigger", &std_vector_trigger, &b_std_vector_trigger);
    fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
@@ -1452,38 +1452,38 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    fChain->SetBranchAddress("itpu", &itpu, &b_itpu);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
-   fChain->SetBranchAddress("ootpum1", &ootpum1, &b_ootpum1);
-   fChain->SetBranchAddress("ootpum2", &ootpum2, &b_ootpum2);
-   fChain->SetBranchAddress("ootpum3", &ootpum3, &b_ootpum3);
-   fChain->SetBranchAddress("ootpum4", &ootpum4, &b_ootpum4);
-   fChain->SetBranchAddress("ootpum5", &ootpum5, &b_ootpum5);
-   fChain->SetBranchAddress("ootpup1", &ootpup1, &b_ootpup1);
-   fChain->SetBranchAddress("ootpup2", &ootpup2, &b_ootpup2);
-   fChain->SetBranchAddress("ootpup3", &ootpup3, &b_ootpup3);
+   //   fChain->SetBranchAddress("ootpum1", &ootpum1, &b_ootpum1);
+   //   fChain->SetBranchAddress("ootpum2", &ootpum2, &b_ootpum2);
+   //   fChain->SetBranchAddress("ootpum3", &ootpum3, &b_ootpum3);
+   //   fChain->SetBranchAddress("ootpum4", &ootpum4, &b_ootpum4);
+   //   fChain->SetBranchAddress("ootpum5", &ootpum5, &b_ootpum5);
+   //   fChain->SetBranchAddress("ootpup1", &ootpup1, &b_ootpup1);
+   //   fChain->SetBranchAddress("ootpup2", &ootpup2, &b_ootpup2);
+   //   fChain->SetBranchAddress("ootpup3", &ootpup3, &b_ootpup3);
    fChain->SetBranchAddress("trpu", &trpu, &b_trpu);
    fChain->SetBranchAddress("bveto_ip", &bveto_ip, &b_bveto_ip);
-   fChain->SetBranchAddress("std_vector_electron_ooEmooP", &std_vector_electron_ooEmooP, &b_std_vector_electron_ooEmooP);
-   fChain->SetBranchAddress("std_vector_jet_puid", &std_vector_jet_puid, &b_std_vector_jet_puid);
-   fChain->SetBranchAddress("std_vector_muon_NTkLayers", &std_vector_muon_NTkLayers, &b_std_vector_muon_NTkLayers);
+   //   fChain->SetBranchAddress("std_vector_electron_ooEmooP", &std_vector_electron_ooEmooP, &b_std_vector_electron_ooEmooP);
+   //   fChain->SetBranchAddress("std_vector_jet_puid", &std_vector_jet_puid, &b_std_vector_jet_puid);
+   //   fChain->SetBranchAddress("std_vector_muon_NTkLayers", &std_vector_muon_NTkLayers, &b_std_vector_muon_NTkLayers);
    fChain->SetBranchAddress("std_vector_jet_cmvav2", &std_vector_jet_cmvav2, &b_std_vector_jet_cmvav2);
-   fChain->SetBranchAddress("std_vector_muon_Chi2LocalPos", &std_vector_muon_Chi2LocalPos, &b_std_vector_muon_Chi2LocalPos);
+   //   fChain->SetBranchAddress("std_vector_muon_Chi2LocalPos", &std_vector_muon_Chi2LocalPos, &b_std_vector_muon_Chi2LocalPos);
    fChain->SetBranchAddress("std_vector_jet_phi", &std_vector_jet_phi, &b_std_vector_jet_phi);
    fChain->SetBranchAddress("std_vector_jet_mass", &std_vector_jet_mass, &b_std_vector_jet_mass);
-   fChain->SetBranchAddress("std_vector_muon_NValidPixelHitsInTrk", &std_vector_muon_NValidPixelHitsInTrk, &b_std_vector_muon_NValidPixelHitsInTrk);
-   fChain->SetBranchAddress("std_vector_electron_passConversionVeto", &std_vector_electron_passConversionVeto, &b_std_vector_electron_passConversionVeto);
-   fChain->SetBranchAddress("std_vector_puppijet_eta", &std_vector_puppijet_eta, &b_std_vector_puppijet_eta);
-   fChain->SetBranchAddress("std_vector_muon_NValidHitsSATrk", &std_vector_muon_NValidHitsSATrk, &b_std_vector_muon_NValidHitsSATrk);
-   fChain->SetBranchAddress("std_vector_electron_ecalPFClusterIso", &std_vector_electron_ecalPFClusterIso, &b_std_vector_electron_ecalPFClusterIso);
-   fChain->SetBranchAddress("std_vector_jet_tche", &std_vector_jet_tche, &b_std_vector_jet_tche);
-   fChain->SetBranchAddress("std_vector_muon_NValidHitsInTrk", &std_vector_muon_NValidHitsInTrk, &b_std_vector_muon_NValidHitsInTrk);
+   //   fChain->SetBranchAddress("std_vector_muon_NValidPixelHitsInTrk", &std_vector_muon_NValidPixelHitsInTrk, &b_std_vector_muon_NValidPixelHitsInTrk);
+   //   fChain->SetBranchAddress("std_vector_electron_passConversionVeto", &std_vector_electron_passConversionVeto, &b_std_vector_electron_passConversionVeto);
+   //   fChain->SetBranchAddress("std_vector_puppijet_eta", &std_vector_puppijet_eta, &b_std_vector_puppijet_eta);
+   //   fChain->SetBranchAddress("std_vector_muon_NValidHitsSATrk", &std_vector_muon_NValidHitsSATrk, &b_std_vector_muon_NValidHitsSATrk);
+   //   fChain->SetBranchAddress("std_vector_electron_ecalPFClusterIso", &std_vector_electron_ecalPFClusterIso, &b_std_vector_electron_ecalPFClusterIso);
+   //   fChain->SetBranchAddress("std_vector_jet_tche", &std_vector_jet_tche, &b_std_vector_jet_tche);
+   //   fChain->SetBranchAddress("std_vector_muon_NValidHitsInTrk", &std_vector_muon_NValidHitsInTrk, &b_std_vector_muon_NValidHitsInTrk);
    fChain->SetBranchAddress("std_vector_jet_csvv2ivf", &std_vector_jet_csvv2ivf, &b_std_vector_jet_csvv2ivf);
-   fChain->SetBranchAddress("std_vector_jet_tchp", &std_vector_jet_tchp, &b_std_vector_jet_tchp);
-   fChain->SetBranchAddress("std_vector_electron_dEtaIn", &std_vector_electron_dEtaIn, &b_std_vector_electron_dEtaIn);
+   //   fChain->SetBranchAddress("std_vector_jet_tchp", &std_vector_jet_tchp, &b_std_vector_jet_tchp);
+   //   fChain->SetBranchAddress("std_vector_electron_dEtaIn", &std_vector_electron_dEtaIn, &b_std_vector_electron_dEtaIn);
    fChain->SetBranchAddress("std_vector_muon_TrkKink", &std_vector_muon_TrkKink, &b_std_vector_muon_TrkKink);
    fChain->SetBranchAddress("std_vector_muon_NormChi2GTrk", &std_vector_muon_NormChi2GTrk, &b_std_vector_muon_NormChi2GTrk);
-   fChain->SetBranchAddress("std_vector_electron_full5x5_sigmaIetaIeta", &std_vector_electron_full5x5_sigmaIetaIeta, &b_std_vector_electron_full5x5_sigmaIetaIeta);
-   fChain->SetBranchAddress("std_vector_jet_ssvhe", &std_vector_jet_ssvhe, &b_std_vector_jet_ssvhe);
-   fChain->SetBranchAddress("std_vector_puppijet_phi", &std_vector_puppijet_phi, &b_std_vector_puppijet_phi);
+   //   fChain->SetBranchAddress("std_vector_electron_full5x5_sigmaIetaIeta", &std_vector_electron_full5x5_sigmaIetaIeta, &b_std_vector_electron_full5x5_sigmaIetaIeta);
+   //   fChain->SetBranchAddress("std_vector_jet_ssvhe", &std_vector_jet_ssvhe, &b_std_vector_jet_ssvhe);
+   //   fChain->SetBranchAddress("std_vector_puppijet_phi", &std_vector_puppijet_phi, &b_std_vector_puppijet_phi);
    fChain->SetBranchAddress("std_vector_jet_eta", &std_vector_jet_eta, &b_std_vector_jet_eta);
    fChain->SetBranchAddress("std_vector_jet_pt", &std_vector_jet_pt, &b_std_vector_jet_pt);
    fChain->SetBranchAddress("std_vector_muon_NValidFractInTrk", &std_vector_muon_NValidFractInTrk, &b_std_vector_muon_NValidFractInTrk);
@@ -1501,15 +1501,15 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jet_QGlikelihood", &std_vector_jet_QGlikelihood, &b_std_vector_jet_QGlikelihood);
    fChain->SetBranchAddress("std_vector_muon_NumOfMatchedStations", &std_vector_muon_NumOfMatchedStations, &b_std_vector_muon_NumOfMatchedStations);
    fChain->SetBranchAddress("std_vector_jet_softMuPhi", &std_vector_jet_softMuPhi, &b_std_vector_jet_softMuPhi);
-   fChain->SetBranchAddress("std_vector_electron_hcalPFClusterIso", &std_vector_electron_hcalPFClusterIso, &b_std_vector_electron_hcalPFClusterIso);
+   //   fChain->SetBranchAddress("std_vector_electron_hcalPFClusterIso", &std_vector_electron_hcalPFClusterIso, &b_std_vector_electron_hcalPFClusterIso);
    fChain->SetBranchAddress("std_vector_jet_bjpb", &std_vector_jet_bjpb, &b_std_vector_jet_bjpb);
    fChain->SetBranchAddress("std_vector_jet_pfcsv", &std_vector_jet_pfcsv, &b_std_vector_jet_pfcsv);
-   fChain->SetBranchAddress("std_vector_electron_dPhiIn", &std_vector_electron_dPhiIn, &b_std_vector_electron_dPhiIn);
-   fChain->SetBranchAddress("std_vector_electron_hOverE", &std_vector_electron_hOverE, &b_std_vector_electron_hOverE);
+   //   fChain->SetBranchAddress("std_vector_electron_dPhiIn", &std_vector_electron_dPhiIn, &b_std_vector_electron_dPhiIn);
+   //   fChain->SetBranchAddress("std_vector_electron_hOverE", &std_vector_electron_hOverE, &b_std_vector_electron_hOverE);
    fChain->SetBranchAddress("std_vector_jet_NumberSoftMu", &std_vector_jet_NumberSoftMu, &b_std_vector_jet_NumberSoftMu);
    fChain->SetBranchAddress("std_vector_jet_HadronFlavour", &std_vector_jet_HadronFlavour, &b_std_vector_jet_HadronFlavour);
-   fChain->SetBranchAddress("std_vector_electron_scEta", &std_vector_electron_scEta, &b_std_vector_electron_scEta);
-   fChain->SetBranchAddress("std_vector_electron_expectedMissingInnerHits", &std_vector_electron_expectedMissingInnerHits, &b_std_vector_electron_expectedMissingInnerHits);
+   //   fChain->SetBranchAddress("std_vector_electron_scEta", &std_vector_electron_scEta, &b_std_vector_electron_scEta);
+   //   fChain->SetBranchAddress("std_vector_electron_expectedMissingInnerHits", &std_vector_electron_expectedMissingInnerHits, &b_std_vector_electron_expectedMissingInnerHits);
    fChain->SetBranchAddress("metFilter", &metFilter, &b_metFilter);
    fChain->SetBranchAddress("jetpt1", &jetpt1, &b_jetpt1);
    fChain->SetBranchAddress("jetpt2", &jetpt2, &b_jetpt2);

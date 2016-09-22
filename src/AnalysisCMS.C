@@ -681,25 +681,13 @@ void AnalysisCMS::EventDump()
     {
       int index = AnalysisLeptons[i].index;
 
-      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f",
+      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f\n",
 			    event,
 			    AnalysisLeptons[i].flavour,
 			    AnalysisLeptons[i].v.Pt(),
 			    AnalysisLeptons[i].v.Eta(),
 			    AnalysisLeptons[i].iso,
 			    std_vector_lepton_isTightLepton->at(index));
-
-      if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
-	{
-	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
-				std_vector_electron_scEta->at(index),
-				std_vector_electron_passConversionVeto->at(index),
-				std_vector_lepton_d0->at(index),
-				std_vector_lepton_dz->at(index),
-				std_vector_electron_expectedMissingInnerHits->at(index));
-	}
-      
-      txt_eventdump << Form("\n");
     }
 }
 
