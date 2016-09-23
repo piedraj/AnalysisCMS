@@ -80,35 +80,36 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
+    float trailing_ptmin = (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) ? 13. : 10.;
+
     bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
 
     pass_2l &= (Lepton1.v.Pt() > 20.);
-    pass_2l &= (Lepton2.v.Pt() > 20.);
-    pass_2l &= (_m2l > 20.);
-
-    bool pass = true;
+    pass_2l &= (Lepton2.v.Pt() > trailing_ptmin);
+    pass_2l &= (_m2l > 12.);
 
 
     // No cuts
     //--------------------------------------------------------------------------
-    FillLevelHistograms(Control_00_NoCuts, pass);    
+    FillLevelHistograms(Control_00_NoCuts, true);
 
 
     // Has 2 leptons
     //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    FillLevelHistograms(Control_01_Has2Leptons, pass);
+    FillLevelHistograms(Control_01_Has2Leptons, pass_2l);
 
 
-    // Z+jets
+    bool pass = true;
+
+
+    // R out/in
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
     pass &= (std_vector_lepton_pt->at(2) < 10.);
-    pass &= (_nbjet30csvv2m == 0);
+    pass &= (_njet > 1);
 
-    FillLevelHistograms(Control_02_ZJets, pass);
+    FillLevelHistograms(Control_02_Routin, pass);
 
 
     // Top
@@ -117,18 +118,14 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_njet > 1);
+    pass &= (_nbjet30csvv2m > 0);
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (MET.Et() > 50. && _dphillmet > 1.2);
 
-    bool btag   = (_nbjet30csvv2m > 0);
-    bool zveto  = (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    bool metcut = (MET.Et() > 50. && _dphillmet > 1.2);
-
-    FillLevelHistograms(Control_03_Routin,     pass);
-    FillLevelHistograms(Control_04_RoutinBtag, pass && btag);
-    FillLevelHistograms(Control_05_Top,        pass && zveto && metcut);
-    FillLevelHistograms(Control_06_TopBtag,    pass && zveto && metcut && btag);
+    FillLevelHistograms(Control_03_Top, pass);
 
 
-    // WW
+    // WW selection as in AN-16-182 (v3) 4.1
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
@@ -136,19 +133,20 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
-    pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     pass &= (_channel == em || MET.Et() > 40.);
     pass &= (_channel == em || mpmet > 40.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_07_WW, pass);
+    FillLevelHistograms(Control_04_WW, pass);
 
-    if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
-    if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
-    if (pass && _njet >= 2 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_2jet);
+    //    if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
+    //    if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
+    //    if (pass && _njet >= 2 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_2jet);
 
+
+    /*
 
     // WH
     //--------------------------------------------------------------------------
@@ -185,6 +183,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     if (pass_wh3l)      GetRecoWeightsLHE(list_vectors_weights_wh3l);
     if (pass_wh3l_ossf) GetRecoWeightsLHE(list_vectors_weights_wh3l_ossf);
     if (pass_wh3l_sssf) GetRecoWeightsLHE(list_vectors_weights_wh3l_sssf);
+
+    */
   }
 
 
