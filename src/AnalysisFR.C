@@ -18,6 +18,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
   if (fChain == 0) return;
 
   Setup(analysis, filename, luminosity);
+
+  // Define systematics histograms
+  //----------------------------------------------------------------------------
   
   // Define fake rate histograms
   //----------------------------------------------------------------------------

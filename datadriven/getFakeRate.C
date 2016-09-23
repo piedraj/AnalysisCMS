@@ -1,7 +1,7 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const Bool_t verbose = true;
+const Bool_t verbose = false;
 
 const Float_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
@@ -11,7 +11,7 @@ const Float_t elescale  = -1.;
 
 bool draw         = true;
 bool savepng      = true;
-bool setgrid      = false;
+bool setgrid      = true;
 bool Wsubtraction = true;
 bool Zsubtraction = true;
 
@@ -133,6 +133,8 @@ void DrawFR(TString flavour,
 	    Float_t jetet)
 {
   TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
+  TString title_EWKrel_tight = Form("%s EWK relative correction (tight) %s", flavour.Data(), variable.Data());
+  TString title_EWKrel_loose = Form("%s EWK relative correction (loose) %s", flavour.Data(), variable.Data());
   TString suffix = Form("%s_bin_%.0fGeV", variable.Data(), jetet);
 
   
@@ -150,8 +152,19 @@ void DrawFR(TString flavour,
   //----------------------------------------------------------------------------
   TH1D* h_FR     = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
   TH1D* h_FR_EWK = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable +"_EWK");
-      
+
   h_FR->Divide(h_tight_data, h_loose_data);
+
+  TH1D* h_tight_correction = (TH1D*)h_tight_zjets->Clone("h_" + flavour + "_FR_" + variable);;
+  TH1D* h_loose_correction = (TH1D*)h_loose_zjets->Clone("h_" + flavour + "_FR_" + variable);;
+  TH1D* h_EWKrel_tight = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_EWKrel_loose = (TH1D*)h_loose_data->Clone("h_" + flavour + "_FR_" + variable);
+  
+  h_tight_correction->Add(h_tight_wjets, 1);
+  h_loose_correction->Add(h_loose_wjets, 1);
+
+  h_EWKrel_tight->Divide(h_tight_correction, h_tight_data);    
+  h_EWKrel_loose->Divide(h_loose_correction, h_loose_data);    
 
   if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
   if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
@@ -159,7 +172,6 @@ void DrawFR(TString flavour,
   if (Wsubtraction) h_tight_data->Add(h_tight_wjets, lepscale);
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
-
 
   // Draw
   //----------------------------------------------------------------------------
@@ -172,6 +184,19 @@ void DrawFR(TString flavour,
 
   h_FR_EWK->Draw("ep,same");
 
+  TCanvas* canvas2 = new TCanvas(title_EWKrel_tight, title_EWKrel_tight, 450, 550);
+
+  canvas2->SetGridx(setgrid);
+  canvas2->SetGridy(setgrid);
+
+  h_EWKrel_tight -> Draw("ep");
+
+  TCanvas* canvas3 = new TCanvas(title_EWKrel_loose, title_EWKrel_loose, 450, 550);
+
+  canvas3->SetGridx(setgrid);
+  canvas3->SetGridy(setgrid);
+
+  h_EWKrel_loose -> Draw("ep");
 
   // Print bin values and errors
   //----------------------------------------------------------------------------
@@ -215,10 +240,27 @@ void DrawFR(TString flavour,
 
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
 
+  h_EWKrel_tight->SetTitle("");
+  h_EWKrel_tight->SetXTitle(xtitle);
+  h_EWKrel_tight->SetYTitle("EWK relative correction");
+  h_EWKrel_tight->GetXaxis()->SetTitleOffset(1.5);
+  h_EWKrel_tight->GetYaxis()->SetTitleOffset(1.8);
+  h_EWKrel_tight->SetLineWidth(2);
+  h_EWKrel_tight->SetMarkerStyle(kFullCircle);
+
+  h_EWKrel_loose->SetTitle("");
+  h_EWKrel_loose->SetXTitle(xtitle);
+  h_EWKrel_loose->SetYTitle("EWK relative correction");
+  h_EWKrel_loose->GetXaxis()->SetTitleOffset(1.5);
+  h_EWKrel_loose->GetYaxis()->SetTitleOffset(1.8);
+  h_EWKrel_loose->SetLineWidth(2);
+  h_EWKrel_loose->SetMarkerStyle(kFullCircle);
 
   // Save and write
   //----------------------------------------------------------------------------
   if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
+  if (savepng) canvas2->SaveAs(Form("png/%s_EWKrel_tight_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
+  if (savepng) canvas3->SaveAs(Form("png/%s_EWKrel_loose_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
 
   TFile* file = new TFile(Form("rootfilesFR/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
 
@@ -270,7 +312,7 @@ void DrawPR(TString  flavour,
   h_PR->GetXaxis()->SetTitleOffset(1.5);
   h_PR->GetYaxis()->SetTitleOffset(1.8);
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
 
 
   // Save
