@@ -190,8 +190,9 @@ void HistogramReader::Draw(TString hname,
 
     _mchist.push_back((TH1D*)dummy->Clone());
 
-    if (_luminosity_fb > 0) _mchist[i]->Scale(_luminosity_fb);
-    if (_mcscale[i]    > 0) _mchist[i]->Scale(_mcscale[i]);
+    if (_luminosity_fb > 0 && _mcscale[i] > -999) _mchist[i]->Scale(_luminosity_fb);
+
+    if (_mcscale[i] > 0) _mchist[i]->Scale(_mcscale[i]);
 
     SetHistogram(_mchist[i], _mccolor[i], 1001, kDot, kSolid, 0, ngroup, moveoverflow, xmin, xmax);
     
@@ -376,12 +377,12 @@ void HistogramReader::Draw(TString hname,
 
   // Legend
   //----------------------------------------------------------------------------
-  Float_t x0     = 0.220;  // x position of the data on the top left
-  Float_t y0     = 0.843;  // y position of the data on the top left
-  Float_t xdelta = 0.228;  // x width between columns
-  Float_t ydelta = 0.050;  // y width between rows
-  Int_t   nx     = 0;      // column number
-  Int_t   ny     = 0;      // row    number
+  Float_t x0     = 0.220;                         // x position of the data on the top left
+  Float_t y0     = 0.843;                         // y position of the data on the top left
+  Float_t xdelta = (_drawyield) ? 0.228 : 0.170;  // x width between columns
+  Float_t ydelta = 0.050;                         // y width between rows
+  Int_t   nx     = 0;                             // column number
+  Int_t   ny     = 0;                             // row    number
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
@@ -421,8 +422,11 @@ void HistogramReader::Draw(TString hname,
     }
   
   
-  // Search signals legend
+  // Search signals legend in a new column
   //----------------------------------------------------------------------------
+  nx++;
+  ny = 0;
+
   for (int i=0; i<_signalhist.size(); i++)
     {
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
@@ -887,11 +891,9 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   if (hist_yield < 0)
     {
-      printf("\n [HistogramReader::Yield] Warning: %s yield = %f. Will use yield = 0\n\n",
+      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
 	     hist->GetName(),
 	     hist_yield);
-
-      hist_yield = 0;
     }
 
   return hist_yield;

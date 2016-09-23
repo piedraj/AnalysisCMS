@@ -482,7 +482,7 @@ void AnalysisFR::GetAwayJets()
 
 /*
 
-   [2016/07/20]
+   [2016/07/20] Total luminosity = 6.274/fb
 
    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 

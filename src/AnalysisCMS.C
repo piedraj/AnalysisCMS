@@ -1,6 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
+#include "../top-reco/src/MassVariations.cc"
 
 
 //------------------------------------------------------------------------------
@@ -18,8 +19,42 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
   _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
   _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
+  _systematic_reco_do    = (systematic.Contains("Recodo"))    ? true : false;
+  _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
 
   _systematic = systematic;
+}
+
+
+//------------------------------------------------------------------------------
+// PassTrigger
+//------------------------------------------------------------------------------
+bool AnalysisCMS::PassTrigger()
+{
+  if (!std_vector_trigger) return true;
+
+  // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
+  // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
+  // HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*                      # 11
+  // HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*                    # 13
+  // HLT_IsoTkMu22_v*                                         # 42
+  // HLT_IsoMu22_v*                                           # 43
+  // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
+  // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
+  // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
+
+  bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
+  bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
+  bool pass_SingleMuon     = (std_vector_trigger->at(42) || std_vector_trigger->at(43));
+  bool pass_SingleElectron = (std_vector_trigger->at(0)  || std_vector_trigger->at(56));
+  bool pass_DoubleEG       = (std_vector_trigger->at(46));
+
+  if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
+  else if (_sample.Contains("DoubleMuon"))     return (!pass_MuonEG &&  pass_DoubleMuon);
+  else if (_sample.Contains("SingleMuon"))     return (!pass_MuonEG && !pass_DoubleMuon &&  pass_SingleMuon);
+  else if (_sample.Contains("DoubleEG"))       return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon &&  pass_DoubleEG);
+  else if (_sample.Contains("SingleElectron")) return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon && !pass_DoubleEG && pass_SingleElectron);
+  else                                         return true;
 }
 
 
@@ -128,12 +163,19 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_jet2mass      [ichannel][icut][ijet]->Fill(jetmass2,        _event_weight);
   h_jet2phi       [ichannel][icut][ijet]->Fill(jetphi2,         _event_weight);
   h_jet2pt        [ichannel][icut][ijet]->Fill(jetpt2,          _event_weight);
+  h_detall        [ichannel][icut][ijet]->Fill(_detall,         _event_weight);
   h_lep1eta       [ichannel][icut][ijet]->Fill(_lep1eta,        _event_weight);
   h_lep1phi       [ichannel][icut][ijet]->Fill(_lep1phi,        _event_weight);
   h_lep1pt        [ichannel][icut][ijet]->Fill(_lep1pt,         _event_weight);
   h_lep2eta       [ichannel][icut][ijet]->Fill(_lep2eta,        _event_weight);
   h_lep2phi       [ichannel][icut][ijet]->Fill(_lep2phi,        _event_weight);
   h_lep2pt        [ichannel][icut][ijet]->Fill(_lep2pt,         _event_weight);
+  h_lep1eta_gen   [ichannel][icut][ijet]->Fill(_lep1eta_gen,    _event_weight);
+  h_lep1phi_gen   [ichannel][icut][ijet]->Fill(_lep1phi_gen,    _event_weight);
+  h_lep1pt_gen    [ichannel][icut][ijet]->Fill(_lep1pt_gen,     _event_weight);
+  h_lep2eta_gen   [ichannel][icut][ijet]->Fill(_lep2eta_gen,    _event_weight);
+  h_lep2phi_gen   [ichannel][icut][ijet]->Fill(_lep2phi_gen,    _event_weight);
+  h_lep2pt_gen    [ichannel][icut][ijet]->Fill(_lep2pt_gen,     _event_weight);
   h_mc            [ichannel][icut][ijet]->Fill(_mc,             _event_weight);
   h_metPfType1    [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
   h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
@@ -157,6 +199,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_nbjet30cmvav2m[ichannel][icut][ijet]->Fill(_nbjet30cmvav2m, _event_weight);
   h_nbjet30cmvav2t[ichannel][icut][ijet]->Fill(_nbjet30cmvav2t, _event_weight);
   h_njet          [ichannel][icut][ijet]->Fill(_njet,           _event_weight);
+  h_top1eta_gen   [ichannel][icut][ijet]->Fill(_top1eta_gen,    _event_weight);
+  h_top1phi_gen   [ichannel][icut][ijet]->Fill(_top1phi_gen,    _event_weight);
+  h_top1pt_gen    [ichannel][icut][ijet]->Fill(_top1pt_gen,     _event_weight);
+  h_top2eta_gen   [ichannel][icut][ijet]->Fill(_top2eta_gen,    _event_weight);
+  h_top2phi_gen   [ichannel][icut][ijet]->Fill(_top2phi_gen,    _event_weight);
+  h_top2pt_gen    [ichannel][icut][ijet]->Fill(_top2pt_gen,     _event_weight);
+  h_m2t_gen       [ichannel][icut][ijet]->Fill(_m2t_gen,        _event_weight);
+  h_dphitt_gen    [ichannel][icut][ijet]->Fill(_dphitt_gen,     _event_weight);
+  h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
+  h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
 
 
   // TH2 histograms
@@ -275,8 +327,6 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
 
-  _is74X = (_filename.Contains("21Oct")) ? true : false;
-
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
@@ -290,10 +340,14 @@ void AnalysisCMS::Setup(TString analysis,
 
   _dataperiod = "";
 
-  if (_filename.Contains("21Jun2016_Run2016B")) _dataperiod = "_21Jun2016_Run2016B";
-  if (_filename.Contains("05Jul2016_Run2016B")) _dataperiod = "_05Jul2016_Run2016B";
-  if (_filename.Contains("08Jul2016_Run2016B")) _dataperiod = "_08Jul2016_Run2016B";
-  if (_filename.Contains("08Jul2016_Run2016C")) _dataperiod = "_08Jul2016_Run2016C";
+  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
+  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
 
   _isdatadriven = "";
 
@@ -335,44 +389,49 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight *= trigger;  // _event_weight *= trigger * metFilter;
+  _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
-    
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
 
 
-  // Includes btag, trigger and idiso systematic uncertainties
+  // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
   if (std_vector_lepton_idisoW)
     {
       float sf_btag = 1.0;
 
-/*      if (!_is74X) {
-	if (_analysis.EqualTo("Top") || _analysis.EqualTo("TTDM") || _analysis.EqualTo("Stop") || _analysis.EqualTo("Control"))
-	  {
-	    sf_btag = bPogSF_CSVM;
-	    if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
-	    if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
-	  }
-	else
-	  {
-	    sf_btag = bPogSF_CMVAL;
-	    if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-	    if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
-	  }
-      }
-*/
-      float sf_trigger = effTrigW; // To be updated for WZ
+      if (_analysis.EqualTo("Top")  ||
+	  _analysis.EqualTo("TTDM") ||
+	  _analysis.EqualTo("Stop") ||
+	  _analysis.EqualTo("Control"))
+	{
+	  sf_btag = bPogSF_CSVM;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
+	}
+      else
+	{
+	  sf_btag = bPogSF_CMVAL;
+	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
+	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
+	}
+
+      float sf_trigger = effTrigW;  // To be updated for WZ
       float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
+      float sf_reco    = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1);
+
+      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
+      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
 
       if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
       if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
 
-      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
-      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
+      if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
+      if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -380,25 +439,25 @@ void AnalysisCMS::ApplyWeights()
 
 	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
 	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
+	  
+	  sf_reco = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1) * std_vector_lepton_recoW->at(2);
+
+	  if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1)   * std_vector_lepton_recoW_Up->at(2);
+	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
-      _event_weight *= sf_btag * sf_trigger * sf_idiso;
+      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
     }
 
-  if (_sample.EqualTo("WWTo2L2Nu"))     _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))   _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu")) _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
+  if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
+  if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  if (_sample.EqualTo("Wg_MADGRAPHMLM"))
-    {
-      _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
-    }
-  else if (!_is74X)
-    {
-      _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
 
-      if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
-    }
+  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
   _event_weight *= _gen_ptll_weight;
 
@@ -412,13 +471,22 @@ void AnalysisCMS::ApplyWeights()
 
 //------------------------------------------------------------------------------
 // GetLeptons
-//
-// Leptons have pt >= 8 GeV after l2Sel
-// Leptons are tight after l2Sel
-//
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
+  // GEN
+  //----------------------------------------------------------------------------
+  _lep1eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(0) : -999;
+  _lep1phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(0) : -999;
+  _lep1pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(0)  : -999;
+
+  _lep2eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(1) : -999;
+  _lep2phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(1) : -999;
+  _lep2pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(1)  : -999;
+
+
+  // RECO
+  //----------------------------------------------------------------------------
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
@@ -476,7 +544,7 @@ void AnalysisCMS::GetLeptons()
     TLorentzVector tlv;
     
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
-    
+
     lep.v = tlv;
 
     AnalysisLeptons.push_back(lep);
@@ -494,6 +562,8 @@ void AnalysisCMS::GetLeptons()
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+
+  _detall = fabs(_lep1eta - _lep2eta);
 }
 
 
@@ -534,7 +604,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     Jet goodjet;
 
     goodjet.index    = i;
-    goodjet.cmvav2   = (_is74X) ? 1. : std_vector_jet_cmvav2->at(i);
+    goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.v        = tlv;
 
@@ -569,14 +639,36 @@ void AnalysisCMS::GetJets(float jet_eta_max)
 
 
 //------------------------------------------------------------------------------
+// GetTopReco
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTopReco()
+{
+  MassVariations theMass;
+
+  std::vector<TLorentzVector> myjets, nu1, nu2;
+  std::vector<Float_t> unc;
+
+  TVector2 myMET(metPfType1, metPfType1Phi);
+
+  for (int i=0; i<AnalysisJets.size(); i++) {
+
+    myjets.push_back(AnalysisJets.at(i).v);
+
+    unc.push_back(0.05);
+  }
+
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+  _topReco = nu1.size();
+}
+
+
+//------------------------------------------------------------------------------
 // GetJetPtSum
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJetPtSum()
 {
-  if (_njet < 2)
-    _sumjpt12 = -999;
-  else
-    _sumjpt12 = AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
+  _sumjpt12 = (_njet < 2) ? -999 : (AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt());
 }
 
 
@@ -589,25 +681,13 @@ void AnalysisCMS::EventDump()
     {
       int index = AnalysisLeptons[i].index;
 
-      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f",
+      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f\n",
 			    event,
 			    AnalysisLeptons[i].flavour,
 			    AnalysisLeptons[i].v.Pt(),
 			    AnalysisLeptons[i].v.Eta(),
 			    AnalysisLeptons[i].iso,
 			    std_vector_lepton_isTightLepton->at(index));
-
-      if (fabs(AnalysisLeptons[i].flavour) == ELECTRON_FLAVOUR)
-	{
-	  txt_eventdump << Form(":%f:%.0f:%f:%f:%.0f",
-				std_vector_electron_scEta->at(index),
-				std_vector_electron_passConversionVeto->at(index),
-				std_vector_lepton_d0->at(index),
-				std_vector_lepton_dz->at(index),
-				std_vector_electron_expectedMissingInnerHits->at(index));
-	}
-      
-      txt_eventdump << Form("\n");
     }
 }
 
@@ -817,43 +897,25 @@ void AnalysisCMS::GetPtWW()
 
 //------------------------------------------------------------------------------                                                               
 // GetSoftMuon
+// https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetSoftMuon()
 {
   _foundsoftmuon = false;
 
-  if (_is74X) {
-
-    for (UInt_t i=0; i<std_vector_jet_softMuPt->size(); ++i)
-      {
-        if (std_vector_jet_pt->at(i)       < 10.) continue;
-        if (std_vector_jet_pt->at(i)       > 30.) continue;
-        if (std_vector_jet_softMuPt->at(i) <  3.) continue;
-
-        _foundsoftmuon = true;
-
-        break;
-      }
-
-  } else {
-
-    // https://twiki.cern.ch/twiki/bin/view/CMS/WW2015Variables#Soft_muons
-    for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
+  for (UInt_t i=0; i<std_vector_softMuPt->size(); i++) {
       
-      if (std_vector_softMuPt->at(i)  < 3.)               continue;
-      if (std_vector_softMuD0->at(i)  < 0.2)              continue;
-      if (std_vector_softMuDz->at(i)  < 0.5)              continue;
-      if (std_vector_softMuIso->at(i) < 0.15)             continue;
-      if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
-      if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
+    if (std_vector_softMuPt->at(i)  < 3.)               continue;
+    if (std_vector_softMuD0->at(i)  < 0.2)              continue;
+    if (std_vector_softMuDz->at(i)  < 0.5)              continue;
+    if (std_vector_softMuIso->at(i) < 0.15)             continue;
+    if (!std_vector_softMuIsTrackerMuon->at(i))         continue;
+    if (!std_vector_softMuTMLastStationAngTight->at(i)) continue;
       
-      _foundsoftmuon = true;
-    
-      break;
-    }
-
+    _foundsoftmuon = true;
+      
+    break;
   }
-
 }
 
 
@@ -862,21 +924,6 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  if (!_filename.Contains("fakeW"))
-    {
-      _fake_weight            = 1.;
-      _fake_weight_elUp       = 1.;
-      _fake_weight_elDown     = 1.;
-      _fake_weight_elStatUp   = 1.;
-      _fake_weight_elStatDown = 1.;
-      _fake_weight_muUp       = 1.;
-      _fake_weight_muDown     = 1.;
-      _fake_weight_muStatUp   = 1.;
-      _fake_weight_muStatDown = 1.;
-
-      return;
-    }
-
   if (_analysis.EqualTo("WZ"))
     {
       _fake_weight            = fakeW3l;
@@ -888,45 +935,18 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muDown     = fakeW3lMuDown;
       _fake_weight_muStatUp   = fakeW3lstatMuUp;
       _fake_weight_muStatDown = fakeW3lstatMuDown;
-
-      return;
-    }
-
-  if (_njet == 0)
-    {
-      _fake_weight            = fakeW2l0j;
-      _fake_weight_elUp       = fakeW2l0jElUp;
-      _fake_weight_elDown     = fakeW2l0jElDown;
-      _fake_weight_elStatUp   = fakeW2l0jstatElUp;
-      _fake_weight_elStatDown = fakeW2l0jstatElDown;
-      _fake_weight_muUp       = fakeW2l0jMuUp;
-      _fake_weight_muDown     = fakeW2l0jMuDown;
-      _fake_weight_muStatUp   = fakeW2l0jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l0jstatMuDown;
-    }
-  else if (_njet == 1)
-    {
-      _fake_weight            = fakeW2l1j;
-      _fake_weight_elUp       = fakeW2l1jElUp;
-      _fake_weight_elDown     = fakeW2l1jElDown;
-      _fake_weight_elStatUp   = fakeW2l1jstatElUp;
-      _fake_weight_elStatDown = fakeW2l1jstatElDown;
-      _fake_weight_muUp       = fakeW2l1jMuUp;
-      _fake_weight_muDown     = fakeW2l1jMuDown;
-      _fake_weight_muStatUp   = fakeW2l1jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l1jstatMuDown;
     }
   else
     {
-      _fake_weight            = fakeW2l2j;
-      _fake_weight_elUp       = fakeW2l2jElUp;
-      _fake_weight_elDown     = fakeW2l2jElDown;
-      _fake_weight_elStatUp   = fakeW2l2jstatElUp;
-      _fake_weight_elStatDown = fakeW2l2jstatElDown;
-      _fake_weight_muUp       = fakeW2l2jMuUp;
-      _fake_weight_muDown     = fakeW2l2jMuDown;
-      _fake_weight_muStatUp   = fakeW2l2jstatMuUp;
-      _fake_weight_muStatDown = fakeW2l2jstatMuDown;
+      _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
+      _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
+      _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
+      _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
+      _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
+      _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
+      _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
+      _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
+      _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
     }
 }
 
@@ -936,23 +956,27 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup(float jet_eta_max)
 {
-  GetGenPtllWeight();
-
-  GetFakeWeights();
-
-  ApplyWeights();
- 
-  if (_is74X)
-    GetMET(pfType1Met, pfType1Metphi);
-  else
-    GetMET(metPfType1, metPfType1Phi);
+  GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
 
   GetLeptons();
 
+  GetTops();
+
+  GetTopReco();
+
   GetJets(jet_eta_max);
 
+  GetGenPtllWeight();
+
+  GetFakeWeights();
+
+  ApplyWeights();
+
+
+  // Additional analysis variables
+  //----------------------------------------------------------------------------
   GetDeltaPhi();
 
   GetDeltaR(); 
@@ -1016,7 +1040,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _sample + _dataperiod + ".txt");
+  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
   txt_summary << "\n";
   txt_summary << Form("   analysis: %s\n",        _analysis.Data());
@@ -1090,18 +1114,25 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphilmet1     [ichannel][icut][ijet] = new TH1D("h_dphilmet1"      + suffix, "",  100,    0,  3.2);
   h_dphilmet2     [ichannel][icut][ijet] = new TH1D("h_dphilmet2"      + suffix, "",  100,    0,  3.2);
   h_drll          [ichannel][icut][ijet] = new TH1D("h_drll"           + suffix, "",  100,    0,    5);
+  h_detall        [ichannel][icut][ijet] = new TH1D("h_detall"         + suffix, "",  100,    0,   10);
   h_lep1eta       [ichannel][icut][ijet] = new TH1D("h_lep1eta"        + suffix, "",   60,   -3,    3);
   h_lep2eta       [ichannel][icut][ijet] = new TH1D("h_lep2eta"        + suffix, "",   60,   -3,    3);
+  h_lep1eta_gen   [ichannel][icut][ijet] = new TH1D("h_lep1eta_gen"    + suffix, "",   60,   -3,    3);
+  h_lep2eta_gen   [ichannel][icut][ijet] = new TH1D("h_lep2eta_gen"    + suffix, "",   60,   -3,    3);
   h_jet1eta       [ichannel][icut][ijet] = new TH1D("h_jet1eta"        + suffix, "",  100,   -5,    5);
   h_jet2eta       [ichannel][icut][ijet] = new TH1D("h_jet2eta"        + suffix, "",  100,   -5,    5);
   h_lep1phi       [ichannel][icut][ijet] = new TH1D("h_lep1phi"        + suffix, "",  200, -3.2,  3.2);
   h_lep2phi       [ichannel][icut][ijet] = new TH1D("h_lep2phi"        + suffix, "",  200, -3.2,  3.2);
+  h_lep1phi_gen   [ichannel][icut][ijet] = new TH1D("h_lep1phi_gen"    + suffix, "",  200, -3.2,  3.2);
+  h_lep2phi_gen   [ichannel][icut][ijet] = new TH1D("h_lep2phi_gen"    + suffix, "",  200, -3.2,  3.2);
   h_jet1phi       [ichannel][icut][ijet] = new TH1D("h_jet1phi"        + suffix, "",  200, -3.2,  3.2);
   h_jet2phi       [ichannel][icut][ijet] = new TH1D("h_jet2phi"        + suffix, "",  200, -3.2,  3.2);
   h_metPfType1Phi [ichannel][icut][ijet] = new TH1D("h_metPfType1Phi"  + suffix, "",  200, -3.2,  3.2);
   h_metTtrkPhi    [ichannel][icut][ijet] = new TH1D("h_metTtrkPhi"     + suffix, "",  200, -3.2,  3.2);
   h_lep1pt        [ichannel][icut][ijet] = new TH1D("h_lep1pt"         + suffix, "", 3000,    0, 3000);
   h_lep2pt        [ichannel][icut][ijet] = new TH1D("h_lep2pt"         + suffix, "", 3000,    0, 3000);
+  h_lep1pt_gen    [ichannel][icut][ijet] = new TH1D("h_lep1pt_gen"     + suffix, "", 3000,    0, 3000);
+  h_lep2pt_gen    [ichannel][icut][ijet] = new TH1D("h_lep2pt_gen"     + suffix, "", 3000,    0, 3000);
   h_jet1pt        [ichannel][icut][ijet] = new TH1D("h_jet1pt"         + suffix, "", 3000,    0, 3000);
   h_jet2pt        [ichannel][icut][ijet] = new TH1D("h_jet2pt"         + suffix, "", 3000,    0, 3000);
   h_jet1mass      [ichannel][icut][ijet] = new TH1D("h_jet1mass"       + suffix, "",  100,    0,  100);
@@ -1130,6 +1161,16 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_nbjet30cmvav2m[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2m" + suffix, "",    7, -0.5,  6.5);
   h_nbjet30cmvav2t[ichannel][icut][ijet] = new TH1D("h_nbjet30cmvav2t" + suffix, "",    7, -0.5,  6.5);
   h_njet          [ichannel][icut][ijet] = new TH1D("h_njet"           + suffix, "",    7, -0.5,  6.5);
+  h_top1pt_gen    [ichannel][icut][ijet] = new TH1D("h_top1pt_gen"     + suffix, "", 3000,    0, 3000);
+  h_top1eta_gen   [ichannel][icut][ijet] = new TH1D("h_top1eta_gen"    + suffix, "",   60,   -3,    3);  
+  h_top1phi_gen   [ichannel][icut][ijet] = new TH1D("h_top1phi_gen"    + suffix, "",  200, -3.2,  3.2);
+  h_top2pt_gen    [ichannel][icut][ijet] = new TH1D("h_top2pt_gen"     + suffix, "", 3000,    0, 3000);
+  h_top2eta_gen   [ichannel][icut][ijet] = new TH1D("h_top2eta_gen"    + suffix, "",   60,   -3,    3);  
+  h_top2phi_gen   [ichannel][icut][ijet] = new TH1D("h_top2phi_gen"    + suffix, "",  200, -3.2,  3.2);
+  h_m2t_gen       [ichannel][icut][ijet] = new TH1D("h_m2t_gen"        + suffix, "", 3000,    0, 3000);
+  h_dphitt_gen    [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"     + suffix, "",  100,    0,  3.2);
+  h_detatt_gen    [ichannel][icut][ijet] = new TH1D("h_detatt_gen"     + suffix, "",  100,    0,   10);
+  h_topReco       [ichannel][icut][ijet] = new TH1D("h_topReco"        + suffix, "",   10,    0,   10);
 
 
   // TH2 histograms
@@ -1149,7 +1190,7 @@ void AnalysisCMS::OpenMinitree()
 
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _sample + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
 
 
   // Minitree branches
@@ -1217,50 +1258,47 @@ void AnalysisCMS::OpenMinitree()
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
   // Stop variables
-  minitree->Branch("dyll",         &_dyll,         "dyll/F");
-  minitree->Branch("ptbll",        &_ptbll,        "ptbll/F");
-  minitree->Branch("dphimetptbll", &_dphimetptbll, "dphimetptbll/F");
-  minitree->Branch("mt2ll",        &_mt2ll,        "mt2ll/F");
-  minitree->Branch("dphimetjet",   &_dphimetjet,   "dphimetjet/F");
-  minitree->Branch("mllbb",        &_mllbb,        "mllbb/F");
-  minitree->Branch("meff",         &_meff,         "meff/F");
-  minitree->Branch("mt2bb",        &_mt2bb,        "mt2bb/F");
-  minitree->Branch("mt2lblb",      &_mt2lblb,      "mt2lblb/F");
-  minitree->Branch("mlb1",         &_mlb1,         "mlb1/F");
-  minitree->Branch("mlb2",         &_mlb2,         "mlb2/F");
-
-  if (_analysis.EqualTo("Stop")) {
-    minitree->Branch("mt2lblbcomb",     &_mt2lblbcomb,     "mt2lblbcomb/F");
-    minitree->Branch("mt2bbtrue",       &_mt2bbtrue,       "mt2bbtrue/F");
-    minitree->Branch("mt2lblbtrue",     &_mt2lblbtrue,     "mt2lblbtrue/F");
-    minitree->Branch("mt2lblbmatch",    &_mt2lblbmatch,    "mt2lblbmatch/F");
-    minitree->Branch("mlb1comb",        &_mlb1comb,        "mlb1comb/F");
-    minitree->Branch("mlb2comb",        &_mlb2comb,        "mlb2comb/F");
-    minitree->Branch("mlb1true",        &_mlb1true,        "mlb1true/F");
-    minitree->Branch("mlb2true",        &_mlb2true,        "mlb2true/F");
-    minitree->Branch("bjet1pt",         &_bjet1pt,         "bjet1pt/F");
-    minitree->Branch("bjet1eta",        &_bjet1eta,        "bjet1eta/F");
-    minitree->Branch("bjet1phi",        &_bjet1phi,        "bjet1phi/F");
-    minitree->Branch("bjet1mass",       &_bjet1mass,       "bjet1mass/F");
-    minitree->Branch("bjet1csvv2ivf",   &_bjet1csvv2ivf,   "bjet1csvv2ivf/F");
-    minitree->Branch("bjet2pt",         &_bjet2pt,         "bjet2pt/F");
-    minitree->Branch("bjet2eta",        &_bjet2eta,        "bjet2eta/F");
-    minitree->Branch("bjet2phi",        &_bjet2phi,        "bjet2phi/F");
-    minitree->Branch("bjet2mass",       &_bjet2mass,       "bjet2mass/F");
-    minitree->Branch("bjet2csvv2ivf",   &_bjet2csvv2ivf,   "bjet2csvv2ivf/F");
-    minitree->Branch("tjet1pt",         &_tjet1pt,         "tjet1pt/F");
-    minitree->Branch("tjet1eta",        &_tjet1eta,        "tjet1eta/F");
-    minitree->Branch("tjet1phi",        &_tjet1phi,        "tjet1phi/F");
-    minitree->Branch("tjet1mass",       &_tjet1mass,       "tjet1mass/F");
-    minitree->Branch("tjet1csvv2ivf",   &_tjet1csvv2ivf,   "tjet1csvv2ivf/F");
-    minitree->Branch("tjet1assignment", &_tjet1assignment, "tjet1assignment/F");
-    minitree->Branch("tjet2pt",         &_tjet2pt,         "tjet2pt/F");
-    minitree->Branch("tjet2eta",        &_tjet2eta,        "tjet2eta/F");
-    minitree->Branch("tjet2phi",        &_tjet2phi,        "tjet2phi/F");
-    minitree->Branch("tjet2mass",       &_tjet2mass,       "tjet2mass/F");
-    minitree->Branch("tjet2csvv2ivf",   &_tjet2csvv2ivf,   "tjet2csvv2ivf/F");
-    minitree->Branch("tjet2assignment", &_tjet2assignment, "tjet2assignment/F");
-  }
+  minitree->Branch("dyll",            &_dyll,            "dyll/F");
+  minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
+  minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");
+  minitree->Branch("mt2ll",           &_mt2ll,           "mt2ll/F");
+  minitree->Branch("dphimetjet",      &_dphimetjet,      "dphimetjet/F");
+  minitree->Branch("mllbb",           &_mllbb,           "mllbb/F");
+  minitree->Branch("meff",            &_meff,            "meff/F");
+  minitree->Branch("mt2bb",           &_mt2bb,           "mt2bb/F");
+  minitree->Branch("mt2lblb",         &_mt2lblb,         "mt2lblb/F");
+  minitree->Branch("mlb1",            &_mlb1,            "mlb1/F");
+  minitree->Branch("mlb2",            &_mlb2,            "mlb2/F");
+  minitree->Branch("mt2lblbcomb",     &_mt2lblbcomb,     "mt2lblbcomb/F");
+  minitree->Branch("mt2bbtrue",       &_mt2bbtrue,       "mt2bbtrue/F");
+  minitree->Branch("mt2lblbtrue",     &_mt2lblbtrue,     "mt2lblbtrue/F");
+  minitree->Branch("mt2lblbmatch",    &_mt2lblbmatch,    "mt2lblbmatch/F");
+  minitree->Branch("mlb1comb",        &_mlb1comb,        "mlb1comb/F");
+  minitree->Branch("mlb2comb",        &_mlb2comb,        "mlb2comb/F");
+  minitree->Branch("mlb1true",        &_mlb1true,        "mlb1true/F");
+  minitree->Branch("mlb2true",        &_mlb2true,        "mlb2true/F");
+  minitree->Branch("bjet1pt",         &_bjet1pt,         "bjet1pt/F");
+  minitree->Branch("bjet1eta",        &_bjet1eta,        "bjet1eta/F");
+  minitree->Branch("bjet1phi",        &_bjet1phi,        "bjet1phi/F");
+  minitree->Branch("bjet1mass",       &_bjet1mass,       "bjet1mass/F");
+  minitree->Branch("bjet1csvv2ivf",   &_bjet1csvv2ivf,   "bjet1csvv2ivf/F");
+  minitree->Branch("bjet2pt",         &_bjet2pt,         "bjet2pt/F");
+  minitree->Branch("bjet2eta",        &_bjet2eta,        "bjet2eta/F");
+  minitree->Branch("bjet2phi",        &_bjet2phi,        "bjet2phi/F");
+  minitree->Branch("bjet2mass",       &_bjet2mass,       "bjet2mass/F");
+  minitree->Branch("bjet2csvv2ivf",   &_bjet2csvv2ivf,   "bjet2csvv2ivf/F");
+  minitree->Branch("tjet1pt",         &_tjet1pt,         "tjet1pt/F");
+  minitree->Branch("tjet1eta",        &_tjet1eta,        "tjet1eta/F");
+  minitree->Branch("tjet1phi",        &_tjet1phi,        "tjet1phi/F");
+  minitree->Branch("tjet1mass",       &_tjet1mass,       "tjet1mass/F");
+  minitree->Branch("tjet1csvv2ivf",   &_tjet1csvv2ivf,   "tjet1csvv2ivf/F");
+  minitree->Branch("tjet1assignment", &_tjet1assignment, "tjet1assignment/F");
+  minitree->Branch("tjet2pt",         &_tjet2pt,         "tjet2pt/F");
+  minitree->Branch("tjet2eta",        &_tjet2eta,        "tjet2eta/F");
+  minitree->Branch("tjet2phi",        &_tjet2phi,        "tjet2phi/F");
+  minitree->Branch("tjet2mass",       &_tjet2mass,       "tjet2mass/F");
+  minitree->Branch("tjet2csvv2ivf",   &_tjet2csvv2ivf,   "tjet2csvv2ivf/F");
+  minitree->Branch("tjet2assignment", &_tjet2assignment, "tjet2assignment/F");
 }
 
 
@@ -1273,8 +1311,7 @@ void AnalysisCMS::GetGenPtllWeight()
 
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
-  //  _gen_ptll_weight = 0.95 - 0.1*TMath::Erf((gen_ptll-14.)/8.8);                        // 76x
-  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // 80x
+  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
 }
 
 
@@ -1284,9 +1321,9 @@ void AnalysisCMS::GetGenPtllWeight()
 //------------------------------------------------------------------------------
 TH1F* AnalysisCMS::GetGenWeightsLHE()
 {
-  TFile* f = new TFile(_filename, "read");
+  TFile* file = TFile::Open(_filename);
 
-  TH1F* dummy = (TH1F*)f->Get("list_vectors_weights");
+  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
 
   root_output->cd();
 
@@ -1368,11 +1405,11 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 			       int            MT2Type,
 			       double         MT2Precision) 
 {
-  double mVisA = fabs(VisibleA.M());  // Mass of visible object on side A. Must be >= 0.
-  double mVisB = fabs(VisibleB.M());  // Mass of visible object on side B. Must be >= 0.
+  double mVisA = fabs(VisibleA.M());  // Mass of visible object on side A. Must be >= 0
+  double mVisB = fabs(VisibleB.M());  // Mass of visible object on side B. Must be >= 0
 
-  double chiA = 0.;  // Hypothesised mass of invisible on side A. Must be >= 0.
-  double chiB = 0.;  // Hypothesised mass of invisible on side B. Must be >= 0.
+  double chiA = 0.;  // Hypothesised mass of invisible on side A. Must be >= 0
+  double chiB = 0.;  // Hypothesised mass of invisible on side B. Must be >= 0
   
   if (MT2Type == 1)
     {
@@ -1382,16 +1419,19 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
       chiB  = 80.;
     }
 
-  double pxA = VisibleA.Px();  // x momentum of visible object on side A.
-  double pyA = VisibleA.Py();  // y momentum of visible object on side A.
+  double pxA = VisibleA.Px();  // x momentum of visible object on side A
+  double pyA = VisibleA.Py();  // y momentum of visible object on side A
   
-  double pxB = VisibleB.Px();  // x momentum of visible object on side B.
-  double pyB = VisibleB.Py();  // y momentum of visible object on side B.
+  double pxB = VisibleB.Px();  // x momentum of visible object on side B
+  double pyB = VisibleB.Py();  // y momentum of visible object on side B
   
-  double pxMiss = Invisible.Px();  // x component of missing transverse momentum.
-  double pyMiss = Invisible.Py();  // y component of missing transverse momentum.
+  double pxMiss = Invisible.Px();  // x component of missing transverse momentum
+  double pyMiss = Invisible.Py();  // y component of missing transverse momentum
   
-  double desiredPrecisionOnMt2 = MT2Precision;  // Must be >= 0. If 0 alg aims for machine precision. If >0, MT2 computed to supplied absolute precision.
+  // Must be >= 0
+  // If = 0 algorithm aims for machine precision
+  // If > 0 MT2 computed to supplied absolute precision
+  double desiredPrecisionOnMt2 = MT2Precision;
   
   //  asymm_mt2_lester_bisect::disableCopyrightMessage();
   
@@ -1491,18 +1531,18 @@ void AnalysisCMS::GetStopVar()
 	if (combinatorialMT2lblb < _mt2lblb) { 
 	 
 	  _mt2lblbcomb = _mt2lblb;
-	  _mt2lblb = combinatorialMT2lblb;
+	  _mt2lblb     = combinatorialMT2lblb;
 
-	  _tjet1pt = AnalysisJets[bjetindex[1]].v.Pt();
-	  _tjet1eta = AnalysisJets[bjetindex[1]].v.Eta();
-	  _tjet1phi = AnalysisJets[bjetindex[1]].v.Phi();
-	  _tjet1mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
+	  _tjet1pt       = AnalysisJets[bjetindex[1]].v.Pt();
+	  _tjet1eta      = AnalysisJets[bjetindex[1]].v.Eta();
+	  _tjet1phi      = AnalysisJets[bjetindex[1]].v.Phi();
+	  _tjet1mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
 	  _tjet1csvv2ivf = AnalysisJets[bjetindex[1]].csvv2ivf;
 
-	  _tjet2pt = AnalysisJets[bjetindex[0]].v.Pt();
-	  _tjet2eta = AnalysisJets[bjetindex[0]].v.Eta();
-	  _tjet2phi = AnalysisJets[bjetindex[0]].v.Phi();
-	  _tjet2mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
+	  _tjet2pt       = AnalysisJets[bjetindex[0]].v.Pt();
+	  _tjet2eta      = AnalysisJets[bjetindex[0]].v.Eta();
+	  _tjet2phi      = AnalysisJets[bjetindex[0]].v.Phi();
+	  _tjet2mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
 	  _tjet2csvv2ivf = AnalysisJets[bjetindex[0]].csvv2ivf;
 
 	  _mlb1 = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
@@ -1775,7 +1815,70 @@ void AnalysisCMS::GetStopVar()
     _mt2lblbtrue = ComputeMT2(AnalysisJets[IdxB1].v + Lepton1.v, AnalysisJets[IdxB2].v + Lepton2.v, MET, 2);
 
     _mt2lblbmatch = ComputeMT2(AnalysisJets[IdxB2].v + Lepton1.v, AnalysisJets[IdxB1].v + Lepton2.v, MET, 2);
-
   }
+}
 
+
+//------------------------------------------------------------------------------
+// GetTops
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTops()
+{
+  _top1eta_gen = -999;
+  _top1phi_gen = -999;
+  _top1pt_gen  = -999;
+  _top2eta_gen = -999;
+  _top2phi_gen = -999;
+  _top2pt_gen  = -999;
+  _m2t_gen     = -999; 
+  _dphitt_gen  = -999;
+  _detatt_gen  = -999;
+
+  if (!_ismc) return; 
+
+  float eta1 = -999;
+  float phi1 = -999;
+  float pt1  = -999;  
+
+  int ntop = 0; 
+
+  for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
+
+    float parton_pt            = std_vector_partonGen_pt->at(i);
+    float parton_eta           = std_vector_partonGen_eta->at(i);
+    float parton_phi           = std_vector_partonGen_phi->at(i);
+    float parton_pid           = std_vector_partonGen_pid->at(i);
+    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
+
+    if (parton_pid != 6 && parton_isHardProcess != 1) continue; 
+
+    ntop += 1; 
+
+    if (ntop > 1) {
+
+      if (fabs(eta1 - parton_eta) < 0.5 && fabs(phi1 - parton_phi) < 0.2) continue;
+
+      _top1eta_gen = eta1; 
+      _top1phi_gen = phi1; 
+      _top1pt_gen  = pt1; 
+      _top2eta_gen = parton_eta;  
+      _top2phi_gen = parton_phi;  
+      _top2pt_gen  = parton_pt;
+      
+      TLorentzVector t1, t2; 
+
+      t1.SetPtEtaPhiM(pt1,       eta1,       phi1,       173.);
+      t2.SetPtEtaPhiM(parton_pt, parton_eta, parton_phi, 173.);
+
+      _m2t_gen    = (t1+t2).M();  
+      _dphitt_gen = fabs(t1.DeltaPhi(t2));
+      _detatt_gen = fabs(t1.Eta() - t2.Eta());
+	
+      break;
+    }
+
+    eta1 = parton_eta;
+    phi1 = parton_phi;
+    pt1  = parton_pt;
+  }
 }

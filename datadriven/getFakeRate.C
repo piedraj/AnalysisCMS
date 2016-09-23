@@ -1,6 +1,8 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
+const Bool_t verbose = false;
+
 const Float_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
 const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
 
@@ -166,6 +168,27 @@ void DrawFR(TString flavour,
   h_FR_EWK->Draw("ep,same");
 
 
+  // Print bin values and errors
+  //----------------------------------------------------------------------------
+  if (variable.EqualTo("pt") && verbose)
+    {
+      printf("\n");
+
+      for (int i=1; i<=h_FR_EWK->GetNbinsX(); i++)
+	{
+	  float ptvalue = h_FR_EWK->GetBinLowEdge(i);
+	
+	  printf(" bin[%d]   pt: %.0f GeV   fr: %.3f +- %.3f\n",
+		 i,
+		 ptvalue,
+		 h_FR_EWK->GetBinContent(i),
+		 h_FR_EWK->GetBinError(i));
+	}
+
+      printf("\n");
+    }
+
+
   // Cosmetics
   //----------------------------------------------------------------------------
   h_FR->SetAxisRange(0, 1, "Y");
@@ -188,9 +211,16 @@ void DrawFR(TString flavour,
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
 
 
-  // Save
+  // Save and write
   //----------------------------------------------------------------------------
   if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
+
+  TFile* file = new TFile(Form("rootfiles/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
+
+  h_FR->Write();
+  h_FR_EWK->Write();
+  
+  file->Close();
 }
 
 

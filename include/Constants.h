@@ -15,11 +15,11 @@
 #include "BTagWorkingPoints80X.h"
 
 
-const double lumi_fb_2016       = 6.324;  // 2016B + 2016C
-const double lumi_fb_2016_susy  = 0.868;  // From run 271036 to run 274240
-const double lumi_fb_2015_dm    = 1.324;  // From run 256630 to run 258750 --> Update to 2016
-const double lumi_fb_2015       = 2.318;  // 2015C + 2015D
-const double lumi_error_percent = 2.7;
+const double lumi_fb_2016       = 12.3;    // 2016B + 2016C + 2016D
+const double lumi_fb_2016_susy  =  0.868;  // From run 271036 to run 274240
+const double lumi_fb_2015_dm    =  1.324;  // From run 256630 to run 258750 --> Update to 2016
+const double lumi_fb_2015       =  2.318;  // 2015C + 2015D
+const double lumi_error_percent =  6.2;
 
 const int ELECTRON_FLAVOUR = 11;
 const int MUON_FLAVOUR     = 13;
@@ -51,6 +51,8 @@ enum {
   Idisoup,
   Triggerdo,
   Triggerup,
+  Recodo,
+  Recoup,
   nsystematic  // This line should be always last
 };
 
@@ -69,7 +71,9 @@ const TString ssystematic[nsystematic] = {
   "Idisodo",
   "Idisoup",
   "Triggerdo",
-  "Triggerup"
+  "Triggerup",
+  "Recodo",
+  "Recoup"
 };
 
 
@@ -79,7 +83,7 @@ const Color_t color_Signal    = kRed;
 const Color_t color_Fakes     = kGray+1;
 const Color_t color_Data      = kBlack;
 const Color_t color_WZTo3LNu  = kOrange-2;
-const Color_t color_ZZ        = kOrange+3;
+const Color_t color_VZ        = kOrange+3;
 const Color_t color_TTTo2L2Nu = kYellow;
 const Color_t color_ST        = kYellow+3;
 const Color_t color_WW        = kAzure-9;
