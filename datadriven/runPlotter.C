@@ -81,6 +81,16 @@ void DrawLeptonPlots(TString lepton,
     plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", logY, true, 0, 200);
     plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", logY, true, 0, 200);
 
+    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
+    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
+    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
+    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
+
+    plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", linY, true,  0, 200);
+    plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", linY, true,  0, 200);
+    plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", logY, true,  0, 200);
+    plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", logY, true,  0, 200);
+
   } else {
 
     plotter->Draw(prefix + "loose_pt"  + suffix, "Loose pt",  20, 0, "GeV", linY, true, 35, 200);
