@@ -2,7 +2,8 @@
 
 if [ $# -lt 1 ] ; then
     echo "  "
-    echo "  ./merge.sh ../rootfiles/nominal/FR"
+    echo "  ./merge.sh ../rootfilesFR/nominal/FR"
+    echo "  ./merge.sh ../rootfilesPR/nominal/PR"
     echo "  "
     exit -1
 fi

@@ -1,10 +1,10 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
-//#include "CutsFR.h"
+//#include "CutsControl.h"
+#include "CutsFR.h"
+//#include "CutsPR.h"
 //#include "CutsMonoH.h"
-//#include "CutsSS.h"
 //#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
