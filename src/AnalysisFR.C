@@ -19,9 +19,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
   Setup(analysis, filename, luminosity);
 
-  // Define systematics histograms
-  //----------------------------------------------------------------------------
-  
   // Define fake rate histograms
   //----------------------------------------------------------------------------
   for (int i=0; i<ncut; i++) {

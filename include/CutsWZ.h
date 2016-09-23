@@ -1,4 +1,4 @@
-1;95;0c#if !defined(MYLIB_CUTSWZ_H)
+#if !defined(MYLIB_CUTSWZ_H)
 #define MYLIB_CUTSWZ_H 1
 
 #include "TString.h"
