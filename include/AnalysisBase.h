@@ -159,7 +159,7 @@ public :
    Float_t         metPfType1SumEt;
    Float_t         metPfType1UnclEnDn;
    Float_t         metPfType1UnclEnUp;
-   Float_t         metPuppi;
+   //   Float_t         metPuppi;
    Float_t         metTtrk;
    Float_t         metTtrkPhi;
    //   Float_t         mllg;
@@ -249,20 +249,20 @@ public :
    vector<float>   *std_vector_jetGen_phi;
    vector<float>   *std_vector_jetGen_pt;
    vector<float>   *std_vector_leptonGen_eta;
-   vector<float>   *std_vector_leptonGen_fromHardProcess;
-   vector<float>   *std_vector_leptonGen_isDirectHadronDecayProduct;
-   vector<float>   *std_vector_leptonGen_isDirectPromptTauDecayProduct;
-   vector<float>   *std_vector_leptonGen_isPrompt;
-   vector<float>   *std_vector_leptonGen_isTauDecayProduct;
+   //   vector<float>   *std_vector_leptonGen_fromHardProcess;
+   //   vector<float>   *std_vector_leptonGen_isDirectHadronDecayProduct;
+   //   vector<float>   *std_vector_leptonGen_isDirectPromptTauDecayProduct;
+   //   vector<float>   *std_vector_leptonGen_isPrompt;
+   //   vector<float>   *std_vector_leptonGen_isTauDecayProduct;
    vector<float>   *std_vector_leptonGen_phi;
    vector<float>   *std_vector_leptonGen_pid;
    vector<float>   *std_vector_leptonGen_pt;
-   vector<float>   *std_vector_leptonGen_status;
+   //   vector<float>   *std_vector_leptonGen_status;
    vector<float>   *std_vector_neutrinoGen_eta;
-   vector<float>   *std_vector_neutrinoGen_isDirectPromptTauDecayProduct;
-   vector<float>   *std_vector_neutrinoGen_isPrompt;
+   //   vector<float>   *std_vector_neutrinoGen_isDirectPromptTauDecayProduct;
+   //   vector<float>   *std_vector_neutrinoGen_isPrompt;
    vector<float>   *std_vector_neutrinoGen_phi;
-   vector<float>   *std_vector_neutrinoGen_pid;
+   //   vector<float>   *std_vector_neutrinoGen_pid;
    vector<float>   *std_vector_neutrinoGen_pt;
    vector<float>   *std_vector_partonGen_eta;
    vector<float>   *std_vector_partonGen_isHardProcess;
@@ -631,7 +631,7 @@ public :
    TBranch        *b_metPfType1SumEt;   //!
    TBranch        *b_metPfType1UnclEnDn;   //!
    TBranch        *b_metPfType1UnclEnUp;   //!
-   TBranch        *b_metPuppi;   //!
+   //   TBranch        *b_metPuppi;   //!
    TBranch        *b_metTtrk;   //!
    TBranch        *b_metTtrkPhi;   //!
    //   TBranch        *b_mllg;   //!
@@ -700,20 +700,20 @@ public :
    TBranch        *b_std_vector_jetGen_phi;   //!
    TBranch        *b_std_vector_jetGen_pt;   //!
    TBranch        *b_std_vector_leptonGen_eta;   //!
-   TBranch        *b_std_vector_leptonGen_fromHardProcess;   //!
-   TBranch        *b_std_vector_leptonGen_isDirectHadronDecayProduct;   //!
-   TBranch        *b_std_vector_leptonGen_isDirectPromptTauDecayProduct;   //!
-   TBranch        *b_std_vector_leptonGen_isPrompt;   //!
-   TBranch        *b_std_vector_leptonGen_isTauDecayProduct;   //!
+   //   TBranch        *b_std_vector_leptonGen_fromHardProcess;   //!
+   //   TBranch        *b_std_vector_leptonGen_isDirectHadronDecayProduct;   //!
+   //   TBranch        *b_std_vector_leptonGen_isDirectPromptTauDecayProduct;   //!
+   //   TBranch        *b_std_vector_leptonGen_isPrompt;   //!
+   //   TBranch        *b_std_vector_leptonGen_isTauDecayProduct;   //!
    TBranch        *b_std_vector_leptonGen_phi;   //!
    TBranch        *b_std_vector_leptonGen_pid;   //!
    TBranch        *b_std_vector_leptonGen_pt;   //!
-   TBranch        *b_std_vector_leptonGen_status;   //!
+   //   TBranch        *b_std_vector_leptonGen_status;   //!
    TBranch        *b_std_vector_neutrinoGen_eta;   //!
-   TBranch        *b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct;   //!
-   TBranch        *b_std_vector_neutrinoGen_isPrompt;   //!
+   //   TBranch        *b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct;   //!
+   //   TBranch        *b_std_vector_neutrinoGen_isPrompt;   //!
    TBranch        *b_std_vector_neutrinoGen_phi;   //!
-   TBranch        *b_std_vector_neutrinoGen_pid;   //!
+   //   TBranch        *b_std_vector_neutrinoGen_pid;   //!
    TBranch        *b_std_vector_neutrinoGen_pt;   //!
    TBranch        *b_std_vector_partonGen_eta;   //!
    TBranch        *b_std_vector_partonGen_isHardProcess;   //!
@@ -1059,20 +1059,20 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_jetGen_phi = 0;
    std_vector_jetGen_pt = 0;
    std_vector_leptonGen_eta = 0;
-   std_vector_leptonGen_fromHardProcess = 0;
-   std_vector_leptonGen_isDirectHadronDecayProduct = 0;
-   std_vector_leptonGen_isDirectPromptTauDecayProduct = 0;
-   std_vector_leptonGen_isPrompt = 0;
-   std_vector_leptonGen_isTauDecayProduct = 0;
+   //   std_vector_leptonGen_fromHardProcess = 0;
+   //   std_vector_leptonGen_isDirectHadronDecayProduct = 0;
+   //   std_vector_leptonGen_isDirectPromptTauDecayProduct = 0;
+   //   std_vector_leptonGen_isPrompt = 0;
+   //   std_vector_leptonGen_isTauDecayProduct = 0;
    std_vector_leptonGen_phi = 0;
    std_vector_leptonGen_pid = 0;
    std_vector_leptonGen_pt = 0;
-   std_vector_leptonGen_status = 0;
+   //   std_vector_leptonGen_status = 0;
    std_vector_neutrinoGen_eta = 0;
-   std_vector_neutrinoGen_isDirectPromptTauDecayProduct = 0;
-   std_vector_neutrinoGen_isPrompt = 0;
+   //   std_vector_neutrinoGen_isDirectPromptTauDecayProduct = 0;
+   //   std_vector_neutrinoGen_isPrompt = 0;
    std_vector_neutrinoGen_phi = 0;
-   std_vector_neutrinoGen_pid = 0;
+   //   std_vector_neutrinoGen_pid = 0;
    std_vector_neutrinoGen_pt = 0;
    std_vector_partonGen_eta = 0;
    std_vector_partonGen_isHardProcess = 0;
@@ -1332,7 +1332,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("metPfType1SumEt", &metPfType1SumEt, &b_metPfType1SumEt);
    fChain->SetBranchAddress("metPfType1UnclEnDn", &metPfType1UnclEnDn, &b_metPfType1UnclEnDn);
    fChain->SetBranchAddress("metPfType1UnclEnUp", &metPfType1UnclEnUp, &b_metPfType1UnclEnUp);
-   fChain->SetBranchAddress("metPuppi", &metPuppi, &b_metPuppi);
+   //   fChain->SetBranchAddress("metPuppi", &metPuppi, &b_metPuppi);
    fChain->SetBranchAddress("metTtrk", &metTtrk, &b_metTtrk);
    fChain->SetBranchAddress("metTtrkPhi", &metTtrkPhi, &b_metTtrkPhi);
    //   fChain->SetBranchAddress("mllg", &mllg, &b_mllg);
@@ -1401,20 +1401,20 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jetGen_phi", &std_vector_jetGen_phi, &b_std_vector_jetGen_phi);
    fChain->SetBranchAddress("std_vector_jetGen_pt", &std_vector_jetGen_pt, &b_std_vector_jetGen_pt);
    fChain->SetBranchAddress("std_vector_leptonGen_eta", &std_vector_leptonGen_eta, &b_std_vector_leptonGen_eta);
-   fChain->SetBranchAddress("std_vector_leptonGen_fromHardProcess", &std_vector_leptonGen_fromHardProcess, &b_std_vector_leptonGen_fromHardProcess);
-   fChain->SetBranchAddress("std_vector_leptonGen_isDirectHadronDecayProduct", &std_vector_leptonGen_isDirectHadronDecayProduct, &b_std_vector_leptonGen_isDirectHadronDecayProduct);
-   fChain->SetBranchAddress("std_vector_leptonGen_isDirectPromptTauDecayProduct", &std_vector_leptonGen_isDirectPromptTauDecayProduct, &b_std_vector_leptonGen_isDirectPromptTauDecayProduct);
-   fChain->SetBranchAddress("std_vector_leptonGen_isPrompt", &std_vector_leptonGen_isPrompt, &b_std_vector_leptonGen_isPrompt);
-   fChain->SetBranchAddress("std_vector_leptonGen_isTauDecayProduct", &std_vector_leptonGen_isTauDecayProduct, &b_std_vector_leptonGen_isTauDecayProduct);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_fromHardProcess", &std_vector_leptonGen_fromHardProcess, &b_std_vector_leptonGen_fromHardProcess);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_isDirectHadronDecayProduct", &std_vector_leptonGen_isDirectHadronDecayProduct, &b_std_vector_leptonGen_isDirectHadronDecayProduct);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_isDirectPromptTauDecayProduct", &std_vector_leptonGen_isDirectPromptTauDecayProduct, &b_std_vector_leptonGen_isDirectPromptTauDecayProduct);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_isPrompt", &std_vector_leptonGen_isPrompt, &b_std_vector_leptonGen_isPrompt);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_isTauDecayProduct", &std_vector_leptonGen_isTauDecayProduct, &b_std_vector_leptonGen_isTauDecayProduct);
    fChain->SetBranchAddress("std_vector_leptonGen_phi", &std_vector_leptonGen_phi, &b_std_vector_leptonGen_phi);
    fChain->SetBranchAddress("std_vector_leptonGen_pid", &std_vector_leptonGen_pid, &b_std_vector_leptonGen_pid);
    fChain->SetBranchAddress("std_vector_leptonGen_pt", &std_vector_leptonGen_pt, &b_std_vector_leptonGen_pt);
-   fChain->SetBranchAddress("std_vector_leptonGen_status", &std_vector_leptonGen_status, &b_std_vector_leptonGen_status);
+   //   fChain->SetBranchAddress("std_vector_leptonGen_status", &std_vector_leptonGen_status, &b_std_vector_leptonGen_status);
    fChain->SetBranchAddress("std_vector_neutrinoGen_eta", &std_vector_neutrinoGen_eta, &b_std_vector_neutrinoGen_eta);
-   fChain->SetBranchAddress("std_vector_neutrinoGen_isDirectPromptTauDecayProduct", &std_vector_neutrinoGen_isDirectPromptTauDecayProduct, &b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct);
-   fChain->SetBranchAddress("std_vector_neutrinoGen_isPrompt", &std_vector_neutrinoGen_isPrompt, &b_std_vector_neutrinoGen_isPrompt);
+   //   fChain->SetBranchAddress("std_vector_neutrinoGen_isDirectPromptTauDecayProduct", &std_vector_neutrinoGen_isDirectPromptTauDecayProduct, &b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct);
+   //   fChain->SetBranchAddress("std_vector_neutrinoGen_isPrompt", &std_vector_neutrinoGen_isPrompt, &b_std_vector_neutrinoGen_isPrompt);
    fChain->SetBranchAddress("std_vector_neutrinoGen_phi", &std_vector_neutrinoGen_phi, &b_std_vector_neutrinoGen_phi);
-   fChain->SetBranchAddress("std_vector_neutrinoGen_pid", &std_vector_neutrinoGen_pid, &b_std_vector_neutrinoGen_pid);
+   //   fChain->SetBranchAddress("std_vector_neutrinoGen_pid", &std_vector_neutrinoGen_pid, &b_std_vector_neutrinoGen_pid);
    fChain->SetBranchAddress("std_vector_neutrinoGen_pt", &std_vector_neutrinoGen_pt, &b_std_vector_neutrinoGen_pt);
    fChain->SetBranchAddress("std_vector_partonGen_eta", &std_vector_partonGen_eta, &b_std_vector_partonGen_eta);
    fChain->SetBranchAddress("std_vector_partonGen_isHardProcess", &std_vector_partonGen_isHardProcess, &b_std_vector_partonGen_isHardProcess);
