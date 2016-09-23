@@ -639,31 +639,6 @@ void AnalysisCMS::GetJets(float jet_eta_max)
 
 
 //------------------------------------------------------------------------------
-// GetTopReco
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetTopReco()
-{
-  MassVariations theMass;
-
-  std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> unc;
-
-  TVector2 myMET(metPfType1, metPfType1Phi);
-
-  for (int i=0; i<AnalysisJets.size(); i++) {
-
-    myjets.push_back(AnalysisJets.at(i).v);
-
-    unc.push_back(0.05);
-  }
-
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
-
-  _topReco = nu1.size();
-}
-
-
-//------------------------------------------------------------------------------
 // GetJetPtSum
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJetPtSum()
@@ -962,11 +937,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
+  GetJets(jet_eta_max);
+
   GetTops();
 
   GetTopReco();
-
-  GetJets(jet_eta_max);
 
   GetGenPtllWeight();
 
@@ -1874,4 +1849,29 @@ void AnalysisCMS::GetTops()
 
   if (ntop_pairs > 1)
     printf("\n [AnalysisCMS::GetTops] Warning, ntop_pairs = %d\n\n", ntop_pairs);
+}
+
+
+//------------------------------------------------------------------------------
+// GetTopReco
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTopReco()
+{
+  MassVariations theMass;
+
+  std::vector<TLorentzVector> myjets, nu1, nu2;
+  std::vector<Float_t> unc;
+
+  TVector2 myMET(metPfType1, metPfType1Phi);
+
+  for (int i=0; i<AnalysisJets.size(); i++) {
+
+    myjets.push_back(AnalysisJets.at(i).v);
+
+    unc.push_back(0.05);
+  }
+
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+  _topReco = nu1.size();
 }
