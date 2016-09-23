@@ -1,10 +1,11 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
+//#include "CutsControl.h"
+#include "CutsDY.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
-//#include "CutsPR.h"
+//#include "CutsSS.h"
 //#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
@@ -84,7 +85,7 @@ const Color_t color_Signal    = kRed;
 const Color_t color_Fakes     = kGray+1;
 const Color_t color_Data      = kBlack;
 const Color_t color_WZTo3LNu  = kOrange-2;
-const Color_t color_VZ        = kOrange+3;
+const Color_t color_ZZ        = kOrange+3;
 const Color_t color_TTTo2L2Nu = kYellow;
 const Color_t color_ST        = kYellow+3;
 const Color_t color_WW        = kAzure-9;
