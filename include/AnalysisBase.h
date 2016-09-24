@@ -108,8 +108,8 @@ public :
    //   Float_t         kfW;
    //   Float_t         mctruth;
    //   Float_t         metGeneta;
-   Float_t         metGenphi;
-   Float_t         metGenpt;
+   //   Float_t         metGenphi;
+   //   Float_t         metGenpt;
    //   Float_t         metLHEeta;
    //   Float_t         metLHEphi;
    //   Float_t         metLHEpt;
@@ -148,17 +148,17 @@ public :
    //   Float_t         metPfRawSumEt;
    //   Float_t         metPfRawUnclEnDn;
    //   Float_t         metPfRawUnclEnUp;
-   Float_t         metPfType1ElecEnDn;
-   Float_t         metPfType1ElecEnUp;
-   Float_t         metPfType1JetEnDn;
-   Float_t         metPfType1JetEnUp;
-   Float_t         metPfType1JetResDn;
-   Float_t         metPfType1JetResUp;
-   Float_t         metPfType1MuonEnDn;
-   Float_t         metPfType1MuonEnUp;
-   Float_t         metPfType1SumEt;
-   Float_t         metPfType1UnclEnDn;
-   Float_t         metPfType1UnclEnUp;
+   //   Float_t         metPfType1ElecEnDn;
+   //   Float_t         metPfType1ElecEnUp;
+   //   Float_t         metPfType1JetEnDn;
+   //   Float_t         metPfType1JetEnUp;
+   //   Float_t         metPfType1JetResDn;
+   //   Float_t         metPfType1JetResUp;
+   //   Float_t         metPfType1MuonEnDn;
+   //   Float_t         metPfType1MuonEnUp;
+   //   Float_t         metPfType1SumEt;
+   //   Float_t         metPfType1UnclEnDn;
+   //   Float_t         metPfType1UnclEnUp;
    //   Float_t         metPuppi;
    Float_t         metTtrk;
    Float_t         metTtrkPhi;
@@ -372,14 +372,14 @@ public :
    //   Float_t         puW6p3;
    //   Float_t         Xsec;
    Float_t         baseW;
-   Float_t         nllnnloW;
+   //   Float_t         nllnnloW;
    Float_t         nllW;
-   Float_t         nllW_Rup;
-   Float_t         nllW_Qup;
-   Float_t         nllW_Rdown;
-   Float_t         nllW_Qdown;
-   Float_t         gen_mww;
-   Float_t         gen_ptww;
+   //   Float_t         nllW_Rup;
+   //   Float_t         nllW_Qup;
+   //   Float_t         nllW_Rdown;
+   //   Float_t         nllW_Qdown;
+   //   Float_t         gen_mww;
+   //   Float_t         gen_ptww;
    Float_t         gen_ptll;
    vector<float>   *std_vector_lepton_chargedHadronIso;
    vector<float>   *std_vector_lepton_photonIso;
@@ -400,7 +400,7 @@ public :
    //   vector<float>   *std_vector_lepton_PfIsoDeltaBeta;
    //   vector<float>   *std_vector_lepton_closejet_phi;
    vector<float>   *std_vector_lepton_trackIso;
-   vector<float>   *std_vector_lepton_isWgsLepton;
+   //   vector<float>   *std_vector_lepton_isWgsLepton;
    //   vector<float>   *std_vector_lepton_closejet_eta;
    //   vector<float>   *std_vector_lepton_SIP3D;
    vector<float>   *std_vector_lepton_isTightLepton;
@@ -411,10 +411,8 @@ public :
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
    //   vector<float>   *std_vector_lepton_isTightMuon;
-   Float_t         susyMstop;
-   Float_t         susyMLSP;
-   Float_t         pfType1Metphi;
-   Float_t         pfType1Met;
+   //   Float_t         susyMstop;
+   //   Float_t         susyMLSP;
    Float_t         metPfType1Phi;
    Float_t         metPfType1;
    Float_t         bPogSF;
@@ -459,19 +457,19 @@ public :
    vector<float>   *std_vector_lepton_idisoW;
    vector<float>   *std_vector_lepton_idisoW_Up;
    vector<float>   *std_vector_lepton_idisoW_Down;
-   vector<float>   *std_vector_lepton_idisoW_Syst;
-   vector<float>   *std_vector_lepton_idisoLooseW;
-   vector<float>   *std_vector_lepton_idisoLooseW_Up;
-   vector<float>   *std_vector_lepton_idisoLooseW_Down;
-   vector<float>   *std_vector_lepton_idisoLooseW_Syst;
+   //   vector<float>   *std_vector_lepton_idisoW_Syst;
+   //   vector<float>   *std_vector_lepton_idisoLooseW;
+   //   vector<float>   *std_vector_lepton_idisoLooseW_Up;
+   //   vector<float>   *std_vector_lepton_idisoLooseW_Down;
+   //   vector<float>   *std_vector_lepton_idisoLooseW_Syst;
    vector<float>   *std_vector_lepton_recoW;
    vector<float>   *std_vector_lepton_recoW_Up;
    vector<float>   *std_vector_lepton_recoW_Down;
-   Float_t         mcoll;
-   Float_t         mcollWW;
+   //   Float_t         mcoll;
+   //   Float_t         mcollWW;
    //   Float_t         vht_pt;
-   Float_t         mjj;
-   Float_t         mllThird;
+   //   Float_t         mjj;
+   //   Float_t         mllThird;
    Float_t         dphilljetjet;
    //   Float_t         vht_phi;
    Float_t         drll;
@@ -480,8 +478,8 @@ public :
    Float_t         dphilljet;
    Float_t         dphilmet1;
    Float_t         dphilmet2;
-   Float_t         projpfmet;
-   Float_t         mTi;
+   //   Float_t         projpfmet;
+   //   Float_t         mTi;
    Float_t         ht;
    Float_t         dphill;
    Float_t         pt2;
@@ -580,8 +578,8 @@ public :
    //   TBranch        *b_kfW;   //!
    //   TBranch        *b_mctruth;   //!
    //   TBranch        *b_metGeneta;   //!
-   TBranch        *b_metGenphi;   //!
-   TBranch        *b_metGenpt;   //!
+   //   TBranch        *b_metGenphi;   //!
+   //   TBranch        *b_metGenpt;   //!
    //   TBranch        *b_metLHEeta;   //!
    //   TBranch        *b_metLHEphi;   //!
    //   TBranch        *b_metLHEpt;   //!
@@ -620,17 +618,17 @@ public :
    //   TBranch        *b_metPfRawSumEt;   //!
    //   TBranch        *b_metPfRawUnclEnDn;   //!
    //   TBranch        *b_metPfRawUnclEnUp;   //!
-   TBranch        *b_metPfType1ElecEnDn;   //!
-   TBranch        *b_metPfType1ElecEnUp;   //!
-   TBranch        *b_metPfType1JetEnDn;   //!
-   TBranch        *b_metPfType1JetEnUp;   //!
-   TBranch        *b_metPfType1JetResDn;   //!
-   TBranch        *b_metPfType1JetResUp;   //!
-   TBranch        *b_metPfType1MuonEnDn;   //!
-   TBranch        *b_metPfType1MuonEnUp;   //!
-   TBranch        *b_metPfType1SumEt;   //!
-   TBranch        *b_metPfType1UnclEnDn;   //!
-   TBranch        *b_metPfType1UnclEnUp;   //!
+   //   TBranch        *b_metPfType1ElecEnDn;   //!
+   //   TBranch        *b_metPfType1ElecEnUp;   //!
+   //   TBranch        *b_metPfType1JetEnDn;   //!
+   //   TBranch        *b_metPfType1JetEnUp;   //!
+   //   TBranch        *b_metPfType1JetResDn;   //!
+   //   TBranch        *b_metPfType1JetResUp;   //!
+   //   TBranch        *b_metPfType1MuonEnDn;   //!
+   //   TBranch        *b_metPfType1MuonEnUp;   //!
+   //   TBranch        *b_metPfType1SumEt;   //!
+   //   TBranch        *b_metPfType1UnclEnDn;   //!
+   //   TBranch        *b_metPfType1UnclEnUp;   //!
    //   TBranch        *b_metPuppi;   //!
    TBranch        *b_metTtrk;   //!
    TBranch        *b_metTtrkPhi;   //!
@@ -823,14 +821,14 @@ public :
    //   TBranch        *b_puW6p3;   //!
    //   TBranch        *b_Xsec;   //!
    TBranch        *b_baseW;   //!
-   TBranch        *b_nllnnloW;   //!
+   //   TBranch        *b_nllnnloW;   //!
    TBranch        *b_nllW;   //!
-   TBranch        *b_nllW_Rup;   //!
-   TBranch        *b_nllW_Qup;   //!
-   TBranch        *b_nllW_Rdown;   //!
-   TBranch        *b_nllW_Qdown;   //!
-   TBranch        *b_gen_mww;   //!
-   TBranch        *b_gen_ptww;   //!
+   //   TBranch        *b_nllW_Rup;   //!
+   //   TBranch        *b_nllW_Qup;   //!
+   //   TBranch        *b_nllW_Rdown;   //!
+   //   TBranch        *b_nllW_Qdown;   //!
+   //   TBranch        *b_gen_mww;   //!
+   //   TBranch        *b_gen_ptww;   //!
    TBranch        *b_gen_ptll;   //!
    TBranch        *b_std_vector_lepton_chargedHadronIso;   //!
    TBranch        *b_std_vector_lepton_photonIso;   //!
@@ -851,7 +849,7 @@ public :
    //   TBranch        *b_std_vector_lepton_PfIsoDeltaBeta;   //!
    //   TBranch        *b_std_vector_lepton_closejet_phi;   //!
    TBranch        *b_std_vector_lepton_trackIso;   //!
-   TBranch        *b_std_vector_lepton_isWgsLepton;   //!
+   //   TBranch        *b_std_vector_lepton_isWgsLepton;   //!
    //   TBranch        *b_std_vector_lepton_closejet_eta;   //!
    //   TBranch        *b_std_vector_lepton_SIP3D;   //!
    TBranch        *b_std_vector_lepton_isTightLepton;   //!
@@ -862,10 +860,8 @@ public :
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
    //   TBranch        *b_std_vector_lepton_isTightMuon;   //!
-   TBranch        *b_susyMstop;   //!
-   TBranch        *b_susyMLSP;   //!
-   TBranch        *b_pfType1Metphi;   //!
-   TBranch        *b_pfType1Met;   //!
+   //   TBranch        *b_susyMstop;   //!
+   //   TBranch        *b_susyMLSP;   //!
    TBranch        *b_metPfType1Phi;   //!
    TBranch        *b_metPfType1;   //!
    TBranch        *b_bPogSF;   //!
@@ -910,19 +906,19 @@ public :
    TBranch        *b_std_vector_lepton_idisoW;   //!
    TBranch        *b_std_vector_lepton_idisoW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoW_Down;   //!
-   TBranch        *b_std_vector_lepton_idisoW_Syst;   //!
-   TBranch        *b_std_vector_lepton_idisoLooseW;   //!
-   TBranch        *b_std_vector_lepton_idisoLooseW_Up;   //!
-   TBranch        *b_std_vector_lepton_idisoLooseW_Down;   //!
-   TBranch        *b_std_vector_lepton_idisoLooseW_Syst;   //!
+   //   TBranch        *b_std_vector_lepton_idisoW_Syst;   //!
+   //   TBranch        *b_std_vector_lepton_idisoLooseW;   //!
+   //   TBranch        *b_std_vector_lepton_idisoLooseW_Up;   //!
+   //   TBranch        *b_std_vector_lepton_idisoLooseW_Down;   //!
+   //   TBranch        *b_std_vector_lepton_idisoLooseW_Syst;   //!
    TBranch        *b_std_vector_lepton_recoW;   //!
    TBranch        *b_std_vector_lepton_recoW_Up;   //!
    TBranch        *b_std_vector_lepton_recoW_Down;   //!
-   TBranch        *b_mcoll;   //!
-   TBranch        *b_mcollWW;   //!
+   //   TBranch        *b_mcoll;   //!
+   //   TBranch        *b_mcollWW;   //!
    //   TBranch        *b_vht_pt;   //!
-   TBranch        *b_mjj;   //!
-   TBranch        *b_mllThird;   //!
+   //   TBranch        *b_mjj;   //!
+   //   TBranch        *b_mllThird;   //!
    TBranch        *b_dphilljetjet;   //!
    //   TBranch        *b_vht_phi;   //!
    TBranch        *b_drll;   //!
@@ -931,8 +927,8 @@ public :
    TBranch        *b_dphilljet;   //!
    TBranch        *b_dphilmet1;   //!
    TBranch        *b_dphilmet2;   //!
-   TBranch        *b_projpfmet;   //!
-   TBranch        *b_mTi;   //!
+   //   TBranch        *b_projpfmet;   //!
+   //   TBranch        *b_mTi;   //!
    TBranch        *b_ht;   //!
    TBranch        *b_dphill;   //!
    TBranch        *b_pt2;   //!
@@ -1170,7 +1166,7 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_lepton_PfIsoDeltaBeta = 0;
    //   std_vector_lepton_closejet_phi = 0;
    std_vector_lepton_trackIso = 0;
-   std_vector_lepton_isWgsLepton = 0;
+   //   std_vector_lepton_isWgsLepton = 0;
    //   std_vector_lepton_closejet_eta = 0;
    //   std_vector_lepton_SIP3D = 0;
    std_vector_lepton_isTightLepton = 0;
@@ -1184,11 +1180,11 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_idisoW = 0;
    std_vector_lepton_idisoW_Up = 0;
    std_vector_lepton_idisoW_Down = 0;
-   std_vector_lepton_idisoW_Syst = 0;
-   std_vector_lepton_idisoLooseW = 0;
-   std_vector_lepton_idisoLooseW_Up = 0;
-   std_vector_lepton_idisoLooseW_Down = 0;
-   std_vector_lepton_idisoLooseW_Syst = 0;
+   //   std_vector_lepton_idisoW_Syst = 0;
+   //   std_vector_lepton_idisoLooseW = 0;
+   //   std_vector_lepton_idisoLooseW_Up = 0;
+   //   std_vector_lepton_idisoLooseW_Down = 0;
+   //   std_vector_lepton_idisoLooseW_Syst = 0;
    std_vector_lepton_recoW = 0;
    std_vector_lepton_recoW_Up = 0;
    std_vector_lepton_recoW_Down = 0;
@@ -1281,8 +1277,8 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("kfW", &kfW, &b_kfW);
    //   fChain->SetBranchAddress("mctruth", &mctruth, &b_mctruth);
    //   fChain->SetBranchAddress("metGeneta", &metGeneta, &b_metGeneta);
-   fChain->SetBranchAddress("metGenphi", &metGenphi, &b_metGenphi);
-   fChain->SetBranchAddress("metGenpt", &metGenpt, &b_metGenpt);
+   //   fChain->SetBranchAddress("metGenphi", &metGenphi, &b_metGenphi);
+   //   fChain->SetBranchAddress("metGenpt", &metGenpt, &b_metGenpt);
    //   fChain->SetBranchAddress("metLHEeta", &metLHEeta, &b_metLHEeta);
    //   fChain->SetBranchAddress("metLHEphi", &metLHEphi, &b_metLHEphi);
    //   fChain->SetBranchAddress("metLHEpt", &metLHEpt, &b_metLHEpt);
@@ -1321,17 +1317,17 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("metPfRawSumEt", &metPfRawSumEt, &b_metPfRawSumEt);
    //   fChain->SetBranchAddress("metPfRawUnclEnDn", &metPfRawUnclEnDn, &b_metPfRawUnclEnDn);
    //   fChain->SetBranchAddress("metPfRawUnclEnUp", &metPfRawUnclEnUp, &b_metPfRawUnclEnUp);
-   fChain->SetBranchAddress("metPfType1ElecEnDn", &metPfType1ElecEnDn, &b_metPfType1ElecEnDn);
-   fChain->SetBranchAddress("metPfType1ElecEnUp", &metPfType1ElecEnUp, &b_metPfType1ElecEnUp);
-   fChain->SetBranchAddress("metPfType1JetEnDn", &metPfType1JetEnDn, &b_metPfType1JetEnDn);
-   fChain->SetBranchAddress("metPfType1JetEnUp", &metPfType1JetEnUp, &b_metPfType1JetEnUp);
-   fChain->SetBranchAddress("metPfType1JetResDn", &metPfType1JetResDn, &b_metPfType1JetResDn);
-   fChain->SetBranchAddress("metPfType1JetResUp", &metPfType1JetResUp, &b_metPfType1JetResUp);
-   fChain->SetBranchAddress("metPfType1MuonEnDn", &metPfType1MuonEnDn, &b_metPfType1MuonEnDn);
-   fChain->SetBranchAddress("metPfType1MuonEnUp", &metPfType1MuonEnUp, &b_metPfType1MuonEnUp);
-   fChain->SetBranchAddress("metPfType1SumEt", &metPfType1SumEt, &b_metPfType1SumEt);
-   fChain->SetBranchAddress("metPfType1UnclEnDn", &metPfType1UnclEnDn, &b_metPfType1UnclEnDn);
-   fChain->SetBranchAddress("metPfType1UnclEnUp", &metPfType1UnclEnUp, &b_metPfType1UnclEnUp);
+   //   fChain->SetBranchAddress("metPfType1ElecEnDn", &metPfType1ElecEnDn, &b_metPfType1ElecEnDn);
+   //   fChain->SetBranchAddress("metPfType1ElecEnUp", &metPfType1ElecEnUp, &b_metPfType1ElecEnUp);
+   //   fChain->SetBranchAddress("metPfType1JetEnDn", &metPfType1JetEnDn, &b_metPfType1JetEnDn);
+   //   fChain->SetBranchAddress("metPfType1JetEnUp", &metPfType1JetEnUp, &b_metPfType1JetEnUp);
+   //   fChain->SetBranchAddress("metPfType1JetResDn", &metPfType1JetResDn, &b_metPfType1JetResDn);
+   //   fChain->SetBranchAddress("metPfType1JetResUp", &metPfType1JetResUp, &b_metPfType1JetResUp);
+   //   fChain->SetBranchAddress("metPfType1MuonEnDn", &metPfType1MuonEnDn, &b_metPfType1MuonEnDn);
+   //   fChain->SetBranchAddress("metPfType1MuonEnUp", &metPfType1MuonEnUp, &b_metPfType1MuonEnUp);
+   //   fChain->SetBranchAddress("metPfType1SumEt", &metPfType1SumEt, &b_metPfType1SumEt);
+   //   fChain->SetBranchAddress("metPfType1UnclEnDn", &metPfType1UnclEnDn, &b_metPfType1UnclEnDn);
+   //   fChain->SetBranchAddress("metPfType1UnclEnUp", &metPfType1UnclEnUp, &b_metPfType1UnclEnUp);
    //   fChain->SetBranchAddress("metPuppi", &metPuppi, &b_metPuppi);
    fChain->SetBranchAddress("metTtrk", &metTtrk, &b_metTtrk);
    fChain->SetBranchAddress("metTtrkPhi", &metTtrkPhi, &b_metTtrkPhi);
@@ -1524,14 +1520,14 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("puW6p3", &puW6p3, &b_puW6p3);
    //   fChain->SetBranchAddress("Xsec", &Xsec, &b_Xsec);
    fChain->SetBranchAddress("baseW", &baseW, &b_baseW);
-   fChain->SetBranchAddress("nllnnloW", &nllnnloW, &b_nllnnloW);
+   //   fChain->SetBranchAddress("nllnnloW", &nllnnloW, &b_nllnnloW);
    fChain->SetBranchAddress("nllW", &nllW, &b_nllW);
-   fChain->SetBranchAddress("nllW_Rup", &nllW_Rup, &b_nllW_Rup);
-   fChain->SetBranchAddress("nllW_Qup", &nllW_Qup, &b_nllW_Qup);
-   fChain->SetBranchAddress("nllW_Rdown", &nllW_Rdown, &b_nllW_Rdown);
-   fChain->SetBranchAddress("nllW_Qdown", &nllW_Qdown, &b_nllW_Qdown);
-   fChain->SetBranchAddress("gen_mww", &gen_mww, &b_gen_mww);
-   fChain->SetBranchAddress("gen_ptww", &gen_ptww, &b_gen_ptww);
+   //   fChain->SetBranchAddress("nllW_Rup", &nllW_Rup, &b_nllW_Rup);
+   //   fChain->SetBranchAddress("nllW_Qup", &nllW_Qup, &b_nllW_Qup);
+   //   fChain->SetBranchAddress("nllW_Rdown", &nllW_Rdown, &b_nllW_Rdown);
+   //   fChain->SetBranchAddress("nllW_Qdown", &nllW_Qdown, &b_nllW_Qdown);
+   //   fChain->SetBranchAddress("gen_mww", &gen_mww, &b_gen_mww);
+   //   fChain->SetBranchAddress("gen_ptww", &gen_ptww, &b_gen_ptww);
    fChain->SetBranchAddress("gen_ptll", &gen_ptll, &b_gen_ptll);
    fChain->SetBranchAddress("std_vector_lepton_chargedHadronIso", &std_vector_lepton_chargedHadronIso, &b_std_vector_lepton_chargedHadronIso);
    fChain->SetBranchAddress("std_vector_lepton_photonIso", &std_vector_lepton_photonIso, &b_std_vector_lepton_photonIso);
@@ -1552,7 +1548,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_lepton_PfIsoDeltaBeta", &std_vector_lepton_PfIsoDeltaBeta, &b_std_vector_lepton_PfIsoDeltaBeta);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_phi", &std_vector_lepton_closejet_phi, &b_std_vector_lepton_closejet_phi);
    fChain->SetBranchAddress("std_vector_lepton_trackIso", &std_vector_lepton_trackIso, &b_std_vector_lepton_trackIso);
-   fChain->SetBranchAddress("std_vector_lepton_isWgsLepton", &std_vector_lepton_isWgsLepton, &b_std_vector_lepton_isWgsLepton);
+   //   fChain->SetBranchAddress("std_vector_lepton_isWgsLepton", &std_vector_lepton_isWgsLepton, &b_std_vector_lepton_isWgsLepton);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_eta", &std_vector_lepton_closejet_eta, &b_std_vector_lepton_closejet_eta);
    //   fChain->SetBranchAddress("std_vector_lepton_SIP3D", &std_vector_lepton_SIP3D, &b_std_vector_lepton_SIP3D);
    fChain->SetBranchAddress("std_vector_lepton_isTightLepton", &std_vector_lepton_isTightLepton, &b_std_vector_lepton_isTightLepton);
@@ -1563,10 +1559,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    //   fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
-   fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
-   fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
-   fChain->SetBranchAddress("pfType1Metphi", &pfType1Metphi, &b_pfType1Metphi);
-   fChain->SetBranchAddress("pfType1Met", &pfType1Met, &b_pfType1Met);
+   //   fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
+   //   fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);
    fChain->SetBranchAddress("metPfType1", &metPfType1, &b_metPfType1);
    fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);
@@ -1611,19 +1605,19 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_idisoW", &std_vector_lepton_idisoW, &b_std_vector_lepton_idisoW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Up", &std_vector_lepton_idisoW_Up, &b_std_vector_lepton_idisoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Down", &std_vector_lepton_idisoW_Down, &b_std_vector_lepton_idisoW_Down);
-   fChain->SetBranchAddress("std_vector_lepton_idisoW_Syst", &std_vector_lepton_idisoW_Syst, &b_std_vector_lepton_idisoW_Syst);
-   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW", &std_vector_lepton_idisoLooseW, &b_std_vector_lepton_idisoLooseW);
-   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Up", &std_vector_lepton_idisoLooseW_Up, &b_std_vector_lepton_idisoLooseW_Up);
-   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Down", &std_vector_lepton_idisoLooseW_Down, &b_std_vector_lepton_idisoLooseW_Down);
-   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Syst", &std_vector_lepton_idisoLooseW_Syst, &b_std_vector_lepton_idisoLooseW_Syst);
+   //   fChain->SetBranchAddress("std_vector_lepton_idisoW_Syst", &std_vector_lepton_idisoW_Syst, &b_std_vector_lepton_idisoW_Syst);
+   //   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW", &std_vector_lepton_idisoLooseW, &b_std_vector_lepton_idisoLooseW);
+   //   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Up", &std_vector_lepton_idisoLooseW_Up, &b_std_vector_lepton_idisoLooseW_Up);
+   //   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Down", &std_vector_lepton_idisoLooseW_Down, &b_std_vector_lepton_idisoLooseW_Down);
+   //   fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Syst", &std_vector_lepton_idisoLooseW_Syst, &b_std_vector_lepton_idisoLooseW_Syst);
    fChain->SetBranchAddress("std_vector_lepton_recoW", &std_vector_lepton_recoW, &b_std_vector_lepton_recoW);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Up", &std_vector_lepton_recoW_Up, &b_std_vector_lepton_recoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Down", &std_vector_lepton_recoW_Down, &b_std_vector_lepton_recoW_Down);
-   fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
-   fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
+   //   fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
+   //   fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
    //   fChain->SetBranchAddress("vht_pt", &vht_pt, &b_vht_pt);
-   fChain->SetBranchAddress("mjj", &mjj, &b_mjj);
-   fChain->SetBranchAddress("mllThird", &mllThird, &b_mllThird);
+   //   fChain->SetBranchAddress("mjj", &mjj, &b_mjj);
+   //   fChain->SetBranchAddress("mllThird", &mllThird, &b_mllThird);
    fChain->SetBranchAddress("dphilljetjet", &dphilljetjet, &b_dphilljetjet);
    //   fChain->SetBranchAddress("vht_phi", &vht_phi, &b_vht_phi);
    fChain->SetBranchAddress("drll", &drll, &b_drll);
@@ -1632,8 +1626,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("dphilljet", &dphilljet, &b_dphilljet);
    fChain->SetBranchAddress("dphilmet1", &dphilmet1, &b_dphilmet1);
    fChain->SetBranchAddress("dphilmet2", &dphilmet2, &b_dphilmet2);
-   fChain->SetBranchAddress("projpfmet", &projpfmet, &b_projpfmet);
-   fChain->SetBranchAddress("mTi", &mTi, &b_mTi);
+   //   fChain->SetBranchAddress("projpfmet", &projpfmet, &b_projpfmet);
+   //   fChain->SetBranchAddress("mTi", &mTi, &b_mTi);
    fChain->SetBranchAddress("ht", &ht, &b_ht);
    fChain->SetBranchAddress("dphill", &dphill, &b_dphill);
    fChain->SetBranchAddress("pt2", &pt2, &b_pt2);

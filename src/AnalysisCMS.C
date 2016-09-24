@@ -1547,14 +1547,13 @@ void AnalysisCMS::GetStopVar()
 
 	  _mlb1comb = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
 	  _mlb2comb = (AnalysisJets[bjetindex[0]].v + Lepton2.v).M();
-
 	}
-
       }
     }
   }
 
   if (!_analysis.EqualTo("Stop")) return;
+
   if (!_ismc) return;
 
   // Top quark reco
@@ -1632,29 +1631,21 @@ void AnalysisCMS::GetStopVar()
 			      CandidateBJetIndex[nCandidateBJets] = rj;
 			      CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
 			      nCandidateBJets++;
-
 			    }
-			    
 			  }
-			  
 			}
 		      }
-
 		    }
 		  }
-		  
 		}
-		
 	      }
 	    }
-	    
 	  }
 	}
-
       }
-      
     }
   }
+
 
   float MinMassDistance = 999999.;
   for (int b0 = 0; b0<nCandidateBJets; b0++) {
