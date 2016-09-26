@@ -2,7 +2,7 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  rm -rf roorFiles"
+    echo "  rm -rf rootFiles"
     echo "  rm -rf jobs"
     echo "  "
     echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt        nominal"
