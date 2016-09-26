@@ -1853,7 +1853,13 @@ void AnalysisCMS::GetTopReco()
   std::vector<TLorentzVector> myjets, nu1, nu2;
   std::vector<Float_t> unc;
 
-  TVector2 myMET(metPfType1, metPfType1Phi);
+  TVector2 myMET;
+
+  // Please check
+  // metPfType1Phi [-pi,   pi]
+  // myMET.Phi()   [  0, 2*pi]
+
+  myMET.SetMagPhi(metPfType1, metPfType1Phi);
 
   for (int i=0; i<AnalysisJets.size(); i++) {
 
