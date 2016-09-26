@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -39,7 +39,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
+  //if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
@@ -145,15 +145,15 @@ void runPlotter(TString level,
     }
 
 
-  if (analysis.EqualTo("Stop"))
-    {
-      plotter.AddSignal("T2tt_mStop?????",   "m_{Stop}150-250 ",  color_Signal-10);  
-      plotter.AddSignal("T2tt_mStop?????",  "m_{Stop}250-350 ", color_Signal-8);  
-      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}350-400 ", color_Signal-6);  
-      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}400-1200 ", color_Signal-4);  
-      plotter.AddSignal("T2tt_mStop?????", " T2bw ", color_Signal-2);  
-    }
- 
+//  if (analysis.EqualTo("Stop"))
+//    {
+//      plotter.AddSignal("T2tt_mStop?????",   "m_{Stop}150-250 ",  color_Signal-10);  
+//      plotter.AddSignal("T2tt_mStop?????",  "m_{Stop}250-350 ", color_Signal-8);  
+//      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}350-400 ", color_Signal-6);  
+//      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}400-1200 ", color_Signal-4);  
+//      plotter.AddSignal("T2tt_mStop?????", " T2bw ", color_Signal-2);  
+//    }
+// 
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
