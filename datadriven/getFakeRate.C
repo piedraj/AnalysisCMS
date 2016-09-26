@@ -181,8 +181,11 @@ void DrawFR(TString flavour,
   canvas->SetGridy(setgrid);
 
   h_FR->Draw("ep");
-
   h_FR_EWK->Draw("ep,same");
+
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+  DrawLegend(0.22, 0.83, h_FR, "Without EWK correction");
+  DrawLegend(0.22, 0.80, h_FR_EWK, "With EWK correction");
 
   TCanvas* canvas2 = new TCanvas(title_EWKrel_tight, title_EWKrel_tight, 450, 550);
 
@@ -191,12 +194,16 @@ void DrawFR(TString flavour,
 
   h_EWKrel_tight -> Draw("ep");
 
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+
   TCanvas* canvas3 = new TCanvas(title_EWKrel_loose, title_EWKrel_loose, 450, 550);
 
   canvas3->SetGridx(setgrid);
   canvas3->SetGridy(setgrid);
 
   h_EWKrel_loose -> Draw("ep");
+
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
 
   // Print bin values and errors
   //----------------------------------------------------------------------------
@@ -221,6 +228,7 @@ void DrawFR(TString flavour,
 
   // Cosmetics
   //----------------------------------------------------------------------------
+
   h_FR->SetAxisRange(0, 1, "Y");
   h_FR->SetLineColor(kBlack);
   h_FR->SetLineWidth(2);
@@ -228,7 +236,7 @@ void DrawFR(TString flavour,
   h_FR->SetMarkerStyle(kFullCircle);
   h_FR->SetTitle("");
   h_FR->SetXTitle(xtitle);
-  h_FR->SetYTitle("fake rate");
+  h_FR->SetYTitle(Form("%s fake rate", flavour.Data()));
 
   h_FR->GetXaxis()->SetTitleOffset(1.5);
   h_FR->GetYaxis()->SetTitleOffset(1.8);
@@ -238,11 +246,9 @@ void DrawFR(TString flavour,
   h_FR_EWK->SetMarkerColor(kRed+1);
   h_FR_EWK->SetMarkerStyle(kFullCircle);
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
-
   h_EWKrel_tight->SetTitle("");
   h_EWKrel_tight->SetXTitle(xtitle);
-  h_EWKrel_tight->SetYTitle("EWK relative correction");
+  h_EWKrel_tight->SetYTitle("EWK relative correction (tight)");
   h_EWKrel_tight->GetXaxis()->SetTitleOffset(1.5);
   h_EWKrel_tight->GetYaxis()->SetTitleOffset(1.8);
   h_EWKrel_tight->SetLineWidth(2);
@@ -250,7 +256,7 @@ void DrawFR(TString flavour,
 
   h_EWKrel_loose->SetTitle("");
   h_EWKrel_loose->SetXTitle(xtitle);
-  h_EWKrel_loose->SetYTitle("EWK relative correction");
+  h_EWKrel_loose->SetYTitle("EWK relative correction (loose)");
   h_EWKrel_loose->GetXaxis()->SetTitleOffset(1.5);
   h_EWKrel_loose->GetYaxis()->SetTitleOffset(1.8);
   h_EWKrel_loose->SetLineWidth(2);
@@ -297,7 +303,6 @@ void DrawPR(TString  flavour,
 
   h_PR->Draw("ep");
 
-
   // Cosmetics
   //----------------------------------------------------------------------------
   h_PR->SetAxisRange(0, 1, "Y");
@@ -307,7 +312,7 @@ void DrawPR(TString  flavour,
   h_PR->SetMarkerStyle(kFullCircle);
   h_PR->SetTitle("");
   h_PR->SetXTitle(xtitle);
-  h_PR->SetYTitle("prompt rate");
+  h_PR->SetYTitle(Form("%s prompt rate", flavour.Data()));
 
   h_PR->GetXaxis()->SetTitleOffset(1.5);
   h_PR->GetYaxis()->SetTitleOffset(1.8);
