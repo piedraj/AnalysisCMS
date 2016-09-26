@@ -2,15 +2,25 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt        nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2loose_fakeW.txt  nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt          nominal"
+    echo "  No skim"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/l2loose/samples_data_l2loose_fakeW.txt nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/l2tight/samples_data_l2tight.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/l2tight/samples_mc_l2tight.txt         nominal"
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_monoh_l2tight.txt       nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight.txt        nominal"
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight_topSel.txt   nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight_topSel.txt nominal"
+    echo "  wwSel skim"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/wwSel/samples_data_l2loose_fakeW.txt nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/wwSel/samples_data_l2tight.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/wwSel/samples_mc_l2tight.txt         nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/wwSel/samples_monoh_l2tight.txt      nominal"
+    echo "  "
+    echo "  "
+    echo "  topSel skim"
+#   echo "  ./submit-jobs-lxplus.sh samples/80x/topSel/samples_data_l2loose_fakeW.txt nominal"  # Not yet available
+    echo "  ./submit-jobs-lxplus.sh samples/80x/topSel/samples_data_l2tight.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/topSel/samples_mc_l2tight.txt         nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/topSel/samples_ttdm_l2tight.txt       nominal"
+    echo "  ./submit-jobs-lxplus.sh samples/80x/topSel/samples_stop_l2tight.txt       nominal"
     echo "  "
     exit -1
 fi
