@@ -639,31 +639,6 @@ void AnalysisCMS::GetJets(float jet_eta_max)
 
 
 //------------------------------------------------------------------------------
-// GetTopReco
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetTopReco()
-{
-  MassVariations theMass;
-
-  std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> unc;
-
-  TVector2 myMET(metPfType1, metPfType1Phi);
-
-  for (int i=0; i<AnalysisJets.size(); i++) {
-
-    myjets.push_back(AnalysisJets.at(i).v);
-
-    unc.push_back(0.05);
-  }
-
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
-
-  _topReco = nu1.size();
-}
-
-
-//------------------------------------------------------------------------------
 // GetJetPtSum
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJetPtSum()
@@ -720,9 +695,9 @@ void AnalysisCMS::GetStarVar()
   float metphi = MET.Phi();
   
   float beta = sqrt(met*met / (met*met + H_MASS*H_MASS));
-  
+
   TVector3 BL(beta * cos(metphi), beta * sin(metphi), 0);
-  
+
   TLorentzVector L1Star = Lepton1.v;
   TLorentzVector L2Star = Lepton2.v;
   
@@ -962,11 +937,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
+  GetJets(jet_eta_max);
+
   GetTops();
 
   GetTopReco();
-
-  GetJets(jet_eta_max);
 
   GetGenPtllWeight();
 
@@ -1572,14 +1547,13 @@ void AnalysisCMS::GetStopVar()
 
 	  _mlb1comb = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
 	  _mlb2comb = (AnalysisJets[bjetindex[0]].v + Lepton2.v).M();
-
 	}
-
       }
     }
   }
 
   if (!_analysis.EqualTo("Stop")) return;
+
   if (!_ismc) return;
 
   // Top quark reco
@@ -1657,29 +1631,21 @@ void AnalysisCMS::GetStopVar()
 			      CandidateBJetIndex[nCandidateBJets] = rj;
 			      CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
 			      nCandidateBJets++;
-
 			    }
-			    
 			  }
-			  
 			}
 		      }
-
 		    }
 		  }
-		  
 		}
-		
 	      }
 	    }
-	    
 	  }
 	}
-
       }
-      
     }
   }
+
 
   float MinMassDistance = 999999.;
   for (int b0 = 0; b0<nCandidateBJets; b0++) {
@@ -1834,51 +1800,75 @@ void AnalysisCMS::GetTops()
   _dphitt_gen  = -999;
   _detatt_gen  = -999;
 
-  if (!_ismc) return; 
+  if (!_ismc) return;
 
-  float eta1 = -999;
-  float phi1 = -999;
-  float pt1  = -999;  
-
-  int ntop = 0; 
+  int ntop_pairs = 0;
 
   for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
 
-    float parton_pt            = std_vector_partonGen_pt->at(i);
-    float parton_eta           = std_vector_partonGen_eta->at(i);
-    float parton_phi           = std_vector_partonGen_phi->at(i);
-    float parton_pid           = std_vector_partonGen_pid->at(i);
-    float parton_isHardProcess = std_vector_partonGen_isHardProcess->at(i);
+    if (std_vector_partonGen_pid->at(i)           != 6) continue;
+    if (std_vector_partonGen_isHardProcess->at(i) != 1) continue;
+    
+    _top1eta_gen = std_vector_partonGen_eta->at(i);
+    _top1phi_gen = std_vector_partonGen_phi->at(i);
+    _top1pt_gen  = std_vector_partonGen_pt ->at(i);
 
-    if (parton_pid != 6 && parton_isHardProcess != 1) continue; 
+    for (int j=i+1; j<std_vector_partonGen_pt->size(); j++) {
 
-    ntop += 1; 
+      if (std_vector_partonGen_pid->at(j)           != 6) continue;
+      if (std_vector_partonGen_isHardProcess->at(j) != 1) continue;
 
-    if (ntop > 1) {
+      _top2eta_gen = std_vector_partonGen_eta->at(j);
+      _top2phi_gen = std_vector_partonGen_phi->at(j);
+      _top2pt_gen  = std_vector_partonGen_pt ->at(j);
 
-      if (fabs(eta1 - parton_eta) < 0.5 && fabs(phi1 - parton_phi) < 0.2) continue;
+      if (fabs(_top1eta_gen - _top2eta_gen) < 0.5) continue;
+      if (fabs(_top1phi_gen - _top2phi_gen) < 0.2) continue;
 
-      _top1eta_gen = eta1; 
-      _top1phi_gen = phi1; 
-      _top1pt_gen  = pt1; 
-      _top2eta_gen = parton_eta;  
-      _top2phi_gen = parton_phi;  
-      _top2pt_gen  = parton_pt;
-      
-      TLorentzVector t1, t2; 
+      ntop_pairs++;
 
-      t1.SetPtEtaPhiM(pt1,       eta1,       phi1,       173.);
-      t2.SetPtEtaPhiM(parton_pt, parton_eta, parton_phi, 173.);
+      TLorentzVector top1, top2; 
 
-      _m2t_gen    = (t1+t2).M();  
-      _dphitt_gen = fabs(t1.DeltaPhi(t2));
-      _detatt_gen = fabs(t1.Eta() - t2.Eta());
-	
-      break;
+      top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, 173.);
+      top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, 173.);
+
+      _m2t_gen    = (top1 + top2).M();  
+      _dphitt_gen = fabs(top1.DeltaPhi(top2));
+      _detatt_gen = fabs(top1.Eta() - top2.Eta());
     }
-
-    eta1 = parton_eta;
-    phi1 = parton_phi;
-    pt1  = parton_pt;
   }
+
+  if (ntop_pairs > 1)
+    printf("\n [AnalysisCMS::GetTops] Warning, ntop_pairs = %d\n\n", ntop_pairs);
+}
+
+
+//------------------------------------------------------------------------------
+// GetTopReco
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetTopReco()
+{
+  MassVariations theMass;
+
+  std::vector<TLorentzVector> myjets, nu1, nu2;
+  std::vector<Float_t> unc;
+
+  TVector2 myMET;
+
+  // Please check
+  // metPfType1Phi [-pi,   pi]
+  // myMET.Phi()   [  0, 2*pi]
+
+  myMET.SetMagPhi(metPfType1, metPfType1Phi);
+
+  for (int i=0; i<AnalysisJets.size(); i++) {
+
+    myjets.push_back(AnalysisJets.at(i).v);
+
+    unc.push_back(0.05);
+  }
+
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+  _topReco = nu1.size();
 }
