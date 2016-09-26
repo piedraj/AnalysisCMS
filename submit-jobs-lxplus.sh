@@ -45,10 +45,19 @@ echo "  "
 
 
 # Submit jobs to the queues
+#
+#    -q 8nm (8 minute)
+#    -q 1nh (1 hour)
+#    -q 8nh (8 hour)
+#    -q 1nd (1 day)
+#    -q 2nd (2 day)
+#    -q 1nw (1 week)
+#    -q 2nw (2 week)
+#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
 mkdir -p jobs
 cd jobs/
-bsub -q 1nh -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
+bsub -q 8nm -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
