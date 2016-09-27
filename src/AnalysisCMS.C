@@ -1855,7 +1855,6 @@ void AnalysisCMS::GetTopReco()
 
   TVector2 myMET;
 
-  // Please check
   // metPfType1Phi [-pi,   pi]
   // myMET.Phi()   [  0, 2*pi]
 
@@ -1865,7 +1864,7 @@ void AnalysisCMS::GetTopReco()
 
     myjets.push_back(AnalysisJets.at(i).v);
 
-    unc.push_back(0.05);
+    unc.push_back(5.);  // GeV
   }
 
   theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);

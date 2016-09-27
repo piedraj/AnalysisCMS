@@ -2,15 +2,30 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2tight.txt        nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_data_l2loose_fakeW.txt  nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight.txt          nominal"
+    echo "  No skim"
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_monoh_l2tight.txt       nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight.txt        nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/l2loose/samples_data_l2loose_fakeW.txt  nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/l2tight/samples_data_l2tight.txt        nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/l2tight/samples_mc_l2tight.txt          nominal"
     echo "  "
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_mc_l2tight_topSel.txt   nominal"
-    echo "  ./submit-jobs-lxplus.sh samples/80x/samples_ttdm_l2tight_topSel.txt nominal"
+    echo "  "
+    echo "  "
+    echo "  wwSel skim"
+    echo "  "
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/wwSel/samples_data_l2loose_fakeW.txt  nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/wwSel/samples_data_l2tight.txt        nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/wwSel/samples_mc_l2tight.txt          nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/wwSel/samples_monoh_l2tight.txt       nominal"
+    echo "  "
+    echo "  "
+    echo "  "
+    echo "  topSel skim"
+    echo "  "
+#   echo "  ./submit-jobs-lxplus.sh  samples/80x/topSel/samples_data_l2loose_fakeW.txt  nominal"  # Not yet available
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/topSel/samples_data_l2tight.txt        nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/topSel/samples_mc_l2tight.txt          nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/topSel/samples_ttdm_l2tight.txt        nominal"
+    echo "  ./submit-jobs-lxplus.sh  samples/80x/topSel/samples_stop_l2tight.txt        nominal"
     echo "  "
     exit -1
 fi
@@ -30,6 +45,15 @@ echo "  "
 
 
 # Submit jobs to the queues
+#
+#    -q 8nm (8 minute)
+#    -q 1nh (1 hour)
+#    -q 8nh (8 hour)
+#    -q 1nd (1 day)
+#    -q 2nd (2 day)
+#    -q 1nw (1 week)
+#    -q 2nw (2 week)
+#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
 echo "  And... submitting" $NJOBS "jobs"
