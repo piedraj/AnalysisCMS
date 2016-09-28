@@ -13,8 +13,8 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _saveminitree = false;
   _eventdump    = false;
 
-  _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
-  _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
+ // _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
+ // _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
   _systematic_idiso_do   = (systematic.Contains("Idisodo"))   ? true : false;
   _systematic_idiso_up   = (systematic.Contains("Idisoup"))   ? true : false;
   _systematic_trigger_do = (systematic.Contains("Triggerdo")) ? true : false;
@@ -1233,6 +1233,8 @@ void AnalysisCMS::OpenMinitree()
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
   // Stop variables
+  minitree->Branch("Mstop",           &susyMstop,        "Mstop/F");
+  minitree->Branch("Mlsp",            &susyMLSP,         "Mlsp/F");
   minitree->Branch("dyll",            &_dyll,            "dyll/F");
   minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
   minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");
