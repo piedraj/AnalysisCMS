@@ -1258,6 +1258,8 @@ void AnalysisCMS::OpenMinitree()
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
   // Stop variables
+  minitree->Branch("Mstop",           &susyMstop,        "Mstop/F");
+  minitree->Branch("Mlsp",            &susyMLSP,         "Mlsp/F");
   minitree->Branch("dyll",            &_dyll,            "dyll/F");
   minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
   minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");

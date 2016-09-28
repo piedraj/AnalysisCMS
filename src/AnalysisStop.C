@@ -66,6 +66,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
   // Loop over events
   //----------------------------------------------------------------------------
+
+  
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
@@ -97,7 +99,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	
       }
       
-      _event_weight *= EventBTagSF;
+      _event_weight *= EventBTagSF/bPogSF_CSVM;
       
       if (FastSimDataset!="") { 
 	
@@ -136,38 +138,37 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
+    bool pass_blind = _mt2ll < 100; // GeV; 
 
     FillLevelHistograms(Stop_00_Has2Leptons, pass);    
 
-    pass &= _mt2ll < 100; // GeV    
-
-    FillLevelHistograms(Stop_00_2LMt2upper100, pass);
+    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind);
 
    
     // Basics Stop
     //-------------------------------------------------------------------------
     pass &= mll>20.;
    
-    FillLevelHistograms(Stop_00_mll20, pass);
+    FillLevelHistograms(Stop_00_mll20, pass && pass_blind);
 
     pass &= fabs(mll - Z_MASS) > 15.;
 
-    FillLevelHistograms(Stop_00_Zveto, pass);
+    FillLevelHistograms(Stop_00_Zveto, pass && pass_blind);
 
     if (pass && _saveminitree) minitree->Fill();
 
     pass &= (MET.Et() > 40.);
     
-    FillLevelHistograms(Stop_00_Met40, pass); 
+    FillLevelHistograms(Stop_00_Met40, pass && pass_blind); 
     
-     pass &= _njet > 1;
+    pass &= _njet > 1;		
 
 
-    FillLevelHistograms(Stop_01_Has2Jets, pass);
+    FillLevelHistograms(Stop_01_Has2Jets, pass && pass_blind);
 
     pass &= (_nbjet30csvv2m > 0);
 
-    FillLevelHistograms(Stop_02_Has1BJet, pass);
+    FillLevelHistograms(Stop_02_Has1BJet, pass && pass_blind);
 
   }
 
