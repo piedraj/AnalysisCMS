@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
-const TString inputdir  = "../rootfiles/160920_new-presel/";
+const TString inputdir  = "../rootfiles/160922_new-presel/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -41,7 +41,7 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
-  Bool_t scale = linY;
+  Bool_t scale = logY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
@@ -53,8 +53,8 @@ void runPlotter(TString level,
   HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetStackOption(option);
-  plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    ( false);
+  plotter.SetPublicStyle(  false);
+  plotter.SetSavePdf    (  true );
 
   if (option.Contains("nostack"))
     {
@@ -261,6 +261,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 
 
 	  // WW ROC
@@ -317,7 +318,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptww"           + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 
 
 	  // WW and MonoH histograms
