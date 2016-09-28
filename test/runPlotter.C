@@ -3,7 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -38,8 +38,6 @@ void runPlotter(TString level,
   if (analysis.EqualTo("NONE")) return;
 
   float lumi = lumi_fb_2016;
-
-  //if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
@@ -129,9 +127,7 @@ void runPlotter(TString level,
     {
       plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
       plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
-    //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
       plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
-    //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
       plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
       plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
       plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
@@ -145,15 +141,15 @@ void runPlotter(TString level,
     }
 
 
-//  if (analysis.EqualTo("Stop"))
-//    {
-//      plotter.AddSignal("T2tt_mStop?????",   "m_{Stop}150-250 ",  color_Signal-10);  
-//      plotter.AddSignal("T2tt_mStop?????",  "m_{Stop}250-350 ", color_Signal-8);  
-//      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}350-400 ", color_Signal-6);  
-//      plotter.AddSignal("T2tt_mStop?????", "m_{Stop}400-1200 ", color_Signal-4);  
-//      plotter.AddSignal("T2tt_mStop?????", " T2bw ", color_Signal-2);  
-//    }
-// 
+  if (analysis.EqualTo("Stop"))
+    {
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}150-250",  color_Signal-10);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}250-350",  color_Signal-8);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal-6);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal-4);  
+      //      plotter.AddSignal("T2tt_mStop??", "T2bw",             color_Signal-2);  
+    }
+
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
@@ -175,7 +171,6 @@ void runPlotter(TString level,
   //     plotter.AddRocBackground("14_HZ");
   //     plotter.AddRocBackground("15_WgStar");
   //   }
-
 
 
   // Draw events by cut
@@ -248,9 +243,6 @@ void runPlotter(TString level,
 	  plotter.SetTitle(title);
 
 
-	
-
-
 	  // Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
@@ -273,17 +265,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
-	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
-	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                // Not in minitrees
-	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                // Not in minitrees
-	  plotter.Draw(prefix + "mllbb"          + suffix, "m_{" + sll + "bb}",                 10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "meff"           + suffix, "m_{eff}",                           10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, true, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, true, 0, 600);  // Not in minitre
-
-	                                                             	
 	  // WW ROC
 	  //--------------------------------------------------------------------
 	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
