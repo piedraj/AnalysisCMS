@@ -188,6 +188,10 @@ void runPlotter(TString level,
     {
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
+      TString title = (i < lastchannel) ? lchannel[i] : "cms";
+
+      plotter.SetTitle(title);
+
       plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY, false);
     }
 

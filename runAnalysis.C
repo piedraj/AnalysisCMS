@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //#include "src/AnalysisControl.C"
 //#include "src/AnalysisFR.C"
 //#include "src/AnalysisMonoH.C"

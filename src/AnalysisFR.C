@@ -1,7 +1,6 @@
 #define AnalysisFR_cxx
 #include "../include/AnalysisFR.h"
 
-
 //------------------------------------------------------------------------------
 // AnalysisFR
 //------------------------------------------------------------------------------
@@ -20,24 +19,23 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
   Setup(analysis, filename, luminosity);
 
-
   // Define fake rate histograms
   //----------------------------------------------------------------------------
   for (int i=0; i<ncut; i++) {
     
     TString directory = scut[i];
-
+    
     root_output->cd();
-
+    
     gDirectory->mkdir(directory);
-
+    
     root_output->cd(directory);
-      
+    
     for (int j=0; j<njetet; j++) {
-
+      
       TString muonsuffix = Form("_%.0fGeV", muonjetet[j]);
       TString elesuffix  = Form("_%.0fGeV", elejetet[j]);
-    
+      
       h_Muon_loose_pt_eta_bin[i][j] = new TH2D("h_Muon_loose_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Muon_tight_pt_eta_bin[i][j] = new TH2D("h_Muon_tight_pt_eta_bin" + muonsuffix, "", nptbin, ptbins, netabin, etabins);
       h_Ele_loose_pt_eta_bin [i][j] = new TH2D("h_Ele_loose_pt_eta_bin"  + elesuffix,  "", nptbin, ptbins, netabin, etabins);
@@ -52,23 +50,23 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       h_Muon_tight_eta_bin[i][j] = new TH1D("h_Muon_tight_eta_bin" + muonsuffix, "", netabin, etabins);
       h_Ele_loose_eta_bin [i][j] = new TH1D("h_Ele_loose_eta_bin"  + elesuffix,  "", netabin, etabins);
       h_Ele_tight_eta_bin [i][j] = new TH1D("h_Ele_tight_eta_bin"  + elesuffix,  "", netabin, etabins);
-
+	
       h_Muon_loose_pt[i][j] = new TH1D("h_Muon_loose_pt" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_pt[i][j] = new TH1D("h_Muon_tight_pt" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_pt [i][j] = new TH1D("h_Ele_loose_pt"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_pt [i][j] = new TH1D("h_Ele_tight_pt"  + elesuffix,  "", 1000, 0, 200);
-
+      
       h_Muon_loose_mtw[i][j] = new TH1D("h_Muon_loose_mtw" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_mtw[i][j] = new TH1D("h_Muon_tight_mtw" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_mtw [i][j] = new TH1D("h_Ele_loose_mtw"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_mtw [i][j] = new TH1D("h_Ele_tight_mtw"  + elesuffix,  "", 1000, 0, 200);
-
+	
       h_Muon_loose_m2l[i][j] = new TH1D("h_Muon_loose_m2l" + muonsuffix, "", 1000, 0, 200);
       h_Muon_tight_m2l[i][j] = new TH1D("h_Muon_tight_m2l" + muonsuffix, "", 1000, 0, 200);
       h_Ele_loose_m2l [i][j] = new TH1D("h_Ele_loose_m2l"  + elesuffix,  "", 1000, 0, 200);
       h_Ele_tight_m2l [i][j] = new TH1D("h_Ele_tight_m2l"  + elesuffix,  "", 1000, 0, 200);
-
-
+      
+      
       // Define effective luminosity estimation histograms
       //------------------------------------------------------------------------
       h_Muon_loose_pt_m2l[i][j] = new TH2D("h_Muon_loose_pt_m2l" + muonsuffix, "", 200, 0, 200, nptbin, ptbins);
@@ -77,95 +75,30 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       h_Ele_tight_pt_m2l [i][j] = new TH2D("h_Ele_tight_pt_m2l"  + elesuffix,  "", 200, 0, 200, nptbin, ptbins);
     }
   }
-
+  
   root_output->cd();
-
-
-  // Define prompt rate histograms
-  //----------------------------------------------------------------------------
-  h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Muon_tight_pt_eta_PR = new TH2D("h_Muon_tight_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
-  h_Ele_loose_pt_eta_PR  = new TH2D("h_Ele_loose_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-  h_Ele_tight_pt_eta_PR  = new TH2D("h_Ele_tight_pt_eta_PR",  "", nptbin, ptbins, netabin, etabins);
-    
-  h_Muon_loose_pt_PR = new TH1D("h_Muon_loose_pt_PR", "", nptbin, ptbins);
-  h_Muon_tight_pt_PR = new TH1D("h_Muon_tight_pt_PR", "", nptbin, ptbins);
-  h_Ele_loose_pt_PR  = new TH1D("h_Ele_loose_pt_PR",  "", nptbin, ptbins);
-  h_Ele_tight_pt_PR  = new TH1D("h_Ele_tight_pt_PR",  "", nptbin, ptbins);
-    
-  h_Muon_loose_eta_PR = new TH1D("h_Muon_loose_eta_PR", "", netabin, etabins);
-  h_Muon_tight_eta_PR = new TH1D("h_Muon_tight_eta_PR", "", netabin, etabins);
-  h_Ele_loose_eta_PR  = new TH1D("h_Ele_loose_eta_PR",  "", netabin, etabins);
-  h_Ele_tight_eta_PR  = new TH1D("h_Ele_tight_eta_PR",  "", netabin, etabins);
-
-
+  
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
+    
     Long64_t ientry = LoadTree(jentry);
-
+    
     if (ientry < 0) break;
-
+    
     fChain->GetEntry(jentry);
-
+    
     PrintProgress(jentry, _nentries);
-
+    
     EventSetup();
-
-    _Zlepton1type  = Loose;
-    _Zlepton2type  = Loose;
-    _Zdecayflavour = 0;
-
+    
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
-
+    
     _leptonPtMin  = (_channel == e) ?  13 :  10;
     _leptonEtaMax = (_channel == e) ? 2.5 : 2.4;
 
     if (Lepton1.v.Pt()        < _leptonPtMin)  continue;
     if (fabs(Lepton1.v.Eta()) > _leptonEtaMax) continue;
-
-
-    // Make Z candidate
-    //--------------------------------------------------------------------------
-    _m2l = -999;
-
-    _l2tight_weight = 1.;
-
-    if (AnalysisLeptons.size() >= 2) { 
-
-      for (int iLep1=0; iLep1<AnalysisLeptons.size(); iLep1++) {
-	
-	if (AnalysisLeptons[iLep1].v.Pt() < 10.) continue;
-
-	for (int iLep2=iLep1+1; iLep2<AnalysisLeptons.size(); iLep2++) {
-	  
-	  if (AnalysisLeptons[iLep2].v.Pt() < 10.) continue;
-
-	  if ((AnalysisLeptons[iLep1].flavour + AnalysisLeptons[iLep2].flavour) != 0.) continue;
-	  
-	  float inv_mass = (AnalysisLeptons[iLep1].v + AnalysisLeptons[iLep2].v).M();
-
-	  if (_m2l < 0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
-
-	    _m2l = inv_mass;
-
-	    _Zlepton1type = AnalysisLeptons[iLep1].type;  
-	    _Zlepton2type = AnalysisLeptons[iLep2].type;
-
-	    if (_Zlepton1type == Tight && _Zlepton2type == Tight)
-	      {
-		_l2tight_weight = (AnalysisLeptons[iLep1].idisoW * AnalysisLeptons[iLep2].idisoW);
-	      }
-
-	    _Zlepton1index = iLep1;
-	    _Zlepton2index = iLep2;
-
-	    _Zdecayflavour = AnalysisLeptons[iLep1].flavour; 
-	  }
-	}
-      }
-    }
 
 
     // Get the event weight
@@ -190,7 +123,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 4.813 : _event_weight *= 138.175;
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84;
 	}
 
       
@@ -198,7 +131,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == e)
 	{
-	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 5.226 : _event_weight *= 27.132;
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 8.51 : _event_weight *= 42.34;
 	}
 
     } else {
@@ -239,42 +172,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
 
 
-    // Prompt rate from MC
-    //--------------------------------------------------------------------------
-    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
-      
-      float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
-      float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
-      
-      if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
-
-	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
-
-	if (_Zlepton2type == Tight) {
-	  
-	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
-	}
-
-      }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-	
-	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
-
-	if (_Zlepton2type == Tight) {
-
-	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
-	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
-	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
-	}
-      }
-    }
-
-
     // Get the jets and the W transverse mass
     //--------------------------------------------------------------------------
     GetAwayJets();
@@ -297,89 +194,16 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       if (AnalysisJets[0].v.Pt() < _inputJetEt) continue; 
 
 
-      bool pass;
-  
-
       // QCD region
       //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw < 20);
+      bool pass;
+      pass = (_nlepton == 1);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 
-
-      // W region
-      //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() > 20 && _mtw > 20);
-      
-      FillLevelHistograms(FR_01_WRegion, i, pass);
-
-
-      // W region "QCD"
-      //------------------------------------------------------------------------
-      pass = (_nlepton == 1 && MET.Et() < 20 && _mtw > 20);
-
-      FillLevelHistograms(FR_02_WRegionQCD, i, pass);
-
-
-      // Z region
-      //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() > 20 && _mtw > 20 && _m2l > 20) {
-
-	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
- 
-	  h_Ele_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);     
-	  h_Ele_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Ele_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
-	    h_Ele_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  }
-	}
-	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-
-	  h_Muon_loose_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight);
-	  h_Muon_loose_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Muon_tight_m2l   [FR_03_ZRegion][i]->Fill(_m2l, _event_weight * _l2tight_weight);
-	    h_Muon_tight_pt_m2l[FR_03_ZRegion][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  } 
-	}
-      }
-
-
-      // Z region "QCD"
-      //------------------------------------------------------------------------
-      if (_nlepton > 1 && MET.Et() < 20 && _mtw < 20 && _m2l > 20) {
-
-	if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
- 
-	  h_Ele_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);     
-	  h_Ele_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-	  
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Ele_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	    h_Ele_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  }
-	}
-	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-	    
-	  h_Muon_loose_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	  h_Muon_loose_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight);
-	
-	  if (_Zlepton1type == Tight && _Zlepton2type == Tight) {
-
-	    h_Muon_tight_m2l   [FR_04_ZRegionQCD][i]->Fill(_m2l, _event_weight);
-	    h_Muon_tight_pt_m2l[FR_04_ZRegionQCD][i]->Fill(_m2l, Lepton1.v.Pt(), _event_weight * _l2tight_weight);
-	  } 
-	}
-      }
     }
   }
-
+  
 
   EndJob();
 }
@@ -482,54 +306,48 @@ void AnalysisFR::GetAwayJets()
 
 /*
 
-   [2016/07/20] Total luminosity = 6.274/fb
+   [2016/09/02] Total luminosity = 12.892/fb
 
    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
 
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu8_TrkIsoVVL_v*" 
 
    +----------------------+-------+------+-------+-------------------+------------------+
    | hltpath              | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +----------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29160 | 4.283             | 4.091            |
-   | HLT_Mu8_TrkIsoVVL_v4 | 13    | 49   | 26096 | 0.756             | 0.722            |
+   | HLT_Mu8_TrkIsoVVL_v3 | 23    | 65   | 29182 | 4.285             | 4.092            |
+   | HLT_Mu8_TrkIsoVVL_v4 | 30    | 111  | 69602 | 1.842             | 1.766            |
    +----------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Mu17_TrkIsoVVL_v*" 
 
    +-----------------------+-------+------+-------+-------------------+------------------+
    | hltpath               | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +-----------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29160 | 55.456            | 53.039           |
-   | HLT_Mu17_TrkIsoVVL_v3 | 13    | 49   | 26096 | 88.241            | 85.136           |
+   | HLT_Mu17_TrkIsoVVL_v2 | 23    | 65   | 29182 | 55.504            | 53.084           |
+   | HLT_Mu17_TrkIsoVVL_v3 | 30    | 111  | 69602 | 114.926           | 110.757          |
    +-----------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*" 
 
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
    | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 3.180             | 3.054            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29182 | 3.184             | 3.057            |
    | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 0.675             | 0.646            |
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 0.822             | 0.794            |
-   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 0.758             | 0.732            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 8540  | 0.751             | 0.725            |
+   | HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 23    | 83   | 53518 | 4.240             | 4.084            |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
 
-
-
-   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*"
+   brilcalc lumi -b "STABLE BEAMS" --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json -u /pb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt --hltpath "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*" 
 
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
    | hltpath                                     | nfill | nrun | ncms  | totdelivered(/pb) | totrecorded(/pb) |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29160 | 17.554            | 16.815           |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v3 | 23    | 65   | 29182 | 17.578            | 16.838           |
    | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v4 | 4     | 12   | 7544  | 3.247             | 3.112            |
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 9211  | 3.938             | 3.805            |
-   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 6     | 21   | 9341  | 3.517             | 3.400            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v5 | 4     | 16   | 8540  | 3.584             | 3.459            |
+   | HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v6 | 23    | 83   | 53518 | 19.652            | 18.937           |
    +---------------------------------------------+-------+------+-------+-------------------+------------------+
 
 */
