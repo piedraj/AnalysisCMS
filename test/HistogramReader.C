@@ -658,6 +658,12 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   if (_drawyield && !_publicstyle)
     final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
+  if (Yield(hist) < 0)
+    printf("\n [HistogramReader::DrawLegend] Warning: %s %s yield = %f\n\n",
+	   label.Data(),
+	   hist->GetName(),
+	   Yield(hist));
+
   legend->AddEntry(hist, final_label.Data(), option.Data());
   legend->Draw();
 
@@ -887,16 +893,7 @@ Float_t HistogramReader::Yield(TH1* hist)
 
   Int_t nbins = hist->GetNbinsX();
 
-  Float_t hist_yield = hist->Integral(0, nbins+1);
-
-  if (hist_yield < 0)
-    {
-      printf("\n [HistogramReader::Yield] Warning: %s yield = %f\n\n",
-	     hist->GetName(),
-	     hist_yield);
-    }
-
-  return hist_yield;
+  return hist->Integral(0, nbins+1);
 }
 
 

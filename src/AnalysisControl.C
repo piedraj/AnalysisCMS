@@ -80,11 +80,13 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
+    float trailing_ptmin = (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) ? 13. : 10.;
+
     bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
 
     pass_2l &= (Lepton1.v.Pt() > 20.);
-    pass_2l &= (Lepton2.v.Pt() > 20.);
-    pass_2l &= (_m2l > 20.);
+    pass_2l &= (Lepton2.v.Pt() > trailing_ptmin);
+    pass_2l &= (_m2l > 12.);
 
 
     // No cuts
@@ -123,7 +125,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(Control_03_Top, pass);
 
 
-    // WW
+    // WW selection as in AN-16-182 (v3) 4.1
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
@@ -131,7 +133,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
-    pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     pass &= (_channel == em || MET.Et() > 40.);
