@@ -213,12 +213,14 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep1eta;
   float                  _lep1phi;
   float                  _lep1pt;
+  float                  _lep1mass;
   float                  _lep1eta_gen;
   float                  _lep1phi_gen;
   float                  _lep1pt_gen;
   float                  _lep2eta;
   float                  _lep2phi;
   float                  _lep2pt;
+  float			 _lep2mass;
   float                  _lep2eta_gen;
   float                  _lep2phi_gen;
   float                  _lep2pt_gen;
@@ -254,6 +256,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2eta_gen;
   float                  _top2phi_gen;
   float                  _top2pt_gen;
+  float                  _nsol_1_1_10;
+  float                  _nsol_10_10_10;
+  float                  _nsol_10_10_100;
   float			 _topReco;
 
   float                  _mll13;
