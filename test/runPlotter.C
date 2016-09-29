@@ -6,7 +6,7 @@
 const Bool_t datadriven = true;
 const Bool_t allplots   = false;
 
-const TString inputdir  = "../rootfiles/160922_new-presel/";
+const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -39,13 +39,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-<<<<<<< HEAD
-  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
-
-  Bool_t scale = logY;
-=======
   Bool_t scale = linY;
->>>>>>> e192630d010e057f779dda8ef49ba80189752e42
 
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
@@ -57,8 +51,8 @@ void runPlotter(TString level,
   HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetStackOption(option);
-  plotter.SetPublicStyle(  false);
-  plotter.SetSavePdf    (  true );
+  plotter.SetPublicStyle(false);
+  plotter.SetSavePdf    (false);
 
   if (option.Contains("nostack"))
     {
@@ -256,6 +250,7 @@ void runPlotter(TString level,
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
@@ -269,7 +264,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
-	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 
 
 	  // WW ROC
