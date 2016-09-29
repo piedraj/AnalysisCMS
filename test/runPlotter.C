@@ -172,6 +172,25 @@ void runPlotter(TString level,
   //     plotter.AddRocBackground("15_WgStar");
   //   }
 
+  if (analysis.EqualTo("MonoH"))
+    {                       
+      plotter.AddRocSignal("monoH_2HDM_MZp-600_MA0-400");
+
+      plotter.AddRocBackground("06_WW");
+      plotter.AddRocBackground("04_TTTo2L2Nu");
+      plotter.AddRocBackground("00_Fakes");
+      plotter.AddRocBackground("02_WZTo3LNu");
+      plotter.AddRocBackground("03_VZ");
+      plotter.AddRocBackground("05_ST");
+      plotter.AddRocBackground("07_ZJets");
+      plotter.AddRocBackground("09_TTV");
+      plotter.AddRocBackground("10_HWW");
+      plotter.AddRocBackground("11_Wg");
+      plotter.AddRocBackground("12_Zg");
+      plotter.AddRocBackground("13_VVV");
+      plotter.AddRocBackground("14_HZ");
+      plotter.AddRocBackground("15_WgStar");
+    }
 
   // Draw events by cut
   //----------------------------------------------------------------------------
@@ -266,12 +285,20 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
-	  // WW ROC
+	  // WW and monoH ROCs
 	  //--------------------------------------------------------------------
-	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
-	  //   {
-	  //     plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
-	  //   }
+	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
+	    {
+	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV",   0, 1000);
+	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}", 50,   "rad",   0,  5.0);
+	    }
+
 	  
 
 	  if (!allplots) continue;

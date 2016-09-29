@@ -1274,6 +1274,10 @@ void HistogramReader::Roc(TString hname,
 
   //Calculating Yields and Efficiencies
   for (int s = 0; s < npoints; ++s){
+    sigYield = 0;
+    sigTot = 0;
+    bkgYield = 0;
+    bkgTot = 0;
     for (int sig = 0; sig < _roc_signals.size(); ++sig){
       sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
       sigTot   += hSig[sig] -> Integral();
