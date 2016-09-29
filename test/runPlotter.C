@@ -39,8 +39,6 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_2016;
 
-  if (analysis.EqualTo("Stop")) lumi = lumi_fb_2016_susy;
-
   Bool_t scale = linY;
 
   if (analysis.EqualTo("MonoH")) scale = logY;
@@ -53,8 +51,8 @@ void runPlotter(TString level,
   HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetStackOption(option);
-  plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    ( false);
+  plotter.SetPublicStyle(false);
+  plotter.SetSavePdf    (false);
 
   if (option.Contains("nostack"))
     {
@@ -129,9 +127,7 @@ void runPlotter(TString level,
     {
       plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
       plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
-    //plotter.AddSignal("monoH_2HDM_MZp-1000_MA0-400", "m_{Z'} 1000", color_Signal-2);
       plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
-    //plotter.AddSignal("monoH_2HDM_MZp-1400_MA0-400", "m_{Z'} 1400", color_Signal);
       plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
       plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
       plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
@@ -147,9 +143,11 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Stop"))
     {
-      plotter.AddSignal("T2tt_mStop100-125_mLSP1to50",   "m_{Stop}100-125 m_{LSP}1-50",  color_Signal-4);  
-      plotter.AddSignal("T2tt_mStop150-175_mLSP1to100",  "m_{Stop}150-175 m_{LSP}1-100", color_Signal-3);  
-      plotter.AddSignal("T2tt_mStop183to291_mLSP1to100", "m_{Stop}183-291 m_{LSP}1-100", color_Signal-2);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}150-250",  color_Signal-10);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}250-350",  color_Signal-8);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal-6);  
+      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal-4);  
+      //      plotter.AddSignal("T2tt_mStop??", "T2bw",             color_Signal-2);  
     }
 
 
@@ -252,6 +250,7 @@ void runPlotter(TString level,
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
@@ -276,7 +275,6 @@ void runPlotter(TString level,
 	  
 
 	  if (!allplots) continue;
-
 
 	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                 // Not in minitrees
@@ -321,7 +319,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptww"           + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 
 
 	  // WW and MonoH histograms
