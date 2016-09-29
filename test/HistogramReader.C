@@ -1262,22 +1262,20 @@ void HistogramReader::Roc(TString hname,
   TGraph* rocGraph = new TGraph();
   TGraph* significanceGraph = new TGraph();
 
-  float sigEff = 0.;
-  float bkgEff = 0.;
-  float sigYield = 0.;
-  float bkgYield = 0.;
-  float sigTot = 0.;
-  float bkgTot = 0.;
+  float sigEff       = 0.;
+  float bkgEff       = 0.;
   float significance = 0.;
-  float sigMax = 0.;
-  float xOfTheMax = 0.;
+  float sigMax       = 0.;
+  float xOfTheMax    = 0.;
 
-  //Calculating Yields and Efficiencies
-  for (int s = 0; s < npoints; ++s){
-    sigYield = 0;
-    sigTot = 0;
-    bkgYield = 0;
-    bkgTot = 0;
+  // Calculating yields and efficiencies
+  for (int s=0; s<npoints; ++s) {
+
+    float sigYield = 0;
+    float sigTot   = 0;
+    float bkgYield = 0;
+    float bkgTot   = 0;
+
     for (int sig = 0; sig < _roc_signals.size(); ++sig){
       sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
       sigTot   += hSig[sig] -> Integral();
