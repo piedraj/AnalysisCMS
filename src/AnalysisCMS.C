@@ -1237,6 +1237,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nsol_10_10_100", &_nsol_10_10_100, "nsol_10_10_100/F");
 
 
+
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
@@ -1894,12 +1895,12 @@ void AnalysisCMS::GetTopReco()
   nu2.clear(); 
 
 
-  theMass.performAllVariations(10, 10, 100, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+  //theMass.performAllVariations(10, 10, 100, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
 
-  _nsol_10_10_100 = nu1.size(); 
+  _nsol_10_10_100 = _nsol_1_1_10; //nu1.size(); 
 
-  nu1.clear(); 
-  nu2.clear(); 
+  //nu1.clear(); 
+  //nu2.clear(); 
 
 
   _topReco = _nsol_1_1_10; 
