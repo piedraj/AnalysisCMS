@@ -1163,7 +1163,7 @@ void HistogramReader::WriteYields(TH1*    hist,
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %22s", " ");
+      _yields_table << Form("\n %14s", " ");
         
       for (int i=1; i<=hist->GetNbinsX(); i++) {
 
@@ -1175,7 +1175,7 @@ void HistogramReader::WriteYields(TH1*    hist,
       _yields_table << Form(" \\\\\n");
     }
 
-  _yields_table << Form(" %22s", label.Data());
+  _yields_table << Form(" %14s", label.Data());
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
 
