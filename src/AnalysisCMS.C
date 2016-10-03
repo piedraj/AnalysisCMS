@@ -1234,7 +1234,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("njet",           &_njet,           "njet/F");
   minitree->Branch("nsol_1_1_10",    &_nsol_1_1_10,    "nsol_1_1_10/F");
   minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
-  minitree->Branch("nsol_10_10_100", &_nsol_10_10_100, "nsol_10_10_100/F");
 
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);

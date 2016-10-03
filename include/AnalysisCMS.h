@@ -246,6 +246,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
+  float                  _nsol_1_1_10;
+  float                  _nsol_10_10_10;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
@@ -256,9 +258,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2eta_gen;
   float                  _top2phi_gen;
   float                  _top2pt_gen;
-  float                  _nsol_1_1_10;
-  float                  _nsol_10_10_10;
-  float                  _nsol_10_10_100;
   float			 _topReco;
 
   float                  _mll13;
