@@ -555,15 +555,15 @@ void AnalysisCMS::GetLeptons()
 
   _nlepton = AnalysisLeptons.size();
 
-  _lep1eta = Lepton1.v.Eta();
-  _lep1phi = Lepton1.v.Phi();
-  _lep1pt  = Lepton1.v.Pt();
-  _lep1mass= Lepton1.v.M(); 
+  _lep1eta  = Lepton1.v.Eta();
+  _lep1phi  = Lepton1.v.Phi();
+  _lep1pt   = Lepton1.v.Pt();
+  _lep1mass = Lepton1.v.M(); 
 
-  _lep2eta = Lepton2.v.Eta();
-  _lep2phi = Lepton2.v.Phi();
-  _lep2pt  = Lepton2.v.Pt();
-  _lep2mass= Lepton2.v.M(); 
+  _lep2eta  = Lepton2.v.Eta();
+  _lep2phi  = Lepton2.v.Phi();
+  _lep2pt   = Lepton2.v.Pt();
+  _lep2mass = Lepton2.v.M(); 
 
   _detall = fabs(_lep1eta - _lep2eta);
 }
@@ -1236,8 +1236,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
   minitree->Branch("nsol_10_10_100", &_nsol_10_10_100, "nsol_10_10_100/F");
 
-
-
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
@@ -1862,7 +1860,7 @@ void AnalysisCMS::GetTopReco()
   MassVariations theMass;
 
   std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> unc;
+  std::vector<Float_t> jet_uncertainty;
 
   TVector2 myMET;
 
@@ -1875,33 +1873,27 @@ void AnalysisCMS::GetTopReco()
 
     myjets.push_back(AnalysisJets.at(i).v);
 
-    unc.push_back(5.);  // GeV
+    jet_uncertainty.push_back(5.);  // GeV
   }
 
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
-  theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+  _topReco = nu1.size();
 
-  _nsol_1_1_10 = nu1.size();
+  if (_saveminitree)
+    {
+      nu1.clear(); 
+      nu2.clear();
+      
+      theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
-  nu1.clear(); 
-  nu2.clear();
+      _nsol_1_1_10 = nu1.size();
  
+      nu1.clear(); 
+      nu2.clear(); 
 
-  theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2); 
+      theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
 
-  _nsol_10_10_10 = nu1.size(); 
-
-  nu1.clear(); 
-  nu2.clear(); 
-
-
-  //theMass.performAllVariations(10, 10, 100, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
-
-  _nsol_10_10_100 = _nsol_1_1_10; //nu1.size(); 
-
-  //nu1.clear(); 
-  //nu2.clear(); 
-
-
-  _topReco = _nsol_1_1_10; 
+      _nsol_10_10_10 = nu1.size(); 
+    }
 }
