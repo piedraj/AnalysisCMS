@@ -558,10 +558,12 @@ void AnalysisCMS::GetLeptons()
   _lep1eta = Lepton1.v.Eta();
   _lep1phi = Lepton1.v.Phi();
   _lep1pt  = Lepton1.v.Pt();
+  _lep1mass= Lepton1.v.M(); 
 
   _lep2eta = Lepton2.v.Eta();
   _lep2phi = Lepton2.v.Phi();
   _lep2pt  = Lepton2.v.Pt();
+  _lep2mass= Lepton2.v.M(); 
 
   _detall = fabs(_lep1eta - _lep2eta);
 }
@@ -1202,9 +1204,11 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1eta",        &_lep1eta,        "lep1eta/F");
   minitree->Branch("lep1phi",        &_lep1phi,        "lep1phi/F");
   minitree->Branch("lep1pt",         &_lep1pt,         "lep1pt/F");
+  minitree->Branch("lep1mass",       &_lep1mass,       "lep1mass/F");
   minitree->Branch("lep2eta",        &_lep2eta,        "lep2eta/F");
   minitree->Branch("lep2phi",        &_lep2phi,        "lep2phi/F");
   minitree->Branch("lep2pt",         &_lep2pt,         "lep2pt/F");
+  minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
   minitree->Branch("mc",             &_mc,             "mc/F");
   minitree->Branch("m2l",            &_m2l,            "m2l/F");
   minitree->Branch("mpmet",          &_mpmet,          "mpmet/F");
@@ -1228,6 +1232,11 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30cmvav2m", &_nbjet30cmvav2m, "nbjet30cmvav2m/F");
   minitree->Branch("nbjet30cmvav2t", &_nbjet30cmvav2t, "nbjet30cmvav2t/F");
   minitree->Branch("njet",           &_njet,           "njet/F");
+  minitree->Branch("nsol_1_1_10",    &_nsol_1_1_10,    "nsol_1_1_10/F");
+  minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
+  minitree->Branch("nsol_10_10_100", &_nsol_10_10_100, "nsol_10_10_100/F");
+
+
 
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
@@ -1869,7 +1878,30 @@ void AnalysisCMS::GetTopReco()
     unc.push_back(5.);  // GeV
   }
 
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
 
-  _topReco = nu1.size();
+  theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+  _nsol_1_1_10 = nu1.size();
+
+  nu1.clear(); 
+  nu2.clear();
+ 
+
+  theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2); 
+
+  _nsol_10_10_10 = nu1.size(); 
+
+  nu1.clear(); 
+  nu2.clear(); 
+
+
+  //theMass.performAllVariations(10, 10, 100, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2);
+
+  _nsol_10_10_100 = _nsol_1_1_10; //nu1.size(); 
+
+  //nu1.clear(); 
+  //nu2.clear(); 
+
+
+  _topReco = _nsol_1_1_10; 
 }
