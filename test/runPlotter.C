@@ -54,8 +54,8 @@ void runPlotter(TString level,
   HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetStackOption(option);
-  plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    ( false);
+  plotter.SetPublicStyle(false);
+  plotter.SetSavePdf    (false);
 
   if (option.Contains("nostack"))
     {
@@ -82,7 +82,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",       "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStat",   "W#gamma*", color_WgStar);
       plotter.AddProcess("03_VZ",       "VZ",       color_VZ);
-    //plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
+      plotter.AddProcess("09_TTV",      "ttV",      color_TTV);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
       if (datadriven)
@@ -108,7 +108,7 @@ void runPlotter(TString level,
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
-    //plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
+      plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
       plotter.AddProcess("05_ST",        "tW",       color_ST);
 
@@ -156,24 +156,25 @@ void runPlotter(TString level,
 
   // ROC curve inputs
   //----------------------------------------------------------------------------
-  // if (analysis.EqualTo("WW"))
-  //   {
-  //     plotter.AddRocSignal("06_WW");
-  //
-  //     plotter.AddRocBackground("04_TTTo2L2Nu");
-  //     plotter.AddRocBackground("00_Fakes");
-  //     plotter.AddRocBackground("02_WZTo3LNu");
-  //     plotter.AddRocBackground("03_VZ");
-  //     plotter.AddRocBackground("05_ST");
-  //     plotter.AddRocBackground("07_ZJets");
-  //     plotter.AddRocBackground("09_TTV");
-  //     plotter.AddRocBackground("10_HWW");
-  //     plotter.AddRocBackground("11_Wg");
-  //     plotter.AddRocBackground("12_Zg");
-  //     plotter.AddRocBackground("13_VVV");
-  //     plotter.AddRocBackground("14_HZ");
-  //     plotter.AddRocBackground("15_WgStar");
-  //   }
+  if (analysis.EqualTo("MonoH"))
+    {                       
+      plotter.AddRocSignal("monoH_2HDM_MZp-600_MA0-400");
+      
+      plotter.AddRocBackground("06_WW");
+      plotter.AddRocBackground("04_TTTo2L2Nu");
+      plotter.AddRocBackground("00_Fakes");
+      plotter.AddRocBackground("02_WZTo3LNu");
+      plotter.AddRocBackground("03_VZ");
+      plotter.AddRocBackground("05_ST");
+      plotter.AddRocBackground("07_ZJets");
+      plotter.AddRocBackground("09_TTV");
+      plotter.AddRocBackground("10_HWW");
+      plotter.AddRocBackground("11_Wg");
+      plotter.AddRocBackground("12_Zg");
+      plotter.AddRocBackground("13_VVV");
+      plotter.AddRocBackground("14_HZ");
+      plotter.AddRocBackground("15_WgStar");
+    }
 
 
   // Draw events by cut
@@ -253,6 +254,7 @@ void runPlotter(TString level,
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
+	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
@@ -268,13 +270,20 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
-	  // WW ROC
+	  // WW and MonoH ROC
 	  //--------------------------------------------------------------------
-	  // if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
-	  //   {
-	  //     plotter.Roc(prefix + "ht" + suffix, "H_{T}", 1000, "GeV", 150, 1000);
-	  //   }
-	  
+	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
+	    {
+	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
+	    }
+
 
 	  if (!allplots) continue;
 
@@ -321,7 +330,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptww"           + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
 	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 
 
 	  // WW and MonoH histograms

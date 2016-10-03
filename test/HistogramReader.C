@@ -424,8 +424,8 @@ void HistogramReader::Draw(TString hname,
   
   // Search signals legend in a new column
   //----------------------------------------------------------------------------
-  nx++;
   ny = 0;
+  nx++;
 
   for (int i=0; i<_signalhist.size(); i++)
     {
@@ -1050,6 +1050,13 @@ Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
 
   Float_t score_value = 0;
   Float_t score_x     = 0;
+  Float_t sig_total   = Yield(sig_hist);
+
+
+  // For The Punzi Effect
+  // http://arxiv.org/pdf/physics/0308063v2.pdf
+  Float_t a = 5.;
+  Float_t b = 1.645;  // Corresponds to a p-value equal to 0.05
 
 
   for (UInt_t k=0; k<nbins+1; k++) {
@@ -1057,13 +1064,17 @@ Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
     Float_t sig_yield = sig_hist->Integral(k, nbins+1);
     Float_t bkg_yield = bkg_hist->Integral(k, nbins+1);
 
+    Float_t sig_eff = (sig_total > 0.) ? sig_yield / sig_total : -999;
+
     if (sig_yield > 0. && bkg_yield > 0.)
       {
 	Float_t score = -999;
 
 	if (fom.EqualTo("S/sqrt(B)"))   score = sig_yield / sqrt(bkg_yield);
 	if (fom.EqualTo("S/sqrt(S+B)")) score = sig_yield / sqrt(sig_yield + bkg_yield);
-	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield;
+	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield; 
+	if (fom.EqualTo("PunziEq6"))    score =   sig_eff / (b*b + 2*a*sqrt(bkg_yield) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkg_yield)); 
+	if (fom.EqualTo("PunziEq7"))    score =   sig_eff / (a/2 + sqrt(bkg_yield));
 
 	if (score > score_value)
 	  {
@@ -1075,11 +1086,11 @@ Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
 
 
   printf("\n [HistogramReader::GetBestScoreX] x = %.2f (%.2f < x < %.2f) has the best %s (%f)\n\n",
-	 score_x,
-	 sig_hist->GetXaxis()->GetXmin(),
-	 sig_hist->GetXaxis()->GetXmax(),
-	 fom.Data(),
-	 score_value);
+  	 score_x,
+  	 sig_hist->GetXaxis()->GetXmin(),
+  	 sig_hist->GetXaxis()->GetXmax(),
+   	 fom.Data(),
+  	 score_value);
 
 
   return score_x;
@@ -1251,18 +1262,20 @@ void HistogramReader::Roc(TString hname,
   TGraph* rocGraph = new TGraph();
   TGraph* significanceGraph = new TGraph();
 
-  float sigEff = 0.;
-  float bkgEff = 0.;
-  float sigYield = 0.;
-  float bkgYield = 0.;
-  float sigTot = 0.;
-  float bkgTot = 0.;
+  float sigEff       = 0.;
+  float bkgEff       = 0.;
   float significance = 0.;
-  float sigMax = 0.;
-  float xOfTheMax = 0.;
+  float sigMax       = 0.;
+  float xOfTheMax    = 0.;
 
-  //Calculating Yields and Efficiencies
-  for (int s = 0; s < npoints; ++s){
+  // Calculating yields and efficiencies
+  for (int s=0; s<npoints; ++s) {
+
+    float sigYield = 0;
+    float sigTot   = 0;
+    float bkgYield = 0;
+    float bkgTot   = 0;
+
     for (int sig = 0; sig < _roc_signals.size(); ++sig){
       sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
       sigTot   += hSig[sig] -> Integral();
