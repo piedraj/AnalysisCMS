@@ -1879,6 +1879,11 @@ void AnalysisCMS::GetTopReco()
 
   _topReco = nu1.size();
 
+  if (nu1.size() == 1 || nu1.size() == 3)
+    {
+      printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
+    }
+
   if (_saveminitree)
     {
       nu1.clear(); 
