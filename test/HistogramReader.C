@@ -263,6 +263,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
 
+  _allmchist->SetName(_mchist[0]->GetName());
+
   // Possible modification (how to deal with systematic uncertainties?)
   //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
 
@@ -1157,6 +1159,8 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
 void HistogramReader::WriteYields(TH1*    hist,
 				  TString label)
 {
+  TString hname = hist->GetName();
+
   if (!_writeyields) return;
 
   if (_writelabels)
@@ -1169,10 +1173,10 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" & %-32s", binlabel.Data());
+	_yields_table << Form(" | %-31s", binlabel.Data());
       }
 
-      _yields_table << Form(" \\\\\n");
+      _yields_table << Form("\n");
     }
 
   _yields_table << Form(" %14s", label.Data());
@@ -1184,19 +1188,21 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" & %7.0f %16s", process_yield, " ");
+	_yields_table << Form(" | %7.0f %14s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" & %10.2f $\\pm$ %7.2f", process_yield, process_error);
+	_yields_table << Form(" | %10.2f +/- %7.2f", process_yield, process_error);
       }
 
-    float process_percent = 1e2 * process_yield / hist->GetBinContent(1);
-    
-    _yields_table << Form(" (%5.1f)", process_percent);
+    int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
+
+    float process_percent = 1e2 * process_yield / hist->GetBinContent(denominator);
+
+    _yields_table << Form(" (%5.1f%s)", process_percent, "%");
   }
 
-  _yields_table << Form(" \\\\\n");
+  _yields_table << Form("\n");
 }
 
 
