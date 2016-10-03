@@ -1239,123 +1239,104 @@ void HistogramReader::Roc(TString hname,
 			  TString units,
 			  Float_t xmin,
 			  Float_t xmax)
-{  
-  //Recalling Signal files and histograms
+{
+  // Recall signal files and histograms
   TFile* fSig[_roc_signals.size()];
-  TH1F*  hSig[_roc_signals.size()]; 
-  TH1F*  hSigTot; 
-  for (int i = 0; i < _roc_signals.size(); ++i){
-    fSig[i] = new TFile(_roc_signals.at(i));
-    hSig[i] = (TH1F*) fSig[i] -> Get(hname);
-  }
+  TH1F*  hSig[_roc_signals.size()];
 
-  //Recalling Background files and histograms
+  for (int i=0; i<_roc_signals.size(); ++i)
+    {
+      fSig[i] = new TFile(_roc_signals.at(i));
+      hSig[i] = (TH1F*)fSig[i]->Get(hname);
+    }
+
+  // Recall background files and histograms
   TFile* fBkg[_roc_backgrounds.size()];
   TH1F*  hBkg[_roc_backgrounds.size()];
-  for (int j = 0; j < _roc_backgrounds.size(); ++j){
-    fBkg[j] = new TFile(_roc_backgrounds.at(j));
-    hBkg[j] = (TH1F*) fBkg[j] -> Get(hname);
-  }
 
+  for (int j=0; j<_roc_backgrounds.size(); ++j)
+    {
+      fBkg[j] = new TFile(_roc_backgrounds.at(j));
+      hBkg[j] = (TH1F*)fBkg[j]->Get(hname);
+    }
+
+
+  // Compute ROC and significance
+  //----------------------------------------------------------------------------
   float step = (xmax - xmin) / npoints;
 
   TGraph* rocGraph = new TGraph();
-  TGraph* significanceGraph = new TGraph();
+  TGraph* sigGraph = new TGraph();
 
-  float sigEff       = 0.;
-  float bkgEff       = 0.;
-  float significance = 0.;
-  float sigMax       = 0.;
-  float xOfTheMax    = 0.;
+  float sigMax    = 0;
+  float xOfTheMax = 0;
 
-  // Calculating yields and efficiencies
-  for (int s=0; s<npoints; ++s) {
+  for (int s=0; s<=npoints; ++s) {
 
     float sigYield = 0;
-    float sigTot   = 0;
     float bkgYield = 0;
-    float bkgTot   = 0;
+    float sigTotal = 0;
+    float bkgTotal = 0;
 
-    for (int sig = 0; sig < _roc_signals.size(); ++sig){
-      sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
-      sigTot   += hSig[sig] -> Integral();
-    }    
-    for (int bkg = 0; bkg < _roc_backgrounds.size(); ++bkg){
-      bkgYield += hBkg[bkg] -> Integral(0., hBkg[bkg] -> FindBin(xmin + s*step));
-      bkgTot   += hBkg[bkg] -> Integral();
+    for (int sig=0; sig<_roc_signals.size(); ++sig) {
+      sigYield += hSig[sig]->Integral(-1, hSig[sig]->FindBin(xmin + s*step));
+      sigTotal += hSig[sig]->Integral(-1, -1);
     }
-    if (sigTot != 0)
-      sigEff = sigYield / sigTot;
-    if (bkgTot != 0)
-      bkgEff = bkgYield / bkgTot;
-    significance = sigYield / (sigYield + bkgYield);
-    if (significance > sigMax){
-      sigMax = significance;
+
+    for (int bkg=0; bkg<_roc_backgrounds.size(); ++bkg) {
+      bkgYield += hBkg[bkg]->Integral(-1, hBkg[bkg]->FindBin(xmin + s*step));
+      bkgTotal += hBkg[bkg]->Integral(-1, -1);
+    }
+
+    float sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
+    float bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
+
+    float significance = sigYield / (sigYield + bkgYield);
+
+    if (significance > sigMax) {
+      sigMax    = significance;
       xOfTheMax = xmin + s*step;
     }
-    rocGraph         ->SetPoint(s, sigEff, 1 - bkgEff);
-    significanceGraph->SetPoint(s, xmin + s*step, significance);
+
+    rocGraph->SetPoint(s, sigEff, 1 - bkgEff);
+    sigGraph->SetPoint(s, xmin + s*step, significance);
   }
 
-  cout<<"My guess is that you should cut at "<<xOfTheMax<<endl;
+  printf(" [HistogramReader::Roc] You should cut at %f\n\n", xOfTheMax);
 
-  //Cosmetics  
-  // TStyle* RocStyle = new TStyle("RocStyle", "RocStyle");
-  // gStyle = RocStyle;
 
-  // RocStyle->SetTitleAlign     (   22);
-  // RocStyle->SetTitleBorderSize(    0);
-  // RocStyle->SetTitleFillColor (   10);
-  // RocStyle->SetTitleFont      (   42);
-  // RocStyle->SetTitleFontSize  (0.045);
-  // RocStyle->SetTitleX         (0.500);
-  // RocStyle->SetTitleY         (0.950);
+  // Draw and save ROC
+  //----------------------------------------------------------------------------
+  TCanvas* rocCanvas = new TCanvas("rocCanvas", "rocCanvas");
 
-  rocGraph->SetTitle("ROC Curve - " + xtitle);
-  rocGraph->GetXaxis()->SetRangeUser(0.,1.);
-  rocGraph->GetYaxis()->SetRangeUser(0.,1.);
+  rocGraph->Draw("ap");
+
+  rocGraph->SetTitle("ROC curve - " + xtitle);
+  rocGraph->GetXaxis()->SetRangeUser(0, 1);
+  rocGraph->GetYaxis()->SetRangeUser(0, 1);
   rocGraph->GetXaxis()->SetTitle("signal efficiency");
   rocGraph->GetYaxis()->SetTitle("background rejection");
   rocGraph->GetYaxis()->SetTitleOffset(1.4);
 
-  TString myxtitle = xtitle;
-  if (units != "NULL")
-    myxtitle = xtitle + " [" + units + "]";
-
-  significanceGraph->SetTitle("significance curve - " + xtitle);
-  significanceGraph->GetXaxis()->SetRangeUser(xmin, xmax);
-  significanceGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
-  significanceGraph->GetXaxis()->SetTitle(myxtitle);
-  significanceGraph->GetYaxis()->SetTitle("S / (S + B)");
-  significanceGraph->GetYaxis()->SetTitleOffset(1.4);
-
-  //Printing and Saving
-  TCanvas *c1 = new TCanvas("c1","c1", 550, 600);
-  c1->cd();
-  TPad* pad1 = new TPad("pad1", "pad1", 0., 0., 1.0, 1.0);
-  pad1->SetLeftMargin(0.15);
-  pad1->SetBottomMargin(0.15);
-  pad1->SetTopMargin(0.15);
-  pad1->Draw();
-  pad1->cd();
-  rocGraph->Draw("AP");
-  //c1->Print(variable + "ROC.pdf","pdf");
-  if (_savepdf) c1->SaveAs(_outputdir + hname + "_ROC.pdf");
-  if (_savepng) c1->SaveAs(_outputdir + hname + "_ROC.png");
+  if (_savepdf) rocCanvas->SaveAs(_outputdir + hname + "_ROC.pdf");
+  if (_savepng) rocCanvas->SaveAs(_outputdir + hname + "_ROC.png");
 
 
-  //  gSystem->Exec("mv " + variable + "ROC.pdf " + );
+  // Draw and save significance
+  //----------------------------------------------------------------------------
+  TCanvas *sigCanvas = new TCanvas("sigCanvas", "sigCanvas");
 
-  TCanvas *c2 = new TCanvas("c2","c2", 600, 600);
-  c2->cd();
-  TPad* pad2 = new TPad("pad2", "pad2", 0., 0., 1.0, 1.0);
-  pad2->SetLeftMargin(0.15);
-  pad2->SetBottomMargin(0.15);
-  pad2->SetTopMargin(0.15);
-  pad2->Draw();
-  pad2->cd();
-  significanceGraph->Draw("AP");
-  //c2->Print(variable + "Significance.pdf","pdf");
-  if (_savepdf) c2->SaveAs(_outputdir + hname + "_Significance.pdf");
-  if (_savepng) c2->SaveAs(_outputdir + hname + "_Significance.png");
+  sigGraph->Draw("ap");
+
+  TString myxtitle = (units != "NULL") ? xtitle + " [" + units + "]" : xtitle;
+
+  sigGraph->SetTitle("significance curve - " + xtitle);
+  sigGraph->GetXaxis()->SetRangeUser(xmin, xmax);
+  sigGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
+  sigGraph->GetXaxis()->SetTitle(myxtitle);
+  sigGraph->GetYaxis()->SetTitle("S / (S + B)");
+  sigGraph->GetYaxis()->SetTitleOffset(1.4);
+
+  if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
+  if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
 }
