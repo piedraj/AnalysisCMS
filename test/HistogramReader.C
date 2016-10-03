@@ -1163,19 +1163,19 @@ void HistogramReader::WriteYields(TH1*    hist,
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %14s", " ");
+      _yields_table << Form("\n %22s", " ");
         
       for (int i=1; i<=hist->GetNbinsX(); i++) {
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" & %-24s", binlabel.Data());
+	_yields_table << Form(" & %-32s", binlabel.Data());
       }
 
       _yields_table << Form(" \\\\\n");
     }
 
-  _yields_table << Form(" %14s", label.Data());
+  _yields_table << Form(" %22s", label.Data());
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
 
@@ -1190,6 +1190,10 @@ void HistogramReader::WriteYields(TH1*    hist,
       {
 	_yields_table << Form(" & %10.2f $\\pm$ %7.2f", process_yield, process_error);
       }
+
+    float process_percent = 1e2 * process_yield / hist->GetBinContent(1);
+    
+    _yields_table << Form(" (%5.1f)", process_percent);
   }
 
   _yields_table << Form(" \\\\\n");
