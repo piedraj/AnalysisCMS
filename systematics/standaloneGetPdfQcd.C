@@ -50,7 +50,7 @@
 //------------------------------------------------------------------------------
 const int  _nqcd        = 9;
 const int  _npdf        = 100;
-const bool _savefigures = false;
+const bool _savefigures = true;
 
 
 // Functions
