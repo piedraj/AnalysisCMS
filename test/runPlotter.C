@@ -65,7 +65,7 @@ void runPlotter(TString level,
     {
       plotter.SetLuminosity(lumi);
       plotter.SetDrawRatio (true);
-    }    
+    }
 
 
   // Get the data
@@ -139,8 +139,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("TTDM"))
     {
-      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
-      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      //      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
+      //      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
 
@@ -241,7 +241,7 @@ void runPlotter(TString level,
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
 	  TString suffix = "_" + schannel[i];
-
+	  
 	  TString title = (i < lastchannel) ? lchannel[i] : "cms";
 
 	  plotter.SetTitle(title);
@@ -258,7 +258,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
-	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);  // Not in minitrees
+	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
 	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",               -1, 1, "NULL", scale);
@@ -270,9 +270,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
-	  // WW and MonoH ROC
+	  // ROC
 	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("WW") || analysis.EqualTo("MonoH"))
+	  if (analysis.EqualTo("MonoH"))
 	    {
 	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000);
 	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
@@ -287,15 +287,16 @@ void runPlotter(TString level,
 
 	  if (!allplots) continue;
 
+
 	  plotter.Draw(prefix + "dyll"           + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
-	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);                 // Not in minitrees
-	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);                 // Not in minitrees
-	  plotter.Draw(prefix + "mllbb"          + suffix, "m_{" + sll + "bb}",                 10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "meff"           + suffix, "m_{eff}",                           10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
-	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);  // Not in minitrees
+	  plotter.Draw(prefix + "dphimetjet"     + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "dphimetptbll"   + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "mllbb"          + suffix, "m_{" + sll + "bb}",                 10, 0, "GeV",  scale, false, 0, 600);
+	  plotter.Draw(prefix + "meff"           + suffix, "m_{eff}",                           10, 0, "GeV",  scale, false, 0, 600);
+	  plotter.Draw(prefix + "ptbll"          + suffix, "p_{T}^{llmet}",                     10, 0, "GeV",  scale, false, 0, 600);
+	  plotter.Draw(prefix + "mt2ll"          + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 600);
+	  plotter.Draw(prefix + "mt2bb"          + suffix, "M_{T2}(bb)" ,                       10, 0, "GeV",  scale, false, 0, 600);
+	  plotter.Draw(prefix + "mt2lblb"        + suffix, "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
 	  plotter.Draw(prefix + "dphijet1met"    + suffix, "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "dphijet2met"    + suffix, "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "dphijj"         + suffix, "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale, false);
@@ -326,10 +327,10 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ht"             + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htjets"         + suffix, "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htnojets"       + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
-	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "ptww"           + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
-	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);  // Not in minitrees
+	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  600);
+	  plotter.Draw(prefix + "ptww"           + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);
+	  plotter.Draw(prefix + "sumjpt12"       + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
+	  plotter.Draw(prefix + "sumpt12"        + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);
 
 
 	  // WW and MonoH histograms

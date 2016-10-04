@@ -32,8 +32,6 @@ void GetRecoEff( TString process, float& a, float& b, float& c ){
 
 	TH1F* myhisto  = (TH1F*) myfile -> Get( "TTDM/" + cut + "/h_topReco_ll" ); 	
 
-	//cout << "wtf" << endl; 
-
 	a = myhisto -> GetBinContent(1);
 
 	b = myhisto -> GetBinContent(3);
@@ -43,4 +41,3 @@ void GetRecoEff( TString process, float& a, float& b, float& c ){
 	myfile -> Close();
 
 }
-

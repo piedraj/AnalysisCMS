@@ -9,7 +9,6 @@
 
 MassSolver::MassSolver() 
 {
-  //  cout << "MassSolver_class: constructor executing!" << endl;
   return;
 }
 
@@ -23,9 +22,6 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
 	double mW1, double mW2, double mt1, double mt2, vector< TLorentzVector > & nu1, 
 	vector< TLorentzVector > & nu2 )
 {
-//     double lp[4], lm[4], b[4], bb[4];
-//     double ETmiss[2], nu[4], nub[4];
-
     double ETmiss[2] = { met.Px() , met.Py() };
     double b[4] = { bq1.E() , bq1.Px() , bq1.Py() , bq1.Pz() };
     double bb[4] = { bq2.E() , bq2.Px() , bq2.Py() , bq2.Pz() };
@@ -475,6 +471,3 @@ double MassSolver::evalterm1(vector<double> *a1, double pnux, double pnuy) {
 double MassSolver::evalterm2(vector<double> *a2, double pnux, double pnuy) {
     return (*a2)[0]+(*a2)[1]*pnux+(*a2)[2]*pnuy+(*a2)[3]*pnux*pnux+(*a2)[4]*pnux*pnuy+(*a2)[5]*pnuy*pnuy;
 }
-
-
-
