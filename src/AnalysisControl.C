@@ -140,51 +140,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || _pt2l > 45.);
 
     FillLevelHistograms(Control_04_WW, pass);
-
-    //    if (pass && _njet == 0 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_0jet);
-    //    if (pass && _njet == 1 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_1jet);
-    //    if (pass && _njet >= 2 && _channel == em) GetRecoWeightsLHE(list_vectors_weights_2jet);
-
-
-    /*
-
-    // WH
-    //--------------------------------------------------------------------------
-    pass = (mllmin3l > 12
-	    && std_vector_lepton_pt->at(0) > 20
-	    && std_vector_lepton_pt->at(1) > 15
-	    && std_vector_lepton_pt->at(2) > 10
-	    && std_vector_lepton_pt->at(3) < 10
-	    && abs(chlll) == 1);
-    
-    bool pass_wh3l_ossf = (pass
-			   && njet_3l == 0
-			   && nbjet_3l == 0
-			   && metPfType1 > 40
-			   && zveto_3l > 25
-			   && mllmin3l < 100
-			   && flagOSSF == 1);
-
-    bool pass_wh3l_sssf = (pass
-			   && njet_3l == 0
-			   && nbjet_3l == 0
-			   && metPfType1 > 30
-			   && zveto_3l > 25
-			   && mllmin3l < 100
-			   && flagOSSF == 0);
-
-    bool pass_wh3l = (pass
-		      && njet_3l == 0
-		      && nbjet_3l == 0
-		      && metPfType1 > 40
-		      && zveto_3l > 25
-		      && mllmin3l < 100);
-
-    if (pass_wh3l)      GetRecoWeightsLHE(list_vectors_weights_wh3l);
-    if (pass_wh3l_ossf) GetRecoWeightsLHE(list_vectors_weights_wh3l_ossf);
-    if (pass_wh3l_sssf) GetRecoWeightsLHE(list_vectors_weights_wh3l_sssf);
-
-    */
   }
 
 

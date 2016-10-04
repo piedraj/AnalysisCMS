@@ -124,11 +124,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetZHCRVar        ();
 
-  TH1F*   GetGenWeightsLHE  ();
-
   void    GetStopVar        ();
-
-  void    GetRecoWeightsLHE (TH1F*          hist);
 
   void    GetMt             (Lepton         lep,
 			     float&         transverse_mass);
