@@ -361,21 +361,6 @@ void AnalysisCMS::Setup(TString analysis,
   OpenMinitree();
 
 
-  // Histograms for QCD, PDF and alpha_s uncertainties
-  //----------------------------------------------------------------------------
-  root_output->cd();
-
-  list_vectors_weights_gen = GetGenWeightsLHE();
-
-  list_vectors_weights_0jet = new TH1F("list_vectors_weights_0jet", "", 200, 0, 200);
-  list_vectors_weights_1jet = new TH1F("list_vectors_weights_1jet", "", 200, 0, 200);
-  list_vectors_weights_2jet = new TH1F("list_vectors_weights_2jet", "", 200, 0, 200);
-
-  list_vectors_weights_wh3l      = new TH1F("list_vectors_weights_wh3l",      "", 200, 0, 200);
-  list_vectors_weights_wh3l_ossf = new TH1F("list_vectors_weights_wh3l_ossf", "", 200, 0, 200);
-  list_vectors_weights_wh3l_sssf = new TH1F("list_vectors_weights_wh3l_sssf", "", 200, 0, 200);
-
-
   return;
 }
 
@@ -1295,43 +1280,6 @@ void AnalysisCMS::GetGenPtllWeight()
   if (!_sample.Contains("DYJetsToLL_M")) return;
 
   _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
-}
-
-
-//------------------------------------------------------------------------------
-// GetGenWeightsLHE
-// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
-//------------------------------------------------------------------------------
-TH1F* AnalysisCMS::GetGenWeightsLHE()
-{
-  TFile* file = TFile::Open(_filename);
-
-  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
-
-  root_output->cd();
-
-  if (!dummy) return NULL;
-
-  TH1F* hist = (TH1F*)dummy->Clone("list_vectors_weights_gen");
-
-  return hist;
-}
-
-
-//------------------------------------------------------------------------------
-// GetRecoWeightsLHE
-// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetRecoWeightsLHE(TH1F* hist)
-{
-  if (!std_vector_LHE_weight) return;
-
-  for (int iWeight=0; iWeight<hist->GetNbinsX(); iWeight++)
-    {
-      float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
-
-      hist->Fill(iWeight+0.5, ratio);
-    }
 }
 
 

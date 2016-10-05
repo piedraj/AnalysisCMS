@@ -124,11 +124,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetZHCRVar        ();
 
-  TH1F*   GetGenWeightsLHE  ();
-
   void    GetStopVar        ();
-
-  void    GetRecoWeightsLHE (TH1F*          hist);
 
   void    GetMt             (Lepton         lep,
 			     float&         transverse_mass);
@@ -326,18 +322,6 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_output;
   TFile*                 root_minitree;
   TTree*                 minitree;
-
-  
-  // Histograms for QCD, PDF and alpha_s uncertainties
-  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
-  //----------------------------------------------------------------------------
-  TH1F*                  list_vectors_weights_gen;
-  TH1F*                  list_vectors_weights_0jet;
-  TH1F*                  list_vectors_weights_1jet;
-  TH1F*                  list_vectors_weights_2jet;
-  TH1F*                  list_vectors_weights_wh3l;
-  TH1F*                  list_vectors_weights_wh3l_ossf;
-  TH1F*                  list_vectors_weights_wh3l_sssf;
 
 
   // TH1 histograms

@@ -7,5 +7,5 @@ Non-prompt systematic uncertainty
 PDF and QCD systematic uncertainty
 ====
 
-    root -l -b -q getPdfQcd.C
+    root -l -b -q getPdfQcd.C+
 
