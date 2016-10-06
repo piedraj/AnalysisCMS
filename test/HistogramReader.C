@@ -11,7 +11,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
-  _title        ("cms"),
+  _title        ("inclusive"),
   _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
@@ -440,7 +440,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
 
-  if (_title.EqualTo("cms"))
+  if (_title.EqualTo("inclusive"))
     {
       DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
       DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
@@ -1250,7 +1250,7 @@ void HistogramReader::Roc(TString hname,
 			  Float_t xmin,
 			  Float_t xmax)
 {
-  // Recall signal files and histograms
+  // Read signal files and histograms
   TFile* fSig[_roc_signals.size()];
   TH1F*  hSig[_roc_signals.size()];
 
@@ -1260,7 +1260,7 @@ void HistogramReader::Roc(TString hname,
       hSig[i] = (TH1F*)fSig[i]->Get(hname);
     }
 
-  // Recall background files and histograms
+  // Read background files and histograms
   TFile* fBkg[_roc_backgrounds.size()];
   TH1F*  hBkg[_roc_backgrounds.size()];
 
@@ -1278,8 +1278,8 @@ void HistogramReader::Roc(TString hname,
   TGraph* rocGraph = new TGraph();
   TGraph* sigGraph = new TGraph();
 
-  float sigMax    = 0;
-  float xOfTheMax = 0;
+  float sigMax    = -999;
+  float xOfTheMax = -999;
 
   for (int s=0; s<=npoints; ++s) {
 
@@ -1301,7 +1301,7 @@ void HistogramReader::Roc(TString hname,
     float sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
     float bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
 
-    float significance = sigYield / (sigYield + bkgYield);
+    float significance = sigYield / sqrt(sigYield + bkgYield);
 
     if (significance > sigMax) {
       sigMax    = significance;
@@ -1312,21 +1312,28 @@ void HistogramReader::Roc(TString hname,
     sigGraph->SetPoint(s, xmin + s*step, significance);
   }
 
-  printf(" [HistogramReader::Roc] You should cut at %f\n\n", xOfTheMax);
+
+  printf("\n [HistogramReader::Roc] Reading %s\n", hname.Data());
+  printf(" The best S/sqrt(S+B) = %f corresponds to x = %.2f %s (%.2f < x < %.2f)\n\n",
+	 sigMax, xOfTheMax, units.Data(), xmin, xmax);
 
 
   // Draw and save ROC
   //----------------------------------------------------------------------------
-  TCanvas* rocCanvas = new TCanvas("rocCanvas", "rocCanvas");
+  TCanvas* rocCanvas = new TCanvas(hname + " ROC", hname + " ROC");
+
+  rocGraph->SetMarkerColor(kRed+1);
+  rocGraph->SetMarkerStyle(kFullCircle);
+  rocGraph->SetMarkerSize(0.5);
 
   rocGraph->Draw("ap");
 
-  rocGraph->SetTitle("ROC curve - " + xtitle);
   rocGraph->GetXaxis()->SetRangeUser(0, 1);
   rocGraph->GetYaxis()->SetRangeUser(0, 1);
-  rocGraph->GetXaxis()->SetTitle("signal efficiency");
-  rocGraph->GetYaxis()->SetTitle("background rejection");
-  rocGraph->GetYaxis()->SetTitleOffset(1.4);
+
+  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+
+  SetAxis(rocGraph->GetHistogram(), xtitle + " signal efficiency", xtitle + " background rejection", 1.5, 1.8);
 
   if (_savepdf) rocCanvas->SaveAs(_outputdir + hname + "_ROC.pdf");
   if (_savepng) rocCanvas->SaveAs(_outputdir + hname + "_ROC.png");
@@ -1334,18 +1341,22 @@ void HistogramReader::Roc(TString hname,
 
   // Draw and save significance
   //----------------------------------------------------------------------------
-  TCanvas *sigCanvas = new TCanvas("sigCanvas", "sigCanvas");
-
-  sigGraph->Draw("ap");
+  TCanvas *sigCanvas = new TCanvas(hname + " significance", hname + " significance");
 
   TString myxtitle = (units != "NULL") ? xtitle + " [" + units + "]" : xtitle;
 
-  sigGraph->SetTitle("significance curve - " + xtitle);
+  sigGraph->SetMarkerColor(kRed+1);
+  sigGraph->SetMarkerStyle(kFullCircle);
+  sigGraph->SetMarkerSize(0.5);
+
+  sigGraph->Draw("ap");
+
   sigGraph->GetXaxis()->SetRangeUser(xmin, xmax);
-  sigGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
-  sigGraph->GetXaxis()->SetTitle(myxtitle);
-  sigGraph->GetYaxis()->SetTitle("S / (S + B)");
-  sigGraph->GetYaxis()->SetTitleOffset(1.4);
+  sigGraph->GetYaxis()->SetRangeUser(0, 1.5*sigMax);
+
+  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+
+  SetAxis(sigGraph->GetHistogram(), myxtitle, "S / #sqrt{S + B}", 1.5, 2.1);
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
