@@ -182,6 +182,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_metTtrk       [ichannel][icut][ijet]->Fill(metTtrk,         _event_weight);
   h_metTtrkPhi    [ichannel][icut][ijet]->Fill(metTtrkPhi,      _event_weight);
   h_mpmet         [ichannel][icut][ijet]->Fill(_mpmet,          _event_weight);
+  h_metPuppi      [ichannel][icut][ijet]->Fill(metPuppi,        _event_weight);
   h_mth           [ichannel][icut][ijet]->Fill(mth,             _event_weight);  // Needs l2Sel
   h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);  // Needs l2Sel
   h_mtw2          [ichannel][icut][ijet]->Fill(mtw2,            _event_weight);  // Needs l2Sel
@@ -1106,6 +1107,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_metPfType1    [ichannel][icut][ijet] = new TH1D("h_metPfType1"     + suffix, "", 2000,    0, 2000);
   h_metTtrk       [ichannel][icut][ijet] = new TH1D("h_metTtrk"        + suffix, "", 2000,    0, 2000);
   h_mpmet         [ichannel][icut][ijet] = new TH1D("h_mpmet"          + suffix, "", 2000,    0, 2000);
+  h_metPuppi      [ichannel][icut][ijet] = new TH1D("h_metPuppi"       + suffix, "", 2000,    0, 2000);
   h_mth           [ichannel][icut][ijet] = new TH1D("h_mth"            + suffix, "", 2000,    0, 2000);
   h_mtw1          [ichannel][icut][ijet] = new TH1D("h_mtw1"           + suffix, "", 2000,    0, 2000);
   h_mtw2          [ichannel][icut][ijet] = new TH1D("h_mtw2"           + suffix, "", 2000,    0, 2000);
@@ -1197,6 +1199,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mc",             &_mc,             "mc/F");
   minitree->Branch("m2l",            &_m2l,            "m2l/F");
   minitree->Branch("mpmet",          &_mpmet,          "mpmet/F");
+  minitree->Branch("metPuppi",       &metPuppi,        "metPuppi/F");
   minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
   minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
   minitree->Branch("metTtrk",        &metTtrk,         "metTtrk/F");
