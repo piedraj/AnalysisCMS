@@ -1367,8 +1367,6 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
   // If > 0 MT2 computed to supplied absolute precision
   double desiredPrecisionOnMt2 = MT2Precision;
   
-  //  asymm_mt2_lester_bisect::disableCopyrightMessage();
-  
   double MT2 = asymm_mt2_lester_bisect::get_mT2(mVisA, pxA, pyA,
 						mVisB, pxB, pyB,
 						pxMiss, pyMiss,
@@ -1389,19 +1387,17 @@ void AnalysisCMS::GetStopVar()
   _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
   _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
-  _dphimetjet  = -0.1;
-  _mllbb       = -0.1;
-  _meff        = -0.1;
-  _mt2bb       = -0.1;
-  _mt2lblb     = -0.1;
-  _mlb1        = -0.1;
-  _mlb2        = -0.1;
-
+  _dphimetjet   = -0.1;
+  _mllbb        = -0.1;
+  _meff         = -0.1;
+  _mt2bb        = -0.1;
+  _mt2lblb      = -0.1;
+  _mlb1         = -0.1;
+  _mlb2         = -0.1;
   _mt2lblbcomb  = -0.1;
   _mt2bbtrue    = -0.1;
   _mt2lblbtrue  = -0.1;
   _mt2lblbmatch = -0.1;
-
   _mlb1comb     = -0.1;
   _mlb2comb     = -0.1;
   _mlb1true     = -0.1;
@@ -1761,9 +1757,9 @@ void AnalysisCMS::GetTops()
 
   if (!_ismc) return;
 
-  int ntop_pairs = 0;
-
   for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
+
+    if (_m2t_gen > -1) break;
 
     if (std_vector_partonGen_pid->at(i)           != 6) continue;
     if (std_vector_partonGen_isHardProcess->at(i) != 1) continue;
@@ -1774,6 +1770,8 @@ void AnalysisCMS::GetTops()
 
     for (int j=i+1; j<std_vector_partonGen_pt->size(); j++) {
 
+      if (_m2t_gen > -1) break;
+
       if (std_vector_partonGen_pid->at(j)           != 6) continue;
       if (std_vector_partonGen_isHardProcess->at(j) != 1) continue;
 
@@ -1781,24 +1779,19 @@ void AnalysisCMS::GetTops()
       _top2phi_gen = std_vector_partonGen_phi->at(j);
       _top2pt_gen  = std_vector_partonGen_pt ->at(j);
 
-      if (fabs(_top1eta_gen - _top2eta_gen) < 0.5) continue;
-      if (fabs(_top1phi_gen - _top2phi_gen) < 0.2) continue;
+      _dphitt_gen = fabs(_top1phi_gen - _top2phi_gen);
+      _detatt_gen = fabs(_top1eta_gen - _top2eta_gen);
 
-      ntop_pairs++;
+      if (_dphitt_gen < 0.1 && _detatt_gen < 0.1) continue;
 
       TLorentzVector top1, top2; 
 
       top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, 173.);
       top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, 173.);
 
-      _m2t_gen    = (top1 + top2).M();  
-      _dphitt_gen = fabs(top1.DeltaPhi(top2));
-      _detatt_gen = fabs(top1.Eta() - top2.Eta());
+      _m2t_gen = (top1 + top2).M();  
     }
   }
-
-  if (ntop_pairs > 1)
-    printf("\n [AnalysisCMS::GetTops] Warning, ntop_pairs = %d\n\n", ntop_pairs);
 }
 
 
