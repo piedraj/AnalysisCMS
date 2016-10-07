@@ -7,6 +7,7 @@ if [ $# -lt 2 ]; then
     echo "  ./submit-jobs.sh  samples/80x/l2loose/samples_data_l2loose_fakeW.txt  nominal"
     echo "  ./submit-jobs.sh  samples/80x/l2tight/samples_data_l2tight.txt        nominal"
     echo "  ./submit-jobs.sh  samples/80x/l2tight/samples_mc_l2tight.txt          nominal"
+    echo "  ./submit-jobs.sh  samples/80x/l2tight/samples_monoh_l2tight.txt       nominal"
     echo "  "
     echo "  "
     echo "  "
