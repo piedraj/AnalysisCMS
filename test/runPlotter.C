@@ -23,6 +23,18 @@ enum {linY, logY};
 // option = "hist"         --> all distributions normalized to the luminosity
 // option = "nostack,hist" --> signal and top distributions normalized to one
 //
+//   Draw(TString  hname,                  Name of the histogram.
+//        TString  xtitle       = "",      Title of the x-axis.
+//        Int_t    ngroup       = -1,      Number of bins to be merged into one bin.
+//        Int_t    precision    = 0,       Number of decimal digits.
+//        TString  units        = "NULL",  Units of the histogram.
+//        Bool_t   setlogy      = false,   Set it to true (false) for logarithmic (linear) scale.
+//        Bool_t   moveoverflow = true,    Set it to true to plot the events out of range.
+//        Float_t  xmin         = -999,
+//        Float_t  xmax         = -999,
+//        Float_t  ymin         = -999,
+//        Float_t  ymax         = -999);
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString level,
 		TString option = "hist")
@@ -255,7 +267,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
-	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
+	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", scale, true, 0,   30);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
 	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",               -1, 1, "NULL", scale);

@@ -503,7 +503,7 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
+      ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
 
       uncertainty->Draw("e2,same");
 
@@ -1173,7 +1173,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" | %-31s", binlabel.Data());
+	_yields_table << Form(" | %-32s", binlabel.Data());
       }
 
       _yields_table << Form("\n");
@@ -1188,11 +1188,11 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" | %7.0f %14s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %14s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" | %10.2f +/- %7.2f", process_yield, process_error);
+	_yields_table << Form(" | %11.2f +/- %7.2f", process_yield, process_error);
       }
 
     int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
