@@ -1536,11 +1536,10 @@ void AnalysisCMS::GetStopVar()
 
   for (int wb=std_vector_VBoson_pt->size()-1; wb>=0; wb--) {
 
-    if (std_vector_VBoson_pt ->at(wb) < 0.) continue;
-    if (std_vector_VBoson_pid->at(wb) < 0.) continue;  // VBoson_pid is always positive
+    if (std_vector_VBoson_pt->at(wb) < 0.) continue;
 
-    int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = 24 for W
-    int IdxW = (Wid + 24) / 48;                // IdxW =  1 for W
+    int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
+    int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
     if (lepIndex[IdxW] < 0) {
 	
@@ -1553,59 +1552,76 @@ void AnalysisCMS::GetStopVar()
 
       for (int lp=0; lp<std_vector_leptonGen_pt->size(); lp++) {
 
-	if (std_vector_leptonGen_pt->at(lp) < 0) continue;
+	if (std_vector_leptonGen_pt->at(lp) < 0 || lepIndex[IdxW] > -999) continue;
 	  
-	float LeptonMass = ELECTRON_MASS;
-	if (fabs(std_vector_leptonGen_pid->at(lp))==13) LeptonMass = MUON_MASS;
+	if (Wid*std_vector_leptonGen_pid->at(lp) > 0) continue;
+
+	float LeptonMass = (fabs(std_vector_leptonGen_pid->at(lp)) == 13) ? MUON_MASS : ELECTRON_MASS;
 
 	TLorentzVector ChargedLepton;
-	ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp), std_vector_leptonGen_eta->at(lp), std_vector_leptonGen_phi->at(lp), LeptonMass);
+
+	ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp),
+				   std_vector_leptonGen_eta->at(lp),
+				   std_vector_leptonGen_phi->at(lp),
+				   LeptonMass);
 	    
-	for (int nt = 0; nt<std_vector_neutrinoGen_pt->size(); nt++) {
-	  if (std_vector_neutrinoGen_pt->at(nt)>-999. && lepIndex[IdxW]<0) {
+	for (int nt=0; nt<std_vector_neutrinoGen_pt->size(); nt++) {
+
+	  if (std_vector_neutrinoGen_pt->at(nt) < 0 || lepIndex[IdxW] > -999) continue;
 		
-	    TLorentzVector CandidateNeutrino;
-	    CandidateNeutrino.SetPtEtaPhiM(std_vector_neutrinoGen_pt->at(nt), std_vector_neutrinoGen_eta->at(nt), std_vector_neutrinoGen_phi->at(nt), 0.);
+	  TLorentzVector CandidateNeutrino;
 
-	    float ThisDeltaR = WBoson.DeltaR(ChargedLepton+CandidateNeutrino);
-	    if (ThisDeltaR<0.00001) {
+	  CandidateNeutrino.SetPtEtaPhiM(std_vector_neutrinoGen_pt->at(nt),
+					 std_vector_neutrinoGen_eta->at(nt),
+					 std_vector_neutrinoGen_phi->at(nt),
+					 0.);
 
-	      lepIndex[IdxW] = lp;
+	  float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
+
+	  if (ThisDeltaR < 0.00001) {
+
+	    lepIndex[IdxW] = lp;
 		  
-	      //cout << " Now look for the b quark (no partons in 74X)" << endl;
-	      for (int rj = 0; rj<_njet; rj++) {
-		
-		if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index))==5 && 
-		    (fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index))!=5 || 
-		     std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0) ) {
-		  for (int gj = 0; gj<std_vector_jetGen_pt->size(); gj++){
-		    
-		    if (std_vector_jetGen_pt->at(gj)>8.) {
+	    // Now look for the b quark
+	    for (int rj=0; rj<_njet; rj++) {
+	      
+	      if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
+		  (fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
+		   std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0) ) {
+
+		for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
+		  
+		  if (std_vector_jetGen_pt->at(gj) < 8.) continue;
 		      
-		      TLorentzVector BottomQuark;
-		      BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj), std_vector_jetGen_eta->at(gj), std_vector_jetGen_phi->at(gj), 4.18);
-		      float TopMass = (WBoson+BottomQuark).M();
-		      float DeltaTopMass = fabs(TopMass-173.34);
+		  TLorentzVector BottomQuark;
+
+		  BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj),
+					   std_vector_jetGen_eta->at(gj),
+					   std_vector_jetGen_phi->at(gj),
+					   BOTTOM_MASS);
+
+		  float TopMass = (WBoson + BottomQuark).M();
+
+		  float DeltaTopMass = fabs(TopMass - TOP_MASS);
+		    
+		  if (DeltaTopMass < 250. && (AnalysisJets[rj].v).DeltaR(BottomQuark) < 0.3) {
+		      
+		    bool NewCandidateJet = true;
+
+		    for (int cb=0; cb<nCandidateBJets; cb++) {
+
+		      if (CandidateBJetIndex[cb] == rj) {
 			  
-		      if (DeltaTopMass<250. && (AnalysisJets[rj].v).DeltaR(BottomQuark)<0.3) {
-			    
-			bool NewCandidateJet = true;
-			for (int cb = 0; cb<nCandidateBJets; cb++) {
-			  if (CandidateBJetIndex[cb]==rj) {
-			    
-			    CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
-			    NewCandidateJet = false;
-			    
-			  }
-			}
-			
-			if (NewCandidateJet) {
-			  
-			  CandidateBJetIndex[nCandidateBJets] = rj;
-			  CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
-			  nCandidateBJets++;
-			}
+			CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
+			NewCandidateJet = false;
 		      }
+		    }
+		      
+		    if (NewCandidateJet) {
+			
+		      CandidateBJetIndex[nCandidateBJets] = rj;
+		      CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
+		      nCandidateBJets++;
 		    }
 		  }
 		}

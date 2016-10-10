@@ -28,6 +28,8 @@ const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;
 const int Z_FLAVOUR        = 23;
 
+const double BOTTOM_MASS   =   4.18;      // [GeV]
+const double TOP_MASS      = 172.44;      // [GeV]
 const double ELECTRON_MASS =   0.000511;  // [GeV]
 const double MUON_MASS     =   0.106;     // [GeV]
 const double TAU_MASS      =   1.777;     // [GeV]
