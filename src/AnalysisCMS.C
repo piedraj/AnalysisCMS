@@ -1516,7 +1516,7 @@ void AnalysisCMS::GetStopVar()
 
   // Top quark reco
   //----------------------------------------------------------------------------
-  //  if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
+  if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
 
   if (!_ismc) return;
 
@@ -1578,51 +1578,50 @@ void AnalysisCMS::GetStopVar()
 	
 	float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
 
-	if (ThisDeltaR < 0.00001) {
+	if (ThisDeltaR > 0.00001) continue;
 
-	  lepIndex[IdxW] = lp;
+	lepIndex[IdxW] = lp;
 		  
-	  // Now look for the b quark
-	  for (int rj=0; rj<_njet; rj++) {
+	// Now look for the b quark
+	for (int rj=0; rj<_njet; rj++) {
 	      
-	    if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
-		(fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
-		 std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0)) {
+	  if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
+	      (fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
+	       std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0)) {
 
-	      for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
+	    for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
 		  
-		if (std_vector_jetGen_pt->at(gj) < 8.) continue;
+	      if (std_vector_jetGen_pt->at(gj) < 8.) continue;
 		      
-		TLorentzVector BottomQuark;
+	      TLorentzVector BottomQuark;
 
-		BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj),
-					 std_vector_jetGen_eta->at(gj),
-					 std_vector_jetGen_phi->at(gj),
-					 BOTTOM_MASS);
+	      BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj),
+				       std_vector_jetGen_eta->at(gj),
+				       std_vector_jetGen_phi->at(gj),
+				       BOTTOM_MASS);
 
-		float TopMass = (WBoson + BottomQuark).M();
+	      float TopMass = (WBoson + BottomQuark).M();
 
-		float DeltaTopMass = fabs(TopMass - TOP_MASS);
+	      float DeltaTopMass = fabs(TopMass - TOP_MASS);
 		    
-		if (DeltaTopMass < 250. && (AnalysisJets[rj].v).DeltaR(BottomQuark) < 0.3) {
+	      if (DeltaTopMass < 250. && (AnalysisJets[rj].v).DeltaR(BottomQuark) < 0.3) {
 		      
-		  bool NewCandidateJet = true;
+		bool NewCandidateJet = true;
 
-		  for (int cb=0; cb<nCandidateBJets; cb++) {
+		for (int cb=0; cb<nCandidateBJets; cb++) {
 
-		    if (CandidateBJetIndex[cb] == rj) {
+		  if (CandidateBJetIndex[cb] == rj) {
 		      
-		      CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
-		      NewCandidateJet = false;
-		    }
+		    CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
+		    NewCandidateJet = false;
 		  }
+		}
 		      
-		  if (NewCandidateJet) {
+		if (NewCandidateJet) {
 			
-		    CandidateBJetIndex[nCandidateBJets] = rj;
-		    CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
-		    nCandidateBJets++;
-		  }
+		  CandidateBJetIndex[nCandidateBJets] = rj;
+		  CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
+		  nCandidateBJets++;
 		}
 	      }
 	    }
