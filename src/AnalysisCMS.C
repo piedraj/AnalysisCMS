@@ -594,6 +594,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     goodjet.index    = i;
     goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
+    goodjet.mass     = std_vector_jet_mass->at(i);
     goodjet.v        = tlv;
 
     if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++;
@@ -733,12 +734,30 @@ void AnalysisCMS::GetDeltaPhi()
   _dphilep1jet2 = -0.1;
   _dphilep2jet1 = -0.1;
   _dphilep2jet2 = -0.1;
-  _dphillmet    = -0.1;
+  _dphimetjet   = -0.1;
 
 
-  // Fill variables
+  // Minimum delta phi between the MET and the jets
   //----------------------------------------------------------------------------
-  _dphillmet = fabs((Lepton1.v + Lepton2.v).DeltaPhi(MET));
+  float minDeltaPhiMetJet = 999.;
+  
+  for (int ijet=0; ijet<_njet; ijet++) {
+      
+    float thisDeltaPhiMetJet = fabs(AnalysisJets[ijet].v.DeltaPhi(MET));
+
+    if (thisDeltaPhiMetJet < minDeltaPhiMetJet) {
+	
+      minDeltaPhiMetJet = thisDeltaPhiMetJet;
+
+      _dphimetjet = thisDeltaPhiMetJet;
+    }
+  }
+
+
+  // Delta phi between jets, MET and leptons
+  //----------------------------------------------------------------------------
+  _dphillmet    = fabs((Lepton1.v + Lepton2.v).DeltaPhi(MET));
+  _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
 
   if (_njet > 0)
     {
@@ -1380,12 +1399,10 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStopVar()
 {
-  _dyll         = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());  // Should be rapidity?
-  _ptbll        = (Lepton1.v + Lepton2.v + MET).Pt();
-  _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
-  _mt2ll        = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+  _dyll  = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
+  _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
+  _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
-  _dphimetjet   = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;
   _mt2bb        = -0.1;
@@ -1408,27 +1425,14 @@ void AnalysisCMS::GetStopVar()
   _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999.;
   _tjet1assignment = _tjet2assignment = 0.;
 
-  double minDeltaPhiMetJet = 999.;
-  
-  for (int ijet=0; ijet<_njet; ijet++) {
-      
-    double thisDeltaPhiMetJet = fabs(AnalysisJets[ijet].v.DeltaPhi(MET));
 
-    if (thisDeltaPhiMetJet < minDeltaPhiMetJet) {
-	
-      minDeltaPhiMetJet = thisDeltaPhiMetJet;
-
-      _dphimetjet = thisDeltaPhiMetJet;
-    }
-  }
-    
-  if (_njet >= 2) {
+  if (_njet > 1) {
       
     _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
 
     int bjetindex[2] = {-1, -1};
 
-    if (_nbjet30csvv2m >= 1) {
+    if (_nbjet30csvv2m > 0) {
 	
       int nbjetfound       = 0;
       int nbjetfromleading = 0;
@@ -1442,9 +1446,10 @@ void AnalysisCMS::GetStopVar()
 	  } else if (nbjetfromleading < 1) {
 	    bjetindex[nbjetfound] = ijet;
 	    nbjetfromleading++;
-	  }  
+	  }
 	}
       }
+
 
       if (bjetindex[0] >= 0 && bjetindex[1] >= 0) {
 	
@@ -1464,13 +1469,13 @@ void AnalysisCMS::GetStopVar()
 	  _tjet1pt       = AnalysisJets[bjetindex[1]].v.Pt();
 	  _tjet1eta      = AnalysisJets[bjetindex[1]].v.Eta();
 	  _tjet1phi      = AnalysisJets[bjetindex[1]].v.Phi();
-	  _tjet1mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
+	  _tjet1mass     = AnalysisJets[bjetindex[1]].mass;
 	  _tjet1csvv2ivf = AnalysisJets[bjetindex[1]].csvv2ivf;
 
 	  _tjet2pt       = AnalysisJets[bjetindex[0]].v.Pt();
 	  _tjet2eta      = AnalysisJets[bjetindex[0]].v.Eta();
 	  _tjet2phi      = AnalysisJets[bjetindex[0]].v.Phi();
-	  _tjet2mass     = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
+	  _tjet2mass     = AnalysisJets[bjetindex[0]].mass;
 	  _tjet2csvv2ivf = AnalysisJets[bjetindex[0]].csvv2ivf;
 
 	  _mlb1 = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
@@ -1483,16 +1488,16 @@ void AnalysisCMS::GetStopVar()
 
 	  _mt2lblbcomb = combinatorialMT2lblb;
 
-	  _tjet1pt = AnalysisJets[bjetindex[0]].v.Pt();
-	  _tjet1eta = AnalysisJets[bjetindex[0]].v.Eta();
-	  _tjet1phi = AnalysisJets[bjetindex[0]].v.Phi();
-	  _tjet1mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[0]].index);
+	  _tjet1pt       = AnalysisJets[bjetindex[0]].v.Pt();
+	  _tjet1eta      = AnalysisJets[bjetindex[0]].v.Eta();
+	  _tjet1phi      = AnalysisJets[bjetindex[0]].v.Phi();
+	  _tjet1mass     = AnalysisJets[bjetindex[0]].mass;
 	  _tjet1csvv2ivf = AnalysisJets[bjetindex[0]].csvv2ivf;
 
-	  _tjet2pt = AnalysisJets[bjetindex[1]].v.Pt();
-	  _tjet2eta = AnalysisJets[bjetindex[1]].v.Eta();
-	  _tjet2phi = AnalysisJets[bjetindex[1]].v.Phi();
-	  _tjet2mass = std_vector_jet_mass->at(AnalysisJets[bjetindex[1]].index);
+	  _tjet2pt       = AnalysisJets[bjetindex[1]].v.Pt();
+	  _tjet2eta      = AnalysisJets[bjetindex[1]].v.Eta();
+	  _tjet2phi      = AnalysisJets[bjetindex[1]].v.Phi();
+	  _tjet2mass     = AnalysisJets[bjetindex[1]].mass;
 	  _tjet2csvv2ivf = AnalysisJets[bjetindex[1]].csvv2ivf;
 
 	  _mlb1 = (AnalysisJets[bjetindex[0]].v + Lepton1.v).M();
@@ -1505,11 +1510,14 @@ void AnalysisCMS::GetStopVar()
     }
   }
 
-  if (!_analysis.EqualTo("Stop")) return;
+
+  // Top quark reco
+  //----------------------------------------------------------------------------
+  if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
 
   if (!_ismc) return;
 
-  // Top quark reco
+
   int lepIndex[2] = {-999, -999}, bIndex[2] = {-999, -999};
   int nCandidateBJets = 0;
   int CandidateBJetIndex[50];
@@ -1535,8 +1543,8 @@ void AnalysisCMS::GetStopVar()
 	for (int lp = 0; lp<std_vector_leptonGen_pt->size(); lp++) {
 	  if (std_vector_leptonGen_pt->at(lp)>-999. && Wid*std_vector_leptonGen_pid->at(lp)<0 && lepIndex[IdxW]<0) {
 
-	    float LeptonMass = 0.000511;
-	    if (fabs(std_vector_leptonGen_pid->at(lp))==13) LeptonMass = 0.1056583715;
+	    float LeptonMass = ELECTRON_MASS;
+	    if (fabs(std_vector_leptonGen_pid->at(lp))==13) LeptonMass = MUON_MASS;
 
 	    TLorentzVector ChargedLepton;
 	    ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp), std_vector_leptonGen_eta->at(lp), std_vector_leptonGen_phi->at(lp), LeptonMass);
@@ -1647,15 +1655,15 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_lepton_ch->at(Lepton1.index)<0 && DeltaRLep1LepGen1<0.1) {
       if (bIndex[0]>=0) {
 
-	_bjet1pt = AnalysisJets[bIndex[0]].v.Pt();
-	_bjet1eta = AnalysisJets[bIndex[0]].v.Eta();
-	_bjet1phi = AnalysisJets[bIndex[0]].v.Phi();
-	_bjet1mass = std_vector_jet_mass->at(AnalysisJets[bIndex[0]].index);
+	_bjet1pt       = AnalysisJets[bIndex[0]].v.Pt();
+	_bjet1eta      = AnalysisJets[bIndex[0]].v.Eta();
+	_bjet1phi      = AnalysisJets[bIndex[0]].v.Phi();
+	_bjet1mass     = AnalysisJets[bIndex[0]].mass;
 	_bjet1csvv2ivf = AnalysisJets[bIndex[0]].csvv2ivf;
 	IdxB1 = bIndex[0];
 
-	if (_tjet1pt==_bjet1pt) _tjet1assignment = 2;
-	if (_tjet2pt==_bjet1pt) _tjet2assignment = 1;
+	if (_tjet1pt == _bjet1pt) _tjet1assignment = 2;
+	if (_tjet2pt == _bjet1pt) _tjet2assignment = 1;
 
 	_mlb1true = (AnalysisJets[IdxB1].v + Lepton1.v).M();
 
@@ -1665,15 +1673,15 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_lepton_ch->at(Lepton2.index)<0 && DeltaRLep2LepGen1<0.1) {
       if (bIndex[0]>=0) {
 
-	_bjet2pt = AnalysisJets[bIndex[0]].v.Pt();
-	_bjet2eta = AnalysisJets[bIndex[0]].v.Eta();
-	_bjet2phi = AnalysisJets[bIndex[0]].v.Phi();
-	_bjet2mass = std_vector_jet_mass->at(AnalysisJets[bIndex[0]].index);
-	_bjet2csvv2ivf = AnalysisJets[bIndex[0]].csvv2ivf;	
+	_bjet2pt       = AnalysisJets[bIndex[0]].v.Pt();
+	_bjet2eta      = AnalysisJets[bIndex[0]].v.Eta();
+	_bjet2phi      = AnalysisJets[bIndex[0]].v.Phi();
+	_bjet2mass     = AnalysisJets[bIndex[0]].mass;
+	_bjet2csvv2ivf = AnalysisJets[bIndex[0]].csvv2ivf;
 	IdxB2 = bIndex[0];
 
-	if (_tjet1pt==_bjet2pt) _tjet1assignment = 1;
-	if (_tjet2pt==_bjet2pt) _tjet2assignment = 2;
+	if (_tjet1pt == _bjet2pt) _tjet1assignment = 1;
+	if (_tjet2pt == _bjet2pt) _tjet2assignment = 2;
 
 	_mlb2true = (AnalysisJets[IdxB2].v + Lepton2.v).M();
 	
@@ -1693,15 +1701,15 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_lepton_ch->at(Lepton1.index)>0 && DeltaRLep1LepGen2<0.1) {
       if (bIndex[1]>=0) {
 
-	_bjet1pt = AnalysisJets[bIndex[1]].v.Pt();
-	_bjet1eta = AnalysisJets[bIndex[1]].v.Eta();
-	_bjet1phi = AnalysisJets[bIndex[1]].v.Phi();
-	_bjet1mass = std_vector_jet_mass->at(AnalysisJets[bIndex[1]].index);
+	_bjet1pt       = AnalysisJets[bIndex[1]].v.Pt();
+	_bjet1eta      = AnalysisJets[bIndex[1]].v.Eta();
+	_bjet1phi      = AnalysisJets[bIndex[1]].v.Phi();
+	_bjet1mass     = AnalysisJets[bIndex[1]].mass;
 	_bjet1csvv2ivf = AnalysisJets[bIndex[1]].csvv2ivf;
 	IdxB1 = bIndex[1];
 
-	if (_tjet1pt==_bjet1pt) _tjet1assignment = 2;
-	if (_tjet2pt==_bjet1pt) _tjet2assignment = 1;
+	if (_tjet1pt == _bjet1pt) _tjet1assignment = 2;
+	if (_tjet2pt == _bjet1pt) _tjet2assignment = 1;
 
 	_mlb1true = (AnalysisJets[IdxB1].v + Lepton1.v).M();
 	
@@ -1711,15 +1719,15 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_lepton_ch->at(Lepton2.index)>0 && DeltaRLep2LepGen2<0.1) {
       if (bIndex[1]>=0) {
 
-	_bjet2pt = AnalysisJets[bIndex[1]].v.Pt();
-	_bjet2eta = AnalysisJets[bIndex[1]].v.Eta();
-	_bjet2phi = AnalysisJets[bIndex[1]].v.Phi();
-	_bjet2mass = std_vector_jet_mass->at(AnalysisJets[bIndex[1]].index);
-	_bjet2csvv2ivf = AnalysisJets[bIndex[1]].csvv2ivf;	
+	_bjet2pt       = AnalysisJets[bIndex[1]].v.Pt();
+	_bjet2eta      = AnalysisJets[bIndex[1]].v.Eta();
+	_bjet2phi      = AnalysisJets[bIndex[1]].v.Phi();
+	_bjet2mass     = AnalysisJets[bIndex[1]].mass;
+	_bjet2csvv2ivf = AnalysisJets[bIndex[1]].csvv2ivf;
 	IdxB2 = bIndex[1];
 
-	if (_tjet1pt==_bjet2pt) _tjet1assignment = 1;
-	if (_tjet2pt==_bjet2pt) _tjet2assignment = 2;
+	if (_tjet1pt == _bjet2pt) _tjet1assignment = 1;
+	if (_tjet2pt == _bjet2pt) _tjet2assignment = 2;
 
 	_mlb2true = (AnalysisJets[IdxB2].v + Lepton2.v).M();
 	

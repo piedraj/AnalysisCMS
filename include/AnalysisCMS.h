@@ -31,6 +31,7 @@ struct Jet
   int            index;
   float          cmvav2;
   float          csvv2ivf;
+  float          mass;
   TLorentzVector v;
 };
 
