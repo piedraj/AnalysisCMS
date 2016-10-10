@@ -1587,7 +1587,7 @@ void AnalysisCMS::GetStopVar()
 	      
 	      if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
 		  (fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
-		   std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0) ) {
+		   std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0)) {
 
 		for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
 		  
