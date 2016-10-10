@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetSaveMinitree(true);
 }
 
 
@@ -123,6 +123,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (MET.Et() > 50. && _dphillmet > 1.2);
 
     FillLevelHistograms(Control_03_Top, pass);
+
+    if (_saveminitree && pass) minitree->Fill();
 
 
     // WW selection as in AN-16-182 (v3) 4.1
