@@ -1632,40 +1632,48 @@ void AnalysisCMS::GetStopVar()
   }
 
 
+  // Get the b-jet indexes with smallest mass difference wrt. the TOP_MASS
+  //----------------------------------------------------------------------------
   float MinMassDistance = 999999.;
-  for (int b0 = 0; b0<nCandidateBJets; b0++) {
-    for (int b1 = 0; b1<nCandidateBJets; b1++) {
-      if (b0!=b1) {
 
-	float MassDistance = sqrt( pow(CandidateBDeltaTopMass[b0][0], 2) +
-				   pow(CandidateBDeltaTopMass[b1][1], 2));
+  for (int b0=0; b0<nCandidateBJets; b0++) {
+    for (int b1=0; b1<nCandidateBJets; b1++) {
 
-	if (MassDistance<MinMassDistance) {
+      if (b0 != b1) {
+
+	float MassDistance = sqrt(pow(CandidateBDeltaTopMass[b0][0], 2) +
+				  pow(CandidateBDeltaTopMass[b1][1], 2));
+
+	if (MassDistance < MinMassDistance) {
 	  
 	  bIndex[0] = CandidateBJetIndex[b0];
 	  bIndex[1] = CandidateBJetIndex[b1];
-	  MinMassDistance = MassDistance;
 
+	  MinMassDistance = MassDistance;
 	}
 	
-      } else if (nCandidateBJets==1) {
+      } else if (nCandidateBJets == 1) {
 	
 	int giw = -1;
-	for (int iw = 0; iw<2; iw++) {
-	  if (CandidateBDeltaTopMass[b0][iw]<MinMassDistance) {
+
+	for (int iw=0; iw<2; iw++) {
+
+	  if (CandidateBDeltaTopMass[b0][iw] < MinMassDistance) {
 	    
 	    giw = iw;
-	    MinMassDistance = CandidateBDeltaTopMass[b0][iw];
 
+	    MinMassDistance = CandidateBDeltaTopMass[b0][iw];
 	  }
 	}
 
-	if (giw>=0) bIndex[giw] = CandidateBJetIndex[b0];
-	
+	if (giw >= 0) bIndex[giw] = CandidateBJetIndex[b0];
       }
     }
   }
 
+
+  // So far so good
+  //----------------------------------------------------------------------------
   int IdxB1 = -999, IdxB2 = -999;
 
   if (lepIndex[0] >=0 ) {
