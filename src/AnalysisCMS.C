@@ -121,7 +121,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_ptww          [ichannel][icut][ijet]->Fill(_ptww,           _event_weight);
   h_pt2l          [ichannel][icut][ijet]->Fill(_pt2l,           _event_weight);
   h_sumjpt12      [ichannel][icut][ijet]->Fill(_sumjpt12,       _event_weight);
-  h_sumpt12       [ichannel][icut][ijet]->Fill(pt1+pt2,         _event_weight);  // Needs l2Sel
+  h_sumpt12       [ichannel][icut][ijet]->Fill(pt1+pt2,         _event_weight);
   h_dyll          [ichannel][icut][ijet]->Fill(_dyll,           _event_weight);
   h_mllbb         [ichannel][icut][ijet]->Fill(_mllbb,          _event_weight);
   h_dphimetjet    [ichannel][icut][ijet]->Fill(_dphimetjet,     _event_weight);
@@ -142,16 +142,16 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphijet2met   [ichannel][icut][ijet]->Fill(_dphijet2met,    _event_weight);
   h_dphijj        [ichannel][icut][ijet]->Fill(_dphijj,         _event_weight);
   h_dphijjmet     [ichannel][icut][ijet]->Fill(_dphijjmet,      _event_weight);
-  h_dphill        [ichannel][icut][ijet]->Fill(dphill,          _event_weight);  // Needs l2Sel
+  h_dphill        [ichannel][icut][ijet]->Fill(dphill,          _event_weight);
   h_dphillmet     [ichannel][icut][ijet]->Fill(_dphillmet,      _event_weight);
   h_dphillstar    [ichannel][icut][ijet]->Fill(_dphillstar,     _event_weight);
-  h_dphilmet1     [ichannel][icut][ijet]->Fill(dphilmet1,       _event_weight);  // Needs l2Sel
-  h_dphilmet2     [ichannel][icut][ijet]->Fill(dphilmet2,       _event_weight);  // Needs l2Sel
+  h_dphilmet1     [ichannel][icut][ijet]->Fill(dphilmet1,       _event_weight);
+  h_dphilmet2     [ichannel][icut][ijet]->Fill(dphilmet2,       _event_weight);
   h_dphilep1jet1  [ichannel][icut][ijet]->Fill(_dphilep1jet1,   _event_weight);
   h_dphilep1jet2  [ichannel][icut][ijet]->Fill(_dphilep1jet2,   _event_weight);
   h_dphilep2jet1  [ichannel][icut][ijet]->Fill(_dphilep2jet1,   _event_weight);
   h_dphilep2jet2  [ichannel][icut][ijet]->Fill(_dphilep2jet2,   _event_weight);
-  h_drll          [ichannel][icut][ijet]->Fill(drll,            _event_weight);  // Needs l2Sel
+  h_drll          [ichannel][icut][ijet]->Fill(drll,            _event_weight);
   h_ht            [ichannel][icut][ijet]->Fill(_ht,             _event_weight);
   h_htjets        [ichannel][icut][ijet]->Fill(_htjets,         _event_weight);
   h_htnojets      [ichannel][icut][ijet]->Fill(_htnojets,       _event_weight);
@@ -183,9 +183,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_metTtrkPhi    [ichannel][icut][ijet]->Fill(metTtrkPhi,      _event_weight);
   h_mpmet         [ichannel][icut][ijet]->Fill(mpmet,           _event_weight);
   h_metPuppi      [ichannel][icut][ijet]->Fill(metPuppi,        _event_weight);
-  h_mth           [ichannel][icut][ijet]->Fill(mth,             _event_weight);  // Needs l2Sel
-  h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);  // Needs l2Sel
-  h_mtw2          [ichannel][icut][ijet]->Fill(mtw2,            _event_weight);  // Needs l2Sel
+  h_mth           [ichannel][icut][ijet]->Fill(mth,             _event_weight);
+  h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);
+  h_mtw2          [ichannel][icut][ijet]->Fill(mtw2,            _event_weight);
   h_m2l           [ichannel][icut][ijet]->Fill(_m2l,            _event_weight);
   h_nbjet15csvv2l [ichannel][icut][ijet]->Fill(_nbjet15csvv2l,  _event_weight);
   h_nbjet15csvv2m [ichannel][icut][ijet]->Fill(_nbjet15csvv2m,  _event_weight);
@@ -809,7 +809,7 @@ void AnalysisCMS::GetMpMet()
   float dphil2trkmet = fabs(Lepton2.v.DeltaPhi(trkMET));
   float dphiltrkmet  = min(dphil1trkmet, dphil2trkmet);
 
-  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);  // Needs l2Sel
+  if (dphilmet    < TMath::Pi() / 2.) _fullpmet *= sin(dphilmet);
   if (dphiltrkmet < TMath::Pi() / 2.) _trkpmet  *= sin(dphiltrkmet);
 
   _mpmet = min(_trkpmet, _fullpmet);
@@ -830,7 +830,7 @@ void AnalysisCMS::GetMetVar()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetDeltaPhiVeto()
 {
-  _passdphiveto = (_njet < 2 || dphilljetjet < 165.*TMath::DegToRad());  // Needs l2Sel
+  _passdphiveto = (_njet < 2 || dphilljetjet < 165.*TMath::DegToRad());
 }
 
 
@@ -863,8 +863,8 @@ void AnalysisCMS::GetMc()
 
   float met = MET.Et();
 
-  if (ptll > 0 && mll > 0 && met > 0)                                          // Needs l2Sel
-    _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));  // Needs l2Sel
+  if (ptll > 0 && mll > 0 && met > 0)
+    _mc = sqrt(pow(sqrt(ptll*ptll + mll*mll) + met, 2) - pow(ptll + met, 2));
 }
 
 
@@ -1418,7 +1418,7 @@ void AnalysisCMS::GetStopVar()
   _mlb1true     = -0.1;
   _mlb2true     = -0.1;
   
-  _bjet1pt         = _bjet2pt         = _tjet1pt       = _tjet2pt       =  -10.;
+  _bjet1pt         = _bjet2pt         = _tjet1pt       = _tjet2pt       = -999.;
   _bjet1eta        = _bjet2eta        = _tjet1eta      = _tjet2eta      = -999.;
   _bjet1phi        = _bjet2phi        = _tjet1phi      = _tjet2phi      = -999.;
   _bjet1mass       = _bjet2mass       = _tjet1mass     = _tjet2mass     = -999.;
@@ -1516,7 +1516,7 @@ void AnalysisCMS::GetStopVar()
 
   // Top quark reco
   //----------------------------------------------------------------------------
-  if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
+  //  if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
 
   if (!_ismc) return;
 
@@ -1524,10 +1524,10 @@ void AnalysisCMS::GetStopVar()
   int bIndex  [2] = {-999, -999};
 
   int   nCandidateBJets = 0;
-  int   CandidateBJetIndex[50];
-  float CandidateBDeltaTopMass[50][2];
+  int   CandidateBJetIndex[10];
+  float CandidateBDeltaTopMass[10][2];
 
-  for (int cb=0; cb<50; cb++) {
+  for (int cb=0; cb<10; cb++) {
     for (int iw=0; iw<2; iw++) {
       CandidateBJetIndex[cb] = -1;
       CandidateBDeltaTopMass[cb][iw] = 999.;
@@ -1541,88 +1541,87 @@ void AnalysisCMS::GetStopVar()
     int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
     int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
-    if (lepIndex[IdxW] < 0) {
+    if (lepIndex[IdxW] > -999) continue;
 	
-      TLorentzVector WBoson;
+    TLorentzVector WBoson;
 
-      WBoson.SetPtEtaPhiM(std_vector_VBoson_pt->at(wb),
-			  std_vector_VBoson_eta->at(wb),
-			  std_vector_VBoson_phi->at(wb),
-			  std_vector_VBoson_mass->at(wb));
+    WBoson.SetPtEtaPhiM(std_vector_VBoson_pt->at(wb),
+			std_vector_VBoson_eta->at(wb),
+			std_vector_VBoson_phi->at(wb),
+			std_vector_VBoson_mass->at(wb));
 
-      for (int lp=0; lp<std_vector_leptonGen_pt->size(); lp++) {
+    for (int lp=0; lp<std_vector_leptonGen_pt->size(); lp++) {
 
-	if (std_vector_leptonGen_pt->at(lp) < 0 || lepIndex[IdxW] > -999) continue;
+      if (std_vector_leptonGen_pt->at(lp) < 0 || lepIndex[IdxW] > -999) continue;
 	  
-	if (Wid*std_vector_leptonGen_pid->at(lp) > 0) continue;
+      if (Wid*std_vector_leptonGen_pid->at(lp) > 0) continue;
 
-	float LeptonMass = (fabs(std_vector_leptonGen_pid->at(lp)) == 13) ? MUON_MASS : ELECTRON_MASS;
+      float LeptonMass = (fabs(std_vector_leptonGen_pid->at(lp)) == 13) ? MUON_MASS : ELECTRON_MASS;
 
-	TLorentzVector ChargedLepton;
+      TLorentzVector ChargedLepton;
 
-	ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp),
-				   std_vector_leptonGen_eta->at(lp),
-				   std_vector_leptonGen_phi->at(lp),
-				   LeptonMass);
+      ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp),
+				 std_vector_leptonGen_eta->at(lp),
+				 std_vector_leptonGen_phi->at(lp),
+				 LeptonMass);
 	    
-	for (int nt=0; nt<std_vector_neutrinoGen_pt->size(); nt++) {
+      for (int nt=0; nt<std_vector_neutrinoGen_pt->size(); nt++) {
 
-	  if (std_vector_neutrinoGen_pt->at(nt) < 0 || lepIndex[IdxW] > -999) continue;
+	if (std_vector_neutrinoGen_pt->at(nt) < 0 || lepIndex[IdxW] > -999) continue;
 		
-	  TLorentzVector CandidateNeutrino;
+	TLorentzVector CandidateNeutrino;
 
-	  CandidateNeutrino.SetPtEtaPhiM(std_vector_neutrinoGen_pt->at(nt),
-					 std_vector_neutrinoGen_eta->at(nt),
-					 std_vector_neutrinoGen_phi->at(nt),
-					 0.);
+	CandidateNeutrino.SetPtEtaPhiM(std_vector_neutrinoGen_pt->at(nt),
+				       std_vector_neutrinoGen_eta->at(nt),
+				       std_vector_neutrinoGen_phi->at(nt),
+				       0.);
+	
+	float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
 
-	  float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
+	if (ThisDeltaR < 0.00001) {
 
-	  if (ThisDeltaR < 0.00001) {
-
-	    lepIndex[IdxW] = lp;
+	  lepIndex[IdxW] = lp;
 		  
-	    // Now look for the b quark
-	    for (int rj=0; rj<_njet; rj++) {
+	  // Now look for the b quark
+	  for (int rj=0; rj<_njet; rj++) {
 	      
-	      if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
-		  (fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
-		   std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0)) {
+	    if (fabs(std_vector_jet_HadronFlavour->at(AnalysisJets[rj].index)) == 5 && 
+		(fabs(std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)) != 5 || 
+		 std_vector_jet_PartonFlavour->at(AnalysisJets[rj].index)*Wid>0)) {
 
-		for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
+	      for (int gj=0; gj<std_vector_jetGen_pt->size(); gj++) {
 		  
-		  if (std_vector_jetGen_pt->at(gj) < 8.) continue;
+		if (std_vector_jetGen_pt->at(gj) < 8.) continue;
 		      
-		  TLorentzVector BottomQuark;
+		TLorentzVector BottomQuark;
 
-		  BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj),
-					   std_vector_jetGen_eta->at(gj),
-					   std_vector_jetGen_phi->at(gj),
-					   BOTTOM_MASS);
+		BottomQuark.SetPtEtaPhiM(std_vector_jetGen_pt->at(gj),
+					 std_vector_jetGen_eta->at(gj),
+					 std_vector_jetGen_phi->at(gj),
+					 BOTTOM_MASS);
 
-		  float TopMass = (WBoson + BottomQuark).M();
+		float TopMass = (WBoson + BottomQuark).M();
 
-		  float DeltaTopMass = fabs(TopMass - TOP_MASS);
+		float DeltaTopMass = fabs(TopMass - TOP_MASS);
 		    
-		  if (DeltaTopMass < 250. && (AnalysisJets[rj].v).DeltaR(BottomQuark) < 0.3) {
+		if (DeltaTopMass < 250. && (AnalysisJets[rj].v).DeltaR(BottomQuark) < 0.3) {
 		      
-		    bool NewCandidateJet = true;
+		  bool NewCandidateJet = true;
 
-		    for (int cb=0; cb<nCandidateBJets; cb++) {
+		  for (int cb=0; cb<nCandidateBJets; cb++) {
 
-		      if (CandidateBJetIndex[cb] == rj) {
-			  
-			CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
-			NewCandidateJet = false;
-		      }
+		    if (CandidateBJetIndex[cb] == rj) {
+		      
+		      CandidateBDeltaTopMass[cb][IdxW] = DeltaTopMass;
+		      NewCandidateJet = false;
 		    }
+		  }
 		      
-		    if (NewCandidateJet) {
+		  if (NewCandidateJet) {
 			
-		      CandidateBJetIndex[nCandidateBJets] = rj;
-		      CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
-		      nCandidateBJets++;
-		    }
+		    CandidateBJetIndex[nCandidateBJets] = rj;
+		    CandidateBDeltaTopMass[nCandidateBJets][IdxW] = DeltaTopMass;
+		    nCandidateBJets++;
 		  }
 		}
 	      }
@@ -1670,10 +1669,14 @@ void AnalysisCMS::GetStopVar()
 
   int IdxB1 = -999, IdxB2 = -999;
 
-  if (lepIndex[0]>=0) {
+  if (lepIndex[0] >=0 ) {
 
     TLorentzVector LepGen1;
-    LepGen1.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lepIndex[0]), std_vector_leptonGen_eta->at(lepIndex[0]), std_vector_leptonGen_phi->at(lepIndex[0]), 0.1); // Mass does not matter here
+
+    LepGen1.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lepIndex[0]),
+			 std_vector_leptonGen_eta->at(lepIndex[0]),
+			 std_vector_leptonGen_phi->at(lepIndex[0]),
+			 0.1);  // Mass does not matter here
     
     float DeltaRLep1LepGen1 = (Lepton1.v).DeltaR(LepGen1);
     float DeltaRLep2LepGen1 = (Lepton2.v).DeltaR(LepGen1);
@@ -1756,17 +1759,14 @@ void AnalysisCMS::GetStopVar()
 	if (_tjet2pt == _bjet2pt) _tjet2assignment = 2;
 
 	_mlb2true = (AnalysisJets[IdxB2].v + Lepton2.v).M();
-	
       }
     }
-    
   }
 
-  if (IdxB1>=0 && IdxB2>=0) {
+  if (IdxB1 >= 0 && IdxB2 >= 0) {
 
-    _mt2bbtrue = ComputeMT2(AnalysisJets[IdxB1].v, AnalysisJets[IdxB2].v, Lepton1.v + Lepton2.v + MET, 1);
-    _mt2lblbtrue = ComputeMT2(AnalysisJets[IdxB1].v + Lepton1.v, AnalysisJets[IdxB2].v + Lepton2.v, MET, 2);
-
+    _mt2bbtrue    = ComputeMT2(AnalysisJets[IdxB1].v, AnalysisJets[IdxB2].v, Lepton1.v + Lepton2.v + MET, 1);
+    _mt2lblbtrue  = ComputeMT2(AnalysisJets[IdxB1].v + Lepton1.v, AnalysisJets[IdxB2].v + Lepton2.v, MET, 2);
     _mt2lblbmatch = ComputeMT2(AnalysisJets[IdxB2].v + Lepton1.v, AnalysisJets[IdxB1].v + Lepton2.v, MET, 2);
   }
 }
