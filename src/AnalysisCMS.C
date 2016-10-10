@@ -181,7 +181,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_metPfType1Phi [ichannel][icut][ijet]->Fill(MET.Phi(),       _event_weight);
   h_metTtrk       [ichannel][icut][ijet]->Fill(metTtrk,         _event_weight);
   h_metTtrkPhi    [ichannel][icut][ijet]->Fill(metTtrkPhi,      _event_weight);
-  h_mpmet         [ichannel][icut][ijet]->Fill(_mpmet,          _event_weight);
+  h_mpmet         [ichannel][icut][ijet]->Fill(mpmet,           _event_weight);
   h_metPuppi      [ichannel][icut][ijet]->Fill(metPuppi,        _event_weight);
   h_mth           [ichannel][icut][ijet]->Fill(mth,             _event_weight);  // Needs l2Sel
   h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);  // Needs l2Sel
@@ -802,7 +802,7 @@ void AnalysisCMS::GetMpMet()
 //------------------------------------------------------------------------------                                                               
 void AnalysisCMS::GetMetVar()
 {
-  _metvar = (_njet <= 1) ? _mpmet : MET.Et();
+  _metvar = (_njet <= 1) ? mpmet : MET.Et();
 }
 
 
@@ -949,8 +949,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetHt();
 
   GetStarVar();
-
-  GetMpMet();
 
   GetSoftMuon();
 
@@ -1198,7 +1196,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
   minitree->Branch("mc",             &_mc,             "mc/F");
   minitree->Branch("m2l",            &_m2l,            "m2l/F");
-  minitree->Branch("mpmet",          &_mpmet,          "mpmet/F");
+  minitree->Branch("mpmet",          &mpmet,           "mpmet/F");
   minitree->Branch("metPuppi",       &metPuppi,        "metPuppi/F");
   minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
   minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
