@@ -237,7 +237,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
   //  
   //  bool pass_htjets = _htjets > 150.;
-  //  bool pass_mpmet  = (_nelectron == 1 || _mpmet > 30.);
+  //  bool pass_mpmet  = (_nelectron == 1 || mpmet > 30.);
   //  
 
   //  pass_htjets &= pass;    
