@@ -2,6 +2,7 @@
 #define AnalysisStop_h
  
 #include "AnalysisCMS.h"
+#include <map>
 
 
 class AnalysisStop : public AnalysisCMS
@@ -21,9 +22,14 @@ class AnalysisStop : public AnalysisCMS
 			      TString sample,
 			      float   luminosity);
 
-  float StopCrossSection, StopCrossSectionUncertainty;
-  void GetStopCrossSection(float StopMass);
+  typedef pair<int, int> MassPoint;
+  typedef pair<float, float> StopCrossSection;
+  typedef pair<StopCrossSection, int> MassPointParameters;
 
+  typedef map<MassPoint, MassPointParameters> MassPointMap;
+  MassPointMap StopNeutralinoMap;
+
+  void SetStopNeutralinoMap();
 
   // Analysis histograms
   //----------------------------------------------------------------------------
