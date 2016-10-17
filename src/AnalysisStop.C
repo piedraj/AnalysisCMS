@@ -109,7 +109,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	MassPointParameters TheseMassPointParameters = StopNeutralinoMap.at(ThisMassPoint);
 	StopCrossSection ThisStopCrossSection = TheseMassPointParameters.first;
 	int SampleSize = TheseMassPointParameters.second;
-	_event_weight *= (1000.*ThisStopCrossSection.first/SampleSize);
+	_event_weight *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
 	
       }
 
