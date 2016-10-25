@@ -436,8 +436,8 @@ void AnalysisCMS::ApplyWeights()
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
-  if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;  // k_factor = 1.4 +- 0.5
+  if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
+  if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;
   if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
   if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
@@ -450,6 +450,28 @@ void AnalysisCMS::ApplyWeights()
   if (!GEN_weight_SM) return;
   
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
+
+
+  // Taken from https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/samples.py
+  if (_sample.Contains("DYJetsToLL_M"))
+    {
+      _event_weight *=
+	((abs(std_vector_lepton_flavour->at(0)) == 11) +
+	 (abs(std_vector_lepton_flavour->at(0)) == 13) *
+	 (0.992739 +
+	  0.00152678  * std_vector_lepton_eta->at(0) +
+	  0.00402821  * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0) -
+	  0.000557167 * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0) -
+	  0.00133539  * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0))) *
+	((abs(std_vector_lepton_flavour->at(1)) == 11) +
+	 (abs(std_vector_lepton_flavour->at(1)) == 13) *
+	 (0.992739 +
+	  0.00152678  * std_vector_lepton_eta->at(1) +
+	  0.00402821  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
+	  0.000557167 * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
+	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
+    }
+
 
   return;
 }

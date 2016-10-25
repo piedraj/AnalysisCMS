@@ -80,12 +80,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
-    float trailing_ptmin = (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) ? 13. : 10.;
-
     bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
 
-    pass_2l &= (Lepton1.v.Pt() > 20.);
-    pass_2l &= (Lepton2.v.Pt() > trailing_ptmin);
+    pass_2l &= (Lepton1.v.Pt() > 25.);
+    pass_2l &= (Lepton2.v.Pt() > 15.);
     pass_2l &= (_m2l > 12.);
 
 
