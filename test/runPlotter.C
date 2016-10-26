@@ -390,10 +390,16 @@ void runPlotter(TString level,
   //
   if (analysis.EqualTo("Control") && level.Contains("WW"))
     {
-      printf("\n");
+      printf("\n Cross section\n");
+      printf("---------------\n");
 
       for (int i=firstchannel; i<=lastchannel; i++)
-	plotter.CrossSection(level, schannel[i], "WW", 1.96718e+06, WW2lnu);
+	plotter.CrossSection(level,
+			     schannel[i],
+			     "WW",
+			     WW2lnu,
+			     "WWTo2L2Nu",            12.1780, 1967180,
+			     "GluGluWWTo2L2Nu_MCFM",  0.5905,  481600);
       
       printf("\n");
     }

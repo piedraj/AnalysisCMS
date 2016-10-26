@@ -536,8 +536,13 @@ void HistogramReader::Draw(TString hname,
 void HistogramReader::CrossSection(TString level,
 				   TString channel,
 				   TString process,
-				   Float_t ngen,
-				   Float_t branchingratio)
+				   Float_t branchingratio,
+				   TString signal1_filename,
+				   Float_t signal1_xs,
+				   Float_t signal1_ngen,
+				   TString signal2_filename,
+				   Float_t signal2_xs,
+				   Float_t signal2_ngen)
 {
   if (_luminosity_fb < 0)
     {
@@ -545,13 +550,46 @@ void HistogramReader::CrossSection(TString level,
     }
 
 
-  // Get the signal and the backgrounds
+  // Get the signal (example qqWW)
+  //----------------------------------------------------------------------------
+  TFile* signal1_file = new TFile(_inputdir + "/" + signal1_filename + ".root");
+
+  float signal1_counterLum = Yield((TH1D*)signal1_file->Get(level + "/h_counterLum_" + channel));
+  float signal1_counterRaw = Yield((TH1D*)signal1_file->Get(level + "/h_counterRaw_" + channel));
+
+  float counterSignal = signal1_counterLum * _luminosity_fb;
+
+  float efficiency = signal1_counterRaw / signal1_ngen;
+
+
+  // Get the second signal (example ggWW)
+  //----------------------------------------------------------------------------
+  if (!signal2_filename.Contains("NULL"))
+    {
+      TFile* signal2_file = new TFile(_inputdir + "/" + signal2_filename + ".root");
+
+      float signal2_counterLum = Yield((TH1D*)signal2_file->Get(level + "/h_counterLum_" + channel));
+      float signal2_counterRaw = Yield((TH1D*)signal2_file->Get(level + "/h_counterRaw_" + channel));
+
+      counterSignal += (signal2_counterLum * _luminosity_fb);
+
+      float signal1_fraction = signal1_xs / (signal1_xs + signal2_xs);
+      float signal2_fraction = 1. - signal1_fraction;
+
+      float signal1_efficiency = signal1_counterRaw / signal1_ngen;
+      float signal2_efficiency = signal2_counterRaw / signal2_ngen;
+
+      efficiency = signal1_fraction*signal1_efficiency + signal2_fraction*signal2_efficiency;
+    }
+
+
+  // Get the backgrounds
   //----------------------------------------------------------------------------
   float counterBackground = 0;
-  float counterSignal;
-  float counterSignalRaw;
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
+
+    if (_mclabel[i].EqualTo(process)) continue;
 
     _mcfile[i]->cd();
 
@@ -563,17 +601,7 @@ void HistogramReader::CrossSection(TString level,
 
     if (_mcscale[i] > 0) counterDummy *= _mcscale[i];
 
-    if (_mclabel[i].EqualTo(process))
-      {
-	TH1D* raw = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
-
-	counterSignal    = counterDummy;
-	counterSignalRaw = Yield(raw);
-      }
-    else
-      {
-	counterBackground += counterDummy;
-      }
+    counterBackground += counterDummy;
   }
 
 
@@ -593,9 +621,8 @@ void HistogramReader::CrossSection(TString level,
 
   // Cross-section calculation
   //----------------------------------------------------------------------------  
-  float efficiency = counterSignalRaw / ngen;
-  float xs         = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
-  float mu         = (counterData - counterBackground) / (counterSignal);
+  float xs = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  float mu = (counterData - counterBackground) / (counterSignal);
 
 
   // Statistical error
@@ -606,8 +633,9 @@ void HistogramReader::CrossSection(TString level,
  
   // Print
   //----------------------------------------------------------------------------  
-  printf(" mu(%s) = %.2f +- %.2f (stat) +- %.2f (lumi) \t xs(%s) = %.2f +- %.2f (stat) +- %.2f (lumi) pb\n",
+  printf(" mu(%s) = %.2f +- %.2f (stat) +- %.2f (lumi) \t efficiency = %5.2f\% \t xs(%s) = %.2f +- %5.2f (stat) +- %5.2f (lumi) pb\n",
 	 channel.Data(), mu, muErrorStat, mu * lumi_error_percent / 1e2,
+	 1e2 * efficiency,
 	 channel.Data(), xs, xsErrorStat, xs * lumi_error_percent / 1e2);
 }
 
@@ -1345,7 +1373,7 @@ void HistogramReader::Roc(TString hname,
   //----------------------------------------------------------------------------
   TCanvas *sigCanvas = new TCanvas(hname + " significance", hname + " significance");
 
-  TString myxtitle = (units != "NULL") ? xtitle + " [" + units + "]" : xtitle;
+  TString myxtitle = (!units.Contains("NULL")) ? xtitle + " [" + units + "]" : xtitle;
 
   sigGraph->SetMarkerColor(kRed+1);
   sigGraph->SetMarkerStyle(kFullCircle);
