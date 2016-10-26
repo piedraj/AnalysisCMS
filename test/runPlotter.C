@@ -382,7 +382,7 @@ void runPlotter(TString level,
     }
 
 
-  // Cross-section
+  // Cross section
   //----------------------------------------------------------------------------
   //  root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root as _file0...
   //  mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
