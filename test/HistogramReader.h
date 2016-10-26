@@ -68,7 +68,9 @@ class HistogramReader
 
   void     CrossSection       (TString        level,
 			       TString        channel,
-			       TString        process);
+			       TString        process,
+			       Float_t        ngen,
+			       Float_t        branchingratio = 1);
 
   void     DrawLatex          (Font_t         tfont,
 			       Float_t        x,
@@ -202,8 +204,8 @@ class HistogramReader
 
   std::ofstream         _yields_table;
 
-  std::vector<TString> _roc_signals;
-  std::vector<TString> _roc_backgrounds;
+  std::vector<TString>  _roc_signals;
+  std::vector<TString>  _roc_backgrounds;
 };
 
 #endif
