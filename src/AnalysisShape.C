@@ -41,7 +41,7 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
       for (int i=ee; i<=ll; i++) {
 
 	TString suffix = "_" + schannel[i];
-
+	
 	DefineHistograms(i, j, k, suffix);
       }
     }
@@ -76,7 +76,7 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 0) _channel = mm;
     
     if (Lepton1.v.Pt() < 30.) continue;
-    if (Lepton2.v.Pt() < 10.) continue;
+    if (Lepton2.v.Pt() < 15.) continue;
 
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
@@ -128,9 +128,35 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
     FillLevelHistograms(Shape_07_Zveto, pass);
+    /*
+    if(pass) {
 
+      printf("================================== \n");
+      for(int x=0;x<3;x++) 
+	{
+	  for(int y=0;y<3;y++)
+	    {
+	      printf("(%d,%d) : %f ", x, y, GetMomentumTensor()[x][y]);
+	    }
+	  cout<<endl; 
+	}
+
+      _miMatrix = GetMomentumTensor();
+      _sphericity = GetSphericity(_miMatrix);
+      printf("Sphericity: %f ", _sphericity); 
+
+      printf("  Before adding to the histogram     ");
+      std::cout << "Channel :" << _channel << "        Jetbin : " << _jetbin << std::endl;
+      h_sphericity[(int)_channel][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
+      h_sphericity[ll][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
+      // h_sphericity[4][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
+      printf("After adding to the histogram \n");
+
+      printf("================================== \n");
+
+    }    
+    */
   }
-
 
   EndJob();
 }
@@ -143,7 +169,69 @@ void AnalysisShape::FillLevelHistograms(int  icut,
 					  bool pass)
 {
   if (!pass) return;
-
+  
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 }
+/*
+TMatrixDSym AnalysisShape::GetMomentumTensor() 
+{
+  TMatrixDSym _smatrix(3); //TMatrixDSym has a funcion implemened to calculate the eigenvalues
+
+  //Leptons
+  for(unsigned int i=0; i<2; i++) {
+    _smatrix[0][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Px();
+    _smatrix[0][1] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Py();
+    _smatrix[0][2] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Pz();
+    
+    _smatrix[1][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Py();
+    _smatrix[1][1] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Py();
+    _smatrix[1][2] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Pz();
+    
+    _smatrix[2][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Pz();
+    _smatrix[2][1] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Pz();
+    _smatrix[2][2] = AnalysisLeptons[i].v.Pz() * AnalysisLeptons[i].v.Pz();
+  }    
+
+  //Jets
+  for(unsigned int i=0; i<AnalysisJets.size(); i++) {
+
+    //    if(AnalysisJets[i].v.Pt() > 30.) {
+      _smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
+      _smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+      _smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+      
+      _smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+      _smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
+      _smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+      
+      _smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+      _smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+      _smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
+      //    }
+  }      
+
+  return _smatrix;
+}
+
+TVectorD AnalysisShape::GetEigenvalues(TMatrixDSym _smatrix) {
+  TMatrixDSymEigen eigen(_smatrix);
+  TVectorD eigenvalues = eigen.GetEigenValues();
+  
+  //  sort(eigenvalues[0],eigenvalues[2]);
+  
+  return eigenvalues; 
+}
+
+float AnalysisShape::GetSphericity(TMatrixDSym _smatrix) {
+  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+
+  float eigenvalue1 = eigenvalues[0];
+  float eigenvalue2 = eigenvalues[1];
+  float eigenvalue3 = eigenvalues[2];
+
+  return 3*(eigenvalue2 + eigenvalue3)/(2*(eigenvalue1 + eigenvalue2 + eigenvalue3));
+  }
+*/
+
+

@@ -381,6 +381,14 @@ void runPlotter(TString level,
 	      plotter.Draw(prefix + "wlpt"       + suffix, "W lepton p_{T}",                   10, 0, "GeV",  scale, true,  0, 150);
 	      plotter.Draw(prefix + "wlzldeltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
 	    }
+
+	  // Shape histograms
+	  //--------------------------------------------------------------------
+	  if (analysis.EqualTo("Shape"))
+	    {
+	      plotter.Draw(prefix + "sphericity" + suffix, "Sphericity",                       -1, 0, "NULL", scale);
+	    }
+
 	}
     }
 
