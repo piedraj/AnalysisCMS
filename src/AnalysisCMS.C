@@ -215,6 +215,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   // TH2 histograms
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
+  h_mpmet_m2l     [ichannel][icut][ijet]->Fill(mpmet,    _m2l,    _event_weight);
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
@@ -452,8 +453,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
-  /*
   // Taken from https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/samples.py
+  // Documented in slide 5 of https://indico.cern.ch/event/562201/contributions/2270962/attachments/1331900/2001984/Sep-06-Latino_Massironi.pdf
   if (_sample.Contains("DYJetsToLL_M"))
     {
       _event_weight *=
@@ -472,9 +473,8 @@ void AnalysisCMS::ApplyWeights()
 	  0.000557167 * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
 	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
     }
-  */
-
-
+  
+  
   return;
 }
 
@@ -1181,6 +1181,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   // TH2 histograms
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
   h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
   h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }

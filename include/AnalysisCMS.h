@@ -428,6 +428,7 @@ class AnalysisCMS : public AnalysisBase
   // TH2 histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
+  TH2D*                  h_mpmet_m2l     [nchannel][ncut][njetbin+1];
   TH2D*                  h_2ht           [nchannel][ncut][njetbin+1];
   TH2D*                  h_dym           [nchannel][ncut][njetbin+1];
 

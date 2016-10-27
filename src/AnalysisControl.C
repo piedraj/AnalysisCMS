@@ -88,17 +88,23 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass_2l &= (_m2l > 12.);
 
 
+    bool pass;
+
+
     // No cuts
     //--------------------------------------------------------------------------
-    FillLevelHistograms(Control_00_NoCuts, true);
+    pass = true;
+
+    FillLevelHistograms(Control_00_NoCuts, pass);
 
 
     // Has 2 leptons
     //--------------------------------------------------------------------------
-    FillLevelHistograms(Control_01_Has2Leptons, pass_2l);
+    pass = pass_2l;
 
-
-    bool pass = true;
+    FillLevelHistograms(Control_01_Has2Leptons, pass);
+    
+    if (_saveminitree && pass) minitree->Fill();
 
 
     // Top
@@ -108,12 +114,9 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_njet > 1);
     pass &= (_nbjet30csvv2m > 0);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (MET.Et() > 50.);
-    pass &= (_dphillmet > 1.2);
+    pass &= (MET.Et() > 45.);
 
     FillLevelHistograms(Control_02_Top, pass);
-
-    if (_saveminitree && pass) minitree->Fill();
 
 
     // R out/in
@@ -133,10 +136,9 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
-    pass &= (mpmet > 20.);
     pass &= (_pt2l > 30.);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || mpmet > 45.);
+    pass &= (_channel == em || MET.Et() > 45.);
     pass &= (_channel == em || _pt2l > 45.);
 
     FillLevelHistograms(Control_04_WW, pass);
