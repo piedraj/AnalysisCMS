@@ -454,6 +454,7 @@ void AnalysisCMS::ApplyWeights()
   _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
+  /*
   // Taken from https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/samples.py
   if (_sample.Contains("DYJetsToLL_M"))
     {
@@ -473,6 +474,7 @@ void AnalysisCMS::ApplyWeights()
 	  0.000557167 * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
 	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
     }
+  */
 
 
   return;

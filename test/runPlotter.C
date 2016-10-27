@@ -150,18 +150,15 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("TTDM"))
     {
-      //      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
-      //      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
+      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
 
   if (analysis.EqualTo("Stop"))
     {
-      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}150-250",  color_Signal-10);  
-      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}250-350",  color_Signal-8);  
-      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal-6);  
-      //      plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal-4);  
-      //      plotter.AddSignal("T2tt_mStop??", "T2bw",             color_Signal-2);  
+      plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal);  
+      plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal+2);  
     }
 
 
@@ -393,16 +390,25 @@ void runPlotter(TString level,
     }
 
 
-  // Cross-section
+  // Cross section
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ") && level.Contains("BVeto"))
+  //  root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root as _file0...
+  //  mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
+  //  1.96718e+06
+  //
+  if (analysis.EqualTo("Control") && level.Contains("WW"))
     {
-      printf("\n Cross section mu\n");
-      printf("------------------\n");
+      printf("\n Cross section\n");
+      printf("---------------\n");
 
       for (int i=firstchannel; i<=lastchannel; i++)
-	plotter.CrossSection(level, schannel[i], analysis);
-
+	plotter.CrossSection(level,
+			     schannel[i],
+			     "WW",
+			     WW2lnu,
+			     "WWTo2L2Nu",            12.1780, 1967180,
+			     "GluGluWWTo2L2Nu_MCFM",  0.5905,  481600);
+      
       printf("\n");
     }
 

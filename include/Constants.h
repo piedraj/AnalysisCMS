@@ -111,7 +111,7 @@ const double W2m     = 0.1057;
 const double W2tau   = 0.1125;
 const double Z2ll    = 0.033658;
 const double WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
-
+const double WW2lnu  = (W2e + W2m + W2tau) * (W2e + W2m + W2tau);
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
