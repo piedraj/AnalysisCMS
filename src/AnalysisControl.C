@@ -107,18 +107,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     if (_saveminitree && pass) minitree->Fill();
 
 
-    // Top
-    //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    pass &= (_njet > 1);
-    pass &= (_nbjet30csvv2m > 0);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (MET.Et() > 45.);
-
-    FillLevelHistograms(Control_02_Top, pass);
-
-
     // R out/in
     //--------------------------------------------------------------------------
     pass = pass_2l;
@@ -127,7 +115,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_pt2l > 30.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_03_Routin, pass);
+    FillLevelHistograms(Control_02_Routin, pass);
 
 
     // WW
@@ -141,7 +129,19 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || MET.Et() > 45.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_04_WW, pass);
+    FillLevelHistograms(Control_03_WW, pass);
+
+
+    // Top
+    //--------------------------------------------------------------------------
+    pass = pass_2l;
+
+    pass &= (_njet > 1);
+    pass &= (_nbjet30csvv2m > 0);
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass &= (MET.Et() > 45.);
+
+    FillLevelHistograms(Control_04_Top, pass);
   }
 
 
