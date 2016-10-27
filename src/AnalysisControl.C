@@ -84,6 +84,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     pass_2l &= (Lepton1.v.Pt() > 25.);
     pass_2l &= (Lepton2.v.Pt() > 20.);
+    pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
     pass_2l &= (_m2l > 12.);
 
 
@@ -100,36 +101,36 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     bool pass = true;
 
 
-    // R out/in
-    //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
-    pass &= (_njet > 1);
-
-    FillLevelHistograms(Control_02_Routin, pass);
-
-
     // Top
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_njet > 1);
     pass &= (_nbjet30csvv2m > 0);
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (MET.Et() > 50. && _dphillmet > 1.2);
+    pass &= (MET.Et() > 50.);
+    pass &= (_dphillmet > 1.2);
 
-    FillLevelHistograms(Control_03_Top, pass);
+    FillLevelHistograms(Control_02_Top, pass);
 
     if (_saveminitree && pass) minitree->Fill();
+
+
+    // R out/in
+    //--------------------------------------------------------------------------
+    pass = pass_2l;
+
+    pass &= (_nbjet20cmvav2l == 0);
+    pass &= (_pt2l > 30.);
+    pass &= (_channel == em || _pt2l > 45.);
+
+    FillLevelHistograms(Control_03_Routin, pass);
 
 
     // WW
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (_nbjet20cmvav2l == 0);
     pass &= (MET.Et() > 20.);
     pass &= (mpmet > 20.);
