@@ -25,10 +25,10 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 8;
+const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 40, 50, 60,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 50, 60, 100};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 45,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 45, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -122,8 +122,8 @@ int          bin_metmax;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin",
-		double  lumi_fb  = 2.301)
+		TString level    = "03_Routin",
+		double  lumi_fb  = 12.3)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -132,7 +132,7 @@ void getDYScale(TString analysis = "Control",
   TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",     "read");
   TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root",    "read");
   TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_ZZ.root",       "read");
+  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
@@ -191,7 +191,7 @@ void getDYScale(TString analysis = "Control",
 
       if (printResults)
 	{
-	  printf("\n--------------------------------------------------------\n");
+	  printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	  printf("\n %.0f < MET < %.0f GeV\n", metcut[j], metcut[j+1]);
 	}
 
@@ -264,7 +264,7 @@ void getDYScale(TString analysis = "Control",
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
 
-      DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
+      DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
 
       canvas[k]->Modified();
       canvas[k]->Update();
@@ -297,11 +297,11 @@ void getDYScale(TString analysis = "Control",
   mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
-  DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
-  DrawLegend(0.22, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
+  DrawLegend(0.72, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
+  DrawLegend(0.72, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+  DrawLegend(0.72, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", lumi_fb));
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
 
   canvas[2]->Modified();
   canvas[2]->Update();
@@ -436,17 +436,17 @@ void GetScale(int    ch,
   if (printResults)
     {
       printf("\n");
-      printf(" k(%s)         %6.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
-      printf(" Nin(%s)       %6.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
-      printf(" Nin(em)       %6.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
-      printf(" Nin(WZ)       %6.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
-      printf(" Nin(ZZ)       %6.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
-      printf(" Nin(DY)       %6.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
-      printf(" Nin(est)      %6.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
-      printf("----------------------------\n");
-      printf(" R(%s,est)     %6.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
-      printf(" R(%s,DY)      %6.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
-      printf(" SF(%s,est/DY) %6.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
+      printf(" k(%s)         %8.3f +- %-5.3f\n", schannel[ch].Data(), k_value[ch],  k_error[ch]);
+      printf(" Nin(%s)       %8.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
+      printf(" Nin(em)       %8.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
+      printf(" Nin(WZ)       %8.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
+      printf(" Nin(ZZ)       %8.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
+      printf(" Nin(DY)       %8.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
+      printf(" Nin(est)      %8.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+      printf("----------------------------------\n");
+      printf(" R(%s,est)     %8.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
+      printf(" R(%s,DY)      %8.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
+      printf(" SF(%s,est/DY) %8.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
       printf("\n");
     }
 }
