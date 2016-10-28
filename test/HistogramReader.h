@@ -44,11 +44,13 @@ class HistogramReader
   void     AddProcess         (const TString& filename,
 			       const TString& label,
 			       Color_t        color,
+			       Int_t          kind  = roc_background,
 			       Float_t        scale = -1);
 
   void     AddSignal          (const TString& filename,
 			       const TString& label,
-			       Color_t        color);
+			       Color_t        color,
+			       Int_t          kind = roc_none);
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -160,10 +162,6 @@ class HistogramReader
 
   void     WriteYields        (TH1*           hist,
 			       TString        label);
-
-  void     AddRocSignal       (TString        filename);
-
-  void     AddRocBackground   (TString        filename);
 
   void     Roc                (TString        hname,
 			       TString        xtitle  = "",
