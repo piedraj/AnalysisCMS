@@ -611,7 +611,7 @@ void HistogramReader::CrossSection(TString level,
     {
       _datafile->cd();
 
-      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
+      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterLum_" + channel);
 
       _datahist = (TH1D*)dummy->Clone();      
     }
@@ -633,10 +633,16 @@ void HistogramReader::CrossSection(TString level,
  
   // Print
   //----------------------------------------------------------------------------  
-  printf(" mu(%s) = %.2f +- %.2f (stat) +- %.2f (lumi) \t efficiency = %5.2f\% \t xs(%s) = %.2f +- %5.2f (stat) +- %5.2f (lumi) pb\n",
-	 channel.Data(), mu, muErrorStat, mu * lumi_error_percent / 1e2,
-	 1e2 * efficiency,
-	 channel.Data(), xs, xsErrorStat, xs * lumi_error_percent / 1e2);
+  printf("      channel = %s\n", channel.Data());
+  printf("        ndata = %.0f\n", counterData);
+  printf("         nbkg = %.2f\n", counterBackground);
+  printf(" ndata - nbkg = %.2f\n", counterData - counterBackground);
+  printf("      nsignal = %.2f\n", counterSignal);
+  printf("           mu = (ndata - nbkg) / nsignal = %.2f +- %.2f (stat) +- %.2f (lumi)\n", mu, muErrorStat, mu * lumi_error_percent / 1e2);
+  printf("         lumi = %.0f pb\n", 1e3 * _luminosity_fb);
+  printf("           br = %f\n", branchingratio);
+  printf("          eff = %.4f\n", efficiency);
+  printf("           xs = (ndata - nbkg) / (lumi * eff * br) = %.2f +- %.2f (stat) +- %.2f (lumi) pb\n\n", xs, xsErrorStat, xs * lumi_error_percent / 1e2);
 }
 
 
