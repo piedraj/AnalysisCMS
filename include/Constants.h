@@ -163,6 +163,9 @@ const TString lchannel[nchannel] = {
 };
 
 
+enum {background, signal, none};
+
+
 // MET related
 //------------------------------------------------------------------------------
 const double metvar_bins     [] = {20, 25, 30, 45, 1000};  // [GeV]

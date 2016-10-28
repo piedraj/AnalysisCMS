@@ -62,6 +62,7 @@ void HistogramReader::AddData(const TString& filename,
 void HistogramReader::AddProcess(const TString& filename,
 				 const TString& label,
 				 Color_t        color,
+				 Int_t          kind,
 				 Float_t        scale)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
@@ -81,6 +82,9 @@ void HistogramReader::AddProcess(const TString& filename,
   
   if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
+
+  if (kind == signal)     _roc_signals    .push_back(fullname);
+  if (kind == background) _roc_backgrounds.push_back(fullname);
 }
 
 
@@ -89,7 +93,8 @@ void HistogramReader::AddProcess(const TString& filename,
 //------------------------------------------------------------------------------
 void HistogramReader::AddSignal(const TString& filename,
 				const TString& label,
-				Color_t        color)
+				Color_t        color,
+				Int_t          kind)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
   
@@ -104,6 +109,9 @@ void HistogramReader::AddSignal(const TString& filename,
   _signalfile.push_back(file);
   _signallabel.push_back(label);
   _signalcolor.push_back(color);
+
+  if (kind == signal)     _roc_signals    .push_back(fullname);
+  if (kind == background) _roc_backgrounds.push_back(fullname);
 }
 
 
@@ -1239,40 +1247,6 @@ void HistogramReader::WriteYields(TH1*    hist,
   }
 
   _yields_table << Form("\n");
-}
-
-
-//------------------------------------------------------------------------------
-// ROC Signals
-//------------------------------------------------------------------------------
-void HistogramReader::AddRocSignal( TString filename)
-{
-  TString fullname = _inputdir + "/" + filename + ".root";
-  
-  if (gSystem->AccessPathName(fullname))
-    {
-      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
-      return;
-    }
-
-  _roc_signals.push_back(fullname);
-}
-
-
-//------------------------------------------------------------------------------
-// ROC Backgrounds
-//------------------------------------------------------------------------------
-void HistogramReader::AddRocBackground( TString filename)
-{
-  TString fullname = _inputdir + "/" + filename + ".root";
-  
-  if (gSystem->AccessPathName(fullname))
-    {
-      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
-      return;
-    }
-
-  _roc_backgrounds.push_back(fullname);
 }
 
 

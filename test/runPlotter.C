@@ -99,7 +99,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, background, -999);
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -113,7 +113,7 @@ void runPlotter(TString level,
     {
       plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
       plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
-      plotter.AddProcess("06_WW",        "WW",       color_WW);
+      plotter.AddProcess("06_WW",        "WW",       color_WW, signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
@@ -126,7 +126,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, background, -999);
 	}
       else
 	{
@@ -159,29 +159,6 @@ void runPlotter(TString level,
     {
       plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal);  
       plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal+2);  
-    }
-
-
-  // ROC curve inputs
-  //----------------------------------------------------------------------------
-  if (analysis.EqualTo("MonoH"))
-    {                       
-      plotter.AddRocSignal("monoH_2HDM_MZp-600_MA0-400");
-      
-      plotter.AddRocBackground("06_WW");
-      plotter.AddRocBackground("04_TTTo2L2Nu");
-      plotter.AddRocBackground("00_Fakes");
-      plotter.AddRocBackground("02_WZTo3LNu");
-      plotter.AddRocBackground("03_VZ");
-      plotter.AddRocBackground("05_ST");
-      plotter.AddRocBackground("07_ZJets");
-      plotter.AddRocBackground("09_TTV");
-      plotter.AddRocBackground("10_HWW");
-      plotter.AddRocBackground("11_Wg");
-      plotter.AddRocBackground("12_Zg");
-      plotter.AddRocBackground("13_VVV");
-      plotter.AddRocBackground("14_HZ");
-      plotter.AddRocBackground("15_WgStar");
     }
 
 
