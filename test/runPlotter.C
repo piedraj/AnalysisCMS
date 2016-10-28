@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
-const Bool_t allplots   = false;
+const Bool_t allplots   = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -37,7 +37,7 @@ enum {linY, logY};
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString level,
-		TString option = "hist")
+		TString option = "nostack,hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -81,7 +81,7 @@ void runPlotter(TString level,
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  //  plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
@@ -154,6 +154,11 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
+  if (analysis.EqualTo("Shape"))
+    {
+      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
+    }
 
   if (analysis.EqualTo("Stop"))
     {
@@ -383,7 +388,9 @@ void runPlotter(TString level,
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("Shape"))
 	    {
-	      plotter.Draw(prefix + "sphericity" + suffix, "Sphericity",                       -1, 0, "NULL", scale);
+	      plotter.Draw(prefix + "sphericity" + suffix, "sphericity", 20, 0, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "alignment" + suffix,  "alignment",  20, 0, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "planarity" + suffix,  "planarity",  20, 0, "NULL", scale, true, 0, 1);
 	    }
 
 	}
