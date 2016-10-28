@@ -1251,7 +1251,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 
 //------------------------------------------------------------------------------
-// ROC Calculation
+// Roc
 //------------------------------------------------------------------------------
 void HistogramReader::Roc(TString hname,
 			  TString xtitle,
@@ -1299,38 +1299,38 @@ void HistogramReader::Roc(TString hname,
   TGraph* rocGraph = new TGraph();
   TGraph* sigGraph = new TGraph();
 
-  float sigMax    = -999;
-  float xOfTheMax = -999;
+  Float_t score_value = 0;
+  Float_t score_x     = 0;
 
-  float sigTotal = hSig->Integral(-1, -1);
-  float bkgTotal = hBkg->Integral(-1, -1);
+  Float_t sigTotal = hSig->Integral(-1, -1);
+  Float_t bkgTotal = hBkg->Integral(-1, -1);
 
   for (int s=0; s<=npoints; ++s) {
 
-    float sigYield = 0;
-    float bkgYield = 0;
+    Float_t sigYield = 0;
+    Float_t bkgYield = 0;
 
     sigYield += hSig->Integral(-1, hSig->FindBin(xmin + s*step));
     bkgYield += hBkg->Integral(-1, hBkg->FindBin(xmin + s*step));
 
-    float sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
-    float bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
+    Float_t sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
+    Float_t bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
 
-    float significance = sigYield / sqrt(sigYield + bkgYield);
+    Float_t score = sigYield / sqrt(sigYield + bkgYield);
 
-    if (significance > sigMax) {
-      sigMax    = significance;
-      xOfTheMax = xmin + s*step;
+    if (score > score_value) {
+      score_value = score;
+      score_x     = xmin + s*step;
     }
 
     rocGraph->SetPoint(s, sigEff, 1 - bkgEff);
-    sigGraph->SetPoint(s, xmin + s*step, significance);
+    sigGraph->SetPoint(s, xmin + s*step, score);
   }
 
 
   printf("\n [HistogramReader::Roc] Reading %s\n", hname.Data());
   printf(" The best S/sqrt(S+B) = %f corresponds to x = %.2f %s (%.2f < x < %.2f)\n\n",
-	 sigMax, xOfTheMax, units.Data(), xmin, xmax);
+	 score_value, score_x, units.Data(), xmin, xmax);
   
 
   // Draw and save ROC
@@ -1367,7 +1367,7 @@ void HistogramReader::Roc(TString hname,
   sigGraph->Draw("ap");
 
   sigGraph->GetXaxis()->SetRangeUser(xmin, xmax);
-  sigGraph->GetYaxis()->SetRangeUser(0, 1.5*sigMax);
+  sigGraph->GetYaxis()->SetRangeUser(0, 1.5*score_value);
 
   DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
 
