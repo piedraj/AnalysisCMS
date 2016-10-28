@@ -1105,9 +1105,9 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mt2lblb      [ichannel][icut][ijet] = new TH1D("h_mt2lblb"       + suffix, "", 2000, 0, 2000);
   h_mlb1         [ichannel][icut][ijet] = new TH1D("h_mlb1"          + suffix, "", 2000, 0, 2000);
   h_mlb2         [ichannel][icut][ijet] = new TH1D("h_mlb2"          + suffix, "", 2000, 0, 2000);
-  h_sphericity   [ichannel][icut][ijet] = new TH1D("h_sphericity"    + suffix, "", 1000,-2,    2);
-  h_alignment   [ichannel][icut][ijet] = new TH1D("h_alignment"    + suffix, "", 1000,-100,100);
-  h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"    + suffix, "", 1000,-100,100);
+  h_sphericity   [ichannel][icut][ijet] = new TH1D("h_sphericity"    + suffix, "", 1000, -1, 1);
+  h_alignment    [ichannel][icut][ijet] = new TH1D("h_alignment"     + suffix, "", 1000, -1, 1);
+  h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"     + suffix, "", 1000, -1, 1);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
