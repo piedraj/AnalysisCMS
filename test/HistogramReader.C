@@ -83,8 +83,8 @@ void HistogramReader::AddProcess(const TString& filename,
   if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 
-  if (kind == signal)     _roc_signals    .push_back(fullname);
-  if (kind == background) _roc_backgrounds.push_back(fullname);
+  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
+  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
 }
 
 
@@ -110,8 +110,8 @@ void HistogramReader::AddSignal(const TString& filename,
   _signallabel.push_back(label);
   _signalcolor.push_back(color);
 
-  if (kind == signal)     _roc_signals    .push_back(fullname);
-  if (kind == background) _roc_backgrounds.push_back(fullname);
+  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
+  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
 }
 
 

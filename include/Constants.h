@@ -163,7 +163,7 @@ const TString lchannel[nchannel] = {
 };
 
 
-enum {background, signal, none};
+enum {roc_background, roc_signal, roc_none};
 
 
 // MET related

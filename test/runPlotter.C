@@ -99,7 +99,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -113,7 +113,7 @@ void runPlotter(TString level,
     {
       plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
       plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
-      plotter.AddProcess("06_WW",        "WW",       color_WW, signal);
+      plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
@@ -126,7 +126,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
 	}
       else
 	{
@@ -263,17 +263,14 @@ void runPlotter(TString level,
 
 	  // ROC
 	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("MonoH"))
-	    {
-	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000);
-	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
-	    }
+	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000);
+	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
 
 
 	  if (!allplots) continue;
