@@ -37,7 +37,7 @@ enum {linY, logY};
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void runPlotter(TString level,
-		TString option = "nostack,hist")
+		TString option = "hist")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -58,6 +58,7 @@ void runPlotter(TString level,
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
   if (analysis.EqualTo("Top"))   scale = logY;
+  if (analysis.EqualTo("Shape")) scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -81,7 +82,7 @@ void runPlotter(TString level,
 
   // Get the data
   //----------------------------------------------------------------------------
-  //  plotter.AddData("01_Data", "data", color_Data);
+  plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
@@ -189,6 +190,26 @@ void runPlotter(TString level,
       plotter.AddRocBackground("15_WgStar");
     }
 
+  if (analysis.EqualTo("Shape"))
+    {                       
+      plotter.AddRocSignal("ttDM0001scalar00010");
+      
+      plotter.AddRocBackground("00_Fakes");
+      plotter.AddRocBackground("02_WZTo3LNu");
+      plotter.AddRocBackground("03_VZ");
+      plotter.AddRocBackground("04_TTTo2L2Nu");      
+      plotter.AddRocBackground("05_ST");
+      plotter.AddRocBackground("06_WW");
+      plotter.AddRocBackground("07_ZJets");
+      plotter.AddRocBackground("08_WJets");
+      plotter.AddRocBackground("09_TTV");
+      plotter.AddRocBackground("10_HWW");
+      plotter.AddRocBackground("11_Wg");
+      plotter.AddRocBackground("12_Zg");
+      plotter.AddRocBackground("13_VVV");
+      plotter.AddRocBackground("14_HZ");
+      plotter.AddRocBackground("15_WgStar");
+    }
 
   // Draw events by cut
   //----------------------------------------------------------------------------
@@ -303,6 +324,15 @@ void runPlotter(TString level,
 	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
 	    }
 
+	  if (analysis.EqualTo("Shape"))
+	    {
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
+	      plotter.Roc(prefix + "sphericity"  + suffix, "sphericity", 20, "NULL", 0, 1);
+	      plotter.Roc(prefix + "planarity"   + suffix, "planarity",  20, "NULL", 0, 1);
+	      plotter.Roc(prefix + "alignment"   + suffix, "alignment",  20, "NULL", 0, 1);
+	    }
+
 
 	  if (!allplots) continue;
 
@@ -388,9 +418,9 @@ void runPlotter(TString level,
 	  //--------------------------------------------------------------------
 	  if (analysis.EqualTo("Shape"))
 	    {
-	      plotter.Draw(prefix + "sphericity" + suffix, "sphericity", 20, 0, "NULL", scale, true, 0, 1);
-	      plotter.Draw(prefix + "alignment" + suffix,  "alignment",  20, 0, "NULL", scale, true, 0, 1);
-	      plotter.Draw(prefix + "planarity" + suffix,  "planarity",  20, 0, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "sphericity" + suffix, "sphericity", 20, 2, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "alignment" + suffix,  "alignment",  20, 2, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "planarity" + suffix,  "planarity",  20, 2, "NULL", scale, true, 0, 1);
 	    }
 
 	}
