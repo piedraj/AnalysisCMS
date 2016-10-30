@@ -9,6 +9,7 @@
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
+  SetStopNeutralinoMap();
 }
 //------------------------------------------------------------------------------
 // Loop
@@ -103,8 +104,12 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
       
       if (FastSimDataset!="") { 
 	
-	GetStopCrossSection(susyMstop);
-	_event_weight *= StopCrossSection;
+	int StopMass = susyMstop, NeutralinoMass = susyMLSP;
+	MassPoint ThisMassPoint (StopMass, NeutralinoMass);
+	MassPointParameters TheseMassPointParameters = StopNeutralinoMap.at(ThisMassPoint);
+	StopCrossSection ThisStopCrossSection = TheseMassPointParameters.first;
+	int SampleSize = TheseMassPointParameters.second;
+	_event_weight *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
 	
       }
 
@@ -213,396 +218,2402 @@ void AnalysisStop::FillLevelHistograms(int  icut,
   FillAnalysisHistograms(_channel, icut, njetbin);
 }
 
-void AnalysisStop::GetStopCrossSection(float StopMass)
-{
+void AnalysisStop::SetStopNeutralinoMap() {
 
-  int iStopMass = StopMass;
+  MassPoint mp0 (150, 1);
+  StopCrossSection cs0 (249.409, 36.7821);
+  MassPointParameters mpp0 (cs0, 511540);
+  StopNeutralinoMap.insert(std::make_pair(mp0, mpp0));
 
-  if (StopMass<100. || StopMass>2000. || iStopMass%5!=0) {
-    StopCrossSection = -1.; return;
-  }
+  MassPoint mp1 (150, 25);
+  StopCrossSection cs1 (249.409, 36.7821);
+  MassPointParameters mpp1 (cs1, 509783);
+  StopNeutralinoMap.insert(std::make_pair(mp1, mpp1));
 
-  if (iStopMass==100) { StopCrossSection = 	1521.11; StopCrossSectionUncertainty = StopCrossSection* 15.4038/100.; }
-  if (iStopMass==105) { StopCrossSection = 	1233.18; StopCrossSectionUncertainty = StopCrossSection* 15.4059/100.; }
-  if (iStopMass==110) { StopCrossSection = 	1013.76; StopCrossSectionUncertainty = StopCrossSection* 15.4088/100.; }
-  if (iStopMass==115) { StopCrossSection = 	832.656; StopCrossSectionUncertainty = StopCrossSection* 15.1503/100.; }
-  if (iStopMass==120) { StopCrossSection = 	689.799; StopCrossSectionUncertainty = StopCrossSection* 15.044/100.; }
-  if (iStopMass==125) { StopCrossSection = 	574.981; StopCrossSectionUncertainty = StopCrossSection* 14.9895/100.; }
-  if (iStopMass==130) { StopCrossSection = 	481.397; StopCrossSectionUncertainty = StopCrossSection* 14.8906/100.; }
-  if (iStopMass==135) { StopCrossSection = 	405.159; StopCrossSectionUncertainty = StopCrossSection* 14.8952/100.; }
-  if (iStopMass==140) { StopCrossSection = 	342.865; StopCrossSectionUncertainty = StopCrossSection* 14.9119/100.; }
-  if (iStopMass==145) { StopCrossSection = 	291.752; StopCrossSectionUncertainty = StopCrossSection* 14.8022/100.; }
-  if (iStopMass==150) { StopCrossSection = 	249.409; StopCrossSectionUncertainty = StopCrossSection* 14.7477/100.; }
-  if (iStopMass==155) { StopCrossSection = 	214.221; StopCrossSectionUncertainty = StopCrossSection* 14.5928/100.; }
-  if (iStopMass==160) { StopCrossSection = 	184.623; StopCrossSectionUncertainty = StopCrossSection* 14.5821/100.; }
-  if (iStopMass==165) { StopCrossSection = 	159.614; StopCrossSectionUncertainty = StopCrossSection* 14.7859/100.; }
-  if (iStopMass==170) { StopCrossSection = 	139.252; StopCrossSectionUncertainty = StopCrossSection* 14.547/100.; }
-  if (iStopMass==175) { StopCrossSection = 	121.416; StopCrossSectionUncertainty = StopCrossSection* 14.6341/100.; }
-  if (iStopMass==180) { StopCrossSection = 	106.194; StopCrossSectionUncertainty = StopCrossSection* 14.2033/100.; }
-  if (iStopMass==185) { StopCrossSection = 	93.3347; StopCrossSectionUncertainty = StopCrossSection* 14.4893/100.; }
-  if (iStopMass==190) { StopCrossSection = 	82.2541; StopCrossSectionUncertainty = StopCrossSection* 14.4677/100.; }
-  if (iStopMass==195) { StopCrossSection = 	72.7397; StopCrossSectionUncertainty = StopCrossSection* 14.4452/100.; }
-  if (iStopMass==200) { StopCrossSection = 	64.5085; StopCrossSectionUncertainty = StopCrossSection* 14.4098/100.; }
-  if (iStopMass==205) { StopCrossSection = 	57.2279; StopCrossSectionUncertainty = StopCrossSection* 14.4191/100.; }
-  if (iStopMass==210) { StopCrossSection = 	50.9226; StopCrossSectionUncertainty = StopCrossSection* 14.2457/100.; }
-  if (iStopMass==215) { StopCrossSection = 	45.3761; StopCrossSectionUncertainty = StopCrossSection* 14.344/100.; }
-  if (iStopMass==220) { StopCrossSection = 	40.5941; StopCrossSectionUncertainty = StopCrossSection* 14.2634/100.; }
-  if (iStopMass==225) { StopCrossSection = 	36.3818; StopCrossSectionUncertainty = StopCrossSection* 14.2189/100.; }
-  if (iStopMass==230) { StopCrossSection = 	32.6679; StopCrossSectionUncertainty = StopCrossSection* 14.1592/100.; }
-  if (iStopMass==235) { StopCrossSection = 	29.3155; StopCrossSectionUncertainty = StopCrossSection* 14.2233/100.; }
-  if (iStopMass==240) { StopCrossSection = 	26.4761; StopCrossSectionUncertainty = StopCrossSection* 14.1723/100.; }
-  if (iStopMass==245) { StopCrossSection = 	23.8853; StopCrossSectionUncertainty = StopCrossSection* 13.9482/100.; }
-  if (iStopMass==250) { StopCrossSection = 	21.5949; StopCrossSectionUncertainty = StopCrossSection* 14.0595/100.; }
-  if (iStopMass==255) { StopCrossSection = 	19.5614; StopCrossSectionUncertainty = StopCrossSection* 13.8755/100.; }
-  if (iStopMass==260) { StopCrossSection = 	17.6836; StopCrossSectionUncertainty = StopCrossSection* 13.9505/100.; }
-  if (iStopMass==265) { StopCrossSection = 	16.112; StopCrossSectionUncertainty = StopCrossSection* 13.9531/100.; }
-  if (iStopMass==270) { StopCrossSection = 	14.6459; StopCrossSectionUncertainty = StopCrossSection* 13.9278/100.; }
-  if (iStopMass==275) { StopCrossSection = 	13.3231; StopCrossSectionUncertainty = StopCrossSection* 14.2549/100.; }
-  if (iStopMass==280) { StopCrossSection = 	12.1575; StopCrossSectionUncertainty = StopCrossSection* 14.1584/100.; }
-  if (iStopMass==285) { StopCrossSection = 	11.0925; StopCrossSectionUncertainty = StopCrossSection* 14.0904/100.; }
-  if (iStopMass==290) { StopCrossSection = 	10.1363; StopCrossSectionUncertainty = StopCrossSection* 13.8967/100.; }
-  if (iStopMass==295) { StopCrossSection = 	9.29002; StopCrossSectionUncertainty = StopCrossSection* 13.9107/100.; }
-  if (iStopMass==300) { StopCrossSection = 	8.51615; StopCrossSectionUncertainty = StopCrossSection* 13.9223/100.; }
-  if (iStopMass==305) { StopCrossSection = 	7.81428; StopCrossSectionUncertainty = StopCrossSection* 13.8996/100.; }
-  if (iStopMass==310) { StopCrossSection = 	7.17876; StopCrossSectionUncertainty = StopCrossSection* 13.9357/100.; }
-  if (iStopMass==315) { StopCrossSection = 	6.60266; StopCrossSectionUncertainty = StopCrossSection* 13.9256/100.; }
-  if (iStopMass==320) { StopCrossSection = 	6.08444; StopCrossSectionUncertainty = StopCrossSection* 13.7957/100.; }
-  if (iStopMass==325) { StopCrossSection = 	5.60471; StopCrossSectionUncertainty = StopCrossSection* 13.8144/100.; }
-  if (iStopMass==330) { StopCrossSection = 	5.17188; StopCrossSectionUncertainty = StopCrossSection* 13.6954/100.; }
-  if (iStopMass==335) { StopCrossSection = 	4.77871; StopCrossSectionUncertainty = StopCrossSection* 13.7554/100.; }
-  if (iStopMass==340) { StopCrossSection = 	4.41629; StopCrossSectionUncertainty = StopCrossSection* 13.7945/100.; }
-  if (iStopMass==345) { StopCrossSection = 	4.08881; StopCrossSectionUncertainty = StopCrossSection* 13.7075/100.; }
-  if (iStopMass==350) { StopCrossSection = 	3.78661; StopCrossSectionUncertainty = StopCrossSection* 13.6877/100.; }
-  if (iStopMass==355) { StopCrossSection = 	3.50911; StopCrossSectionUncertainty = StopCrossSection* 13.8089/100.; }
-  if (iStopMass==360) { StopCrossSection = 	3.25619; StopCrossSectionUncertainty = StopCrossSection* 13.8002/100.; }
-  if (iStopMass==365) { StopCrossSection = 	3.02472; StopCrossSectionUncertainty = StopCrossSection* 13.7093/100.; }
-  if (iStopMass==370) { StopCrossSection = 	2.8077; StopCrossSectionUncertainty = StopCrossSection* 13.8064/100.; }
-  if (iStopMass==375) { StopCrossSection = 	2.61162; StopCrossSectionUncertainty = StopCrossSection* 13.8477/100.; }
-  if (iStopMass==380) { StopCrossSection = 	2.43031; StopCrossSectionUncertainty = StopCrossSection* 13.6999/100.; }
-  if (iStopMass==385) { StopCrossSection = 	2.26365; StopCrossSectionUncertainty = StopCrossSection* 13.728/100.; }
-  if (iStopMass==390) { StopCrossSection = 	2.10786; StopCrossSectionUncertainty = StopCrossSection* 13.732/100.; }
-  if (iStopMass==395) { StopCrossSection = 	1.9665; StopCrossSectionUncertainty = StopCrossSection* 13.4737/100.; }
-  if (iStopMass==400) { StopCrossSection = 	1.83537; StopCrossSectionUncertainty = StopCrossSection* 13.6985/100.; }
-  if (iStopMass==405) { StopCrossSection = 	1.70927; StopCrossSectionUncertainty = StopCrossSection* 13.7114/100.; }
-  if (iStopMass==410) { StopCrossSection = 	1.60378; StopCrossSectionUncertainty = StopCrossSection* 13.5468/100.; }
-  if (iStopMass==415) { StopCrossSection = 	1.49798; StopCrossSectionUncertainty = StopCrossSection* 13.4453/100.; }
-  if (iStopMass==420) { StopCrossSection = 	1.39688; StopCrossSectionUncertainty = StopCrossSection* 13.6719/100.; }
-  if (iStopMass==425) { StopCrossSection = 	1.31169; StopCrossSectionUncertainty = StopCrossSection* 13.5013/100.; }
-  if (iStopMass==430) { StopCrossSection = 	1.22589; StopCrossSectionUncertainty = StopCrossSection* 13.3237/100.; }
-  if (iStopMass==435) { StopCrossSection = 	1.14553; StopCrossSectionUncertainty = StopCrossSection* 13.5478/100.; }
-  if (iStopMass==440) { StopCrossSection = 	1.07484; StopCrossSectionUncertainty = StopCrossSection* 13.7238/100.; }
-  if (iStopMass==445) { StopCrossSection = 	1.01019; StopCrossSectionUncertainty = StopCrossSection* 13.4187/100.; }
-  if (iStopMass==450) { StopCrossSection = 	0.948333; StopCrossSectionUncertainty = StopCrossSection* 13.4559/100.; }
-  if (iStopMass==455) { StopCrossSection = 	0.890847; StopCrossSectionUncertainty = StopCrossSection* 13.4587/100.; }
-  if (iStopMass==460) { StopCrossSection = 	0.836762; StopCrossSectionUncertainty = StopCrossSection* 13.4468/100.; }
-  if (iStopMass==465) { StopCrossSection = 	0.787221; StopCrossSectionUncertainty = StopCrossSection* 13.4149/100.; }
-  if (iStopMass==470) { StopCrossSection = 	0.740549; StopCrossSectionUncertainty = StopCrossSection* 13.4127/100.; }
-  if (iStopMass==475) { StopCrossSection = 	0.697075; StopCrossSectionUncertainty = StopCrossSection* 13.3926/100.; }
-  if (iStopMass==480) { StopCrossSection = 	0.655954; StopCrossSectionUncertainty = StopCrossSection* 13.4392/100.; }
-  if (iStopMass==485) { StopCrossSection = 	0.618562; StopCrossSectionUncertainty = StopCrossSection* 13.3705/100.; }
-  if (iStopMass==490) { StopCrossSection = 	0.582467; StopCrossSectionUncertainty = StopCrossSection* 13.3914/100.; }
-  if (iStopMass==495) { StopCrossSection = 	0.549524; StopCrossSectionUncertainty = StopCrossSection* 13.3691/100.; }
-  if (iStopMass==500) { StopCrossSection = 	0.51848; StopCrossSectionUncertainty = StopCrossSection* 13.3797/100.; }
-  if (iStopMass==505) { StopCrossSection = 	0.489324; StopCrossSectionUncertainty = StopCrossSection* 13.3608/100.; }
-  if (iStopMass==510) { StopCrossSection = 	0.462439; StopCrossSectionUncertainty = StopCrossSection* 13.3046/100.; }
-  if (iStopMass==515) { StopCrossSection = 	0.436832; StopCrossSectionUncertainty = StopCrossSection* 13.3703/100.; }
-  if (iStopMass==520) { StopCrossSection = 	0.412828; StopCrossSectionUncertainty = StopCrossSection* 13.272/100.; }
-  if (iStopMass==525) { StopCrossSection = 	0.390303; StopCrossSectionUncertainty = StopCrossSection* 13.3443/100.; }
-  if (iStopMass==530) { StopCrossSection = 	0.368755; StopCrossSectionUncertainty = StopCrossSection* 13.3769/100.; }
-  if (iStopMass==535) { StopCrossSection = 	0.348705; StopCrossSectionUncertainty = StopCrossSection* 13.2706/100.; }
-  if (iStopMass==540) { StopCrossSection = 	0.330157; StopCrossSectionUncertainty = StopCrossSection* 13.2981/100.; }
-  if (iStopMass==545) { StopCrossSection = 	0.312672; StopCrossSectionUncertainty = StopCrossSection* 13.277/100.; }
-  if (iStopMass==550) { StopCrossSection = 	0.296128; StopCrossSectionUncertainty = StopCrossSection* 13.2687/100.; }
-  if (iStopMass==555) { StopCrossSection = 	0.280734; StopCrossSectionUncertainty = StopCrossSection* 13.2363/100.; }
-  if (iStopMass==560) { StopCrossSection = 	0.266138; StopCrossSectionUncertainty = StopCrossSection* 13.193/100.; }
-  if (iStopMass==565) { StopCrossSection = 	0.251557; StopCrossSectionUncertainty = StopCrossSection* 13.1731/100.; }
-  if (iStopMass==570) { StopCrossSection = 	0.238537; StopCrossSectionUncertainty = StopCrossSection* 13.3409/100.; }
-  if (iStopMass==575) { StopCrossSection = 	0.226118; StopCrossSectionUncertainty = StopCrossSection* 13.2741/100.; }
-  if (iStopMass==580) { StopCrossSection = 	0.214557; StopCrossSectionUncertainty = StopCrossSection* 13.1697/100.; }
-  if (iStopMass==585) { StopCrossSection = 	0.203566; StopCrossSectionUncertainty = StopCrossSection* 13.3257/100.; }
-  if (iStopMass==590) { StopCrossSection = 	0.193079; StopCrossSectionUncertainty = StopCrossSection* 13.2037/100.; }
-  if (iStopMass==595) { StopCrossSection = 	0.183604; StopCrossSectionUncertainty = StopCrossSection* 13.0973/100.; }
-  if (iStopMass==600) { StopCrossSection = 	0.174599; StopCrossSectionUncertainty = StopCrossSection* 13.2074/100.; }
-  if (iStopMass==605) { StopCrossSection = 	0.166131; StopCrossSectionUncertainty = StopCrossSection* 13.0154/100.; }
-  if (iStopMass==610) { StopCrossSection = 	0.158242; StopCrossSectionUncertainty = StopCrossSection* 13.142/100.; }
-  if (iStopMass==615) { StopCrossSection = 	0.150275; StopCrossSectionUncertainty = StopCrossSection* 13.285/100.; }
-  if (iStopMass==620) { StopCrossSection = 	0.142787; StopCrossSectionUncertainty = StopCrossSection* 13.0642/100.; }
-  if (iStopMass==625) { StopCrossSection = 	0.136372; StopCrossSectionUncertainty = StopCrossSection* 12.7962/100.; }
-  if (iStopMass==630) { StopCrossSection = 	0.129886; StopCrossSectionUncertainty = StopCrossSection* 13.2957/100.; }
-  if (iStopMass==635) { StopCrossSection = 	0.123402; StopCrossSectionUncertainty = StopCrossSection* 13.016/100.; }
-  if (iStopMass==640) { StopCrossSection = 	0.11795; StopCrossSectionUncertainty = StopCrossSection* 12.7132/100.; }
-  if (iStopMass==645) { StopCrossSection = 	0.112008; StopCrossSectionUncertainty = StopCrossSection* 12.808/100.; }
-  if (iStopMass==650) { StopCrossSection = 	0.107045; StopCrossSectionUncertainty = StopCrossSection* 12.9232/100.; }
-  if (iStopMass==655) { StopCrossSection = 	0.102081; StopCrossSectionUncertainty = StopCrossSection* 13.0012/100.; }
-  if (iStopMass==660) { StopCrossSection = 	0.09725; StopCrossSectionUncertainty = StopCrossSection* 12.9038/100.; }
-  if (iStopMass==665) { StopCrossSection = 	0.0927515; StopCrossSectionUncertainty = StopCrossSection* 12.9548/100.; }
-  if (iStopMass==670) { StopCrossSection = 	0.0885084; StopCrossSectionUncertainty = StopCrossSection* 13.0218/100.; }
-  if (iStopMass==675) { StopCrossSection = 	0.0844877; StopCrossSectionUncertainty = StopCrossSection* 13.0703/100.; }
-  if (iStopMass==680) { StopCrossSection = 	0.0806192; StopCrossSectionUncertainty = StopCrossSection* 13.1131/100.; }
-  if (iStopMass==685) { StopCrossSection = 	0.0769099; StopCrossSectionUncertainty = StopCrossSection* 13.1517/100.; }
-  if (iStopMass==690) { StopCrossSection = 	0.0734901; StopCrossSectionUncertainty = StopCrossSection* 13.2344/100.; }
-  if (iStopMass==695) { StopCrossSection = 	0.0701805; StopCrossSectionUncertainty = StopCrossSection* 13.2716/100.; }
-  if (iStopMass==700) { StopCrossSection = 	0.0670476; StopCrossSectionUncertainty = StopCrossSection* 13.3429/100.; }
-  if (iStopMass==705) { StopCrossSection = 	0.0641426; StopCrossSectionUncertainty = StopCrossSection* 13.363/100.; }
-  if (iStopMass==710) { StopCrossSection = 	0.0612942; StopCrossSectionUncertainty = StopCrossSection* 13.3941/100.; }
-  if (iStopMass==715) { StopCrossSection = 	0.0585678; StopCrossSectionUncertainty = StopCrossSection* 13.4663/100.; }
-  if (iStopMass==720) { StopCrossSection = 	0.0560753; StopCrossSectionUncertainty = StopCrossSection* 13.4984/100.; }
-  if (iStopMass==725) { StopCrossSection = 	0.0536438; StopCrossSectionUncertainty = StopCrossSection* 13.5804/100.; }
-  if (iStopMass==730) { StopCrossSection = 	0.0513219; StopCrossSectionUncertainty = StopCrossSection* 13.5682/100.; }
-  if (iStopMass==735) { StopCrossSection = 	0.0491001; StopCrossSectionUncertainty = StopCrossSection* 13.6268/100.; }
-  if (iStopMass==740) { StopCrossSection = 	0.0470801; StopCrossSectionUncertainty = StopCrossSection* 13.6895/100.; }
-  if (iStopMass==745) { StopCrossSection = 	0.045061; StopCrossSectionUncertainty = StopCrossSection* 13.6816/100.; }
-  if (iStopMass==750) { StopCrossSection = 	0.0431418; StopCrossSectionUncertainty = StopCrossSection* 13.7455/100.; }
-  if (iStopMass==755) { StopCrossSection = 	0.0413447; StopCrossSectionUncertainty = StopCrossSection* 13.7833/100.; }
-  if (iStopMass==760) { StopCrossSection = 	0.0396264; StopCrossSectionUncertainty = StopCrossSection* 13.8518/100.; }
-  if (iStopMass==765) { StopCrossSection = 	0.0379036; StopCrossSectionUncertainty = StopCrossSection* 13.8537/100.; }
-  if (iStopMass==770) { StopCrossSection = 	0.0363856; StopCrossSectionUncertainty = StopCrossSection* 13.9334/100.; }
-  if (iStopMass==775) { StopCrossSection = 	0.0348796; StopCrossSectionUncertainty = StopCrossSection* 13.9597/100.; }
-  if (iStopMass==780) { StopCrossSection = 	0.0334669; StopCrossSectionUncertainty = StopCrossSection* 14.0267/100.; }
-  if (iStopMass==785) { StopCrossSection = 	0.0320548; StopCrossSectionUncertainty = StopCrossSection* 14.0406/100.; }
-  if (iStopMass==790) { StopCrossSection = 	0.0307373; StopCrossSectionUncertainty = StopCrossSection* 14.115/100.; }
-  if (iStopMass==795) { StopCrossSection = 	0.0295348; StopCrossSectionUncertainty = StopCrossSection* 14.1397/100.; }
-  if (iStopMass==800) { StopCrossSection = 	0.0283338; StopCrossSectionUncertainty = StopCrossSection* 14.171/100.; }
-  if (iStopMass==805) { StopCrossSection = 	0.0272206; StopCrossSectionUncertainty = StopCrossSection* 14.241/100.; }
-  if (iStopMass==810) { StopCrossSection = 	0.0261233; StopCrossSectionUncertainty = StopCrossSection* 14.2891/100.; }
-  if (iStopMass==815) { StopCrossSection = 	0.0251107; StopCrossSectionUncertainty = StopCrossSection* 14.3632/100.; }
-  if (iStopMass==820) { StopCrossSection = 	0.0241099; StopCrossSectionUncertainty = StopCrossSection* 14.3805/100.; }
-  if (iStopMass==825) { StopCrossSection = 	0.0230866; StopCrossSectionUncertainty = StopCrossSection* 14.4428/100.; }
-  if (iStopMass==830) { StopCrossSection = 	0.0221834; StopCrossSectionUncertainty = StopCrossSection* 14.4791/100.; }
-  if (iStopMass==835) { StopCrossSection = 	0.0213766; StopCrossSectionUncertainty = StopCrossSection* 14.5511/100.; }
-  if (iStopMass==840) { StopCrossSection = 	0.0204715; StopCrossSectionUncertainty = StopCrossSection* 14.6131/100.; }
-  if (iStopMass==845) { StopCrossSection = 	0.0197653; StopCrossSectionUncertainty = StopCrossSection* 14.6602/100.; }
-  if (iStopMass==850) { StopCrossSection = 	0.0189612; StopCrossSectionUncertainty = StopCrossSection* 14.702/100.; }
-  if (iStopMass==855) { StopCrossSection = 	0.0182516; StopCrossSectionUncertainty = StopCrossSection* 14.7648/100.; }
-  if (iStopMass==860) { StopCrossSection = 	0.0175509; StopCrossSectionUncertainty = StopCrossSection* 14.7944/100.; }
-  if (iStopMass==865) { StopCrossSection = 	0.0168336; StopCrossSectionUncertainty = StopCrossSection* 14.8528/100.; }
-  if (iStopMass==870) { StopCrossSection = 	0.0162314; StopCrossSectionUncertainty = StopCrossSection* 14.8772/100.; }
-  if (iStopMass==875) { StopCrossSection = 	0.015625; StopCrossSectionUncertainty = StopCrossSection* 14.9567/100.; }
-  if (iStopMass==880) { StopCrossSection = 	0.0150143; StopCrossSectionUncertainty = StopCrossSection* 15.0389/100.; }
-  if (iStopMass==885) { StopCrossSection = 	0.0144112; StopCrossSectionUncertainty = StopCrossSection* 15.0614/100.; }
-  if (iStopMass==890) { StopCrossSection = 	0.0138979; StopCrossSectionUncertainty = StopCrossSection* 15.1/100.; }
-  if (iStopMass==895) { StopCrossSection = 	0.0133962; StopCrossSectionUncertainty = StopCrossSection* 15.1325/100.; }
-  if (iStopMass==900) { StopCrossSection = 	0.0128895; StopCrossSectionUncertainty = StopCrossSection* 15.2026/100.; }
-  if (iStopMass==905) { StopCrossSection = 	0.0123843; StopCrossSectionUncertainty = StopCrossSection* 15.2968/100.; }
-  if (iStopMass==910) { StopCrossSection = 	0.0119837; StopCrossSectionUncertainty = StopCrossSection* 15.3089/100.; }
-  if (iStopMass==915) { StopCrossSection = 	0.0114713; StopCrossSectionUncertainty = StopCrossSection* 15.3678/100.; }
-  if (iStopMass==920) { StopCrossSection = 	0.0110688; StopCrossSectionUncertainty = StopCrossSection* 15.4082/100.; }
-  if (iStopMass==925) { StopCrossSection = 	0.0106631; StopCrossSectionUncertainty = StopCrossSection* 15.4806/100.; }
-  if (iStopMass==930) { StopCrossSection = 	0.0102629; StopCrossSectionUncertainty = StopCrossSection* 15.5313/100.; }
-  if (iStopMass==935) { StopCrossSection = 	0.0098874; StopCrossSectionUncertainty = StopCrossSection* 15.6066/100.; }
-  if (iStopMass==940) { StopCrossSection = 	0.00952142; StopCrossSectionUncertainty = StopCrossSection* 15.6055/100.; }
-  if (iStopMass==945) { StopCrossSection = 	0.00916636; StopCrossSectionUncertainty = StopCrossSection* 15.6849/100.; }
-  if (iStopMass==950) { StopCrossSection = 	0.00883465; StopCrossSectionUncertainty = StopCrossSection* 15.7177/100.; }
-  if (iStopMass==955) { StopCrossSection = 	0.00851073; StopCrossSectionUncertainty = StopCrossSection* 15.8094/100.; }
-  if (iStopMass==960) { StopCrossSection = 	0.00820884; StopCrossSectionUncertainty = StopCrossSection* 15.844/100.; }
-  if (iStopMass==965) { StopCrossSection = 	0.00791403; StopCrossSectionUncertainty = StopCrossSection* 15.9216/100.; }
-  if (iStopMass==970) { StopCrossSection = 	0.00763112; StopCrossSectionUncertainty = StopCrossSection* 15.9742/100.; }
-  if (iStopMass==975) { StopCrossSection = 	0.00735655; StopCrossSectionUncertainty = StopCrossSection* 16.0548/100.; }
-  if (iStopMass==980) { StopCrossSection = 	0.00710317; StopCrossSectionUncertainty = StopCrossSection* 16.0626/100.; }
-  if (iStopMass==985) { StopCrossSection = 	0.00684867; StopCrossSectionUncertainty = StopCrossSection* 16.144/100.; }
-  if (iStopMass==990) { StopCrossSection = 	0.00660695; StopCrossSectionUncertainty = StopCrossSection* 16.1813/100.; }
-  if (iStopMass==995) { StopCrossSection = 	0.00637546; StopCrossSectionUncertainty = StopCrossSection* 16.2158/100.; }
-  if (iStopMass==1000) { StopCrossSection = 	0.00615134; StopCrossSectionUncertainty = StopCrossSection* 16.2953/100.; }
-  if (iStopMass==1005) { StopCrossSection = 	0.00593765; StopCrossSectionUncertainty = StopCrossSection* 16.3716/100.; }
-  if (iStopMass==1010) { StopCrossSection = 	0.00572452; StopCrossSectionUncertainty = StopCrossSection* 16.3857/100.; }
-  if (iStopMass==1015) { StopCrossSection = 	0.00553094; StopCrossSectionUncertainty = StopCrossSection* 16.4628/100.; }
-  if (iStopMass==1020) { StopCrossSection = 	0.00533968; StopCrossSectionUncertainty = StopCrossSection* 16.4963/100.; }
-  if (iStopMass==1025) { StopCrossSection = 	0.00514619; StopCrossSectionUncertainty = StopCrossSection* 16.5762/100.; }
-  if (iStopMass==1030) { StopCrossSection = 	0.00497235; StopCrossSectionUncertainty = StopCrossSection* 16.5838/100.; }
-  if (iStopMass==1035) { StopCrossSection = 	0.00479906; StopCrossSectionUncertainty = StopCrossSection* 16.6646/100.; }
-  if (iStopMass==1040) { StopCrossSection = 	0.00463806; StopCrossSectionUncertainty = StopCrossSection* 16.6947/100.; }
-  if (iStopMass==1045) { StopCrossSection = 	0.00447537; StopCrossSectionUncertainty = StopCrossSection* 16.7071/100.; }
-  if (iStopMass==1050) { StopCrossSection = 	0.00432261; StopCrossSectionUncertainty = StopCrossSection* 16.7859/100.; }
-  if (iStopMass==1055) { StopCrossSection = 	0.00417983; StopCrossSectionUncertainty = StopCrossSection* 16.8637/100.; }
-  if (iStopMass==1060) { StopCrossSection = 	0.00403886; StopCrossSectionUncertainty = StopCrossSection* 16.8981/100.; }
-  if (iStopMass==1065) { StopCrossSection = 	0.0038962; StopCrossSectionUncertainty = StopCrossSection* 16.9794/100.; }
-  if (iStopMass==1070) { StopCrossSection = 	0.00376343; StopCrossSectionUncertainty = StopCrossSection* 16.9764/100.; }
-  if (iStopMass==1075) { StopCrossSection = 	0.00364174; StopCrossSectionUncertainty = StopCrossSection* 17.0634/100.; }
-  if (iStopMass==1080) { StopCrossSection = 	0.00352093; StopCrossSectionUncertainty = StopCrossSection* 17.0908/100.; }
-  if (iStopMass==1085) { StopCrossSection = 	0.00339813; StopCrossSectionUncertainty = StopCrossSection* 17.1929/100.; }
-  if (iStopMass==1090) { StopCrossSection = 	0.00328695; StopCrossSectionUncertainty = StopCrossSection* 17.2274/100.; }
-  if (iStopMass==1095) { StopCrossSection = 	0.00317628; StopCrossSectionUncertainty = StopCrossSection* 17.2617/100.; }
-  if (iStopMass==1100) { StopCrossSection = 	0.00307413; StopCrossSectionUncertainty = StopCrossSection* 17.3377/100.; }
-  if (iStopMass==1105) { StopCrossSection = 	0.00297377; StopCrossSectionUncertainty = StopCrossSection* 17.3822/100.; }
-  if (iStopMass==1110) { StopCrossSection = 	0.00287148; StopCrossSectionUncertainty = StopCrossSection* 17.4725/100.; }
-  if (iStopMass==1115) { StopCrossSection = 	0.00278078; StopCrossSectionUncertainty = StopCrossSection* 17.5091/100.; }
-  if (iStopMass==1120) { StopCrossSection = 	0.00268873; StopCrossSectionUncertainty = StopCrossSection* 17.5883/100.; }
-  if (iStopMass==1125) { StopCrossSection = 	0.00260821; StopCrossSectionUncertainty = StopCrossSection* 17.6126/100.; }
-  if (iStopMass==1130) { StopCrossSection = 	0.00251529; StopCrossSectionUncertainty = StopCrossSection* 17.6836/100.; }
-  if (iStopMass==1135) { StopCrossSection = 	0.00243484; StopCrossSectionUncertainty = StopCrossSection* 17.7128/100.; }
-  if (iStopMass==1140) { StopCrossSection = 	0.00236295; StopCrossSectionUncertainty = StopCrossSection* 17.7977/100.; }
-  if (iStopMass==1145) { StopCrossSection = 	0.00228192; StopCrossSectionUncertainty = StopCrossSection* 17.8507/100.; }
-  if (iStopMass==1150) { StopCrossSection = 	0.00221047; StopCrossSectionUncertainty = StopCrossSection* 17.9259/100.; }
-  if (iStopMass==1155) { StopCrossSection = 	0.00213907; StopCrossSectionUncertainty = StopCrossSection* 18.0255/100.; }
-  if (iStopMass==1160) { StopCrossSection = 	0.00206845; StopCrossSectionUncertainty = StopCrossSection* 18.0518/100.; }
-  if (iStopMass==1165) { StopCrossSection = 	0.0020063; StopCrossSectionUncertainty = StopCrossSection* 18.0954/100.; }
-  if (iStopMass==1170) { StopCrossSection = 	0.00194569; StopCrossSectionUncertainty = StopCrossSection* 18.1194/100.; }
-  if (iStopMass==1175) { StopCrossSection = 	0.0018741; StopCrossSectionUncertainty = StopCrossSection* 18.2145/100.; }
-  if (iStopMass==1180) { StopCrossSection = 	0.00182266; StopCrossSectionUncertainty = StopCrossSection* 18.3074/100.; }
-  if (iStopMass==1185) { StopCrossSection = 	0.00176211; StopCrossSectionUncertainty = StopCrossSection* 18.3375/100.; }
-  if (iStopMass==1190) { StopCrossSection = 	0.00170006; StopCrossSectionUncertainty = StopCrossSection* 18.4075/100.; }
-  if (iStopMass==1195) { StopCrossSection = 	0.00164968; StopCrossSectionUncertainty = StopCrossSection* 18.4438/100.; }
-  if (iStopMass==1200) { StopCrossSection = 	0.00159844; StopCrossSectionUncertainty = StopCrossSection* 18.5209/100.; }
-  if (iStopMass==1205) { StopCrossSection = 	0.0015472; StopCrossSectionUncertainty = StopCrossSection* 18.5977/100.; }
-  if (iStopMass==1210) { StopCrossSection = 	0.00149657; StopCrossSectionUncertainty = StopCrossSection* 18.6485/100.; }
-  if (iStopMass==1215) { StopCrossSection = 	0.00145544; StopCrossSectionUncertainty = StopCrossSection* 18.7347/100.; }
-  if (iStopMass==1220) { StopCrossSection = 	0.00140288; StopCrossSectionUncertainty = StopCrossSection* 18.8774/100.; }
-  if (iStopMass==1225) { StopCrossSection = 	0.00136155; StopCrossSectionUncertainty = StopCrossSection* 18.989/100.; }
-  if (iStopMass==1230) { StopCrossSection = 	0.00131271; StopCrossSectionUncertainty = StopCrossSection* 18.8763/100.; }
-  if (iStopMass==1235) { StopCrossSection = 	0.0012717; StopCrossSectionUncertainty = StopCrossSection* 18.9588/100.; }
-  if (iStopMass==1240) { StopCrossSection = 	0.00123066; StopCrossSectionUncertainty = StopCrossSection* 19.049/100.; }
-  if (iStopMass==1245) { StopCrossSection = 	0.00119994; StopCrossSectionUncertainty = StopCrossSection* 19.1442/100.; }
-  if (iStopMass==1250) { StopCrossSection = 	0.0011583; StopCrossSectionUncertainty = StopCrossSection* 19.3006/100.; }
-  if (iStopMass==1255) { StopCrossSection = 	0.00112694; StopCrossSectionUncertainty = StopCrossSection* 19.4441/100.; }
-  if (iStopMass==1260) { StopCrossSection = 	0.00108716; StopCrossSectionUncertainty = StopCrossSection* 19.4141/100.; }
-  if (iStopMass==1265) { StopCrossSection = 	0.00105517; StopCrossSectionUncertainty = StopCrossSection* 19.6361/100.; }
-  if (iStopMass==1270) { StopCrossSection = 	0.00102241; StopCrossSectionUncertainty = StopCrossSection* 19.6297/100.; }
-  if (iStopMass==1275) { StopCrossSection = 	0.000991293; StopCrossSectionUncertainty = StopCrossSection* 19.762/100.; }
-  if (iStopMass==1280) { StopCrossSection = 	0.000961012; StopCrossSectionUncertainty = StopCrossSection* 19.7926/100.; }
-  if (iStopMass==1285) { StopCrossSection = 	0.000932394; StopCrossSectionUncertainty = StopCrossSection* 19.8682/100.; }
-  if (iStopMass==1290) { StopCrossSection = 	0.000903404; StopCrossSectionUncertainty = StopCrossSection* 19.9924/100.; }
-  if (iStopMass==1295) { StopCrossSection = 	0.000876957; StopCrossSectionUncertainty = StopCrossSection* 20.0777/100.; }
-  if (iStopMass==1300) { StopCrossSection = 	0.000850345; StopCrossSectionUncertainty = StopCrossSection* 20.1604/100.; }
-  if (iStopMass==1305) { StopCrossSection = 	0.00082443; StopCrossSectionUncertainty = StopCrossSection* 20.2883/100.; }
-  if (iStopMass==1310) { StopCrossSection = 	0.00079983; StopCrossSectionUncertainty = StopCrossSection* 20.373/100.; }
-  if (iStopMass==1315) { StopCrossSection = 	0.000775222; StopCrossSectionUncertainty = StopCrossSection* 20.4622/100.; }
-  if (iStopMass==1320) { StopCrossSection = 	0.000751372; StopCrossSectionUncertainty = StopCrossSection* 20.5919/100.; }
-  if (iStopMass==1325) { StopCrossSection = 	0.000728912; StopCrossSectionUncertainty = StopCrossSection* 20.6884/100.; }
-  if (iStopMass==1330) { StopCrossSection = 	0.000706867; StopCrossSectionUncertainty = StopCrossSection* 20.7763/100.; }
-  if (iStopMass==1335) { StopCrossSection = 	0.000685372; StopCrossSectionUncertainty = StopCrossSection* 20.8587/100.; }
-  if (iStopMass==1340) { StopCrossSection = 	0.000664649; StopCrossSectionUncertainty = StopCrossSection* 20.9879/100.; }
-  if (iStopMass==1345) { StopCrossSection = 	0.000644804; StopCrossSectionUncertainty = StopCrossSection* 21.1487/100.; }
-  if (iStopMass==1350) { StopCrossSection = 	0.000625155; StopCrossSectionUncertainty = StopCrossSection* 21.2761/100.; }
-  if (iStopMass==1355) { StopCrossSection = 	0.000606802; StopCrossSectionUncertainty = StopCrossSection* 21.3529/100.; }
-  if (iStopMass==1360) { StopCrossSection = 	0.000588512; StopCrossSectionUncertainty = StopCrossSection* 21.4428/100.; }
-  if (iStopMass==1365) { StopCrossSection = 	0.000570506; StopCrossSectionUncertainty = StopCrossSection* 21.6584/100.; }
-  if (iStopMass==1370) { StopCrossSection = 	0.000553379; StopCrossSectionUncertainty = StopCrossSection* 21.6036/100.; }
-  if (iStopMass==1375) { StopCrossSection = 	0.000536646; StopCrossSectionUncertainty = StopCrossSection* 21.775/100.; }
-  if (iStopMass==1380) { StopCrossSection = 	0.000521404; StopCrossSectionUncertainty = StopCrossSection* 21.8383/100.; }
-  if (iStopMass==1385) { StopCrossSection = 	0.000505008; StopCrossSectionUncertainty = StopCrossSection* 21.9675/100.; }
-  if (iStopMass==1390) { StopCrossSection = 	0.000490353; StopCrossSectionUncertainty = StopCrossSection* 22.1444/100.; }
-  if (iStopMass==1395) { StopCrossSection = 	0.000476164; StopCrossSectionUncertainty = StopCrossSection* 22.2016/100.; }
-  if (iStopMass==1400) { StopCrossSection = 	0.000461944; StopCrossSectionUncertainty = StopCrossSection* 22.2704/100.; }
-  if (iStopMass==1405) { StopCrossSection = 	0.000448172; StopCrossSectionUncertainty = StopCrossSection* 22.4911/100.; }
-  if (iStopMass==1410) { StopCrossSection = 	0.000435082; StopCrossSectionUncertainty = StopCrossSection* 22.5606/100.; }
-  if (iStopMass==1415) { StopCrossSection = 	0.000422967; StopCrossSectionUncertainty = StopCrossSection* 22.6095/100.; }
-  if (iStopMass==1420) { StopCrossSection = 	0.000410381; StopCrossSectionUncertainty = StopCrossSection* 22.797/100.; }
-  if (iStopMass==1425) { StopCrossSection = 	0.000398106; StopCrossSectionUncertainty = StopCrossSection* 22.8949/100.; }
-  if (iStopMass==1430) { StopCrossSection = 	0.000386792; StopCrossSectionUncertainty = StopCrossSection* 23.1319/100.; }
-  if (iStopMass==1435) { StopCrossSection = 	0.000375724; StopCrossSectionUncertainty = StopCrossSection* 23.1724/100.; }
-  if (iStopMass==1440) { StopCrossSection = 	0.000364616; StopCrossSectionUncertainty = StopCrossSection* 23.2234/100.; }
-  if (iStopMass==1445) { StopCrossSection = 	0.000353965; StopCrossSectionUncertainty = StopCrossSection* 23.4637/100.; }
-  if (iStopMass==1450) { StopCrossSection = 	0.000343923; StopCrossSectionUncertainty = StopCrossSection* 23.4948/100.; }
-  if (iStopMass==1455) { StopCrossSection = 	0.000333885; StopCrossSectionUncertainty = StopCrossSection* 23.5468/100.; }
-  if (iStopMass==1460) { StopCrossSection = 	0.000324344; StopCrossSectionUncertainty = StopCrossSection* 23.771/100.; }
-  if (iStopMass==1465) { StopCrossSection = 	0.0003153; StopCrossSectionUncertainty = StopCrossSection* 23.8004/100.; }
-  if (iStopMass==1470) { StopCrossSection = 	0.00030583; StopCrossSectionUncertainty = StopCrossSection* 24.0064/100.; }
-  if (iStopMass==1475) { StopCrossSection = 	0.000296811; StopCrossSectionUncertainty = StopCrossSection* 24.0314/100.; }
-  if (iStopMass==1480) { StopCrossSection = 	0.000288149; StopCrossSectionUncertainty = StopCrossSection* 23.9248/100.; }
-  if (iStopMass==1485) { StopCrossSection = 	0.000279711; StopCrossSectionUncertainty = StopCrossSection* 24.1257/100.; }
-  if (iStopMass==1490) { StopCrossSection = 	0.000271724; StopCrossSectionUncertainty = StopCrossSection* 24.1274/100.; }
-  if (iStopMass==1495) { StopCrossSection = 	0.000264275; StopCrossSectionUncertainty = StopCrossSection* 24.3545/100.; }
-  if (iStopMass==1500) { StopCrossSection = 	0.000256248; StopCrossSectionUncertainty = StopCrossSection* 24.372/100.; }
-  if (iStopMass==1505) { StopCrossSection = 	0.000248853; StopCrossSectionUncertainty = StopCrossSection* 24.5827/100.; }
-  if (iStopMass==1510) { StopCrossSection = 	0.000241844; StopCrossSectionUncertainty = StopCrossSection* 24.6187/100.; }
-  if (iStopMass==1515) { StopCrossSection = 	0.000234438; StopCrossSectionUncertainty = StopCrossSection* 24.8442/100.; }
-  if (iStopMass==1520) { StopCrossSection = 	0.000227374; StopCrossSectionUncertainty = StopCrossSection* 24.8909/100.; }
-  if (iStopMass==1525) { StopCrossSection = 	0.000221045; StopCrossSectionUncertainty = StopCrossSection* 25.0895/100.; }
-  if (iStopMass==1530) { StopCrossSection = 	0.000214431; StopCrossSectionUncertainty = StopCrossSection* 24.8728/100.; }
-  if (iStopMass==1535) { StopCrossSection = 	0.000208092; StopCrossSectionUncertainty = StopCrossSection* 25.1043/100.; }
-  if (iStopMass==1540) { StopCrossSection = 	0.000201748; StopCrossSectionUncertainty = StopCrossSection* 25.3207/100.; }
-  if (iStopMass==1545) { StopCrossSection = 	0.000196399; StopCrossSectionUncertainty = StopCrossSection* 25.5641/100.; }
-  if (iStopMass==1550) { StopCrossSection = 	0.000190474; StopCrossSectionUncertainty = StopCrossSection* 25.5213/100.; }
-  if (iStopMass==1555) { StopCrossSection = 	0.000185188; StopCrossSectionUncertainty = StopCrossSection* 25.7329/100.; }
-  if (iStopMass==1560) { StopCrossSection = 	0.000179263; StopCrossSectionUncertainty = StopCrossSection* 25.6931/100.; }
-  if (iStopMass==1565) { StopCrossSection = 	0.000174021; StopCrossSectionUncertainty = StopCrossSection* 25.9111/100.; }
-  if (iStopMass==1570) { StopCrossSection = 	0.000169176; StopCrossSectionUncertainty = StopCrossSection* 25.8106/100.; }
-  if (iStopMass==1575) { StopCrossSection = 	0.000163861; StopCrossSectionUncertainty = StopCrossSection* 26.0597/100.; }
-  if (iStopMass==1580) { StopCrossSection = 	0.000159583; StopCrossSectionUncertainty = StopCrossSection* 26.2958/100.; }
-  if (iStopMass==1585) { StopCrossSection = 	0.000154719; StopCrossSectionUncertainty = StopCrossSection* 26.195/100.; }
-  if (iStopMass==1590) { StopCrossSection = 	0.000150506; StopCrossSectionUncertainty = StopCrossSection* 26.4111/100.; }
-  if (iStopMass==1595) { StopCrossSection = 	0.000145626; StopCrossSectionUncertainty = StopCrossSection* 26.3077/100.; }
-  if (iStopMass==1600) { StopCrossSection = 	0.000141382; StopCrossSectionUncertainty = StopCrossSection* 26.5291/100.; }
-  if (iStopMass==1605) { StopCrossSection = 	0.000137131; StopCrossSectionUncertainty = StopCrossSection* 26.7424/100.; }
-  if (iStopMass==1610) { StopCrossSection = 	0.000132187; StopCrossSectionUncertainty = StopCrossSection* 26.668/100.; }
-  if (iStopMass==1615) { StopCrossSection = 	0.000127929; StopCrossSectionUncertainty = StopCrossSection* 26.9117/100.; }
-  if (iStopMass==1620) { StopCrossSection = 	0.000124086; StopCrossSectionUncertainty = StopCrossSection* 26.7738/100.; }
-  if (iStopMass==1625) { StopCrossSection = 	0.00011982; StopCrossSectionUncertainty = StopCrossSection* 27.0483/100.; }
-  if (iStopMass==1630) { StopCrossSection = 	0.000116042; StopCrossSectionUncertainty = StopCrossSection* 26.8071/100.; }
-  if (iStopMass==1635) { StopCrossSection = 	0.000112767; StopCrossSectionUncertainty = StopCrossSection* 27.127/100.; }
-  if (iStopMass==1640) { StopCrossSection = 	0.000108936; StopCrossSectionUncertainty = StopCrossSection* 26.9351/100.; }
-  if (iStopMass==1645) { StopCrossSection = 	0.000105746; StopCrossSectionUncertainty = StopCrossSection* 27.1783/100.; }
-  if (iStopMass==1650) { StopCrossSection = 	0.000102693; StopCrossSectionUncertainty = StopCrossSection* 27.292/100.; }
-  if (iStopMass==1655) { StopCrossSection = 	0.000100112; StopCrossSectionUncertainty = StopCrossSection* 27.4445/100.; }
-  if (iStopMass==1660) { StopCrossSection = 	9.75763e-05; StopCrossSectionUncertainty = StopCrossSection* 27.5431/100.; }
-  if (iStopMass==1665) { StopCrossSection = 	9.52062e-05; StopCrossSectionUncertainty = StopCrossSection* 27.6946/100.; }
-  if (iStopMass==1670) { StopCrossSection = 	9.29857e-05; StopCrossSectionUncertainty = StopCrossSection* 27.7869/100.; }
-  if (iStopMass==1675) { StopCrossSection = 	9.08285e-05; StopCrossSectionUncertainty = StopCrossSection* 27.9347/100.; }
-  if (iStopMass==1680) { StopCrossSection = 	8.87433e-05; StopCrossSectionUncertainty = StopCrossSection* 28.1539/100.; }
-  if (iStopMass==1685) { StopCrossSection = 	8.66618e-05; StopCrossSectionUncertainty = StopCrossSection* 28.3509/100.; }
-  if (iStopMass==1690) { StopCrossSection = 	8.46535e-05; StopCrossSectionUncertainty = StopCrossSection* 28.4432/100.; }
-  if (iStopMass==1695) { StopCrossSection = 	8.27102e-05; StopCrossSectionUncertainty = StopCrossSection* 28.591/100.; }
-  if (iStopMass==1700) { StopCrossSection = 	8.07774e-05; StopCrossSectionUncertainty = StopCrossSection* 28.7497/100.; }
-  if (iStopMass==1705) { StopCrossSection = 	7.8666e-05; StopCrossSectionUncertainty = StopCrossSection* 28.8194/100.; }
-  if (iStopMass==1710) { StopCrossSection = 	7.6572e-05; StopCrossSectionUncertainty = StopCrossSection* 29.0265/100.; }
-  if (iStopMass==1715) { StopCrossSection = 	7.45994e-05; StopCrossSectionUncertainty = StopCrossSection* 29.1193/100.; }
-  if (iStopMass==1720) { StopCrossSection = 	7.25199e-05; StopCrossSectionUncertainty = StopCrossSection* 29.3013/100.; }
-  if (iStopMass==1725) { StopCrossSection = 	7.05189e-05; StopCrossSectionUncertainty = StopCrossSection* 29.3697/100.; }
-  if (iStopMass==1730) { StopCrossSection = 	6.85712e-05; StopCrossSectionUncertainty = StopCrossSection* 29.4972/100.; }
-  if (iStopMass==1735) { StopCrossSection = 	6.67296e-05; StopCrossSectionUncertainty = StopCrossSection* 29.6167/100.; }
-  if (iStopMass==1740) { StopCrossSection = 	6.49184e-05; StopCrossSectionUncertainty = StopCrossSection* 29.7686/100.; }
-  if (iStopMass==1745) { StopCrossSection = 	6.30949e-05; StopCrossSectionUncertainty = StopCrossSection* 29.8524/100.; }
-  if (iStopMass==1750) { StopCrossSection = 	6.13637e-05; StopCrossSectionUncertainty = StopCrossSection* 29.9789/100.; }
-  if (iStopMass==1755) { StopCrossSection = 	5.97301e-05; StopCrossSectionUncertainty = StopCrossSection* 30.0928/100.; }
-  if (iStopMass==1760) { StopCrossSection = 	5.80751e-05; StopCrossSectionUncertainty = StopCrossSection* 30.2585/100.; }
-  if (iStopMass==1765) { StopCrossSection = 	5.65479e-05; StopCrossSectionUncertainty = StopCrossSection* 30.366/100.; }
-  if (iStopMass==1770) { StopCrossSection = 	5.49998e-05; StopCrossSectionUncertainty = StopCrossSection* 30.5241/100.; }
-  if (iStopMass==1775) { StopCrossSection = 	5.35686e-05; StopCrossSectionUncertainty = StopCrossSection* 30.6718/100.; }
-  if (iStopMass==1780) { StopCrossSection = 	5.20828e-05; StopCrossSectionUncertainty = StopCrossSection* 30.6799/100.; }
-  if (iStopMass==1785) { StopCrossSection = 	5.07079e-05; StopCrossSectionUncertainty = StopCrossSection* 30.9201/100.; }
-  if (iStopMass==1790) { StopCrossSection = 	4.93948e-05; StopCrossSectionUncertainty = StopCrossSection* 31.0043/100.; }
-  if (iStopMass==1795) { StopCrossSection = 	4.80635e-05; StopCrossSectionUncertainty = StopCrossSection* 31.138/100.; }
-  if (iStopMass==1800) { StopCrossSection = 	4.67492e-05; StopCrossSectionUncertainty = StopCrossSection* 31.2291/100.; }
-  if (iStopMass==1805) { StopCrossSection = 	4.55055e-05; StopCrossSectionUncertainty = StopCrossSection* 31.4321/100.; }
-  if (iStopMass==1810) { StopCrossSection = 	4.42835e-05; StopCrossSectionUncertainty = StopCrossSection* 31.5499/100.; }
-  if (iStopMass==1815) { StopCrossSection = 	4.30744e-05; StopCrossSectionUncertainty = StopCrossSection* 31.6302/100.; }
-  if (iStopMass==1820) { StopCrossSection = 	4.19954e-05; StopCrossSectionUncertainty = StopCrossSection* 31.7151/100.; }
-  if (iStopMass==1825) { StopCrossSection = 	4.08527e-05; StopCrossSectionUncertainty = StopCrossSection* 31.9048/100.; }
-  if (iStopMass==1830) { StopCrossSection = 	3.97561e-05; StopCrossSectionUncertainty = StopCrossSection* 31.9718/100.; }
-  if (iStopMass==1835) { StopCrossSection = 	3.87041e-05; StopCrossSectionUncertainty = StopCrossSection* 32.2028/100.; }
-  if (iStopMass==1840) { StopCrossSection = 	3.76008e-05; StopCrossSectionUncertainty = StopCrossSection* 32.268/100.; }
-  if (iStopMass==1845) { StopCrossSection = 	3.66914e-05; StopCrossSectionUncertainty = StopCrossSection* 32.4529/100.; }
-  if (iStopMass==1850) { StopCrossSection = 	3.56995e-05; StopCrossSectionUncertainty = StopCrossSection* 32.5039/100.; }
-  if (iStopMass==1855) { StopCrossSection = 	3.47689e-05; StopCrossSectionUncertainty = StopCrossSection* 32.6767/100.; }
-  if (iStopMass==1860) { StopCrossSection = 	3.38528e-05; StopCrossSectionUncertainty = StopCrossSection* 32.8878/100.; }
-  if (iStopMass==1865) { StopCrossSection = 	3.29644e-05; StopCrossSectionUncertainty = StopCrossSection* 32.8975/100.; }
-  if (iStopMass==1870) { StopCrossSection = 	3.20679e-05; StopCrossSectionUncertainty = StopCrossSection* 32.9608/100.; }
-  if (iStopMass==1875) { StopCrossSection = 	3.12583e-05; StopCrossSectionUncertainty = StopCrossSection* 33.1541/100.; }
-  if (iStopMass==1880) { StopCrossSection = 	3.04342e-05; StopCrossSectionUncertainty = StopCrossSection* 33.3117/100.; }
-  if (iStopMass==1885) { StopCrossSection = 	2.96516e-05; StopCrossSectionUncertainty = StopCrossSection* 33.2866/100.; }
-  if (iStopMass==1890) { StopCrossSection = 	2.88952e-05; StopCrossSectionUncertainty = StopCrossSection* 33.6279/100.; }
-  if (iStopMass==1895) { StopCrossSection = 	2.81145e-05; StopCrossSectionUncertainty = StopCrossSection* 33.6845/100.; }
-  if (iStopMass==1900) { StopCrossSection = 	2.73974e-05; StopCrossSectionUncertainty = StopCrossSection* 33.8247/100.; }
-  if (iStopMass==1905) { StopCrossSection = 	2.66796e-05; StopCrossSectionUncertainty = StopCrossSection* 33.9708/100.; }
-  if (iStopMass==1910) { StopCrossSection = 	2.59941e-05; StopCrossSectionUncertainty = StopCrossSection* 33.9526/100.; }
-  if (iStopMass==1915) { StopCrossSection = 	2.52784e-05; StopCrossSectionUncertainty = StopCrossSection* 34.1137/100.; }
-  if (iStopMass==1920) { StopCrossSection = 	2.46598e-05; StopCrossSectionUncertainty = StopCrossSection* 34.2714/100.; }
-  if (iStopMass==1925) { StopCrossSection = 	2.39932e-05; StopCrossSectionUncertainty = StopCrossSection* 34.2328/100.; }
-  if (iStopMass==1930) { StopCrossSection = 	2.33737e-05; StopCrossSectionUncertainty = StopCrossSection* 34.394/100.; }
-  if (iStopMass==1935) { StopCrossSection = 	2.27623e-05; StopCrossSectionUncertainty = StopCrossSection* 34.5138/100.; }
-  if (iStopMass==1940) { StopCrossSection = 	2.21454e-05; StopCrossSectionUncertainty = StopCrossSection* 34.6933/100.; }
-  if (iStopMass==1945) { StopCrossSection = 	2.15924e-05; StopCrossSectionUncertainty = StopCrossSection* 35.0815/100.; }
-  if (iStopMass==1950) { StopCrossSection = 	2.10232e-05; StopCrossSectionUncertainty = StopCrossSection* 34.9444/100.; }
-  if (iStopMass==1955) { StopCrossSection = 	2.05211e-05; StopCrossSectionUncertainty = StopCrossSection* 35.0155/100.; }
-  if (iStopMass==1960) { StopCrossSection = 	1.98996e-05; StopCrossSectionUncertainty = StopCrossSection* 35.2135/100.; }
-  if (iStopMass==1965) { StopCrossSection = 	1.9408e-05; StopCrossSectionUncertainty = StopCrossSection* 35.3328/100.; }
-  if (iStopMass==1970) { StopCrossSection = 	1.88974e-05; StopCrossSectionUncertainty = StopCrossSection* 35.4643/100.; }
-  if (iStopMass==1975) { StopCrossSection = 	1.84612e-05; StopCrossSectionUncertainty = StopCrossSection* 35.7904/100.; }
-  if (iStopMass==1980) { StopCrossSection = 	1.79562e-05; StopCrossSectionUncertainty = StopCrossSection* 35.8898/100.; }
-  if (iStopMass==1985) { StopCrossSection = 	1.75673e-05; StopCrossSectionUncertainty = StopCrossSection* 35.989/100.; }
-  if (iStopMass==1990) { StopCrossSection = 	1.70612e-05; StopCrossSectionUncertainty = StopCrossSection* 36.0953/100.; }
-  if (iStopMass==1995) { StopCrossSection = 	1.66228e-05; StopCrossSectionUncertainty = StopCrossSection* 36.4709/100.; }
-  if (iStopMass==2000) { StopCrossSection = 	1.62355e-05; StopCrossSectionUncertainty = StopCrossSection* 36.5277/100.; }
+  MassPoint mp2 (150, 50);
+  StopCrossSection cs2 (249.409, 36.7821);
+  MassPointParameters mpp2 (cs2, 493441);
+  StopNeutralinoMap.insert(std::make_pair(mp2, mpp2));
 
+  MassPoint mp3 (150, 63);
+  StopCrossSection cs3 (249.409, 36.7821);
+  MassPointParameters mpp3 (cs3, 520210);
+  StopNeutralinoMap.insert(std::make_pair(mp3, mpp3));
 
-} 
+  MassPoint mp4 (167, 1);
+  StopCrossSection cs4 (151.469, 22.263);
+  MassPointParameters mpp4 (cs4, 494839);
+  StopNeutralinoMap.insert(std::make_pair(mp4, mpp4));
+
+  MassPoint mp5 (175, 1);
+  StopCrossSection cs5 (121.416, 17.7681);
+  MassPointParameters mpp5 (cs5, 477804);
+  StopNeutralinoMap.insert(std::make_pair(mp5, mpp5));
+
+  MassPoint mp6 (175, 25);
+  StopCrossSection cs6 (121.416, 17.7681);
+  MassPointParameters mpp6 (cs6, 462989);
+  StopNeutralinoMap.insert(std::make_pair(mp6, mpp6));
+
+  MassPoint mp7 (175, 50);
+  StopCrossSection cs7 (121.416, 17.7681);
+  MassPointParameters mpp7 (cs7, 466467);
+  StopNeutralinoMap.insert(std::make_pair(mp7, mpp7));
+
+  MassPoint mp8 (175, 75);
+  StopCrossSection cs8 (121.416, 17.7681);
+  MassPointParameters mpp8 (cs8, 470315);
+  StopNeutralinoMap.insert(std::make_pair(mp8, mpp8));
+
+  MassPoint mp9 (175, 88);
+  StopCrossSection cs9 (121.416, 17.7681);
+  MassPointParameters mpp9 (cs9, 471080);
+  StopNeutralinoMap.insert(std::make_pair(mp9, mpp9));
+
+  MassPoint mp10 (183, 1);
+  StopCrossSection cs10 (98.4784, 14.1473);
+  MassPointParameters mpp10 (cs10, 461583);
+  StopNeutralinoMap.insert(std::make_pair(mp10, mpp10));
+
+  MassPoint mp11 (192, 25);
+  StopCrossSection cs11 (78.4483, 11.3431);
+  MassPointParameters mpp11 (cs11, 451233);
+  StopNeutralinoMap.insert(std::make_pair(mp11, mpp11));
+
+  MassPoint mp12 (200, 1);
+  StopCrossSection cs12 (64.5085, 9.29555);
+  MassPointParameters mpp12 (cs12, 603141);
+  StopNeutralinoMap.insert(std::make_pair(mp12, mpp12));
+
+  MassPoint mp13 (200, 25);
+  StopCrossSection cs13 (64.5085, 9.29555);
+  MassPointParameters mpp13 (cs13, 618584);
+  StopNeutralinoMap.insert(std::make_pair(mp13, mpp13));
+
+  MassPoint mp14 (200, 50);
+  StopCrossSection cs14 (64.5085, 9.29555);
+  MassPointParameters mpp14 (cs14, 605968);
+  StopNeutralinoMap.insert(std::make_pair(mp14, mpp14));
+
+  MassPoint mp15 (200, 75);
+  StopCrossSection cs15 (64.5085, 9.29555);
+  MassPointParameters mpp15 (cs15, 609486);
+  StopNeutralinoMap.insert(std::make_pair(mp15, mpp15));
+
+  MassPoint mp16 (200, 100);
+  StopCrossSection cs16 (64.5085, 9.29555);
+  MassPointParameters mpp16 (cs16, 618446);
+  StopNeutralinoMap.insert(std::make_pair(mp16, mpp16));
+
+  MassPoint mp17 (200, 113);
+  StopCrossSection cs17 (64.5085, 9.29555);
+  MassPointParameters mpp17 (cs17, 627087);
+  StopNeutralinoMap.insert(std::make_pair(mp17, mpp17));
+
+  MassPoint mp18 (208, 25);
+  StopCrossSection cs18 (53.4447, 7.65327);
+  MassPointParameters mpp18 (cs18, 608873);
+  StopNeutralinoMap.insert(std::make_pair(mp18, mpp18));
+
+  MassPoint mp19 (217, 50);
+  StopCrossSection cs19 (43.4633, 6.22129);
+  MassPointParameters mpp19 (cs19, 590927);
+  StopNeutralinoMap.insert(std::make_pair(mp19, mpp19));
+
+  MassPoint mp20 (225, 1);
+  StopCrossSection cs20 (36.3818, 5.17309);
+  MassPointParameters mpp20 (cs20, 576221);
+  StopNeutralinoMap.insert(std::make_pair(mp20, mpp20));
+
+  MassPoint mp21 (225, 25);
+  StopCrossSection cs21 (36.3818, 5.17309);
+  MassPointParameters mpp21 (cs21, 595652);
+  StopNeutralinoMap.insert(std::make_pair(mp21, mpp21));
+
+  MassPoint mp22 (225, 50);
+  StopCrossSection cs22 (36.3818, 5.17309);
+  MassPointParameters mpp22 (cs22, 579557);
+  StopNeutralinoMap.insert(std::make_pair(mp22, mpp22));
+
+  MassPoint mp23 (225, 75);
+  StopCrossSection cs23 (36.3818, 5.17309);
+  MassPointParameters mpp23 (cs23, 603362);
+  StopNeutralinoMap.insert(std::make_pair(mp23, mpp23));
+
+  MassPoint mp24 (225, 100);
+  StopCrossSection cs24 (36.3818, 5.17309);
+  MassPointParameters mpp24 (cs24, 612652);
+  StopNeutralinoMap.insert(std::make_pair(mp24, mpp24));
+
+  MassPoint mp25 (225, 125);
+  StopCrossSection cs25 (36.3818, 5.17309);
+  MassPointParameters mpp25 (cs25, 585474);
+  StopNeutralinoMap.insert(std::make_pair(mp25, mpp25));
+
+  MassPoint mp26 (225, 138);
+  StopCrossSection cs26 (36.3818, 5.17309);
+  MassPointParameters mpp26 (cs26, 589303);
+  StopNeutralinoMap.insert(std::make_pair(mp26, mpp26));
+
+  MassPoint mp27 (233, 50);
+  StopCrossSection cs27 (30.6565, 4.35198);
+  MassPointParameters mpp27 (cs27, 570867);
+  StopNeutralinoMap.insert(std::make_pair(mp27, mpp27));
+
+  MassPoint mp28 (242, 75);
+  StopCrossSection cs28 (25.4398, 3.58399);
+  MassPointParameters mpp28 (cs28, 540198);
+  StopNeutralinoMap.insert(std::make_pair(mp28, mpp28));
+
+  MassPoint mp29 (250, 1);
+  StopCrossSection cs29 (21.5949, 3.03613);
+  MassPointParameters mpp29 (cs29, 553575);
+  StopNeutralinoMap.insert(std::make_pair(mp29, mpp29));
+
+  MassPoint mp30 (250, 25);
+  StopCrossSection cs30 (21.5949, 3.03613);
+  MassPointParameters mpp30 (cs30, 559295);
+  StopNeutralinoMap.insert(std::make_pair(mp30, mpp30));
+
+  MassPoint mp31 (250, 50);
+  StopCrossSection cs31 (21.5949, 3.03613);
+  MassPointParameters mpp31 (cs31, 553091);
+  StopNeutralinoMap.insert(std::make_pair(mp31, mpp31));
+
+  MassPoint mp32 (250, 75);
+  StopCrossSection cs32 (21.5949, 3.03613);
+  MassPointParameters mpp32 (cs32, 535011);
+  StopNeutralinoMap.insert(std::make_pair(mp32, mpp32));
+
+  MassPoint mp33 (250, 100);
+  StopCrossSection cs33 (21.5949, 3.03613);
+  MassPointParameters mpp33 (cs33, 552763);
+  StopNeutralinoMap.insert(std::make_pair(mp33, mpp33));
+
+  MassPoint mp34 (250, 125);
+  StopCrossSection cs34 (21.5949, 3.03613);
+  MassPointParameters mpp34 (cs34, 549299);
+  StopNeutralinoMap.insert(std::make_pair(mp34, mpp34));
+
+  MassPoint mp35 (250, 150);
+  StopCrossSection cs35 (21.5949, 3.03613);
+  MassPointParameters mpp35 (cs35, 557831);
+  StopNeutralinoMap.insert(std::make_pair(mp35, mpp35));
+
+  MassPoint mp36 (250, 163);
+  StopCrossSection cs36 (21.5949, 3.03613);
+  MassPointParameters mpp36 (cs36, 545884);
+  StopNeutralinoMap.insert(std::make_pair(mp36, mpp36));
+
+  MassPoint mp37 (258, 75);
+  StopCrossSection cs37 (18.4347, 2.56587);
+  MassPointParameters mpp37 (cs37, 853986);
+  StopNeutralinoMap.insert(std::make_pair(mp37, mpp37));
+
+  MassPoint mp38 (267, 100);
+  StopCrossSection cs38 (15.5256, 2.16481);
+  MassPointParameters mpp38 (cs38, 845095);
+  StopNeutralinoMap.insert(std::make_pair(mp38, mpp38));
+
+  MassPoint mp39 (275, 1);
+  StopCrossSection cs39 (13.3231, 1.89919);
+  MassPointParameters mpp39 (cs39, 861956);
+  StopNeutralinoMap.insert(std::make_pair(mp39, mpp39));
+
+  MassPoint mp40 (275, 25);
+  StopCrossSection cs40 (13.3231, 1.89919);
+  MassPointParameters mpp40 (cs40, 824537);
+  StopNeutralinoMap.insert(std::make_pair(mp40, mpp40));
+
+  MassPoint mp41 (275, 50);
+  StopCrossSection cs41 (13.3231, 1.89919);
+  MassPointParameters mpp41 (cs41, 851997);
+  StopNeutralinoMap.insert(std::make_pair(mp41, mpp41));
+
+  MassPoint mp42 (275, 75);
+  StopCrossSection cs42 (13.3231, 1.89919);
+  MassPointParameters mpp42 (cs42, 844693);
+  StopNeutralinoMap.insert(std::make_pair(mp42, mpp42));
+
+  MassPoint mp43 (275, 100);
+  StopCrossSection cs43 (13.3231, 1.89919);
+  MassPointParameters mpp43 (cs43, 838466);
+  StopNeutralinoMap.insert(std::make_pair(mp43, mpp43));
+
+  MassPoint mp44 (275, 125);
+  StopCrossSection cs44 (13.3231, 1.89919);
+  MassPointParameters mpp44 (cs44, 829187);
+  StopNeutralinoMap.insert(std::make_pair(mp44, mpp44));
+
+  MassPoint mp45 (275, 150);
+  StopCrossSection cs45 (13.3231, 1.89919);
+  MassPointParameters mpp45 (cs45, 840658);
+  StopNeutralinoMap.insert(std::make_pair(mp45, mpp45));
+
+  MassPoint mp46 (275, 175);
+  StopCrossSection cs46 (13.3231, 1.89919);
+  MassPointParameters mpp46 (cs46, 846634);
+  StopNeutralinoMap.insert(std::make_pair(mp46, mpp46));
+
+  MassPoint mp47 (275, 188);
+  StopCrossSection cs47 (13.3231, 1.89919);
+  MassPointParameters mpp47 (cs47, 845385);
+  StopNeutralinoMap.insert(std::make_pair(mp47, mpp47));
+
+  MassPoint mp48 (283, 100);
+  StopCrossSection cs48 (11.5185, 1.62631);
+  MassPointParameters mpp48 (cs48, 851914);
+  StopNeutralinoMap.insert(std::make_pair(mp48, mpp48));
+
+  MassPoint mp49 (292, 125);
+  StopCrossSection cs49 (9.79779, 1.36209);
+  MassPointParameters mpp49 (cs49, 783430);
+  StopNeutralinoMap.insert(std::make_pair(mp49, mpp49));
+
+  MassPoint mp50 (300, 1);
+  StopCrossSection cs50 (8.51615, 1.18564);
+  MassPointParameters mpp50 (cs50, 975907);
+  StopNeutralinoMap.insert(std::make_pair(mp50, mpp50));
+
+  MassPoint mp51 (300, 25);
+  StopCrossSection cs51 (8.51615, 1.18564);
+  MassPointParameters mpp51 (cs51, 934485);
+  StopNeutralinoMap.insert(std::make_pair(mp51, mpp51));
+
+  MassPoint mp52 (300, 50);
+  StopCrossSection cs52 (8.51615, 1.18564);
+  MassPointParameters mpp52 (cs52, 983303);
+  StopNeutralinoMap.insert(std::make_pair(mp52, mpp52));
+
+  MassPoint mp53 (300, 75);
+  StopCrossSection cs53 (8.51615, 1.18564);
+  MassPointParameters mpp53 (cs53, 978530);
+  StopNeutralinoMap.insert(std::make_pair(mp53, mpp53));
+
+  MassPoint mp54 (300, 100);
+  StopCrossSection cs54 (8.51615, 1.18564);
+  MassPointParameters mpp54 (cs54, 975157);
+  StopNeutralinoMap.insert(std::make_pair(mp54, mpp54));
+
+  MassPoint mp55 (300, 125);
+  StopCrossSection cs55 (8.51615, 1.18564);
+  MassPointParameters mpp55 (cs55, 966457);
+  StopNeutralinoMap.insert(std::make_pair(mp55, mpp55));
+
+  MassPoint mp56 (300, 150);
+  StopCrossSection cs56 (8.51615, 1.18564);
+  MassPointParameters mpp56 (cs56, 970794);
+  StopNeutralinoMap.insert(std::make_pair(mp56, mpp56));
+
+  MassPoint mp57 (300, 175);
+  StopCrossSection cs57 (8.51615, 1.18564);
+  MassPointParameters mpp57 (cs57, 980640);
+  StopNeutralinoMap.insert(std::make_pair(mp57, mpp57));
+
+  MassPoint mp58 (300, 200);
+  StopCrossSection cs58 (8.51615, 1.18564);
+  MassPointParameters mpp58 (cs58, 962116);
+  StopNeutralinoMap.insert(std::make_pair(mp58, mpp58));
+
+  MassPoint mp59 (300, 213);
+  StopCrossSection cs59 (8.51615, 1.18564);
+  MassPointParameters mpp59 (cs59, 960632);
+  StopNeutralinoMap.insert(std::make_pair(mp59, mpp59));
+
+  MassPoint mp60 (308, 125);
+  StopCrossSection cs60 (7.43297, 1.03471);
+  MassPointParameters mpp60 (cs60, 954600);
+  StopNeutralinoMap.insert(std::make_pair(mp60, mpp60));
+
+  MassPoint mp61 (317, 150);
+  StopCrossSection cs61 (6.39537, 0.887432);
+  MassPointParameters mpp61 (cs61, 962749);
+  StopNeutralinoMap.insert(std::make_pair(mp61, mpp61));
+
+  MassPoint mp62 (325, 25);
+  StopCrossSection cs62 (5.60471, 0.774257);
+  MassPointParameters mpp62 (cs62, 952721);
+  StopNeutralinoMap.insert(std::make_pair(mp62, mpp62));
+
+  MassPoint mp63 (325, 50);
+  StopCrossSection cs63 (5.60471, 0.774257);
+  MassPointParameters mpp63 (cs63, 962633);
+  StopNeutralinoMap.insert(std::make_pair(mp63, mpp63));
+
+  MassPoint mp64 (325, 75);
+  StopCrossSection cs64 (5.60471, 0.774257);
+  MassPointParameters mpp64 (cs64, 948917);
+  StopNeutralinoMap.insert(std::make_pair(mp64, mpp64));
+
+  MassPoint mp65 (325, 100);
+  StopCrossSection cs65 (5.60471, 0.774257);
+  MassPointParameters mpp65 (cs65, 960304);
+  StopNeutralinoMap.insert(std::make_pair(mp65, mpp65));
+
+  MassPoint mp66 (325, 125);
+  StopCrossSection cs66 (5.60471, 0.774257);
+  MassPointParameters mpp66 (cs66, 930616);
+  StopNeutralinoMap.insert(std::make_pair(mp66, mpp66));
+
+  MassPoint mp67 (325, 150);
+  StopCrossSection cs67 (5.60471, 0.774257);
+  MassPointParameters mpp67 (cs67, 956900);
+  StopNeutralinoMap.insert(std::make_pair(mp67, mpp67));
+
+  MassPoint mp68 (325, 175);
+  StopCrossSection cs68 (5.60471, 0.774257);
+  MassPointParameters mpp68 (cs68, 950666);
+  StopNeutralinoMap.insert(std::make_pair(mp68, mpp68));
+
+  MassPoint mp69 (325, 200);
+  StopCrossSection cs69 (5.60471, 0.774257);
+  MassPointParameters mpp69 (cs69, 934111);
+  StopNeutralinoMap.insert(std::make_pair(mp69, mpp69));
+
+  MassPoint mp70 (325, 225);
+  StopCrossSection cs70 (5.60471, 0.774257);
+  MassPointParameters mpp70 (cs70, 958895);
+  StopNeutralinoMap.insert(std::make_pair(mp70, mpp70));
+
+  MassPoint mp71 (325, 238);
+  StopCrossSection cs71 (5.60471, 0.774257);
+  MassPointParameters mpp71 (cs71, 957518);
+  StopNeutralinoMap.insert(std::make_pair(mp71, mpp71));
+
+  MassPoint mp72 (333, 150);
+  StopCrossSection cs72 (4.93598, 0.677722);
+  MassPointParameters mpp72 (cs72, 908690);
+  StopNeutralinoMap.insert(std::make_pair(mp72, mpp72));
+
+  MassPoint mp73 (342, 175);
+  StopCrossSection cs73 (4.2853, 0.589713);
+  MassPointParameters mpp73 (cs73, 919345);
+  StopNeutralinoMap.insert(std::make_pair(mp73, mpp73));
+
+  MassPoint mp74 (350, 1);
+  StopCrossSection cs74 (3.78661, 0.5183);
+  MassPointParameters mpp74 (cs74, 907345);
+  StopNeutralinoMap.insert(std::make_pair(mp74, mpp74));
+
+  MassPoint mp75 (350, 50);
+  StopCrossSection cs75 (3.78661, 0.5183);
+  MassPointParameters mpp75 (cs75, 898779);
+  StopNeutralinoMap.insert(std::make_pair(mp75, mpp75));
+
+  MassPoint mp76 (350, 75);
+  StopCrossSection cs76 (3.78661, 0.5183);
+  MassPointParameters mpp76 (cs76, 910911);
+  StopNeutralinoMap.insert(std::make_pair(mp76, mpp76));
+
+  MassPoint mp77 (350, 100);
+  StopCrossSection cs77 (3.78661, 0.5183);
+  MassPointParameters mpp77 (cs77, 900543);
+  StopNeutralinoMap.insert(std::make_pair(mp77, mpp77));
+
+  MassPoint mp78 (350, 125);
+  StopCrossSection cs78 (3.78661, 0.5183);
+  MassPointParameters mpp78 (cs78, 901150);
+  StopNeutralinoMap.insert(std::make_pair(mp78, mpp78));
+
+  MassPoint mp79 (350, 150);
+  StopCrossSection cs79 (3.78661, 0.5183);
+  MassPointParameters mpp79 (cs79, 905247);
+  StopNeutralinoMap.insert(std::make_pair(mp79, mpp79));
+
+  MassPoint mp80 (350, 175);
+  StopCrossSection cs80 (3.78661, 0.5183);
+  MassPointParameters mpp80 (cs80, 883578);
+  StopNeutralinoMap.insert(std::make_pair(mp80, mpp80));
+
+  MassPoint mp81 (350, 200);
+  StopCrossSection cs81 (3.78661, 0.5183);
+  MassPointParameters mpp81 (cs81, 894275);
+  StopNeutralinoMap.insert(std::make_pair(mp81, mpp81));
+
+  MassPoint mp82 (350, 225);
+  StopCrossSection cs82 (3.78661, 0.5183);
+  MassPointParameters mpp82 (cs82, 894541);
+  StopNeutralinoMap.insert(std::make_pair(mp82, mpp82));
+
+  MassPoint mp83 (350, 250);
+  StopCrossSection cs83 (3.78661, 0.5183);
+  MassPointParameters mpp83 (cs83, 896650);
+  StopNeutralinoMap.insert(std::make_pair(mp83, mpp83));
+
+  MassPoint mp84 (350, 263);
+  StopCrossSection cs84 (3.78661, 0.5183);
+  MassPointParameters mpp84 (cs84, 907384);
+  StopNeutralinoMap.insert(std::make_pair(mp84, mpp84));
+
+  MassPoint mp85 (358, 175);
+  StopCrossSection cs85 (3.35736, 0.463444);
+  MassPointParameters mpp85 (cs85, 882289);
+  StopNeutralinoMap.insert(std::make_pair(mp85, mpp85));
+
+  MassPoint mp86 (367, 200);
+  StopCrossSection cs86 (2.93791, 0.403858);
+  MassPointParameters mpp86 (cs86, 885117);
+  StopNeutralinoMap.insert(std::make_pair(mp86, mpp86));
+
+  MassPoint mp87 (375, 75);
+  StopCrossSection cs87 (2.61162, 0.361649);
+  MassPointParameters mpp87 (cs87, 856669);
+  StopNeutralinoMap.insert(std::make_pair(mp87, mpp87));
+
+  MassPoint mp88 (375, 100);
+  StopCrossSection cs88 (2.61162, 0.361649);
+  MassPointParameters mpp88 (cs88, 882061);
+  StopNeutralinoMap.insert(std::make_pair(mp88, mpp88));
+
+  MassPoint mp89 (375, 125);
+  StopCrossSection cs89 (2.61162, 0.361649);
+  MassPointParameters mpp89 (cs89, 890334);
+  StopNeutralinoMap.insert(std::make_pair(mp89, mpp89));
+
+  MassPoint mp90 (375, 150);
+  StopCrossSection cs90 (2.61162, 0.361649);
+  MassPointParameters mpp90 (cs90, 891883);
+  StopNeutralinoMap.insert(std::make_pair(mp90, mpp90));
+
+  MassPoint mp91 (375, 175);
+  StopCrossSection cs91 (2.61162, 0.361649);
+  MassPointParameters mpp91 (cs91, 865630);
+  StopNeutralinoMap.insert(std::make_pair(mp91, mpp91));
+
+  MassPoint mp92 (375, 200);
+  StopCrossSection cs92 (2.61162, 0.361649);
+  MassPointParameters mpp92 (cs92, 913123);
+  StopNeutralinoMap.insert(std::make_pair(mp92, mpp92));
+
+  MassPoint mp93 (375, 225);
+  StopCrossSection cs93 (2.61162, 0.361649);
+  MassPointParameters mpp93 (cs93, 890175);
+  StopNeutralinoMap.insert(std::make_pair(mp93, mpp93));
+
+  MassPoint mp94 (375, 250);
+  StopCrossSection cs94 (2.61162, 0.361649);
+  MassPointParameters mpp94 (cs94, 883829);
+  StopNeutralinoMap.insert(std::make_pair(mp94, mpp94));
+
+  MassPoint mp95 (375, 275);
+  StopCrossSection cs95 (2.61162, 0.361649);
+  MassPointParameters mpp95 (cs95, 889172);
+  StopNeutralinoMap.insert(std::make_pair(mp95, mpp95));
+
+  MassPoint mp96 (375, 288);
+  StopCrossSection cs96 (2.61162, 0.361649);
+  MassPointParameters mpp96 (cs96, 877750);
+  StopNeutralinoMap.insert(std::make_pair(mp96, mpp96));
+
+  MassPoint mp97 (383, 200);
+  StopCrossSection cs97 (2.33031, 0.319632);
+  MassPointParameters mpp97 (cs97, 816009);
+  StopNeutralinoMap.insert(std::make_pair(mp97, mpp97));
+
+  MassPoint mp98 (392, 225);
+  StopCrossSection cs98 (2.05132, 0.279655);
+  MassPointParameters mpp98 (cs98, 712720);
+  StopNeutralinoMap.insert(std::make_pair(mp98, mpp98));
+
+  MassPoint mp99 (400, 1);
+  StopCrossSection cs99 (1.83537, 0.251418);
+  MassPointParameters mpp99 (cs99, 698496);
+  StopNeutralinoMap.insert(std::make_pair(mp99, mpp99));
+
+  MassPoint mp100 (400, 50);
+  StopCrossSection cs100 (1.83537, 0.251418);
+  MassPointParameters mpp100 (cs100, 701993);
+  StopNeutralinoMap.insert(std::make_pair(mp100, mpp100));
+
+  MassPoint mp101 (400, 100);
+  StopCrossSection cs101 (1.83537, 0.251418);
+  MassPointParameters mpp101 (cs101, 685608);
+  StopNeutralinoMap.insert(std::make_pair(mp101, mpp101));
+
+  MassPoint mp102 (400, 125);
+  StopCrossSection cs102 (1.83537, 0.251418);
+  MassPointParameters mpp102 (cs102, 696052);
+  StopNeutralinoMap.insert(std::make_pair(mp102, mpp102));
+
+  MassPoint mp103 (400, 150);
+  StopCrossSection cs103 (1.83537, 0.251418);
+  MassPointParameters mpp103 (cs103, 703616);
+  StopNeutralinoMap.insert(std::make_pair(mp103, mpp103));
+
+  MassPoint mp104 (400, 175);
+  StopCrossSection cs104 (1.83537, 0.251418);
+  MassPointParameters mpp104 (cs104, 697935);
+  StopNeutralinoMap.insert(std::make_pair(mp104, mpp104));
+
+  MassPoint mp105 (400, 200);
+  StopCrossSection cs105 (1.83537, 0.251418);
+  MassPointParameters mpp105 (cs105, 701844);
+  StopNeutralinoMap.insert(std::make_pair(mp105, mpp105));
+
+  MassPoint mp106 (400, 225);
+  StopCrossSection cs106 (1.83537, 0.251418);
+  MassPointParameters mpp106 (cs106, 701488);
+  StopNeutralinoMap.insert(std::make_pair(mp106, mpp106));
+
+  MassPoint mp107 (400, 250);
+  StopCrossSection cs107 (1.83537, 0.251418);
+  MassPointParameters mpp107 (cs107, 697102);
+  StopNeutralinoMap.insert(std::make_pair(mp107, mpp107));
+
+  MassPoint mp108 (400, 275);
+  StopCrossSection cs108 (1.83537, 0.251418);
+  MassPointParameters mpp108 (cs108, 686788);
+  StopNeutralinoMap.insert(std::make_pair(mp108, mpp108));
+
+  MassPoint mp109 (400, 300);
+  StopCrossSection cs109 (1.83537, 0.251418);
+  MassPointParameters mpp109 (cs109, 704446);
+  StopNeutralinoMap.insert(std::make_pair(mp109, mpp109));
+
+  MassPoint mp110 (400, 313);
+  StopCrossSection cs110 (1.83537, 0.251418);
+  MassPointParameters mpp110 (cs110, 699713);
+  StopNeutralinoMap.insert(std::make_pair(mp110, mpp110));
+
+  MassPoint mp111 (408, 225);
+  StopCrossSection cs111 (1.64598, 0.224102);
+  MassPointParameters mpp111 (cs111, 629945);
+  StopNeutralinoMap.insert(std::make_pair(mp111, mpp111));
+
+  MassPoint mp112 (417, 250);
+  StopCrossSection cs112 (1.45754, 0.197237);
+  MassPointParameters mpp112 (cs112, 554977);
+  StopNeutralinoMap.insert(std::make_pair(mp112, mpp112));
+
+  MassPoint mp113 (425, 125);
+  StopCrossSection cs113 (1.31169, 0.177095);
+  MassPointParameters mpp113 (cs113, 480381);
+  StopNeutralinoMap.insert(std::make_pair(mp113, mpp113));
+
+  MassPoint mp114 (425, 150);
+  StopCrossSection cs114 (1.31169, 0.177095);
+  MassPointParameters mpp114 (cs114, 482995);
+  StopNeutralinoMap.insert(std::make_pair(mp114, mpp114));
+
+  MassPoint mp115 (425, 175);
+  StopCrossSection cs115 (1.31169, 0.177095);
+  MassPointParameters mpp115 (cs115, 481395);
+  StopNeutralinoMap.insert(std::make_pair(mp115, mpp115));
+
+  MassPoint mp116 (425, 200);
+  StopCrossSection cs116 (1.31169, 0.177095);
+  MassPointParameters mpp116 (cs116, 503771);
+  StopNeutralinoMap.insert(std::make_pair(mp116, mpp116));
+
+  MassPoint mp117 (425, 225);
+  StopCrossSection cs117 (1.31169, 0.177095);
+  MassPointParameters mpp117 (cs117, 486428);
+  StopNeutralinoMap.insert(std::make_pair(mp117, mpp117));
+
+  MassPoint mp118 (425, 250);
+  StopCrossSection cs118 (1.31169, 0.177095);
+  MassPointParameters mpp118 (cs118, 494006);
+  StopNeutralinoMap.insert(std::make_pair(mp118, mpp118));
+
+  MassPoint mp119 (425, 275);
+  StopCrossSection cs119 (1.31169, 0.177095);
+  MassPointParameters mpp119 (cs119, 481194);
+  StopNeutralinoMap.insert(std::make_pair(mp119, mpp119));
+
+  MassPoint mp120 (425, 300);
+  StopCrossSection cs120 (1.31169, 0.177095);
+  MassPointParameters mpp120 (cs120, 487595);
+  StopNeutralinoMap.insert(std::make_pair(mp120, mpp120));
+
+  MassPoint mp121 (425, 325);
+  StopCrossSection cs121 (1.31169, 0.177095);
+  MassPointParameters mpp121 (cs121, 482190);
+  StopNeutralinoMap.insert(std::make_pair(mp121, mpp121));
+
+  MassPoint mp122 (425, 338);
+  StopCrossSection cs122 (1.31169, 0.177095);
+  MassPointParameters mpp122 (cs122, 471920);
+  StopNeutralinoMap.insert(std::make_pair(mp122, mpp122));
+
+  MassPoint mp123 (433, 250);
+  StopCrossSection cs123 (1.17767, 0.15845);
+  MassPointParameters mpp123 (cs123, 441590);
+  StopNeutralinoMap.insert(std::make_pair(mp123, mpp123));
+
+  MassPoint mp124 (442, 275);
+  StopCrossSection cs124 (1.04898, 0.142727);
+  MassPointParameters mpp124 (cs124, 372555);
+  StopNeutralinoMap.insert(std::make_pair(mp124, mpp124));
+
+  MassPoint mp125 (450, 1);
+  StopCrossSection cs125 (0.948333, 0.127607);
+  MassPointParameters mpp125 (cs125, 345199);
+  StopNeutralinoMap.insert(std::make_pair(mp125, mpp125));
+
+  MassPoint mp126 (450, 50);
+  StopCrossSection cs126 (0.948333, 0.127607);
+  MassPointParameters mpp126 (cs126, 360986);
+  StopNeutralinoMap.insert(std::make_pair(mp126, mpp126));
+
+  MassPoint mp127 (450, 100);
+  StopCrossSection cs127 (0.948333, 0.127607);
+  MassPointParameters mpp127 (cs127, 340979);
+  StopNeutralinoMap.insert(std::make_pair(mp127, mpp127));
+
+  MassPoint mp128 (450, 150);
+  StopCrossSection cs128 (0.948333, 0.127607);
+  MassPointParameters mpp128 (cs128, 348945);
+  StopNeutralinoMap.insert(std::make_pair(mp128, mpp128));
+
+  MassPoint mp129 (450, 175);
+  StopCrossSection cs129 (0.948333, 0.127607);
+  MassPointParameters mpp129 (cs129, 355531);
+  StopNeutralinoMap.insert(std::make_pair(mp129, mpp129));
+
+  MassPoint mp130 (450, 200);
+  StopCrossSection cs130 (0.948333, 0.127607);
+  MassPointParameters mpp130 (cs130, 338247);
+  StopNeutralinoMap.insert(std::make_pair(mp130, mpp130));
+
+  MassPoint mp131 (450, 225);
+  StopCrossSection cs131 (0.948333, 0.127607);
+  MassPointParameters mpp131 (cs131, 353388);
+  StopNeutralinoMap.insert(std::make_pair(mp131, mpp131));
+
+  MassPoint mp132 (450, 250);
+  StopCrossSection cs132 (0.948333, 0.127607);
+  MassPointParameters mpp132 (cs132, 342538);
+  StopNeutralinoMap.insert(std::make_pair(mp132, mpp132));
+
+  MassPoint mp133 (450, 275);
+  StopCrossSection cs133 (0.948333, 0.127607);
+  MassPointParameters mpp133 (cs133, 341142);
+  StopNeutralinoMap.insert(std::make_pair(mp133, mpp133));
+
+  MassPoint mp134 (450, 300);
+  StopCrossSection cs134 (0.948333, 0.127607);
+  MassPointParameters mpp134 (cs134, 347312);
+  StopNeutralinoMap.insert(std::make_pair(mp134, mpp134));
+
+  MassPoint mp135 (450, 325);
+  StopCrossSection cs135 (0.948333, 0.127607);
+  MassPointParameters mpp135 (cs135, 331272);
+  StopNeutralinoMap.insert(std::make_pair(mp135, mpp135));
+
+  MassPoint mp136 (450, 350);
+  StopCrossSection cs136 (0.948333, 0.127607);
+  MassPointParameters mpp136 (cs136, 345538);
+  StopNeutralinoMap.insert(std::make_pair(mp136, mpp136));
+
+  MassPoint mp137 (450, 363);
+  StopCrossSection cs137 (0.948333, 0.127607);
+  MassPointParameters mpp137 (cs137, 341472);
+  StopNeutralinoMap.insert(std::make_pair(mp137, mpp137));
+
+  MassPoint mp138 (458, 275);
+  StopCrossSection cs138 (0.858396, 0.115469);
+  MassPointParameters mpp138 (cs138, 320588);
+  StopNeutralinoMap.insert(std::make_pair(mp138, mpp138));
+
+  MassPoint mp139 (467, 300);
+  StopCrossSection cs139 (0.768552, 0.103094);
+  MassPointParameters mpp139 (cs139, 277504);
+  StopNeutralinoMap.insert(std::make_pair(mp139, mpp139));
+
+  MassPoint mp140 (475, 175);
+  StopCrossSection cs140 (0.697075, 0.0933565);
+  MassPointParameters mpp140 (cs140, 249037);
+  StopNeutralinoMap.insert(std::make_pair(mp140, mpp140));
+
+  MassPoint mp141 (475, 200);
+  StopCrossSection cs141 (0.697075, 0.0933565);
+  MassPointParameters mpp141 (cs141, 245396);
+  StopNeutralinoMap.insert(std::make_pair(mp141, mpp141));
+
+  MassPoint mp142 (475, 225);
+  StopCrossSection cs142 (0.697075, 0.0933565);
+  MassPointParameters mpp142 (cs142, 252206);
+  StopNeutralinoMap.insert(std::make_pair(mp142, mpp142));
+
+  MassPoint mp143 (475, 250);
+  StopCrossSection cs143 (0.697075, 0.0933565);
+  MassPointParameters mpp143 (cs143, 250149);
+  StopNeutralinoMap.insert(std::make_pair(mp143, mpp143));
+
+  MassPoint mp144 (475, 275);
+  StopCrossSection cs144 (0.697075, 0.0933565);
+  MassPointParameters mpp144 (cs144, 259063);
+  StopNeutralinoMap.insert(std::make_pair(mp144, mpp144));
+
+  MassPoint mp145 (475, 300);
+  StopCrossSection cs145 (0.697075, 0.0933565);
+  MassPointParameters mpp145 (cs145, 238918);
+  StopNeutralinoMap.insert(std::make_pair(mp145, mpp145));
+
+  MassPoint mp146 (475, 325);
+  StopCrossSection cs146 (0.697075, 0.0933565);
+  MassPointParameters mpp146 (cs146, 255027);
+  StopNeutralinoMap.insert(std::make_pair(mp146, mpp146));
+
+  MassPoint mp147 (475, 350);
+  StopCrossSection cs147 (0.697075, 0.0933565);
+  MassPointParameters mpp147 (cs147, 258151);
+  StopNeutralinoMap.insert(std::make_pair(mp147, mpp147));
+
+  MassPoint mp148 (475, 375);
+  StopCrossSection cs148 (0.697075, 0.0933565);
+  MassPointParameters mpp148 (cs148, 246829);
+  StopNeutralinoMap.insert(std::make_pair(mp148, mpp148));
+
+  MassPoint mp149 (475, 388);
+  StopCrossSection cs149 (0.697075, 0.0933565);
+  MassPointParameters mpp149 (cs149, 243991);
+  StopNeutralinoMap.insert(std::make_pair(mp149, mpp149));
+
+  MassPoint mp150 (483, 300);
+  StopCrossSection cs150 (0.633519, 0.0848849);
+  MassPointParameters mpp150 (cs150, 236700);
+  StopNeutralinoMap.insert(std::make_pair(mp150, mpp150));
+
+  MassPoint mp151 (492, 325);
+  StopCrossSection cs151 (0.56929, 0.0761869);
+  MassPointParameters mpp151 (cs151, 200396);
+  StopNeutralinoMap.insert(std::make_pair(mp151, mpp151));
+
+  MassPoint mp152 (500, 1);
+  StopCrossSection cs152 (0.51848, 0.0693711);
+  MassPointParameters mpp152 (cs152, 201790);
+  StopNeutralinoMap.insert(std::make_pair(mp152, mpp152));
+
+  MassPoint mp153 (500, 50);
+  StopCrossSection cs153 (0.51848, 0.0693711);
+  MassPointParameters mpp153 (cs153, 204320);
+  StopNeutralinoMap.insert(std::make_pair(mp153, mpp153));
+
+  MassPoint mp154 (500, 100);
+  StopCrossSection cs154 (0.51848, 0.0693711);
+  MassPointParameters mpp154 (cs154, 193841);
+  StopNeutralinoMap.insert(std::make_pair(mp154, mpp154));
+
+  MassPoint mp155 (500, 150);
+  StopCrossSection cs155 (0.51848, 0.0693711);
+  MassPointParameters mpp155 (cs155, 196526);
+  StopNeutralinoMap.insert(std::make_pair(mp155, mpp155));
+
+  MassPoint mp156 (500, 200);
+  StopCrossSection cs156 (0.51848, 0.0693711);
+  MassPointParameters mpp156 (cs156, 198566);
+  StopNeutralinoMap.insert(std::make_pair(mp156, mpp156));
+
+  MassPoint mp157 (500, 225);
+  StopCrossSection cs157 (0.51848, 0.0693711);
+  MassPointParameters mpp157 (cs157, 202707);
+  StopNeutralinoMap.insert(std::make_pair(mp157, mpp157));
+
+  MassPoint mp158 (500, 250);
+  StopCrossSection cs158 (0.51848, 0.0693711);
+  MassPointParameters mpp158 (cs158, 193604);
+  StopNeutralinoMap.insert(std::make_pair(mp158, mpp158));
+
+  MassPoint mp159 (500, 275);
+  StopCrossSection cs159 (0.51848, 0.0693711);
+  MassPointParameters mpp159 (cs159, 201321);
+  StopNeutralinoMap.insert(std::make_pair(mp159, mpp159));
+
+  MassPoint mp160 (500, 300);
+  StopCrossSection cs160 (0.51848, 0.0693711);
+  MassPointParameters mpp160 (cs160, 191044);
+  StopNeutralinoMap.insert(std::make_pair(mp160, mpp160));
+
+  MassPoint mp161 (500, 325);
+  StopCrossSection cs161 (0.51848, 0.0693711);
+  MassPointParameters mpp161 (cs161, 190896);
+  StopNeutralinoMap.insert(std::make_pair(mp161, mpp161));
+
+  MassPoint mp162 (500, 350);
+  StopCrossSection cs162 (0.51848, 0.0693711);
+  MassPointParameters mpp162 (cs162, 190200);
+  StopNeutralinoMap.insert(std::make_pair(mp162, mpp162));
+
+  MassPoint mp163 (500, 375);
+  StopCrossSection cs163 (0.51848, 0.0693711);
+  MassPointParameters mpp163 (cs163, 188442);
+  StopNeutralinoMap.insert(std::make_pair(mp163, mpp163));
+
+  MassPoint mp164 (500, 400);
+  StopCrossSection cs164 (0.51848, 0.0693711);
+  MassPointParameters mpp164 (cs164, 196993);
+  StopNeutralinoMap.insert(std::make_pair(mp164, mpp164));
+
+  MassPoint mp165 (500, 413);
+  StopCrossSection cs165 (0.51848, 0.0693711);
+  MassPointParameters mpp165 (cs165, 189000);
+  StopNeutralinoMap.insert(std::make_pair(mp165, mpp165));
+
+  MassPoint mp166 (508, 325);
+  StopCrossSection cs166 (0.473193, 0.0630664);
+  MassPointParameters mpp166 (cs166, 184242);
+  StopNeutralinoMap.insert(std::make_pair(mp166, mpp166));
+
+  MassPoint mp167 (517, 350);
+  StopCrossSection cs167 (0.42723, 0.0569597);
+  MassPointParameters mpp167 (cs167, 163267);
+  StopNeutralinoMap.insert(std::make_pair(mp167, mpp167));
+
+  MassPoint mp168 (525, 225);
+  StopCrossSection cs168 (0.390303, 0.0520832);
+  MassPointParameters mpp168 (cs168, 149626);
+  StopNeutralinoMap.insert(std::make_pair(mp168, mpp168));
+
+  MassPoint mp169 (525, 250);
+  StopCrossSection cs169 (0.390303, 0.0520832);
+  MassPointParameters mpp169 (cs169, 146799);
+  StopNeutralinoMap.insert(std::make_pair(mp169, mpp169));
+
+  MassPoint mp170 (525, 275);
+  StopCrossSection cs170 (0.390303, 0.0520832);
+  MassPointParameters mpp170 (cs170, 153427);
+  StopNeutralinoMap.insert(std::make_pair(mp170, mpp170));
+
+  MassPoint mp171 (525, 300);
+  StopCrossSection cs171 (0.390303, 0.0520832);
+  MassPointParameters mpp171 (cs171, 154624);
+  StopNeutralinoMap.insert(std::make_pair(mp171, mpp171));
+
+  MassPoint mp172 (525, 325);
+  StopCrossSection cs172 (0.390303, 0.0520832);
+  MassPointParameters mpp172 (cs172, 138642);
+  StopNeutralinoMap.insert(std::make_pair(mp172, mpp172));
+
+  MassPoint mp173 (525, 350);
+  StopCrossSection cs173 (0.390303, 0.0520832);
+  MassPointParameters mpp173 (cs173, 149976);
+  StopNeutralinoMap.insert(std::make_pair(mp173, mpp173));
+
+  MassPoint mp174 (525, 375);
+  StopCrossSection cs174 (0.390303, 0.0520832);
+  MassPointParameters mpp174 (cs174, 148360);
+  StopNeutralinoMap.insert(std::make_pair(mp174, mpp174));
+
+  MassPoint mp175 (525, 400);
+  StopCrossSection cs175 (0.390303, 0.0520832);
+  MassPointParameters mpp175 (cs175, 142655);
+  StopNeutralinoMap.insert(std::make_pair(mp175, mpp175));
+
+  MassPoint mp176 (525, 425);
+  StopCrossSection cs176 (0.390303, 0.0520832);
+  MassPointParameters mpp176 (cs176, 138180);
+  StopNeutralinoMap.insert(std::make_pair(mp176, mpp176));
+
+  MassPoint mp177 (525, 438);
+  StopCrossSection cs177 (0.390303, 0.0520832);
+  MassPointParameters mpp177 (cs177, 134106);
+  StopNeutralinoMap.insert(std::make_pair(mp177, mpp177));
+
+  MassPoint mp178 (533, 350);
+  StopCrossSection cs178 (0.356725, 0.0474963);
+  MassPointParameters mpp178 (cs178, 148390);
+  StopNeutralinoMap.insert(std::make_pair(mp178, mpp178));
+
+  MassPoint mp179 (542, 375);
+  StopCrossSection cs179 (0.323163, 0.0429481);
+  MassPointParameters mpp179 (cs179, 120506);
+  StopNeutralinoMap.insert(std::make_pair(mp179, mpp179));
+
+  MassPoint mp180 (550, 1);
+  StopCrossSection cs180 (0.296128, 0.0392923);
+  MassPointParameters mpp180 (cs180, 114315);
+  StopNeutralinoMap.insert(std::make_pair(mp180, mpp180));
+
+  MassPoint mp181 (550, 50);
+  StopCrossSection cs181 (0.296128, 0.0392923);
+  MassPointParameters mpp181 (cs181, 109953);
+  StopNeutralinoMap.insert(std::make_pair(mp181, mpp181));
+
+  MassPoint mp182 (550, 100);
+  StopCrossSection cs182 (0.296128, 0.0392923);
+  MassPointParameters mpp182 (cs182, 106444);
+  StopNeutralinoMap.insert(std::make_pair(mp182, mpp182));
+
+  MassPoint mp183 (550, 150);
+  StopCrossSection cs183 (0.296128, 0.0392923);
+  MassPointParameters mpp183 (cs183, 114667);
+  StopNeutralinoMap.insert(std::make_pair(mp183, mpp183));
+
+  MassPoint mp184 (550, 200);
+  StopCrossSection cs184 (0.296128, 0.0392923);
+  MassPointParameters mpp184 (cs184, 107117);
+  StopNeutralinoMap.insert(std::make_pair(mp184, mpp184));
+
+  MassPoint mp185 (550, 250);
+  StopCrossSection cs185 (0.296128, 0.0392923);
+  MassPointParameters mpp185 (cs185, 106871);
+  StopNeutralinoMap.insert(std::make_pair(mp185, mpp185));
+
+  MassPoint mp186 (550, 275);
+  StopCrossSection cs186 (0.296128, 0.0392923);
+  MassPointParameters mpp186 (cs186, 114239);
+  StopNeutralinoMap.insert(std::make_pair(mp186, mpp186));
+
+  MassPoint mp187 (550, 300);
+  StopCrossSection cs187 (0.296128, 0.0392923);
+  MassPointParameters mpp187 (cs187, 105867);
+  StopNeutralinoMap.insert(std::make_pair(mp187, mpp187));
+
+  MassPoint mp188 (550, 325);
+  StopCrossSection cs188 (0.296128, 0.0392923);
+  MassPointParameters mpp188 (cs188, 109650);
+  StopNeutralinoMap.insert(std::make_pair(mp188, mpp188));
+
+  MassPoint mp189 (550, 350);
+  StopCrossSection cs189 (0.296128, 0.0392923);
+  MassPointParameters mpp189 (cs189, 121720);
+  StopNeutralinoMap.insert(std::make_pair(mp189, mpp189));
+
+  MassPoint mp190 (550, 375);
+  StopCrossSection cs190 (0.296128, 0.0392923);
+  MassPointParameters mpp190 (cs190, 111063);
+  StopNeutralinoMap.insert(std::make_pair(mp190, mpp190));
+
+  MassPoint mp191 (550, 400);
+  StopCrossSection cs191 (0.296128, 0.0392923);
+  MassPointParameters mpp191 (cs191, 120961);
+  StopNeutralinoMap.insert(std::make_pair(mp191, mpp191));
+
+  MassPoint mp192 (550, 425);
+  StopCrossSection cs192 (0.296128, 0.0392923);
+  MassPointParameters mpp192 (cs192, 110705);
+  StopNeutralinoMap.insert(std::make_pair(mp192, mpp192));
+
+  MassPoint mp193 (550, 450);
+  StopCrossSection cs193 (0.296128, 0.0392923);
+  MassPointParameters mpp193 (cs193, 106443);
+  StopNeutralinoMap.insert(std::make_pair(mp193, mpp193));
+
+  MassPoint mp194 (550, 463);
+  StopCrossSection cs194 (0.296128, 0.0392923);
+  MassPointParameters mpp194 (cs194, 114809);
+  StopNeutralinoMap.insert(std::make_pair(mp194, mpp194));
+
+  MassPoint mp195 (558, 375);
+  StopCrossSection cs195 (0.271976, 0.0359305);
+  MassPointParameters mpp195 (cs195, 100950);
+  StopNeutralinoMap.insert(std::make_pair(mp195, mpp195));
+
+  MassPoint mp196 (567, 400);
+  StopCrossSection cs196 (0.246349, 0.0326119);
+  MassPointParameters mpp196 (cs196, 89804);
+  StopNeutralinoMap.insert(std::make_pair(mp196, mpp196));
+
+  MassPoint mp197 (575, 275);
+  StopCrossSection cs197 (0.226118, 0.0300151);
+  MassPointParameters mpp197 (cs197, 85820);
+  StopNeutralinoMap.insert(std::make_pair(mp197, mpp197));
+
+  MassPoint mp198 (575, 300);
+  StopCrossSection cs198 (0.226118, 0.0300151);
+  MassPointParameters mpp198 (cs198, 91177);
+  StopNeutralinoMap.insert(std::make_pair(mp198, mpp198));
+
+  MassPoint mp199 (575, 325);
+  StopCrossSection cs199 (0.226118, 0.0300151);
+  MassPointParameters mpp199 (cs199, 84924);
+  StopNeutralinoMap.insert(std::make_pair(mp199, mpp199));
+
+  MassPoint mp200 (575, 350);
+  StopCrossSection cs200 (0.226118, 0.0300151);
+  MassPointParameters mpp200 (cs200, 87200);
+  StopNeutralinoMap.insert(std::make_pair(mp200, mpp200));
+
+  MassPoint mp201 (575, 375);
+  StopCrossSection cs201 (0.226118, 0.0300151);
+  MassPointParameters mpp201 (cs201, 80105);
+  StopNeutralinoMap.insert(std::make_pair(mp201, mpp201));
+
+  MassPoint mp202 (575, 400);
+  StopCrossSection cs202 (0.226118, 0.0300151);
+  MassPointParameters mpp202 (cs202, 90596);
+  StopNeutralinoMap.insert(std::make_pair(mp202, mpp202));
+
+  MassPoint mp203 (575, 425);
+  StopCrossSection cs203 (0.226118, 0.0300151);
+  MassPointParameters mpp203 (cs203, 79896);
+  StopNeutralinoMap.insert(std::make_pair(mp203, mpp203));
+
+  MassPoint mp204 (575, 450);
+  StopCrossSection cs204 (0.226118, 0.0300151);
+  MassPointParameters mpp204 (cs204, 84527);
+  StopNeutralinoMap.insert(std::make_pair(mp204, mpp204));
+
+  MassPoint mp205 (575, 475);
+  StopCrossSection cs205 (0.226118, 0.0300151);
+  MassPointParameters mpp205 (cs205, 80622);
+  StopNeutralinoMap.insert(std::make_pair(mp205, mpp205));
+
+  MassPoint mp206 (575, 488);
+  StopCrossSection cs206 (0.226118, 0.0300151);
+  MassPointParameters mpp206 (cs206, 76205);
+  StopNeutralinoMap.insert(std::make_pair(mp206, mpp206));
+
+  MassPoint mp207 (583, 400);
+  StopCrossSection cs207 (0.207962, 0.0275786);
+  MassPointParameters mpp207 (cs207, 83316);
+  StopNeutralinoMap.insert(std::make_pair(mp207, mpp207));
+
+  MassPoint mp208 (592, 425);
+  StopCrossSection cs208 (0.189289, 0.024915);
+  MassPointParameters mpp208 (cs208, 64819);
+  StopNeutralinoMap.insert(std::make_pair(mp208, mpp208));
+
+  MassPoint mp209 (600, 1);
+  StopCrossSection cs209 (0.174599, 0.02306);
+  MassPointParameters mpp209 (cs209, 65444);
+  StopNeutralinoMap.insert(std::make_pair(mp209, mpp209));
+
+  MassPoint mp210 (600, 50);
+  StopCrossSection cs210 (0.174599, 0.02306);
+  MassPointParameters mpp210 (cs210, 67689);
+  StopNeutralinoMap.insert(std::make_pair(mp210, mpp210));
+
+  MassPoint mp211 (600, 100);
+  StopCrossSection cs211 (0.174599, 0.02306);
+  MassPointParameters mpp211 (cs211, 77545);
+  StopNeutralinoMap.insert(std::make_pair(mp211, mpp211));
+
+  MassPoint mp212 (600, 150);
+  StopCrossSection cs212 (0.174599, 0.02306);
+  MassPointParameters mpp212 (cs212, 70701);
+  StopNeutralinoMap.insert(std::make_pair(mp212, mpp212));
+
+  MassPoint mp213 (600, 200);
+  StopCrossSection cs213 (0.174599, 0.02306);
+  MassPointParameters mpp213 (cs213, 61618);
+  StopNeutralinoMap.insert(std::make_pair(mp213, mpp213));
+
+  MassPoint mp214 (600, 250);
+  StopCrossSection cs214 (0.174599, 0.02306);
+  MassPointParameters mpp214 (cs214, 72780);
+  StopNeutralinoMap.insert(std::make_pair(mp214, mpp214));
+
+  MassPoint mp215 (600, 300);
+  StopCrossSection cs215 (0.174599, 0.02306);
+  MassPointParameters mpp215 (cs215, 72083);
+  StopNeutralinoMap.insert(std::make_pair(mp215, mpp215));
+
+  MassPoint mp216 (600, 325);
+  StopCrossSection cs216 (0.174599, 0.02306);
+  MassPointParameters mpp216 (cs216, 67829);
+  StopNeutralinoMap.insert(std::make_pair(mp216, mpp216));
+
+  MassPoint mp217 (600, 350);
+  StopCrossSection cs217 (0.174599, 0.02306);
+  MassPointParameters mpp217 (cs217, 70760);
+  StopNeutralinoMap.insert(std::make_pair(mp217, mpp217));
+
+  MassPoint mp218 (600, 375);
+  StopCrossSection cs218 (0.174599, 0.02306);
+  MassPointParameters mpp218 (cs218, 64281);
+  StopNeutralinoMap.insert(std::make_pair(mp218, mpp218));
+
+  MassPoint mp219 (600, 400);
+  StopCrossSection cs219 (0.174599, 0.02306);
+  MassPointParameters mpp219 (cs219, 68997);
+  StopNeutralinoMap.insert(std::make_pair(mp219, mpp219));
+
+  MassPoint mp220 (600, 425);
+  StopCrossSection cs220 (0.174599, 0.02306);
+  MassPointParameters mpp220 (cs220, 74713);
+  StopNeutralinoMap.insert(std::make_pair(mp220, mpp220));
+
+  MassPoint mp221 (600, 450);
+  StopCrossSection cs221 (0.174599, 0.02306);
+  MassPointParameters mpp221 (cs221, 72238);
+  StopNeutralinoMap.insert(std::make_pair(mp221, mpp221));
+
+  MassPoint mp222 (600, 475);
+  StopCrossSection cs222 (0.174599, 0.02306);
+  MassPointParameters mpp222 (cs222, 73545);
+  StopNeutralinoMap.insert(std::make_pair(mp222, mpp222));
+
+  MassPoint mp223 (600, 500);
+  StopCrossSection cs223 (0.174599, 0.02306);
+  MassPointParameters mpp223 (cs223, 62982);
+  StopNeutralinoMap.insert(std::make_pair(mp223, mpp223));
+
+  MassPoint mp224 (600, 513);
+  StopCrossSection cs224 (0.174599, 0.02306);
+  MassPointParameters mpp224 (cs224, 70385);
+  StopNeutralinoMap.insert(std::make_pair(mp224, mpp224));
+
+  MassPoint mp225 (608, 425);
+  StopCrossSection cs225 (0.161398, 0.0211267);
+  MassPointParameters mpp225 (cs225, 57022);
+  StopNeutralinoMap.insert(std::make_pair(mp225, mpp225));
+
+  MassPoint mp226 (617, 450);
+  StopCrossSection cs226 (0.14728, 0.01944);
+  MassPointParameters mpp226 (cs226, 61131);
+  StopNeutralinoMap.insert(std::make_pair(mp226, mpp226));
+
+  MassPoint mp227 (625, 325);
+  StopCrossSection cs227 (0.136372, 0.0174504);
+  MassPointParameters mpp227 (cs227, 56053);
+  StopNeutralinoMap.insert(std::make_pair(mp227, mpp227));
+
+  MassPoint mp228 (625, 350);
+  StopCrossSection cs228 (0.136372, 0.0174504);
+  MassPointParameters mpp228 (cs228, 55670);
+  StopNeutralinoMap.insert(std::make_pair(mp228, mpp228));
+
+  MassPoint mp229 (625, 375);
+  StopCrossSection cs229 (0.136372, 0.0174504);
+  MassPointParameters mpp229 (cs229, 51913);
+  StopNeutralinoMap.insert(std::make_pair(mp229, mpp229));
+
+  MassPoint mp230 (625, 400);
+  StopCrossSection cs230 (0.136372, 0.0174504);
+  MassPointParameters mpp230 (cs230, 52024);
+  StopNeutralinoMap.insert(std::make_pair(mp230, mpp230));
+
+  MassPoint mp231 (625, 425);
+  StopCrossSection cs231 (0.136372, 0.0174504);
+  MassPointParameters mpp231 (cs231, 58821);
+  StopNeutralinoMap.insert(std::make_pair(mp231, mpp231));
+
+  MassPoint mp232 (625, 450);
+  StopCrossSection cs232 (0.136372, 0.0174504);
+  MassPointParameters mpp232 (cs232, 57771);
+  StopNeutralinoMap.insert(std::make_pair(mp232, mpp232));
+
+  MassPoint mp233 (625, 475);
+  StopCrossSection cs233 (0.136372, 0.0174504);
+  MassPointParameters mpp233 (cs233, 53659);
+  StopNeutralinoMap.insert(std::make_pair(mp233, mpp233));
+
+  MassPoint mp234 (625, 500);
+  StopCrossSection cs234 (0.136372, 0.0174504);
+  MassPointParameters mpp234 (cs234, 51350);
+  StopNeutralinoMap.insert(std::make_pair(mp234, mpp234));
+
+  MassPoint mp235 (625, 525);
+  StopCrossSection cs235 (0.136372, 0.0174504);
+  MassPointParameters mpp235 (cs235, 55581);
+  StopNeutralinoMap.insert(std::make_pair(mp235, mpp235));
+
+  MassPoint mp236 (625, 538);
+  StopCrossSection cs236 (0.136372, 0.0174504);
+  MassPointParameters mpp236 (cs236, 54603);
+  StopNeutralinoMap.insert(std::make_pair(mp236, mpp236));
+
+  MassPoint mp237 (633, 450);
+  StopCrossSection cs237 (0.125996, 0.0165449);
+  MassPointParameters mpp237 (cs237, 48772);
+  StopNeutralinoMap.insert(std::make_pair(mp237, mpp237));
+
+  MassPoint mp238 (642, 475);
+  StopCrossSection cs238 (0.115573, 0.0147355);
+  MassPointParameters mpp238 (cs238, 52247);
+  StopNeutralinoMap.insert(std::make_pair(mp238, mpp238));
+
+  MassPoint mp239 (650, 1);
+  StopCrossSection cs239 (0.107045, 0.0138336);
+  MassPointParameters mpp239 (cs239, 39561);
+  StopNeutralinoMap.insert(std::make_pair(mp239, mpp239));
+
+  MassPoint mp240 (650, 50);
+  StopCrossSection cs240 (0.107045, 0.0138336);
+  MassPointParameters mpp240 (cs240, 41932);
+  StopNeutralinoMap.insert(std::make_pair(mp240, mpp240));
+
+  MassPoint mp241 (650, 100);
+  StopCrossSection cs241 (0.107045, 0.0138336);
+  MassPointParameters mpp241 (cs241, 39789);
+  StopNeutralinoMap.insert(std::make_pair(mp241, mpp241));
+
+  MassPoint mp242 (650, 150);
+  StopCrossSection cs242 (0.107045, 0.0138336);
+  MassPointParameters mpp242 (cs242, 45693);
+  StopNeutralinoMap.insert(std::make_pair(mp242, mpp242));
+
+  MassPoint mp243 (650, 200);
+  StopCrossSection cs243 (0.107045, 0.0138336);
+  MassPointParameters mpp243 (cs243, 40678);
+  StopNeutralinoMap.insert(std::make_pair(mp243, mpp243));
+
+  MassPoint mp244 (650, 250);
+  StopCrossSection cs244 (0.107045, 0.0138336);
+  MassPointParameters mpp244 (cs244, 45334);
+  StopNeutralinoMap.insert(std::make_pair(mp244, mpp244));
+
+  MassPoint mp245 (650, 300);
+  StopCrossSection cs245 (0.107045, 0.0138336);
+  MassPointParameters mpp245 (cs245, 39559);
+  StopNeutralinoMap.insert(std::make_pair(mp245, mpp245));
+
+  MassPoint mp246 (650, 350);
+  StopCrossSection cs246 (0.107045, 0.0138336);
+  MassPointParameters mpp246 (cs246, 42018);
+  StopNeutralinoMap.insert(std::make_pair(mp246, mpp246));
+
+  MassPoint mp247 (650, 375);
+  StopCrossSection cs247 (0.107045, 0.0138336);
+  MassPointParameters mpp247 (cs247, 39344);
+  StopNeutralinoMap.insert(std::make_pair(mp247, mpp247));
+
+  MassPoint mp248 (650, 400);
+  StopCrossSection cs248 (0.107045, 0.0138336);
+  MassPointParameters mpp248 (cs248, 42883);
+  StopNeutralinoMap.insert(std::make_pair(mp248, mpp248));
+
+  MassPoint mp249 (650, 425);
+  StopCrossSection cs249 (0.107045, 0.0138336);
+  MassPointParameters mpp249 (cs249, 40883);
+  StopNeutralinoMap.insert(std::make_pair(mp249, mpp249));
+
+  MassPoint mp250 (650, 450);
+  StopCrossSection cs250 (0.107045, 0.0138336);
+  MassPointParameters mpp250 (cs250, 41270);
+  StopNeutralinoMap.insert(std::make_pair(mp250, mpp250));
+
+  MassPoint mp251 (650, 475);
+  StopCrossSection cs251 (0.107045, 0.0138336);
+  MassPointParameters mpp251 (cs251, 42292);
+  StopNeutralinoMap.insert(std::make_pair(mp251, mpp251));
+
+  MassPoint mp252 (650, 500);
+  StopCrossSection cs252 (0.107045, 0.0138336);
+  MassPointParameters mpp252 (cs252, 39517);
+  StopNeutralinoMap.insert(std::make_pair(mp252, mpp252));
+
+  MassPoint mp253 (650, 525);
+  StopCrossSection cs253 (0.107045, 0.0138336);
+  MassPointParameters mpp253 (cs253, 42652);
+  StopNeutralinoMap.insert(std::make_pair(mp253, mpp253));
+
+  MassPoint mp254 (650, 550);
+  StopCrossSection cs254 (0.107045, 0.0138336);
+  MassPointParameters mpp254 (cs254, 41964);
+  StopNeutralinoMap.insert(std::make_pair(mp254, mpp254));
+
+  MassPoint mp255 (650, 563);
+  StopCrossSection cs255 (0.107045, 0.0138336);
+  MassPointParameters mpp255 (cs255, 40391);
+  StopNeutralinoMap.insert(std::make_pair(mp255, mpp255));
+
+  MassPoint mp256 (658, 475);
+  StopCrossSection cs256 (0.0991824, 0.0128381);
+  MassPointParameters mpp256 (cs256, 39792);
+  StopNeutralinoMap.insert(std::make_pair(mp256, mpp256));
+
+  MassPoint mp257 (667, 500);
+  StopCrossSection cs257 (0.0910543, 0.0118196);
+  MassPointParameters mpp257 (cs257, 35953);
+  StopNeutralinoMap.insert(std::make_pair(mp257, mpp257));
+
+  MassPoint mp258 (675, 375);
+  StopCrossSection cs258 (0.0844877, 0.0110428);
+  MassPointParameters mpp258 (cs258, 32183);
+  StopNeutralinoMap.insert(std::make_pair(mp258, mpp258));
+
+  MassPoint mp259 (675, 400);
+  StopCrossSection cs259 (0.0844877, 0.0110428);
+  MassPointParameters mpp259 (cs259, 32162);
+  StopNeutralinoMap.insert(std::make_pair(mp259, mpp259));
+
+  MassPoint mp260 (675, 425);
+  StopCrossSection cs260 (0.0844877, 0.0110428);
+  MassPointParameters mpp260 (cs260, 33487);
+  StopNeutralinoMap.insert(std::make_pair(mp260, mpp260));
+
+  MassPoint mp261 (675, 450);
+  StopCrossSection cs261 (0.0844877, 0.0110428);
+  MassPointParameters mpp261 (cs261, 33464);
+  StopNeutralinoMap.insert(std::make_pair(mp261, mpp261));
+
+  MassPoint mp262 (675, 475);
+  StopCrossSection cs262 (0.0844877, 0.0110428);
+  MassPointParameters mpp262 (cs262, 33683);
+  StopNeutralinoMap.insert(std::make_pair(mp262, mpp262));
+
+  MassPoint mp263 (675, 500);
+  StopCrossSection cs263 (0.0844877, 0.0110428);
+  MassPointParameters mpp263 (cs263, 34330);
+  StopNeutralinoMap.insert(std::make_pair(mp263, mpp263));
+
+  MassPoint mp264 (675, 525);
+  StopCrossSection cs264 (0.0844877, 0.0110428);
+  MassPointParameters mpp264 (cs264, 37133);
+  StopNeutralinoMap.insert(std::make_pair(mp264, mpp264));
+
+  MassPoint mp265 (675, 550);
+  StopCrossSection cs265 (0.0844877, 0.0110428);
+  MassPointParameters mpp265 (cs265, 30405);
+  StopNeutralinoMap.insert(std::make_pair(mp265, mpp265));
+
+  MassPoint mp266 (675, 575);
+  StopCrossSection cs266 (0.0844877, 0.0110428);
+  MassPointParameters mpp266 (cs266, 32896);
+  StopNeutralinoMap.insert(std::make_pair(mp266, mpp266));
+
+  MassPoint mp267 (675, 588);
+  StopCrossSection cs267 (0.0844877, 0.0110428);
+  MassPointParameters mpp267 (cs267, 33017);
+  StopNeutralinoMap.insert(std::make_pair(mp267, mpp267));
+
+  MassPoint mp268 (683, 500);
+  StopCrossSection cs268 (0.0783936, 0.0102976);
+  MassPointParameters mpp268 (cs268, 25776);
+  StopNeutralinoMap.insert(std::make_pair(mp268, mpp268));
+
+  MassPoint mp269 (692, 525);
+  StopCrossSection cs269 (0.0721663, 0.00956121);
+  MassPointParameters mpp269 (cs269, 25630);
+  StopNeutralinoMap.insert(std::make_pair(mp269, mpp269));
+
+  MassPoint mp270 (700, 1);
+  StopCrossSection cs270 (0.0670476, 0.00894609);
+  MassPointParameters mpp270 (cs270, 26111);
+  StopNeutralinoMap.insert(std::make_pair(mp270, mpp270));
+
+  MassPoint mp271 (700, 50);
+  StopCrossSection cs271 (0.0670476, 0.00894609);
+  MassPointParameters mpp271 (cs271, 27465);
+  StopNeutralinoMap.insert(std::make_pair(mp271, mpp271));
+
+  MassPoint mp272 (700, 100);
+  StopCrossSection cs272 (0.0670476, 0.00894609);
+  MassPointParameters mpp272 (cs272, 25649);
+  StopNeutralinoMap.insert(std::make_pair(mp272, mpp272));
+
+  MassPoint mp273 (700, 150);
+  StopCrossSection cs273 (0.0670476, 0.00894609);
+  MassPointParameters mpp273 (cs273, 20171);
+  StopNeutralinoMap.insert(std::make_pair(mp273, mpp273));
+
+  MassPoint mp274 (700, 200);
+  StopCrossSection cs274 (0.0670476, 0.00894609);
+  MassPointParameters mpp274 (cs274, 22547);
+  StopNeutralinoMap.insert(std::make_pair(mp274, mpp274));
+
+  MassPoint mp275 (700, 250);
+  StopCrossSection cs275 (0.0670476, 0.00894609);
+  MassPointParameters mpp275 (cs275, 26741);
+  StopNeutralinoMap.insert(std::make_pair(mp275, mpp275));
+
+  MassPoint mp276 (700, 300);
+  StopCrossSection cs276 (0.0670476, 0.00894609);
+  MassPointParameters mpp276 (cs276, 28242);
+  StopNeutralinoMap.insert(std::make_pair(mp276, mpp276));
+
+  MassPoint mp277 (700, 350);
+  StopCrossSection cs277 (0.0670476, 0.00894609);
+  MassPointParameters mpp277 (cs277, 23129);
+  StopNeutralinoMap.insert(std::make_pair(mp277, mpp277));
+
+  MassPoint mp278 (700, 400);
+  StopCrossSection cs278 (0.0670476, 0.00894609);
+  MassPointParameters mpp278 (cs278, 23085);
+  StopNeutralinoMap.insert(std::make_pair(mp278, mpp278));
+
+  MassPoint mp279 (700, 425);
+  StopCrossSection cs279 (0.0670476, 0.00894609);
+  MassPointParameters mpp279 (cs279, 25370);
+  StopNeutralinoMap.insert(std::make_pair(mp279, mpp279));
+
+  MassPoint mp280 (700, 450);
+  StopCrossSection cs280 (0.0670476, 0.00894609);
+  MassPointParameters mpp280 (cs280, 24735);
+  StopNeutralinoMap.insert(std::make_pair(mp280, mpp280));
+
+  MassPoint mp281 (700, 475);
+  StopCrossSection cs281 (0.0670476, 0.00894609);
+  MassPointParameters mpp281 (cs281, 26015);
+  StopNeutralinoMap.insert(std::make_pair(mp281, mpp281));
+
+  MassPoint mp282 (700, 500);
+  StopCrossSection cs282 (0.0670476, 0.00894609);
+  MassPointParameters mpp282 (cs282, 26271);
+  StopNeutralinoMap.insert(std::make_pair(mp282, mpp282));
+
+  MassPoint mp283 (700, 525);
+  StopCrossSection cs283 (0.0670476, 0.00894609);
+  MassPointParameters mpp283 (cs283, 26332);
+  StopNeutralinoMap.insert(std::make_pair(mp283, mpp283));
+
+  MassPoint mp284 (700, 550);
+  StopCrossSection cs284 (0.0670476, 0.00894609);
+  MassPointParameters mpp284 (cs284, 20934);
+  StopNeutralinoMap.insert(std::make_pair(mp284, mpp284));
+
+  MassPoint mp285 (700, 575);
+  StopCrossSection cs285 (0.0670476, 0.00894609);
+  MassPointParameters mpp285 (cs285, 27086);
+  StopNeutralinoMap.insert(std::make_pair(mp285, mpp285));
+
+  MassPoint mp286 (700, 600);
+  StopCrossSection cs286 (0.0670476, 0.00894609);
+  MassPointParameters mpp286 (cs286, 24494);
+  StopNeutralinoMap.insert(std::make_pair(mp286, mpp286));
+
+  MassPoint mp287 (700, 613);
+  StopCrossSection cs287 (0.0670476, 0.00894609);
+  MassPointParameters mpp287 (cs287, 26506);
+  StopNeutralinoMap.insert(std::make_pair(mp287, mpp287));
+
+  MassPoint mp288 (708, 525);
+  StopCrossSection cs288 (0.0624336, 0.00835443);
+  MassPointParameters mpp288 (cs288, 27069);
+  StopNeutralinoMap.insert(std::make_pair(mp288, mpp288));
+
+  MassPoint mp289 (717, 550);
+  StopCrossSection cs289 (0.0575708, 0.00775986);
+  MassPointParameters mpp289 (cs289, 23062);
+  StopNeutralinoMap.insert(std::make_pair(mp289, mpp289));
+
+  MassPoint mp290 (725, 425);
+  StopCrossSection cs290 (0.0536438, 0.00728504);
+  MassPointParameters mpp290 (cs290, 18160);
+  StopNeutralinoMap.insert(std::make_pair(mp290, mpp290));
+
+  MassPoint mp291 (725, 450);
+  StopCrossSection cs291 (0.0536438, 0.00728504);
+  MassPointParameters mpp291 (cs291, 22343);
+  StopNeutralinoMap.insert(std::make_pair(mp291, mpp291));
+
+  MassPoint mp292 (725, 475);
+  StopCrossSection cs292 (0.0536438, 0.00728504);
+  MassPointParameters mpp292 (cs292, 20603);
+  StopNeutralinoMap.insert(std::make_pair(mp292, mpp292));
+
+  MassPoint mp293 (725, 500);
+  StopCrossSection cs293 (0.0536438, 0.00728504);
+  MassPointParameters mpp293 (cs293, 22427);
+  StopNeutralinoMap.insert(std::make_pair(mp293, mpp293));
+
+  MassPoint mp294 (725, 525);
+  StopCrossSection cs294 (0.0536438, 0.00728504);
+  MassPointParameters mpp294 (cs294, 24821);
+  StopNeutralinoMap.insert(std::make_pair(mp294, mpp294));
+
+  MassPoint mp295 (725, 550);
+  StopCrossSection cs295 (0.0536438, 0.00728504);
+  MassPointParameters mpp295 (cs295, 22408);
+  StopNeutralinoMap.insert(std::make_pair(mp295, mpp295));
+
+  MassPoint mp296 (725, 575);
+  StopCrossSection cs296 (0.0536438, 0.00728504);
+  MassPointParameters mpp296 (cs296, 19038);
+  StopNeutralinoMap.insert(std::make_pair(mp296, mpp296));
+
+  MassPoint mp297 (725, 600);
+  StopCrossSection cs297 (0.0536438, 0.00728504);
+  MassPointParameters mpp297 (cs297, 22627);
+  StopNeutralinoMap.insert(std::make_pair(mp297, mpp297));
+
+  MassPoint mp298 (725, 625);
+  StopCrossSection cs298 (0.0536438, 0.00728504);
+  MassPointParameters mpp298 (cs298, 22703);
+  StopNeutralinoMap.insert(std::make_pair(mp298, mpp298));
+
+  MassPoint mp299 (725, 638);
+  StopCrossSection cs299 (0.0536438, 0.00728504);
+  MassPointParameters mpp299 (cs299, 22341);
+  StopNeutralinoMap.insert(std::make_pair(mp299, mpp299));
+
+  MassPoint mp300 (733, 550);
+  StopCrossSection cs300 (0.0499888, 0.00679985);
+  MassPointParameters mpp300 (cs300, 17080);
+  StopNeutralinoMap.insert(std::make_pair(mp300, mpp300));
+
+  MassPoint mp301 (742, 575);
+  StopCrossSection cs301 (0.0462725, 0.00633304);
+  MassPointParameters mpp301 (cs301, 21237);
+  StopNeutralinoMap.insert(std::make_pair(mp301, mpp301));
+
+  MassPoint mp302 (750, 1);
+  StopCrossSection cs302 (0.0431418, 0.00593006);
+  MassPointParameters mpp302 (cs302, 18315);
+  StopNeutralinoMap.insert(std::make_pair(mp302, mpp302));
+
+  MassPoint mp303 (750, 50);
+  StopCrossSection cs303 (0.0431418, 0.00593006);
+  MassPointParameters mpp303 (cs303, 18103);
+  StopNeutralinoMap.insert(std::make_pair(mp303, mpp303));
+
+  MassPoint mp304 (750, 100);
+  StopCrossSection cs304 (0.0431418, 0.00593006);
+  MassPointParameters mpp304 (cs304, 22648);
+  StopNeutralinoMap.insert(std::make_pair(mp304, mpp304));
+
+  MassPoint mp305 (750, 150);
+  StopCrossSection cs305 (0.0431418, 0.00593006);
+  MassPointParameters mpp305 (cs305, 18839);
+  StopNeutralinoMap.insert(std::make_pair(mp305, mpp305));
+
+  MassPoint mp306 (750, 200);
+  StopCrossSection cs306 (0.0431418, 0.00593006);
+  MassPointParameters mpp306 (cs306, 18964);
+  StopNeutralinoMap.insert(std::make_pair(mp306, mpp306));
+
+  MassPoint mp307 (750, 250);
+  StopCrossSection cs307 (0.0431418, 0.00593006);
+  MassPointParameters mpp307 (cs307, 17522);
+  StopNeutralinoMap.insert(std::make_pair(mp307, mpp307));
+
+  MassPoint mp308 (750, 300);
+  StopCrossSection cs308 (0.0431418, 0.00593006);
+  MassPointParameters mpp308 (cs308, 21378);
+  StopNeutralinoMap.insert(std::make_pair(mp308, mpp308));
+
+  MassPoint mp309 (750, 350);
+  StopCrossSection cs309 (0.0431418, 0.00593006);
+  MassPointParameters mpp309 (cs309, 17361);
+  StopNeutralinoMap.insert(std::make_pair(mp309, mpp309));
+
+  MassPoint mp310 (750, 400);
+  StopCrossSection cs310 (0.0431418, 0.00593006);
+  MassPointParameters mpp310 (cs310, 18457);
+  StopNeutralinoMap.insert(std::make_pair(mp310, mpp310));
+
+  MassPoint mp311 (750, 450);
+  StopCrossSection cs311 (0.0431418, 0.00593006);
+  MassPointParameters mpp311 (cs311, 19891);
+  StopNeutralinoMap.insert(std::make_pair(mp311, mpp311));
+
+  MassPoint mp312 (750, 475);
+  StopCrossSection cs312 (0.0431418, 0.00593006);
+  MassPointParameters mpp312 (cs312, 18658);
+  StopNeutralinoMap.insert(std::make_pair(mp312, mpp312));
+
+  MassPoint mp313 (750, 500);
+  StopCrossSection cs313 (0.0431418, 0.00593006);
+  MassPointParameters mpp313 (cs313, 19258);
+  StopNeutralinoMap.insert(std::make_pair(mp313, mpp313));
+
+  MassPoint mp314 (750, 525);
+  StopCrossSection cs314 (0.0431418, 0.00593006);
+  MassPointParameters mpp314 (cs314, 15547);
+  StopNeutralinoMap.insert(std::make_pair(mp314, mpp314));
+
+  MassPoint mp315 (750, 550);
+  StopCrossSection cs315 (0.0431418, 0.00593006);
+  MassPointParameters mpp315 (cs315, 20206);
+  StopNeutralinoMap.insert(std::make_pair(mp315, mpp315));
+
+  MassPoint mp316 (750, 575);
+  StopCrossSection cs316 (0.0431418, 0.00593006);
+  MassPointParameters mpp316 (cs316, 20945);
+  StopNeutralinoMap.insert(std::make_pair(mp316, mpp316));
+
+  MassPoint mp317 (750, 600);
+  StopCrossSection cs317 (0.0431418, 0.00593006);
+  MassPointParameters mpp317 (cs317, 20420);
+  StopNeutralinoMap.insert(std::make_pair(mp317, mpp317));
+
+  MassPoint mp318 (750, 625);
+  StopCrossSection cs318 (0.0431418, 0.00593006);
+  MassPointParameters mpp318 (cs318, 23907);
+  StopNeutralinoMap.insert(std::make_pair(mp318, mpp318));
+
+  MassPoint mp319 (750, 650);
+  StopCrossSection cs319 (0.0431418, 0.00593006);
+  MassPointParameters mpp319 (cs319, 16680);
+  StopNeutralinoMap.insert(std::make_pair(mp319, mpp319));
+
+  MassPoint mp320 (758, 575);
+  StopCrossSection cs320 (0.0403137, 0.00557285);
+  MassPointParameters mpp320 (cs320, 22200);
+  StopNeutralinoMap.insert(std::make_pair(mp320, mpp320));
+
+  MassPoint mp321 (767, 600);
+  StopCrossSection cs321 (0.0372964, 0.00517853);
+  MassPointParameters mpp321 (cs321, 19945);
+  StopNeutralinoMap.insert(std::make_pair(mp321, mpp321));
+
+  MassPoint mp322 (775, 475);
+  StopCrossSection cs322 (0.0348796, 0.00486909);
+  MassPointParameters mpp322 (cs322, 18999);
+  StopNeutralinoMap.insert(std::make_pair(mp322, mpp322));
+
+  MassPoint mp323 (775, 500);
+  StopCrossSection cs323 (0.0348796, 0.00486909);
+  MassPointParameters mpp323 (cs323, 17163);
+  StopNeutralinoMap.insert(std::make_pair(mp323, mpp323));
+
+  MassPoint mp324 (775, 525);
+  StopCrossSection cs324 (0.0348796, 0.00486909);
+  MassPointParameters mpp324 (cs324, 17133);
+  StopNeutralinoMap.insert(std::make_pair(mp324, mpp324));
+
+  MassPoint mp325 (775, 550);
+  StopCrossSection cs325 (0.0348796, 0.00486909);
+  MassPointParameters mpp325 (cs325, 15054);
+  StopNeutralinoMap.insert(std::make_pair(mp325, mpp325));
+
+  MassPoint mp326 (775, 575);
+  StopCrossSection cs326 (0.0348796, 0.00486909);
+  MassPointParameters mpp326 (cs326, 19633);
+  StopNeutralinoMap.insert(std::make_pair(mp326, mpp326));
+
+  MassPoint mp327 (775, 600);
+  StopCrossSection cs327 (0.0348796, 0.00486909);
+  MassPointParameters mpp327 (cs327, 17283);
+  StopNeutralinoMap.insert(std::make_pair(mp327, mpp327));
+
+  MassPoint mp328 (775, 625);
+  StopCrossSection cs328 (0.0348796, 0.00486909);
+  MassPointParameters mpp328 (cs328, 20492);
+  StopNeutralinoMap.insert(std::make_pair(mp328, mpp328));
+
+  MassPoint mp329 (775, 650);
+  StopCrossSection cs329 (0.0348796, 0.00486909);
+  MassPointParameters mpp329 (cs329, 18582);
+  StopNeutralinoMap.insert(std::make_pair(mp329, mpp329));
+
+  MassPoint mp330 (783, 600);
+  StopCrossSection cs330 (0.0326196, 0.00457813);
+  MassPointParameters mpp330 (cs330, 18739);
+  StopNeutralinoMap.insert(std::make_pair(mp330, mpp330));
+
+  MassPoint mp331 (792, 625);
+  StopCrossSection cs331 (0.0302563, 0.00427359);
+  MassPointParameters mpp331 (cs331, 16790);
+  StopNeutralinoMap.insert(std::make_pair(mp331, mpp331));
+
+  MassPoint mp332 (800, 1);
+  StopCrossSection cs332 (0.0283338, 0.00401518);
+  MassPointParameters mpp332 (cs332, 18533);
+  StopNeutralinoMap.insert(std::make_pair(mp332, mpp332));
+
+  MassPoint mp333 (800, 50);
+  StopCrossSection cs333 (0.0283338, 0.00401518);
+  MassPointParameters mpp333 (cs333, 18635);
+  StopNeutralinoMap.insert(std::make_pair(mp333, mpp333));
+
+  MassPoint mp334 (800, 100);
+  StopCrossSection cs334 (0.0283338, 0.00401518);
+  MassPointParameters mpp334 (cs334, 23126);
+  StopNeutralinoMap.insert(std::make_pair(mp334, mpp334));
+
+  MassPoint mp335 (800, 150);
+  StopCrossSection cs335 (0.0283338, 0.00401518);
+  MassPointParameters mpp335 (cs335, 19048);
+  StopNeutralinoMap.insert(std::make_pair(mp335, mpp335));
+
+  MassPoint mp336 (800, 200);
+  StopCrossSection cs336 (0.0283338, 0.00401518);
+  MassPointParameters mpp336 (cs336, 18703);
+  StopNeutralinoMap.insert(std::make_pair(mp336, mpp336));
+
+  MassPoint mp337 (800, 250);
+  StopCrossSection cs337 (0.0283338, 0.00401518);
+  MassPointParameters mpp337 (cs337, 22584);
+  StopNeutralinoMap.insert(std::make_pair(mp337, mpp337));
+
+  MassPoint mp338 (800, 300);
+  StopCrossSection cs338 (0.0283338, 0.00401518);
+  MassPointParameters mpp338 (cs338, 16831);
+  StopNeutralinoMap.insert(std::make_pair(mp338, mpp338));
+
+  MassPoint mp339 (800, 350);
+  StopCrossSection cs339 (0.0283338, 0.00401518);
+  MassPointParameters mpp339 (cs339, 18809);
+  StopNeutralinoMap.insert(std::make_pair(mp339, mpp339));
+
+  MassPoint mp340 (800, 400);
+  StopCrossSection cs340 (0.0283338, 0.00401518);
+  MassPointParameters mpp340 (cs340, 19428);
+  StopNeutralinoMap.insert(std::make_pair(mp340, mpp340));
+
+  MassPoint mp341 (800, 450);
+  StopCrossSection cs341 (0.0283338, 0.00401518);
+  MassPointParameters mpp341 (cs341, 19534);
+  StopNeutralinoMap.insert(std::make_pair(mp341, mpp341));
+
+  MassPoint mp342 (800, 500);
+  StopCrossSection cs342 (0.0283338, 0.00401518);
+  MassPointParameters mpp342 (cs342, 21312);
+  StopNeutralinoMap.insert(std::make_pair(mp342, mpp342));
+
+  MassPoint mp343 (800, 525);
+  StopCrossSection cs343 (0.0283338, 0.00401518);
+  MassPointParameters mpp343 (cs343, 17702);
+  StopNeutralinoMap.insert(std::make_pair(mp343, mpp343));
+
+  MassPoint mp344 (800, 550);
+  StopCrossSection cs344 (0.0283338, 0.00401518);
+  MassPointParameters mpp344 (cs344, 18987);
+  StopNeutralinoMap.insert(std::make_pair(mp344, mpp344));
+
+  MassPoint mp345 (800, 575);
+  StopCrossSection cs345 (0.0283338, 0.00401518);
+  MassPointParameters mpp345 (cs345, 15937);
+  StopNeutralinoMap.insert(std::make_pair(mp345, mpp345));
+
+  MassPoint mp346 (800, 600);
+  StopCrossSection cs346 (0.0283338, 0.00401518);
+  MassPointParameters mpp346 (cs346, 20128);
+  StopNeutralinoMap.insert(std::make_pair(mp346, mpp346));
+
+  MassPoint mp347 (800, 625);
+  StopCrossSection cs347 (0.0283338, 0.00401518);
+  MassPointParameters mpp347 (cs347, 14755);
+  StopNeutralinoMap.insert(std::make_pair(mp347, mpp347));
+
+  MassPoint mp348 (800, 650);
+  StopCrossSection cs348 (0.0283338, 0.00401518);
+  MassPointParameters mpp348 (cs348, 19720);
+  StopNeutralinoMap.insert(std::make_pair(mp348, mpp348));
+
+  MassPoint mp349 (808, 625);
+  StopCrossSection cs349 (0.0265622, 0.00379026);
+  MassPointParameters mpp349 (cs349, 21277);
+  StopNeutralinoMap.insert(std::make_pair(mp349, mpp349));
+
+  MassPoint mp350 (817, 650);
+  StopCrossSection cs350 (0.0247104, 0.00355087);
+  MassPointParameters mpp350 (cs350, 19143);
+  StopNeutralinoMap.insert(std::make_pair(mp350, mpp350));
+
+  MassPoint mp351 (825, 525);
+  StopCrossSection cs351 (0.0230866, 0.00333435);
+  MassPointParameters mpp351 (cs351, 21129);
+  StopNeutralinoMap.insert(std::make_pair(mp351, mpp351));
+
+  MassPoint mp352 (825, 550);
+  StopCrossSection cs352 (0.0230866, 0.00333435);
+  MassPointParameters mpp352 (cs352, 19159);
+  StopNeutralinoMap.insert(std::make_pair(mp352, mpp352));
+
+  MassPoint mp353 (825, 575);
+  StopCrossSection cs353 (0.0230866, 0.00333435);
+  MassPointParameters mpp353 (cs353, 18458);
+  StopNeutralinoMap.insert(std::make_pair(mp353, mpp353));
+
+  MassPoint mp354 (825, 600);
+  StopCrossSection cs354 (0.0230866, 0.00333435);
+  MassPointParameters mpp354 (cs354, 20323);
+  StopNeutralinoMap.insert(std::make_pair(mp354, mpp354));
+
+  MassPoint mp355 (825, 625);
+  StopCrossSection cs355 (0.0230866, 0.00333435);
+  MassPointParameters mpp355 (cs355, 19352);
+  StopNeutralinoMap.insert(std::make_pair(mp355, mpp355));
+
+  MassPoint mp356 (825, 650);
+  StopCrossSection cs356 (0.0230866, 0.00333435);
+  MassPointParameters mpp356 (cs356, 19509);
+  StopNeutralinoMap.insert(std::make_pair(mp356, mpp356));
+
+  MassPoint mp357 (833, 650);
+  StopCrossSection cs357 (0.0216993, 0.0031511);
+  MassPointParameters mpp357 (cs357, 21277);
+  StopNeutralinoMap.insert(std::make_pair(mp357, mpp357));
+
+  MassPoint mp358 (850, 1);
+  StopCrossSection cs358 (0.0189612, 0.00278768);
+  MassPointParameters mpp358 (cs358, 18872);
+  StopNeutralinoMap.insert(std::make_pair(mp358, mpp358));
+
+  MassPoint mp359 (850, 50);
+  StopCrossSection cs359 (0.0189612, 0.00278768);
+  MassPointParameters mpp359 (cs359, 21196);
+  StopNeutralinoMap.insert(std::make_pair(mp359, mpp359));
+
+  MassPoint mp360 (850, 100);
+  StopCrossSection cs360 (0.0189612, 0.00278768);
+  MassPointParameters mpp360 (cs360, 18684);
+  StopNeutralinoMap.insert(std::make_pair(mp360, mpp360));
+
+  MassPoint mp361 (850, 150);
+  StopCrossSection cs361 (0.0189612, 0.00278768);
+  MassPointParameters mpp361 (cs361, 19904);
+  StopNeutralinoMap.insert(std::make_pair(mp361, mpp361));
+
+  MassPoint mp362 (850, 200);
+  StopCrossSection cs362 (0.0189612, 0.00278768);
+  MassPointParameters mpp362 (cs362, 17242);
+  StopNeutralinoMap.insert(std::make_pair(mp362, mpp362));
+
+  MassPoint mp363 (850, 250);
+  StopCrossSection cs363 (0.0189612, 0.00278768);
+  MassPointParameters mpp363 (cs363, 17776);
+  StopNeutralinoMap.insert(std::make_pair(mp363, mpp363));
+
+  MassPoint mp364 (850, 300);
+  StopCrossSection cs364 (0.0189612, 0.00278768);
+  MassPointParameters mpp364 (cs364, 18397);
+  StopNeutralinoMap.insert(std::make_pair(mp364, mpp364));
+
+  MassPoint mp365 (850, 350);
+  StopCrossSection cs365 (0.0189612, 0.00278768);
+  MassPointParameters mpp365 (cs365, 19063);
+  StopNeutralinoMap.insert(std::make_pair(mp365, mpp365));
+
+  MassPoint mp366 (850, 400);
+  StopCrossSection cs366 (0.0189612, 0.00278768);
+  MassPointParameters mpp366 (cs366, 16887);
+  StopNeutralinoMap.insert(std::make_pair(mp366, mpp366));
+
+  MassPoint mp367 (850, 450);
+  StopCrossSection cs367 (0.0189612, 0.00278768);
+  MassPointParameters mpp367 (cs367, 21780);
+  StopNeutralinoMap.insert(std::make_pair(mp367, mpp367));
+
+  MassPoint mp368 (850, 500);
+  StopCrossSection cs368 (0.0189612, 0.00278768);
+  MassPointParameters mpp368 (cs368, 21169);
+  StopNeutralinoMap.insert(std::make_pair(mp368, mpp368));
+
+  MassPoint mp369 (850, 550);
+  StopCrossSection cs369 (0.0189612, 0.00278768);
+  MassPointParameters mpp369 (cs369, 18999);
+  StopNeutralinoMap.insert(std::make_pair(mp369, mpp369));
+
+  MassPoint mp370 (850, 575);
+  StopCrossSection cs370 (0.0189612, 0.00278768);
+  MassPointParameters mpp370 (cs370, 16400);
+  StopNeutralinoMap.insert(std::make_pair(mp370, mpp370));
+
+  MassPoint mp371 (850, 600);
+  StopCrossSection cs371 (0.0189612, 0.00278768);
+  MassPointParameters mpp371 (cs371, 14517);
+  StopNeutralinoMap.insert(std::make_pair(mp371, mpp371));
+
+  MassPoint mp372 (850, 625);
+  StopCrossSection cs372 (0.0189612, 0.00278768);
+  MassPointParameters mpp372 (cs372, 18129);
+  StopNeutralinoMap.insert(std::make_pair(mp372, mpp372));
+
+  MassPoint mp373 (850, 650);
+  StopCrossSection cs373 (0.0189612, 0.00278768);
+  MassPointParameters mpp373 (cs373, 19614);
+  StopNeutralinoMap.insert(std::make_pair(mp373, mpp373));
+
+  MassPoint mp374 (875, 575);
+  StopCrossSection cs374 (0.015625, 0.00233698);
+  MassPointParameters mpp374 (cs374, 17851);
+  StopNeutralinoMap.insert(std::make_pair(mp374, mpp374));
+
+  MassPoint mp375 (875, 600);
+  StopCrossSection cs375 (0.015625, 0.00233698);
+  MassPointParameters mpp375 (cs375, 20189);
+  StopNeutralinoMap.insert(std::make_pair(mp375, mpp375));
+
+  MassPoint mp376 (875, 625);
+  StopCrossSection cs376 (0.015625, 0.00233698);
+  MassPointParameters mpp376 (cs376, 18632);
+  StopNeutralinoMap.insert(std::make_pair(mp376, mpp376));
+
+  MassPoint mp377 (875, 650);
+  StopCrossSection cs377 (0.015625, 0.00233698);
+  MassPointParameters mpp377 (cs377, 18532);
+  StopNeutralinoMap.insert(std::make_pair(mp377, mpp377));
+
+  MassPoint mp378 (900, 1);
+  StopCrossSection cs378 (0.0128895, 0.00195954);
+  MassPointParameters mpp378 (cs378, 19667);
+  StopNeutralinoMap.insert(std::make_pair(mp378, mpp378));
+
+  MassPoint mp379 (900, 50);
+  StopCrossSection cs379 (0.0128895, 0.00195954);
+  MassPointParameters mpp379 (cs379, 21651);
+  StopNeutralinoMap.insert(std::make_pair(mp379, mpp379));
+
+  MassPoint mp380 (900, 100);
+  StopCrossSection cs380 (0.0128895, 0.00195954);
+  MassPointParameters mpp380 (cs380, 18211);
+  StopNeutralinoMap.insert(std::make_pair(mp380, mpp380));
+
+  MassPoint mp381 (900, 150);
+  StopCrossSection cs381 (0.0128895, 0.00195954);
+  MassPointParameters mpp381 (cs381, 17432);
+  StopNeutralinoMap.insert(std::make_pair(mp381, mpp381));
+
+  MassPoint mp382 (900, 200);
+  StopCrossSection cs382 (0.0128895, 0.00195954);
+  MassPointParameters mpp382 (cs382, 19494);
+  StopNeutralinoMap.insert(std::make_pair(mp382, mpp382));
+
+  MassPoint mp383 (900, 250);
+  StopCrossSection cs383 (0.0128895, 0.00195954);
+  MassPointParameters mpp383 (cs383, 16297);
+  StopNeutralinoMap.insert(std::make_pair(mp383, mpp383));
+
+  MassPoint mp384 (900, 300);
+  StopCrossSection cs384 (0.0128895, 0.00195954);
+  MassPointParameters mpp384 (cs384, 19115);
+  StopNeutralinoMap.insert(std::make_pair(mp384, mpp384));
+
+  MassPoint mp385 (900, 350);
+  StopCrossSection cs385 (0.0128895, 0.00195954);
+  MassPointParameters mpp385 (cs385, 19783);
+  StopNeutralinoMap.insert(std::make_pair(mp385, mpp385));
+
+  MassPoint mp386 (900, 400);
+  StopCrossSection cs386 (0.0128895, 0.00195954);
+  MassPointParameters mpp386 (cs386, 19405);
+  StopNeutralinoMap.insert(std::make_pair(mp386, mpp386));
+
+  MassPoint mp387 (900, 450);
+  StopCrossSection cs387 (0.0128895, 0.00195954);
+  MassPointParameters mpp387 (cs387, 19605);
+  StopNeutralinoMap.insert(std::make_pair(mp387, mpp387));
+
+  MassPoint mp388 (900, 500);
+  StopCrossSection cs388 (0.0128895, 0.00195954);
+  MassPointParameters mpp388 (cs388, 17254);
+  StopNeutralinoMap.insert(std::make_pair(mp388, mpp388));
+
+  MassPoint mp389 (900, 550);
+  StopCrossSection cs389 (0.0128895, 0.00195954);
+  MassPointParameters mpp389 (cs389, 16796);
+  StopNeutralinoMap.insert(std::make_pair(mp389, mpp389));
+
+  MassPoint mp390 (900, 600);
+  StopCrossSection cs390 (0.0128895, 0.00195954);
+  MassPointParameters mpp390 (cs390, 18222);
+  StopNeutralinoMap.insert(std::make_pair(mp390, mpp390));
+
+  MassPoint mp391 (900, 625);
+  StopCrossSection cs391 (0.0128895, 0.00195954);
+  MassPointParameters mpp391 (cs391, 18390);
+  StopNeutralinoMap.insert(std::make_pair(mp391, mpp391));
+
+  MassPoint mp392 (900, 650);
+  StopCrossSection cs392 (0.0128895, 0.00195954);
+  MassPointParameters mpp392 (cs392, 17897);
+  StopNeutralinoMap.insert(std::make_pair(mp392, mpp392));
+
+  MassPoint mp393 (925, 625);
+  StopCrossSection cs393 (0.0106631, 0.00165071);
+  MassPointParameters mpp393 (cs393, 21218);
+  StopNeutralinoMap.insert(std::make_pair(mp393, mpp393));
+
+  MassPoint mp394 (925, 650);
+  StopCrossSection cs394 (0.0106631, 0.00165071);
+  MassPointParameters mpp394 (cs394, 20376);
+  StopNeutralinoMap.insert(std::make_pair(mp394, mpp394));
+
+  MassPoint mp395 (950, 1);
+  StopCrossSection cs395 (0.00883465, 0.0013886);
+  MassPointParameters mpp395 (cs395, 23521);
+  StopNeutralinoMap.insert(std::make_pair(mp395, mpp395));
+
+  MassPoint mp396 (950, 50);
+  StopCrossSection cs396 (0.00883465, 0.0013886);
+  MassPointParameters mpp396 (cs396, 20772);
+  StopNeutralinoMap.insert(std::make_pair(mp396, mpp396));
+
+  MassPoint mp397 (950, 100);
+  StopCrossSection cs397 (0.00883465, 0.0013886);
+  MassPointParameters mpp397 (cs397, 20889);
+  StopNeutralinoMap.insert(std::make_pair(mp397, mpp397));
+
+  MassPoint mp398 (950, 150);
+  StopCrossSection cs398 (0.00883465, 0.0013886);
+  MassPointParameters mpp398 (cs398, 17523);
+  StopNeutralinoMap.insert(std::make_pair(mp398, mpp398));
+
+  MassPoint mp399 (950, 200);
+  StopCrossSection cs399 (0.00883465, 0.0013886);
+  MassPointParameters mpp399 (cs399, 20573);
+  StopNeutralinoMap.insert(std::make_pair(mp399, mpp399));
+
+  MassPoint mp400 (950, 250);
+  StopCrossSection cs400 (0.00883465, 0.0013886);
+  MassPointParameters mpp400 (cs400, 21709);
+  StopNeutralinoMap.insert(std::make_pair(mp400, mpp400));
+
+  MassPoint mp401 (950, 300);
+  StopCrossSection cs401 (0.00883465, 0.0013886);
+  MassPointParameters mpp401 (cs401, 17749);
+  StopNeutralinoMap.insert(std::make_pair(mp401, mpp401));
+
+  MassPoint mp402 (950, 350);
+  StopCrossSection cs402 (0.00883465, 0.0013886);
+  MassPointParameters mpp402 (cs402, 17035);
+  StopNeutralinoMap.insert(std::make_pair(mp402, mpp402));
+
+  MassPoint mp403 (950, 400);
+  StopCrossSection cs403 (0.00883465, 0.0013886);
+  MassPointParameters mpp403 (cs403, 15832);
+  StopNeutralinoMap.insert(std::make_pair(mp403, mpp403));
+
+  MassPoint mp404 (950, 450);
+  StopCrossSection cs404 (0.00883465, 0.0013886);
+  MassPointParameters mpp404 (cs404, 15418);
+  StopNeutralinoMap.insert(std::make_pair(mp404, mpp404));
+
+  MassPoint mp405 (950, 500);
+  StopCrossSection cs405 (0.00883465, 0.0013886);
+  MassPointParameters mpp405 (cs405, 18750);
+  StopNeutralinoMap.insert(std::make_pair(mp405, mpp405));
+
+  MassPoint mp406 (950, 550);
+  StopCrossSection cs406 (0.00883465, 0.0013886);
+  MassPointParameters mpp406 (cs406, 18086);
+  StopNeutralinoMap.insert(std::make_pair(mp406, mpp406));
+
+  MassPoint mp407 (950, 600);
+  StopCrossSection cs407 (0.00883465, 0.0013886);
+  MassPointParameters mpp407 (cs407, 18997);
+  StopNeutralinoMap.insert(std::make_pair(mp407, mpp407));
+
+  MassPoint mp408 (950, 650);
+  StopCrossSection cs408 (0.00883465, 0.0013886);
+  MassPointParameters mpp408 (cs408, 19072);
+  StopNeutralinoMap.insert(std::make_pair(mp408, mpp408));
+
+  MassPoint mp409 (1000, 1);
+  StopCrossSection cs409 (0.00615134, 0.00100238);
+  MassPointParameters mpp409 (cs409, 19536);
+  StopNeutralinoMap.insert(std::make_pair(mp409, mpp409));
+
+  MassPoint mp410 (1000, 50);
+  StopCrossSection cs410 (0.00615134, 0.00100238);
+  MassPointParameters mpp410 (cs410, 17885);
+  StopNeutralinoMap.insert(std::make_pair(mp410, mpp410));
+
+  MassPoint mp411 (1000, 100);
+  StopCrossSection cs411 (0.00615134, 0.00100238);
+  MassPointParameters mpp411 (cs411, 19056);
+  StopNeutralinoMap.insert(std::make_pair(mp411, mpp411));
+
+  MassPoint mp412 (1000, 150);
+  StopCrossSection cs412 (0.00615134, 0.00100238);
+  MassPointParameters mpp412 (cs412, 23375);
+  StopNeutralinoMap.insert(std::make_pair(mp412, mpp412));
+
+  MassPoint mp413 (1000, 200);
+  StopCrossSection cs413 (0.00615134, 0.00100238);
+  MassPointParameters mpp413 (cs413, 15383);
+  StopNeutralinoMap.insert(std::make_pair(mp413, mpp413));
+
+  MassPoint mp414 (1000, 250);
+  StopCrossSection cs414 (0.00615134, 0.00100238);
+  MassPointParameters mpp414 (cs414, 19039);
+  StopNeutralinoMap.insert(std::make_pair(mp414, mpp414));
+
+  MassPoint mp415 (1000, 300);
+  StopCrossSection cs415 (0.00615134, 0.00100238);
+  MassPointParameters mpp415 (cs415, 14698);
+  StopNeutralinoMap.insert(std::make_pair(mp415, mpp415));
+
+  MassPoint mp416 (1000, 350);
+  StopCrossSection cs416 (0.00615134, 0.00100238);
+  MassPointParameters mpp416 (cs416, 17436);
+  StopNeutralinoMap.insert(std::make_pair(mp416, mpp416));
+
+  MassPoint mp417 (1000, 400);
+  StopCrossSection cs417 (0.00615134, 0.00100238);
+  MassPointParameters mpp417 (cs417, 16450);
+  StopNeutralinoMap.insert(std::make_pair(mp417, mpp417));
+
+  MassPoint mp418 (1000, 450);
+  StopCrossSection cs418 (0.00615134, 0.00100238);
+  MassPointParameters mpp418 (cs418, 15813);
+  StopNeutralinoMap.insert(std::make_pair(mp418, mpp418));
+
+  MassPoint mp419 (1000, 500);
+  StopCrossSection cs419 (0.00615134, 0.00100238);
+  MassPointParameters mpp419 (cs419, 17173);
+  StopNeutralinoMap.insert(std::make_pair(mp419, mpp419));
+
+  MassPoint mp420 (1000, 550);
+  StopCrossSection cs420 (0.00615134, 0.00100238);
+  MassPointParameters mpp420 (cs420, 22344);
+  StopNeutralinoMap.insert(std::make_pair(mp420, mpp420));
+
+  MassPoint mp421 (1000, 600);
+  StopCrossSection cs421 (0.00615134, 0.00100238);
+  MassPointParameters mpp421 (cs421, 20898);
+  StopNeutralinoMap.insert(std::make_pair(mp421, mpp421));
+
+  MassPoint mp422 (1000, 650);
+  StopCrossSection cs422 (0.00615134, 0.00100238);
+  MassPointParameters mpp422 (cs422, 25491);
+  StopNeutralinoMap.insert(std::make_pair(mp422, mpp422));
+
+  MassPoint mp423 (1050, 1);
+  StopCrossSection cs423 (0.00432261, 0.000725589);
+  MassPointParameters mpp423 (cs423, 18683);
+  StopNeutralinoMap.insert(std::make_pair(mp423, mpp423));
+
+  MassPoint mp424 (1050, 50);
+  StopCrossSection cs424 (0.00432261, 0.000725589);
+  MassPointParameters mpp424 (cs424, 15579);
+  StopNeutralinoMap.insert(std::make_pair(mp424, mpp424));
+
+  MassPoint mp425 (1050, 100);
+  StopCrossSection cs425 (0.00432261, 0.000725589);
+  MassPointParameters mpp425 (cs425, 14860);
+  StopNeutralinoMap.insert(std::make_pair(mp425, mpp425));
+
+  MassPoint mp426 (1050, 150);
+  StopCrossSection cs426 (0.00432261, 0.000725589);
+  MassPointParameters mpp426 (cs426, 20257);
+  StopNeutralinoMap.insert(std::make_pair(mp426, mpp426));
+
+  MassPoint mp427 (1050, 200);
+  StopCrossSection cs427 (0.00432261, 0.000725589);
+  MassPointParameters mpp427 (cs427, 17442);
+  StopNeutralinoMap.insert(std::make_pair(mp427, mpp427));
+
+  MassPoint mp428 (1050, 250);
+  StopCrossSection cs428 (0.00432261, 0.000725589);
+  MassPointParameters mpp428 (cs428, 19038);
+  StopNeutralinoMap.insert(std::make_pair(mp428, mpp428));
+
+  MassPoint mp429 (1050, 300);
+  StopCrossSection cs429 (0.00432261, 0.000725589);
+  MassPointParameters mpp429 (cs429, 19647);
+  StopNeutralinoMap.insert(std::make_pair(mp429, mpp429));
+
+  MassPoint mp430 (1050, 350);
+  StopCrossSection cs430 (0.00432261, 0.000725589);
+  MassPointParameters mpp430 (cs430, 18029);
+  StopNeutralinoMap.insert(std::make_pair(mp430, mpp430));
+
+  MassPoint mp431 (1050, 400);
+  StopCrossSection cs431 (0.00432261, 0.000725589);
+  MassPointParameters mpp431 (cs431, 18420);
+  StopNeutralinoMap.insert(std::make_pair(mp431, mpp431));
+
+  MassPoint mp432 (1050, 450);
+  StopCrossSection cs432 (0.00432261, 0.000725589);
+  MassPointParameters mpp432 (cs432, 18297);
+  StopNeutralinoMap.insert(std::make_pair(mp432, mpp432));
+
+  MassPoint mp433 (1050, 500);
+  StopCrossSection cs433 (0.00432261, 0.000725589);
+  MassPointParameters mpp433 (cs433, 16860);
+  StopNeutralinoMap.insert(std::make_pair(mp433, mpp433));
+
+  MassPoint mp434 (1050, 550);
+  StopCrossSection cs434 (0.00432261, 0.000725589);
+  MassPointParameters mpp434 (cs434, 18895);
+  StopNeutralinoMap.insert(std::make_pair(mp434, mpp434));
+
+  MassPoint mp435 (1050, 600);
+  StopCrossSection cs435 (0.00432261, 0.000725589);
+  MassPointParameters mpp435 (cs435, 16704);
+  StopNeutralinoMap.insert(std::make_pair(mp435, mpp435));
+
+  MassPoint mp436 (1050, 650);
+  StopCrossSection cs436 (0.00432261, 0.000725589);
+  MassPointParameters mpp436 (cs436, 18113);
+  StopNeutralinoMap.insert(std::make_pair(mp436, mpp436));
+
+  MassPoint mp437 (1100, 1);
+  StopCrossSection cs437 (0.00307413, 0.000532983);
+  MassPointParameters mpp437 (cs437, 17516);
+  StopNeutralinoMap.insert(std::make_pair(mp437, mpp437));
+
+  MassPoint mp438 (1100, 50);
+  StopCrossSection cs438 (0.00307413, 0.000532983);
+  MassPointParameters mpp438 (cs438, 19165);
+  StopNeutralinoMap.insert(std::make_pair(mp438, mpp438));
+
+  MassPoint mp439 (1100, 100);
+  StopCrossSection cs439 (0.00307413, 0.000532983);
+  MassPointParameters mpp439 (cs439, 18053);
+  StopNeutralinoMap.insert(std::make_pair(mp439, mpp439));
+
+  MassPoint mp440 (1100, 150);
+  StopCrossSection cs440 (0.00307413, 0.000532983);
+  MassPointParameters mpp440 (cs440, 21117);
+  StopNeutralinoMap.insert(std::make_pair(mp440, mpp440));
+
+  MassPoint mp441 (1100, 200);
+  StopCrossSection cs441 (0.00307413, 0.000532983);
+  MassPointParameters mpp441 (cs441, 20849);
+  StopNeutralinoMap.insert(std::make_pair(mp441, mpp441));
+
+  MassPoint mp442 (1100, 250);
+  StopCrossSection cs442 (0.00307413, 0.000532983);
+  MassPointParameters mpp442 (cs442, 21487);
+  StopNeutralinoMap.insert(std::make_pair(mp442, mpp442));
+
+  MassPoint mp443 (1100, 300);
+  StopCrossSection cs443 (0.00307413, 0.000532983);
+  MassPointParameters mpp443 (cs443, 18002);
+  StopNeutralinoMap.insert(std::make_pair(mp443, mpp443));
+
+  MassPoint mp444 (1100, 350);
+  StopCrossSection cs444 (0.00307413, 0.000532983);
+  MassPointParameters mpp444 (cs444, 17150);
+  StopNeutralinoMap.insert(std::make_pair(mp444, mpp444));
+
+  MassPoint mp445 (1100, 400);
+  StopCrossSection cs445 (0.00307413, 0.000532983);
+  MassPointParameters mpp445 (cs445, 21811);
+  StopNeutralinoMap.insert(std::make_pair(mp445, mpp445));
+
+  MassPoint mp446 (1100, 450);
+  StopCrossSection cs446 (0.00307413, 0.000532983);
+  MassPointParameters mpp446 (cs446, 18963);
+  StopNeutralinoMap.insert(std::make_pair(mp446, mpp446));
+
+  MassPoint mp447 (1100, 500);
+  StopCrossSection cs447 (0.00307413, 0.000532983);
+  MassPointParameters mpp447 (cs447, 20169);
+  StopNeutralinoMap.insert(std::make_pair(mp447, mpp447));
+
+  MassPoint mp448 (1100, 550);
+  StopCrossSection cs448 (0.00307413, 0.000532983);
+  MassPointParameters mpp448 (cs448, 15726);
+  StopNeutralinoMap.insert(std::make_pair(mp448, mpp448));
+
+  MassPoint mp449 (1100, 600);
+  StopCrossSection cs449 (0.00307413, 0.000532983);
+  MassPointParameters mpp449 (cs449, 18043);
+  StopNeutralinoMap.insert(std::make_pair(mp449, mpp449));
+
+  MassPoint mp450 (1100, 650);
+  StopCrossSection cs450 (0.00307413, 0.000532983);
+  MassPointParameters mpp450 (cs450, 17519);
+  StopNeutralinoMap.insert(std::make_pair(mp450, mpp450));
+
+  MassPoint mp451 (1150, 1);
+  StopCrossSection cs451 (0.00221047, 0.000396247);
+  MassPointParameters mpp451 (cs451, 20192);
+  StopNeutralinoMap.insert(std::make_pair(mp451, mpp451));
+
+  MassPoint mp452 (1150, 50);
+  StopCrossSection cs452 (0.00221047, 0.000396247);
+  MassPointParameters mpp452 (cs452, 20634);
+  StopNeutralinoMap.insert(std::make_pair(mp452, mpp452));
+
+  MassPoint mp453 (1150, 100);
+  StopCrossSection cs453 (0.00221047, 0.000396247);
+  MassPointParameters mpp453 (cs453, 18944);
+  StopNeutralinoMap.insert(std::make_pair(mp453, mpp453));
+
+  MassPoint mp454 (1150, 150);
+  StopCrossSection cs454 (0.00221047, 0.000396247);
+  MassPointParameters mpp454 (cs454, 18300);
+  StopNeutralinoMap.insert(std::make_pair(mp454, mpp454));
+
+  MassPoint mp455 (1150, 200);
+  StopCrossSection cs455 (0.00221047, 0.000396247);
+  MassPointParameters mpp455 (cs455, 17542);
+  StopNeutralinoMap.insert(std::make_pair(mp455, mpp455));
+
+  MassPoint mp456 (1150, 250);
+  StopCrossSection cs456 (0.00221047, 0.000396247);
+  MassPointParameters mpp456 (cs456, 17251);
+  StopNeutralinoMap.insert(std::make_pair(mp456, mpp456));
+
+  MassPoint mp457 (1150, 300);
+  StopCrossSection cs457 (0.00221047, 0.000396247);
+  MassPointParameters mpp457 (cs457, 19473);
+  StopNeutralinoMap.insert(std::make_pair(mp457, mpp457));
+
+  MassPoint mp458 (1150, 350);
+  StopCrossSection cs458 (0.00221047, 0.000396247);
+  MassPointParameters mpp458 (cs458, 16007);
+  StopNeutralinoMap.insert(std::make_pair(mp458, mpp458));
+
+  MassPoint mp459 (1150, 400);
+  StopCrossSection cs459 (0.00221047, 0.000396247);
+  MassPointParameters mpp459 (cs459, 20796);
+  StopNeutralinoMap.insert(std::make_pair(mp459, mpp459));
+
+  MassPoint mp460 (1150, 450);
+  StopCrossSection cs460 (0.00221047, 0.000396247);
+  MassPointParameters mpp460 (cs460, 18274);
+  StopNeutralinoMap.insert(std::make_pair(mp460, mpp460));
+
+  MassPoint mp461 (1150, 500);
+  StopCrossSection cs461 (0.00221047, 0.000396247);
+  MassPointParameters mpp461 (cs461, 21031);
+  StopNeutralinoMap.insert(std::make_pair(mp461, mpp461));
+
+  MassPoint mp462 (1150, 550);
+  StopCrossSection cs462 (0.00221047, 0.000396247);
+  MassPointParameters mpp462 (cs462, 18437);
+  StopNeutralinoMap.insert(std::make_pair(mp462, mpp462));
+
+  MassPoint mp463 (1150, 600);
+  StopCrossSection cs463 (0.00221047, 0.000396247);
+  MassPointParameters mpp463 (cs463, 18597);
+  StopNeutralinoMap.insert(std::make_pair(mp463, mpp463));
+
+  MassPoint mp464 (1150, 650);
+  StopCrossSection cs464 (0.00221047, 0.000396247);
+  MassPointParameters mpp464 (cs464, 19505);
+  StopNeutralinoMap.insert(std::make_pair(mp464, mpp464));
+
+  MassPoint mp465 (1200, 1);
+  StopCrossSection cs465 (0.00159844, 0.000296045);
+  MassPointParameters mpp465 (cs465, 16938);
+  StopNeutralinoMap.insert(std::make_pair(mp465, mpp465));
+
+  MassPoint mp466 (1200, 50);
+  StopCrossSection cs466 (0.00159844, 0.000296045);
+  MassPointParameters mpp466 (cs466, 17111);
+  StopNeutralinoMap.insert(std::make_pair(mp466, mpp466));
+
+  MassPoint mp467 (1200, 100);
+  StopCrossSection cs467 (0.00159844, 0.000296045);
+  MassPointParameters mpp467 (cs467, 21532);
+  StopNeutralinoMap.insert(std::make_pair(mp467, mpp467));
+
+  MassPoint mp468 (1200, 150);
+  StopCrossSection cs468 (0.00159844, 0.000296045);
+  MassPointParameters mpp468 (cs468, 20130);
+  StopNeutralinoMap.insert(std::make_pair(mp468, mpp468));
+
+  MassPoint mp469 (1200, 200);
+  StopCrossSection cs469 (0.00159844, 0.000296045);
+  MassPointParameters mpp469 (cs469, 21315);
+  StopNeutralinoMap.insert(std::make_pair(mp469, mpp469));
+
+  MassPoint mp470 (1200, 250);
+  StopCrossSection cs470 (0.00159844, 0.000296045);
+  MassPointParameters mpp470 (cs470, 18727);
+  StopNeutralinoMap.insert(std::make_pair(mp470, mpp470));
+
+  MassPoint mp471 (1200, 300);
+  StopCrossSection cs471 (0.00159844, 0.000296045);
+  MassPointParameters mpp471 (cs471, 18112);
+  StopNeutralinoMap.insert(std::make_pair(mp471, mpp471));
+
+  MassPoint mp472 (1200, 350);
+  StopCrossSection cs472 (0.00159844, 0.000296045);
+  MassPointParameters mpp472 (cs472, 18028);
+  StopNeutralinoMap.insert(std::make_pair(mp472, mpp472));
+
+  MassPoint mp473 (1200, 400);
+  StopCrossSection cs473 (0.00159844, 0.000296045);
+  MassPointParameters mpp473 (cs473, 20219);
+  StopNeutralinoMap.insert(std::make_pair(mp473, mpp473));
+
+  MassPoint mp474 (1200, 450);
+  StopCrossSection cs474 (0.00159844, 0.000296045);
+  MassPointParameters mpp474 (cs474, 23181);
+  StopNeutralinoMap.insert(std::make_pair(mp474, mpp474));
+
+  MassPoint mp475 (1200, 500);
+  StopCrossSection cs475 (0.00159844, 0.000296045);
+  MassPointParameters mpp475 (cs475, 18878);
+  StopNeutralinoMap.insert(std::make_pair(mp475, mpp475));
+
+  MassPoint mp476 (1200, 550);
+  StopCrossSection cs476 (0.00159844, 0.000296045);
+  MassPointParameters mpp476 (cs476, 21553);
+  StopNeutralinoMap.insert(std::make_pair(mp476, mpp476));
+
+  MassPoint mp477 (1200, 600);
+  StopCrossSection cs477 (0.00159844, 0.000296045);
+  MassPointParameters mpp477 (cs477, 19744);
+  StopNeutralinoMap.insert(std::make_pair(mp477, mpp477));
+
+  MassPoint mp478 (1200, 650);
+  StopCrossSection cs478 (0.00159844, 0.000296045);
+  MassPointParameters mpp478 (cs478, 21272);
+  StopNeutralinoMap.insert(std::make_pair(mp478, mpp478));
+
+}
+

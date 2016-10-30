@@ -159,7 +159,7 @@ public :
    //   Float_t         metPfType1SumEt;
    //   Float_t         metPfType1UnclEnDn;
    //   Float_t         metPfType1UnclEnUp;
-   //   Float_t         metPuppi;
+   Float_t         metPuppi;
    Float_t         metTtrk;
    Float_t         metTtrkPhi;
    //   Float_t         mllg;
@@ -629,7 +629,7 @@ public :
    //   TBranch        *b_metPfType1SumEt;   //!
    //   TBranch        *b_metPfType1UnclEnDn;   //!
    //   TBranch        *b_metPfType1UnclEnUp;   //!
-   //   TBranch        *b_metPuppi;   //!
+   TBranch        *b_metPuppi;   //!
    TBranch        *b_metTtrk;   //!
    TBranch        *b_metTtrkPhi;   //!
    //   TBranch        *b_mllg;   //!
@@ -1328,7 +1328,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("metPfType1SumEt", &metPfType1SumEt, &b_metPfType1SumEt);
    //   fChain->SetBranchAddress("metPfType1UnclEnDn", &metPfType1UnclEnDn, &b_metPfType1UnclEnDn);
    //   fChain->SetBranchAddress("metPfType1UnclEnUp", &metPfType1UnclEnUp, &b_metPfType1UnclEnUp);
-   //   fChain->SetBranchAddress("metPuppi", &metPuppi, &b_metPuppi);
+   fChain->SetBranchAddress("metPuppi", &metPuppi, &b_metPuppi);
    fChain->SetBranchAddress("metTtrk", &metTtrk, &b_metTtrk);
    fChain->SetBranchAddress("metTtrkPhi", &metTtrkPhi, &b_metTtrkPhi);
    //   fChain->SetBranchAddress("mllg", &mllg, &b_mllg);

@@ -6,6 +6,7 @@
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsPR.h"
+//#include "CutsShape.h"
 //#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
@@ -18,6 +19,7 @@
 
 
 const double lumi_fb_2016       = 12.3;    // 2016B + 2016C + 2016D
+const double lumi_fb_Run2016B   =  5.892;  // From run 272007 to run 275376
 const double lumi_fb_2016_susy  =  0.0;    // From run 278820 to run 279931 --> To be estimated
 const double lumi_fb_2016_dm    =  0.0;    // To be updated
 const double lumi_fb_2015       =  2.318;  // 2015C + 2015D
@@ -28,6 +30,8 @@ const int MUON_FLAVOUR     = 13;
 const int TAU_FLAVOUR      = 15;
 const int Z_FLAVOUR        = 23;
 
+const double BOTTOM_MASS   =   4.18;      // [GeV]
+const double TOP_MASS      = 173.34;      // [GeV]
 const double ELECTRON_MASS =   0.000511;  // [GeV]
 const double MUON_MASS     =   0.106;     // [GeV]
 const double TAU_MASS      =   1.777;     // [GeV]
@@ -107,7 +111,7 @@ const double W2m     = 0.1057;
 const double W2tau   = 0.1125;
 const double Z2ll    = 0.033658;
 const double WZ23lnu = 3 * Z2ll * (W2e + W2m + W2tau);
-
+const double WW2lnu  = (W2e + W2m + W2tau) * (W2e + W2m + W2tau);
 
 const int njetbin = 3;  // 0jet, 1jet, 2+jet, all
 
@@ -157,6 +161,9 @@ const TString lchannel[nchannel] = {
   "#mu#mu#mu",
   "lll"
 };
+
+
+enum {roc_background, roc_signal, roc_none};
 
 
 // MET related

@@ -33,234 +33,115 @@
 */
 
 
+#include "TCanvas.h"
+#include "TCut.h"
 #include "TFile.h"
+#include "TFrame.h"
 #include "TH1D.h"
 #include "TString.h"
+#include "TSystem.h"
+#include "TTree.h"
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 
 // Constants
 //------------------------------------------------------------------------------
-const int _nqcd = 9;
-const int _npdf = 100;
-
-const TString _gendir = "/gpfs/csic_users/piedra/work/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/";
-const TString _recdir = "/gpfs/csic_users/piedra/work/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/";
-
-const bool _savefigures = false;
+const int  _nqcd        = 9;
+const int  _npdf        = 100;
+const bool _savefigures = true;
 
 
 // Functions
 //------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString     sample,
-		   TString     label,
-		   TString     level);
-
-void DrawLatex    (Font_t      tfont,
-		   Float_t     x,
-		   Float_t     y,
-		   Float_t     tsize,
-		   Short_t     align,
-		   const char* text,
-		   Bool_t      setndc = true);
+void PrintProgress(Long64_t counter, Long64_t total);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// getPdfQcd
+// root -l -b -q getPdfQcd.C+
 //
-//    WWTo2L2Nu 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      2.23%
-//    QCD         mu=0.5 / mu=2.0   0.53% / 0.52%
-//    alpha_s     265000 / 266000   0.02% / 0.02%
-//    PDF                           0.25%
-//    PDF+alpha_s                   0.25%
-//   
-//   
-//    WWTo2L2Nu 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.84%
-//    QCD         mu=0.5 / mu=2.0   1.53% / 1.37%
-//    alpha_s     265000 / 266000   0.01% / 0.00%
-//    PDF                           0.27%
-//    PDF+alpha_s                   0.27%
-//   
-//   
-//    VBFHToWWTo2L2Nu_M125 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.18%
-//    QCD         mu=0.5 / mu=2.0   0.77% / 0.68%
-//    alpha_s     265000 / 266000   1.07% / 0.75%
-//    PDF                           0.52%
-//    PDF+alpha_s                   1.06%
-//   
-//   
-//    VBFHToWWTo2L2Nu_M125 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.79%
-//    QCD         mu=0.5 / mu=2.0   0.07% / 0.03%
-//    alpha_s     265000 / 266000   0.19% / 0.26%
-//    PDF                           0.31%
-//    PDF+alpha_s                   0.39%
-//   
-//   
-//    GluGluHToWWTo2L2Nu_M125 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      1.12%
-//    QCD         mu=0.5 / mu=2.0   2.81% / 2.34%
-//    alpha_s     265000 / 266000   0.13% / 0.05%
-//    PDF                           0.58%
-//    PDF+alpha_s                   0.58%
-//   
-//   
-//    GluGluHToWWTo2L2Nu_M125 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.55%
-//    QCD         mu=0.5 / mu=2.0   2.00% / 1.66%
-//    alpha_s     265000 / 266000   0.29% / 0.30%
-//    PDF                           0.38%
-//    PDF+alpha_s                   0.48%
-//   
-//   
-//    WZTo3LNu 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.15%
-//    QCD         mu=0.5 / mu=2.0   1.70% / 1.47%
-//    alpha_s     265000 / 266000   0.15% / 0.26%
-//    PDF                           0.47%
-//    PDF+alpha_s                   0.52%
-//   
-//   
-//    WZTo3LNu 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.14%
-//    QCD         mu=0.5 / mu=2.0   2.91% / 2.54%
-//    alpha_s     265000 / 266000   0.20% / 0.27%
-//    PDF                           0.49%
-//    PDF+alpha_s                   0.54%
-//   
-//   
-//    HWminusJ_HToWW_M125 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   6.12% / 4.55%
-//    alpha_s     265000 / 266000   0.32% / 0.31%
-//    PDF                           0.56%
-//    PDF+alpha_s                   0.64%
-//   
-//   
-//    HWminusJ_HToWW_M125 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   1.32% / 1.52%
-//    alpha_s     265000 / 266000   0.05% / 0.02%
-//    PDF                           0.49%
-//    PDF+alpha_s                   0.49%
-//   
-//   
-//    HWplusJ_HToWW_M125 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   2.29% / 3.39%
-//    alpha_s     265000 / 266000   0.20% / 0.11%
-//    PDF                           0.48%
-//    PDF+alpha_s                   0.50%
-//   
-//   
-//    HWplusJ_HToWW_M125 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.12%
-//    QCD         mu=0.5 / mu=2.0   4.64% / 3.57%
-//    alpha_s     265000 / 266000   0.10% / 0.04%
-//    PDF                           0.36%
-//    PDF+alpha_s                   0.36%
-//   
-//   
-//    HZJ_HToWW_M125 0jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.06%
-//    QCD         mu=0.5 / mu=2.0   1.96% / 3.17%
-//    alpha_s     265000 / 266000   0.08% / 0.29%
-//    PDF                           1.22%
-//    PDF+alpha_s                   1.24%
-//   
-//   
-//    HZJ_HToWW_M125 1jet acceptance uncertainties
-//   -----------------------------------------
-//    nominal acceptance * eff      0.06%
-//    QCD         mu=0.5 / mu=2.0   2.65% / 0.69%
-//    alpha_s     265000 / 266000   0.09% / 0.01%
-//    PDF                           0.86%
-//    PDF+alpha_s                   0.86%
-//   
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getPdfQcd()
 {
-  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
+  gInterpreter->ExecuteMacro("PaperStyle.C");
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l");
-  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l");
-  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l");
-  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l");
-  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l");
-  GetPdfQcdSyst("WZZ",                     "", "wh3l");
-  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l");
+  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root");
 
-  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l_ossf");
-  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l_ossf");
-  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l_ossf");
-  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l_ossf");
-  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l_ossf");
-  GetPdfQcdSyst("WZZ",                     "", "wh3l_ossf");
-  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l_ossf");
+  TH1D* h_weights_gen = (TH1D*)file->Get("list_vectors_weights");
+  TH1D* h_weights_rec = (TH1D*)h_weights_gen->Clone();
 
-  GetPdfQcdSyst("HWminusJ_HToTauTau_M125", "", "wh3l_sssf");
-  GetPdfQcdSyst("HWminusJ_HToWW_M125",     "", "wh3l_sssf");
-  GetPdfQcdSyst("HWplusJ_HToTauTau_M125",  "", "wh3l_sssf");
-  GetPdfQcdSyst("HWplusJ_HToWW_M125",      "", "wh3l_sssf");
-  GetPdfQcdSyst("HZJ_HToWW_M125",          "", "wh3l_sssf");
-  GetPdfQcdSyst("WZZ",                     "", "wh3l_sssf");
-  GetPdfQcdSyst("ggZH_HToWW_M125",         "", "wh3l_sssf");
+  h_weights_rec->Reset();
 
+  TTree* tree = (TTree*)file->Get("latino");
 
-  /*
-  GetPdfQcdSyst("WWTo2L2Nu", "WW", "0jet");
-  GetPdfQcdSyst("WWTo2L2Nu", "WW", "1jet");
+  float chlll;
+  float metPfType1;
+  float mlll;
+  float njet_3l;
+  float zveto_3l;
 
-  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "qqH", "0jet");
-  GetPdfQcdSyst("VBFHToWWTo2L2Nu_M125", "qqH", "1jet");
+  tree->SetBranchAddress("chlll",      &chlll);
+  tree->SetBranchAddress("metPfType1", &metPfType1);
+  tree->SetBranchAddress("mlll",       &mlll);
+  tree->SetBranchAddress("njet_3l",    &njet_3l);
+  tree->SetBranchAddress("zveto_3l",   &zveto_3l);
 
-  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "ggH", "0jet");
-  GetPdfQcdSyst("GluGluHToWWTo2L2Nu_M125", "ggH", "1jet");
+  std::vector<float> *std_vector_LHE_weight = 0;
+  std::vector<float> *std_vector_jet_cmvav2 = 0;
+  std::vector<float> *std_vector_jet_pt     = 0;
 
-  GetPdfQcdSyst("WZTo3LNu", "WZ", "0jet");
-  GetPdfQcdSyst("WZTo3LNu", "WZ", "1jet");
-
-  GetPdfQcdSyst("HWminusJ_HToWW_M125", "HW-", "0jet");
-  GetPdfQcdSyst("HWminusJ_HToWW_M125", "HW-", "1jet");
-
-  GetPdfQcdSyst("HWplusJ_HToWW_M125", "HW+", "0jet");
-  GetPdfQcdSyst("HWplusJ_HToWW_M125", "HW+", "1jet");
-
-  GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "0jet");
-  GetPdfQcdSyst("HZJ_HToWW_M125", "HZ", "1jet");
-  */
-}
+  tree->SetBranchAddress("std_vector_LHE_weight", &std_vector_LHE_weight);
+  tree->SetBranchAddress("std_vector_jet_cmvav2", &std_vector_jet_cmvav2);
+  tree->SetBranchAddress("std_vector_jet_pt",     &std_vector_jet_pt);
 
 
-//------------------------------------------------------------------------------
-// GetPdfQcdSyst
-//------------------------------------------------------------------------------
-void GetPdfQcdSyst(TString sample,
-		   TString label,
-		   TString level)
-{
-  TFile* file = new TFile(_recdir + sample + ".root", "read");
+  // Loop over the tree
+  //----------------------------------------------------------------------------
+  std::cout << std::endl;
 
-  TH1F* h_weights_gen = (TH1F*)file->Get("list_vectors_weights_gen");
-  TH1F* h_weights_rec = (TH1F*)file->Get("list_vectors_weights_" + level);
+  for (int ievent=0; ievent<tree->GetEntries(); ievent++) {
+    
+    tree->GetEntry(ievent);
+    
+    PrintProgress(ievent, tree->GetEntries());
+
+    bool wh3l_wz_13TeV = (njet_3l    ==   0 &&
+			  metPfType1 >   40 &&
+			  zveto_3l   <   20 &&
+			  abs(chlll) ==   1 &&
+			  mlll       >  100 &&
+			  (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.715) &&
+			  (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.715) &&
+			  (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.715) &&
+			  (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.715) &&
+			  (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.715) &&
+			  (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.715) &&
+			  (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.715) &&
+			  (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.715) &&
+			  (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.715) &&
+			  (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.715));
+
+
+    if (!wh3l_wz_13TeV) continue;
+
+
+    // Loop over weights
+    //--------------------------------------------------------------------------
+    for (int iWeight=0; iWeight<h_weights_rec->GetNbinsX(); iWeight++)
+      {
+	float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
+	
+	h_weights_rec->Fill(iWeight+0.5, ratio);
+      }
+  }
+
+  std::cout << std::endl;
 
 
   // Produce the QCD uncertainties
@@ -290,7 +171,7 @@ void GetPdfQcdSyst(TString sample,
 
   // Draw the PDF distribution
   //----------------------------------------------------------------------------
-  TCanvas* canvas = new TCanvas(sample + "_" + level, sample + "_" + level);
+  TCanvas* canvas = new TCanvas("canvas", "canvas");
 
   h_pdfratio->SetFillColor(kRed+1);
   h_pdfratio->SetFillStyle(  1001);
@@ -303,14 +184,12 @@ void GetPdfQcdSyst(TString sample,
 
   h_pdfratio->GetXaxis()->SetTitleOffset(2.0);
 
-  DrawLatex(42, 0.940, 0.945, 0.050, 31, label + " " + level);
-
   canvas->GetFrame()->DrawClone();
 
   if (_savefigures)
     {
-      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + level + ".pdf");
-      canvas->SaveAs("figures/pdfacceptance_" + sample + "_" + level + ".png");
+      canvas->SaveAs("figures/pdfacceptance.pdf");
+      canvas->SaveAs("figures/pdfacceptance.png");
     }
 
 
@@ -338,7 +217,7 @@ void GetPdfQcdSyst(TString sample,
 
   // Print the final uncertainties
   //----------------------------------------------------------------------------
-  printf("\n %s %s acceptance uncertainties\n", sample.Data(), level.Data());
+  printf("\n Acceptance uncertainties\n");
   printf("-----------------------------------------\n");
   printf(" nominal acceptance * eff      %4.2f%%\n", 1e2 * h_weights_rec->GetBinContent(1) / h_weights_gen->GetBinContent(1));
   printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
@@ -350,22 +229,19 @@ void GetPdfQcdSyst(TString sample,
 
 
 //------------------------------------------------------------------------------
-// DrawLatex 
+// PrintProgress
 //------------------------------------------------------------------------------
-void DrawLatex(Font_t      tfont,
-	       Float_t     x,
-	       Float_t     y,
-	       Float_t     tsize,
-	       Short_t     align,
-	       const char* text,
-	       Bool_t      setndc)
+void PrintProgress(Long64_t counter, Long64_t total)
 {
-  TLatex* tl = new TLatex(x, y, text);
+  double progress = 1e2 * (counter+1) / total;
 
-  tl->SetNDC      (setndc);
-  tl->SetTextAlign( align);
-  tl->SetTextFont ( tfont);
-  tl->SetTextSize ( tsize);
+  double fractpart, intpart;
 
-  tl->Draw("same");
+  fractpart = modf(progress, &intpart);
+
+  if (fractpart < 1e-2)
+    {
+      std::cout << " Progress: " << int(ceil(progress)) << "%\r";
+      std::cout.flush();
+    }
 }

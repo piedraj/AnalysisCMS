@@ -31,6 +31,7 @@ struct Jet
   int            index;
   float          cmvav2;
   float          csvv2ivf;
+  float          mass;
   TLorentzVector v;
 };
 
@@ -124,11 +125,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetZHCRVar        ();
 
-  TH1F*   GetGenWeightsLHE  ();
-
   void    GetStopVar        ();
-
-  void    GetRecoWeightsLHE (TH1F*          hist);
 
   void    GetMt             (Lepton         lep,
 			     float&         transverse_mass);
@@ -246,6 +243,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
+  float                  _nsol_1_1_10;
+  float                  _nsol_10_10_10;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
@@ -256,9 +255,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2eta_gen;
   float                  _top2phi_gen;
   float                  _top2pt_gen;
-  float                  _nsol_1_1_10;
-  float                  _nsol_10_10_10;
-  float                  _nsol_10_10_100;
   float			 _topReco;
 
   float                  _mll13;
@@ -327,18 +323,6 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_output;
   TFile*                 root_minitree;
   TTree*                 minitree;
-
-  
-  // Histograms for QCD, PDF and alpha_s uncertainties
-  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
-  //----------------------------------------------------------------------------
-  TH1F*                  list_vectors_weights_gen;
-  TH1F*                  list_vectors_weights_0jet;
-  TH1F*                  list_vectors_weights_1jet;
-  TH1F*                  list_vectors_weights_2jet;
-  TH1F*                  list_vectors_weights_wh3l;
-  TH1F*                  list_vectors_weights_wh3l_ossf;
-  TH1F*                  list_vectors_weights_wh3l_sssf;
 
 
   // TH1 histograms
@@ -413,6 +397,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_metTtrk       [nchannel][ncut][njetbin+1];
   TH1D*                  h_metTtrkPhi    [nchannel][ncut][njetbin+1];
   TH1D*                  h_mpmet         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metPuppi      [nchannel][ncut][njetbin+1];
   TH1D*                  h_mth           [nchannel][ncut][njetbin+1];
   TH1D*                  h_mtw1          [nchannel][ncut][njetbin+1];
   TH1D*                  h_mtw2          [nchannel][ncut][njetbin+1];
@@ -443,6 +428,7 @@ class AnalysisCMS : public AnalysisBase
   // TH2 histograms
   //----------------------------------------------------------------------------
   TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
+  TH2D*                  h_mpmet_m2l     [nchannel][ncut][njetbin+1];
   TH2D*                  h_2ht           [nchannel][ncut][njetbin+1];
   TH2D*                  h_dym           [nchannel][ncut][njetbin+1];
 

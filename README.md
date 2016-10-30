@@ -9,7 +9,7 @@ AnalysisCMS is a framework that produces Physics distributions based on **latino
     https://github.com/latinos/PlotsConfigurations
 
 
-1. Everything begins here.
+1. Everything begins here
 ====
 
 Log in to gridui or lxplus.

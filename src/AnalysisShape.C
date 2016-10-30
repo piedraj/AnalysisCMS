@@ -1,20 +1,19 @@
-#define AnalysisControl_cxx
-#include "../include/AnalysisControl.h"
-
+#define AnalysisShape_cxx
+#include "../include/AnalysisShape.h"
 
 //------------------------------------------------------------------------------
-// AnalysisControl
+// AnalysisShape
 //------------------------------------------------------------------------------
-AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
+AnalysisShape::AnalysisShape(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetSaveMinitree(false);
 }
 
 
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
+void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
@@ -65,7 +64,6 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     EventSetup();
 
-
     // Analysis
     //--------------------------------------------------------------------------
     _nelectron = 0;
@@ -77,71 +75,60 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
     
+    if (Lepton1.v.Pt() < 30.) continue;
+    if (Lepton2.v.Pt() < 10.) continue;
+
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 
-    bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
-
-    pass_2l &= (Lepton1.v.Pt() > 25.);
-    pass_2l &= (Lepton2.v.Pt() > 20.);
-    pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_2l &= (_m2l > 12.);
-
-
     bool pass;
 
-
-    // No cuts
+    // Has 2 "tight" leptons
     //--------------------------------------------------------------------------
+    //    pass = (std_vector_lepton_isTightLepton -> at(0) == 1 && std_vector_lepton_isTightLepton -> at(1) == 1);
     pass = true;
-
-    FillLevelHistograms(Control_00_NoCuts, pass);
-
-
-    // Has 2 leptons
-    //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    FillLevelHistograms(Control_01_Has2Leptons, pass);
     
-    if (_saveminitree && pass) minitree->Fill();
+    FillLevelHistograms(Shape_01_Has2Leptons, pass);
 
-
-    // R out/in
+    // No additional lepton
     //--------------------------------------------------------------------------
-    pass = pass_2l;
+    pass &= (std_vector_lepton_pt -> at(2) < 10.);
 
-    pass &= (_nbjet20cmvav2l == 0);
-    pass &= (_pt2l > 30.);
-    pass &= (_channel == em || _pt2l > 45.);
+    FillLevelHistograms(Shape_02_HasOnly2Leptons, pass);
 
-    FillLevelHistograms(Control_02_Routin, pass);
-
-
-    // WW
+    // At least two jets
     //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    pass &= (_nbjet20cmvav2l == 0);
-    pass &= (MET.Et() > 20.);
-    pass &= (_pt2l > 30.);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || MET.Et() > 45.);
-    pass &= (_channel == em || _pt2l > 45.);
-
-    FillLevelHistograms(Control_03_WW, pass);
-
-
-    // Top
-    //--------------------------------------------------------------------------
-    pass = pass_2l;
-
     pass &= (_njet > 1);
     pass &= (_nbjet30csvv2m > 0);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (MET.Et() > 45.);
+    pass &= (AnalysisJets[0].v.Pt() > 30. && fabs(AnalysisJets[0].v.Eta()) < 4.);
+    pass &= (AnalysisJets[1].v.Pt() > 30. && fabs(AnalysisJets[1].v.Eta()) < 4.);
 
-    FillLevelHistograms(Control_04_Top, pass);
+    FillLevelHistograms(Shape_03_Has2Jets, pass);
+
+    // MET
+    //--------------------------------------------------------------------------
+    pass &= (MET.Et() >= 50.);
+
+    FillLevelHistograms(Shape_04_MET, pass);
+
+    // Deltaphi
+    //--------------------------------------------------------------------------
+    pass &= (_dphillmet > 1.2);
+
+    FillLevelHistograms(Shape_05_DeltaPhi, pass);
+
+    // mll
+    //--------------------------------------------------------------------------
+    pass &= (mll >= 20.);
+
+    FillLevelHistograms(Shape_06_mll, pass);
+
+    // Zveto
+    //--------------------------------------------------------------------------
+    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+
+    FillLevelHistograms(Shape_07_Zveto, pass);
+
   }
 
 
@@ -152,7 +139,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 //------------------------------------------------------------------------------
 // FillLevelHistograms
 //------------------------------------------------------------------------------
-void AnalysisControl::FillLevelHistograms(int  icut,
+void AnalysisShape::FillLevelHistograms(int  icut,
 					  bool pass)
 {
   if (!pass) return;

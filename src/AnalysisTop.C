@@ -123,12 +123,12 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     		passMet45 = pass && (_nelectron == 1 || MET.Et() > 45.);
  //             FillLevelHistograms(Top_02_Met45, passMet45);
  
-                passRoutin = (njet > 1) && pass && (_nbjet30cmvav2m > 0);
+                passRoutin = (_njet > 1) && pass && (_nbjet30cmvav2m > 0);
 		FillLevelHistograms(Top_02_Routin, passRoutin);
 
-  		passL = pass && (njet > 1) && (_nbjet30cmvav2l > 0);
-                passM = pass && (njet > 1) && (_nbjet30cmvav2m > 0);
-                passT = pass && (njet > 1) && (_nbjet30cmvav2t > 0);
+  		passL = pass && (_njet > 1) && (_nbjet30cmvav2l > 0);
+                passM = pass && (_njet > 1) && (_nbjet30cmvav2m > 0);
+                passT = pass && (_njet > 1) && (_nbjet30cmvav2t > 0);
 //		FillLevelHistograms(Top_04_bL, passL);
 //                FillLevelHistograms(Top_04_bM, passM);
 //                FillLevelHistograms(Top_04_bT, passT);
@@ -220,7 +220,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
     //-------------------------------------------------------------------------
     // Basics + Has1BJet
    
-  //  pass &= (njet > 1);
+  //  pass &= (_njet > 1);
   //
   //  FillLevelHistograms(Top_01_Has2Jets, pass);
 //    pass &= (_njet > 1);
@@ -237,7 +237,7 @@ void AnalysisTop::Loop(TString analysis, TString filename, float luminosity)
 
   //  
   //  bool pass_htjets = _htjets > 150.;
-  //  bool pass_mpmet  = (_nelectron == 1 || _mpmet > 30.);
+  //  bool pass_mpmet  = (_nelectron == 1 || mpmet > 30.);
   //  
 
   //  pass_htjets &= pass;    

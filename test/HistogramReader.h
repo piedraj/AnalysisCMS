@@ -44,11 +44,13 @@ class HistogramReader
   void     AddProcess         (const TString& filename,
 			       const TString& label,
 			       Color_t        color,
+			       Int_t          kind  = roc_background,
 			       Float_t        scale = -1);
 
   void     AddSignal          (const TString& filename,
 			       const TString& label,
-			       Color_t        color);
+			       Color_t        color,
+			       Int_t          kind = roc_none);
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -68,7 +70,14 @@ class HistogramReader
 
   void     CrossSection       (TString        level,
 			       TString        channel,
-			       TString        process);
+			       TString        process,
+			       Float_t        branchingratio,
+			       TString        signal1_filename,
+			       Float_t        signal1_xs,
+			       Float_t        signal1_ngen,
+			       TString        signal2_filename = "NULL",
+			       Float_t        signal2_xs       = -999,
+			       Float_t        signal2_ngen     = -999);
 
   void     DrawLatex          (Font_t         tfont,
 			       Float_t        x,
@@ -154,10 +163,6 @@ class HistogramReader
   void     WriteYields        (TH1*           hist,
 			       TString        label);
 
-  void     AddRocSignal       (TString        filename);
-
-  void     AddRocBackground   (TString        filename);
-
   void     Roc                (TString        hname,
 			       TString        xtitle  = "",
 			       Int_t          npoints = 100,
@@ -202,8 +207,8 @@ class HistogramReader
 
   std::ofstream         _yields_table;
 
-  std::vector<TString> _roc_signals;
-  std::vector<TString> _roc_backgrounds;
+  std::vector<TString>  _roc_signals;
+  std::vector<TString>  _roc_backgrounds;
 };
 
 #endif

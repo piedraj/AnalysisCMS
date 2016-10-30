@@ -11,7 +11,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _inputdir     (inputdir),
   _outputdir    (outputdir),
   _stackoption  ("nostack,hist"),
-  _title        ("cms"),
+  _title        ("inclusive"),
   _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
@@ -62,6 +62,7 @@ void HistogramReader::AddData(const TString& filename,
 void HistogramReader::AddProcess(const TString& filename,
 				 const TString& label,
 				 Color_t        color,
+				 Int_t          kind,
 				 Float_t        scale)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
@@ -81,6 +82,9 @@ void HistogramReader::AddProcess(const TString& filename,
   
   if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
+
+  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
+  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
 }
 
 
@@ -89,7 +93,8 @@ void HistogramReader::AddProcess(const TString& filename,
 //------------------------------------------------------------------------------
 void HistogramReader::AddSignal(const TString& filename,
 				const TString& label,
-				Color_t        color)
+				Color_t        color,
+				Int_t          kind)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
   
@@ -104,6 +109,9 @@ void HistogramReader::AddSignal(const TString& filename,
   _signalfile.push_back(file);
   _signallabel.push_back(label);
   _signalcolor.push_back(color);
+
+  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
+  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
 }
 
 
@@ -262,6 +270,8 @@ void HistogramReader::Draw(TString hname,
   // All MC
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
+
+  _allmchist->SetName(_mchist[0]->GetName());
 
   // Possible modification (how to deal with systematic uncertainties?)
   //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
@@ -438,7 +448,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
 
-  if (_title.EqualTo("cms"))
+  if (_title.EqualTo("inclusive"))
     {
       DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
       DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
@@ -501,7 +511,7 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
+      ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
 
       uncertainty->Draw("e2,same");
 
@@ -533,7 +543,14 @@ void HistogramReader::Draw(TString hname,
 //------------------------------------------------------------------------------
 void HistogramReader::CrossSection(TString level,
 				   TString channel,
-				   TString process)
+				   TString process,
+				   Float_t branchingratio,
+				   TString signal1_filename,
+				   Float_t signal1_xs,
+				   Float_t signal1_ngen,
+				   TString signal2_filename,
+				   Float_t signal2_xs,
+				   Float_t signal2_ngen)
 {
   if (_luminosity_fb < 0)
     {
@@ -541,37 +558,59 @@ void HistogramReader::CrossSection(TString level,
     }
 
 
-  // Get the signal and the backgrounds
+  // Get the signal (example qqWW)
   //----------------------------------------------------------------------------
-  _mchist.clear();
+  TFile* signal1_file = new TFile(_inputdir + "/" + signal1_filename + ".root");
 
-  TH1D* signal;
-  TH1D* signalLum;
+  float signal1_counterLum = Yield((TH1D*)signal1_file->Get(level + "/h_counterLum_" + channel));
+  float signal1_counterRaw = Yield((TH1D*)signal1_file->Get(level + "/h_counterRaw_" + channel));
+
+  float counterSignal = signal1_counterLum * _luminosity_fb;
+
+  float efficiency = signal1_counterRaw / signal1_ngen;
+
+
+  // Get the second signal (example ggWW)
+  //----------------------------------------------------------------------------
+  if (!signal2_filename.Contains("NULL"))
+    {
+      TFile* signal2_file = new TFile(_inputdir + "/" + signal2_filename + ".root");
+
+      float signal2_counterLum = Yield((TH1D*)signal2_file->Get(level + "/h_counterLum_" + channel));
+      float signal2_counterRaw = Yield((TH1D*)signal2_file->Get(level + "/h_counterRaw_" + channel));
+
+      counterSignal += (signal2_counterLum * _luminosity_fb);
+
+      float signal1_fraction = signal1_xs / (signal1_xs + signal2_xs);
+      float signal2_fraction = 1. - signal1_fraction;
+
+      float signal1_efficiency = signal1_counterRaw / signal1_ngen;
+      float signal2_efficiency = signal2_counterRaw / signal2_ngen;
+
+      efficiency = signal1_fraction*signal1_efficiency + signal2_fraction*signal2_efficiency;
+    }
+
+
+  // Get the backgrounds
+  //----------------------------------------------------------------------------
+  float counterBackground = 0;
 
   for (UInt_t i=0; i<_mcfile.size(); i++) {
 
+    if (_mclabel[i].EqualTo(process)) continue;
+
     _mcfile[i]->cd();
 
-    if (_mclabel[i].EqualTo(process))
-      {
-        signal    = (TH1D*)_mcfile[i]->Get(level + "/h_counterRaw_" + channel);
-        signalLum = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
-      }
-    else
-      {
-	TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
+    TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
 
-	_mchist.push_back((TH1D*)dummy->Clone());
+    float counterDummy = Yield(dummy);
 
-	if (_mcscale[i] > 0) _mchist[i]->Scale(_mcscale[i]);
-      }
+    if (_luminosity_fb > 0 && _mcscale[i] > -999) counterDummy *= _luminosity_fb;
+
+    if (_mcscale[i] > 0) counterDummy *= _mcscale[i];
+
+    counterBackground += counterDummy;
   }
-
-  float counterBkg       = 0.;
-  float counterSignal    = Yield(signal);
-  float counterSignalLum = Yield(signalLum);
-
-  for (UInt_t i=0; i<_mchist.size(); i++) counterBkg += Yield(_mchist[i]);
 
 
   // Get the data
@@ -580,7 +619,7 @@ void HistogramReader::CrossSection(TString level,
     {
       _datafile->cd();
 
-      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterRaw_" + channel);
+      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterLum_" + channel);
 
       _datahist = (TH1D*)dummy->Clone();      
     }
@@ -590,21 +629,28 @@ void HistogramReader::CrossSection(TString level,
 
   // Cross-section calculation
   //----------------------------------------------------------------------------  
-  float efficiency   = counterSignal / 1980800.;
-  float crossSection = (counterData - counterBkg) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
-  float mu           = (counterData - counterBkg) / (counterSignalLum);
+  float xs = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  float mu = (counterData - counterBackground) / (counterSignal);
 
 
   // Statistical error
   //----------------------------------------------------------------------------  
-  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * WZ23lnu);
-  float muErrorStat = sqrt(counterData) / (counterSignalLum); 
+  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  float muErrorStat = sqrt(counterData) / (counterSignal); 
+
  
-  printf(" mu(%s) = %.2f $\\pm$ %.2f (stat.) $\\pm$ %.2f (lumi.) \\\\\n",
-	 channel.Data(),
-	 mu,
-	 muErrorStat,
-	 mu * lumi_error_percent / 1e2);
+  // Print
+  //----------------------------------------------------------------------------  
+  printf("      channel = %s\n", channel.Data());
+  printf("        ndata = %.0f\n", counterData);
+  printf("         nbkg = %.2f\n", counterBackground);
+  printf(" ndata - nbkg = %.2f\n", counterData - counterBackground);
+  printf("      nsignal = %.2f\n", counterSignal);
+  printf("           mu = (ndata - nbkg) / nsignal = %.2f +- %.2f (stat) +- %.2f (lumi)\n", mu, muErrorStat, mu * lumi_error_percent / 1e2);
+  printf("         lumi = %.0f pb\n", 1e3 * _luminosity_fb);
+  printf("           br = %f\n", branchingratio);
+  printf("          eff = %.4f\n", efficiency);
+  printf("           xs = (ndata - nbkg) / (lumi * eff * br) = %.2f +- %.2f (stat) +- %.2f (lumi) pb\n\n", xs, xsErrorStat, xs * lumi_error_percent / 1e2);
 }
 
 
@@ -1157,6 +1203,8 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
 void HistogramReader::WriteYields(TH1*    hist,
 				  TString label)
 {
+  TString hname = hist->GetName();
+
   if (!_writeyields) return;
 
   if (_writelabels)
@@ -1169,10 +1217,10 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
 	    
-	_yields_table << Form(" & %-24s", binlabel.Data());
+	_yields_table << Form(" | %-32s", binlabel.Data());
       }
 
-      _yields_table << Form(" \\\\\n");
+      _yields_table << Form("\n");
     }
 
   _yields_table << Form(" %14s", label.Data());
@@ -1184,54 +1232,26 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" & %7.0f %16s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %14s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" & %10.2f $\\pm$ %7.2f", process_yield, process_error);
+	_yields_table << Form(" | %11.2f +/- %7.2f", process_yield, process_error);
       }
+
+    int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
+
+    float process_percent = 1e2 * process_yield / hist->GetBinContent(denominator);
+
+    _yields_table << Form(" (%5.1f%s)", process_percent, "%");
   }
 
-  _yields_table << Form(" \\\\\n");
+  _yields_table << Form("\n");
 }
 
 
 //------------------------------------------------------------------------------
-// ROC Signals
-//------------------------------------------------------------------------------
-void HistogramReader::AddRocSignal( TString filename)
-{
-  TString fullname = _inputdir + "/" + filename + ".root";
-  
-  if (gSystem->AccessPathName(fullname))
-    {
-      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
-      return;
-    }
-
-  _roc_signals.push_back(fullname);
-}
-
-
-//------------------------------------------------------------------------------
-// ROC Backgrounds
-//------------------------------------------------------------------------------
-void HistogramReader::AddRocBackground( TString filename)
-{
-  TString fullname = _inputdir + "/" + filename + ".root";
-  
-  if (gSystem->AccessPathName(fullname))
-    {
-      printf(" [HistogramReader::AddProcess] Cannot access %s\n", fullname.Data());
-      return;
-    }
-
-  _roc_backgrounds.push_back(fullname);
-}
-
-
-//------------------------------------------------------------------------------
-// ROC Calculation
+// Roc
 //------------------------------------------------------------------------------
 void HistogramReader::Roc(TString hname,
 			  TString xtitle,
@@ -1239,123 +1259,120 @@ void HistogramReader::Roc(TString hname,
 			  TString units,
 			  Float_t xmin,
 			  Float_t xmax)
-{  
-  //Recalling Signal files and histograms
-  TFile* fSig[_roc_signals.size()];
-  TH1F*  hSig[_roc_signals.size()]; 
-  TH1F*  hSigTot; 
-  for (int i = 0; i < _roc_signals.size(); ++i){
-    fSig[i] = new TFile(_roc_signals.at(i));
-    hSig[i] = (TH1F*) fSig[i] -> Get(hname);
-  }
+{
+  // Get the signal
+  //----------------------------------------------------------------------------
+  THStack* stack_sig = new THStack(hname + "_stack_sig", hname + "_stack_sig");
 
-  //Recalling Background files and histograms
-  TFile* fBkg[_roc_backgrounds.size()];
-  TH1F*  hBkg[_roc_backgrounds.size()];
-  for (int j = 0; j < _roc_backgrounds.size(); ++j){
-    fBkg[j] = new TFile(_roc_backgrounds.at(j));
-    hBkg[j] = (TH1F*) fBkg[j] -> Get(hname);
-  }
+  TFile* file_sig[_roc_signals.size()];
 
+  for (int i=0; i<_roc_signals.size(); ++i)
+    {
+      file_sig[i] = new TFile(_roc_signals.at(i));
+      
+      stack_sig->Add((TH1D*)file_sig[i]->Get(hname));
+    }
+
+  TH1D* hSig = (TH1D*)(stack_sig->GetStack()->Last());
+
+
+  // Get the backgrounds
+  //----------------------------------------------------------------------------
+  THStack* stack_bkg = new THStack(hname + "_stack_bkg", hname + "_stack_bkg");
+
+  TFile* file_bkg[_roc_backgrounds.size()];
+
+  for (int j=0; j<_roc_backgrounds.size(); ++j)
+    {
+      file_bkg[j] = new TFile(_roc_backgrounds.at(j));
+
+      stack_bkg->Add((TH1D*)file_bkg[j]->Get(hname));
+    }
+
+  TH1D* hBkg = (TH1D*)(stack_bkg->GetStack()->Last());
+
+
+  // Compute ROC and significance
+  //----------------------------------------------------------------------------
   float step = (xmax - xmin) / npoints;
 
   TGraph* rocGraph = new TGraph();
-  TGraph* significanceGraph = new TGraph();
+  TGraph* sigGraph = new TGraph();
 
-  float sigEff       = 0.;
-  float bkgEff       = 0.;
-  float significance = 0.;
-  float sigMax       = 0.;
-  float xOfTheMax    = 0.;
+  Float_t score_value = 0;
+  Float_t score_x     = 0;
 
-  // Calculating yields and efficiencies
-  for (int s=0; s<npoints; ++s) {
+  Float_t sigTotal = hSig->Integral(-1, -1);
+  Float_t bkgTotal = hBkg->Integral(-1, -1);
 
-    float sigYield = 0;
-    float sigTot   = 0;
-    float bkgYield = 0;
-    float bkgTot   = 0;
+  for (int s=0; s<=npoints; ++s) {
 
-    for (int sig = 0; sig < _roc_signals.size(); ++sig){
-      sigYield += hSig[sig] -> Integral(0., hSig[sig] -> FindBin(xmin + s*step));
-      sigTot   += hSig[sig] -> Integral();
-    }    
-    for (int bkg = 0; bkg < _roc_backgrounds.size(); ++bkg){
-      bkgYield += hBkg[bkg] -> Integral(0., hBkg[bkg] -> FindBin(xmin + s*step));
-      bkgTot   += hBkg[bkg] -> Integral();
+    Float_t sigYield = 0;
+    Float_t bkgYield = 0;
+
+    sigYield += hSig->Integral(-1, hSig->FindBin(xmin + s*step));
+    bkgYield += hBkg->Integral(-1, hBkg->FindBin(xmin + s*step));
+
+    Float_t sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
+    Float_t bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
+
+    Float_t score = sigYield / sqrt(sigYield + bkgYield);
+
+    if (score > score_value) {
+      score_value = score;
+      score_x     = xmin + s*step;
     }
-    if (sigTot != 0)
-      sigEff = sigYield / sigTot;
-    if (bkgTot != 0)
-      bkgEff = bkgYield / bkgTot;
-    significance = sigYield / (sigYield + bkgYield);
-    if (significance > sigMax){
-      sigMax = significance;
-      xOfTheMax = xmin + s*step;
-    }
-    rocGraph         ->SetPoint(s, sigEff, 1 - bkgEff);
-    significanceGraph->SetPoint(s, xmin + s*step, significance);
+
+    rocGraph->SetPoint(s, sigEff, 1 - bkgEff);
+    sigGraph->SetPoint(s, xmin + s*step, score);
   }
 
-  cout<<"My guess is that you should cut at "<<xOfTheMax<<endl;
 
-  //Cosmetics  
-  // TStyle* RocStyle = new TStyle("RocStyle", "RocStyle");
-  // gStyle = RocStyle;
+  printf("\n [HistogramReader::Roc] Reading %s\n", hname.Data());
+  printf(" The best S/sqrt(S+B) = %f corresponds to x = %.2f %s (%.2f < x < %.2f)\n\n",
+	 score_value, score_x, units.Data(), xmin, xmax);
+  
 
-  // RocStyle->SetTitleAlign     (   22);
-  // RocStyle->SetTitleBorderSize(    0);
-  // RocStyle->SetTitleFillColor (   10);
-  // RocStyle->SetTitleFont      (   42);
-  // RocStyle->SetTitleFontSize  (0.045);
-  // RocStyle->SetTitleX         (0.500);
-  // RocStyle->SetTitleY         (0.950);
+  // Draw and save ROC
+  //----------------------------------------------------------------------------
+  TCanvas* rocCanvas = new TCanvas(hname + " ROC", hname + " ROC");
 
-  rocGraph->SetTitle("ROC Curve - " + xtitle);
-  rocGraph->GetXaxis()->SetRangeUser(0.,1.);
-  rocGraph->GetYaxis()->SetRangeUser(0.,1.);
-  rocGraph->GetXaxis()->SetTitle("signal efficiency");
-  rocGraph->GetYaxis()->SetTitle("background rejection");
-  rocGraph->GetYaxis()->SetTitleOffset(1.4);
+  rocGraph->SetMarkerColor(kRed+1);
+  rocGraph->SetMarkerStyle(kFullCircle);
+  rocGraph->SetMarkerSize(0.5);
 
-  TString myxtitle = xtitle;
-  if (units != "NULL")
-    myxtitle = xtitle + " [" + units + "]";
+  rocGraph->Draw("ap");
 
-  significanceGraph->SetTitle("significance curve - " + xtitle);
-  significanceGraph->GetXaxis()->SetRangeUser(xmin, xmax);
-  significanceGraph->GetYaxis()->SetRangeUser(0., 1.5*sigMax);
-  significanceGraph->GetXaxis()->SetTitle(myxtitle);
-  significanceGraph->GetYaxis()->SetTitle("S / (S + B)");
-  significanceGraph->GetYaxis()->SetTitleOffset(1.4);
+  rocGraph->GetXaxis()->SetRangeUser(0, 1);
+  rocGraph->GetYaxis()->SetRangeUser(0, 1);
 
-  //Printing and Saving
-  TCanvas *c1 = new TCanvas("c1","c1", 550, 600);
-  c1->cd();
-  TPad* pad1 = new TPad("pad1", "pad1", 0., 0., 1.0, 1.0);
-  pad1->SetLeftMargin(0.15);
-  pad1->SetBottomMargin(0.15);
-  pad1->SetTopMargin(0.15);
-  pad1->Draw();
-  pad1->cd();
-  rocGraph->Draw("AP");
-  //c1->Print(variable + "ROC.pdf","pdf");
-  if (_savepdf) c1->SaveAs(_outputdir + hname + "_ROC.pdf");
-  if (_savepng) c1->SaveAs(_outputdir + hname + "_ROC.png");
+  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+
+  SetAxis(rocGraph->GetHistogram(), xtitle + " signal efficiency", xtitle + " background rejection", 1.5, 1.8);
+
+  if (_savepdf) rocCanvas->SaveAs(_outputdir + hname + "_ROC.pdf");
+  if (_savepng) rocCanvas->SaveAs(_outputdir + hname + "_ROC.png");
 
 
-  //  gSystem->Exec("mv " + variable + "ROC.pdf " + );
+  // Draw and save significance
+  //----------------------------------------------------------------------------
+  TCanvas *sigCanvas = new TCanvas(hname + " significance", hname + " significance");
 
-  TCanvas *c2 = new TCanvas("c2","c2", 600, 600);
-  c2->cd();
-  TPad* pad2 = new TPad("pad2", "pad2", 0., 0., 1.0, 1.0);
-  pad2->SetLeftMargin(0.15);
-  pad2->SetBottomMargin(0.15);
-  pad2->SetTopMargin(0.15);
-  pad2->Draw();
-  pad2->cd();
-  significanceGraph->Draw("AP");
-  //c2->Print(variable + "Significance.pdf","pdf");
-  if (_savepdf) c2->SaveAs(_outputdir + hname + "_Significance.pdf");
-  if (_savepng) c2->SaveAs(_outputdir + hname + "_Significance.png");
+  TString myxtitle = (!units.Contains("NULL")) ? xtitle + " [" + units + "]" : xtitle;
+
+  sigGraph->SetMarkerColor(kRed+1);
+  sigGraph->SetMarkerStyle(kFullCircle);
+  sigGraph->SetMarkerSize(0.5);
+
+  sigGraph->Draw("ap");
+
+  sigGraph->GetXaxis()->SetRangeUser(xmin, xmax);
+  sigGraph->GetYaxis()->SetRangeUser(0, 1.5*score_value);
+
+  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+
+  SetAxis(sigGraph->GetHistogram(), myxtitle, "S / #sqrt{S + B}", 1.5, 2.1);
+
+  if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
+  if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
 }

@@ -108,7 +108,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     bool pass_zwindow = (_nelectron == 1 || fabs(mll - Z_MASS) > 15.);
     FillLevelHistograms(WW_03_ZVeto, pass && pass_zwindow);
 
-    pass &= ((_nelectron == 1 && _mpmet > 20) || (_nelectron != 1 && _mpmet > 45));
+    pass &= ((_nelectron == 1 && mpmet > 20) || (_nelectron != 1 && mpmet > 45));
     FillLevelHistograms(WW_04_MpMet, pass && pass_zwindow);
 
     pass &= (_passdphiveto);
@@ -147,7 +147,7 @@ void AnalysisWW::Loop(TString analysis, TString filename, float luminosity)
     // FillLevelHistograms(WW_60_DYttCR, pass_dyttCR);
 
     // //    bool pass_dyCR = (_nbjet20cmvav2l == 0 && !pass_zwindow);
-    // bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _mpmet > 20 && _nbjet20cmvav2l == 0);
+    // bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && mpmet > 20 && _nbjet20cmvav2l == 0);
     // FillLevelHistograms(WW_70_DYCR, pass_dyCR);
 
     // bool pass_dyCR_nompmet = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _nbjet20cmvav2l == 0);
