@@ -55,7 +55,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
-    //if ( _nentries > 100 )  _nentries = 100;  
+    //if ( _nentries > 1000 )  _nentries = 1000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
@@ -114,12 +114,6 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(TTDM_01_NewPresel, pass);
 
     if (_saveminitree && pass ) minitree->Fill();
-
-    pass &= (MET.Et() > 50.); 
-
-    FillLevelHistograms(TTDM_02_MET50, pass);
-
-
 
     // TT Control Region
     //--------------------------------------------------------------------------

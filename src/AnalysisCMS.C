@@ -1889,7 +1889,7 @@ void AnalysisCMS::GetTopReco()
 
   theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, unc, myMET, nu1, nu2); 
 
-  _nsol_10_10_10 = nu1.size(); 
+  _nsol_10_10_10 = nu1.size();
 
   nu1.clear(); 
   nu2.clear(); 
