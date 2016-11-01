@@ -1561,9 +1561,10 @@ void AnalysisCMS::GetStopVar()
 
   for (int wb=std_vector_VBoson_pt->size()-1; wb>=0; wb--) {
 
-    if (std_vector_VBoson_pt->at(wb) < 0.) continue;
+    if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
 
     int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
+    if (fabs(Wid)!=24) continue;
     int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
     if (lepIndex[IdxW] > -999) continue;
