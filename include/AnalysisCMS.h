@@ -146,6 +146,15 @@ class AnalysisCMS : public AnalysisBase
   TLorentzVector         MET;
   TLorentzVector         trkMET;
 
+  std::vector<float>     _jet_pt; 
+  std::vector<float>     _jet_eta;
+  std::vector<float>     _jet_phi;
+
+  std::vector<float>     _bjet30csvv2m_pt; 
+  std::vector<float>     _bjet30csvv2m_eta;
+  std::vector<float>     _bjet30csvv2m_phi;
+
+
   bool                   _saveminitree;
   bool                   _eventdump;
   bool                   _foundsoftmuon;
