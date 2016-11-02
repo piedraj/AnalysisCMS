@@ -1,7 +1,7 @@
 // root -l -b -q CreateHistograms
 
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
-      lep2pt, lep2eta, lep2phi, lep2mass,
+      /*lep2pt, lep2eta, lep2phi, lep2mass,
       jet1pt, jet1eta, jet1phi, jet1mass,
       jet2pt, jet2eta, jet2phi, jet2mass,
       metPfType1, metPfType1Phi,
@@ -9,8 +9,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       ht, htjets, htnojets,
       njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
       dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
-      top1eta_gen top1phi_gen top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
-      nvtx,
+      top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
+      nvtx,*/
       nhisto
  }; 
 
@@ -36,7 +36,7 @@ void CreateHistograms(){
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
 
- 	b_name[lep2pt  ] = "lep2pt"  ;
+ 	/*b_name[lep2pt  ] = "lep2pt"  ;
 	b_name[lep2eta ] = "lep2eta" ;
 	b_name[lep2phi ] = "lep2phi" ;
 	b_name[lep2mass] = "lep2mass";
@@ -90,7 +90,7 @@ void CreateHistograms(){
 	b_name[top2pt_gen  ] = "top2pt_gen"  ;
 	b_name[detatt_gen  ] = "detatt_gen"  ;
 
-	b_name[nvtx        ] = "nvtx"        ;
+	b_name[nvtx        ] = "nvtx"        ;*/
 
 
 	for( int i = 0; i < nhisto; i++ ){
@@ -140,7 +140,7 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", mycut );
 
- 	mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", mycut );
+ 	/*mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", mycut );
 	mytree -> Draw( b_name[lep2eta      ] + " >> " + h_name[lep2eta      ] + "(   60, -3  ,    3   )", mycut );
 	mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", mycut );
@@ -194,7 +194,7 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[top2pt_gen   ] + " >> " + h_name[top2pt_gen   ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", mycut );
 
-	mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", mycut );
+	mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", mycut );*/
 
 
 	for( int i = 0; i < nhisto; i++ ){	

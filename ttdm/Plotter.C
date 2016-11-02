@@ -75,11 +75,11 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("09_TTV",       "ttV",        color_TTV);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
   plotter.AddProcess("05_ST",        "tW",         color_ST);
-  //plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, -999); // -999 is needed to not scale by luminosity
+  plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
 
   // Add signals
   //----------------------------------------------------------------------------
-  plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
+  plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal, roc_signal);
   plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+4);
  
 
@@ -135,19 +135,19 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "jet1eta"        , "leading jet #eta",                  -1, 1, "NULL", scale, false);
   //plotter.Draw( "jet1mass"       , "leading jet mass",                  -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet1phi"        , "leading jet #phi",                   5, 2, "rad",  scale, false);
-  plotter.Draw( "jet1pt"         , "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
+  //plotter.Draw( "jet1pt"         , "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "jet2eta"        , "trailing jet #eta",                 -1, 1, "NULL", scale, false);
   //plotter.Draw( "jet2mass"       , "trailing jet mass",                 -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet2phi"        , "trailing jet #phi",                  5, 2, "rad",  scale, false);
-  plotter.Draw( "jet2pt"         , "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
+  //plotter.Draw( "jet2pt"         , "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "lep1eta"        , "leading lepton #eta",               -1, 1, "NULL", scale);
   //plotter.Draw( "lep1phi"        , "leading lepton #phi",                5, 2, "rad",  scale);
   plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
   //plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
   //plotter.Draw( "lep2phi"        , "trailing lepton #phi",               5, 2, "rad",  scale);
-  plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
+  //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
   //plotter.Draw( "m2l"            , "m_{" + sll + "}",                    5, 0, "GeV",  scale, true, 0,  300);
-  plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  500);
+  //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  500);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
   //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 600); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
