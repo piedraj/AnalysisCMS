@@ -55,7 +55,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    EventDump         ();
 
-  void    EventSetup        (float    jet_eta_max = -1);
+  void    EventSetup        (float    jet_eta_max = -1, float jet_pt_min = 30.);
 
   void    FillHistograms    (int      ichannel,
 			     int      icut,
@@ -65,7 +65,7 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetGenPtllWeight  ();
 
-  void    GetJets           (float    jet_eta_max);
+  void    GetJets           (float    jet_eta_max, float jet_pt_min);
 
   void    GetLeptons        ();
 

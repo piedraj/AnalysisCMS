@@ -1,6 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
+#include "../src/mt2_bisect.cpp"
 #include "../top-reco/src/MassVariations.cc"
 
 
@@ -582,7 +583,7 @@ void AnalysisCMS::GetLeptons()
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetJets(float jet_eta_max)
+void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
@@ -629,7 +630,7 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
-    if (pt < 30.) continue;
+    if (pt < jet_pt_min) continue;
 
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++;
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
@@ -960,7 +961,7 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 // EventSetup
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventSetup(float jet_eta_max)
+void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 {
   GetMET(metPfType1, metPfType1Phi);
 
@@ -968,7 +969,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
-  GetJets(jet_eta_max);
+  GetJets(jet_eta_max, jet_pt_min);
 
   GetTops();
 
@@ -1414,6 +1415,20 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 						pxMiss, pyMiss,
 						chiA, chiB,
 						desiredPrecisionOnMt2);
+
+  // Compare with original UC Davis
+  double pa[3] = { mVisA, pxA, pyA };
+  double pb[3] = { mVisB, pxB, pyB };
+  double pmiss[3] = { 0, pxMiss, pyMiss };
+  double mn    = chiA;
+
+  mt2_bisect::mt2 mt2_event;
+  
+  mt2_event.set_momenta(pa,pb,pmiss);
+  mt2_event.set_mn(mn);
+  //mt2_event.print();
+
+  cout << MT2Type << " mt2 = " << mt2_event.get_mt2() << " " << MT2 << " " << fabs(mt2_event.get_mt2()-MT2)<< endl;
 
   return MT2;
 }

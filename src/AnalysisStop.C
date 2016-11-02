@@ -79,7 +79,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup(2.4);
+    EventSetup(2.4, 20.);
 
     if (_ismc) {
 
