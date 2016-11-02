@@ -80,7 +80,7 @@ void Plotter(TString option = "hist"){
   // Add signals
   //----------------------------------------------------------------------------
   plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal, roc_signal);
-  plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+4);
+  //plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+4);
  
 
   // ROC curve inputs
@@ -155,6 +155,14 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
   //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale);
   //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
+
+
+
+
+  //           hname     xtitle                      npoints  units xmin xmax
+  //  ---------------------------------------------------------------------------
+  plotter.Roc( "lep1pt", "leading lepton p_{T}",        1000, "GeV", 0, 1000);
+
 
 
   // Copy index.php in every directory
