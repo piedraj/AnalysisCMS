@@ -266,6 +266,8 @@ void HistogramReader::Draw(TString hname,
 
   hfirst->Reset();
 
+  hfirst->SetTitle("");  // clear histogram title out
+
 
   // All MC
   //----------------------------------------------------------------------------
