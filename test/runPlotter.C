@@ -281,6 +281,7 @@ void runPlotter(TString level,
 	  if (analysis.EqualTo("Shape"))
 	    {
 	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "dphimetjet" + suffix, "min #Delta#phi(jet," + sm + ")", 5, 2);
 	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
 	      plotter.Roc(prefix + "sphericity"  + suffix, "sphericity", 20, "NULL", 0, 1);
 	      plotter.Roc(prefix + "planarity"   + suffix, "planarity",  20, "NULL", 0, 1);
