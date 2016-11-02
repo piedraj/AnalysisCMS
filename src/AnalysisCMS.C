@@ -992,7 +992,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetTops();
 
-  GetTopReco();
+  //GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1023,7 +1023,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetDeltaPhiVeto();
 
-  //GetStopVar();
+  GetStopVar();
 }
 
 
@@ -1235,11 +1235,11 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dphilep2jet2",   &_dphilep2jet2,   "dphilep2jet2/F");
   minitree->Branch("dphill",         &dphill,          "dphill/F" );
   minitree->Branch("dphillmet",      &_dphillmet,      "dphillmet/F");
-  minitree->Branch("dphillstar",     &_dphillstar,     "dphillstar/F");
+  //minitree->Branch("dphillstar",     &_dphillstar,     "dphillstar/F");
   minitree->Branch("dphilmet1",      &dphilmet1,       "dphilmet1/F");
   minitree->Branch("dphilmet2",      &dphilmet2,       "dphilmet2/F");
   minitree->Branch("dphitt_gen",     &_dphitt_gen,     "dphitt_gen/F");
-  minitree->Branch("drll",           &drll,            "drll/F");
+  //minitree->Branch("drll",           &drll,            "drll/F");
   minitree->Branch("event",          &event,           "event/I");
   minitree->Branch("eventW",         &_event_weight,   "eventW/F");
   minitree->Branch("ht",             &_ht,             "ht/F");
@@ -1262,34 +1262,37 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2pt",         &_lep2pt,         "lep2pt/F");
   minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
   minitree->Branch("lumi",           &lumi,            "lumi/I");
-  minitree->Branch("mc",             &_mc,             "mc/F");
+  //minitree->Branch("mc",             &_mc,             "mc/F");
   minitree->Branch("m2l",            &_m2l,            "m2l/F");
-  minitree->Branch("mpmet",          &mpmet,           "mpmet/F");
-  minitree->Branch("metPuppi",       &metPuppi,        "metPuppi/F");
+  //minitree->Branch("mpmet",          &mpmet,           "mpmet/F");
+  //minitree->Branch("metPuppi",       &metPuppi,        "metPuppi/F");
   minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
   minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
-  minitree->Branch("metTtrk",        &metTtrk,         "metTtrk/F");
-  minitree->Branch("metTtrkPhi",     &metTtrkPhi,      "metTtrkPhi/F");
-  minitree->Branch("mth",            &mth,             "mth/F");
+  //minitree->Branch("metTtrk",        &metTtrk,         "metTtrk/F");
+  //minitree->Branch("metTtrkPhi",     &metTtrkPhi,      "metTtrkPhi/F");
+  minitree->Branch("mt2ll",          &_mt2ll,          "mt2ll/F");                        
+  minitree->Branch("mt2lblb",        &_mt2lblb,        "mt2lblb/F");
+  //minitree->Branch("mth",            &mth,             "mth/F");
   minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
   minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
-  minitree->Branch("nbjet15csvv2l",  &_nbjet15csvv2l,  "nbjet15csvv2l/F");
-  minitree->Branch("nbjet15csvv2m",  &_nbjet15csvv2m,  "nbjet15csvv2m/F");
-  minitree->Branch("nbjet15csvv2t",  &_nbjet15csvv2t,  "nbjet15csvv2t/F");
+  //minitree->Branch("nbjet15csvv2l",  &_nbjet15csvv2l,  "nbjet15csvv2l/F");
+  //minitree->Branch("nbjet15csvv2m",  &_nbjet15csvv2m,  "nbjet15csvv2m/F");
+  //minitree->Branch("nbjet15csvv2t",  &_nbjet15csvv2t,  "nbjet15csvv2t/F");
   minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
   minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
-  minitree->Branch("nbjet20cmvav2l", &_nbjet20cmvav2l, "nbjet20cmvav2l/F");
-  minitree->Branch("nbjet20cmvav2m", &_nbjet20cmvav2m, "nbjet20cmvav2m/F");
-  minitree->Branch("nbjet20cmvav2t", &_nbjet20cmvav2t, "nbjet20cmvav2t/F");
-  minitree->Branch("nbjet30cmvav2l", &_nbjet30cmvav2l, "nbjet30cmvav2l/F");
-  minitree->Branch("nbjet30cmvav2m", &_nbjet30cmvav2m, "nbjet30cmvav2m/F");
-  minitree->Branch("nbjet30cmvav2t", &_nbjet30cmvav2t, "nbjet30cmvav2t/F");
+  //minitree->Branch("nbjet20cmvav2l", &_nbjet20cmvav2l, "nbjet20cmvav2l/F");
+  //minitree->Branch("nbjet20cmvav2m", &_nbjet20cmvav2m, "nbjet20cmvav2m/F");
+  //minitree->Branch("nbjet20cmvav2t", &_nbjet20cmvav2t, "nbjet20cmvav2t/F");
+  //minitree->Branch("nbjet30cmvav2l", &_nbjet30cmvav2l, "nbjet30cmvav2l/F");
+  //minitree->Branch("nbjet30cmvav2m", &_nbjet30cmvav2m, "nbjet30cmvav2m/F");
+  //minitree->Branch("nbjet30cmvav2t", &_nbjet30cmvav2t, "nbjet30cmvav2t/F");
   minitree->Branch("njet",           &_njet,           "njet/F");
-  minitree->Branch("nsol_1_1_10",    &_nsol_1_1_10,    "nsol_1_1_10/F");
-  minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
+  //minitree->Branch("nsol_1_1_10",    &_nsol_1_1_10,    "nsol_1_1_10/F");
+  //minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
+  minitree->Branch("nvtx",           &nvtx,            "nvtx/F");
   minitree->Branch("run",            &run,             "run/I");
-  minitree->Branch("top1eta_gen",    &_top1eta_gen,    "top1eta_gen/F");
+  minitree->Branch("top1eta_gen",    &_top1eta_gen,    "top1eta_gen/F");                 
   minitree->Branch("top1phi_gen",    &_top1phi_gen,    "top1phi_gen/F");
   minitree->Branch("top1pt_gen",     &_top1pt_gen,     "top1pt_gen/F");
   minitree->Branch("top2eta_gen",    &_top2eta_gen,    "top2eta_gen/F");
@@ -1306,7 +1309,7 @@ void AnalysisCMS::OpenMinitree()
 
 
   if (std_vector_LHE_weight)
-    minitree->Branch("LHEweight", &std_vector_LHE_weight);
+    //minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
 
   if (!_analysis.EqualTo("TTDM")){
