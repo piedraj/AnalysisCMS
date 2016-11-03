@@ -672,6 +672,29 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   _njet = AnalysisJets.size();
 
   _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
+
+  // jetpt1, jetpt2 etc vienen de latino y no tienen la seleción de AnalysisJets
+  // Aquí cambiamo sus valores por lo de los jets selecionados
+  jeteta1 = -999.;
+  jeteta2 = -999.;
+  jetpt1  = -999.;
+  jetpt2  = -999.;
+  jetphi1 = -999.;	
+  jetphi2 = -999.;
+
+  if (_njet == 1) {
+    jetpt1  = AnalysisJets[0].v.Pt();
+    jeteta1 = AnalysisJets[0].v.Eta();
+    jetphi1 = AnalysisJets[0].v.Phi();
+  } else if (_njet > 1) {
+    jetpt1  = AnalysisJets[0].v.Pt();
+    jeteta1 = AnalysisJets[0].v.Eta();
+    jetphi1 = AnalysisJets[0].v.Phi();
+    jetpt2  = AnalysisJets[1].v.Pt();
+    jeteta2 = AnalysisJets[1].v.Eta();
+    jetphi2 = AnalysisJets[1].v.Phi(); 
+  }
+  
 }
 
 
