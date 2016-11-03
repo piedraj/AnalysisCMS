@@ -681,7 +681,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   jetpt2  = -999.;
   jetphi1 = -999.;	
   jetphi2 = -999.;
-
+  
   if (_njet == 1) {
     jetpt1  = AnalysisJets[0].v.Pt();
     jeteta1 = AnalysisJets[0].v.Eta();
@@ -1293,6 +1293,12 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mth",            &mth,             "mth/F");
   minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
   minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
+  minitree->Branch("LeadingPtCSVv2L",&_LeadingPtCSVv2L,"_LeadingPtCSVv2L/F");
+  minitree->Branch("LeadingPtCSVv2M",&_LeadingPtCSVv2M,"_LeadingPtCSVv2M/F");
+  minitree->Branch("LeadingPtCSVv2T",&_LeadingPtCSVv2T,"_LeadingPtCSVv2T/F");
+  minitree->Branch("TrailingPtCSVv2L",&_TrailingPtCSVv2L,"_TrailingPtCSVv2L/F");
+  minitree->Branch("TrailingPtCSVv2M",&_TrailingPtCSVv2M,"_TrailingPtCSVv2M/F");
+  minitree->Branch("TrailingPtCSVv2T",&_TrailingPtCSVv2T,"_TrailingPtCSVv2T/F");
   minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
   minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
@@ -1548,7 +1554,7 @@ void AnalysisCMS::GetStopVar()
 	
       } else if (BJetOption==1) {
 	
-	float leadingBTagDiscriminator = trailingBTagDiscriminator = -9999;
+	float leadingBTagDiscriminator = -9999., trailingBTagDiscriminator = -9999;
 	for (int ijet=0; ijet<_njet; ijet++) {
 	  if (AnalysisJets[ijet].csvv2ivf > leadingBTagDiscriminator) {
 	    trailingBTagDiscriminator = leadingBTagDiscriminator;
