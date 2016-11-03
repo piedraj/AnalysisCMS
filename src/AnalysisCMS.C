@@ -188,9 +188,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);
   h_mtw2          [ichannel][icut][ijet]->Fill(mtw2,            _event_weight);
   h_m2l           [ichannel][icut][ijet]->Fill(_m2l,            _event_weight);
-  h_nbjet15csvv2l [ichannel][icut][ijet]->Fill(_nbjet15csvv2l,  _event_weight);
-  h_nbjet15csvv2m [ichannel][icut][ijet]->Fill(_nbjet15csvv2m,  _event_weight);
-  h_nbjet15csvv2t [ichannel][icut][ijet]->Fill(_nbjet15csvv2t,  _event_weight);
   h_nbjet30csvv2l [ichannel][icut][ijet]->Fill(_nbjet30csvv2l,  _event_weight);
   h_nbjet30csvv2m [ichannel][icut][ijet]->Fill(_nbjet30csvv2m,  _event_weight);
   h_nbjet30csvv2t [ichannel][icut][ijet]->Fill(_nbjet30csvv2t,  _event_weight);
@@ -587,9 +584,12 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
-  _nbjet15csvv2l  = 0;
-  _nbjet15csvv2m  = 0;
-  _nbjet15csvv2t  = 0;
+  _LeadingPtCSVv2L  = -0.1;
+  _LeadingPtCSVv2M  = -0.1;
+  _LeadingPtCSVv2T  = -0.1;
+  _TrailingPtCSVv2L = -0.1;
+  _TrailingPtCSVv2M = -0.1;
+  _TrailingPtCSVv2T = -0.1;
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
@@ -620,11 +620,33 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.mass     = std_vector_jet_mass->at(i);
-    goodjet.v        = tlv;
 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
+    if (goodjet.csvv2ivf > CSVv2L) {
+      if (pt > _LeadingPtCSVv2L) {
+	_TrailingPtCSVv2L = _LeadingPtCSVv2L;
+	_LeadingPtCSVv2L  = pt;
+      } else if (pt > _TrailingPtCSVv2L) {
+	_TrailingPtCSVv2L = pt;
+      } 
+    }
+
+    if (goodjet.csvv2ivf > CSVv2M) {
+      if (pt > _LeadingPtCSVv2M) {
+	_TrailingPtCSVv2M = _LeadingPtCSVv2M;
+	_LeadingPtCSVv2M  = pt;
+      } else if (pt > _TrailingPtCSVv2M) {
+	_TrailingPtCSVv2M = pt;
+      } 
+    }
+
+    if (goodjet.csvv2ivf > CSVv2T) {
+      if (pt > _LeadingPtCSVv2T) {
+	_TrailingPtCSVv2T = _LeadingPtCSVv2T;
+	_LeadingPtCSVv2T  = pt;
+      } else if (pt > _TrailingPtCSVv2T) {
+	_TrailingPtCSVv2T = pt;
+      } 
+    }
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20cmvav2l++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
@@ -632,7 +654,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < jet_pt_min) continue;
 
-    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++;
+    // I would give this variables a more generic way (now they depends on jet_pt_min)
+    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
@@ -1154,9 +1177,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mtw1          [ichannel][icut][ijet] = new TH1D("h_mtw1"           + suffix, "", 2000,    0, 2000);
   h_mtw2          [ichannel][icut][ijet] = new TH1D("h_mtw2"           + suffix, "", 2000,    0, 2000);
   h_m2l           [ichannel][icut][ijet] = new TH1D("h_m2l"            + suffix, "", 2000,    0, 2000);
-  h_nbjet15csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2l"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2m"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2t"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2l"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2m"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2t"  + suffix, "",    7, -0.5,  6.5);
@@ -1250,9 +1270,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mth",            &mth,             "mth/F");
   minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
   minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
-  minitree->Branch("nbjet15csvv2l",  &_nbjet15csvv2l,  "nbjet15csvv2l/F");
-  minitree->Branch("nbjet15csvv2m",  &_nbjet15csvv2m,  "nbjet15csvv2m/F");
-  minitree->Branch("nbjet15csvv2t",  &_nbjet15csvv2t,  "nbjet15csvv2t/F");
   minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
   minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");

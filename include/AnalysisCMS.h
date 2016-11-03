@@ -230,9 +230,12 @@ class AnalysisCMS : public AnalysisBase
   float                  _m2l;
   float                  _m3l;
   float			 _m2t_gen;
-  float                  _nbjet15csvv2l;
-  float                  _nbjet15csvv2m;
-  float                  _nbjet15csvv2t;
+  float                  _LeadingPtCSVv2L;
+  float                  _LeadingPtCSVv2M;
+  float                  _LeadingPtCSVv2T;
+  float                  _TrailingPtCSVv2L;
+  float                  _TrailingPtCSVv2M;
+  float                  _TrailingPtCSVv2T;
   float                  _nbjet30csvv2l;
   float                  _nbjet30csvv2m;
   float                  _nbjet30csvv2t;

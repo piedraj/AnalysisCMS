@@ -168,7 +168,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Stop_01_Has2Jets, pass && pass_blind);
 
-    pass &= (_nbjet30csvv2m > 0);
+    pass &= (_LeadingPtCSVv2M >= 20.);
 
     FillLevelHistograms(Stop_02_Has1BJet, pass && pass_blind);
 
