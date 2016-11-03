@@ -1483,33 +1483,62 @@ void AnalysisCMS::GetStopVar()
   _tjet1assignment = _tjet2assignment = 0.;
 
 
-  if (_njet > 1) {
+  if (_njet > 0) {
       
-    _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
+    _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt();
+    if (_njet > 1) _meff += AnalysisJets[1].v.Pt();
 
-
-    // Get the index of the b-tagged jets
-    // If there is only one b-tagged jet, get also the index of the jet with largest pt
+    // Get the index of candidate b-jets
+    int BJetOption = 0; // Choose tagged jets, if not existing choose leading jets
+    //int BJetOption = 1; // Choose jets with greater b-tag discriminant (sligly more performant, but tricky with SFs
     int bjetindex[2] = {-1, -1};
 
-    if (_nbjet30csvv2m > 0) {
+    if (_njet>1) { // We need at least two jets to get two candidate b-jets
 	
-      int nbjetfound       = 0;
-      int nbjetfromleading = 0;
+      if (BJetOption==0) {
 
-      for (int ijet=0; ijet<_njet; ijet++) {
-	if (nbjetfound < 2) {
-	  if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+	// Note that this is now nbjets with pt > jet_pt_min
+	if (_nbjet30csvv2m==0) {
+
+	  bjetindex[0] = 0;
+	  bjetindex[1] = 1;
+
+	} else {
+
+	  int nbjetfound       = 0;
+	  int nbjetfromleading = 0;
+	  
+	  for (int ijet=0; ijet<_njet; ijet++) {
+	    if (nbjetfound < 2) {
+	      if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+		bjetindex[1] = bjetindex[0];
+		bjetindex[nbjetfound] = ijet;
+		nbjetfound++;
+	      } else if (nbjetfromleading < 1) {
+		bjetindex[nbjetfound] = ijet;
+		nbjetfromleading++;
+	      }
+	    }
+	  }
+
+	}
+	
+      } else if (BJetOption==1) {
+	
+	float leadingBTagDiscriminator = trailingBTagDiscriminator = -9999;
+	for (int ijet=0; ijet<_njet; ijet++) {
+	  if (AnalysisJets[ijet].csvv2ivf > leadingBTagDiscriminator) {
+	    trailingBTagDiscriminator = leadingBTagDiscriminator;
 	    bjetindex[1] = bjetindex[0];
-	    bjetindex[nbjetfound] = ijet;
-	    nbjetfound++;
-	  } else if (nbjetfromleading < 1) {
-	    bjetindex[nbjetfound] = ijet;
-	    nbjetfromleading++;
+	    leadingBTagDiscriminator = AnalysisJets[ijet].csvv2ivf;
+            bjetindex[0] = ijet;
+	  } else if (AnalysisJets[ijet].csvv2ivf > trailingBTagDiscriminator) {
+	    trailingBTagDiscriminator = AnalysisJets[ijet].csvv2ivf;
+            bjetindex[1] = ijet; 
 	  }
 	}
-      }
 
+      }
 
       if (bjetindex[0] > -1 && bjetindex[1] > -1) {
 	
@@ -1566,8 +1595,11 @@ void AnalysisCMS::GetStopVar()
 	  _mlb1comb = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
 	  _mlb2comb = (AnalysisJets[bjetindex[0]].v + Lepton2.v).M();
 	}
+
       }
+
     }
+
   }
 
 
@@ -1688,7 +1720,6 @@ void AnalysisCMS::GetStopVar()
       }
     }
   }
-
 
   // Get the b-jet indexes with smallest mass difference wrt. the TOP_MASS
   //----------------------------------------------------------------------------
