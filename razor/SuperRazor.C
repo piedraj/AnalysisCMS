@@ -1,25 +1,30 @@
+// Details given in paper (http://arxiv.org/abs/1310.4827) 
+// Code ispired by
 // https://github.com/susynt/SusyNtuple/blob/master/Root/KinematicTools.cxx 
-/////////////////////////////////////////////////////////////////////////////////
-// Super-Razor Super Razor Super razor super razor (leptonic) calculation
-/////////////////////////////////////////////////////////////////////////////////
+// With extension to jet info
+///////////////////////////////////////////////////////////////////////////
 
-void SuperRazor(vector<TLorentzVector> leptons, TLorentzVector met, TVector3& vBETA_z, TVector3& pT_CM,
-                TVector3& vBETA_T_CMtoR, TVector3& vBETA_R,
-                double& SHATR, double& dphi_LL_vBETA_T, double& dphi_L1_L2,
-                double& gamma_R, double& dphi_vBETA_R_vBETA_T,
-                double& MDELTAR, double& costhetaRp1)
+void ComputeSuperRazor(vector<TLorentzVector> leptons, vector<TLorentzVector> jets, TLorentzVector met, 
+		       TVector3& vBETA_z, TVector3& pT_CM,
+		       TVector3& vBETA_T_CMtoR, TVector3& vBETA_R,
+		       double& SHATR, double& dphi_LL_vBETA_T, double& dphi_L1_L2,
+		       double& gamma_R, double& dphi_vBETA_R_vBETA_T,
+		       double& MDELTAR, double& costhetaRp1, bool UseJets = false);
 {
-    //
-    // Code written by Christopher Rogan <crogan@cern.ch>, 04-23-13
-    // Details given in paper (http://arxiv.org/abs/1310.4827) written by
-    // Matthew R. Buckley, Joseph D. Lykken, Christopher Rogan, Maria Spiropulu
+    
     //
     if (leptons.size() < 2) return;
+    if (jets.size() < 2) return;
 
     // necessary variables
     TLorentzVector metlv = met;
     TLorentzVector l0 = leptons[0];
     TLorentzVector l1 = leptons[1];
+
+    if (UseJets) {
+      l0 += jets[0];
+      l1 += jets[1];
+    }
 
     //
     // Lab frame 

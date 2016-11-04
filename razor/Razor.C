@@ -31,7 +31,16 @@ vector<TLorentzVector> getHemispheres(vector<TLorentzVector> jets, vector<TLoren
     if (leps.size()==0) {
       possibleHem1s.push_back(j_temp1);
       possibleHem2s.push_back(j_temp2);
-    } else if (leps.size()==2) {
+    } else if (leps.size()==1) {
+      TLorentzVector q1_temp1 = j_temp1 + leps[0];
+      TLorentzVector q1_temp2 = j_temp2;
+      possibleHem1s.push_back(q1_temp1);
+      possibleHem2s.push_back(q1_temp2);
+      TLorentzVector q2_temp1 = j_temp1;
+      TLorentzVector q2_temp2 = j_temp2 + leps[0];
+      possibleHem1s.push_back(q2_temp1);
+      possibleHem2s.push_back(q2_temp2);
+    }else if (leps.size()>=2) {
       TLorentzVector q1_temp1 = j_temp1 + leps[0];
       TLorentzVector q1_temp2 = j_temp2 + leps[1];
       possibleHem1s.push_back(q1_temp1);
