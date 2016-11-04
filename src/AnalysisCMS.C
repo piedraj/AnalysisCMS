@@ -1,7 +1,6 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
-#include "../src/mt2_bisect.cpp"
 #include "../top-reco/src/MassVariations.cc"
 
 
@@ -1461,21 +1460,6 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 						pxMiss, pyMiss,
 						chiA, chiB,
 						desiredPrecisionOnMt2);
-
-  // Compare with original UC Davis
-  double pa[3] = { mVisA, pxA, pyA };
-  double pb[3] = { mVisB, pxB, pyB };
-  double pmiss[3] = { 0, pxMiss, pyMiss };
-  double mn    = chiA;
-
-  mt2_bisect::mt2 mt2_event;
-  
-  mt2_event.set_momenta(pa,pb,pmiss);
-  mt2_event.set_mn(mn);
-  //mt2_event.print();
-
-  cout << MT2Type << " mt2 = " << mt2_event.get_mt2() << " " << MT2 << " " << fabs(mt2_event.get_mt2()-MT2)<< endl;
-
   return MT2;
 }
 
