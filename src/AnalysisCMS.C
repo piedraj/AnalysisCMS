@@ -1460,6 +1460,7 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 						pxMiss, pyMiss,
 						chiA, chiB,
 						desiredPrecisionOnMt2);
+
   return MT2;
 }
 

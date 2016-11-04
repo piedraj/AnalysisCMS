@@ -119,7 +119,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    //if (!_ismc && run > 274240) continue;  // Luminosity for any blinded analysis  
+    //if (!_ismc && run > 274240) continue;  // Luminosity for ICHEP blinded analysis  
   
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -167,6 +167,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
     pass &= _njet > 1;		
 
     FillLevelHistograms(Stop_01_Has2Jets, pass && pass_blind);
+
+    bool passPreselection = pass && (MET.Et()>80.) && (MET.Et()/sqrt(_htjets)>5.) && (_channel==em || _LeadingPtCSVv2M>=20.);
+
+    FillLevelHistograms(Stop_01_PreSelection, passPreselection);
 
     pass &= (_LeadingPtCSVv2M >= 20.);
 
