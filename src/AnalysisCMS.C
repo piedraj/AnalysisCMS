@@ -619,6 +619,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.mass     = std_vector_jet_mass->at(i);
+    goodjet.v        = tlv; 
 
     if (goodjet.csvv2ivf > CSVv2L) {
       if (pt > _LeadingPtCSVv2L) {
@@ -674,24 +675,29 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
   // jetpt1, jetpt2 etc vienen de latino y no tienen la seleción de AnalysisJets
   // Aquí cambiamo sus valores por lo de los jets selecionados
-  jeteta1 = -999.;
-  jeteta2 = -999.;
-  jetpt1  = -999.;
-  jetpt2  = -999.;
-  jetphi1 = -999.;	
-  jetphi2 = -999.;
+  jeteta1  = -999.;
+  jeteta2  = -999.;
+  jetpt1   = -999.;
+  jetpt2   = -999.;
+  jetphi1  = -999.;	
+  jetphi2  = -999.;
+  jetmass1 = -999.;	
+  jetmass2 = -999.;
   
   if (_njet == 1) {
-    jetpt1  = AnalysisJets[0].v.Pt();
-    jeteta1 = AnalysisJets[0].v.Eta();
-    jetphi1 = AnalysisJets[0].v.Phi();
+    jetpt1   = AnalysisJets[0].v.Pt();
+    jeteta1  = AnalysisJets[0].v.Eta();
+    jetphi1  = AnalysisJets[0].v.Phi();
+    jetmass1 = AnalysisJets[0].mass;
   } else if (_njet > 1) {
-    jetpt1  = AnalysisJets[0].v.Pt();
-    jeteta1 = AnalysisJets[0].v.Eta();
-    jetphi1 = AnalysisJets[0].v.Phi();
-    jetpt2  = AnalysisJets[1].v.Pt();
-    jeteta2 = AnalysisJets[1].v.Eta();
-    jetphi2 = AnalysisJets[1].v.Phi(); 
+    jetpt1   = AnalysisJets[0].v.Pt();
+    jeteta1  = AnalysisJets[0].v.Eta();
+    jetphi1  = AnalysisJets[0].v.Phi();
+    jetmass1 = AnalysisJets[0].mass;
+    jetpt2   = AnalysisJets[1].v.Pt();
+    jeteta2  = AnalysisJets[1].v.Eta();
+    jetphi2  = AnalysisJets[1].v.Phi(); 
+    jetmass2 = AnalysisJets[1].mass;
   }
   
 }
@@ -1018,7 +1024,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  GetTopReco();
+  //GetTopReco();
 
   GetGenPtllWeight();
 
