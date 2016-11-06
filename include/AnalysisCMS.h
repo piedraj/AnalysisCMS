@@ -274,6 +274,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _mt2ll;
   float                  _dphimetptbll;
   float                  _dphimetjet;
+  float                  _dphimetbbll;
   float                  _mllbb;
   float                  _meff;
   float                  _mt2bb;
@@ -344,6 +345,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_meff         [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptbll        [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphimetptbll [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetbbll  [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2ll        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2bb        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];

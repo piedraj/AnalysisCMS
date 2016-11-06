@@ -128,6 +128,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_meff          [ichannel][icut][ijet]->Fill(_meff,           _event_weight);
   h_ptbll         [ichannel][icut][ijet]->Fill(_ptbll,          _event_weight);
   h_dphimetptbll  [ichannel][icut][ijet]->Fill(_dphimetptbll,   _event_weight);
+  h_dphimetbbll   [ichannel][icut][ijet]->Fill(_dphimetbbll,    _event_weight);
   h_mt2ll         [ichannel][icut][ijet]->Fill(_mt2ll,          _event_weight);
   h_mt2bb         [ichannel][icut][ijet]->Fill(_mt2bb,          _event_weight);
   h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
@@ -1143,6 +1144,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dyll         [ichannel][icut][ijet] = new TH1D("h_dyll"          + suffix, "",  100, 0,    5);
   h_dphimetjet   [ichannel][icut][ijet] = new TH1D("h_dphimetjet"    + suffix, "",  100, 0,  3.2);
   h_dphimetptbll [ichannel][icut][ijet] = new TH1D("h_dphimetptbll"  + suffix, "",  100, 0,  3.2);
+  h_dphimetbbll  [ichannel][icut][ijet] = new TH1D("h_dphimetbbll"   + suffix, "",  100, 0,  3.2);
   h_mllbb        [ichannel][icut][ijet] = new TH1D("h_mllbb"         + suffix, "", 2000, 0, 2000);
   h_meff         [ichannel][icut][ijet] = new TH1D("h_meff"          + suffix, "", 2000, 0, 2000);
   h_ptbll        [ichannel][icut][ijet] = new TH1D("h_ptbll"         + suffix, "", 2000, 0, 2000);
@@ -1326,6 +1328,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dyll",            &_dyll,            "dyll/F");
   minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
   minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");
+  minitree->Branch("dphimetbbll",     &_dphimetbbll,     "dphimetbbll/F");
   minitree->Branch("mt2ll",           &_mt2ll,           "mt2ll/F");
   minitree->Branch("dphimetjet",      &_dphimetjet,      "dphimetjet/F");
   minitree->Branch("mllbb",           &_mllbb,           "mllbb/F");
@@ -1480,6 +1483,7 @@ void AnalysisCMS::GetStopVar()
   _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
   _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
+  _dphimetbbll  = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;
   _mt2bb        = -0.1;
@@ -1561,6 +1565,8 @@ void AnalysisCMS::GetStopVar()
       }
 
       if (bjetindex[0] > -1 && bjetindex[1] > -1) {
+
+	_dphimetbbll = fabs((Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).DeltaPhi(MET));
 	
 	_mllbb = (Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).M();
 
