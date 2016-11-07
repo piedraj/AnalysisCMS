@@ -134,8 +134,9 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mlb1          [ichannel][icut][ijet]->Fill(_mlb1,           _event_weight);
   h_mlb2          [ichannel][icut][ijet]->Fill(_mlb2,           _event_weight);
   h_sphericity    [ichannel][icut][ijet]->Fill(_sphericity,     _event_weight);
-  h_alignment    [ichannel][icut][ijet]->Fill(_alignment,     _event_weight);
-  h_planarity     [ichannel][icut][ijet]->Fill(_planarity,     _event_weight);
+  h_alignment     [ichannel][icut][ijet]->Fill(_alignment,       _event_weight);
+  h_planarity     [ichannel][icut][ijet]->Fill(_planarity,      _event_weight);
+  h_centrality    [ichannel][icut][ijet]->Fill(_centrality,     _event_weight);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -999,6 +1000,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
   GetSphericity(GetMomentumTensor());
   GetAlignment(GetMomentumTensor());
   GetPlanarity(GetMomentumTensor());
+  GetCentrality();
 
   GetGenPtllWeight();
 
@@ -1128,6 +1130,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_sphericity   [ichannel][icut][ijet] = new TH1D("h_sphericity"    + suffix, "", 1000, -1, 1);
   h_alignment    [ichannel][icut][ijet] = new TH1D("h_alignment"     + suffix, "", 1000, -1, 1);
   h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"     + suffix, "", 1000, -1, 1);
+  h_centrality   [ichannel][icut][ijet] = new TH1D("h_centrality"    + suffix, "", 1000, 0,  1);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1317,6 +1320,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("_sphericity", &_sphericity);
   minitree->Branch("_alignment", &_alignment);
   minitree->Branch("_planarity", &_planarity);
+  minitree->Branch("_centrality", &_centrality);
 
   if (std_vector_LHE_weight)
     //    minitree->Branch("LHEweight", &std_vector_LHE_weight);
@@ -2069,4 +2073,18 @@ float AnalysisCMS::GetPlanarity(TMatrixDSym _smatrix) {
 
   _planarity = eigenvalue3/eigenvalue2;
   return _planarity;
+}
+
+//------------------------------------------------------------------------------
+// GetCentrality
+//------------------------------------------------------------------------------
+float AnalysisCMS::GetCentrality() {
+  float sumPt = 0.;
+  float sumEVis = 0.;
+  for(int i=0; i < AnalysisJets.size(); i++) {
+    sumPt += AnalysisJets[i].v.Pt();
+    sumEVis += AnalysisJets[i].v.E();
+  }
+  _centrality = sumPt/sumEVis;
+  return _centrality;
 }

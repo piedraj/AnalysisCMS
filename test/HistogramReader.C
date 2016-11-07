@@ -153,7 +153,7 @@ void HistogramReader::Draw(TString hname,
 
   if (_drawratio && _datafile)
     {
-      canvas = new TCanvas(cname, cname, 550, 720);
+      canvas = new TCanvas(cname, cname, 550, 750);
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
@@ -265,7 +265,7 @@ void HistogramReader::Draw(TString hname,
   TH1D* hfirst = (TH1D*)_mchist[0]->Clone("hfirst");
 
   hfirst->Reset();
-
+  hfirst->SetTitle("");
 
   // All MC
   //----------------------------------------------------------------------------
@@ -434,8 +434,8 @@ void HistogramReader::Draw(TString hname,
   
   // Search signals legend in a new column
   //----------------------------------------------------------------------------
-  ny = 0;
-  nx++;
+  //  ny = 0;
+  //  nx++;
 
   for (int i=0; i<_signalhist.size(); i++)
     {
@@ -508,6 +508,7 @@ void HistogramReader::Draw(TString hname,
 	uncertainty->SetBinError  (ibin, uncertaintyError);
       }
 
+      ratio->SetTitle("");
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);

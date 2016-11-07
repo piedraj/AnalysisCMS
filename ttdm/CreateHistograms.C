@@ -1,14 +1,14 @@
 // root -l -b -q CreateHistograms
 
-enum{ lep1pt, lep1eta, lep1phi, lep1mass,
-      /*lep2pt, lep2eta, lep2phi, lep2mass,
+enum{ /*lep1pt, lep1eta, lep1phi, lep1mass,
+      lep2pt, lep2eta, lep2phi, lep2mass,
       jet1pt, jet1eta, jet1phi, jet1mass,
-      jet2pt, jet2eta, jet2phi, jet2mass,
+      jet2pt, jet2eta, jet2phi, jet2mass, */
       metPfType1, metPfType1Phi,
       m2l, mt2ll, mt2lblb, mtw1, mtw2,
-      ht, htjets, htnojets,
+      /*ht, htjets, htnojets,*/
       njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
-      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
+      /*dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx,*/
       nhisto
@@ -19,24 +19,24 @@ TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
-const TString  inputdir = "161003_ttreco-medium_ISCOPY-before-ANN";  // where the minitrees are stored
+const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-const TCut mycut = "eventW*(metPfType1>0.)";  // the cuts chain 
-
+//const TCut mycut = "eventW*(metPfType1>0.)";  // the cuts chain 
+const TCut mycut = "eventW*((channel==5)&&metPfType1>0.)";  // the cuts chain 
 
 void ConvertToHistograms( TString process );
 
 
 
 void CreateHistograms(){
-
- 	b_name[lep1pt  ] = "lep1pt"  ;
+  /*
+        b_name[lep1pt  ] = "lep1pt"  ;
 	b_name[lep1eta ] = "lep1eta" ;
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
 
- 	/*b_name[lep2pt  ] = "lep2pt"  ;
+ 	b_name[lep2pt  ] = "lep2pt"  ;
 	b_name[lep2eta ] = "lep2eta" ;
 	b_name[lep2phi ] = "lep2phi" ;
 	b_name[lep2mass] = "lep2mass";
@@ -50,7 +50,7 @@ void CreateHistograms(){
 	b_name[jet2eta ] = "jet2eta" ;
 	b_name[jet2phi ] = "jet2phi" ;
 	b_name[jet2mass] = "jet2mass";
-
+  */
 	b_name[metPfType1   ] = "metPfType1";
 	b_name[metPfType1Phi] = "metPfType1Phi";
 
@@ -59,16 +59,16 @@ void CreateHistograms(){
 	b_name[mt2lblb] = "mt2lblb";
 	b_name[mtw1   ] = "mtw1"   ;
 	b_name[mtw2   ] = "mtw2"   ;
-
+  /*
 	b_name[ht      ] = "ht"      ;
 	b_name[htjets  ] = "htjets"  ;
 	b_name[htnojets] = "htnojets";
-
+  */
 	b_name[njet         ] = "njet"         ;
 	b_name[nbjet30csvv2l] = "nbjet30csvv2l";
 	b_name[nbjet30csvv2m] = "nbjet30csvv2m";
 	b_name[nbjet30csvv2t] = "nbjet30csvv2t";
-
+	/*
 	b_name[dphijet1met ] = "dphijet1met" ;   
 	b_name[dphijet2met ] = "dphijet2met" ;  
 	b_name[dphijj      ] = "dphijj"      ;    
@@ -134,13 +134,13 @@ void ConvertToHistograms( TString process ){
 	gSystem->mkdir(outputdir, kTRUE);
 
 	TFile* storagefile = new TFile( outputdir + "/" + process + ".root", "update" );
-
+	/*
 	mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", mycut );
 	mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", mycut );
 	mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", mycut );
 
- 	/*mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", mycut );
+ 	mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", mycut );
 	mytree -> Draw( b_name[lep2eta      ] + " >> " + h_name[lep2eta      ] + "(   60, -3  ,    3   )", mycut );
 	mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", mycut );
@@ -154,7 +154,7 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[jet2eta      ] + " >> " + h_name[jet2eta      ] + "(   60, -3  ,    3   )", mycut );
 	mytree -> Draw( b_name[jet2phi      ] + " >> " + h_name[jet2phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", mycut );
-
+	*/
 	mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", mycut );
 
@@ -163,16 +163,16 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[mt2lblb      ] + " >> " + h_name[mt2lblb      ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[mtw1         ] + " >> " + h_name[mtw1         ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[mtw2         ] + " >> " + h_name[mtw2         ] + "( 3000,  0,   3000   )", mycut );
-
+	/*
 	mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", mycut );
-
+	*/
 	mytree -> Draw( b_name[njet         ] + " >> " + h_name[njet         ] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2m] + " >> " + h_name[nbjet30csvv2m] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2t] + " >> " + h_name[nbjet30csvv2t] + "(   10,  0,     10   )", mycut );
-
+	/*
 	mytree -> Draw( b_name[dphijet1met  ] + " >> " + h_name[dphijet1met  ] + "(  100,  0,      3.2 )", mycut );   
 	mytree -> Draw( b_name[dphijet2met  ] + " >> " + h_name[dphijet2met  ] + "(  100,  0,      3.2 )", mycut ); 
 	mytree -> Draw( b_name[dphijj       ] + " >> " + h_name[dphijj       ] + "(  100,  0,      3.2 )", mycut );    

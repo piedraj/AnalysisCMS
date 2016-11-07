@@ -80,9 +80,11 @@ class AnalysisCMS : public AnalysisBase
 
   float GetSphericity       (TMatrixDSym _smatrix);
 
-  float GetAlignment       (TMatrixDSym _smatrix);
+  float GetAlignment        (TMatrixDSym _smatrix);
 
-  float GetPlanarity       (TMatrixDSym _smatrix);
+  float GetPlanarity        (TMatrixDSym _smatrix);
+
+  float GetCentrality       ();
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -278,6 +280,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _sphericity;
   float                  _alignment;
   float                  _planarity;
+  float                  _centrality;
 
   float                  _mll13;
   float                  _mll23;
@@ -447,6 +450,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_sphericity    [nchannel][ncut][njetbin+1];
   TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
   TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
 
 
   // TH2 histograms
