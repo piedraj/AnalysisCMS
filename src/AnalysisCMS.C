@@ -584,12 +584,13 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
-  _LeadingPtCSVv2L  = -0.1;
-  _LeadingPtCSVv2M  = -0.1;
-  _LeadingPtCSVv2T  = -0.1;
-  _TrailingPtCSVv2L = -0.1;
-  _TrailingPtCSVv2M = -0.1;
-  _TrailingPtCSVv2T = -0.1;
+  _leadingPtCSVv2L  = -0.1;
+  _leadingPtCSVv2M  = -0.1;
+  _leadingPtCSVv2T  = -0.1;
+  _trailingPtCSVv2L = -0.1;
+  _trailingPtCSVv2M = -0.1;
+  _trailingPtCSVv2T = -0.1;
+
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
@@ -623,29 +624,29 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     goodjet.v        = tlv; 
 
     if (goodjet.csvv2ivf > CSVv2L) {
-      if (pt > _LeadingPtCSVv2L) {
-	_TrailingPtCSVv2L = _LeadingPtCSVv2L;
-	_LeadingPtCSVv2L  = pt;
-      } else if (pt > _TrailingPtCSVv2L) {
-	_TrailingPtCSVv2L = pt;
+      if (pt > _leadingPtCSVv2L) {
+	_trailingPtCSVv2L = _leadingPtCSVv2L;
+	_leadingPtCSVv2L  = pt;
+      } else if (pt > _trailingPtCSVv2L) {
+	_trailingPtCSVv2L = pt;
       } 
     }
 
     if (goodjet.csvv2ivf > CSVv2M) {
-      if (pt > _LeadingPtCSVv2M) {
-	_TrailingPtCSVv2M = _LeadingPtCSVv2M;
-	_LeadingPtCSVv2M  = pt;
-      } else if (pt > _TrailingPtCSVv2M) {
-	_TrailingPtCSVv2M = pt;
+      if (pt > _leadingPtCSVv2M) {
+	_trailingPtCSVv2M = _leadingPtCSVv2M;
+	_leadingPtCSVv2M  = pt;
+      } else if (pt > _trailingPtCSVv2M) {
+	_trailingPtCSVv2M = pt;
       } 
     }
 
     if (goodjet.csvv2ivf > CSVv2T) {
-      if (pt > _LeadingPtCSVv2T) {
-	_TrailingPtCSVv2T = _LeadingPtCSVv2T;
-	_LeadingPtCSVv2T  = pt;
-      } else if (pt > _TrailingPtCSVv2T) {
-	_TrailingPtCSVv2T = pt;
+      if (pt > _leadingPtCSVv2T) {
+	_trailingPtCSVv2T = _leadingPtCSVv2T;
+	_leadingPtCSVv2T  = pt;
+      } else if (pt > _trailingPtCSVv2T) {
+	_trailingPtCSVv2T = pt;
       } 
     }
 
@@ -655,7 +656,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < jet_pt_min) continue;
 
-    // I would give this variables a more generic way (now they depends on jet_pt_min)
+    // I would give these variables a more generic way (now they depends on jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
@@ -674,8 +675,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
   _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
 
-  // jetpt1, jetpt2 etc vienen de latino y no tienen la seleción de AnalysisJets
-  // Aquí cambiamo sus valores por lo de los jets selecionados
+  // jetpt1, jetpt2, etc are latino variables that do not have the AnalysisJets selection
+  // Here we replace their values by those obtained with our selection
   jeteta1  = -999.;
   jeteta2  = -999.;
   jetpt1   = -999.;
@@ -685,22 +686,19 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   jetmass1 = -999.;	
   jetmass2 = -999.;
   
-  if (_njet == 1) {
+  if (_njet > 0) {
     jetpt1   = AnalysisJets[0].v.Pt();
     jeteta1  = AnalysisJets[0].v.Eta();
     jetphi1  = AnalysisJets[0].v.Phi();
     jetmass1 = AnalysisJets[0].mass;
-  } else if (_njet > 1) {
-    jetpt1   = AnalysisJets[0].v.Pt();
-    jeteta1  = AnalysisJets[0].v.Eta();
-    jetphi1  = AnalysisJets[0].v.Phi();
-    jetmass1 = AnalysisJets[0].mass;
-    jetpt2   = AnalysisJets[1].v.Pt();
-    jeteta2  = AnalysisJets[1].v.Eta();
-    jetphi2  = AnalysisJets[1].v.Phi(); 
-    jetmass2 = AnalysisJets[1].mass;
+
+    if (_njet > 1) {
+      jetpt2   = AnalysisJets[1].v.Pt();
+      jeteta2  = AnalysisJets[1].v.Eta();
+      jetphi2  = AnalysisJets[1].v.Phi(); 
+      jetmass2 = AnalysisJets[1].mass;
+    }
   }
-  
 }
 
 
@@ -1025,7 +1023,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  //GetTopReco();
+  if (_analysis.EqualTo("TTDM")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1254,70 +1252,70 @@ void AnalysisCMS::OpenMinitree()
   //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
-  minitree->Branch("channel",        &_channel,        "channel/F");
-  minitree->Branch("dphijet1met",    &_dphijet1met,    "dphijet1met/F");
-  minitree->Branch("dphijet2met",    &_dphijet2met,    "dphijet2met/F");
-  minitree->Branch("dphijj",         &_dphijj,         "dphijj/F");
-  minitree->Branch("dphijjmet",      &_dphijjmet,      "dphijjmet/F");
-  minitree->Branch("dphilep1jet1",   &_dphilep1jet1,   "dphilep1jet1/F");
-  minitree->Branch("dphilep1jet2",   &_dphilep1jet2,   "dphilep1jet2/F");
-  minitree->Branch("dphilep2jet1",   &_dphilep2jet1,   "dphilep2jet1/F");
-  minitree->Branch("dphilep2jet2",   &_dphilep2jet2,   "dphilep2jet2/F");
-  minitree->Branch("dphill",         &dphill,          "dphill/F" );
-  minitree->Branch("dphillmet",      &_dphillmet,      "dphillmet/F");
-  minitree->Branch("dphillstar",     &_dphillstar,     "dphillstar/F");
-  minitree->Branch("dphilmet1",      &dphilmet1,       "dphilmet1/F");
-  minitree->Branch("dphilmet2",      &dphilmet2,       "dphilmet2/F");
-  minitree->Branch("drll",           &drll,            "drll/F");
-  minitree->Branch("eventW",         &_event_weight,   "eventW/F");
-  minitree->Branch("ht",             &_ht,             "ht/F");
-  minitree->Branch("htjets",         &_htjets,         "htjets/F");
-  minitree->Branch("htnojets",       &_htnojets,       "htnojets/F");
-  minitree->Branch("jet1eta",        &jeteta1,         "jet1eta/F");
-  minitree->Branch("jet1mass",       &jetmass1,        "jet1mass/F");
-  minitree->Branch("jet1phi",        &jetphi1,         "jet1phi/F");
-  minitree->Branch("jet1pt",         &jetpt1,          "jet1pt/F");
-  minitree->Branch("jet2eta",        &jeteta2,         "jet2eta/F");
-  minitree->Branch("jet2mass",       &jetmass2,        "jet2mass/F");
-  minitree->Branch("jet2phi",        &jetphi2,         "jet2phi/F");
-  minitree->Branch("jet2pt",         &jetpt2,          "jet2pt/F");
-  minitree->Branch("lep1eta",        &_lep1eta,        "lep1eta/F");
-  minitree->Branch("lep1phi",        &_lep1phi,        "lep1phi/F");
-  minitree->Branch("lep1pt",         &_lep1pt,         "lep1pt/F");
-  minitree->Branch("lep1mass",       &_lep1mass,       "lep1mass/F");
-  minitree->Branch("lep2eta",        &_lep2eta,        "lep2eta/F");
-  minitree->Branch("lep2phi",        &_lep2phi,        "lep2phi/F");
-  minitree->Branch("lep2pt",         &_lep2pt,         "lep2pt/F");
-  minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
-  minitree->Branch("mc",             &_mc,             "mc/F");
-  minitree->Branch("m2l",            &_m2l,            "m2l/F");
-  minitree->Branch("mpmet",          &mpmet,           "mpmet/F");
-  minitree->Branch("metPuppi",       &metPuppi,        "metPuppi/F");
-  minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
-  minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
-  minitree->Branch("metTtrk",        &metTtrk,         "metTtrk/F");
-  minitree->Branch("metTtrkPhi",     &metTtrkPhi,      "metTtrkPhi/F");
-  minitree->Branch("mth",            &mth,             "mth/F");
-  minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
-  minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
-  minitree->Branch("LeadingPtCSVv2L",&_LeadingPtCSVv2L,"_LeadingPtCSVv2L/F");
-  minitree->Branch("LeadingPtCSVv2M",&_LeadingPtCSVv2M,"_LeadingPtCSVv2M/F");
-  minitree->Branch("LeadingPtCSVv2T",&_LeadingPtCSVv2T,"_LeadingPtCSVv2T/F");
-  minitree->Branch("TrailingPtCSVv2L",&_TrailingPtCSVv2L,"_TrailingPtCSVv2L/F");
-  minitree->Branch("TrailingPtCSVv2M",&_TrailingPtCSVv2M,"_TrailingPtCSVv2M/F");
-  minitree->Branch("TrailingPtCSVv2T",&_TrailingPtCSVv2T,"_TrailingPtCSVv2T/F");
-  minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
-  minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
-  minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
-  minitree->Branch("nbjet20cmvav2l", &_nbjet20cmvav2l, "nbjet20cmvav2l/F");
-  minitree->Branch("nbjet20cmvav2m", &_nbjet20cmvav2m, "nbjet20cmvav2m/F");
-  minitree->Branch("nbjet20cmvav2t", &_nbjet20cmvav2t, "nbjet20cmvav2t/F");
-  minitree->Branch("nbjet30cmvav2l", &_nbjet30cmvav2l, "nbjet30cmvav2l/F");
-  minitree->Branch("nbjet30cmvav2m", &_nbjet30cmvav2m, "nbjet30cmvav2m/F");
-  minitree->Branch("nbjet30cmvav2t", &_nbjet30cmvav2t, "nbjet30cmvav2t/F");
-  minitree->Branch("njet",           &_njet,           "njet/F");
-  minitree->Branch("nsol_1_1_10",    &_nsol_1_1_10,    "nsol_1_1_10/F");
-  minitree->Branch("nsol_10_10_10",  &_nsol_10_10_10,  "nsol_10_10_10/F");
+  minitree->Branch("channel",          &_channel,          "channel/F");
+  minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
+  minitree->Branch("dphijet2met",      &_dphijet2met,      "dphijet2met/F");
+  minitree->Branch("dphijj",           &_dphijj,           "dphijj/F");
+  minitree->Branch("dphijjmet",        &_dphijjmet,        "dphijjmet/F");
+  minitree->Branch("dphilep1jet1",     &_dphilep1jet1,     "dphilep1jet1/F");
+  minitree->Branch("dphilep1jet2",     &_dphilep1jet2,     "dphilep1jet2/F");
+  minitree->Branch("dphilep2jet1",     &_dphilep2jet1,     "dphilep2jet1/F");
+  minitree->Branch("dphilep2jet2",     &_dphilep2jet2,     "dphilep2jet2/F");
+  minitree->Branch("dphill",           &dphill,            "dphill/F" );
+  minitree->Branch("dphillmet",        &_dphillmet,        "dphillmet/F");
+  minitree->Branch("dphillstar",       &_dphillstar,       "dphillstar/F");
+  minitree->Branch("dphilmet1",        &dphilmet1,         "dphilmet1/F");
+  minitree->Branch("dphilmet2",        &dphilmet2,         "dphilmet2/F");
+  minitree->Branch("drll",             &drll,              "drll/F");
+  minitree->Branch("eventW",           &_event_weight,     "eventW/F");
+  minitree->Branch("ht",               &_ht,               "ht/F");
+  minitree->Branch("htjets",           &_htjets,           "htjets/F");
+  minitree->Branch("htnojets",         &_htnojets,         "htnojets/F");
+  minitree->Branch("jet1eta",          &jeteta1,           "jet1eta/F");
+  minitree->Branch("jet1mass",         &jetmass1,          "jet1mass/F");
+  minitree->Branch("jet1phi",          &jetphi1,           "jet1phi/F");
+  minitree->Branch("jet1pt",           &jetpt1,            "jet1pt/F");
+  minitree->Branch("jet2eta",          &jeteta2,           "jet2eta/F");
+  minitree->Branch("jet2mass",         &jetmass2,          "jet2mass/F");
+  minitree->Branch("jet2phi",          &jetphi2,           "jet2phi/F");
+  minitree->Branch("jet2pt",           &jetpt2,            "jet2pt/F");
+  minitree->Branch("lep1eta",          &_lep1eta,          "lep1eta/F");
+  minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
+  minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
+  minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
+  minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
+  minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
+  minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
+  minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
+  minitree->Branch("mc",               &_mc,               "mc/F");
+  minitree->Branch("m2l",              &_m2l,              "m2l/F");
+  minitree->Branch("mpmet",            &mpmet,             "mpmet/F");
+  minitree->Branch("metPuppi",         &metPuppi,          "metPuppi/F");
+  minitree->Branch("metPfType1",       &metPfType1,        "metPfType1/F");
+  minitree->Branch("metPfType1Phi",    &metPfType1Phi,     "metPfType1Phi/F");
+  minitree->Branch("metTtrk",          &metTtrk,           "metTtrk/F");
+  minitree->Branch("metTtrkPhi",       &metTtrkPhi,        "metTtrkPhi/F");
+  minitree->Branch("mth",              &mth,               "mth/F");
+  minitree->Branch("mtw1",             &mtw1,              "mtw1/F");
+  minitree->Branch("mtw2",             &mtw2,              "mtw2/F");
+  minitree->Branch("leadingPtCSVv2L",  &_leadingPtCSVv2L,  "leadingPtCSVv2L/F");
+  minitree->Branch("leadingPtCSVv2M",  &_leadingPtCSVv2M,  "leadingPtCSVv2M/F");
+  minitree->Branch("leadingPtCSVv2T",  &_leadingPtCSVv2T,  "leadingPtCSVv2T/F");
+  minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
+  minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
+  minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
+  minitree->Branch("nbjet30csvv2l",    &_nbjet30csvv2l,    "nbjet30csvv2l/F");
+  minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
+  minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
+  minitree->Branch("nbjet20cmvav2l",   &_nbjet20cmvav2l,   "nbjet20cmvav2l/F");
+  minitree->Branch("nbjet20cmvav2m",   &_nbjet20cmvav2m,   "nbjet20cmvav2m/F");
+  minitree->Branch("nbjet20cmvav2t",   &_nbjet20cmvav2t,   "nbjet20cmvav2t/F");
+  minitree->Branch("nbjet30cmvav2l",   &_nbjet30cmvav2l,   "nbjet30cmvav2l/F");
+  minitree->Branch("nbjet30cmvav2m",   &_nbjet30cmvav2m,   "nbjet30cmvav2m/F");
+  minitree->Branch("nbjet30cmvav2t",   &_nbjet30cmvav2t,   "nbjet30cmvav2t/F");
+  minitree->Branch("njet",             &_njet,             "njet/F");
+  minitree->Branch("nsol_1_1_10",      &_nsol_1_1_10,      "nsol_1_1_10/F");
+  minitree->Branch("nsol_10_10_10",    &_nsol_10_10_10,    "nsol_10_10_10/F");
 
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
@@ -1510,19 +1508,21 @@ void AnalysisCMS::GetStopVar()
   if (_njet > 0) {
       
     _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt();
+
     if (_njet > 1) _meff += AnalysisJets[1].v.Pt();
 
     // Get the index of candidate b-jets
     int BJetOption = 0; // Choose tagged jets, if not existing choose leading jets
-    //int BJetOption = 1; // Choose jets with greater b-tag discriminant (sligly more performant, but tricky with SFs
+    //int BJetOption = 1; // Choose jets with largest b-tag discriminant (slightly more performant, but tricky with SFs)
+
     int bjetindex[2] = {-1, -1};
 
-    if (_njet>1) { // We need at least two jets to get two candidate b-jets
+    if (_njet > 1) { // We need at least two jets to get two candidate b-jets
 	
-      if (BJetOption==0) {
+      if (BJetOption == 0) {
 
 	// Note that this is now nbjets with pt > jet_pt_min
-	if (_nbjet30csvv2m==0) {
+	if (_nbjet30csvv2m == 0) {
 
 	  bjetindex[0] = 0;
 	  bjetindex[1] = 1;
@@ -1544,10 +1544,9 @@ void AnalysisCMS::GetStopVar()
 	      }
 	    }
 	  }
-
 	}
 	
-      } else if (BJetOption==1) {
+      } else if (BJetOption == 1) {
 	
 	float leadingBTagDiscriminator = -9999., trailingBTagDiscriminator = -9999;
 	for (int ijet=0; ijet<_njet; ijet++) {
@@ -1621,11 +1620,8 @@ void AnalysisCMS::GetStopVar()
 	  _mlb1comb = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
 	  _mlb2comb = (AnalysisJets[bjetindex[0]].v + Lepton2.v).M();
 	}
-
       }
-
     }
-
   }
 
 
@@ -1654,9 +1650,9 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
 
     int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
-    if (fabs(Wid)!=24) continue;
     int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
+    if (fabs(Wid) != 24) continue;
     if (lepIndex[IdxW] > -999) continue;
 	
     TLorentzVector WBoson;
@@ -1747,6 +1743,7 @@ void AnalysisCMS::GetStopVar()
     }
   }
 
+
   // Get the b-jet indexes with smallest mass difference wrt. the TOP_MASS
   //----------------------------------------------------------------------------
   float MinMassDistance = 999999.;
@@ -1791,7 +1788,7 @@ void AnalysisCMS::GetStopVar()
   //----------------------------------------------------------------------------
   int IdxB1 = -999, IdxB2 = -999;
 
-  if (lepIndex[0] >=0 ) {
+  if (lepIndex[0] >=0) {
 
     TLorentzVector LepGen1;
 
@@ -1822,7 +1819,7 @@ void AnalysisCMS::GetStopVar()
     }
 
     if (std_vector_lepton_ch->at(Lepton2.index)<0 && DeltaRLep2LepGen1<0.1) {
-      if (bIndex[0]>=0) {
+      if (bIndex[0] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[0]].v.Pt();
 	_bjet2eta      = AnalysisJets[bIndex[0]].v.Eta();
@@ -1850,7 +1847,7 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen2 = (Lepton2.v).DeltaR(LepGen2);
     
     if (std_vector_lepton_ch->at(Lepton1.index)>0 && DeltaRLep1LepGen2<0.1) {
-      if (bIndex[1]>=0) {
+      if (bIndex[1] >= 0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[1]].v.Pt();
 	_bjet1eta      = AnalysisJets[bIndex[1]].v.Eta();
@@ -1868,7 +1865,7 @@ void AnalysisCMS::GetStopVar()
     }
     
     if (std_vector_lepton_ch->at(Lepton2.index)>0 && DeltaRLep2LepGen2<0.1) {
-      if (bIndex[1]>=0) {
+      if (bIndex[1] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[1]].v.Pt();
 	_bjet2eta      = AnalysisJets[bIndex[1]].v.Eta();
@@ -1940,8 +1937,8 @@ void AnalysisCMS::GetTops()
 
       TLorentzVector top1, top2; 
 
-      top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, 173.);
-      top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, 173.);
+      top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, TOP_MASS);
+      top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, TOP_MASS);
 
       _m2t_gen = (top1 + top2).M();  
     }

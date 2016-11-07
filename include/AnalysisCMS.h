@@ -55,7 +55,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    EventDump         ();
 
-  void    EventSetup        (float    jet_eta_max = -1, float jet_pt_min = 30.);
+  void    EventSetup        (float    jet_eta_max = -1,
+			     float    jet_pt_min  = 30);
 
   void    FillHistograms    (int      ichannel,
 			     int      icut,
@@ -65,7 +66,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetGenPtllWeight  ();
 
-  void    GetJets           (float    jet_eta_max, float jet_pt_min);
+  void    GetJets           (float    jet_eta_max,
+			     float    jet_pt_min);
 
   void    GetLeptons        ();
 
@@ -230,12 +232,12 @@ class AnalysisCMS : public AnalysisBase
   float                  _m2l;
   float                  _m3l;
   float			 _m2t_gen;
-  float                  _LeadingPtCSVv2L;
-  float                  _LeadingPtCSVv2M;
-  float                  _LeadingPtCSVv2T;
-  float                  _TrailingPtCSVv2L;
-  float                  _TrailingPtCSVv2M;
-  float                  _TrailingPtCSVv2T;
+  float                  _leadingPtCSVv2L;
+  float                  _leadingPtCSVv2M;
+  float                  _leadingPtCSVv2T;
+  float                  _trailingPtCSVv2L;
+  float                  _trailingPtCSVv2M;
+  float                  _trailingPtCSVv2T;
   float                  _nbjet30csvv2l;
   float                  _nbjet30csvv2m;
   float                  _nbjet30csvv2t;
@@ -259,16 +261,11 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2phi_gen;
   float                  _top2pt_gen;
   float			 _topReco;
-
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;
   float                  _mll24;
   float                  _mll34;
-
-
-  // Variables ported from AnalysisStop
-  //----------------------------------------------------------------------------
   float                  _dyll;
   float                  _ptbll;
   float                  _mt2ll;
@@ -281,17 +278,14 @@ class AnalysisCMS : public AnalysisBase
   float                  _mt2lblb;
   float                  _mlb1;
   float                  _mlb2;
-
   float                  _mt2lblbcomb;
   float                  _mt2bbtrue;
   float                  _mt2lblbtrue;
   float                  _mt2lblbmatch;
-
   float                  _mlb1comb;
   float                  _mlb2comb;
   float                  _mlb1true;
   float                  _mlb2true;
-
   float                  _bjet1pt;
   float                  _bjet1eta;
   float                  _bjet1phi;
