@@ -128,6 +128,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_meff          [ichannel][icut][ijet]->Fill(_meff,           _event_weight);
   h_ptbll         [ichannel][icut][ijet]->Fill(_ptbll,          _event_weight);
   h_dphimetptbll  [ichannel][icut][ijet]->Fill(_dphimetptbll,   _event_weight);
+  h_dphimetbbll   [ichannel][icut][ijet]->Fill(_dphimetbbll,    _event_weight);
   h_mt2ll         [ichannel][icut][ijet]->Fill(_mt2ll,          _event_weight);
   h_mt2bb         [ichannel][icut][ijet]->Fill(_mt2bb,          _event_weight);
   h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
@@ -187,9 +188,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);
   h_mtw2          [ichannel][icut][ijet]->Fill(mtw2,            _event_weight);
   h_m2l           [ichannel][icut][ijet]->Fill(_m2l,            _event_weight);
-  h_nbjet15csvv2l [ichannel][icut][ijet]->Fill(_nbjet15csvv2l,  _event_weight);
-  h_nbjet15csvv2m [ichannel][icut][ijet]->Fill(_nbjet15csvv2m,  _event_weight);
-  h_nbjet15csvv2t [ichannel][icut][ijet]->Fill(_nbjet15csvv2t,  _event_weight);
   h_nbjet30csvv2l [ichannel][icut][ijet]->Fill(_nbjet30csvv2l,  _event_weight);
   h_nbjet30csvv2m [ichannel][icut][ijet]->Fill(_nbjet30csvv2m,  _event_weight);
   h_nbjet30csvv2t [ichannel][icut][ijet]->Fill(_nbjet30csvv2t,  _event_weight);
@@ -582,13 +580,16 @@ void AnalysisCMS::GetLeptons()
 //------------------------------------------------------------------------------
 // GetJets
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetJets(float jet_eta_max)
+void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
-  _nbjet15csvv2l  = 0;
-  _nbjet15csvv2m  = 0;
-  _nbjet15csvv2t  = 0;
+  _LeadingPtCSVv2L  = -0.1;
+  _LeadingPtCSVv2M  = -0.1;
+  _LeadingPtCSVv2T  = -0.1;
+  _TrailingPtCSVv2L = -0.1;
+  _TrailingPtCSVv2M = -0.1;
+  _TrailingPtCSVv2T = -0.1;
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
@@ -619,19 +620,43 @@ void AnalysisCMS::GetJets(float jet_eta_max)
     goodjet.cmvav2   = std_vector_jet_cmvav2->at(i);
     goodjet.csvv2ivf = std_vector_jet_csvv2ivf->at(i);
     goodjet.mass     = std_vector_jet_mass->at(i);
-    goodjet.v        = tlv;
+    goodjet.v        = tlv; 
 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
+    if (goodjet.csvv2ivf > CSVv2L) {
+      if (pt > _LeadingPtCSVv2L) {
+	_TrailingPtCSVv2L = _LeadingPtCSVv2L;
+	_LeadingPtCSVv2L  = pt;
+      } else if (pt > _TrailingPtCSVv2L) {
+	_TrailingPtCSVv2L = pt;
+      } 
+    }
+
+    if (goodjet.csvv2ivf > CSVv2M) {
+      if (pt > _LeadingPtCSVv2M) {
+	_TrailingPtCSVv2M = _LeadingPtCSVv2M;
+	_LeadingPtCSVv2M  = pt;
+      } else if (pt > _TrailingPtCSVv2M) {
+	_TrailingPtCSVv2M = pt;
+      } 
+    }
+
+    if (goodjet.csvv2ivf > CSVv2T) {
+      if (pt > _LeadingPtCSVv2T) {
+	_TrailingPtCSVv2T = _LeadingPtCSVv2T;
+	_LeadingPtCSVv2T  = pt;
+      } else if (pt > _TrailingPtCSVv2T) {
+	_TrailingPtCSVv2T = pt;
+      } 
+    }
 
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20cmvav2l++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
-    if (pt < 30.) continue;
+    if (pt < jet_pt_min) continue;
 
-    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++;
+    // I would give this variables a more generic way (now they depends on jet_pt_min)
+    if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
@@ -648,6 +673,34 @@ void AnalysisCMS::GetJets(float jet_eta_max)
   _njet = AnalysisJets.size();
 
   _jetbin = (_njet < njetbin) ? _njet : njetbin - 1;
+
+  // jetpt1, jetpt2 etc vienen de latino y no tienen la seleción de AnalysisJets
+  // Aquí cambiamo sus valores por lo de los jets selecionados
+  jeteta1  = -999.;
+  jeteta2  = -999.;
+  jetpt1   = -999.;
+  jetpt2   = -999.;
+  jetphi1  = -999.;	
+  jetphi2  = -999.;
+  jetmass1 = -999.;	
+  jetmass2 = -999.;
+  
+  if (_njet == 1) {
+    jetpt1   = AnalysisJets[0].v.Pt();
+    jeteta1  = AnalysisJets[0].v.Eta();
+    jetphi1  = AnalysisJets[0].v.Phi();
+    jetmass1 = AnalysisJets[0].mass;
+  } else if (_njet > 1) {
+    jetpt1   = AnalysisJets[0].v.Pt();
+    jeteta1  = AnalysisJets[0].v.Eta();
+    jetphi1  = AnalysisJets[0].v.Phi();
+    jetmass1 = AnalysisJets[0].mass;
+    jetpt2   = AnalysisJets[1].v.Pt();
+    jeteta2  = AnalysisJets[1].v.Eta();
+    jetphi2  = AnalysisJets[1].v.Phi(); 
+    jetmass2 = AnalysisJets[1].mass;
+  }
+  
 }
 
 
@@ -960,7 +1013,7 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 // EventSetup
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventSetup(float jet_eta_max)
+void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 {
   GetMET(metPfType1, metPfType1Phi);
 
@@ -968,11 +1021,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max)
 
   GetLeptons();
 
-  GetJets(jet_eta_max);
+  GetJets(jet_eta_max, jet_pt_min);
 
   GetTops();
 
-  GetTopReco();
+  //GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1091,6 +1144,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dyll         [ichannel][icut][ijet] = new TH1D("h_dyll"          + suffix, "",  100, 0,    5);
   h_dphimetjet   [ichannel][icut][ijet] = new TH1D("h_dphimetjet"    + suffix, "",  100, 0,  3.2);
   h_dphimetptbll [ichannel][icut][ijet] = new TH1D("h_dphimetptbll"  + suffix, "",  100, 0,  3.2);
+  h_dphimetbbll  [ichannel][icut][ijet] = new TH1D("h_dphimetbbll"   + suffix, "",  100, 0,  3.2);
   h_mllbb        [ichannel][icut][ijet] = new TH1D("h_mllbb"         + suffix, "", 2000, 0, 2000);
   h_meff         [ichannel][icut][ijet] = new TH1D("h_meff"          + suffix, "", 2000, 0, 2000);
   h_ptbll        [ichannel][icut][ijet] = new TH1D("h_ptbll"         + suffix, "", 2000, 0, 2000);
@@ -1153,9 +1207,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mtw1          [ichannel][icut][ijet] = new TH1D("h_mtw1"           + suffix, "", 2000,    0, 2000);
   h_mtw2          [ichannel][icut][ijet] = new TH1D("h_mtw2"           + suffix, "", 2000,    0, 2000);
   h_m2l           [ichannel][icut][ijet] = new TH1D("h_m2l"            + suffix, "", 2000,    0, 2000);
-  h_nbjet15csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2l"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2m"  + suffix, "",    7, -0.5,  6.5);
-  h_nbjet15csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet15csvv2t"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2l [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2l"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2m [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2m"  + suffix, "",    7, -0.5,  6.5);
   h_nbjet30csvv2t [ichannel][icut][ijet] = new TH1D("h_nbjet30csvv2t"  + suffix, "",    7, -0.5,  6.5);
@@ -1249,9 +1300,12 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mth",            &mth,             "mth/F");
   minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
   minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
-  minitree->Branch("nbjet15csvv2l",  &_nbjet15csvv2l,  "nbjet15csvv2l/F");
-  minitree->Branch("nbjet15csvv2m",  &_nbjet15csvv2m,  "nbjet15csvv2m/F");
-  minitree->Branch("nbjet15csvv2t",  &_nbjet15csvv2t,  "nbjet15csvv2t/F");
+  minitree->Branch("LeadingPtCSVv2L",&_LeadingPtCSVv2L,"_LeadingPtCSVv2L/F");
+  minitree->Branch("LeadingPtCSVv2M",&_LeadingPtCSVv2M,"_LeadingPtCSVv2M/F");
+  minitree->Branch("LeadingPtCSVv2T",&_LeadingPtCSVv2T,"_LeadingPtCSVv2T/F");
+  minitree->Branch("TrailingPtCSVv2L",&_TrailingPtCSVv2L,"_TrailingPtCSVv2L/F");
+  minitree->Branch("TrailingPtCSVv2M",&_TrailingPtCSVv2M,"_TrailingPtCSVv2M/F");
+  minitree->Branch("TrailingPtCSVv2T",&_TrailingPtCSVv2T,"_TrailingPtCSVv2T/F");
   minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
   minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
@@ -1274,6 +1328,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dyll",            &_dyll,            "dyll/F");
   minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
   minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");
+  minitree->Branch("dphimetbbll",     &_dphimetbbll,     "dphimetbbll/F");
   minitree->Branch("mt2ll",           &_mt2ll,           "mt2ll/F");
   minitree->Branch("dphimetjet",      &_dphimetjet,      "dphimetjet/F");
   minitree->Branch("mllbb",           &_mllbb,           "mllbb/F");
@@ -1428,6 +1483,7 @@ void AnalysisCMS::GetStopVar()
   _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
   _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
 
+  _dphimetbbll  = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;
   _mt2bb        = -0.1;
@@ -1451,35 +1507,66 @@ void AnalysisCMS::GetStopVar()
   _tjet1assignment = _tjet2assignment = 0.;
 
 
-  if (_njet > 1) {
+  if (_njet > 0) {
       
-    _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt() + AnalysisJets[1].v.Pt();
+    _meff = MET.Pt() + Lepton1.v.Pt() + Lepton2.v.Pt() + AnalysisJets[0].v.Pt();
+    if (_njet > 1) _meff += AnalysisJets[1].v.Pt();
 
-
-    // Get the index of the b-tagged jets
-    // If there is only one b-tagged jet, get also the index of the jet with largest pt
+    // Get the index of candidate b-jets
+    int BJetOption = 0; // Choose tagged jets, if not existing choose leading jets
+    //int BJetOption = 1; // Choose jets with greater b-tag discriminant (sligly more performant, but tricky with SFs
     int bjetindex[2] = {-1, -1};
 
-    if (_nbjet30csvv2m > 0) {
+    if (_njet>1) { // We need at least two jets to get two candidate b-jets
 	
-      int nbjetfound       = 0;
-      int nbjetfromleading = 0;
+      if (BJetOption==0) {
 
-      for (int ijet=0; ijet<_njet; ijet++) {
-	if (nbjetfound < 2) {
-	  if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+	// Note that this is now nbjets with pt > jet_pt_min
+	if (_nbjet30csvv2m==0) {
+
+	  bjetindex[0] = 0;
+	  bjetindex[1] = 1;
+
+	} else {
+
+	  int nbjetfound       = 0;
+	  int nbjetfromleading = 0;
+	  
+	  for (int ijet=0; ijet<_njet; ijet++) {
+	    if (nbjetfound < 2) {
+	      if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+		bjetindex[1] = bjetindex[0];
+		bjetindex[nbjetfound] = ijet;
+		nbjetfound++;
+	      } else if (nbjetfromleading < 1) {
+		bjetindex[nbjetfound] = ijet;
+		nbjetfromleading++;
+	      }
+	    }
+	  }
+
+	}
+	
+      } else if (BJetOption==1) {
+	
+	float leadingBTagDiscriminator = -9999., trailingBTagDiscriminator = -9999;
+	for (int ijet=0; ijet<_njet; ijet++) {
+	  if (AnalysisJets[ijet].csvv2ivf > leadingBTagDiscriminator) {
+	    trailingBTagDiscriminator = leadingBTagDiscriminator;
 	    bjetindex[1] = bjetindex[0];
-	    bjetindex[nbjetfound] = ijet;
-	    nbjetfound++;
-	  } else if (nbjetfromleading < 1) {
-	    bjetindex[nbjetfound] = ijet;
-	    nbjetfromleading++;
+	    leadingBTagDiscriminator = AnalysisJets[ijet].csvv2ivf;
+            bjetindex[0] = ijet;
+	  } else if (AnalysisJets[ijet].csvv2ivf > trailingBTagDiscriminator) {
+	    trailingBTagDiscriminator = AnalysisJets[ijet].csvv2ivf;
+            bjetindex[1] = ijet; 
 	  }
 	}
+
       }
 
-
       if (bjetindex[0] > -1 && bjetindex[1] > -1) {
+
+	_dphimetbbll = fabs((Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).DeltaPhi(MET));
 	
 	_mllbb = (Lepton1.v + Lepton2.v + AnalysisJets[bjetindex[0]].v + AnalysisJets[bjetindex[1]].v).M();
 
@@ -1534,8 +1621,11 @@ void AnalysisCMS::GetStopVar()
 	  _mlb1comb = (AnalysisJets[bjetindex[1]].v + Lepton1.v).M();
 	  _mlb2comb = (AnalysisJets[bjetindex[0]].v + Lepton2.v).M();
 	}
+
       }
+
     }
+
   }
 
 
@@ -1561,9 +1651,10 @@ void AnalysisCMS::GetStopVar()
 
   for (int wb=std_vector_VBoson_pt->size()-1; wb>=0; wb--) {
 
-    if (std_vector_VBoson_pt->at(wb) < 0.) continue;
+    if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
 
     int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
+    if (fabs(Wid)!=24) continue;
     int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
     if (lepIndex[IdxW] > -999) continue;
@@ -1655,7 +1746,6 @@ void AnalysisCMS::GetStopVar()
       }
     }
   }
-
 
   // Get the b-jet indexes with smallest mass difference wrt. the TOP_MASS
   //----------------------------------------------------------------------------

@@ -20,7 +20,7 @@
 
 const double lumi_fb_2016       = 12.3;    // 2016B + 2016C + 2016D
 const double lumi_fb_Run2016B   =  5.892;  // From run 272007 to run 275376
-const double lumi_fb_2016_susy  =  0.0;    // From run 278820 to run 279931 --> To be estimated
+const double lumi_fb_2016_susy  =  4.394;  // From run 278820 to run 279931
 const double lumi_fb_2016_dm    =  0.0;    // To be updated
 const double lumi_fb_2015       =  2.318;  // 2015C + 2015D
 const double lumi_error_percent =  6.2;

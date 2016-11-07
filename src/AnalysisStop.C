@@ -79,7 +79,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup(2.4);
+    EventSetup(2.4, 20.);
 
     if (_ismc) {
 
@@ -87,6 +87,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
       for (int ijet = 0; ijet<_njet; ijet++) {
       
+	if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
+
 	int ThisIndex = AnalysisJets[ijet].index;
 	int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
 	
@@ -117,7 +119,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 
     // Analysis
     //--------------------------------------------------------------------------
-    //if (!_ismc && run > 274240) continue;  // Luminosity for any blinded analysis  
+    //if (!_ismc && run > 274240) continue;  // Luminosity for ICHEP blinded analysis  
   
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -156,24 +158,30 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
    
     FillLevelHistograms(Stop_00_mll20, pass && pass_blind);
 
-    pass &= fabs(mll - Z_MASS) > 15.;
+    pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
 
     FillLevelHistograms(Stop_00_Zveto, pass && pass_blind);
 
     if (pass && _saveminitree) minitree->Fill();
-
-    pass &= (MET.Et() > 40.);
-    
-    FillLevelHistograms(Stop_00_Met40, pass && pass_blind); 
     
     pass &= _njet > 1;		
 
-
     FillLevelHistograms(Stop_01_Has2Jets, pass && pass_blind);
 
-    pass &= (_nbjet30csvv2m > 0);
+    bool passPreselection = pass && (MET.Et()>80.) && (MET.Et()/sqrt(_htjets)>5.) && (_channel==em || _LeadingPtCSVv2M>=20.);
+
+    FillLevelHistograms(Stop_01_PreSelection, passPreselection);
+
+    pass &= (_LeadingPtCSVv2M >= 20.);
 
     FillLevelHistograms(Stop_02_Has1BJet, pass && pass_blind);
+
+    int nJetPt30 = 0;
+    for (int ijet = 0; ijet<_njet; ijet++) 
+      if (AnalysisJets[ijet].v.Pt()>=30.) nJetPt30++;
+    
+    bool passPt30 = (nJetPt30 > 1) && (_nbjet30csvv2m > 0);
+    FillLevelHistograms(Stop_02_PassPt30, pass && pass_blind && passPt30);
 
   }
 
