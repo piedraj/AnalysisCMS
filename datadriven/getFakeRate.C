@@ -183,7 +183,7 @@ void DrawFR(TString flavour,
   h_FR->Draw("ep");
   h_FR_EWK->Draw("ep,same");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
   DrawLegend(0.22, 0.83, h_FR, "Without EWK correction");
   DrawLegend(0.22, 0.80, h_FR_EWK, "With EWK correction");
 
@@ -194,7 +194,7 @@ void DrawFR(TString flavour,
 
   h_EWKrel_tight -> Draw("ep");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
 
   TCanvas* canvas3 = new TCanvas(title_EWKrel_loose, title_EWKrel_loose, 450, 550);
 
@@ -203,7 +203,7 @@ void DrawFR(TString flavour,
 
   h_EWKrel_loose -> Draw("ep");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
 
   // Print bin values and errors
   //----------------------------------------------------------------------------
@@ -317,7 +317,7 @@ void DrawPR(TString  flavour,
   h_PR->GetXaxis()->SetTitleOffset(1.5);
   h_PR->GetYaxis()->SetTitleOffset(1.8);
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
 
 
   // Save
