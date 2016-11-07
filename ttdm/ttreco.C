@@ -3,9 +3,6 @@
 #include "TVector2.h"
 #include <vector>
 
-#include "TFile.h"
-#include "TBranch.h"
-#include "TTree.h"
 
 const TString  inputdir = "week-1";  // where the minitrees are stored
 

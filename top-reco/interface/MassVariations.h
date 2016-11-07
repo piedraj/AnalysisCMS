@@ -17,7 +17,7 @@ class MassVariations
         MassVariations();
         ~MassVariations();
 
-        void performAllVariations(Int_t, Int_t, Int_t, Int_t, TLorentzVector &, TLorentzVector &, std::vector<TLorentzVector> &, std::vector<Float_t> &, TVector2 &, 
+        void performAllVariations(/*Int_t,*/ Int_t, Int_t, Int_t, TLorentzVector &, TLorentzVector &, std::vector<TLorentzVector> &, std::vector<Float_t> &, TVector2 &, 
                              std::vector<TLorentzVector>&, std::vector<TLorentzVector> &nu2);
   
     private: 
@@ -25,7 +25,7 @@ class MassVariations
         MassSolver *massSolver;
         TRandom3   *random;
   
-        int variations(Int_t, Int_t, Int_t, Int_t, TLorentzVector &, TLorentzVector &, TLorentzVector &, TLorentzVector &, Float_t unc1, Float_t unc2, TVector2 &,
+        int variations(/*Int_t,*/ Int_t, Int_t, Int_t, TLorentzVector &, TLorentzVector &, TLorentzVector &, TLorentzVector &, Float_t unc1, Float_t unc2, TVector2 &,
                              std::vector<TLorentzVector>&, std::vector<TLorentzVector> &nu2);
 
 

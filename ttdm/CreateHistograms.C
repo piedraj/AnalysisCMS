@@ -1,7 +1,7 @@
 // root -l -b -q CreateHistograms
 
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
-      /*lep2pt, lep2eta, lep2phi, lep2mass,
+      lep2pt, lep2eta, lep2phi, lep2mass,
       jet1pt, jet1eta, jet1phi, jet1mass,
       jet2pt, jet2eta, jet2phi, jet2mass,
       metPfType1, metPfType1Phi,
@@ -10,8 +10,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
       dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
-      nvtx,*/
-      //sphericity, alignment, planarity,
+      nvtx,
+      sphericity, alignment, planarity,
       nhisto
  }; 
 
@@ -20,11 +20,11 @@ TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
-const TString  inputdir = "161003_ttreco-medium_ISCOPY-before-ANN";  // where the minitrees are stored
+const TString  inputdir = "week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-const TCut mycut = "eventW*(metPfType1>0.)";  // the cuts chain 
-
+//const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
+const TCut mycut = "eventW*(channel==5&&metPfType1>0.)";                 
 
 void CreateHistograms2( TString process );
 
@@ -37,7 +37,7 @@ void CreateHistograms(){
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
 
- 	/*b_name[lep2pt  ] = "lep2pt"  ;
+ 	b_name[lep2pt  ] = "lep2pt"  ;
 	b_name[lep2eta ] = "lep2eta" ;
 	b_name[lep2phi ] = "lep2phi" ;
 	b_name[lep2mass] = "lep2mass";
@@ -91,11 +91,11 @@ void CreateHistograms(){
 	b_name[top2pt_gen  ] = "top2pt_gen"  ;
 	b_name[detatt_gen  ] = "detatt_gen"  ;
 
-	b_name[nvtx        ] = "nvtx"        ;*/
+	b_name[nvtx        ] = "nvtx"        ;
 
-	//b_name[sphericity] = "sphericity";
-	//b_name[alignment ] = "alignment" ;
-	//b_name[planarity ] = "planarity" ;
+	b_name[sphericity] = "sphericity";
+	b_name[alignment ] = "alignment" ;
+	b_name[planarity ] = "planarity" ;
 
 
 	for( int i = 0; i < nhisto; i++ ){
