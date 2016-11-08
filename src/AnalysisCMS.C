@@ -584,12 +584,13 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
-  _jet_pt.clear(); 
   _jet_eta.clear();
   _jet_phi.clear();
-  _bjet30csvv2m_pt.clear(); 
+  _jet_pt.clear(); 
+
   _bjet30csvv2m_eta.clear();
   _bjet30csvv2m_phi.clear();
+  _bjet30csvv2m_pt.clear(); 
 
   _leadingPtCSVv2L  = -0.1;
   _leadingPtCSVv2M  = -0.1;
@@ -674,17 +675,15 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     AnalysisJets.push_back(goodjet);
 
-
-    _jet_pt .push_back(pt ); 
     _jet_eta.push_back(eta); 
     _jet_phi.push_back(phi);
+    _jet_pt .push_back(pt); 
 
-    if ( goodjet.csvv2ivf > CSVv2M ){
- 
-    	_bjet30csvv2m_pt .push_back(pt ); 
+    if (goodjet.csvv2ivf > CSVv2M) {
+
     	_bjet30csvv2m_eta.push_back(eta); 
     	_bjet30csvv2m_phi.push_back(phi);
-
+     	_bjet30csvv2m_pt .push_back(pt); 
     }
   }
 
@@ -1043,7 +1042,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  //if (_analysis.EqualTo("TTDM")) GetTopReco();
+  //  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1272,81 +1271,23 @@ void AnalysisCMS::OpenMinitree()
   //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
-  if(_analysis.EqualTo("TTDM")){
-
-	  minitree->Branch("channel",        &_channel,        "channel/F");
-	  minitree->Branch("detatt_gen",     &_detatt_gen,     "detatt_gen/F");
-	  minitree->Branch("dphijet1met",    &_dphijet1met,    "dphijet1met/F");
-	  minitree->Branch("dphijet2met",    &_dphijet2met,    "dphijet2met/F");
-	  minitree->Branch("dphijj",         &_dphijj,         "dphijj/F");
-	  minitree->Branch("dphijjmet",      &_dphijjmet,      "dphijjmet/F");
-	  minitree->Branch("dphilep1jet1",   &_dphilep1jet1,   "dphilep1jet1/F");
-	  minitree->Branch("dphilep1jet2",   &_dphilep1jet2,   "dphilep1jet2/F");
-	  minitree->Branch("dphilep2jet1",   &_dphilep2jet1,   "dphilep2jet1/F");
-	  minitree->Branch("dphilep2jet2",   &_dphilep2jet2,   "dphilep2jet2/F");
-	  minitree->Branch("dphill",         &dphill,          "dphill/F" );
-	  minitree->Branch("dphillmet",      &_dphillmet,      "dphillmet/F");
-	  minitree->Branch("dphilmet1",      &dphilmet1,       "dphilmet1/F");
-	  minitree->Branch("dphilmet2",      &dphilmet2,       "dphilmet2/F");
-	  minitree->Branch("dphitt_gen",     &_dphitt_gen,     "dphitt_gen/F");
-	  minitree->Branch("event",          &event,           "event/I");
-	  minitree->Branch("eventW",         &_event_weight,   "eventW/F");
-	  minitree->Branch("ht",             &_ht,             "ht/F");
-	  minitree->Branch("htjets",         &_htjets,         "htjets/F");
-	  minitree->Branch("htnojets",       &_htnojets,       "htnojets/F");
-	  minitree->Branch("jet1eta",        &jeteta1,         "jet1eta/F");
-	  minitree->Branch("jet1mass",       &jetmass1,        "jet1mass/F");
-	  minitree->Branch("jet1phi",        &jetphi1,         "jet1phi/F");
-	  minitree->Branch("jet1pt",         &jetpt1,          "jet1pt/F");
-	  minitree->Branch("jet2eta",        &jeteta2,         "jet2eta/F");
-	  minitree->Branch("jet2mass",       &jetmass2,        "jet2mass/F");
-	  minitree->Branch("jet2phi",        &jetphi2,         "jet2phi/F");
-	  minitree->Branch("jet2pt",         &jetpt2,          "jet2pt/F");
-	  minitree->Branch("lep1eta",        &_lep1eta,        "lep1eta/F");
-	  minitree->Branch("lep1phi",        &_lep1phi,        "lep1phi/F");
-	  minitree->Branch("lep1pt",         &_lep1pt,         "lep1pt/F");
-	  minitree->Branch("lep1mass",       &_lep1mass,       "lep1mass/F");
-	  minitree->Branch("lep2eta",        &_lep2eta,        "lep2eta/F");
-	  minitree->Branch("lep2phi",        &_lep2phi,        "lep2phi/F");
-	  minitree->Branch("lep2pt",         &_lep2pt,         "lep2pt/F");
-	  minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
-	  minitree->Branch("lumi",           &lumi,            "lumi/I");
-	  minitree->Branch("m2l",            &_m2l,            "m2l/F");
-	  minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
-	  minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
-	  minitree->Branch("mt2ll",          &_mt2ll,          "mt2ll/F");                        
-	  minitree->Branch("mt2lblb",        &_mt2lblb,        "mt2lblb/F");
-	  minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
-	  minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
-	  minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
-	  minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
-	  minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
-	  minitree->Branch("njet",           &_njet,           "njet/F");
-	  minitree->Branch("nvtx",           &nvtx,            "nvtx/F");
-	  minitree->Branch("run",            &run,             "run/I");
-	  minitree->Branch("top1eta_gen",    &_top1eta_gen,    "top1eta_gen/F");                 
-	  minitree->Branch("top1phi_gen",    &_top1phi_gen,    "top1phi_gen/F");
-	  minitree->Branch("top1pt_gen",     &_top1pt_gen,     "top1pt_gen/F");
-	  minitree->Branch("top2eta_gen",    &_top2eta_gen,    "top2eta_gen/F");
-	  minitree->Branch("top2phi_gen",    &_top2phi_gen,    "top2phi_gen/F");
-	  minitree->Branch("top2pt_gen",     &_top2pt_gen,     "top2pt_gen/F");
-
-	  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
-	  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
-	  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
-	  minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
-	  minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
-	  minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
-
-	  minitree->Branch("sphericity",     &_sphericity,     "sphericity");
-	  minitree->Branch("alignment",      &_alignment,      "alignment");            
-	  minitree->Branch("planarity",      &_planarity,      "planarity");
-
-  }
-
-  else{
-
+  // A
+  minitree->Branch("alignment",        &_alignment,        "alignment/F");
+  // B
+  minitree->Branch("bjet1csvv2ivf",    &_bjet1csvv2ivf,    "bjet1csvv2ivf/F");
+  minitree->Branch("bjet1eta",         &_bjet1eta,         "bjet1eta/F");
+  minitree->Branch("bjet1mass",        &_bjet1mass,        "bjet1mass/F");
+  minitree->Branch("bjet1phi",         &_bjet1phi,         "bjet1phi/F");
+  minitree->Branch("bjet1pt",          &_bjet1pt,          "bjet1pt/F");
+  minitree->Branch("bjet2csvv2ivf",    &_bjet2csvv2ivf,    "bjet2csvv2ivf/F");
+  minitree->Branch("bjet2eta",         &_bjet2eta,         "bjet2eta/F");
+  minitree->Branch("bjet2mass",        &_bjet2mass,        "bjet2mass/F");
+  minitree->Branch("bjet2phi",         &_bjet2phi,         "bjet2phi/F");
+  minitree->Branch("bjet2pt",          &_bjet2pt,          "bjet2pt/F");
+  // C
   minitree->Branch("channel",          &_channel,          "channel/F");
+  // D
+  minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
   minitree->Branch("dphijet2met",      &_dphijet2met,      "dphijet2met/F");
   minitree->Branch("dphijj",           &_dphijj,           "dphijj/F");
@@ -1360,11 +1301,20 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("dphillstar",       &_dphillstar,       "dphillstar/F");
   minitree->Branch("dphilmet1",        &dphilmet1,         "dphilmet1/F");
   minitree->Branch("dphilmet2",        &dphilmet2,         "dphilmet2/F");
+  minitree->Branch("dphimetbbll",      &_dphimetbbll,      "dphimetbbll/F");
+  minitree->Branch("dphimetjet",       &_dphimetjet,       "dphimetjet/F");
+  minitree->Branch("dphimetptbll",     &_dphimetptbll,     "dphimetptbll/F");
+  minitree->Branch("dphitt_gen",       &_dphitt_gen,       "dphitt_gen/F");
   minitree->Branch("drll",             &drll,              "drll/F");
+  minitree->Branch("dyll",             &_dyll,             "dyll/F");
+  // E
+  minitree->Branch("event",            &event,             "event/I");
   minitree->Branch("eventW",           &_event_weight,     "eventW/F");
+  // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htjets",           &_htjets,           "htjets/F");
   minitree->Branch("htnojets",         &_htnojets,         "htnojets/F");
+  // J
   minitree->Branch("jet1eta",          &jeteta1,           "jet1eta/F");
   minitree->Branch("jet1mass",         &jetmass1,          "jet1mass/F");
   minitree->Branch("jet1phi",          &jetphi1,           "jet1phi/F");
@@ -1373,14 +1323,20 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("jet2mass",         &jetmass2,          "jet2mass/F");
   minitree->Branch("jet2phi",          &jetphi2,           "jet2phi/F");
   minitree->Branch("jet2pt",           &jetpt2,            "jet2pt/F");
+  // L
+  minitree->Branch("leadingPtCSVv2L",  &_leadingPtCSVv2L,  "leadingPtCSVv2L/F");
+  minitree->Branch("leadingPtCSVv2M",  &_leadingPtCSVv2M,  "leadingPtCSVv2M/F");
+  minitree->Branch("leadingPtCSVv2T",  &_leadingPtCSVv2T,  "leadingPtCSVv2T/F");
   minitree->Branch("lep1eta",          &_lep1eta,          "lep1eta/F");
+  minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
-  minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
+  minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
-  minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
+  minitree->Branch("lumi",             &lumi,              "lumi/I");
+  // M
   minitree->Branch("mc",               &_mc,               "mc/F");
   minitree->Branch("m2l",              &_m2l,              "m2l/F");
   minitree->Branch("mpmet",            &mpmet,             "mpmet/F");
@@ -1392,74 +1348,80 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mth",              &mth,               "mth/F");
   minitree->Branch("mtw1",             &mtw1,              "mtw1/F");
   minitree->Branch("mtw2",             &mtw2,              "mtw2/F");
-  minitree->Branch("leadingPtCSVv2L",  &_leadingPtCSVv2L,  "leadingPtCSVv2L/F");
-  minitree->Branch("leadingPtCSVv2M",  &_leadingPtCSVv2M,  "leadingPtCSVv2M/F");
-  minitree->Branch("leadingPtCSVv2T",  &_leadingPtCSVv2T,  "leadingPtCSVv2T/F");
-  minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
-  minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
-  minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
-  minitree->Branch("nbjet30csvv2l",    &_nbjet30csvv2l,    "nbjet30csvv2l/F");
-  minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
-  minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
+  minitree->Branch("mt2ll",            &_mt2ll,            "mt2ll/F");
+  minitree->Branch("mllbb",            &_mllbb,            "mllbb/F");
+  minitree->Branch("meff",             &_meff,             "meff/F");
+  minitree->Branch("mt2bb",            &_mt2bb,            "mt2bb/F");
+  minitree->Branch("mt2lblb",          &_mt2lblb,          "mt2lblb/F");
+  minitree->Branch("mlb1",             &_mlb1,             "mlb1/F");
+  minitree->Branch("mlb2",             &_mlb2,             "mlb2/F");
+  minitree->Branch("mt2lblbcomb",      &_mt2lblbcomb,      "mt2lblbcomb/F");
+  minitree->Branch("mt2bbtrue",        &_mt2bbtrue,        "mt2bbtrue/F");
+  minitree->Branch("mt2lblbtrue",      &_mt2lblbtrue,      "mt2lblbtrue/F");
+  minitree->Branch("mt2lblbmatch",     &_mt2lblbmatch,     "mt2lblbmatch/F");
+  minitree->Branch("mlb1comb",         &_mlb1comb,         "mlb1comb/F");
+  minitree->Branch("mlb2comb",         &_mlb2comb,         "mlb2comb/F");
+  minitree->Branch("mlb1true",         &_mlb1true,         "mlb1true/F");
+  minitree->Branch("mlb2true",         &_mlb2true,         "mlb2true/F");
+  // N
   minitree->Branch("nbjet20cmvav2l",   &_nbjet20cmvav2l,   "nbjet20cmvav2l/F");
   minitree->Branch("nbjet20cmvav2m",   &_nbjet20cmvav2m,   "nbjet20cmvav2m/F");
   minitree->Branch("nbjet20cmvav2t",   &_nbjet20cmvav2t,   "nbjet20cmvav2t/F");
   minitree->Branch("nbjet30cmvav2l",   &_nbjet30cmvav2l,   "nbjet30cmvav2l/F");
   minitree->Branch("nbjet30cmvav2m",   &_nbjet30cmvav2m,   "nbjet30cmvav2m/F");
   minitree->Branch("nbjet30cmvav2t",   &_nbjet30cmvav2t,   "nbjet30cmvav2t/F");
+  minitree->Branch("nbjet30csvv2l",    &_nbjet30csvv2l,    "nbjet30csvv2l/F");
+  minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
+  minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
-  minitree->Branch("nsol_1_1_10",      &_nsol_1_1_10,      "nsol_1_1_10/F");
+  minitree->Branch("nsol_1_1_10",      &_nsol_10_1_1,      "nsol_10_1_1/F");
   minitree->Branch("nsol_10_10_10",    &_nsol_10_10_10,    "nsol_10_10_10/F");
+  minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
+  // P
+  minitree->Branch("planarity",        &_planarity,        "planarity/F");
+  minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
+  // R
+  minitree->Branch("run",              &run,               "run/I");
+  // S
+  minitree->Branch("sphericity",       &_sphericity,       "sphericity/F");
+  minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
+  minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
+  // T
+  minitree->Branch("tjet1assignment",  &_tjet1assignment,  "tjet1assignment/F");
+  minitree->Branch("tjet1csvv2ivf",    &_tjet1csvv2ivf,    "tjet1csvv2ivf/F");
+  minitree->Branch("tjet1eta",         &_tjet1eta,         "tjet1eta/F");
+  minitree->Branch("tjet1mass",        &_tjet1mass,        "tjet1mass/F");
+  minitree->Branch("tjet1phi",         &_tjet1phi,         "tjet1phi/F");
+  minitree->Branch("tjet1pt",          &_tjet1pt,          "tjet1pt/F");
+  minitree->Branch("tjet2assignment",  &_tjet2assignment,  "tjet2assignment/F");
+  minitree->Branch("tjet2csvv2ivf",    &_tjet2csvv2ivf,    "tjet2csvv2ivf/F");
+  minitree->Branch("tjet2eta",         &_tjet2eta,         "tjet2eta/F");
+  minitree->Branch("tjet2mass",        &_tjet2mass,        "tjet2mass/F");
+  minitree->Branch("tjet2phi",         &_tjet2phi,         "tjet2phi/F");
+  minitree->Branch("tjet2pt",          &_tjet2pt,          "tjet2pt/F");
+  minitree->Branch("top1eta_gen",      &_top1eta_gen,      "top1eta_gen/F");                 
+  minitree->Branch("top1phi_gen",      &_top1phi_gen,      "top1phi_gen/F");
+  minitree->Branch("top1pt_gen",       &_top1pt_gen,       "top1pt_gen/F");
+  minitree->Branch("top2eta_gen",      &_top2eta_gen,      "top2eta_gen/F");
+  minitree->Branch("top2phi_gen",      &_top2phi_gen,      "top2phi_gen/F");
+  minitree->Branch("top2pt_gen",       &_top2pt_gen,       "top2pt_gen/F");
+  minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
+  minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
+  minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
 
+
+  // Only available in MC
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
-  // Stop variables
-  minitree->Branch("susyMstop",       &susyMstop,        "susyMstop/F");
-  minitree->Branch("susyMLSP",        &susyMLSP,         "susyMLSP/F");
-  minitree->Branch("dyll",            &_dyll,            "dyll/F");
-  minitree->Branch("ptbll",           &_ptbll,           "ptbll/F");
-  minitree->Branch("dphimetptbll",    &_dphimetptbll,    "dphimetptbll/F");
-  minitree->Branch("dphimetbbll",     &_dphimetbbll,     "dphimetbbll/F");
-  minitree->Branch("mt2ll",           &_mt2ll,           "mt2ll/F");
-  minitree->Branch("dphimetjet",      &_dphimetjet,      "dphimetjet/F");
-  minitree->Branch("mllbb",           &_mllbb,           "mllbb/F");
-  minitree->Branch("meff",            &_meff,            "meff/F");
-  minitree->Branch("mt2bb",           &_mt2bb,           "mt2bb/F");
-  minitree->Branch("mt2lblb",         &_mt2lblb,         "mt2lblb/F");
-  minitree->Branch("mlb1",            &_mlb1,            "mlb1/F");
-  minitree->Branch("mlb2",            &_mlb2,            "mlb2/F");
-  minitree->Branch("mt2lblbcomb",     &_mt2lblbcomb,     "mt2lblbcomb/F");
-  minitree->Branch("mt2bbtrue",       &_mt2bbtrue,       "mt2bbtrue/F");
-  minitree->Branch("mt2lblbtrue",     &_mt2lblbtrue,     "mt2lblbtrue/F");
-  minitree->Branch("mt2lblbmatch",    &_mt2lblbmatch,    "mt2lblbmatch/F");
-  minitree->Branch("mlb1comb",        &_mlb1comb,        "mlb1comb/F");
-  minitree->Branch("mlb2comb",        &_mlb2comb,        "mlb2comb/F");
-  minitree->Branch("mlb1true",        &_mlb1true,        "mlb1true/F");
-  minitree->Branch("mlb2true",        &_mlb2true,        "mlb2true/F");
-  minitree->Branch("bjet1pt",         &_bjet1pt,         "bjet1pt/F");
-  minitree->Branch("bjet1eta",        &_bjet1eta,        "bjet1eta/F");
-  minitree->Branch("bjet1phi",        &_bjet1phi,        "bjet1phi/F");
-  minitree->Branch("bjet1mass",       &_bjet1mass,       "bjet1mass/F");
-  minitree->Branch("bjet1csvv2ivf",   &_bjet1csvv2ivf,   "bjet1csvv2ivf/F");
-  minitree->Branch("bjet2pt",         &_bjet2pt,         "bjet2pt/F");
-  minitree->Branch("bjet2eta",        &_bjet2eta,        "bjet2eta/F");
-  minitree->Branch("bjet2phi",        &_bjet2phi,        "bjet2phi/F");
-  minitree->Branch("bjet2mass",       &_bjet2mass,       "bjet2mass/F");
-  minitree->Branch("bjet2csvv2ivf",   &_bjet2csvv2ivf,   "bjet2csvv2ivf/F");
-  minitree->Branch("tjet1pt",         &_tjet1pt,         "tjet1pt/F");
-  minitree->Branch("tjet1eta",        &_tjet1eta,        "tjet1eta/F");
-  minitree->Branch("tjet1phi",        &_tjet1phi,        "tjet1phi/F");
-  minitree->Branch("tjet1mass",       &_tjet1mass,       "tjet1mass/F");
-  minitree->Branch("tjet1csvv2ivf",   &_tjet1csvv2ivf,   "tjet1csvv2ivf/F");
-  minitree->Branch("tjet1assignment", &_tjet1assignment, "tjet1assignment/F");
-  minitree->Branch("tjet2pt",         &_tjet2pt,         "tjet2pt/F");
-  minitree->Branch("tjet2eta",        &_tjet2eta,        "tjet2eta/F");
-  minitree->Branch("tjet2phi",        &_tjet2phi,        "tjet2phi/F");
-  minitree->Branch("tjet2mass",       &_tjet2mass,       "tjet2mass/F");
-  minitree->Branch("tjet2csvv2ivf",   &_tjet2csvv2ivf,   "tjet2csvv2ivf/F");
-  minitree->Branch("tjet2assignment", &_tjet2assignment, "tjet2assignment/F");
-  }
+
+  // Vectors
+  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
+  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
+  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
+  minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
+  minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
+  minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
 }
 
 
@@ -2030,20 +1992,15 @@ void AnalysisCMS::GetTops()
 
       if (_dphitt_gen < 0.1 && _detatt_gen < 0.1) continue;
 
-      //cout << "   >>  dphitt = " << _dphitt_gen*180/3.141592 << endl;  
-
       TLorentzVector top1, top2; 
 
       top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, TOP_MASS);
       top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, TOP_MASS);
 
       _m2t_gen = (top1 + top2).M();
-  
     }
   }
 }
-
-
 
 
 //------------------------------------------------------------------------------
@@ -2070,7 +2027,7 @@ void AnalysisCMS::GetTopReco()
     jet_uncertainty.push_back(5.);  // GeV
   }
 
-  theMass.performAllVariations(/*1,*/ 1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
   _topReco = nu1.size();
 
@@ -2084,93 +2041,100 @@ void AnalysisCMS::GetTopReco()
       nu1.clear(); 
       nu2.clear();
       
-      theMass.performAllVariations(/*1,*/ 10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+      theMass.performAllVariations(10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
-      _nsol_1_1_10 = nu1.size();
+      _nsol_10_1_1 = nu1.size();
  
       nu1.clear(); 
       nu2.clear(); 
 
-      theMass.performAllVariations(/*1,*/ 10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
+      theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
 
       _nsol_10_10_10 = nu1.size(); 
     }
 }
+
 
 //------------------------------------------------------------------------------
 // GetMomentumTensor
 //------------------------------------------------------------------------------
 TMatrixDSym AnalysisCMS::GetMomentumTensor()
 {
-  TMatrixDSym _smatrix(3); //TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
-               
-  //Leptons                                                                                                
-  _smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
-  _smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  _smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-  
-  _smatrix[1][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  _smatrix[1][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Py();
-  _smatrix[1][2] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-  
-  _smatrix[2][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-  _smatrix[2][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-  _smatrix[2][2] = AnalysisLeptons[0].v.Pz() * AnalysisLeptons[0].v.Pz();
+  TMatrixDSym smatrix(3);  // TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
 
-  _smatrix[0][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Px();
-  _smatrix[0][1] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  _smatrix[0][2] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-  
-  _smatrix[1][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  _smatrix[1][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Py();
-  _smatrix[1][2] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-  
-  _smatrix[2][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-  _smatrix[2][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-  _smatrix[2][2] += AnalysisLeptons[1].v.Pz() * AnalysisLeptons[1].v.Pz();
+  // Leptons
+  smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
+  smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
+  smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
+
+  smatrix[1][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
+  smatrix[1][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Py();
+  smatrix[1][2] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
+
+  smatrix[2][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
+  smatrix[2][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
+  smatrix[2][2] = AnalysisLeptons[0].v.Pz() * AnalysisLeptons[0].v.Pz();
+
+  smatrix[0][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Px();
+  smatrix[0][1] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
+  smatrix[0][2] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
+
+  smatrix[1][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
+  smatrix[1][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Py();
+  smatrix[1][2] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
+
+  smatrix[2][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
+  smatrix[2][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
+  smatrix[2][2] += AnalysisLeptons[1].v.Pz() * AnalysisLeptons[1].v.Pz();
 
 
-  //Jets                                                                                                                                 
-  for(unsigned int i=0; i<AnalysisJets.size(); i++) {
+  // Jets
+  for (unsigned int i=0; i<AnalysisJets.size(); i++) {
 
-    _smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
-    _smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    _smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+    smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
+    smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+    smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
 
-    _smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    _smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
-    _smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+    smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+    smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
+    smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
 
-    _smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-    _smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-    _smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
-
+    smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+    smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+    smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
   }
 
-  return _smatrix;
+
+  return smatrix;
 }
+
 
 //------------------------------------------------------------------------------
 // GetEigenvalues
 //------------------------------------------------------------------------------
-TVectorD AnalysisCMS::GetEigenvalues(TMatrixDSym _smatrix) {
-  TMatrixDSymEigen eigen(_smatrix);
+TVectorD AnalysisCMS::GetEigenvalues(TMatrixDSym smatrix)
+{
+  TMatrixDSymEigen eigen(smatrix);
+
   TVectorD eigenvalues = eigen.GetEigenValues();
 
   return eigenvalues;
 }
 
+
 //------------------------------------------------------------------------------
 // GetSphericity
 //------------------------------------------------------------------------------
-float AnalysisCMS::GetSphericity(TMatrixDSym _smatrix) {
-  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+float AnalysisCMS::GetSphericity(TMatrixDSym smatrix)
+{
+  TVectorD eigenvalues = GetEigenvalues(smatrix);
 
   float eigenvalue1 = eigenvalues[0];
   float eigenvalue2 = eigenvalues[1];
   float eigenvalue3 = eigenvalues[2];
 
-  _sphericity = 3*(eigenvalue2 + eigenvalue3)/(2*(eigenvalue1 + eigenvalue2 + eigenvalue3));
+  _sphericity = 1.5 * (eigenvalue2 + eigenvalue3) / (eigenvalue1 + eigenvalue2 + eigenvalue3);
+
   return _sphericity;
 }
 
@@ -2178,13 +2142,15 @@ float AnalysisCMS::GetSphericity(TMatrixDSym _smatrix) {
 //------------------------------------------------------------------------------
 // GetAlignment
 //------------------------------------------------------------------------------
-float AnalysisCMS::GetAlignment(TMatrixDSym _smatrix) {
-  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+float AnalysisCMS::GetAlignment(TMatrixDSym smatrix)
+{
+  TVectorD eigenvalues = GetEigenvalues(smatrix);
 
   float eigenvalue1 = eigenvalues[0];
   float eigenvalue2 = eigenvalues[1];
 
-  _alignment = eigenvalue2/eigenvalue1;
+  _alignment = eigenvalue2 / eigenvalue1;
+
   return _alignment;
 }
 
@@ -2192,12 +2158,14 @@ float AnalysisCMS::GetAlignment(TMatrixDSym _smatrix) {
 //------------------------------------------------------------------------------
 // GetPlanarity
 //------------------------------------------------------------------------------
-float AnalysisCMS::GetPlanarity(TMatrixDSym _smatrix) {
-  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
+{
+  TVectorD eigenvalues = GetEigenvalues(smatrix);
 
   float eigenvalue2 = eigenvalues[1];
   float eigenvalue3 = eigenvalues[2];
 
-  _planarity = eigenvalue3/eigenvalue2;
+  _planarity = eigenvalue3 / eigenvalue2;
+
   return _planarity;
 }
