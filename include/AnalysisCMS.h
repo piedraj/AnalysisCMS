@@ -56,7 +56,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    EventDump         ();
 
-  void    EventSetup        (float    jet_eta_max = -1);
+  void    EventSetup        (float    jet_eta_max = -1,
+			     float    jet_pt_min  = 30);
 
   void    FillHistograms    (int      ichannel,
 			     int      icut,
@@ -66,7 +67,8 @@ class AnalysisCMS : public AnalysisBase
 
   void    GetGenPtllWeight  ();
 
-  void    GetJets           (float    jet_eta_max);
+  void    GetJets           (float    jet_eta_max,
+			     float    jet_pt_min);
 
   void    GetLeptons        ();
 
@@ -251,9 +253,12 @@ class AnalysisCMS : public AnalysisBase
   float                  _m2l;
   float                  _m3l;
   float			 _m2t_gen;
-  float                  _nbjet15csvv2l;
-  float                  _nbjet15csvv2m;
-  float                  _nbjet15csvv2t;
+  float                  _leadingPtCSVv2L;
+  float                  _leadingPtCSVv2M;
+  float                  _leadingPtCSVv2T;
+  float                  _trailingPtCSVv2L;
+  float                  _trailingPtCSVv2M;
+  float                  _trailingPtCSVv2T;
   float                  _nbjet30csvv2l;
   float                  _nbjet30csvv2m;
   float                  _nbjet30csvv2t;
@@ -287,32 +292,26 @@ class AnalysisCMS : public AnalysisBase
   float                  _mll14;
   float                  _mll24;
   float                  _mll34;
-
-
-  // Variables ported from AnalysisStop
-  //----------------------------------------------------------------------------
   float                  _dyll;
   float                  _ptbll;
   float                  _mt2ll;
   float                  _dphimetptbll;
   float                  _dphimetjet;
+  float                  _dphimetbbll;
   float                  _mllbb;
   float                  _meff;
   float                  _mt2bb;
   float                  _mt2lblb;
   float                  _mlb1;
   float                  _mlb2;
-
   float                  _mt2lblbcomb;
   float                  _mt2bbtrue;
   float                  _mt2lblbtrue;
   float                  _mt2lblbmatch;
-
   float                  _mlb1comb;
   float                  _mlb2comb;
   float                  _mlb1true;
   float                  _mlb2true;
-
   float                  _bjet1pt;
   float                  _bjet1eta;
   float                  _bjet1phi;
@@ -366,6 +365,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_meff         [nchannel][ncut][njetbin+1];
   TH1D*                  h_ptbll        [nchannel][ncut][njetbin+1];
   TH1D*                  h_dphimetptbll [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dphimetbbll  [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2ll        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2bb        [nchannel][ncut][njetbin+1];
   TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];

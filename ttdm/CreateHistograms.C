@@ -23,7 +23,7 @@ const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
 //const TCut mycut = "eventW*(metPfType1>0.)";  // the cuts chain 
-const TCut mycut = "eventW*((channel==5)&&metPfType1>0.)";  // the cuts chain 
+const TCut mycut = "eventW*((channel==3)&&metPfType1>20.)";  // the cuts chain 
 
 void ConvertToHistograms( TString process );
 
@@ -118,6 +118,11 @@ void CreateHistograms(){
 	ConvertToHistograms("15_WgStar"   );
 
 	ConvertToHistograms("ttDM0001scalar00010");
+	ConvertToHistograms("ttDM0001scalar00020");
+	ConvertToHistograms("ttDM0001scalar00050");
+	ConvertToHistograms("ttDM0001scalar00100");
+	ConvertToHistograms("ttDM0001scalar00200");
+	ConvertToHistograms("ttDM0001scalar00300");
 	ConvertToHistograms("ttDM0001scalar00500");
 
 	cout << "\n \n yeah \n \n" << endl; 
