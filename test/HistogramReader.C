@@ -153,7 +153,7 @@ void HistogramReader::Draw(TString hname,
 
   if (_drawratio && _datafile)
     {
-      canvas = new TCanvas(cname, cname, 550, 750);
+      canvas = new TCanvas(cname, cname, 550, 720);
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);

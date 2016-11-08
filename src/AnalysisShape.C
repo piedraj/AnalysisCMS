@@ -173,65 +173,6 @@ void AnalysisShape::FillLevelHistograms(int  icut,
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 }
-/*
-TMatrixDSym AnalysisShape::GetMomentumTensor() 
-{
-  TMatrixDSym _smatrix(3); //TMatrixDSym has a funcion implemened to calculate the eigenvalues
 
-  //Leptons
-  for(unsigned int i=0; i<2; i++) {
-    _smatrix[0][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Px();
-    _smatrix[0][1] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Py();
-    _smatrix[0][2] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Pz();
-    
-    _smatrix[1][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Py();
-    _smatrix[1][1] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Py();
-    _smatrix[1][2] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Pz();
-    
-    _smatrix[2][0] = AnalysisLeptons[i].v.Px() * AnalysisLeptons[i].v.Pz();
-    _smatrix[2][1] = AnalysisLeptons[i].v.Py() * AnalysisLeptons[i].v.Pz();
-    _smatrix[2][2] = AnalysisLeptons[i].v.Pz() * AnalysisLeptons[i].v.Pz();
-  }    
-
-  //Jets
-  for(unsigned int i=0; i<AnalysisJets.size(); i++) {
-
-    //    if(AnalysisJets[i].v.Pt() > 30.) {
-      _smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
-      _smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-      _smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-      
-      _smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-      _smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
-      _smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-      
-      _smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-      _smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-      _smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
-      //    }
-  }      
-
-  return _smatrix;
-}
-
-TVectorD AnalysisShape::GetEigenvalues(TMatrixDSym _smatrix) {
-  TMatrixDSymEigen eigen(_smatrix);
-  TVectorD eigenvalues = eigen.GetEigenValues();
-  
-  //  sort(eigenvalues[0],eigenvalues[2]);
-  
-  return eigenvalues; 
-}
-
-float AnalysisShape::GetSphericity(TMatrixDSym _smatrix) {
-  TVectorD eigenvalues = GetEigenvalues(_smatrix);
-
-  float eigenvalue1 = eigenvalues[0];
-  float eigenvalue2 = eigenvalues[1];
-  float eigenvalue3 = eigenvalues[2];
-
-  return 3*(eigenvalue2 + eigenvalue3)/(2*(eigenvalue1 + eigenvalue2 + eigenvalue3));
-  }
-*/
 
 
