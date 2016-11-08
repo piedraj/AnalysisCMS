@@ -88,6 +88,8 @@ class AnalysisCMS : public AnalysisBase
 
   float GetCentrality       ();
 
+  float GetST               ();
+
   void    GetMET            (float    module,
 			     float    phi);
 
@@ -286,6 +288,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _alignment;
   float                  _planarity;
   float                  _centrality;
+  float                  _ST;
 
   float                  _mll13;
   float                  _mll23;
@@ -451,7 +454,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
   TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
   TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
-
+  TH1D*                  h_ST            [nchannel][ncut][njetbin+1];
 
   // TH2 histograms
   //----------------------------------------------------------------------------

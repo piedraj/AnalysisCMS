@@ -8,8 +8,8 @@ enum{ /*lep1pt, lep1eta, lep1phi, lep1mass,
       m2l, mt2ll, mt2lblb, mtw1, mtw2,
       /*ht, htjets, htnojets,*/
       njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
-      /*dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
-      top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
+      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
+      /*top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx,*/
       nhisto
  }; 
@@ -22,8 +22,8 @@ TH1F* myhisto [nhisto];
 const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-//const TCut mycut = "eventW*(metPfType1>0.)";  // the cuts chain 
-const TCut mycut = "eventW*((channel==3)&&metPfType1>20.)";  // the cuts chain 
+//const TCut mycut = "eventW*((channel==3)&&dphillmet > 0.6)";  // the cuts chain 
+const TCut mycut = "eventW*((channel==5))";  // the cuts chain 
 
 void ConvertToHistograms( TString process );
 
@@ -68,7 +68,7 @@ void CreateHistograms(){
 	b_name[nbjet30csvv2l] = "nbjet30csvv2l";
 	b_name[nbjet30csvv2m] = "nbjet30csvv2m";
 	b_name[nbjet30csvv2t] = "nbjet30csvv2t";
-	/*
+	
 	b_name[dphijet1met ] = "dphijet1met" ;   
 	b_name[dphijet2met ] = "dphijet2met" ;  
 	b_name[dphijj      ] = "dphijj"      ;    
@@ -81,7 +81,7 @@ void CreateHistograms(){
 	b_name[dphilmet1   ] = "dphilmet1"   ;
 	b_name[dphilmet2   ] = "dphilmet2"   ;
 	b_name[dphillmet   ] = "dphillmet"   ;
-
+	/*
 	b_name[top1eta_gen ] = "top1eta_gen" ;
 	b_name[top1phi_gen ] = "top1phi_gen" ;
 	b_name[top1pt_gen  ] = "top1pt_gen"  ;
@@ -177,7 +177,7 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2m] + " >> " + h_name[nbjet30csvv2m] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2t] + " >> " + h_name[nbjet30csvv2t] + "(   10,  0,     10   )", mycut );
-	/*
+	
 	mytree -> Draw( b_name[dphijet1met  ] + " >> " + h_name[dphijet1met  ] + "(  100,  0,      3.2 )", mycut );   
 	mytree -> Draw( b_name[dphijet2met  ] + " >> " + h_name[dphijet2met  ] + "(  100,  0,      3.2 )", mycut ); 
 	mytree -> Draw( b_name[dphijj       ] + " >> " + h_name[dphijj       ] + "(  100,  0,      3.2 )", mycut );    
@@ -190,7 +190,7 @@ void ConvertToHistograms( TString process ){
 	mytree -> Draw( b_name[dphilmet1    ] + " >> " + h_name[dphilmet1    ] + "(  100,  0,      3.2 )", mycut );
 	mytree -> Draw( b_name[dphilmet2    ] + " >> " + h_name[dphilmet2    ] + "(  100,  0,      3.2 )", mycut ); 
 	mytree -> Draw( b_name[dphillmet    ] + " >> " + h_name[dphillmet    ] + "(  100,  0,      3.2 )", mycut ); 
-
+	/*
 	mytree -> Draw( b_name[top1eta_gen  ] + " >> " + h_name[top1eta_gen  ] + "(   60, -3,      3   )", mycut );
 	mytree -> Draw( b_name[top1phi_gen  ] + " >> " + h_name[top1phi_gen  ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[top1pt_gen   ] + " >> " + h_name[top1pt_gen   ] + "( 3000,  0,   3000   )", mycut );

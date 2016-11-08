@@ -138,6 +138,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_alignment     [ichannel][icut][ijet]->Fill(_alignment,       _event_weight);
   h_planarity     [ichannel][icut][ijet]->Fill(_planarity,      _event_weight);
   h_centrality    [ichannel][icut][ijet]->Fill(_centrality,     _event_weight);
+  h_ST            [ichannel][icut][ijet]->Fill(_ST,             _event_weight);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -601,9 +602,6 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   _trailingPtCSVv2M = -0.1;
   _trailingPtCSVv2T = -0.1;
 
-  _nbjet15csvv2l  = 0;
-  _nbjet15csvv2m  = 0;
-  _nbjet15csvv2t  = 0;
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
@@ -1055,6 +1053,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetAlignment(GetMomentumTensor());
   GetPlanarity(GetMomentumTensor());
   GetCentrality();
+  GetST();
 
   GetGenPtllWeight();
 
@@ -1186,6 +1185,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_alignment    [ichannel][icut][ijet] = new TH1D("h_alignment"     + suffix, "", 1000, -1, 1);
   h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"     + suffix, "", 1000, -1, 1);
   h_centrality   [ichannel][icut][ijet] = new TH1D("h_centrality"    + suffix, "", 1000, 0,  1);
+  h_ST           [ichannel][icut][ijet] = new TH1D("h_ST"            + suffix, "", 2000, 0, 2000);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1373,6 +1373,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("_alignment", &_alignment);
   minitree->Branch("_planarity", &_planarity);
   minitree->Branch("_centrality", &_centrality);
+  minitree->Branch("_ST", &_ST);
 
   if (std_vector_LHE_weight)
     //    minitree->Branch("LHEweight", &std_vector_LHE_weight);
@@ -1537,7 +1538,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("tjet2mass",       &_tjet2mass,       "tjet2mass/F");
   minitree->Branch("tjet2csvv2ivf",   &_tjet2csvv2ivf,   "tjet2csvv2ivf/F");
   minitree->Branch("tjet2assignment", &_tjet2assignment, "tjet2assignment/F");
->>>>>>> 9d09232bdc851bc423be419cc3dbafd5faf7b8a6
 }
 
 
@@ -2288,4 +2288,12 @@ float AnalysisCMS::GetCentrality() {
   }
   _centrality = sumPt/sumEVis;
   return _centrality;
+}
+
+//------------------------------------------------------------------------------
+// GetST
+//------------------------------------------------------------------------------
+float AnalysisCMS::GetST() {
+  _ST = _ht + metPfType1 + AnalysisLeptons[0].v.Pt() + AnalysisLeptons[1].v.Pt();
+  return _ST;
 }
