@@ -58,6 +58,7 @@ void runPlotter(TString level,
   if (analysis.EqualTo("MonoH")) scale = logY;
   if (analysis.EqualTo("Stop"))  scale = logY;
   if (analysis.EqualTo("Top"))   scale = logY;
+  if (analysis.EqualTo("Shape")) scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -154,6 +155,11 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
     }
 
+  if (analysis.EqualTo("Shape"))
+    {
+      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
+      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
+    }
 
   if (analysis.EqualTo("Stop"))
     {
@@ -272,6 +278,16 @@ void runPlotter(TString level,
 	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000);
 	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
 
+	  if (analysis.EqualTo("Shape"))
+	    {
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000);
+	      plotter.Roc(prefix + "dphimetjet" + suffix, "min #Delta#phi(jet," + sm + ")", 5, 2);
+	      plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5);
+	      plotter.Roc(prefix + "sphericity"  + suffix, "sphericity", 20, "NULL", 0, 1);
+	      plotter.Roc(prefix + "planarity"   + suffix, "planarity",  20, "NULL", 0, 1);
+	      plotter.Roc(prefix + "alignment"   + suffix, "alignment",  20, "NULL", 0, 1);
+	    }
+
 
 	  if (!allplots) continue;
 
@@ -352,6 +368,16 @@ void runPlotter(TString level,
 	      plotter.Draw(prefix + "wlpt"       + suffix, "W lepton p_{T}",                   10, 0, "GeV",  scale, true,  0, 150);
 	      plotter.Draw(prefix + "wlzldeltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
 	    }
+
+	  // Shape histograms
+	  //--------------------------------------------------------------------
+	  if (analysis.EqualTo("Shape"))
+	    {
+	      plotter.Draw(prefix + "sphericity" + suffix, "sphericity", 20, 2, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "alignment" + suffix,  "alignment",  20, 2, "NULL", scale, true, 0, 1);
+	      plotter.Draw(prefix + "planarity" + suffix,  "planarity",  20, 2, "NULL", scale, true, 0, 1);
+	    }
+
 	}
     }
 

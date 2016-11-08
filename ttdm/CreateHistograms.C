@@ -3,7 +3,7 @@
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       lep2pt, lep2eta, lep2phi, lep2mass,
       jet1pt, jet1eta, jet1phi, jet1mass,
-      jet2pt, jet2eta, jet2phi, jet2mass,
+      jet2pt, jet2eta, jet2phi, jet2mass, 
       metPfType1, metPfType1Phi,
       m2l, mt2ll, mt2lblb, mtw1, mtw2,
       ht, htjets, htnojets,
@@ -20,19 +20,17 @@ TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-//const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
-const TCut mycut = "eventW*(channel==5&&metPfType1>0.)";                 
+//const TCut mycut = "eventW*((channel==3)&&dphillmet > 0.6)";  // the cuts chain 
+const TCut mycut = "eventW*((channel==5))";  // the cuts chain 
 
-void CreateHistograms2( TString process );
-
-
+void ConvertToHistograms( TString process );
 
 void CreateHistograms(){
 
- 	b_name[lep1pt  ] = "lep1pt"  ;
+        b_name[lep1pt  ] = "lep1pt"  ;
 	b_name[lep1eta ] = "lep1eta" ;
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
@@ -97,7 +95,6 @@ void CreateHistograms(){
 	b_name[alignment ] = "alignment" ;
 	b_name[planarity ] = "planarity" ;
 
-
 	for( int i = 0; i < nhisto; i++ ){
 
  		h_name[i] = b_name[i];
@@ -105,27 +102,32 @@ void CreateHistograms(){
 	}
 
 
-	CreateHistograms2("00_Fakes"    );
-	CreateHistograms2("01_Data"     );
-	CreateHistograms2("02_WZTo3LNu" );
-	CreateHistograms2("03_VZ"       );
-	CreateHistograms2("04_TTTo2L2Nu");
-	CreateHistograms2("05_ST"       );
-	CreateHistograms2("06_WW"       );
-	CreateHistograms2("07_ZJets"    );
-	//CreateHistograms2("08_WJets"    );
-	CreateHistograms2("09_TTV"      );
-	CreateHistograms2("10_HWW"      );
-	CreateHistograms2("11_Wg"       );
-	CreateHistograms2("12_Zg"       );
-	CreateHistograms2("13_VVV"      );
-	CreateHistograms2("14_HZ"       );
-	CreateHistograms2("15_WgStar"   );
+	ConvertToHistograms("00_Fakes"    );
+	ConvertToHistograms("01_Data"     );
+	ConvertToHistograms("02_WZTo3LNu" );
+	ConvertToHistograms("03_VZ"       );
+	ConvertToHistograms("04_TTTo2L2Nu");
+	ConvertToHistograms("05_ST"       );
+	ConvertToHistograms("06_WW"       );
+	ConvertToHistograms("07_ZJets"    );
+	//ConvertToHistograms("08_WJets"    );
+	ConvertToHistograms("09_TTV"      );
+	ConvertToHistograms("10_HWW"      );
+	ConvertToHistograms("11_Wg"       );
+	ConvertToHistograms("12_Zg"       );
+	ConvertToHistograms("13_VVV"      );
+	ConvertToHistograms("14_HZ"       );
+	ConvertToHistograms("15_WgStar"   );
 
-	CreateHistograms2("ttDM0001scalar00010");
-	CreateHistograms2("ttDM0001scalar00500");
+	ConvertToHistograms("ttDM0001scalar00010");
+	ConvertToHistograms("ttDM0001scalar00020");
+	ConvertToHistograms("ttDM0001scalar00050");
+	ConvertToHistograms("ttDM0001scalar00100");
+	ConvertToHistograms("ttDM0001scalar00200");
+	ConvertToHistograms("ttDM0001scalar00300");
+	ConvertToHistograms("ttDM0001scalar00500");
 
-	cout << "\n \n done !!! \n \n" << endl; 
+	cout << "\n \n yeah \n \n" << endl; 
 
 }
 
@@ -173,6 +175,10 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", mycut );
 	mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", mycut );
 
+	mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", mycut );
+	mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", mycut );
+	mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", mycut );
+
 	mytree -> Draw( b_name[njet         ] + " >> " + h_name[njet         ] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", mycut );
 	mytree -> Draw( b_name[nbjet30csvv2m] + " >> " + h_name[nbjet30csvv2m] + "(   10,  0,     10   )", mycut );
@@ -204,7 +210,6 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", mycut );
 	mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", mycut );
 	mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", mycut );
-
 
 	for( int i = 0; i < nhisto; i++ ){	
 

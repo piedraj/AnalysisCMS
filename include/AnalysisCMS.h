@@ -81,11 +81,15 @@ class AnalysisCMS : public AnalysisBase
 
   TVectorD GetEigenvalues   (TMatrixDSym _smatrix);
 
-  float   GetSphericity     (TMatrixDSym _smatrix);
+  float GetSphericity       (TMatrixDSym _smatrix);
 
-  float   GetAlignment      (TMatrixDSym _smatrix);
+  float GetAlignment        (TMatrixDSym _smatrix);
 
-  float   GetPlanarity      (TMatrixDSym _smatrix);
+  float GetPlanarity        (TMatrixDSym _smatrix);
+
+  float GetCentrality       ();
+
+  float GetST               ();
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -284,6 +288,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _sphericity;
   float                  _alignment;
   float                  _planarity;
+  float                  _centrality;
+  float                  _ST;
+
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;
@@ -369,7 +376,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_mlb1         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb2         [nchannel][ncut][njetbin+1];
 
-
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
   TH1D*                  h_channel       [nchannel][ncut][njetbin+1];
@@ -445,7 +451,11 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
-
+  TH1D*                  h_sphericity    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_ST            [nchannel][ncut][njetbin+1];
 
   // TH2 histograms
   //----------------------------------------------------------------------------

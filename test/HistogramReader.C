@@ -265,9 +265,7 @@ void HistogramReader::Draw(TString hname,
   TH1D* hfirst = (TH1D*)_mchist[0]->Clone("hfirst");
 
   hfirst->Reset();
-
   hfirst->SetTitle("");   // clear histogram title out
-
 
   // All MC
   //----------------------------------------------------------------------------
@@ -436,6 +434,7 @@ void HistogramReader::Draw(TString hname,
   
   // Search signals legend in a new column
   //----------------------------------------------------------------------------
+
   //ny = 0;
   //nx++;
 
