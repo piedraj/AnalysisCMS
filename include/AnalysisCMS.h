@@ -9,11 +9,11 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TLorentzVector.h>
+#include <TMatrixDSym.h>
+#include <TMatrixDSymEigen.h>
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TTree.h>
-#include <TMatrixDSym.h>
-#include <TMatrixDSymEigen.h>
 
 
 enum {Loose, Tight};
@@ -44,115 +44,121 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0, TString systematic = "nominal");
 
-  void    ApplyWeights      ();
+  void        ApplyWeights      ();
 
-  void    DefineHistograms  (int      ichannel,
-			     int      icut,
-			     int      ijet,
-			     TString  suffix);
+  void        DefineHistograms  (int      ichannel,
+				 int      icut,
+				 int      ijet,
+				 TString  suffix);
+  
+  float       ElectronIsolation (int      k);
 
-  float   ElectronIsolation (int      k);
+  void        EndJob            ();
 
-  void    EndJob            ();
+  void        EventDump         ();
 
-  void    EventDump         ();
+  void        EventSetup        (float    jet_eta_max = -1,
+				 float    jet_pt_min  = 30);
 
-  void    EventSetup        (float    jet_eta_max = -1,
-			     float    jet_pt_min  = 30);
+  void        FillHistograms    (int      ichannel,
+				 int      icut,
+				 int      ijet);
 
-  void    FillHistograms    (int      ichannel,
-			     int      icut,
-			     int      ijet);
+  void        GetFakeWeights    ();
 
-  void    GetFakeWeights    ();
+  void        GetGenPtllWeight  ();
 
-  void    GetGenPtllWeight  ();
+  void        GetJets           (float    jet_eta_max,
+				 float    jet_pt_min);
+  
+  void        GetLeptons        ();
 
-  void    GetJets           (float    jet_eta_max,
-			     float    jet_pt_min);
+  void        GetTops           (); 
 
-  void    GetLeptons        ();
+  void        GetTopReco        ();
 
-  void    GetTops           (); 
+  void        GetMET            (float    module,
+				 float    phi);
 
-  void    GetTopReco        ();
+  void        GetTrkMET         (float    module,
+				 float    phi);
 
-  TMatrixDSym GetMomentumTensor();
+  float       GetSphericity     (TMatrixDSym _smatrix);
 
-  TVectorD GetEigenvalues   (TMatrixDSym _smatrix);
+  float       GetAlignment      (TMatrixDSym _smatrix);
 
-  float GetSphericity       (TMatrixDSym _smatrix);
+  float       GetPlanarity      (TMatrixDSym _smatrix);
 
-  float GetAlignment        (TMatrixDSym _smatrix);
+  float       GetCentrality     ();
 
-  float GetPlanarity        (TMatrixDSym _smatrix);
+  float       GetST             ();
 
-  float GetCentrality       ();
+  float       MuonIsolation     (int      k);
 
-  float GetST               ();
+  void        OpenMinitree      ();
 
-  void    GetMET            (float    module,
-			     float    phi);
+  bool        PassTrigger       ();
 
-  void    GetTrkMET         (float    module,
-			     float    phi);
+  void        PrintProgress     (Long64_t counter,
+				 Long64_t total);
 
-  float   MuonIsolation     (int      k);
+  void        SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
 
-  void    OpenMinitree      ();
+  void        Setup             (TString  analysis,
+				 TString  filename,
+				 float    luminosity);
 
-  bool    PassTrigger       ();
-
-  void    PrintProgress     (Long64_t counter,
-			     Long64_t total);
-
-  void    SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
-
-  void    Setup             (TString  analysis,
-			     TString  filename,
-			     float    luminosity);
-
-  void    Summary           (TString  analysis,
-			     TString  precision,
-			     TString  title);
+  void        Summary           (TString  analysis,
+				 TString  precision,
+				 TString  title);
 
 
   // New analysis variables
   //----------------------------------------------------------------------------
-  void    GetDeltaPhi       ();
+  void        GetDeltaPhi       ();
 
-  void    GetDeltaPhiVeto   ();
+  void        GetDeltaPhiVeto   ();
 
-  void    GetDeltaR         ();
+  void        GetDeltaR         ();
 
-  void    GetHt             ();
+  void        GetHt             ();
 
-  void    GetJetPtSum       ();
+  void        GetJetPtSum       ();
 
-  void    GetMc             ();
+  void        GetMc             ();
 
-  void    GetMetVar         ();
+  void        GetMetVar         ();
 
-  void    GetMpMet          ();
+  void        GetMpMet          ();
 
-  void    GetPtWW           ();
+  void        GetPtWW           ();
 
-  void    GetSoftMuon       ();
+  void        GetSoftMuon       ();
 
-  void    GetStarVar        ();
+  void        GetStarVar        ();
 
-  void    GetZHCRVar        ();
+  void        GetZHCRVar        ();
 
-  void    GetStopVar        ();
+  void        GetStopVar        ();
 
-  void    GetMt             (Lepton         lep,
-			     float&         transverse_mass);
+  void        GetMt             (Lepton         lep,
+				 float&         transverse_mass);
 
-  double  ComputeMT2        (TLorentzVector VisibleA,
-			     TLorentzVector VisibleB, 
-			     TLorentzVector Invisible,
-			     int            MT2Type      = 0,
-			     double         MT2Precision = 0.);
+  double      ComputeMT2        (TLorentzVector VisibleA,
+				 TLorentzVector VisibleB, 
+				 TLorentzVector Invisible,
+				 int            MT2Type      = 0,
+				 double         MT2Precision = 0.);
+
+  TMatrixDSym GetMomentumTensor ();
+
+  TVectorD    GetEigenvalues    (TMatrixDSym    smatrix);
+
+  float       GetSphericity     (TMatrixDSym    smatrix);
+
+  float       GetAlignment      (TMatrixDSym    smatrix);
+
+  float       GetPlanarity      (TMatrixDSym    smatrix);
 
 
   // Data members
@@ -164,13 +170,13 @@ class AnalysisCMS : public AnalysisBase
   TLorentzVector         MET;
   TLorentzVector         trkMET;
 
-  std::vector<float>     _jet_pt; 
   std::vector<float>     _jet_eta;
   std::vector<float>     _jet_phi;
+  std::vector<float>     _jet_pt; 
 
-  std::vector<float>     _bjet30csvv2m_pt; 
   std::vector<float>     _bjet30csvv2m_eta;
   std::vector<float>     _bjet30csvv2m_phi;
+  std::vector<float>     _bjet30csvv2m_pt; 
 
   bool                   _saveminitree;
   bool                   _eventdump;
@@ -272,7 +278,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
-  float                  _nsol_1_1_10;
+  float                  _nsol_10_1_1;
   float                  _nsol_10_10_10;
   float                  _ptww;
   float                  _pt2l;
@@ -338,7 +344,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _tjet2mass;
   float                  _tjet2csvv2ivf;
   float                  _tjet2assignment;
-
 
   Long64_t               _nentries;
 

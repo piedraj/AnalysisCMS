@@ -265,7 +265,8 @@ void HistogramReader::Draw(TString hname,
   TH1D* hfirst = (TH1D*)_mchist[0]->Clone("hfirst");
 
   hfirst->Reset();
-  hfirst->SetTitle("");   // clear histogram title out
+
+  hfirst->SetTitle("");
 
   // All MC
   //----------------------------------------------------------------------------
@@ -430,14 +431,9 @@ void HistogramReader::Draw(TString hname,
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
       ny++;
     }
-  
-  
-  // Search signals legend in a new column
+
+  // Search signals legend
   //----------------------------------------------------------------------------
-
-  //ny = 0;
-  //nx++;
-
   for (int i=0; i<_signalhist.size(); i++)
     {
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
@@ -509,7 +505,8 @@ void HistogramReader::Draw(TString hname,
 	uncertainty->SetBinError  (ibin, uncertaintyError);
       }
 
-      ratio->SetTitle("");   // clear histogram title out 
+      ratio->SetTitle("");
+
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
