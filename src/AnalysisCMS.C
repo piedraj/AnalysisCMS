@@ -584,6 +584,13 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
   AnalysisJets.clear();
 
+  _jet_pt.clear(); 
+  _jet_eta.clear();
+  _jet_phi.clear();
+  _bjet30csvv2m_pt.clear(); 
+  _bjet30csvv2m_eta.clear();
+  _bjet30csvv2m_phi.clear();
+
   _leadingPtCSVv2L  = -0.1;
   _leadingPtCSVv2M  = -0.1;
   _leadingPtCSVv2T  = -0.1;
@@ -666,6 +673,19 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (goodjet.cmvav2 > cMVAv2T) _nbjet30cmvav2t++;
 
     AnalysisJets.push_back(goodjet);
+
+
+    _jet_pt .push_back(pt ); 
+    _jet_eta.push_back(eta); 
+    _jet_phi.push_back(phi);
+
+    if ( goodjet.csvv2ivf > CSVv2M ){
+ 
+    	_bjet30csvv2m_pt .push_back(pt ); 
+    	_bjet30csvv2m_eta.push_back(eta); 
+    	_bjet30csvv2m_phi.push_back(phi);
+
+    }
   }
 
 
@@ -1023,7 +1043,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  if (_analysis.EqualTo("TTDM")) GetTopReco();
+  //if (_analysis.EqualTo("TTDM")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1252,6 +1272,80 @@ void AnalysisCMS::OpenMinitree()
   //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
+  if(_analysis.EqualTo("TTDM")){
+
+	  minitree->Branch("channel",        &_channel,        "channel/F");
+	  minitree->Branch("detatt_gen",     &_detatt_gen,     "detatt_gen/F");
+	  minitree->Branch("dphijet1met",    &_dphijet1met,    "dphijet1met/F");
+	  minitree->Branch("dphijet2met",    &_dphijet2met,    "dphijet2met/F");
+	  minitree->Branch("dphijj",         &_dphijj,         "dphijj/F");
+	  minitree->Branch("dphijjmet",      &_dphijjmet,      "dphijjmet/F");
+	  minitree->Branch("dphilep1jet1",   &_dphilep1jet1,   "dphilep1jet1/F");
+	  minitree->Branch("dphilep1jet2",   &_dphilep1jet2,   "dphilep1jet2/F");
+	  minitree->Branch("dphilep2jet1",   &_dphilep2jet1,   "dphilep2jet1/F");
+	  minitree->Branch("dphilep2jet2",   &_dphilep2jet2,   "dphilep2jet2/F");
+	  minitree->Branch("dphill",         &dphill,          "dphill/F" );
+	  minitree->Branch("dphillmet",      &_dphillmet,      "dphillmet/F");
+	  minitree->Branch("dphilmet1",      &dphilmet1,       "dphilmet1/F");
+	  minitree->Branch("dphilmet2",      &dphilmet2,       "dphilmet2/F");
+	  minitree->Branch("dphitt_gen",     &_dphitt_gen,     "dphitt_gen/F");
+	  minitree->Branch("event",          &event,           "event/I");
+	  minitree->Branch("eventW",         &_event_weight,   "eventW/F");
+	  minitree->Branch("ht",             &_ht,             "ht/F");
+	  minitree->Branch("htjets",         &_htjets,         "htjets/F");
+	  minitree->Branch("htnojets",       &_htnojets,       "htnojets/F");
+	  minitree->Branch("jet1eta",        &jeteta1,         "jet1eta/F");
+	  minitree->Branch("jet1mass",       &jetmass1,        "jet1mass/F");
+	  minitree->Branch("jet1phi",        &jetphi1,         "jet1phi/F");
+	  minitree->Branch("jet1pt",         &jetpt1,          "jet1pt/F");
+	  minitree->Branch("jet2eta",        &jeteta2,         "jet2eta/F");
+	  minitree->Branch("jet2mass",       &jetmass2,        "jet2mass/F");
+	  minitree->Branch("jet2phi",        &jetphi2,         "jet2phi/F");
+	  minitree->Branch("jet2pt",         &jetpt2,          "jet2pt/F");
+	  minitree->Branch("lep1eta",        &_lep1eta,        "lep1eta/F");
+	  minitree->Branch("lep1phi",        &_lep1phi,        "lep1phi/F");
+	  minitree->Branch("lep1pt",         &_lep1pt,         "lep1pt/F");
+	  minitree->Branch("lep1mass",       &_lep1mass,       "lep1mass/F");
+	  minitree->Branch("lep2eta",        &_lep2eta,        "lep2eta/F");
+	  minitree->Branch("lep2phi",        &_lep2phi,        "lep2phi/F");
+	  minitree->Branch("lep2pt",         &_lep2pt,         "lep2pt/F");
+	  minitree->Branch("lep2mass",       &_lep2mass,       "lep2mass/F");
+	  minitree->Branch("lumi",           &lumi,            "lumi/I");
+	  minitree->Branch("m2l",            &_m2l,            "m2l/F");
+	  minitree->Branch("metPfType1",     &metPfType1,      "metPfType1/F");
+	  minitree->Branch("metPfType1Phi",  &metPfType1Phi,   "metPfType1Phi/F");
+	  minitree->Branch("mt2ll",          &_mt2ll,          "mt2ll/F");                        
+	  minitree->Branch("mt2lblb",        &_mt2lblb,        "mt2lblb/F");
+	  minitree->Branch("mtw1",           &mtw1,            "mtw1/F");
+	  minitree->Branch("mtw2",           &mtw2,            "mtw2/F");
+	  minitree->Branch("nbjet30csvv2l",  &_nbjet30csvv2l,  "nbjet30csvv2l/F");
+	  minitree->Branch("nbjet30csvv2m",  &_nbjet30csvv2m,  "nbjet30csvv2m/F");
+	  minitree->Branch("nbjet30csvv2t",  &_nbjet30csvv2t,  "nbjet30csvv2t/F");
+	  minitree->Branch("njet",           &_njet,           "njet/F");
+	  minitree->Branch("nvtx",           &nvtx,            "nvtx/F");
+	  minitree->Branch("run",            &run,             "run/I");
+	  minitree->Branch("top1eta_gen",    &_top1eta_gen,    "top1eta_gen/F");                 
+	  minitree->Branch("top1phi_gen",    &_top1phi_gen,    "top1phi_gen/F");
+	  minitree->Branch("top1pt_gen",     &_top1pt_gen,     "top1pt_gen/F");
+	  minitree->Branch("top2eta_gen",    &_top2eta_gen,    "top2eta_gen/F");
+	  minitree->Branch("top2phi_gen",    &_top2phi_gen,    "top2phi_gen/F");
+	  minitree->Branch("top2pt_gen",     &_top2pt_gen,     "top2pt_gen/F");
+
+	  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
+	  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
+	  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
+	  minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
+	  minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
+	  minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
+
+	  minitree->Branch("sphericity",     &_sphericity,     "sphericity");
+	  minitree->Branch("alignment",      &_alignment,      "alignment");            
+	  minitree->Branch("planarity",      &_planarity,      "planarity");
+
+  }
+
+  else{
+
   minitree->Branch("channel",          &_channel,          "channel/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
   minitree->Branch("dphijet2met",      &_dphijet2met,      "dphijet2met/F");
@@ -1365,6 +1459,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("tjet2mass",       &_tjet2mass,       "tjet2mass/F");
   minitree->Branch("tjet2csvv2ivf",   &_tjet2csvv2ivf,   "tjet2csvv2ivf/F");
   minitree->Branch("tjet2assignment", &_tjet2assignment, "tjet2assignment/F");
+  }
 }
 
 
@@ -1935,15 +2030,20 @@ void AnalysisCMS::GetTops()
 
       if (_dphitt_gen < 0.1 && _detatt_gen < 0.1) continue;
 
+      //cout << "   >>  dphitt = " << _dphitt_gen*180/3.141592 << endl;  
+
       TLorentzVector top1, top2; 
 
       top1.SetPtEtaPhiM(_top1pt_gen, _top1eta_gen, _top1phi_gen, TOP_MASS);
       top2.SetPtEtaPhiM(_top2pt_gen, _top2eta_gen, _top2phi_gen, TOP_MASS);
 
-      _m2t_gen = (top1 + top2).M();  
+      _m2t_gen = (top1 + top2).M();
+  
     }
   }
 }
+
+
 
 
 //------------------------------------------------------------------------------
@@ -1970,7 +2070,7 @@ void AnalysisCMS::GetTopReco()
     jet_uncertainty.push_back(5.);  // GeV
   }
 
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+  theMass.performAllVariations(/*1,*/ 1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
   _topReco = nu1.size();
 
@@ -1984,15 +2084,120 @@ void AnalysisCMS::GetTopReco()
       nu1.clear(); 
       nu2.clear();
       
-      theMass.performAllVariations(1, 1, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+      theMass.performAllVariations(/*1,*/ 10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
       _nsol_1_1_10 = nu1.size();
  
       nu1.clear(); 
       nu2.clear(); 
 
-      theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
+      theMass.performAllVariations(/*1,*/ 10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
 
       _nsol_10_10_10 = nu1.size(); 
     }
+}
+
+//------------------------------------------------------------------------------
+// GetMomentumTensor
+//------------------------------------------------------------------------------
+TMatrixDSym AnalysisCMS::GetMomentumTensor()
+{
+  TMatrixDSym _smatrix(3); //TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
+               
+  //Leptons                                                                                                
+  _smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
+  _smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
+  _smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
+  
+  _smatrix[1][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
+  _smatrix[1][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Py();
+  _smatrix[1][2] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
+  
+  _smatrix[2][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
+  _smatrix[2][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
+  _smatrix[2][2] = AnalysisLeptons[0].v.Pz() * AnalysisLeptons[0].v.Pz();
+
+  _smatrix[0][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Px();
+  _smatrix[0][1] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
+  _smatrix[0][2] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
+  
+  _smatrix[1][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
+  _smatrix[1][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Py();
+  _smatrix[1][2] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
+  
+  _smatrix[2][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
+  _smatrix[2][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
+  _smatrix[2][2] += AnalysisLeptons[1].v.Pz() * AnalysisLeptons[1].v.Pz();
+
+
+  //Jets                                                                                                                                 
+  for(unsigned int i=0; i<AnalysisJets.size(); i++) {
+
+    _smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
+    _smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+    _smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+
+    _smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
+    _smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
+    _smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+
+    _smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
+    _smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
+    _smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
+
+  }
+
+  return _smatrix;
+}
+
+//------------------------------------------------------------------------------
+// GetEigenvalues
+//------------------------------------------------------------------------------
+TVectorD AnalysisCMS::GetEigenvalues(TMatrixDSym _smatrix) {
+  TMatrixDSymEigen eigen(_smatrix);
+  TVectorD eigenvalues = eigen.GetEigenValues();
+
+  return eigenvalues;
+}
+
+//------------------------------------------------------------------------------
+// GetSphericity
+//------------------------------------------------------------------------------
+float AnalysisCMS::GetSphericity(TMatrixDSym _smatrix) {
+  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+
+  float eigenvalue1 = eigenvalues[0];
+  float eigenvalue2 = eigenvalues[1];
+  float eigenvalue3 = eigenvalues[2];
+
+  _sphericity = 3*(eigenvalue2 + eigenvalue3)/(2*(eigenvalue1 + eigenvalue2 + eigenvalue3));
+  return _sphericity;
+}
+
+
+//------------------------------------------------------------------------------
+// GetAlignment
+//------------------------------------------------------------------------------
+float AnalysisCMS::GetAlignment(TMatrixDSym _smatrix) {
+  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+
+  float eigenvalue1 = eigenvalues[0];
+  float eigenvalue2 = eigenvalues[1];
+
+  _alignment = eigenvalue2/eigenvalue1;
+  return _alignment;
+}
+
+
+//------------------------------------------------------------------------------
+// GetPlanarity
+//------------------------------------------------------------------------------
+float AnalysisCMS::GetPlanarity(TMatrixDSym _smatrix) {
+  TVectorD eigenvalues = GetEigenvalues(_smatrix);
+
+  float eigenvalue2 = eigenvalues[1];
+  float eigenvalue3 = eigenvalues[2];
+
+  _planarity = eigenvalue3/eigenvalue2;
+  return _planarity;
 }
