@@ -12,6 +12,8 @@
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TTree.h>
+#include <TMatrixDSym.h>
+#include <TMatrixDSymEigen.h>
 
 
 enum {Loose, Tight};
@@ -74,6 +76,16 @@ class AnalysisCMS : public AnalysisBase
   void    GetTops           (); 
 
   void    GetTopReco        ();
+
+  TMatrixDSym GetMomentumTensor();
+
+  TVectorD GetEigenvalues   (TMatrixDSym _smatrix);
+
+  float   GetSphericity     (TMatrixDSym _smatrix);
+
+  float   GetAlignment      (TMatrixDSym _smatrix);
+
+  float   GetPlanarity      (TMatrixDSym _smatrix);
 
   void    GetMET            (float    module,
 			     float    phi);
@@ -147,6 +159,14 @@ class AnalysisCMS : public AnalysisBase
   Lepton                 Lepton2;
   TLorentzVector         MET;
   TLorentzVector         trkMET;
+
+  std::vector<float>     _jet_pt; 
+  std::vector<float>     _jet_eta;
+  std::vector<float>     _jet_phi;
+
+  std::vector<float>     _bjet30csvv2m_pt; 
+  std::vector<float>     _bjet30csvv2m_eta;
+  std::vector<float>     _bjet30csvv2m_phi;
 
   bool                   _saveminitree;
   bool                   _eventdump;
@@ -261,6 +281,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2phi_gen;
   float                  _top2pt_gen;
   float			 _topReco;
+  float                  _sphericity;
+  float                  _alignment;
+  float                  _planarity;
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;

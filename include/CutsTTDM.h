@@ -7,7 +7,6 @@
 enum {
   TTDM_00_Has2Leptons,
   TTDM_01_NewPresel,
-  TTDM_02_MET50,
   //TTDM_03_AN16105,
   //TTDM_04_tt,
   //TTDM_05_tt,
@@ -21,7 +20,6 @@ enum {
 const TString scut[ncut] = {
   "TTDM/00_Has2Leptons",
   "TTDM/01_NewPresel",
-  "TTDM/02_MET50"
 };
 
 #endif
