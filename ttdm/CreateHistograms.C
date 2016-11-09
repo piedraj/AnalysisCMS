@@ -24,9 +24,9 @@ const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
 //const TCut mycut = "eventW*((channel==3)&&dphillmet > 0.6)";  // the cuts chain 
-const TCut mycut = "eventW*((channel==5))";  // the cuts chain 
+const TCut mycut = "eventW*((channel==5) && dphillmet > 1.2 && metPfType1 > 50.)";  // the cuts chain 
 
-void ConvertToHistograms( TString process );
+void CreateHistograms2( TString process );
 
 void CreateHistograms(){
 
@@ -101,31 +101,30 @@ void CreateHistograms(){
 
 	}
 
+	CreateHistograms2("00_Fakes"    );
+	CreateHistograms2("01_Data"     );
+	CreateHistograms2("02_WZTo3LNu" );
+	CreateHistograms2("03_VZ"       );
+	CreateHistograms2("04_TTTo2L2Nu");
+	CreateHistograms2("05_ST"       );
+	CreateHistograms2("06_WW"       );
+	CreateHistograms2("07_ZJets"    );
+	//CreateHistograms2("08_WJets"    );
+	CreateHistograms2("09_TTV"      );
+	CreateHistograms2("10_HWW"      );
+	CreateHistograms2("11_Wg"       );
+	CreateHistograms2("12_Zg"       );
+	CreateHistograms2("13_VVV"      );
+	CreateHistograms2("14_HZ"       );
+	CreateHistograms2("15_WgStar"   );
 
-	ConvertToHistograms("00_Fakes"    );
-	ConvertToHistograms("01_Data"     );
-	ConvertToHistograms("02_WZTo3LNu" );
-	ConvertToHistograms("03_VZ"       );
-	ConvertToHistograms("04_TTTo2L2Nu");
-	ConvertToHistograms("05_ST"       );
-	ConvertToHistograms("06_WW"       );
-	ConvertToHistograms("07_ZJets"    );
-	//ConvertToHistograms("08_WJets"    );
-	ConvertToHistograms("09_TTV"      );
-	ConvertToHistograms("10_HWW"      );
-	ConvertToHistograms("11_Wg"       );
-	ConvertToHistograms("12_Zg"       );
-	ConvertToHistograms("13_VVV"      );
-	ConvertToHistograms("14_HZ"       );
-	ConvertToHistograms("15_WgStar"   );
-
-	ConvertToHistograms("ttDM0001scalar00010");
-	ConvertToHistograms("ttDM0001scalar00020");
-	ConvertToHistograms("ttDM0001scalar00050");
-	ConvertToHistograms("ttDM0001scalar00100");
-	ConvertToHistograms("ttDM0001scalar00200");
-	ConvertToHistograms("ttDM0001scalar00300");
-	ConvertToHistograms("ttDM0001scalar00500");
+	CreateHistograms2("ttDM0001scalar00010");
+	CreateHistograms2("ttDM0001scalar00020");
+	CreateHistograms2("ttDM0001scalar00050");
+	CreateHistograms2("ttDM0001scalar00100");
+	CreateHistograms2("ttDM0001scalar00200");
+	CreateHistograms2("ttDM0001scalar00300");
+	CreateHistograms2("ttDM0001scalar00500");
 
 	cout << "\n \n yeah \n \n" << endl; 
 

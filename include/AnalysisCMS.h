@@ -83,16 +83,6 @@ class AnalysisCMS : public AnalysisBase
   void        GetTrkMET         (float    module,
 				 float    phi);
 
-  float       GetSphericity     (TMatrixDSym _smatrix);
-
-  float       GetAlignment      (TMatrixDSym _smatrix);
-
-  float       GetPlanarity      (TMatrixDSym _smatrix);
-
-  float       GetCentrality     ();
-
-  float       GetST             ();
-
   float       MuonIsolation     (int      k);
 
   void        OpenMinitree      ();
@@ -160,6 +150,9 @@ class AnalysisCMS : public AnalysisBase
 
   float       GetPlanarity      (TMatrixDSym    smatrix);
 
+  float       GetCentrality     ();
+
+  float       GetST             ();
 
   // Data members
   //----------------------------------------------------------------------------
@@ -291,11 +284,11 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2phi_gen;
   float                  _top2pt_gen;
   float			 _topReco;
-  float                  _sphericity;
-  float                  _alignment;
-  float                  _planarity;
-  float                  _centrality;
-  float                  _ST;
+  float                  sphericity;
+  float                  alignment;
+  float                  planarity;
+  float                  centrality;
+  float                  ST;
 
   float                  _mll13;
   float                  _mll23;

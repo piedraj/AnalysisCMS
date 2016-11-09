@@ -134,11 +134,11 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
   h_mlb1          [ichannel][icut][ijet]->Fill(_mlb1,           _event_weight);
   h_mlb2          [ichannel][icut][ijet]->Fill(_mlb2,           _event_weight);
-  h_sphericity    [ichannel][icut][ijet]->Fill(_sphericity,     _event_weight);
-  h_alignment     [ichannel][icut][ijet]->Fill(_alignment,       _event_weight);
-  h_planarity     [ichannel][icut][ijet]->Fill(_planarity,      _event_weight);
-  h_centrality    [ichannel][icut][ijet]->Fill(_centrality,     _event_weight);
-  h_ST            [ichannel][icut][ijet]->Fill(_ST,             _event_weight);
+  h_sphericity    [ichannel][icut][ijet]->Fill(sphericity,     _event_weight);
+  h_alignment     [ichannel][icut][ijet]->Fill(alignment,       _event_weight);
+  h_planarity     [ichannel][icut][ijet]->Fill(planarity,      _event_weight);
+  h_centrality    [ichannel][icut][ijet]->Fill(centrality,     _event_weight);
+  h_ST            [ichannel][icut][ijet]->Fill(ST,             _event_weight);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1287,7 +1287,7 @@ void AnalysisCMS::OpenMinitree()
   minitree = new TTree("latino", "minitree");
 
   // A
-  minitree->Branch("alignment",        &_alignment,        "alignment/F");
+  minitree->Branch("alignment",        &alignment,        "alignment/F");
   // B
   minitree->Branch("bjet1csvv2ivf",    &_bjet1csvv2ivf,    "bjet1csvv2ivf/F");
   minitree->Branch("bjet1eta",         &_bjet1eta,         "bjet1eta/F");
@@ -1301,7 +1301,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("bjet2pt",          &_bjet2pt,          "bjet2pt/F");
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
-  minitree->Branch("centrality",       &_centrality,       "centrality/F");
+  minitree->Branch("centrality",       &centrality,       "centrality/F");
   // D
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
@@ -1394,13 +1394,13 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nsol_10_10_10",    &_nsol_10_10_10,    "nsol_10_10_10/F");
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   // P
-  minitree->Branch("planarity",        &_planarity,        "planarity/F");
+  minitree->Branch("planarity",        &planarity,        "planarity/F");
   minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
   // R
   minitree->Branch("run",              &run,               "run/I");
   // S
-  minitree->Branch("sphericity",       &_sphericity,       "sphericity/F");
-  minitree->Branch("ST",               &_ST,               "ST/F");
+  minitree->Branch("sphericity",       &sphericity,       "sphericity/F");
+  minitree->Branch("ST",               &ST,               "ST/F");
   minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
   minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
   // T
@@ -2152,9 +2152,9 @@ float AnalysisCMS::GetSphericity(TMatrixDSym smatrix)
   float eigenvalue2 = eigenvalues[1];
   float eigenvalue3 = eigenvalues[2];
 
-  _sphericity = 1.5 * (eigenvalue2 + eigenvalue3) / (eigenvalue1 + eigenvalue2 + eigenvalue3);
+  sphericity = 1.5 * (eigenvalue2 + eigenvalue3) / (eigenvalue1 + eigenvalue2 + eigenvalue3);
 
-  return _sphericity;
+  return sphericity;
 }
 
 
@@ -2168,9 +2168,9 @@ float AnalysisCMS::GetAlignment(TMatrixDSym smatrix)
   float eigenvalue1 = eigenvalues[0];
   float eigenvalue2 = eigenvalues[1];
 
-  _alignment = eigenvalue2 / eigenvalue1;
+  alignment = eigenvalue2 / eigenvalue1;
 
-  return _alignment;
+  return alignment;
 }
 
 
@@ -2184,9 +2184,9 @@ float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
   float eigenvalue2 = eigenvalues[1];
   float eigenvalue3 = eigenvalues[2];
 
-  _planarity = eigenvalue3 / eigenvalue2;
+  planarity = eigenvalue3 / eigenvalue2;
 
-  return _planarity;
+  return planarity;
 }
 
 //------------------------------------------------------------------------------
@@ -2195,19 +2195,22 @@ float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
 float AnalysisCMS::GetCentrality() {
   float sumPt = 0.;
   float sumEVis = 0.;
+
   for(int i=0; i < AnalysisJets.size(); i++) {
     sumPt += AnalysisJets[i].v.Pt();
     sumEVis += AnalysisJets[i].v.E();
   }
-  _centrality = sumPt/sumEVis;
-  return _centrality;
+
+  centrality = sumPt/sumEVis;
+
+  return centrality;
 }
 
 //------------------------------------------------------------------------------
 // GetST
 //------------------------------------------------------------------------------
 float AnalysisCMS::GetST() {
-  _ST = _ht + metPfType1 + AnalysisLeptons[0].v.Pt() + AnalysisLeptons[1].v.Pt();
-  return _ST;
+  ST = _ht + metPfType1 + AnalysisLeptons[0].v.Pt() + AnalysisLeptons[1].v.Pt();
+  return ST;
 }
 

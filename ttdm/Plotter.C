@@ -90,22 +90,22 @@ void Plotter(TString option = "hist"){
 
   // ROC curve inputs
   //----------------------------------------------------------------------------                 
-  //   plotter.AddRocSignal("ttDM-signal"); 
-
-  //   plotter.AddRocBackground("06_WW");
-  //   plotter.AddRocBackground("04_TTTo2L2Nu");
-  //   plotter.AddRocBackground("00_Fakes");
-  //   plotter.AddRocBackground("02_WZTo3LNu");
-  //   plotter.AddRocBackground("03_VZ");
-  //   plotter.AddRocBackground("05_ST");
-  //   plotter.AddRocBackground("07_ZJets");
-  //   plotter.AddRocBackground("09_TTV");
-  //   plotter.AddRocBackground("10_HWW");
-  //   plotter.AddRocBackground("11_Wg");
-  //   plotter.AddRocBackground("12_Zg");
-  //   plotter.AddRocBackground("13_VVV");
-  //   plotter.AddRocBackground("14_HZ");
-  //   plotter.AddRocBackground("15_WgStar");
+  //plotter.AddRocSignal("ttDM-signal"); 
+  
+  //plotter.AddRocBackground("06_WW");
+  //plotter.AddRocBackground("04_TTTo2L2Nu");
+  //plotter.AddRocBackground("00_Fakes");
+  //plotter.AddRocBackground("02_WZTo3LNu");
+  //plotter.AddRocBackground("03_VZ");
+  //plotter.AddRocBackground("05_ST");
+  //plotter.AddRocBackground("07_ZJets");
+  //plotter.AddRocBackground("09_TTV");
+  //plotter.AddRocBackground("10_HWW");
+  //plotter.AddRocBackground("11_Wg");
+  //plotter.AddRocBackground("12_Zg");
+  //plotter.AddRocBackground("13_VVV");
+  //plotter.AddRocBackground("14_HZ");
+  //plotter.AddRocBackground("15_WgStar");
 
 
 
@@ -151,7 +151,7 @@ void Plotter(TString option = "hist"){
       //plotter.Draw( "lep2phi"        , "trailing lepton #phi",               5, 2, "rad",  scale);
       //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
       //plotter.Draw( "m2l"              , "m_{" + sll + "}",                    5, 0, "GeV",  scale, true, 0,  300);
-      //plotter.Draw( "metPfType1"       , sm,                                  10, 0, "GeV",  scale, true, 0,  500);
+      plotter.Draw( "metPfType1"       , sm,                                  10, 0, "GeV",  scale, true, 0,  500);
       //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
       //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 600); 
       //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
@@ -163,6 +163,7 @@ void Plotter(TString option = "hist"){
       //           hname     xtitle                      npoints  units xmin xmax
       //  ---------------------------------------------------------------------------
       //plotter.Roc( "lep1pt", "leading lepton p_{T}",        1000, "GeV", 0, 1000);
+      plotter.Roc( "metPfType1", sm,                         1000, "GeV", 0,  500);
       
       // Copy index.php in every directory
       //----------------------------------------------------------------------------
