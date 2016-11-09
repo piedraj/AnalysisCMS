@@ -1042,6 +1042,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
+  GetDark();
+
   //  GetTopReco();
 
   GetGenPtllWeight();
@@ -1287,6 +1289,9 @@ void AnalysisCMS::OpenMinitree()
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
   // D
+  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
+  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
   minitree->Branch("dphijet2met",      &_dphijet2met,      "dphijet2met/F");
@@ -2000,6 +2005,62 @@ void AnalysisCMS::GetTops()
       _m2t_gen = (top1 + top2).M();
     }
   }
+}
+
+
+//------------------------------------------------------------------------------
+// GetDark
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetDark()
+{
+  _darketa_gen = -99.;
+  _darkphi_gen = -99.;
+  _darkpt_gen  = -99.;
+
+  if (!_ismc) return;
+
+  TVector3 MET, n1, n2, dark; 
+
+  MET.SetPtEtaPhi( metGenpt, metGeneta, metGenphi ); 
+ 
+  int nu_size = std_vector_neutrinoGen_pt->size();
+
+  for (int i=0; i<nu_size; i++) {
+
+	if (     std_vector_neutrinoGen_isPrompt ->at(i)  !=  1 ) continue;
+	if ( abs(std_vector_neutrinoGen_MotherPID->at(i)) != 24 ) continue;
+
+	int mum1 = std_vector_neutrinoGen_MotherPID->at(i)/abs(std_vector_neutrinoGen_MotherPID->at(i)); 
+ 
+		for(int j=i; j<nu_size; j++){
+
+			if (     std_vector_neutrinoGen_isPrompt ->at(j)  !=  1 ) continue;
+			if ( abs(std_vector_neutrinoGen_MotherPID->at(j)) != 24 ) continue;
+
+                        int mum2 = std_vector_neutrinoGen_MotherPID->at(j)/abs(std_vector_neutrinoGen_MotherPID->at(j));
+
+			if ( mum1*mum2 != -1 ) continue; 
+
+			n1.SetPtEtaPhi( std_vector_neutrinoGen_pt->at(i), std_vector_neutrinoGen_eta->at(i), std_vector_neutrinoGen_phi->at(i) );
+			n2.SetPtEtaPhi( std_vector_neutrinoGen_pt->at(j), std_vector_neutrinoGen_eta->at(j), std_vector_neutrinoGen_phi->at(j) );
+
+			dark = MET - n1 - n2; 
+
+			_darketa_gen = dark.Eta(); 
+			_darkphi_gen = dark.Phi(); 
+			_darkpt_gen  = dark.Pt() ; 
+
+			//cout << i << " -- " << j << "\t dark pt = " << _darkpt_gen << "\t dark phi = " << _darkphi_gen << endl; 
+			cout << "MET.Pt() = " << MET.Pt() << "\t (n1+n2).Pt() = " << (n1+n2).Pt() << endl; 
+
+			break;
+
+		}
+
+	break;   
+
+  }
+
 }
 
 
