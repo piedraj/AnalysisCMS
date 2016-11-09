@@ -2051,7 +2051,7 @@ void AnalysisCMS::GetDark()
 			_darkpt_gen  = dark.Pt() ; 
 
 			//cout << i << " -- " << j << "\t dark pt = " << _darkpt_gen << "\t dark phi = " << _darkphi_gen << endl; 
-			cout << "MET.Pt() = " << MET.Pt() << "\t (n1+n2).Pt() = " << (n1+n2).Pt() << endl; 
+			//cout << "MET.Pt() = " << MET.Pt() << "\t (n1+n2).Pt() = " << (n1+n2).Pt() << endl; 
 
 			break;
 
