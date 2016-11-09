@@ -685,10 +685,13 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 				     TH1*    hist,
 				     TString label,
 				     TString option,
+				     Bool_t  drawyield,
 				     Float_t tsize,
 				     Float_t xoffset,
 				     Float_t yoffset)
 {
+  drawyield &= (_drawyield && _publicstyle);
+
   TLegend* legend = new TLegend(x1,
 				y1,
 				x1 + xoffset,
@@ -702,7 +705,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 
   TString final_label = Form(" %s", label.Data());
 
-  if (_drawyield && !_publicstyle)
+  if (drawyield)
     final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   if (Yield(hist) < 0)
@@ -1297,59 +1300,93 @@ void HistogramReader::Roc(TString hname,
   //----------------------------------------------------------------------------
   float step = (xmax - xmin) / npoints;
 
-  TGraph* rocGraph = new TGraph();
-  TGraph* sigGraph = new TGraph();
+  TGraph* rocGraph_min = new TGraph();
+  TGraph* rocGraph_max = new TGraph();
+  TGraph* sigGraph_min = new TGraph();
+  TGraph* sigGraph_max = new TGraph();
 
-  Float_t score_value = 0;
-  Float_t score_x     = 0;
+  Float_t score_value_min = 0;
+  Float_t score_value_max = 0;
+  Float_t score_x_min     = 0;
+  Float_t score_x_max     = 0;
 
   Float_t sigTotal = hSig->Integral(-1, -1);
   Float_t bkgTotal = hBkg->Integral(-1, -1);
 
   for (int s=0; s<=npoints; ++s) {
 
-    Float_t sigYield = 0;
-    Float_t bkgYield = 0;
+    Float_t sigYield_min = 0;
+    Float_t sigYield_max = 0;
+    Float_t bkgYield_min = 0;
+    Float_t bkgYield_max = 0;
 
-    sigYield += hSig->Integral(-1, hSig->FindBin(xmin + s*step));
-    bkgYield += hBkg->Integral(-1, hBkg->FindBin(xmin + s*step));
+    sigYield_max += hSig->Integral(-1, hSig->FindBin(xmin + s*step));
+    bkgYield_max += hBkg->Integral(-1, hBkg->FindBin(xmin + s*step));
 
-    Float_t sigEff = (sigTotal != 0) ? sigYield / sigTotal : -999;
-    Float_t bkgEff = (bkgTotal != 0) ? bkgYield / bkgTotal : -999;
+    sigYield_min += hSig->Integral(hSig->FindBin(xmin + s*step), -1);
+    bkgYield_min += hBkg->Integral(hBkg->FindBin(xmin + s*step), -1);
 
-    Float_t score = sigYield / sqrt(sigYield + bkgYield);
+    Float_t sigEff_max = (sigTotal != 0) ? sigYield_max / sigTotal : -999;
+    Float_t bkgEff_max = (bkgTotal != 0) ? bkgYield_max / bkgTotal : -999;
 
-    if (score > score_value) {
-      score_value = score;
-      score_x     = xmin + s*step;
+    Float_t sigEff_min = (sigTotal != 0) ? sigYield_min / sigTotal : -999;
+    Float_t bkgEff_min = (bkgTotal != 0) ? bkgYield_min / bkgTotal : -999;
+
+    Float_t score_min = sigYield_min / sqrt(bkgYield_min);
+    Float_t score_max = sigYield_max / sqrt(bkgYield_max);
+
+    if (score_min > score_value_min) {
+      score_value_min = score_min;
+      score_x_min     = xmin + s*step;
     }
 
-    rocGraph->SetPoint(s, sigEff, 1 - bkgEff);
-    sigGraph->SetPoint(s, xmin + s*step, score);
+    if (score_max > score_value_max) {
+      score_value_max = score_max;
+      score_x_max     = xmin + s*step;
+    }
+
+    rocGraph_min->SetPoint(s, sigEff_min, 1 - bkgEff_min);
+    rocGraph_max->SetPoint(s, sigEff_max, 1 - bkgEff_max);
+
+    sigGraph_min->SetPoint(s, xmin + s*step, score_min);
+    sigGraph_max->SetPoint(s, xmin + s*step, score_max);
   }
 
 
-  printf("\n [HistogramReader::Roc] Reading %s\n", hname.Data());
-  printf(" The best S/sqrt(S+B) = %f corresponds to x = %.2f %s (%.2f < x < %.2f)\n\n",
-	 score_value, score_x, units.Data(), xmin, xmax);
+  printf("\n");
+  printf(" [HistogramReader::Roc] Reading %s\n", hname.Data());
+  printf(" The best S/sqrt(B) = %5.2f corresponds to x > %7.2f %s (%.2f < x < %.2f)\n", score_value_min, score_x_min, units.Data(), xmin, xmax);
+  printf(" The best S/sqrt(B) = %5.2f corresponds to x < %7.2f %s (%.2f < x < %.2f)\n", score_value_max, score_x_max, units.Data(), xmin, xmax);
+  printf("\n");
   
 
   // Draw and save ROC
   //----------------------------------------------------------------------------
+  Color_t color_min = kRed+1;
+  Color_t color_max = kBlack;
+
+  Style_t style_min = kFullCircle;
+  Style_t style_max = kOpenCircle;
+
   TCanvas* rocCanvas = new TCanvas(hname + " ROC", hname + " ROC");
 
-  rocGraph->SetMarkerColor(kRed+1);
-  rocGraph->SetMarkerStyle(kFullCircle);
-  rocGraph->SetMarkerSize(0.5);
+  rocGraph_min->SetMarkerColor(color_min);
+  rocGraph_min->SetMarkerStyle(style_min);
+  rocGraph_min->SetMarkerSize(0.5);
 
-  rocGraph->Draw("ap");
+  rocGraph_max->SetMarkerColor(color_max);
+  rocGraph_max->SetMarkerStyle(style_max);
+  rocGraph_max->SetMarkerSize(0.5);
 
-  rocGraph->GetXaxis()->SetRangeUser(0, 1);
-  rocGraph->GetYaxis()->SetRangeUser(0, 1);
+  rocGraph_min->Draw("ap");
+  rocGraph_max->Draw("psame");
+
+  rocGraph_min->GetXaxis()->SetRangeUser(0, 1);
+  rocGraph_min->GetYaxis()->SetRangeUser(0, 1);
 
   DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
 
-  SetAxis(rocGraph->GetHistogram(), xtitle + " signal efficiency", xtitle + " background rejection", 1.5, 1.8);
+  SetAxis(rocGraph_min->GetHistogram(), xtitle + " signal efficiency", xtitle + " background rejection", 1.5, 1.8);
 
   if (_savepdf) rocCanvas->SaveAs(_outputdir + hname + "_ROC.pdf");
   if (_savepng) rocCanvas->SaveAs(_outputdir + hname + "_ROC.png");
@@ -1361,18 +1398,41 @@ void HistogramReader::Roc(TString hname,
 
   TString myxtitle = (!units.Contains("NULL")) ? xtitle + " [" + units + "]" : xtitle;
 
-  sigGraph->SetMarkerColor(kRed+1);
-  sigGraph->SetMarkerStyle(kFullCircle);
-  sigGraph->SetMarkerSize(0.5);
+  sigGraph_min->SetMarkerColor(color_min);
+  sigGraph_min->SetMarkerStyle(style_min);
+  sigGraph_min->SetMarkerSize(0.5);
 
-  sigGraph->Draw("ap");
+  sigGraph_max->SetMarkerColor(color_max);
+  sigGraph_max->SetMarkerStyle(style_max);
+  sigGraph_max->SetMarkerSize(0.5);
 
-  sigGraph->GetXaxis()->SetRangeUser(xmin, xmax);
-  sigGraph->GetYaxis()->SetRangeUser(0, 1.5*score_value);
+  sigGraph_min->Draw("ap");
+  sigGraph_max->Draw("psame");
+
+  Float_t ymax = (score_value_min > score_value_max) ? score_value_min : score_value_max;
+
+  ymax *= 1.5;
+
+  sigGraph_min->GetXaxis()->SetRangeUser(xmin, xmax);
+  sigGraph_min->GetYaxis()->SetRangeUser(   0, ymax);
 
   DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
 
-  SetAxis(sigGraph->GetHistogram(), myxtitle, "S / #sqrt{S + B}", 1.5, 2.1);
+  TH1F* dummy_min = new TH1F("dummy_min", "", 1, 0, 1);
+  TH1F* dummy_max = new TH1F("dummy_max", "", 1, 0, 1);
+
+  dummy_min->SetLineColor  (color_min);
+  dummy_min->SetMarkerColor(color_min);
+  dummy_min->SetMarkerStyle(style_min);
+
+  dummy_max->SetLineColor  (color_max);
+  dummy_max->SetMarkerColor(color_max);
+  dummy_max->SetMarkerStyle(style_max);
+
+  DrawLegend(0.22, 0.84, dummy_min, Form("%s > x", xtitle.Data()), "lp", false);
+  DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
+
+  SetAxis(sigGraph_min->GetHistogram(), myxtitle, "S / #sqrt{B}", 1.5, 2.1);
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");

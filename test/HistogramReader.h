@@ -91,10 +91,11 @@ class HistogramReader
 			       Float_t        y1,
 			       TH1*           hist,
 			       TString        label,
-			       TString        option  = "p",
-			       Float_t        tsize   = 0.030,
-			       Float_t        xoffset = 0.200,
-			       Float_t        yoffset = 0.050);
+			       TString        option    = "p",
+			       Bool_t         drawyield = true,
+			       Float_t        tsize     = 0.030,
+			       Float_t        xoffset   = 0.200,
+			       Float_t        yoffset   = 0.050);
 
   Float_t  GetMaximum         (TH1*           hist,
 			       Float_t        xmin     = -999,
