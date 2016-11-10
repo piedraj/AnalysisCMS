@@ -73,7 +73,9 @@ class AnalysisCMS : public AnalysisBase
   
   void        GetLeptons        ();
 
-  void        GetTops           (); 
+  void        GetTops           ();
+
+  void        GetDark           ();  
 
   void        GetTopReco        ();
 
@@ -190,6 +192,9 @@ class AnalysisCMS : public AnalysisBase
   TString                _systematic;
 
   float                  _channel;
+  float                  _darketa_gen;   
+  float                  _darkphi_gen;
+  float                  _darkpt_gen;
   float                  _deltarjet1met;
   float                  _deltarjet2met;
   float                  _deltarjj;
