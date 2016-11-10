@@ -690,7 +690,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 				     Float_t xoffset,
 				     Float_t yoffset)
 {
-  drawyield &= (_drawyield && _publicstyle);
+  drawyield &= (_drawyield && !_publicstyle);
 
   TLegend* legend = new TLegend(x1,
 				y1,
@@ -1169,6 +1169,8 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
 
     _signalhist.push_back((TH1D*)dummy->Clone());
 
+    if (_luminosity_fb > 0) _signalhist[i]->Scale(_luminosity_fb);
+
     if (ngroup > 0) _signalhist[i]->Rebin(ngroup);
   }
 
@@ -1186,6 +1188,10 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
     TH1D* dummy = (TH1D*)_mcfile[i]->Get(hname);
 
     _mchist.push_back((TH1D*)dummy->Clone());
+
+    if (_luminosity_fb > 0 && _mcscale[i] > -999) _mchist[i]->Scale(_luminosity_fb);
+
+    if (_mcscale[i] > 0) _mchist[i]->Scale(_mcscale[i]);
 
     if (ngroup > 0) _mchist[i]->Rebin(ngroup);
 
@@ -1273,8 +1279,12 @@ void HistogramReader::Roc(TString hname,
   for (int i=0; i<_roc_signals.size(); ++i)
     {
       file_sig[i] = new TFile(_roc_signals.at(i));
+
+      TH1D* dummy = (TH1D*)(file_sig[i]->Get(hname))->Clone();
+
+      if (_luminosity_fb > 0 && !(_roc_signals.at(i)).Contains("Fakes")) dummy->Scale(_luminosity_fb);
       
-      stack_sig->Add((TH1D*)file_sig[i]->Get(hname));
+      stack_sig->Add(dummy);
     }
 
   TH1D* hSig = (TH1D*)(stack_sig->GetStack()->Last());
@@ -1290,7 +1300,11 @@ void HistogramReader::Roc(TString hname,
     {
       file_bkg[j] = new TFile(_roc_backgrounds.at(j));
 
-      stack_bkg->Add((TH1D*)file_bkg[j]->Get(hname));
+      TH1D* dummy = (TH1D*)(file_bkg[j]->Get(hname))->Clone();
+
+      if (_luminosity_fb > 0 && !(_roc_backgrounds.at(j)).Contains("Fakes")) dummy->Scale(_luminosity_fb);
+
+      stack_bkg->Add(dummy);
     }
 
   TH1D* hBkg = (TH1D*)(stack_bkg->GetStack()->Last());
@@ -1354,7 +1368,7 @@ void HistogramReader::Roc(TString hname,
 
 
   printf("\n");
-  printf(" [HistogramReader::Roc] Reading %s\n", hname.Data());
+  printf(" [HistogramReader::Roc] Reading %s\n\n", hname.Data());
   printf(" The best S/sqrt(B) = %5.2f corresponds to x > %7.2f %s (%.2f < x < %.2f)\n", score_value_min, score_x_min, units.Data(), xmin, xmax);
   printf(" The best S/sqrt(B) = %5.2f corresponds to x < %7.2f %s (%.2f < x < %.2f)\n", score_value_max, score_x_max, units.Data(), xmin, xmax);
   printf("\n");
