@@ -1120,11 +1120,11 @@ Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
       {
 	Float_t score = -999;
 
-	if (fom.EqualTo("S/sqrt(B)"))   score = sig_yield / sqrt(bkg_yield);
-	if (fom.EqualTo("S/sqrt(S+B)")) score = sig_yield / sqrt(sig_yield + bkg_yield);
-	if (fom.EqualTo("S/B"))         score = sig_yield / bkg_yield; 
-	if (fom.EqualTo("PunziEq6"))    score =   sig_eff / (b*b + 2*a*sqrt(bkg_yield) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkg_yield)); 
-	if (fom.EqualTo("PunziEq7"))    score =   sig_eff / (a/2 + sqrt(bkg_yield));
+	if (fom.EqualTo("S / #sqrt{B}"))   score = sig_yield / sqrt(bkg_yield);
+	if (fom.EqualTo("S / #sqrt{S+B}")) score = sig_yield / sqrt(sig_yield + bkg_yield);
+	if (fom.EqualTo("S / B"))          score = sig_yield / bkg_yield; 
+	if (fom.EqualTo("Punzi Eq.6"))     score =   sig_eff / (b*b + 2*a*sqrt(bkg_yield) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkg_yield)); 
+	if (fom.EqualTo("Punzi Eq.7"))     score =   sig_eff / (a/2 + sqrt(bkg_yield));
 
 	if (score > score_value)
 	  {
@@ -1268,7 +1268,8 @@ void HistogramReader::Roc(TString hname,
 			  Int_t   npoints,
 			  TString units,
 			  Float_t xmin,
-			  Float_t xmax)
+			  Float_t xmax,
+			  TString fom)
 {
   // Get the signal
   //----------------------------------------------------------------------------
@@ -1310,6 +1311,12 @@ void HistogramReader::Roc(TString hname,
   TH1D* hBkg = (TH1D*)(stack_bkg->GetStack()->Last());
 
 
+  // For The Punzi Effect
+  // http://arxiv.org/pdf/physics/0308063v2.pdf
+  Float_t a = 5.;
+  Float_t b = 1.645;  // Corresponds to a p-value equal to 0.05
+
+
   // Compute ROC and significance
   //----------------------------------------------------------------------------
   float step = (xmax - xmin) / npoints;
@@ -1346,8 +1353,27 @@ void HistogramReader::Roc(TString hname,
     Float_t sigEff_min = (sigTotal != 0) ? sigYield_min / sigTotal : -999;
     Float_t bkgEff_min = (bkgTotal != 0) ? bkgYield_min / bkgTotal : -999;
 
-    Float_t score_min = sigYield_min / sqrt(bkgYield_min);
-    Float_t score_max = sigYield_max / sqrt(bkgYield_max);
+    Float_t score_min = -999;
+
+    if (sigYield_min > 0. && bkgYield_min > 0.)
+      {
+        if (fom.EqualTo("S / #sqrt{B}"))   score_min = sigYield_min / sqrt(bkgYield_min);
+        if (fom.EqualTo("S / #sqrt{S+B}")) score_min = sigYield_min / sqrt(bkgYield_min + sigYield_min);
+        if (fom.EqualTo("S / B"))          score_min = sigYield_min / bkgYield_min;
+        if (fom.EqualTo("Punzi Eq.6"))     score_min =   sigEff_min / (b*b + 2*a*sqrt(bkgYield_min) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkgYield_min));
+        if (fom.EqualTo("Punzi Eq.7"))     score_min =   sigEff_min / (a/2 + sqrt(bkgYield_min));
+      }
+
+    Float_t score_max = -999;
+
+    if (sigYield_max > 0. && bkgYield_max > 0.)
+      {
+        if (fom.EqualTo("S / #sqrt{B}"))   score_max = sigYield_max / sqrt(bkgYield_max);
+        if (fom.EqualTo("S / #sqrt{S+B}")) score_max = sigYield_max / sqrt(bkgYield_max + sigYield_max);
+        if (fom.EqualTo("S / B"))          score_max = sigYield_max / bkgYield_max;
+        if (fom.EqualTo("Punzi Eq.6"))     score_max =   sigEff_max / (b*b + 2*a*sqrt(bkgYield_max) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkgYield_max));
+        if (fom.EqualTo("Punzi Eq.7"))     score_max =   sigEff_max / (a/2 + sqrt(bkgYield_max));
+      }
 
     if (score_min > score_value_min) {
       score_value_min = score_min;
@@ -1369,8 +1395,8 @@ void HistogramReader::Roc(TString hname,
 
   printf("\n");
   printf(" [HistogramReader::Roc] Reading %s\n\n", hname.Data());
-  printf(" The best S/sqrt(B) = %5.2f corresponds to x > %7.2f %s (%.2f < x < %.2f)\n", score_value_min, score_x_min, units.Data(), xmin, xmax);
-  printf(" The best S/sqrt(B) = %5.2f corresponds to x < %7.2f %s (%.2f < x < %.2f)\n", score_value_max, score_x_max, units.Data(), xmin, xmax);
+  printf(" The best %s = %f corresponds to x > %7.2f %s (%.2f < x < %.2f)\n", fom.Data(), score_value_min, score_x_min, units.Data(), xmin, xmax);
+  printf(" The best %s = %f corresponds to x < %7.2f %s (%.2f < x < %.2f)\n", fom.Data(), score_value_max, score_x_max, units.Data(), xmin, xmax);
   printf("\n");
   
 
@@ -1446,7 +1472,7 @@ void HistogramReader::Roc(TString hname,
   DrawLegend(0.22, 0.84, dummy_min, Form("%s > x", xtitle.Data()), "lp", false);
   DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
 
-  SetAxis(sigGraph_min->GetHistogram(), myxtitle, "S / #sqrt{B}", 1.5, 2.1);
+  SetAxis(sigGraph_min->GetHistogram(), myxtitle, fom, 1.5, 2.1);
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
