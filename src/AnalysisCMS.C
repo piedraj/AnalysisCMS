@@ -700,14 +700,14 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
   // jetpt1, jetpt2, etc are latino variables that do not have the AnalysisJets selection
   // Here we replace their values by those obtained with our selection
-  jeteta1  = -999.;
-  jeteta2  = -999.;
-  jetpt1   = -999.;
-  jetpt2   = -999.;
-  jetphi1  = -999.;	
-  jetphi2  = -999.;
-  jetmass1 = -999.;	
-  jetmass2 = -999.;
+  jeteta1  = -999;
+  jeteta2  = -999;
+  jetpt1   = -999;
+  jetpt2   = -999;
+  jetphi1  = -999;	
+  jetphi2  = -999;
+  jetmass1 = -999;	
+  jetmass2 = -999;
   
   if (_njet > 0) {
     jetpt1   = AnalysisJets[0].v.Pt();
@@ -1046,6 +1046,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
+  GetDark();
+
   //  GetTopReco();
 
   GetSphericity(GetMomentumTensor());
@@ -1300,6 +1302,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("channel",          &_channel,          "channel/F");
   minitree->Branch("centrality",       &centrality,       "centrality/F");
   // D
+  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
+  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
   minitree->Branch("dphijet2met",      &_dphijet2met,      "dphijet2met/F");
@@ -1568,11 +1573,11 @@ void AnalysisCMS::GetStopVar()
   _mlb1true     = -0.1;
   _mlb2true     = -0.1;
   
-  _bjet1pt         = _bjet2pt         = _tjet1pt       = _tjet2pt       = -999.;
-  _bjet1eta        = _bjet2eta        = _tjet1eta      = _tjet2eta      = -999.;
-  _bjet1phi        = _bjet2phi        = _tjet1phi      = _tjet2phi      = -999.;
-  _bjet1mass       = _bjet2mass       = _tjet1mass     = _tjet2mass     = -999.;
-  _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999.;
+  _bjet1pt         = _bjet2pt         = _tjet1pt       = _tjet2pt       = -999;
+  _bjet1eta        = _bjet2eta        = _tjet1eta      = _tjet2eta      = -999;
+  _bjet1phi        = _bjet2phi        = _tjet1phi      = _tjet2phi      = -999;
+  _bjet1mass       = _bjet2mass       = _tjet1mass     = _tjet2mass     = -999;
+  _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999;
   _tjet1assignment = _tjet2assignment = 0.;
 
 
@@ -1619,7 +1624,7 @@ void AnalysisCMS::GetStopVar()
 	
       } else if (BJetOption == 1) {
 	
-	float leadingBTagDiscriminator = -9999., trailingBTagDiscriminator = -9999;
+	float leadingBTagDiscriminator = -9999, trailingBTagDiscriminator = -9999;
 	for (int ijet=0; ijet<_njet; ijet++) {
 	  if (AnalysisJets[ijet].csvv2ivf > leadingBTagDiscriminator) {
 	    trailingBTagDiscriminator = leadingBTagDiscriminator;
@@ -2014,6 +2019,55 @@ void AnalysisCMS::GetTops()
 
       _m2t_gen = (top1 + top2).M();
     }
+  }
+}
+
+
+//------------------------------------------------------------------------------
+// GetDark
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetDark()
+{
+  _darketa_gen = -999;
+  _darkphi_gen = -999;
+  _darkpt_gen  = -999;
+
+  if (!_ismc) return;
+
+  TVector3 genMET, n1, n2, dark; 
+
+  genMET.SetPtEtaPhi(metGenpt, metGeneta, metGenphi); 
+ 
+  int nu_size = std_vector_neutrinoGen_pt->size();
+
+  for (int i=0; i<nu_size; i++) {
+
+    if (std_vector_neutrinoGen_isPrompt->at(i)       !=  1) continue;
+    if (abs(std_vector_neutrinoGen_MotherPID->at(i)) != 24) continue;  // Coming from W
+
+    // What about neutrinos from taus?
+    // Why not just consider all neutrinos that are prompt?
+
+    for(int j=i+1; j<nu_size; j++) {
+
+      if (std_vector_neutrinoGen_isPrompt->at(j)       !=  1) continue;
+      if (abs(std_vector_neutrinoGen_MotherPID->at(j)) != 24) continue;
+
+      if (std_vector_neutrinoGen_MotherPID->at(i) * std_vector_neutrinoGen_MotherPID->at(j) > 0) continue; 
+
+      n1.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(i), std_vector_neutrinoGen_eta->at(i), std_vector_neutrinoGen_phi->at(i));
+      n2.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(j), std_vector_neutrinoGen_eta->at(j), std_vector_neutrinoGen_phi->at(j));
+
+      dark = genMET - n1 - n2;
+
+      _darketa_gen = dark.Eta(); 
+      _darkphi_gen = dark.Phi(); 
+      _darkpt_gen  = dark.Pt();
+
+      break;  // Why this break?
+    }
+
+    break;  // Why this break?
   }
 }
 
