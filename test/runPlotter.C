@@ -263,6 +263,11 @@ void runPlotter(TString level,
 
 	  // ROC
 	  //--------------------------------------------------------------------
+	  // S / #sqrt{B}
+	  // S / #sqrt{S+B}
+	  // S / B
+	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
+	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
