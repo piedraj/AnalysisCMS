@@ -98,12 +98,37 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(Control_00_NoCuts, pass);
 
 
-    // Has 2 leptons
+    // Has 2 medium leptons
     //--------------------------------------------------------------------------
     pass = pass_2l;
 
-    FillLevelHistograms(Control_01_Has2Leptons, pass);
+    bool isMediumMuon1 = (std_vector_lepton_isMediumMuon->at(0) && abs(Lepton1.flavour) == MUON_FLAVOUR);
+    bool isMediumMuon2 = (std_vector_lepton_isMediumMuon->at(1) && abs(Lepton2.flavour) == MUON_FLAVOUR);
+
+    bool isMediumElectron1 = (std_vector_lepton_eleIdMedium->at(0) && abs(Lepton1.flavour) == ELECTRON_FLAVOUR);
+    bool isMediumElectron2 = (std_vector_lepton_eleIdMedium->at(1) && abs(Lepton2.flavour) == ELECTRON_FLAVOUR);
+
+    pass &= (isMediumMuon1 || isMediumElectron1);
+    pass &= (isMediumMuon2 || isMediumElectron2);
+
+    FillLevelHistograms(Control_01_TwoMediumLeptons, pass);
     
+
+    // Has 2 tight leptons
+    //--------------------------------------------------------------------------
+    pass = pass_2l;
+
+    bool isTightMuon1 = (std_vector_lepton_isTightMuon->at(0) && abs(Lepton1.flavour) == MUON_FLAVOUR);
+    bool isTightMuon2 = (std_vector_lepton_isTightMuon->at(1) && abs(Lepton2.flavour) == MUON_FLAVOUR);
+
+    bool isTightElectron1 = (std_vector_lepton_eleIdTight->at(0) && abs(Lepton1.flavour) == ELECTRON_FLAVOUR);
+    bool isTightElectron2 = (std_vector_lepton_eleIdTight->at(1) && abs(Lepton2.flavour) == ELECTRON_FLAVOUR);
+
+    pass &= (isTightMuon1 || isTightElectron1);
+    pass &= (isTightMuon2 || isTightElectron2);
+
+    FillLevelHistograms(Control_02_TwoTightLeptons, pass);
+
     if (_saveminitree && pass) minitree->Fill();
 
 
@@ -115,7 +140,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_pt2l > 30.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_02_Routin, pass);
+    FillLevelHistograms(Control_03_Routin, pass);
 
 
     // WW
@@ -129,7 +154,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || MET.Et() > 45.);
     pass &= (_channel == em || _pt2l > 45.);
 
-    FillLevelHistograms(Control_03_WW, pass);
+    FillLevelHistograms(Control_04_WW, pass);
 
 
     // Top
@@ -141,7 +166,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     pass &= (MET.Et() > 45.);
 
-    FillLevelHistograms(Control_04_Top, pass);
+    FillLevelHistograms(Control_05_Top, pass);
   }
 
 
