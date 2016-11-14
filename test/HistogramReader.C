@@ -1086,7 +1086,6 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
 }
 
-
 //------------------------------------------------------------------------------
 // GetBestScoreX
 //------------------------------------------------------------------------------

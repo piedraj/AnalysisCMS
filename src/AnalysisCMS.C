@@ -138,7 +138,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_alignment     [ichannel][icut][ijet]->Fill(alignment,       _event_weight);
   h_planarity     [ichannel][icut][ijet]->Fill(planarity,      _event_weight);
   h_centrality    [ichannel][icut][ijet]->Fill(centrality,     _event_weight);
-  h_ST            [ichannel][icut][ijet]->Fill(ST,             _event_weight);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1053,7 +1052,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetAlignment(GetMomentumTensor());
   GetPlanarity(GetMomentumTensor());
   GetCentrality();
-  GetST();
 
   GetGenPtllWeight();
 
@@ -1185,7 +1183,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_alignment    [ichannel][icut][ijet] = new TH1D("h_alignment"     + suffix, "", 1000, -1, 1);
   h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"     + suffix, "", 1000, -1, 1);
   h_centrality   [ichannel][icut][ijet] = new TH1D("h_centrality"    + suffix, "", 1000, 0,  1);
-  h_ST           [ichannel][icut][ijet] = new TH1D("h_ST"            + suffix, "", 2000, 0, 2000);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1400,7 +1397,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("run",              &run,               "run/I");
   // S
   minitree->Branch("sphericity",       &sphericity,       "sphericity/F");
-  minitree->Branch("ST",               &ST,               "ST/F");
   minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
   minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
   // T
@@ -2206,11 +2202,4 @@ float AnalysisCMS::GetCentrality() {
   return centrality;
 }
 
-//------------------------------------------------------------------------------
-// GetST
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetST() {
-  ST = _ht + metPfType1 + AnalysisLeptons[0].v.Pt() + AnalysisLeptons[1].v.Pt();
-  return ST;
-}
 

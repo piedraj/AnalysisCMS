@@ -152,8 +152,6 @@ class AnalysisCMS : public AnalysisBase
 
   float       GetCentrality     ();
 
-  float       GetST             ();
-
   // Data members
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
@@ -288,7 +286,6 @@ class AnalysisCMS : public AnalysisBase
   float                  alignment;
   float                  planarity;
   float                  centrality;
-  float                  ST;
 
   float                  _mll13;
   float                  _mll23;
@@ -453,7 +450,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
   TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
   TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_ST            [nchannel][ncut][njetbin+1];
 
   // TH2 histograms
   //----------------------------------------------------------------------------
