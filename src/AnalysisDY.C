@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisDY::AnalysisDY(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetSaveMinitree(true);
 }
 
 
@@ -38,7 +38,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
       root_output->cd(directory);
 
       for (int i=ee; i<=ll; i++) {
-
+	
 	TString suffix = "_" + schannel[i];
 
 	DefineHistograms(i, j, k, suffix);
@@ -54,7 +54,10 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
   for (Long64_t jentry=0; jentry<_nentries; jentry++) {
 
     Long64_t ientry = LoadTree(jentry);
-
+   
+    met_Over_pt2l = MET.Et() / ptll;
+    pt2l_Over_met = ptll / MET.Et();
+    
     if (ientry < 0) break;
 
     fChain->GetEntry(jentry);
@@ -79,124 +82,87 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;
     _pt2l = ptll;
     
-
-    // Fill histograms
-    //--------------------------------------------------------------------------
     bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
-    pass_2l &= (Lepton1.v.Pt() > 20.);
+    pass_2l &= (Lepton1.v.Pt() > 25.);
     pass_2l &= (Lepton2.v.Pt() > 20.);
-    pass_2l &= (mll > 20.);
-   
-    FillLevelHistograms(DY_00_noCuts, true);
+    pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_2l &= (mll>12.);
 
+
+
+    // Fill histograms. WW selection: CMS AN-15-325, pag.7 with pt1 > 25 (trigger)
+    //--------------------------------------------------------------------------
+    
+    //No cuts
+    //---------------------------------------------------------------------------
+    FillLevelHistograms(DY_00_noCuts, true);    
+    
+    //Has 2 Leptons                                                                                                                           
+    //---------------------------------------------------------------------------     
     FillLevelHistograms(DY_01_Has2Leptons, pass_2l);
 
-    pass_2l &= (abs(mll>70.) && abs(mll<120.));
-    FillLevelHistograms(DY_02_Zwindow, pass_2l);
-   
-    pass_2l &= (metPfType1 < 60. && pfmetMEtSig < 15.);
-    FillLevelHistograms(DY_03_phiMETcorrected, pass_2l);
-   
-   
-
-   
-   
-
-   
-   
-
-   
-   
-
-   
-
-   
-    // bool passBvetoMedium = pass && (_nbjet20cmvav2m == 0);
-    // FillLevelHistograms(DY_08_BVetoMedium, passBvetoMedium && pass_zwindow);
-
-    // bool passBvetoTight = pass && (_nbjet20cmvav2t == 0);
-    // FillLevelHistograms(DY_09_BVetoTight, passBvetoTight && pass_zwindow);
-
-    // bool passBvetoLooseOld = pass && (_nbjet15csvv2l == 0);
-    // FillLevelHistograms(DY_10_BVetoLooseOld, passBvetoLooseOld && pass_zwindow);
-
-    // bool passBvetoMediumOld = pass && (_nbjet15csvv2m == 0);
-    // FillLevelHistograms(DY_11_BVetoMediumOld, passBvetoMediumOld && pass_zwindow);
-    //
-    // bool passBvetoTightOld = pass && (_nbjet15csvv2t == 0);
-    // FillLevelHistograms(DY_12_BVetoTightOld, passBvetoTightOld && pass_zwindow);
-    //
-    // bool pass_topCR = (mll > 50 && pass_zwindow && MET.Et() > 20 && _nbjet20cmvav2l > 0);
-    // FillLevelHistograms(DY_50_TopCR, pass_topCR);
-
-    // bool pass_dyttCR = (_nbjet20cmvav2l == 0 && mll > 30 && mll < 80 && MET.Et() < 60);
-    // FillLevelHistograms(DY_60_DYttCR, pass_dyttCR);
-
-    // //    bool pass_dyCR = (_nbjet20cmvav2l == 0 && !pass_zwindow);
-    // bool pass_dyCR = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && mpmet > 20 && _nbjet20cmvav2l == 0);
-    // FillLevelHistograms(DY_70_DYCR, pass_dyCR);
-
-    // bool pass_dyCR_nompmet = (!pass_zwindow && ptll > 45 && MET.Et() > 20 && _nbjet20cmvav2l == 0);
-    // FillLevelHistograms(DY_71_DYCR_NoMpMet, pass_dyCR_nompmet);
-
-    // bool pass_dyCR_justptll = (!pass_zwindow && ptll > 45 && _nbjet20cmvav2l == 0);
-    // FillLevelHistograms(DY_72_DYCR_JustPtll, pass_dyCR_nompmet);
-
-    //    bool pass_ht = (_ht < 250.);
-    //    FillLevelHistograms(DY_09_Ht, pass && pass_zveto && pass_ht);
+    if (_saveminitree && pass_2l) minitree->Fill();
     
-    //    FillLevelHistograms(DY_10_DY, pass);  // Data-driven DY
+    // DY-Control Region  
+    //---------------------------------------------------------------------------  
+    bool pass_Zwindow = fabs(_m2l - Z_MASS) < 15.;
+    FillLevelHistograms(DY_02_DYControl, pass_2l && pass_Zwindow);
 
+    // B Veto                                                                                                                                
+    //---------------------------------------------------------------------------    
+    pass_2l &= (_nbjet20cmvav2l == 0);
+    FillLevelHistograms(DY_03_BVetoLoose, pass_2l);
 
-    // DY control region
-    //--------------------------------------------------------------------------
-    /*
-    FillLevelHistograms(DY_11_ZWindow, pass_zwindow);
+    //Ptll cut                                                                                                                                                                                           
+    //---------------------------------------------------------------------------                                                                                                                         
+    pass_2l &= (ptll>30.);
+    pass_2l &= (_channel == em || ptll > 45.);
+    FillLevelHistograms(DY_04_Ptll, pass_2l);
 
-    pass_zwindow &= (_nelectron == 1 && ptll > 30. || _nelectron != 1 && ptll > 45.);
-    FillLevelHistograms(DY_12_ZWindowPtll, pass_zwindow);
+    // Cortes adicionales en variables: dphillmet, MET/ptll                                                                                                                                              
+    //---------------------------------------------------------------------------                                                                                                                 
+                                                                                                                                                                                                         
+    pass_2l &= (_dphillmet>=0);
+    pass_2l &= (_channel == em || _dphillmet > 2.5);
+    FillLevelHistograms(DY_05_dphillmet, pass_2l);
 
-    for (UInt_t j=0; j<12; ++j)
-      {
-	bool jet = (std_vector_jet_pt->at(0) < 25. + j && fabs(std_vector_jet_eta->at(0)) < 4.7);
+    // MET cut
+    //---------------------------------------------------------------------------    
+    pass_2l &= (MET.Et() > 20.);
+    FillLevelHistograms(DY_06_PfMet, pass_2l);
 
-	FillLevelHistograms(DY_18_ZWindow25 + j, pass_zwindow && jet);
-      }
-
-    //    pass_zwindow &= (mpmet > 20.);
-    //    FillLevelHistograms(DY_13_ZWindowMpMet, pass_zwindow);
-
-    pass_zwindow &= (MET.Et() > 20.);
-    FillLevelHistograms(DY_14_ZWindowPfMet, pass_zwindow);
-
-    pass_zwindow &= (_nbjet20cmvav2l == 0);
-    FillLevelHistograms(DY_15_ZWindowBVeto, pass_zwindow);
-
-    pass_zwindow &= (!_foundsoftmuon);
-    FillLevelHistograms(DY_16_ZWindowSoftMu, pass_zwindow);
-
-    pass_zwindow &= (mpmet > 20.);
-    FillLevelHistograms(DY_17_ZCR, pass_zwindow);
-    */
-
-
-    // monoH selection - on top of WW (excluding Ht selection)
-    //--------------------------------------------------------------------------
-    /*
-    bool pass_monoh = (pass && pass_zveto);
-    bool pass_drll  = (Lepton1.v.DeltaR(Lepton2.v) < 1.5);
-
-    FillLevelHistograms(DY_103_MonoH_CR, pass_monoh && !pass_drll);
+    // mpMET cut                                                                                                           
+    //---------------------------------------------------------------------------                                                            
+    pass_2l &= (mpmet > 20.);
+    pass_2l &= (_channel == em || mpmet > 45.);
+    FillLevelHistograms(DY_07_mpMet, pass_2l);
     
-    pass_monoh &= (_mc < 100.);
-    FillLevelHistograms(DY_100_MonoH_Mc, pass_monoh);
+    //DY-Control region
+    //---------------------------------------------------------------------------
+    FillLevelHistograms(DY_08_Zwindow, pass_2l && pass_Zwindow);
+
+    // Z peak Veto
+    //---------------------------------------------------------------------------    
+    pass_2l &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    FillLevelHistograms(DY_09_ZVeto, pass_2l);
     
-    pass_monoh &= pass_drll;
-    FillLevelHistograms(DY_101_MonoH_DRll, pass_monoh);
+    //top-enriched control region (CMS AN-16-182, pag.57, adapted to WW selection)
+    //---------------------------------------------------------------------------                        
+    bool pass_tcontrol = (Lepton1.flavour * Lepton2.flavour < 0);
+    pass_tcontrol &= (Lepton1.v.Pt() > 25.);
+    pass_tcontrol &= (Lepton2.v.Pt() > 20.);
+    pass_tcontrol &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_tcontrol &= (mll > 12.);
+    pass_tcontrol &= (ptll > 30.);
+    pass_tcontrol &= (_channel == em || ptll > 45.);
+    pass_tcontrol &= (MET.Et() > 20.);
+    pass_tcontrol &= (mpmet > 20.);
+    pass_tcontrol &= (_channel == em || mpmet > 45.);
+    pass_tcontrol &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_tcontrol &= (_njet==0 ? _nbjet20cmvav2l > 0 : _nbjet30cmvav2l > 0);
+    FillLevelHistograms(DY_10_TopControl, pass_tcontrol);
     
-    pass_monoh &= (mpmet > 60.);
-    FillLevelHistograms(DY_102_MonoH_MpMet, pass_monoh);
-    */
+    
   }
 
 
@@ -226,6 +192,6 @@ void AnalysisDY::FillLevelHistograms(int  icut,
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
-  //  FillAnalysisHistograms(_channel, icut, _jetbin);
-  //  FillAnalysisHistograms(_channel, icut, njetbin);
+    FillAnalysisHistograms(_channel, icut, _jetbin);
+    FillAnalysisHistograms(_channel, icut, njetbin);
 }
