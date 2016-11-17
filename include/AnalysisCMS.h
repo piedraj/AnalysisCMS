@@ -455,6 +455,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
   TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
   TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
 
   // TH2 histograms
   //----------------------------------------------------------------------------

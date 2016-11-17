@@ -211,6 +211,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphitt_gen    [ichannel][icut][ijet]->Fill(_dphitt_gen,     _event_weight);
   h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
+  h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
 
 
   // TH2 histograms
@@ -1258,6 +1259,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_dphitt_gen    [ichannel][icut][ijet] = new TH1D("h_dphitt_gen"     + suffix, "",  100,    0,  3.2);
   h_detatt_gen    [ichannel][icut][ijet] = new TH1D("h_detatt_gen"     + suffix, "",  100,    0,   10);
   h_topReco       [ichannel][icut][ijet] = new TH1D("h_topReco"        + suffix, "",    6,    0,    6);
+  h_met_over_pt2l [ichannel][icut][ijet] = new TH1D("h_met_over_pt2l"  + suffix, "",  200,    0,    2);
 
 
   // TH2 histograms

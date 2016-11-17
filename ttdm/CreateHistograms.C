@@ -19,12 +19,11 @@ TString b_name[nhisto];
 TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
-
 const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-//const TCut mycut = "eventW*((channel==3)&&dphillmet > 0.6)";  // the cuts chain 
-const TCut mycut = "eventW*((channel==5) && dphillmet > 1.2 && metPfType1 > 50.)";  // the cuts chain 
+const TCut mycut = "eventW*((channel == 5) * dphillmet > 1.2 && metPfType1 > 40.)";  // the cuts chain 
+//const TCut mycut = "eventW*((channel==5) && dphillmet > 1.2 && metPfType1 > 50.)";  // the cuts chain 
 
 void CreateHistograms2( TString process );
 
@@ -106,6 +105,7 @@ void CreateHistograms(){
 	CreateHistograms2("02_WZTo3LNu" );
 	CreateHistograms2("03_VZ"       );
 	CreateHistograms2("04_TTTo2L2Nu");
+	CreateHistograms2("TTTo2L2Nu_alphaS01108");
 	CreateHistograms2("05_ST"       );
 	CreateHistograms2("06_WW"       );
 	CreateHistograms2("07_ZJets"    );
@@ -126,6 +126,14 @@ void CreateHistograms(){
 	CreateHistograms2("ttDM0001scalar00300");
 	CreateHistograms2("ttDM0001scalar00500");
 
+	CreateHistograms2("ttDM0001pseudo00010");
+	CreateHistograms2("ttDM0001pseudo00020");
+	CreateHistograms2("ttDM0001pseudo00050");
+	CreateHistograms2("ttDM0001pseudo00100");
+	CreateHistograms2("ttDM0001pseudo00200");
+	CreateHistograms2("ttDM0001pseudo00300");
+	CreateHistograms2("ttDM0001pseudo00500");
+
 	cout << "\n \n yeah \n \n" << endl; 
 
 }
@@ -133,7 +141,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( TString process ){ 
 
-	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
+        TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
 	
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
 

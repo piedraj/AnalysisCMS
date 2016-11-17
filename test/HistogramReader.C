@@ -1328,6 +1328,11 @@ void HistogramReader::Roc(TString hname,
   Float_t score_x_min     = 0;
   Float_t score_x_max     = 0;
 
+  Float_t sigEff_score_x_min = -999;
+  Float_t bkgEff_score_x_min = -999;
+  Float_t sigEff_score_x_max = -999;
+  Float_t bkgEff_score_x_max = -999;
+
   Float_t sigTotal = hSig->Integral(-1, -1);
   Float_t bkgTotal = hBkg->Integral(-1, -1);
 
@@ -1373,13 +1378,17 @@ void HistogramReader::Roc(TString hname,
       }
 
     if (score_min > score_value_min) {
-      score_value_min = score_min;
-      score_x_min     = xmin + s*step;
+      score_value_min    = score_min;
+      score_x_min        = xmin + s*step;
+      sigEff_score_x_min = sigEff_min;
+      bkgEff_score_x_min = bkgEff_min;
     }
 
     if (score_max > score_value_max) {
-      score_value_max = score_max;
-      score_x_max     = xmin + s*step;
+      score_value_max    = score_max;
+      score_x_max        = xmin + s*step;
+      sigEff_score_x_max = sigEff_max;
+      bkgEff_score_x_max = bkgEff_max;
     }
 
     rocGraph_min->SetPoint(s, sigEff_min, 1 - bkgEff_min);
@@ -1391,9 +1400,21 @@ void HistogramReader::Roc(TString hname,
 
 
   printf("\n");
-  printf(" [HistogramReader::Roc] Reading %s\n\n", hname.Data());
-  printf(" The best %s = %f corresponds to x > %7.2f %s (%.2f < x < %.2f)\n", fom.Data(), score_value_min, score_x_min, units.Data(), xmin, xmax);
-  printf(" The best %s = %f corresponds to x < %7.2f %s (%.2f < x < %.2f)\n", fom.Data(), score_value_max, score_x_max, units.Data(), xmin, xmax);
+  printf(" [HistogramReader::Roc] Reading %s from %.2f to %.2f\n\n", hname.Data(), xmin, xmax);
+  printf(" The best %s (%f) corresponds to x > %7.2f %s (S_eff = %6.2f\%, B_eff = %6.2f\%)\n",
+	 fom.Data(),
+	 score_value_min,
+	 score_x_min,
+	 units.Data(),
+	 1e2 * sigEff_score_x_min,
+	 1e2 * bkgEff_score_x_min);
+  printf(" The best %s (%f) corresponds to x < %7.2f %s (S_eff = %6.2f\%, B_eff = %6.2f\%)\n",
+	 fom.Data(),
+	 score_value_max,
+	 score_x_max,
+	 units.Data(),
+	 1e2 * sigEff_score_x_max,
+	 1e2 * bkgEff_score_x_max);
   printf("\n");
   
 
