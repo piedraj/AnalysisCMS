@@ -1,10 +1,12 @@
-#include "../top-reco/src/MassVariations.cc"
+#include "/afs/cern.ch/user/j/jgarciaf/mimick/src/MassReconstructor.cc"
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include <vector>
 
 
 const TString  inputdir = "week-1";  // where the minitrees are stored
+
+const bool WriteBranch = 0; 
 
 void ttreco2(TString process); 
 
@@ -25,10 +27,10 @@ void ttreco(){
 	//ttreco2("12_Zg"       );
 	//ttreco2("13_VVV"      );
 	//ttreco2("14_HZ"       );
-	//ttreco2("15_WgStar"   );*/
+	//ttreco2("15_WgStar"   );
 
-	ttreco2("ttDM0001scalar00010");
-	//ttreco2("ttDM0001scalar00500");
+	//ttreco2("ttDM0001scalar00010");
+	ttreco2("ttDM0001scalar00500");
 
 	cout << "\n \n done !!! \n \n" << endl; 
 
@@ -36,12 +38,22 @@ void ttreco(){
 
 void ttreco2( TString process ) {
 
-	//TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
-	TFile myfile( process + ".root", "update" ); 
+	cout << "\n\n" << process << "\n" <<  endl; 
+
+ 
+	TFile* fshape  = new TFile( "/afs/cern.ch/user/j/jgarciaf/mimick/mlb.root" ); 
+
+	TH1F* shapemlb = (TH1F*) fshape->Get( "mlb" );
+
+	MassReconstructor theMass( 100, shapemlb );  
+
+
+	TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "update" ); 
 
    	TTreeReader myreader( "latino", &myfile );
 
-	TTree*      mytree = (TTree*) myfile.Get( "latino" );
+	TTree* mytree = (TTree*) myfile.Get( "latino" );
+
 
 
 	//----- read -------------------------------------------------------
@@ -63,12 +75,27 @@ void ttreco2( TString process ) {
    	TTreeReaderValue<std::vector<float>> jet_eta( myreader, "jet_eta" );
    	TTreeReaderValue<std::vector<float>> jet_phi( myreader, "jet_phi" );
 
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_pt ( myreader, "bjet30csvv2m_pt"  );
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_eta( myreader, "bjet30csvv2m_eta" );
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_phi( myreader, "bjet30csvv2m_phi" );
+
+	//TTreeReaderValue<float> top1pt  ( myreader, "top1pt_gen"   );
+   	//TTreeReaderValue<float> top1eta ( myreader, "top1eta_gen"  );
+   	//TTreeReaderValue<float> top1phi ( myreader, "top1phi_gen"  );
+
+	//TTreeReaderValue<float> top2pt  ( myreader, "top2pt_gen"   );
+   	//TTreeReaderValue<float> top2eta ( myreader, "top2eta_gen"  );
+   	//TTreeReaderValue<float> top2phi ( myreader, "top2phi_gen"  );
+
+
 
 	//----- write ------------------------------------------------------
 
-	int nsol; 
+	float topRecoW;
+	float darkpt  ; 
 
-	TBranch* b_nsol = mytree -> Branch( "nsol", &nsol, "nsol/I" );
+	TBranch* b_topRecoW = mytree -> Branch( "topRecoW", &topRecoW, "topRecoW/F" );
+	TBranch* b_darkpt   = mytree -> Branch( "darkpt"  , &darkpt  , "darkpt/F"   );
 
 
 
@@ -76,25 +103,39 @@ void ttreco2( TString process ) {
 
 	int nentries = myreader.GetEntries(1); 
 
+	//if ( nentries > 10 ) nentries = 10; 
+
 	for ( Long64_t ievt = 0; ievt < nentries; ievt++ ) {
+
+		if( ievt%10000 == 0 ) cout << "\n\n ievt: " << ievt << endl;
 
 		myreader.SetEntry(ievt);
 
+		//--- MET
 
-		TVector2 MET; 
+		TVector2 MET;
 
-		MET.SetMagPhi( *metPfType1, *metPfType1Phi ); 
+		MET.SetMagPhi( *metPfType1, *metPfType1Phi );
 
 
-		TLorentzVector l1, l2; 
+		//--- leptons
+
+		TLorentzVector l1, l2;   // top1gen, top2gen; 
 
 		l1.SetPtEtaPhiM( *lep1pt, *lep1eta, *lep1phi, *lep1mass ); 
   		l2.SetPtEtaPhiM( *lep2pt, *lep2eta, *lep2phi, *lep2mass );
 
+		//top1gen.SetPtEtaPhiM( *top1pt, *top1eta, *top1phi, 173.34 );
+		//top2gen.SetPtEtaPhiM( *top2pt, *top2eta, *top2phi, 173.34 );
 
-		std::vector<TLorentzVector> jets; 
-		std::vector<Float_t>        unc;
- 
+
+		//--- jets
+
+		std::vector<TLorentzVector> jets;
+ 		std::vector<TLorentzVector> bjets;
+		std::vector<Float_t>        unc;   // unimportant, but keep it, please
+
+
 		for( int i = 0; i < jet_pt->size(); i++ ){
 
 			TLorentzVector jet_tlv;
@@ -108,20 +149,61 @@ void ttreco2( TString process ) {
 		}
 
 
+		for( int i = 0; i < bjet30csvv2m_pt->size(); i++ ){
+
+			TLorentzVector bjet30csvv2m_tlv;
+
+			bjet30csvv2m_tlv.SetPtEtaPhiM( bjet30csvv2m_pt->at(i), bjet30csvv2m_eta->at(i), bjet30csvv2m_phi->at(i), 0. ); 
+
+			bjets.push_back(bjet30csvv2m_tlv);
+
+		}
+
+
+		//--- arguments by reference: neutrinos & tops
+
 		std::vector<TLorentzVector> nu1, nu2;
 
+	        TVector2 top1, top2;
+
+
+		//--- reco à la DESY
 		
-		MassVariations theMass;
-
-		theMass.performAllVariations( /*1,*/ 10, 1, 1, l1, l2, jets, unc, MET, nu1, nu2 );
-
-		nsol = nu1.size(); 
-
-		b_nsol -> Fill();
+		theMass.startVariations( l1, l2, bjets, jets, MET, top1, top2, topRecoW );
 		
-	}
 
-	mytree -> Write();
+		//--- 'rosquillas' reco
+
+		if(  top1.X() == 0  &&  top1.Y() == 0  &&  top2.X() == 0  &&  top2.Y() == 0 ){
+
+			int theJet1 = -1; 
+			int theJet2 = -1; 
+
+			darkpt = theMass.performAllVariations( 1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2 ); 
+
+		}
+	
+		else{
+
+			darkpt = (top1+top2).Mod(); 
+
+		}
+
+
+		//--- writing... 
+
+		if (WriteBranch){
+
+			b_topRecoW -> Fill(); 
+			b_darkpt   -> Fill(); 
+ 
+		}
+
+	}   // ievt
+
+	fshape->Close();
+
+	if (WriteBranch) mytree -> Write( "", TObject::kOverwrite );
 
   	myfile.Close();
 
