@@ -2,6 +2,8 @@
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
 #include "../top-reco/src/MassVariations.cc"
+#include "../razor/Razor.C"
+#include "../razor/SuperRazor.C"
 
 
 //------------------------------------------------------------------------------
@@ -154,6 +156,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphilep2jet2  [ichannel][icut][ijet]->Fill(_dphilep2jet2,   _event_weight);
   h_drll          [ichannel][icut][ijet]->Fill(drll,            _event_weight);
   h_ht            [ichannel][icut][ijet]->Fill(_ht,             _event_weight);
+  h_htvisible     [ichannel][icut][ijet]->Fill(_htvisible,      _event_weight);
   h_htjets        [ichannel][icut][ijet]->Fill(_htjets,         _event_weight);
   h_htnojets      [ichannel][icut][ijet]->Fill(_htnojets,       _event_weight);
   h_jet1eta       [ichannel][icut][ijet]->Fill(jeteta1,         _event_weight);
@@ -210,6 +213,12 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
   h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
 
+  h_MR            [ichannel][icut][ijet]->Fill(_MR,             _event_weight);
+  h_R2            [ichannel][icut][ijet]->Fill(_R2,             _event_weight);
+  h_Rpt           [ichannel][icut][ijet]->Fill(_Rpt,            _event_weight);
+  h_invGamma      [ichannel][icut][ijet]->Fill(_invGamma,       _event_weight);
+  h_Mdr           [ichannel][icut][ijet]->Fill(_Mdr,            _event_weight);
+  h_DeltaPhiRll   [ichannel][icut][ijet]->Fill(_DeltaPhiRll,    _event_weight);
 
   // TH2 histograms
   //----------------------------------------------------------------------------
@@ -432,7 +441,11 @@ void AnalysisCMS::ApplyWeights()
 	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
 	}
 
-      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
+      float sf_fastsim = 1.;
+      if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) 
+	sf_fastsim = std_vector_lepton_fastsimW->at(0) * std_vector_lepton_fastsimW->at(1); 
+
+      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim;
     }
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
@@ -889,6 +902,8 @@ void AnalysisCMS::GetHt()
     _htjets += AnalysisJets[ijet].v.Pt();
 
   }
+
+  _htvisible = Lepton1.v.Pt() + Lepton2.v.Pt() + _htjets;
 }
 
 
@@ -1077,6 +1092,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetDeltaPhiVeto();
 
   GetStopVar();
+
+  GetRazor();
 }
 
 
@@ -1216,6 +1233,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_jet1mass      [ichannel][icut][ijet] = new TH1D("h_jet1mass"       + suffix, "",  100,    0,  100);
   h_jet2mass      [ichannel][icut][ijet] = new TH1D("h_jet2mass"       + suffix, "",  100,    0,  100);
   h_ht            [ichannel][icut][ijet] = new TH1D("h_ht"             + suffix, "", 2000,    0, 2000);
+  h_htvisible     [ichannel][icut][ijet] = new TH1D("h_htvisible"      + suffix, "", 2000,    0, 2000);
   h_htjets        [ichannel][icut][ijet] = new TH1D("h_htjets"         + suffix, "", 2000,    0, 2000);
   h_htnojets      [ichannel][icut][ijet] = new TH1D("h_htnojets"       + suffix, "", 2000,    0, 2000);
   h_mc            [ichannel][icut][ijet] = new TH1D("h_mc"             + suffix, "", 2000,    0, 2000);
@@ -1248,6 +1266,13 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_detatt_gen    [ichannel][icut][ijet] = new TH1D("h_detatt_gen"     + suffix, "",  100,    0,   10);
   h_topReco       [ichannel][icut][ijet] = new TH1D("h_topReco"        + suffix, "",    6,    0,    6);
   h_met_over_pt2l [ichannel][icut][ijet] = new TH1D("h_met_over_pt2l"  + suffix, "",  200,    0,    2);
+
+  h_MR            [ichannel][icut][ijet] = new TH1D("h_MR"             + suffix, "",  100,    0, 1000);
+  h_R2            [ichannel][icut][ijet] = new TH1D("h_R2"             + suffix, "",   70,    0,  1.4);
+  h_Rpt           [ichannel][icut][ijet] = new TH1D("h_Rpt"            + suffix, "",  100,    0,    1);
+  h_invGamma      [ichannel][icut][ijet] = new TH1D("h_invGamma"       + suffix, "",  100,    0,  2.0);
+  h_Mdr           [ichannel][icut][ijet] = new TH1D("h_Mdr"            + suffix, "",  100,    0,  500);
+  h_DeltaPhiRll   [ichannel][icut][ijet] = new TH1D("h_DeltaPhiRll"    + suffix, "",  100,    0,  3.2);
 
 
   // TH2 histograms
@@ -1319,6 +1344,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW",           &_event_weight,     "eventW/F");
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
+  minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
   minitree->Branch("htjets",           &_htjets,           "htjets/F");
   minitree->Branch("htnojets",         &_htnojets,         "htnojets/F");
   // J
@@ -1416,6 +1442,13 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
 
+  // Razor variables
+  minitree->Branch("MR",              &_MR,              "MR/F");
+  minitree->Branch("R2",              &_R2,              "R2/F");
+  minitree->Branch("Rpt",             &_Rpt,             "Rpt/F");
+  minitree->Branch("invGamma",        &_invGamma,        "invGamma/F");
+  minitree->Branch("Mdr",             &_Mdr,             "Mdr/F");
+  minitree->Branch("DeltaPhiRll",     &_DeltaPhiRll,     "DeltaPhiRll/F");
 
   // Only available in MC
   if (std_vector_LHE_weight)
@@ -2008,6 +2041,68 @@ void AnalysisCMS::GetTops()
     }
   }
 }
+
+
+//------------------------------------------------------------------------------
+// GetRazor
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetRazor()
+{
+
+  _MR = -0.1;
+  _R2 = -0.1;
+  
+  _Rpt = -0.1;
+  _invGamma = -0.1;
+  _Mdr = -0.1;
+  _DeltaPhiRll = -0.1;
+  
+  // This is filled in GetLeptons()
+  vector<TLorentzVector> Leps;
+  Leps.push_back(Lepton1.v);
+  Leps.push_back(Lepton2.v);
+  
+  vector<TLorentzVector> Jets;
+
+  if (_njet > 1) { 
+
+    // This is filled in GetStopVariables()
+    TLorentzVector Jet1; Jet1.SetPtEtaPhiM(_tjet1pt, _tjet1eta, _tjet1phi, _tjet1mass);
+    TLorentzVector Jet2; Jet2.SetPtEtaPhiM(_tjet2pt, _tjet2eta, _tjet2phi, _tjet2mass);
+    Jets.push_back(Jet1);
+    Jets.push_back(Jet2);
+
+    vector<TLorentzVector> Hemispheres = getHemispheres(Jets, Leps);
+
+    _MR = computeMR(Hemispheres[0], Hemispheres[1]);
+    _R2 = computeR2(Hemispheres[0], Hemispheres[1], MET);
+
+  }
+
+  bool UseJetsInSuperRazor = false;
+  /*
+  if (!UseJetsInSuperRazor || _njet > 1) {
+
+    TVector3 vBETA_z, pT_CM, vBETA_T_CMtoR, vBETA_R;
+    double SHATR,  dphi_LL_vBETA_T,  dphi_L1_L2;
+    double gamma_R,  dphi_vBETA_R_vBETA_T;
+    double MDELTAR,  costhetaRp1;
+    
+    SuperRazor(Leps, Jets, MET, vBETA_z, pT_CM,
+	       vBETA_T_CMtoR, vBETA_R,
+	       SHATR, dphi_LL_vBETA_T, dphi_L1_L2,
+	       gamma_R, dphi_vBETA_R_vBETA_T,
+	       MDELTAR, costhetaRp1, UseJetsInSuperRazor);
+    
+    _Rpt = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
+    _invGamma = 1./gamma_R;
+    _Mdr = SHATR/gamma_R;
+    _DeltaPhiRll = dphi_LL_vBETA_T;
+  
+    }*/
+
+}
+
 
 
 //------------------------------------------------------------------------------

@@ -370,6 +370,7 @@ public :
    //   Float_t         jettche1;
    //   Float_t         jettche2;
    Float_t         puW;
+   Float_t         puWB;
    //   Float_t         puW6p3;
    //   Float_t         Xsec;
    Float_t         baseW;
@@ -466,6 +467,9 @@ public :
    vector<float>   *std_vector_lepton_recoW;
    vector<float>   *std_vector_lepton_recoW_Up;
    vector<float>   *std_vector_lepton_recoW_Down;
+   vector<float>   *std_vector_lepton_fastsimW;
+   vector<float>   *std_vector_lepton_fastsimW_Up;
+   vector<float>   *std_vector_lepton_fastsimW_Down;
    //   Float_t         mcoll;
    //   Float_t         mcollWW;
    //   Float_t         vht_pt;
@@ -820,6 +824,7 @@ public :
    //   TBranch        *b_jettche1;   //!
    //   TBranch        *b_jettche2;   //!
    TBranch        *b_puW;   //!
+   TBranch        *b_puWB;   //!
    //   TBranch        *b_puW6p3;   //!
    //   TBranch        *b_Xsec;   //!
    TBranch        *b_baseW;   //!
@@ -916,6 +921,9 @@ public :
    TBranch        *b_std_vector_lepton_recoW;   //!
    TBranch        *b_std_vector_lepton_recoW_Up;   //!
    TBranch        *b_std_vector_lepton_recoW_Down;   //!
+   TBranch        *b_std_vector_lepton_fastsimW;   //!
+   TBranch        *b_std_vector_lepton_fastsimW_Up;   //!
+   TBranch        *b_std_vector_lepton_fastsimW_Down;   //!
    //   TBranch        *b_mcoll;   //!
    //   TBranch        *b_mcollWW;   //!
    //   TBranch        *b_vht_pt;   //!
@@ -1191,6 +1199,9 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_recoW = 0;
    std_vector_lepton_recoW_Up = 0;
    std_vector_lepton_recoW_Down = 0;
+   std_vector_lepton_fastsimW = 0;
+   std_vector_lepton_fastsimW_Up = 0;
+   std_vector_lepton_fastsimW_Down = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1521,6 +1532,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("jettche1", &jettche1, &b_jettche1);
    //   fChain->SetBranchAddress("jettche2", &jettche2, &b_jettche2);
    fChain->SetBranchAddress("puW", &puW, &b_puW);
+   fChain->SetBranchAddress("puWB", &puWB, &b_puWB);
    //   fChain->SetBranchAddress("puW6p3", &puW6p3, &b_puW6p3);
    //   fChain->SetBranchAddress("Xsec", &Xsec, &b_Xsec);
    fChain->SetBranchAddress("baseW", &baseW, &b_baseW);
@@ -1617,6 +1629,9 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_recoW", &std_vector_lepton_recoW, &b_std_vector_lepton_recoW);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Up", &std_vector_lepton_recoW_Up, &b_std_vector_lepton_recoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Down", &std_vector_lepton_recoW_Down, &b_std_vector_lepton_recoW_Down);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW", &std_vector_lepton_fastsimW, &b_std_vector_lepton_fastsimW);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW_Up", &std_vector_lepton_fastsimW_Up, &b_std_vector_lepton_fastsimW_Up);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW_Down", &std_vector_lepton_fastsimW_Down, &b_std_vector_lepton_fastsimW_Down);
    //   fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
    //   fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
    //   fChain->SetBranchAddress("vht_pt", &vht_pt, &b_vht_pt);

@@ -133,6 +133,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetStopVar        ();
 
+  void        GetRazor          ();
+
   void        GetMt             (Lepton         lep,
 				 float&         transverse_mass);
 
@@ -231,6 +233,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
+  float                  _htvisible;
   float                  _htjets;
   float                  _htnojets;
   float 		 _detall; 	
@@ -337,6 +340,13 @@ class AnalysisCMS : public AnalysisBase
   float                  _tjet2csvv2ivf;
   float                  _tjet2assignment;
 
+  float                  _MR;
+  float                  _R2;
+  float                  _Rpt;
+  float                  _invGamma;
+  float                  _Mdr;
+  float                  _DeltaPhiRll;
+
   Long64_t               _nentries;
 
   unsigned int           _jetbin;
@@ -394,6 +404,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_detatt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_drll          [nchannel][ncut][njetbin+1];
   TH1D*                  h_ht            [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htvisible     [nchannel][ncut][njetbin+1];
   TH1D*                  h_htjets        [nchannel][ncut][njetbin+1];
   TH1D*                  h_htnojets      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1eta       [nchannel][ncut][njetbin+1];
@@ -450,6 +461,15 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
   TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
+
+  // Razor
+  //----------------------------------------------------------------------------
+  TH1D*                  h_MR          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_R2          [nchannel][ncut][njetbin+1];
+  TH1D*                  h_Rpt         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_invGamma    [nchannel][ncut][njetbin+1];
+  TH1D*                  h_Mdr         [nchannel][ncut][njetbin+1];
+  TH1D*                  h_DeltaPhiRll [nchannel][ncut][njetbin+1];
 
 
   // TH2 histograms
