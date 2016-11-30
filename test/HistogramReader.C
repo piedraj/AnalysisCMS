@@ -1407,7 +1407,7 @@ void HistogramReader::Roc(TString hname,
   sigGraph_max->SetMarkerSize(0.5);
 
   sigGraph_min->Draw("ap");
-  sigGraph_max->Draw("psame");
+  //sigGraph_max->Draw("psame");
 
   Float_t ymax = (score_value_min > score_value_max) ? score_value_min : score_value_max;
 
@@ -1430,7 +1430,7 @@ void HistogramReader::Roc(TString hname,
   dummy_max->SetMarkerStyle(style_max);
 
   DrawLegend(0.22, 0.84, dummy_min, Form("%s > x", xtitle.Data()), "lp", false);
-  DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
+  //DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
 
   SetAxis(sigGraph_min->GetHistogram(), myxtitle, "S / #sqrt{B}", 1.5, 2.1);
 
