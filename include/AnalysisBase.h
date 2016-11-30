@@ -387,7 +387,7 @@ public :
    //   vector<float>   *std_vector_lepton_closejet_PartonFlavour;
    //   vector<float>   *std_vector_lepton_closejet_pt;
    vector<float>   *std_vector_lepton_neutralHadronIso;
-   //   vector<float>   *std_vector_lepton_eleIdMedium;
+   vector<float>   *std_vector_lepton_eleIdMedium;
    //   vector<float>   *std_vector_lepton_chargedParticleIso;
    vector<float>   *std_vector_lepton_phi;
    //   vector<float>   *std_vector_lepton_eleIdLoose;
@@ -397,7 +397,7 @@ public :
    vector<float>   *std_vector_lepton_pt;
    vector<float>   *std_vector_lepton_sumPUPt;
    vector<float>   *std_vector_lepton_eta;
-   //   vector<float>   *std_vector_lepton_isMediumMuon;
+   vector<float>   *std_vector_lepton_isMediumMuon;
    //   vector<float>   *std_vector_lepton_PfIsoDeltaBeta;
    //   vector<float>   *std_vector_lepton_closejet_phi;
    vector<float>   *std_vector_lepton_trackIso;
@@ -408,10 +408,10 @@ public :
    vector<float>   *std_vector_lepton_ch;
    vector<float>   *std_vector_lepton_flavour;
    //   vector<float>   *std_vector_lepton_closejet_drlj;
-   //   vector<float>   *std_vector_lepton_eleIdTight;
+   vector<float>   *std_vector_lepton_eleIdTight;
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
-   //   vector<float>   *std_vector_lepton_isTightMuon;
+   vector<float>   *std_vector_lepton_isTightMuon;
    Float_t         susyMstop;
    Float_t         susyMLSP;
    Float_t         metPfType1Phi;
@@ -837,7 +837,7 @@ public :
    //   TBranch        *b_std_vector_lepton_closejet_PartonFlavour;   //!
    //   TBranch        *b_std_vector_lepton_closejet_pt;   //!
    TBranch        *b_std_vector_lepton_neutralHadronIso;   //!
-   //   TBranch        *b_std_vector_lepton_eleIdMedium;   //!
+   TBranch        *b_std_vector_lepton_eleIdMedium;   //!
    //   TBranch        *b_std_vector_lepton_chargedParticleIso;   //!
    TBranch        *b_std_vector_lepton_phi;   //!
    //   TBranch        *b_std_vector_lepton_eleIdLoose;   //!
@@ -847,7 +847,7 @@ public :
    TBranch        *b_std_vector_lepton_pt;   //!
    TBranch        *b_std_vector_lepton_sumPUPt;   //!
    TBranch        *b_std_vector_lepton_eta;   //!
-   //   TBranch        *b_std_vector_lepton_isMediumMuon;   //!
+   TBranch        *b_std_vector_lepton_isMediumMuon;   //!
    //   TBranch        *b_std_vector_lepton_PfIsoDeltaBeta;   //!
    //   TBranch        *b_std_vector_lepton_closejet_phi;   //!
    TBranch        *b_std_vector_lepton_trackIso;   //!
@@ -858,10 +858,10 @@ public :
    TBranch        *b_std_vector_lepton_ch;   //!
    TBranch        *b_std_vector_lepton_flavour;   //!
    //   TBranch        *b_std_vector_lepton_closejet_drlj;   //!
-   //   TBranch        *b_std_vector_lepton_eleIdTight;   //!
+   TBranch        *b_std_vector_lepton_eleIdTight;   //!
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
-   //   TBranch        *b_std_vector_lepton_isTightMuon;   //!
+   TBranch        *b_std_vector_lepton_isTightMuon;   //!
    TBranch        *b_susyMstop;   //!
    TBranch        *b_susyMLSP;   //!
    TBranch        *b_metPfType1Phi;   //!
@@ -1155,7 +1155,7 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_lepton_closejet_PartonFlavour = 0;
    //   std_vector_lepton_closejet_pt = 0;
    std_vector_lepton_neutralHadronIso = 0;
-   //   std_vector_lepton_eleIdMedium = 0;
+   std_vector_lepton_eleIdMedium = 0;
    //   std_vector_lepton_chargedParticleIso = 0;
    std_vector_lepton_phi = 0;
    //   std_vector_lepton_eleIdLoose = 0;
@@ -1165,7 +1165,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_pt = 0;
    std_vector_lepton_sumPUPt = 0;
    std_vector_lepton_eta = 0;
-   //   std_vector_lepton_isMediumMuon = 0;
+   std_vector_lepton_isMediumMuon = 0;
    //   std_vector_lepton_PfIsoDeltaBeta = 0;
    //   std_vector_lepton_closejet_phi = 0;
    std_vector_lepton_trackIso = 0;
@@ -1176,10 +1176,10 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_ch = 0;
    std_vector_lepton_flavour = 0;
    //   std_vector_lepton_closejet_drlj = 0;
-   //   std_vector_lepton_eleIdTight = 0;
+   std_vector_lepton_eleIdTight = 0;
    std_vector_lepton_d0 = 0;
    std_vector_lepton_genmatched = 0;
-   //   std_vector_lepton_isTightMuon = 0;
+   std_vector_lepton_isTightMuon = 0;
    std_vector_lepton_idisoW = 0;
    std_vector_lepton_idisoW_Up = 0;
    std_vector_lepton_idisoW_Down = 0;
@@ -1538,7 +1538,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_PartonFlavour", &std_vector_lepton_closejet_PartonFlavour, &b_std_vector_lepton_closejet_PartonFlavour);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_pt", &std_vector_lepton_closejet_pt, &b_std_vector_lepton_closejet_pt);
    fChain->SetBranchAddress("std_vector_lepton_neutralHadronIso", &std_vector_lepton_neutralHadronIso, &b_std_vector_lepton_neutralHadronIso);
-   //   fChain->SetBranchAddress("std_vector_lepton_eleIdMedium", &std_vector_lepton_eleIdMedium, &b_std_vector_lepton_eleIdMedium);
+   fChain->SetBranchAddress("std_vector_lepton_eleIdMedium", &std_vector_lepton_eleIdMedium, &b_std_vector_lepton_eleIdMedium);
    //   fChain->SetBranchAddress("std_vector_lepton_chargedParticleIso", &std_vector_lepton_chargedParticleIso, &b_std_vector_lepton_chargedParticleIso);
    fChain->SetBranchAddress("std_vector_lepton_phi", &std_vector_lepton_phi, &b_std_vector_lepton_phi);
    //   fChain->SetBranchAddress("std_vector_lepton_eleIdLoose", &std_vector_lepton_eleIdLoose, &b_std_vector_lepton_eleIdLoose);
@@ -1548,7 +1548,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_pt", &std_vector_lepton_pt, &b_std_vector_lepton_pt);
    fChain->SetBranchAddress("std_vector_lepton_sumPUPt", &std_vector_lepton_sumPUPt, &b_std_vector_lepton_sumPUPt);
    fChain->SetBranchAddress("std_vector_lepton_eta", &std_vector_lepton_eta, &b_std_vector_lepton_eta);
-   //   fChain->SetBranchAddress("std_vector_lepton_isMediumMuon", &std_vector_lepton_isMediumMuon, &b_std_vector_lepton_isMediumMuon);
+   fChain->SetBranchAddress("std_vector_lepton_isMediumMuon", &std_vector_lepton_isMediumMuon, &b_std_vector_lepton_isMediumMuon);
    //   fChain->SetBranchAddress("std_vector_lepton_PfIsoDeltaBeta", &std_vector_lepton_PfIsoDeltaBeta, &b_std_vector_lepton_PfIsoDeltaBeta);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_phi", &std_vector_lepton_closejet_phi, &b_std_vector_lepton_closejet_phi);
    fChain->SetBranchAddress("std_vector_lepton_trackIso", &std_vector_lepton_trackIso, &b_std_vector_lepton_trackIso);
@@ -1559,10 +1559,10 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_ch", &std_vector_lepton_ch, &b_std_vector_lepton_ch);
    fChain->SetBranchAddress("std_vector_lepton_flavour", &std_vector_lepton_flavour, &b_std_vector_lepton_flavour);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_drlj", &std_vector_lepton_closejet_drlj, &b_std_vector_lepton_closejet_drlj);
-   //   fChain->SetBranchAddress("std_vector_lepton_eleIdTight", &std_vector_lepton_eleIdTight, &b_std_vector_lepton_eleIdTight);
+   fChain->SetBranchAddress("std_vector_lepton_eleIdTight", &std_vector_lepton_eleIdTight, &b_std_vector_lepton_eleIdTight);
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
-   //   fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
+   fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
    fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
    fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);

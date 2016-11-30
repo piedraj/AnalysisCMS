@@ -169,7 +169,8 @@ class HistogramReader
 			       Int_t          npoints = 100,
 			       TString        units   = "NULL",
 			       Float_t        xmin    = -999,
-			       Float_t        xmax    = -999);
+			       Float_t        xmax    = -999,
+			       TString        fom     = "S / #sqrt{B}");
     
  private :
 

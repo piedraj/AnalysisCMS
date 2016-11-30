@@ -449,6 +449,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
+  TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
 
 
   // TH2 histograms

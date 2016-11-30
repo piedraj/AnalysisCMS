@@ -97,6 +97,8 @@ int          bin_zmax;
 int          bin_metmin;
 int          bin_metmax;
 
+TString      xtitle;
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -122,9 +124,15 @@ int          bin_metmax;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
-		TString level    = "03_Routin",
+		TString level    = "02_Routin",
+		TString variable = "mpmet",
 		double  lumi_fb  = 12.9)
 {
+  xtitle = "";
+
+  if (variable.EqualTo("metPfType1")) xtitle = "E_{T}^{miss} [GeV]";
+  if (variable.EqualTo("mpmet"))      xtitle = "min projected E_{T}^{miss} [GeV]";
+
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   gSystem->mkdir(outputdir, kTRUE);
@@ -139,10 +147,10 @@ void getDYScale(TString analysis = "Control",
   //----------------------------------------------------------------------------
   for (int i=ee; i<ll; i++)
     {
-      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
-      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_metPfType1_m2l_" + schannel[i]);
+      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
 
       h2_dy[i]->Scale(lumi_fb);
       h2_wz[i]->Scale(lumi_fb);
@@ -192,7 +200,7 @@ void getDYScale(TString analysis = "Control",
       if (printResults)
 	{
 	  printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	  printf("\n %.0f < MET < %.0f GeV\n", metcut[j], metcut[j+1]);
+	  printf("\n %.0f < %s < %.0f GeV\n", metcut[j], variable.Data(), metcut[j+1]);
 	}
 
       float scale[3], scale_err[3], R_data[2], R_data_err[2], R_dy[2], R_dy_err[2];
@@ -255,7 +263,7 @@ void getDYScale(TString analysis = "Control",
 
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
       mgraph[k]->GetYaxis()->SetTitleOffset(2.0);
-      mgraph[k]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+      mgraph[k]->GetXaxis()->SetTitle(xtitle);
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
       mgraph[k]->SetMinimum(-0.02);
@@ -294,12 +302,12 @@ void getDYScale(TString analysis = "Control",
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
   mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
-  mgraph[2]->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+  mgraph[2]->GetXaxis()->SetTitle(xtitle);
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  DrawLegend(0.72, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
-  DrawLegend(0.72, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
-  DrawLegend(0.72, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
+  DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
+  DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+  DrawLegend(0.22, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
 
   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
 
