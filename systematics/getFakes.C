@@ -1,6 +1,5 @@
 #include"../include/Constants.h"
 
-
 enum {
   nominalYield,
   elUp,
@@ -43,16 +42,17 @@ float _muStatSyst[nchannel];
 void getFakes(TString level = "NONE")
 {
   if (level.EqualTo("NONE")) {
-
-    printf("\n");
-
-    for (int i=0; i<ncut; i++)
-      printf(" root -l -b -q \"getFakes.C(\\\"%s\\\")\"\n", scut[i].Data());
     
     printf("\n");
 
+    for (int i=0; i<ncut; i++) {
+            printf(" root -l -b -q \"getFakes.C(\\\"%s\\\")\"\n", scut[i].Data());
+    }
+    
+    printf("\n");
+    
     return;
-  }
+ }
 
   TString tok;
 
@@ -62,7 +62,7 @@ void getFakes(TString level = "NONE")
 
   if (analysis.EqualTo("NONE")) return;
 
-  TFile* inputfile = new TFile("../rootfiles/nominal/" + analysis + "/00_Fakes.root", "read");
+  TFile* inputfile = new TFile("../rootfilesControl/nominal/" + analysis + "/00_Fakes.root", "read");
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -85,7 +85,7 @@ void getFakes(TString level = "NONE")
 
       _elStatSyst[i] = 1e2 * fabs(_value[i][elStatUp] - _value[i][elStatDown]) / (2. * _value[i][nominalYield]);
       _muStatSyst[i] = 1e2 * fabs(_value[i][muStatUp] - _value[i][muStatDown]) / (2. * _value[i][nominalYield]);
-    }
+      }
 
 
   // Print yields
@@ -99,24 +99,23 @@ void getFakes(TString level = "NONE")
   for (int j=0; j<nvalue; j++)
     {
       printf(" %22s", svalue[j].Data());
-      
+
       for (int i=firstchannel; i<lastchannel; i++)
-	{
-	  printf(" & %7.2f $\\pm$ %5.2f", _value[i][j], _error[i][j]);
-	}
+        {
+          printf(" & %7.2f $\\pm$ %5.2f", _value[i][j], _error[i][j]);
+        }
 
       printf(" \\\\\n");
     }
 
-
   // Print systematic uncertainties
   //----------------------------------------------------------------------------
   printf("\\hline\n");
-  printf(" %22s", " ");                       for (int i=firstchannel; i<lastchannel; i++) printf(" & %19s", schannel[i].Data());   printf(" \\\\\n");
-  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
-  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
-  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
-  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %17.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "electron jet \\pt syst."); for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "electron stat. syst.");    for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _elStatSyst[i]); printf(" \\\\\n");
+  printf(" %22s", "muon jet \\pt syst.");     for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muSyst[i]);     printf(" \\\\\n");
+  printf(" %22s", "muon stat. syst.");        for (int i=firstchannel; i<lastchannel; i++) printf(" & %16.0f\\%%", _muStatSyst[i]); printf(" \\\\\n");
 
   printf("\n");
+
 }

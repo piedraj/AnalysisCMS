@@ -75,12 +75,12 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
 
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
-
+    
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 25.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
-
+    
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -97,7 +97,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // AN-16-011, IFCA ¿?
     //--------------------------------------------------------------------------
     bool pass   = true;
-
+    
     pass &= (std_vector_lepton_pt->at(2) < 10.);
 
     // missing: 

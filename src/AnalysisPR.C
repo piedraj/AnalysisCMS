@@ -180,7 +180,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
     // Prompt rate from MC
     //--------------------------------------------------------------------------
-    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
+    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight && _mtw < 20.) {
       
       float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
       float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());

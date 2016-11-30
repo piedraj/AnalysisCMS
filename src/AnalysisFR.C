@@ -198,7 +198,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       bool pass;
       pass = (_nlepton == 1);
-      pass = (_mtw > 20.);
+      pass = (_mtw < 20.);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
 

@@ -704,7 +704,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   TString final_label = Form(" %s", label.Data());
 
   if (drawyield)
-    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+    final_label = Form("%s (%.1f)", final_label.Data(), Yield(hist));
 
   if (Yield(hist) < 0)
     printf("\n [HistogramReader::DrawLegend] Warning: %s %s yield = %f\n\n",

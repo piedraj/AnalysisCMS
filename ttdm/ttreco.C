@@ -1,34 +1,36 @@
-#include "../top-reco/src/MassVariations.cc"
+#include "../mimick/src/MassReconstructor.cc"
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include <vector>
 
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString  inputdir = "minitrees_week-1"; 
+
+const bool WriteBranch = 1; 
 
 void ttreco2(TString process); 
 
 void ttreco(){
 
-	//ttreco2("00_Fakes"    );
-	//ttreco2("01_Data"     );
-	//ttreco2("02_WZTo3LNu" );
-	//ttreco2("03_VZ"       );
-	//ttreco2("04_TTTo2L2Nu");
-	//ttreco2("05_ST"       );
-	//ttreco2("06_WW"       );
-	//ttreco2("07_ZJets"    );
-	//ttreco2("08_WJets"    );
-	//ttreco2("09_TTV"      );
-	//ttreco2("10_HWW"      );
-	//ttreco2("11_Wg"       );
-	//ttreco2("12_Zg"       );
-	//ttreco2("13_VVV"      );
-	//ttreco2("14_HZ"       );
-	//ttreco2("15_WgStar"   );*/
+	ttreco2("00_Fakes"    );
+	ttreco2("01_Data"     );
+	ttreco2("02_WZTo3LNu" );
+	ttreco2("03_VZ"       );
+	ttreco2("04_TTTo2L2Nu");
+	ttreco2("05_ST"       );
+	ttreco2("06_WW"       );
+	ttreco2("07_ZJets"    );
+	ttreco2("08_WJets"    );
+	ttreco2("09_TTV"      );
+	ttreco2("10_HWW"      );
+	ttreco2("11_Wg"       );
+	ttreco2("12_Zg"       );
+	ttreco2("13_VVV"      );
+	ttreco2("14_HZ"       );
+	ttreco2("15_WgStar"   );
 
 	ttreco2("ttDM0001scalar00010");
-	//ttreco2("ttDM0001scalar00500");
+	ttreco2("ttDM0001scalar00500");
 
 	cout << "\n \n done !!! \n \n" << endl; 
 
@@ -36,12 +38,20 @@ void ttreco(){
 
 void ttreco2( TString process ) {
 
-	//TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
-	TFile myfile( process + ".root", "update" ); 
+	cout << "\n\n" << process << "\n" <<  endl; 
+
+	TFile *fshape = new TFile("../mimick/mlb.root");
+	TH1F *shapemlb = (TH1F *) fshape->Get("mlb");
+	MassReconstructor theMass(100, shapemlb);
+
+	TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "update" );   // might need some tuning
+
 
    	TTreeReader myreader( "latino", &myfile );
 
-	TTree*      mytree = (TTree*) myfile.Get( "latino" );
+	TTree* mytree = (TTree*) myfile.Get( "latino" );
+
+
 
 
 	//----- read -------------------------------------------------------
@@ -63,28 +73,30 @@ void ttreco2( TString process ) {
    	TTreeReaderValue<std::vector<float>> jet_eta( myreader, "jet_eta" );
    	TTreeReaderValue<std::vector<float>> jet_phi( myreader, "jet_phi" );
 
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_pt ( myreader, "bjet30csvv2m_pt"  );
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_eta( myreader, "bjet30csvv2m_eta" );
+   	TTreeReaderValue<std::vector<float>> bjet30csvv2m_phi( myreader, "bjet30csvv2m_phi" );
+
 
 	//----- write ------------------------------------------------------
 
-	int nsol; 
 
-	TBranch* b_nsol = mytree -> Branch( "nsol", &nsol, "nsol/I" );
+	float mimick; 
 
+	TBranch* b_mimick = mytree -> Branch( "mimick"  , &mimick  , "mimick/F"   );
 
+	
 
 	//----- loop -------------------------------------------------------
+
 
 	int nentries = myreader.GetEntries(1); 
 
 	for ( Long64_t ievt = 0; ievt < nentries; ievt++ ) {
 
+		if( ievt%10000 == 0 ) cout << "\n\n ievt: " << ievt << endl;
+
 		myreader.SetEntry(ievt);
-
-
-		TVector2 MET; 
-
-		MET.SetMagPhi( *metPfType1, *metPfType1Phi ); 
-
 
 		TLorentzVector l1, l2; 
 
@@ -92,9 +104,11 @@ void ttreco2( TString process ) {
   		l2.SetPtEtaPhiM( *lep2pt, *lep2eta, *lep2phi, *lep2mass );
 
 
-		std::vector<TLorentzVector> jets; 
+		std::vector<TLorentzVector> jets;
+ 		std::vector<TLorentzVector> bjets;
 		std::vector<Float_t>        unc;
- 
+
+
 		for( int i = 0; i < jet_pt->size(); i++ ){
 
 			TLorentzVector jet_tlv;
@@ -108,22 +122,47 @@ void ttreco2( TString process ) {
 		}
 
 
+		for( int i = 0; i < bjet30csvv2m_pt->size(); i++ ){
+
+			TLorentzVector bjet30csvv2m_tlv;
+
+			bjet30csvv2m_tlv.SetPtEtaPhiM( bjet30csvv2m_pt->at(i), bjet30csvv2m_eta->at(i), bjet30csvv2m_phi->at(i), 0. ); 
+
+			bjets.push_back(bjet30csvv2m_tlv);
+
+		}
+
 		std::vector<TLorentzVector> nu1, nu2;
 
+	        TVector2 top1, top2;
+
+
+		TVector2 MET;
+
+		MET.SetMagPhi( *metPfType1, *metPfType1Phi );
+
+		float w = 0; 
+
+		theMass.startVariations(l1, l2, bjets, jets, MET, top1, top2, w);
 		
-		MassVariations theMass;
+		mimick = w; //cout << w << endl; 
 
-		theMass.performAllVariations( /*1,*/ 10, 1, 1, l1, l2, jets, unc, MET, nu1, nu2 );
+		
 
-		nsol = nu1.size(); 
+		if (WriteBranch){
 
-		b_nsol -> Fill();
+			b_mimick   -> Fill();
+			
+		}
 		
 	}
 
-	mytree -> Write();
+	fshape->Close();
+
+	if (WriteBranch) mytree -> Write( "", TObject::kOverwrite );
 
   	myfile.Close();
+
 
 }
 

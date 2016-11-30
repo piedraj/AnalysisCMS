@@ -1,5 +1,5 @@
-// root -l -b -q Plotter.C 
 
+// root -l -b -q Plotter.C 
 #include "../test/HistogramReader.C"
 
 const TString inputdir  = "histos/";
@@ -59,7 +59,7 @@ void Plotter(TString option = "hist"){
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  //  plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
@@ -80,12 +80,12 @@ void Plotter(TString option = "hist"){
   // Add signals
   //----------------------------------------------------------------------------
   plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal-2);
-  plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20", color_Signal-1);
+  //plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20", color_Signal-1);
   plotter.AddSignal("ttDM0001scalar00050", "m_{#chi}1 m_{S}50", color_Signal, roc_signal);
-  plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100", color_Signal+1);
-  plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200", color_Signal+2);
-  plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300", color_Signal+3);
-  plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+4);
+  //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100", color_Signal+1);
+  //plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200", color_Signal+2);
+  //plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300", color_Signal+3);
+  plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
  
 
   // ROC curve inputs
@@ -134,7 +134,7 @@ void Plotter(TString option = "hist"){
   plotter.Draw( "dphillmet"      , "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
   //plotter.Draw( "dphilmet1"      , "#Delta#phi(lep1,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphilmet2"      , "#Delta#phi(lep2,E_{T}^{miss})",      5, 2, "rad",  scale, false);
-  //plotter.Draw( "ht"             , "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
+  plotter.Draw( "ht"             , "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
   //plotter.Draw( "htjets"         , "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
   //plotter.Draw( "htnojets"       , "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
   //plotter.Draw( "jet1eta"        , "leading jet #eta",                  -1, 1, "NULL", scale, false);
@@ -161,14 +161,26 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  6);
   //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
 
-
+  plotter.Draw( "topRecoW"       , "topRecoW",                         -1, 0, "NULL", linY,  true, 0,  0.01);
 
 
   //           hname     xtitle                      npoints  units xmin xmax
   //  ---------------------------------------------------------------------------
   //plotter.Roc( "lep1pt", "leading lepton p_{T}",        1000, "GeV", 0, 1000);
+  plotter.Roc( "mt2ll", "M_{T2}(" + sll + ")",            1000, "GeV", 0, 500, "Punzi Eq.6");
   plotter.Roc( "mt2ll", "M_{T2}(" + sll + ")",            1000, "GeV", 0, 500);
 
+  plotter.Roc( "dphillmet", "#Delta#phi(" +sll + "," + sm + ")",            1000, "GeV", 2, 5, "Punzi Eq.6");
+  plotter.Roc( "dphillmet", "#Delta#phi(" +sll + "," + sm + ")",            1000, "GeV", 2, 5);
+  
+  plotter.Roc( "metPfType1", sm,            1000, "GeV", 0, 200, "Punzi Eq.6");
+  plotter.Roc( "metPfType1", sm,            1000, "GeV", 0, 200);
+
+  plotter.Roc( "ht", "H_{T}",            1000, "GeV", 0, 1500, "Punzi Eq.6");
+  plotter.Roc( "ht", "H_{T}",            1000, "GeV", 0, 1500);
+
+  plotter.Roc("topRecoW", "topRecoW", 1000, "NULL", 0, 0.01, "Punzi Eq.6");
+  plotter.Roc("topRecoW", "topRecoW", 1000, "NULL", 0, 0.01);
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
@@ -176,4 +188,5 @@ void Plotter(TString option = "hist"){
   gSystem->Exec("rm -f index.php");
 
 }
+
 

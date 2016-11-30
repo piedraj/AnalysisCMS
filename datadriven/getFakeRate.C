@@ -9,7 +9,7 @@ const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
 const Float_t muonscale = -1.;
 const Float_t elescale  = -1.;
 
-bool draw         = true;
+bool draw         = false;
 bool savepng      = true;
 bool setgrid      = true;
 bool Wsubtraction = true;
