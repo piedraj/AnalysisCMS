@@ -6,7 +6,7 @@
 
 const TString  inputdir = "week-1";  // where the minitrees are stored
 
-const bool WriteBranch = 0; 
+const bool WriteBranch = 1; 
 
 void ttreco2(TString process); 
 
@@ -30,7 +30,9 @@ void ttreco(){
 	//ttreco2("15_WgStar"   );
 
 	//ttreco2("ttDM0001scalar00010");
-	ttreco2("ttDM0001scalar00500");
+	ttreco2("ttDM0001scalar00050");
+	//ttreco2("ttDM0001scalar00500");
+
 
 	cout << "\n \n done !!! \n \n" << endl; 
 
@@ -48,7 +50,8 @@ void ttreco2( TString process ) {
 	MassReconstructor theMass( 100, shapemlb );  
 
 
-	TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "update" ); 
+	//TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "update" ); 
+	TFile myfile( "../../../../public/minitrees_week-1_with-ttReco/" + process + ".root", "update" ); 
 
    	TTreeReader myreader( "latino", &myfile );
 
