@@ -2083,7 +2083,7 @@ void AnalysisCMS::GetTopReco()
     jet_uncertainty.push_back(5.);  // GeV
   }
 
-  //theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
   _topReco = nu1.size();
 
@@ -2092,19 +2092,19 @@ void AnalysisCMS::GetTopReco()
       printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
     }
 
-  if (_saveminitree && _analysis.EqualTo("TTDM"))
+  if (_saveminitre)
     {
       nu1.clear(); 
       nu2.clear();
       
-      //theMass.performAllVariations(10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+      theMass.performAllVariations(10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
       _nsol_10_1_1 = nu1.size();
  
       nu1.clear(); 
       nu2.clear(); 
 
-      //theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
+      theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
 
       _nsol_10_10_10 = nu1.size(); 
     }
