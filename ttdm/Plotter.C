@@ -48,7 +48,7 @@ void Plotter(TString option = "hist"){
 
   if (option.Contains("nostack"))
     {
-      plotter.SetDrawRatio(false);
+      plotter.SetDrawRatio(false);     
     }
   else
     {
@@ -73,7 +73,8 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("15_WgStar",    "W#gamma*",   color_WgStar);
   plotter.AddProcess("07_ZJets",     "Z+jets",     color_ZJets);
   plotter.AddProcess("09_TTV",       "ttV",        color_TTV);
-  plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
+  plotter.AddProcess("04_TTTo2L2Nu", "tt",           color_TTTo2L2Nu); //color_TTTo2L2Nu);
+  plotter.AddProcess("TTTo2L2Nu_alphaS01108", "tt (#alpha_{S})",  color_TTTo2L2Nu);
   plotter.AddProcess("05_ST",        "tW",         color_ST);
   plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
 
@@ -86,28 +87,6 @@ void Plotter(TString option = "hist"){
   //plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200", color_Signal+2);
   //plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300", color_Signal+3);
   plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
- 
-
-  // ROC curve inputs
-  //----------------------------------------------------------------------------                 
-  //   plotter.AddRocSignal("ttDM-signal"); 
-
-  //   plotter.AddRocBackground("06_WW");
-  //   plotter.AddRocBackground("04_TTTo2L2Nu");
-  //   plotter.AddRocBackground("00_Fakes");
-  //   plotter.AddRocBackground("02_WZTo3LNu");
-  //   plotter.AddRocBackground("03_VZ");
-  //   plotter.AddRocBackground("05_ST");
-  //   plotter.AddRocBackground("07_ZJets");
-  //   plotter.AddRocBackground("09_TTV");
-  //   plotter.AddRocBackground("10_HWW");
-  //   plotter.AddRocBackground("11_Wg");
-  //   plotter.AddRocBackground("12_Zg");
-  //   plotter.AddRocBackground("13_VVV");
-  //   plotter.AddRocBackground("14_HZ");
-  //   plotter.AddRocBackground("15_WgStar");
-
-
 
   // Draw distributions
   //----------------------------------------------------------------------------
@@ -122,6 +101,7 @@ void Plotter(TString option = "hist"){
 
   //            hname              xtitle                     ngroup precision units  setlogy moveoverflow xmin xmax ymin ymax
   // -------------------------------------------------------------------------------------------------------------------------
+  //plotter.Draw( "darkpt"         , "(reconstructed) mediator p_{T}",      -1, 0, "GeV",  linY, false, -100, 800, 0., 0.13 );
   //plotter.Draw( "dphijet1met"    , "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphijet2met"    , "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphijj"         , "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale, false);
@@ -154,18 +134,18 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300);
   plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
-  plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 600); 
+  plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "mtw2"           , "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6);
-  //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  6);
+  //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10);
   //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
-
-  plotter.Draw( "topRecoW"       , "topRecoW",                         -1, 0, "NULL", linY,  true, 0,  0.01);
-
+  plotter.Draw( "topRecoW"       , "top reco weight",                  -1, 4, "NULL", scale, true, 0,  0.01);
+  //plotter.Draw( "mva01_ttDM0001scalar00010", "ANN",                  -1, 3, "NULL", linY, true, 0., 1., 0., 0.2);
 
   //           hname     xtitle                      npoints  units xmin xmax
   //  ---------------------------------------------------------------------------
+
   //plotter.Roc( "lep1pt", "leading lepton p_{T}",        1000, "GeV", 0, 1000);
   plotter.Roc( "mt2ll", "M_{T2}(" + sll + ")",            1000, "GeV", 0, 500, "Punzi Eq.6");
   plotter.Roc( "mt2ll", "M_{T2}(" + sll + ")",            1000, "GeV", 0, 500);
@@ -181,6 +161,12 @@ void Plotter(TString option = "hist"){
 
   plotter.Roc("topRecoW", "topRecoW", 1000, "NULL", 0, 0.01, "Punzi Eq.6");
   plotter.Roc("topRecoW", "topRecoW", 1000, "NULL", 0, 0.01);
+
+  //plotter.Roc( "darkpt"    , "(reconstructed) mediator p_{T}"       , 80, "GeV",0, 800);
+  //plotter.Roc( "metPfType1", sm                   , 100, "GeV", 0, 200);
+  //plotter.Roc( "mt2ll"     , "M_{T2}(" + sll + ")", 50, "GeV", 0, 200);
+  //plotter.Roc( "topRecoW"  , "top reco weight"    , 100, "GeV", 0, .01);
+  //plotter.Roc( "mva01_ttDM0001scalar00010", "ANN", 100, "GeV", 0., 1. );
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------

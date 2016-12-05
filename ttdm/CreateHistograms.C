@@ -1,5 +1,7 @@
 // root -l -b -q CreateHistograms
 
+#include "../include/Constants.h"
+
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       lep2pt, lep2eta, lep2phi, lep2mass,
       jet1pt, jet1eta, jet1phi, jet1mass,
@@ -13,8 +15,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       nvtx,
       sphericity, alignment, planarity,
       topRecoW, darkpt,
-      nhisto
- }; 
+      mva01, 
+      nhisto }; 
 
 TString b_name[nhisto];
 TString h_name[nhisto];
@@ -23,6 +25,8 @@ TH1F* myhisto [nhisto];
 const TString inputdir = "/afs/cern.ch/work/j/jgarciaf/public/minitrees_week-1_with-ttReco/";  // where the minitrees are stored
  //const TString inputdir = "minitrees_week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
+
+ofstream yields;   
 
 const TCut mycut = "eventW*((channel == 5) && metPfType1 > 40.)"; 
 //const TCut mycut = "eventW*((channel==5) && dphillmet > 1.2 && metPfType1 > 50.)";  // the cuts chain 
@@ -100,11 +104,15 @@ void CreateHistograms(){
 	b_name[topRecoW  ] = "topRecoW"  ;
 	b_name[darkpt    ] = "darkpt"    ;
 
+	b_name[mva01     ] = "mva01_ttDM0001scalar00500";
+
 	for( int i = 0; i < nhisto; i++ ){
 
  		h_name[i] = b_name[i];
 
 	}
+
+	yields.open( outputdir + "/yields.txt" );
 
 	CreateHistograms2("00_Fakes"    );
 	CreateHistograms2("01_Data"     );
@@ -115,7 +123,6 @@ void CreateHistograms(){
 	CreateHistograms2("05_ST"       );
 	CreateHistograms2("06_WW"       );
 	CreateHistograms2("07_ZJets"    );
-	//CreateHistograms2("08_WJets"    );
 	CreateHistograms2("09_TTV"      );
 	CreateHistograms2("10_HWW"      );
 	CreateHistograms2("11_Wg"       );
@@ -124,32 +131,24 @@ void CreateHistograms(){
 	CreateHistograms2("14_HZ"       );
 	CreateHistograms2("15_WgStar"   );
 
-	CreateHistograms2("ttDM0001scalar00010");
-	//CreateHistograms2("ttDM0001scalar00020");
-	CreateHistograms2("ttDM0001scalar00050");
-	//CreateHistograms2("ttDM0001scalar00100");
-	//CreateHistograms2("ttDM0001scalar00200");
+	//CreateHistograms2("ttDM0001scalar00010");
 	//CreateHistograms2("ttDM0001scalar00300");
 	CreateHistograms2("ttDM0001scalar00500");
 
-	//CreateHistograms2("ttDM0001pseudo00010");
-	//CreateHistograms2("ttDM0001pseudo00020");
-	//CreateHistograms2("ttDM0001pseudo00050");
-	//CreateHistograms2("ttDM0001pseudo00100");
-	//CreateHistograms2("ttDM0001pseudo00200");
-	//CreateHistograms2("ttDM0001pseudo00300");
-	//CreateHistograms2("ttDM0001pseudo00500");
+	cout << "\n \n The End !!! \n \n" << endl; 
 
-	cout << "\n \n yeah \n \n" << endl; 
+	yields.close();
 
 }
 
 
 void CreateHistograms2( TString process ){ 
 
-  //TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
-  TFile* myfile = new TFile(inputdir + process + ".root", "read"); 
-	
+        //TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
+        TFile* myfile = new TFile(inputdir + process + ".root", "read"); 
+
+	cout << "\n\n" << process << "\n" << endl; 
+
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
 	gSystem->mkdir(outputdir, kTRUE);
@@ -228,6 +227,8 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
 	mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
 
+	mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+
 	for( int i = 0; i < nhisto; i++ ){	
 
 		myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
@@ -235,6 +236,9 @@ void CreateHistograms2( TString process ){
 		myhisto[i] -> Write(); 
 
 	}
+
+		if( process == "00_Fakes" || process == "01_Data" ) yields << Form( "%20s \t %10.3f \n", process.Data(),              myhisto[0]->Integral() );
+		else                                                yields << Form( "%20s \t %10.3f \n", process.Data(), lumi_fb_2016*myhisto[0]->Integral() );
 
 	storagefile -> Close();
 

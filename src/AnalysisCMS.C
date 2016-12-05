@@ -2107,7 +2107,7 @@ void AnalysisCMS::GetTopReco()
       printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
     }
 
-  if (_saveminitree && _analysis.EqualTo("TTDM"))
+  if (_saveminitre)
     {
       nu1.clear(); 
       nu2.clear();
