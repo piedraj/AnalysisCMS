@@ -1362,7 +1362,7 @@ void HistogramReader::Roc(TString hname,
 
     if (sigYield_min > 0. && bkgYield_min > 0.)
       {
-        if (fom.EqualTo("S / #sqrt{B}"))   score_min = sigYield_min / sqrt(bkgYield_min);
+        if (fom.EqualTo("S / #sqrt{B}"))   score_min = sigYield_min / sqrt(bkgYield_min);  
         if (fom.EqualTo("S / #sqrt{S+B}")) score_min = sigYield_min / sqrt(bkgYield_min + sigYield_min);
         if (fom.EqualTo("S / B"))          score_min = sigYield_min / bkgYield_min;
         if (fom.EqualTo("Punzi Eq.6"))     score_min =   sigEff_min / (b*b + 2*a*sqrt(bkgYield_min) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkgYield_min));
