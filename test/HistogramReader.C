@@ -1122,7 +1122,7 @@ Float_t HistogramReader::GetBestScoreX(TH1*    sig_hist,
 
 	if (fom.EqualTo("S / #sqrt{B}"))   score = sig_yield / sqrt(bkg_yield);
 	if (fom.EqualTo("S / #sqrt{S+B}")) score = sig_yield / sqrt(sig_yield + bkg_yield);
-	if (fom.EqualTo("S / B"))          score = sig_yield / bkg_yield; 
+	if (fom.EqualTo("S / B"))          score = sig_yield / bkg_yield;
 	if (fom.EqualTo("Punzi Eq.6"))     score =   sig_eff / (b*b + 2*a*sqrt(bkg_yield) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkg_yield)); 
 	if (fom.EqualTo("Punzi Eq.7"))     score =   sig_eff / (a/2 + sqrt(bkg_yield));
 
@@ -1362,7 +1362,7 @@ void HistogramReader::Roc(TString hname,
 
     if (sigYield_min > 0. && bkgYield_min > 0.)
       {
-        if (fom.EqualTo("S / #sqrt{B}"))   score_min = sigYield_min / sqrt(bkgYield_min);
+        if (fom.EqualTo("S / #sqrt{B}"))   score_min = sigYield_min / sqrt(bkgYield_min);  
         if (fom.EqualTo("S / #sqrt{S+B}")) score_min = sigYield_min / sqrt(bkgYield_min + sigYield_min);
         if (fom.EqualTo("S / B"))          score_min = sigYield_min / bkgYield_min;
         if (fom.EqualTo("Punzi Eq.6"))     score_min =   sigEff_min / (b*b + 2*a*sqrt(bkgYield_min) + b*sqrt(b*b + 4*a*sqrt(b) + 4*bkgYield_min));
