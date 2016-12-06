@@ -176,6 +176,7 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
+  bool                   _isminitree; 
   bool                   _passdphiveto;
   bool                   _systematic_btag_do;
   bool                   _systematic_btag_up;
@@ -185,6 +186,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_trigger_up;
   bool                   _systematic_reco_do;
   bool                   _systematic_reco_up;
+  bool                   _systematic_fastsim_do;
+  bool                   _systematic_fastsim_up;
 
   TString                _analysis;
   TString                _dataperiod;

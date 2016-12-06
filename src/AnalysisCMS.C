@@ -23,6 +23,8 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_trigger_up = (systematic.Contains("Triggerup")) ? true : false;
   _systematic_reco_do    = (systematic.Contains("Recodo"))    ? true : false;
   _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
+  _systematic_fastsim_do = (systematic.Contains("Fastsimdo")) ? true : false;
+  _systematic_fastsim_up = (systematic.Contains("Fastsimup")) ? true : false;
 
   _systematic = systematic;
 }
@@ -323,7 +325,11 @@ void AnalysisCMS::Setup(TString analysis,
 
   Ssiz_t from = 0;
 
-  while (_filename.Tokenize(tok, from, "latino_")) {
+  _isminitree = filename.Contains("minitrees") ? true : false;
+
+  const char *delim = _isminitree ? "/" : "latino_";
+
+  while (_filename.Tokenize(tok, from, delim)) {
 
     if (tok.Contains(".root")) {
 
@@ -336,6 +342,7 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("MuonEG"))         _ismc = false;
   if (_sample.Contains("SingleElectron")) _ismc = false;
   if (_sample.Contains("SingleMuon"))     _ismc = false;
+  if (_sample.Contains("Data"))           _ismc = false;
 
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
@@ -344,9 +351,11 @@ void AnalysisCMS::Setup(TString analysis,
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
   printf("       ismc: %d\n",        _ismc);
+  printf(" isminitree: %d\n",        _isminitree);
   
-  gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
-  gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
+  if (!_isminitree) gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+  else gSystem->mkdir("minitrees/rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
 
   _dataperiod = "";
 
@@ -363,7 +372,10 @@ void AnalysisCMS::Setup(TString analysis,
 
   if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
 
-  root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  if (!_isminitree)
+    root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  else 
+    root_output = new TFile("minitrees/rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
 
   if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
 
@@ -471,6 +483,13 @@ void AnalysisCMS::ApplyWeights()
       float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
       float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
       float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
+      
+      float sf_fastsim = 1., sf_fastsim_up = 1., sf_fastsim_do = 1.;
+      if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) {
+	sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
+	sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
+	sf_fastsim_do = std_vector_lepton_fastsimW_Down->at(0) * std_vector_lepton_fastsimW_Down->at(1); 
+      }
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -491,6 +510,8 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_reco_do)    sf_reco    = sf_reco_do;
       if (_systematic_trigger_up) sf_trigger = sf_trigger_up;
       if (_systematic_trigger_do) sf_trigger = sf_trigger_do;
+      if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
+      if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
 
       _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco);
     
@@ -2095,15 +2116,15 @@ void AnalysisCMS::GetRazor()
     Jets.push_back(Jet1);
     Jets.push_back(Jet2);
 
-    vector<TLorentzVector> Hemispheres = getHemispheres(Jets, Leps);
-
-    _MR = computeMR(Hemispheres[0], Hemispheres[1]);
-    _R2 = computeR2(Hemispheres[0], Hemispheres[1], MET);
-
   }
 
-  bool UseJetsInSuperRazor = false;
+  vector<TLorentzVector> Hemispheres = getHemispheres(Jets, Leps);
+  
+  _MR = computeMR(Hemispheres[0], Hemispheres[1]);
+  _R2 = computeR2(Hemispheres[0], Hemispheres[1], MET);
   /*
+  bool UseJetsInSuperRazor = false;
+  
   if (!UseJetsInSuperRazor || _njet > 1) {
 
     TVector3 vBETA_z, pT_CM, vBETA_T_CMtoR, vBETA_R;
