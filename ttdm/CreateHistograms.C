@@ -15,13 +15,14 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       nvtx,
       sphericity, alignment, planarity,
       topRecoW, darkpt,
-      mva01, 
+      //mva01, 
       nhisto }; 
 
 TString b_name[nhisto];
 TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
+const bool doshape = 1; 
 
 const TString  inputdir = "week-1";  // where the minitrees are stored
 const TString outputdir = "histos"; 
@@ -29,7 +30,7 @@ const TString outputdir = "histos";
 ofstream yields;   
 
 //const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
-const TCut mycut = "eventW*(channel==5&&darkpt>0.&&mva01_ttDM0001scalar00500>0.6)";//&&mt2ll>50.)";                 
+const TCut mycut = "metPfType1>80.&&mt2ll>100.&&mt2ll<140.0";                 
 
 void CreateHistograms2( TString process );
 
@@ -105,7 +106,7 @@ void CreateHistograms(){
 	b_name[topRecoW  ] = "topRecoW"  ;
 	b_name[darkpt    ] = "darkpt"    ;
 
-	b_name[mva01     ] = "mva01_ttDM0001scalar00500";
+	//b_name[mva01     ] = "mva01_ttDM0001scalar00500";
 
 
 	for( int i = 0; i < nhisto; i++ ){
@@ -114,8 +115,10 @@ void CreateHistograms(){
 
 	}
 
+	gSystem->mkdir(outputdir, kTRUE);
 
 	yields.open( outputdir + "/yields.txt" );
+
 
 	CreateHistograms2("00_Fakes"    );
 	CreateHistograms2("01_Data"     );
@@ -135,7 +138,7 @@ void CreateHistograms(){
 	CreateHistograms2("15_WgStar"   );
 
 	//CreateHistograms2("ttDM0001scalar00010");
-	//CreateHistograms2("ttDM0001scalar00300");
+	//CreateHistograms2("ttDM0001scalar00050");
 	CreateHistograms2("ttDM0001scalar00500");
 
 	cout << "\n \n The End !!! \n \n" << endl; 
@@ -152,12 +155,16 @@ void CreateHistograms2( TString process ){
 	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
 
 	//TFile* myfile = new TFile( "/afs/cern.ch/work/c/cprieels/public/ForJuan/minitrees/minitrees_week-1/TTDM/" + process + ".root", "read" ); 
+
+	TFile* storagefile; 
+	TFile* shape_f; 
+
+	if ( doshape == 0)  storagefile = new TFile( outputdir + "/" + process + ".root", "recreate" );
+
+	if ( doshape == 1)      shape_f = new TFile( outputdir + "/datacard.root"       , "update"   );
 	
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-	gSystem->mkdir(outputdir, kTRUE);
-
-	TFile* storagefile = new TFile( outputdir + "/" + process + ".root", "update" );
 
 	mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", mycut );
 	mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", mycut );
@@ -227,19 +234,45 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
 	mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
 
-	mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+	//mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+
+	myfile -> Close();
+
 
 	for( int i = 0; i < nhisto; i++ ){	
 
 		myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
 
-		myhisto[i] -> Write(); 
+	}
+
+
+	if( doshape == 0 ){ 
+
+		for( int i = 0; i < nhisto; i++ ){	
+
+			myhisto[i] -> Write(); 
+
+		}
+
+		storagefile -> Close();
 
 	}
 
-		if( process == "00_Fakes" || process == "01_Data" ) yields << Form( "%20s \t %10.3f \n", process.Data(),              myhisto[0]->Integral() );
-		else                                                yields << Form( "%20s \t %10.3f \n", process.Data(), lumi_fb_2016*myhisto[0]->Integral() );
 
-	storagefile -> Close();
+	//if( process == "00_Fakes" || process == "01_Data" ) yields << Form( "%20s \t %10.3f \n", process.Data(),              myhisto[0]->Integral() );
+	//else                                                yields << Form( "%20s \t %10.3f \n", process.Data(), lumi_fb_2016*myhisto[0]->Integral() );
+
+
+	if( doshape == 1 ){ 
+
+		int k = mt2ll; 
+
+		TH1F* shape_h = (TH1F*) myhisto[k] -> Clone( process );
+
+		shape_h -> Write(); 
+
+		shape_f -> Close();
+
+	}
 
 }

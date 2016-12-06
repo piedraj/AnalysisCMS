@@ -219,6 +219,14 @@ class AnalysisCMS : public AnalysisBase
   float			 _dphitt_gen;
   float                  _detatt_gen; 
   float                  _event_weight;
+  float                  _event_weight_Btagup;
+  float                  _event_weight_Btagdo;
+  float                  _event_weight_Idisoup;
+  float                  _event_weight_Idisodo;
+  float                  _event_weight_Triggerup;
+  float                  _event_weight_Triggerdo;
+  float                  _event_weight_Recoup;
+  float                  _event_weight_Recodo;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
