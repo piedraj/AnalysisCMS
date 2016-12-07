@@ -214,13 +214,13 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
   h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
-
   h_MR            [ichannel][icut][ijet]->Fill(_MR,             _event_weight);
   h_R2            [ichannel][icut][ijet]->Fill(_R2,             _event_weight);
   h_Rpt           [ichannel][icut][ijet]->Fill(_Rpt,            _event_weight);
   h_invGamma      [ichannel][icut][ijet]->Fill(_invGamma,       _event_weight);
   h_Mdr           [ichannel][icut][ijet]->Fill(_Mdr,            _event_weight);
   h_DeltaPhiRll   [ichannel][icut][ijet]->Fill(_DeltaPhiRll,    _event_weight);
+
 
   // TH2 histograms
   //----------------------------------------------------------------------------
@@ -1310,7 +1310,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_detatt_gen    [ichannel][icut][ijet] = new TH1D("h_detatt_gen"     + suffix, "",  100,    0,   10);
   h_topReco       [ichannel][icut][ijet] = new TH1D("h_topReco"        + suffix, "",    6,    0,    6);
   h_met_over_pt2l [ichannel][icut][ijet] = new TH1D("h_met_over_pt2l"  + suffix, "",  200,    0,    2);
-
   h_MR            [ichannel][icut][ijet] = new TH1D("h_MR"             + suffix, "",  100,    0, 1000);
   h_R2            [ichannel][icut][ijet] = new TH1D("h_R2"             + suffix, "",   70,    0,  1.4);
   h_Rpt           [ichannel][icut][ijet] = new TH1D("h_Rpt"            + suffix, "",  100,    0,    1);
@@ -1396,7 +1395,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Recodo",    &_event_weight_Recodo,    "eventW_Recodo/F");
   minitree->Branch("eventW_Fastsimup", &_event_weight_Fastsimup, "eventW_Fastsimup/F");
   minitree->Branch("eventW_Fastsimdo", &_event_weight_Fastsimdo, "eventW_Fastsimdo/F");
-
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
@@ -1496,12 +1494,12 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
 
   // Razor variables
-  minitree->Branch("MR",              &_MR,              "MR/F");
-  minitree->Branch("R2",              &_R2,              "R2/F");
-  minitree->Branch("Rpt",             &_Rpt,             "Rpt/F");
-  minitree->Branch("invGamma",        &_invGamma,        "invGamma/F");
-  minitree->Branch("Mdr",             &_Mdr,             "Mdr/F");
-  minitree->Branch("DeltaPhiRll",     &_DeltaPhiRll,     "DeltaPhiRll/F");
+  minitree->Branch("MR",               &_MR,               "MR/F");
+  minitree->Branch("R2",               &_R2,               "R2/F");
+  minitree->Branch("Rpt",              &_Rpt,              "Rpt/F");
+  minitree->Branch("invGamma",         &_invGamma,         "invGamma/F");
+  minitree->Branch("Mdr",              &_Mdr,              "Mdr/F");
+  minitree->Branch("DeltaPhiRll",      &_DeltaPhiRll,      "DeltaPhiRll/F");
 
   // Only available in MC
   if (std_vector_LHE_weight)
@@ -2101,13 +2099,11 @@ void AnalysisCMS::GetTops()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetRazor()
 {
-
-  _MR = -0.1;
-  _R2 = -0.1;
-  
-  _Rpt = -0.1;
-  _invGamma = -0.1;
-  _Mdr = -0.1;
+  _MR          = -0.1;
+  _R2          = -0.1;
+  _Rpt         = -0.1;
+  _invGamma    = -0.1;
+  _Mdr         = -0.1;
   _DeltaPhiRll = -0.1;
   
   // This is filled in GetLeptons()
@@ -2124,13 +2120,13 @@ void AnalysisCMS::GetRazor()
     TLorentzVector Jet2; Jet2.SetPtEtaPhiM(_tjet2pt, _tjet2eta, _tjet2phi, _tjet2mass);
     Jets.push_back(Jet1);
     Jets.push_back(Jet2);
-
   }
 
   vector<TLorentzVector> Hemispheres = getHemispheres(Jets, Leps);
   
   _MR = computeMR(Hemispheres[0], Hemispheres[1]);
   _R2 = computeR2(Hemispheres[0], Hemispheres[1], MET);
+
   /*
   bool UseJetsInSuperRazor = false;
   
@@ -2153,9 +2149,7 @@ void AnalysisCMS::GetRazor()
     _DeltaPhiRll = dphi_LL_vBETA_T;
   
     }*/
-
 }
-
 
 
 //------------------------------------------------------------------------------
