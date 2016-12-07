@@ -220,6 +220,14 @@ class AnalysisCMS : public AnalysisBase
   float			 _dphitt_gen;
   float                  _detatt_gen; 
   float                  _event_weight;
+  float                  _event_weight_Btagup;
+  float                  _event_weight_Btagdo;
+  float                  _event_weight_Idisoup;
+  float                  _event_weight_Idisodo;
+  float                  _event_weight_Triggerup;
+  float                  _event_weight_Triggerdo;
+  float                  _event_weight_Recoup;
+  float                  _event_weight_Recodo;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
@@ -274,8 +282,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
-  float                  _nsol_10_1_1;
-  float                  _nsol_10_10_10;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;

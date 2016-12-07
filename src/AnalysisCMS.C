@@ -374,7 +374,15 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
-  _event_weight = 1.0;
+  _event_weight           = 1.0;
+  _event_weight_Btagup    = 1.0;
+  _event_weight_Btagdo    = 1.0;
+  _event_weight_Idisoup   = 1.0;
+  _event_weight_Idisodo   = 1.0;
+  _event_weight_Triggerup = 1.0;   
+  _event_weight_Triggerdo = 1.0;
+  _event_weight_Recoup    = 1.0;
+  _event_weight_Recodo    = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
 
@@ -385,58 +393,6 @@ void AnalysisCMS::ApplyWeights()
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
-
-
-  // Include btag, trigger and idiso systematic uncertainties
-  //----------------------------------------------------------------------------
-  if (std_vector_lepton_idisoW)
-    {
-      float sf_btag = 1.0;
-
-      if (_analysis.EqualTo("Top")  ||
-	  _analysis.EqualTo("TTDM") ||
-	  _analysis.EqualTo("Stop") ||
-	  _analysis.EqualTo("Control"))
-	{
-	  sf_btag = bPogSF_CSVM;
-	  if (_systematic_btag_up) sf_btag = bPogSF_CSVM_Up;
-	  if (_systematic_btag_do) sf_btag = bPogSF_CSVM_Down;
-	}
-      else
-	{
-	  sf_btag = bPogSF_CMVAL;
-	  if (_systematic_btag_up) sf_btag = bPogSF_CMVAL_Up;
-	  if (_systematic_btag_do) sf_btag = bPogSF_CMVAL_Down;
-	}
-
-      float sf_trigger = effTrigW;  // To be updated for WZ
-      float sf_idiso   = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1);
-      float sf_reco    = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1);
-
-      if (_systematic_trigger_up) sf_trigger = effTrigW_Up;
-      if (_systematic_trigger_do) sf_trigger = effTrigW_Down;
-
-      if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
-      if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
-
-      if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
-      if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
-
-      if (_analysis.EqualTo("WZ"))
-	{
-	  sf_idiso = std_vector_lepton_idisoW->at(0) * std_vector_lepton_idisoW->at(1) * std_vector_lepton_idisoW->at(2);
-
-	  if (_systematic_idiso_up) sf_idiso = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1)   * std_vector_lepton_idisoW_Up->at(2);
-	  if (_systematic_idiso_do) sf_idiso = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1) * std_vector_lepton_idisoW_Down->at(2);
-	  
-	  sf_reco = std_vector_lepton_recoW->at(0) * std_vector_lepton_recoW->at(1) * std_vector_lepton_recoW->at(2);
-
-	  if (_systematic_reco_up) sf_reco = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1)   * std_vector_lepton_recoW_Up->at(2);
-	  if (_systematic_reco_do) sf_reco = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1) * std_vector_lepton_recoW_Down->at(2);
-	}
-
-      _event_weight *= sf_btag * sf_trigger * sf_idiso * sf_reco;
-    }
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
@@ -450,10 +406,7 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= _gen_ptll_weight;
 
-  if (!GEN_weight_SM) return;
-  
-  _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
-
+  if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
   // Taken from https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/samples.py
   // Documented in slide 5 of https://indico.cern.ch/event/562201/contributions/2270962/attachments/1331900/2001984/Sep-06-Latino_Massironi.pdf
@@ -476,7 +429,75 @@ void AnalysisCMS::ApplyWeights()
 	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
     }
   
-  
+
+  // Include btag, trigger and idiso systematic uncertainties
+  //----------------------------------------------------------------------------
+  if (std_vector_lepton_idisoW)
+    {
+      float sf_btag    = 1.0;
+      float sf_btag_up = 1.0; 
+      float sf_btag_do = 1.0;
+ 
+      if (_analysis.EqualTo("Top")  ||
+	  _analysis.EqualTo("TTDM") ||
+	  _analysis.EqualTo("Stop") ||
+	  _analysis.EqualTo("Control"))
+	{
+	  sf_btag    = bPogSF_CSVM;
+	  sf_btag_up = bPogSF_CSVM_Up;
+	  sf_btag_do = bPogSF_CSVM_Down;
+	}
+      else
+	{
+	  sf_btag    = bPogSF_CMVAL;
+	  sf_btag_up = bPogSF_CMVAL_Up;
+	  sf_btag_do = bPogSF_CMVAL_Down;
+	}
+
+      float sf_trigger    = effTrigW;  // To be updated for WZ
+      float sf_trigger_up = effTrigW_Up;
+      float sf_trigger_do = effTrigW_Down;
+
+      float sf_idiso    = std_vector_lepton_idisoW->at(0)      * std_vector_lepton_idisoW->at(1);
+      float sf_idiso_up = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      float sf_idiso_do = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+
+      float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
+      float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
+      float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
+
+      if (_analysis.EqualTo("WZ"))
+	{
+	  sf_idiso    *= std_vector_lepton_idisoW->at(2);
+	  sf_idiso_up *= std_vector_lepton_idisoW_Up->at(2);
+	  sf_idiso_do *= std_vector_lepton_idisoW_Down->at(2);
+
+	  sf_reco    *= std_vector_lepton_recoW->at(2);
+	  sf_reco_up *= std_vector_lepton_recoW_Up->at(2);
+	  sf_reco_do *= std_vector_lepton_recoW_Down->at(2);
+	}
+
+      if (_systematic_btag_up)    sf_btag    = sf_btag_up;
+      if (_systematic_btag_do)    sf_btag    = sf_btag_do;
+      if (_systematic_idiso_up)   sf_idiso   = sf_idiso_up;
+      if (_systematic_idiso_do)   sf_idiso   = sf_idiso_do;
+      if (_systematic_reco_up)    sf_reco    = sf_reco_up;
+      if (_systematic_reco_do)    sf_reco    = sf_reco_do;
+      if (_systematic_trigger_up) sf_trigger = sf_trigger_up;
+      if (_systematic_trigger_do) sf_trigger = sf_trigger_do;
+
+      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco);
+    
+      _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
+      _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
+      _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
+      _event_weight_Idisodo   = _event_weight * (sf_idiso_do/sf_idiso);
+      _event_weight_Triggerup = _event_weight * (sf_trigger_up/sf_trigger);
+      _event_weight_Triggerdo = _event_weight * (sf_trigger_do/sf_trigger);
+      _event_weight_Recoup    = _event_weight * (sf_reco_up/sf_reco);
+      _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
+    }
+
   return;
 }
 
@@ -1328,8 +1349,16 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("drll",             &drll,              "drll/F");
   minitree->Branch("dyll",             &_dyll,             "dyll/F");
   // E
-  minitree->Branch("event",            &event,             "event/I");
-  minitree->Branch("eventW",           &_event_weight,     "eventW/F");
+  minitree->Branch("event",            &event,                   "event/I");
+  minitree->Branch("eventW",           &_event_weight,           "eventW/F");
+  minitree->Branch("eventW_Btagup",    &_event_weight_Btagup,    "eventW_Btagup/F");
+  minitree->Branch("eventW_Btagdo",    &_event_weight_Btagdo,    "eventW_Btagdo/F");
+  minitree->Branch("eventW_Idisoup",   &_event_weight_Idisoup,   "eventW_Idisoup/F");
+  minitree->Branch("eventW_Idisodo",   &_event_weight_Idisodo,   "eventW_Idisodo/F");
+  minitree->Branch("eventW_Triggerup", &_event_weight_Triggerup, "eventW_Triggerup/F");
+  minitree->Branch("eventW_Triggerdo", &_event_weight_Triggerdo, "eventW_Triggerdo/F");
+  minitree->Branch("eventW_Recoup",    &_event_weight_Recoup,    "eventW_Recoup/F");
+  minitree->Branch("eventW_Recodo",    &_event_weight_Recodo,    "eventW_Recodo/F");
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htjets",           &_htjets,           "htjets/F");
@@ -1394,8 +1423,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
-  minitree->Branch("nsol_1_1_10",      &_nsol_10_1_1,      "nsol_10_1_1/F");
-  minitree->Branch("nsol_10_10_10",    &_nsol_10_10_10,    "nsol_10_10_10/F");
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   // P
   minitree->Branch("planarity",        &planarity,        "planarity/F");
@@ -2105,23 +2132,6 @@ void AnalysisCMS::GetTopReco()
   if (nu1.size() == 1 || nu1.size() == 3)
     {
       printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
-    }
-
-  if (_saveminitre)
-    {
-      nu1.clear(); 
-      nu2.clear();
-      
-      theMass.performAllVariations(10, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
-
-      _nsol_10_1_1 = nu1.size();
- 
-      nu1.clear(); 
-      nu2.clear(); 
-
-      theMass.performAllVariations(10, 10, 10, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2); 
-
-      _nsol_10_10_10 = nu1.size(); 
     }
 }
 
