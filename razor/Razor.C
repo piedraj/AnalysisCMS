@@ -12,7 +12,9 @@ vector<TLorentzVector> getHemispheres(vector<TLorentzVector> jets, vector<TLoren
   
   //step 1: store all possible partitions of the input jets
   int j_count;
-  for(int i = 1; i < nComb-1; i++){ //note we omit the trivial hemisphere combinations (0 and nComb-1)
+  //for(int i = 1; i < nComb-1; i++){ //note we omit the trivial hemisphere combinations (0 and nComb-1)
+  for(int i = 0; i < nComb; i++){ //modified to get razor when njets<2 if nleps>=2
+    if ((i==0 || i==nComb-1) && (nJets>=2 || leps.size()<2)) continue;
     TLorentzVector j_temp1, j_temp2;
     int itemp = i;
     j_count = nComb/2;

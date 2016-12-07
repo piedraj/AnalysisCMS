@@ -1,6 +1,5 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
-#include "../../BTagSFUtil/BTagSFUtil.C"
 
 
 //------------------------------------------------------------------------------
@@ -11,18 +10,178 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
   SetSaveMinitree(true);
   SetStopNeutralinoMap();
 }
+
+AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic) 
+{
+  SetSaveMinitree(false);
+  SetStopNeutralinoMap();
+  GetMiniTree(MiniTreeFile);
+}
+
 //------------------------------------------------------------------------------
 // Loop
 //------------------------------------------------------------------------------
-void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
-{
+void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, float StopRefMass, float NeutralinoRefMass)
+{ 
   if (fChain == 0) return;
- 
-  Setup(analysis, filename, luminosity);
- 
 
+  if (filename.Contains("T2tt")) {
+
+    if (StopRefMass==-1.) {
+
+      if (filename.Contains("150to250"))       { StopRefMass = 150.; NeutralinoRefMass =  25.; }
+      else if (filename.Contains("250to350"))  { StopRefMass = 275.; NeutralinoRefMass = 150.; }
+      else if (filename.Contains("350to400"))  { StopRefMass = 350.; NeutralinoRefMass = 225.; }
+      else if (filename.Contains("400to1200")) { StopRefMass = 450.; NeutralinoRefMass = 325.; }
+      else                                     { StopRefMass = 350.; NeutralinoRefMass = 225.; }
+
+    }
+
+    int iStopRefMass = StopRefMass, iNeutralinoRefMass = NeutralinoRefMass;
+    TString MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
+    filename.ReplaceAll(".root", MassPointFlag + ".root");
+
+  }
+
+  Setup(analysis, filename, luminosity);
+  
   // Define histograms
   //----------------------------------------------------------------------------
+  BookAnalysisHistograms();
+  
+  root_output->cd();
+
+  FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
+  BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, FastSimDataset);
+
+  // Loop over events
+  //----------------------------------------------------------------------------
+
+  
+  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+
+    if (!_isminitree) {
+
+      Long64_t ientry = LoadTree(jentry);
+      
+      if (ientry < 0) break;
+
+    }
+
+    fChain->GetEntry(jentry);
+
+    PrintProgress(jentry, _nentries);
+
+    bool pass_masspoint = true;
+    if (filename.Contains("T2tt")) 
+      pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
+    if (!pass_masspoint && !_saveminitree) continue;
+
+    if (!_isminitree) EventSetup(2.4, 20.);    
+
+    // Analysis
+    //--------------------------------------------------------------------------
+
+    if (!_isminitree) {
+
+      if (_ismc) CorrectEventWeight(); 
+  
+      if (Lepton1.flavour * Lepton2.flavour > 0) continue;
+
+      if (Lepton1.v.Pt() < 25.) continue;
+      if (Lepton2.v.Pt() < 20.) continue;
+    
+      if (_nlepton > 2) continue;
+
+      _nelectron = 0;
+
+      if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+      if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    
+      if      (_nelectron == 2) _channel = ee;
+      else if (_nelectron == 1) _channel = em;
+      else if (_nelectron == 0) _channel = mm;
+    
+      _m2l  = mll;
+      _pt2l = ptll;
+
+    }
+
+    // Get analysis variables
+    //--------------------------------------------------------------------------
+    GetAnalysisVariables();
+
+
+    // Fill histograms
+    //--------------------------------------------------------------------------
+    bool pass = true;
+    bool pass_blind = true; 
+    if (filename.Contains("Data") || filename.Contains("Run")) {
+
+      pass_blind = false;
+      if (_mt2ll<40.) pass_blind = true;
+      if (MET.Et()<140.) pass_blind = true;
+
+    }
+
+    if (!_isminitree) {
+
+      // 
+      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
+
+      FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
+
+      // Basics Stop
+      //-------------------------------------------------------------------------
+      pass &= mll>20.;
+      
+      FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
+      
+      pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
+      
+      if (pass && _saveminitree) minitree->Fill();
+    
+    } 
+      
+    FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+
+    FillLevelHistograms(Stop_00_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_00_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
+
+    //FillLevelHistograms(Stop_00_SR1,    pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
+    //FillLevelHistograms(Stop_00_SR2,    pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
+    //FillLevelHistograms(Stop_00_SR3,    pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
+
+    pass &= (MET.Et()>50.);
+
+    FillLevelHistograms(Stop_01_MET, pass && pass_blind && pass_masspoint);
+
+    pass &= jetpt2 >= 20.;		
+
+    FillLevelHistograms(Stop_02_Has2Jets, pass && pass_blind && pass_masspoint);
+
+    bool passMETTight = pass && (MET.Et()>80.);
+
+    FillLevelHistograms(Stop_02_METTight, passMETTight && pass_blind && pass_masspoint);
+
+    pass &= (_leadingPtCSVv2M >= 20.);
+
+    FillLevelHistograms(Stop_03_Has1BJet, pass && pass_blind && pass_masspoint);
+    
+    //bool passPt30 = (jetpt2 >= 30.) && (_leadingPtCSVv2M >= 30.);
+    //FillLevelHistograms(Stop_03_PassPt30, pass && pass_blind && passPt30 && pass_masspoint);
+
+  }
+
+  EndJob();
+}
+
+//------------------------------------------------------------------------------
+// BookAnalysisHistograms
+//------------------------------------------------------------------------------
+void AnalysisStop::BookAnalysisHistograms()
+{
+
   TH1::SetDefaultSumw2();
 
   for (int j=0; j<ncut; j++) {
@@ -54,140 +213,56 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity)
 	h_mlb1true          [i][j][k] = new TH1D("h_mlb1true"         + suffix, "", 3000,    0, 3000);
 	h_mlb2true          [i][j][k] = new TH1D("h_mlb2true"         + suffix, "", 3000,    0, 3000);
 	h_mt2lblbvsmlbtrue  [i][j][k] = new TH2D("h_mt2lblbvsmlbtrue" + suffix, "",  100,    0, 1000,  100,    0, 1000);
+
+	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	
+	h_MT2_Met           [i][j][k] = new TH1D("h_MT2_Met" + suffix, "", NbinsMT2*NbinsMet, vMinMT2, vMinMT2 + NbinsMet*(vMaxMT2-vMinMT2));
+	h_HTvisible_Met     [i][j][k] = new TH1D("h_HTvisible_Met" + suffix, "", NbinsHTvisible*NbinsMet, vMinHTvisible, vMinHTvisible + NbinsMet*(vMaxHTvisible-vMinHTvisible));
+	h_MetMeff_Met       [i][j][k] = new TH1D("h_MetMeff_Met" + suffix, "", NbinsMetMeff*NbinsMet, vMinMetMeff, vMinMetMeff + NbinsMet*(vMaxMetMeff-vMinMetMeff));
+	h_R2_Met            [i][j][k] = new TH1D("h_R2_Met" + suffix, "", NbinsR2*NbinsMet, vMinR2, vMinR2 + NbinsMet*(vMaxR2-vMinR2));
+
       }
     }
   }
 
-  root_output->cd();
-
-  TString FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
-  BTagSFUtil *BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, FastSimDataset);
-
-
-  // Loop over events
-  //----------------------------------------------------------------------------
-
-  
-  for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
-    Long64_t ientry = LoadTree(jentry);
-
-    if (ientry < 0) break;
-
-    fChain->GetEntry(jentry);
-
-    PrintProgress(jentry, _nentries);
-
-    EventSetup(2.4, 20.);
-
-    if (_ismc) {
-
-      float EventBTagSF = 1.;
-
-      for (int ijet = 0; ijet<_njet; ijet++) {
-      
-	if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
-
-	int ThisIndex = AnalysisJets[ijet].index;
-	int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
-	
-	float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-	float DataEfficiency = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-	
-	if (AnalysisJets[ijet].csvv2ivf>CSVv2M) 
-	  EventBTagSF *= DataEfficiency/MonteCarloEfficiency;
-	else 
-	  EventBTagSF *= (1. - DataEfficiency)/(1. - MonteCarloEfficiency);
-	
-      }
-      
-      _event_weight *= EventBTagSF/bPogSF_CSVM;
-      
-      if (FastSimDataset!="") { 
-	
-	int StopMass = susyMstop, NeutralinoMass = susyMLSP;
-	MassPoint ThisMassPoint (StopMass, NeutralinoMass);
-	MassPointParameters TheseMassPointParameters = StopNeutralinoMap.at(ThisMassPoint);
-	StopCrossSection ThisStopCrossSection = TheseMassPointParameters.first;
-	int SampleSize = TheseMassPointParameters.second;
-	_event_weight *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
-	
-      }
-
-    }
-
-    // Analysis
-    //--------------------------------------------------------------------------
-    //if (!_ismc && run > 274240) continue;  // Luminosity for ICHEP blinded analysis  
-  
-    if (Lepton1.flavour * Lepton2.flavour > 0) continue;
-
-    if (Lepton1.v.Pt() < 25.) continue;
-    if (Lepton2.v.Pt() < 20.) continue;
-    
-    if (_nlepton > 2) continue;
-
-    _nelectron = 0;
-
-    if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
-    if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
-    
-    if      (_nelectron == 2) _channel = ee;
-    else if (_nelectron == 1) _channel = em;
-    else if (_nelectron == 0) _channel = mm;
-    
-    _m2l  = mll;
-    _pt2l = ptll;
-
-    
-
-    // Fill histograms
-    //--------------------------------------------------------------------------
-    bool pass = true;
-    bool pass_blind = _mt2ll < 100; // GeV; 
-
-    FillLevelHistograms(Stop_00_Has2Leptons, pass);    
-
-    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind);
-
-   
-    // Basics Stop
-    //-------------------------------------------------------------------------
-    pass &= mll>20.;
-   
-    FillLevelHistograms(Stop_00_mll20, pass && pass_blind);
-
-    pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
-
-    FillLevelHistograms(Stop_00_Zveto, pass && pass_blind);
-
-    if (pass && _saveminitree) minitree->Fill();
-    
-    pass &= _njet > 1;		
-
-    FillLevelHistograms(Stop_01_Has2Jets, pass && pass_blind);
-
-    bool passPreselection = pass && (MET.Et()>80.) && (MET.Et()/sqrt(_htjets)>5.) && (_channel==em || _LeadingPtCSVv2M>=20.);
-
-    FillLevelHistograms(Stop_01_PreSelection, passPreselection);
-
-    pass &= (_LeadingPtCSVv2M >= 20.);
-
-    FillLevelHistograms(Stop_02_Has1BJet, pass && pass_blind);
-
-    int nJetPt30 = 0;
-    for (int ijet = 0; ijet<_njet; ijet++) 
-      if (AnalysisJets[ijet].v.Pt()>=30.) nJetPt30++;
-    
-    bool passPt30 = (nJetPt30 > 1) && (_nbjet30csvv2m > 0);
-    FillLevelHistograms(Stop_02_PassPt30, pass && pass_blind && passPt30);
-
-  }
-
-  EndJob();
 }
 
+//------------------------------------------------------------------------------
+// GetAnalysisVariables
+//------------------------------------------------------------------------------
+void AnalysisStop::GetAnalysisVariables()
+{
+  // Met
+  if (_isminitree) MET.SetPtEtaPhiM(metPfType1, 0.0, metPfType1Phi, 0.0); 
+  _metmeff = MET.Et()/_meff;
+
+  // NbinsMet;
+  //float tempMet = MET.Et(); if (tempMet<vMinMet) tempMet = vMinMet; if (tempMet>=vMaxMet) tempMet = vMaxMet - 0.1;
+  //float widthMetBin = (vMaxMet - vMinMet)/NbinsMet;
+  int binMet;// = (tempMet - vMinMet)/widthMetBin;
+  if (MET.Et()<100.) binMet = 0;
+  else if (MET.Et()<140.) binMet = 1;
+  else if (MET.Et()<200.) binMet = 2;
+  else if (MET.Et()<300.) binMet = 3;
+  else binMet = 4;
+
+  // _MT2_Met
+  float tempMT2 = _mt2ll; if (tempMT2<vMinMT2) tempMT2 = vMinMT2; if (tempMT2>=vMaxMT2) tempMT2 = vMaxMT2 - 0.1;
+  _MT2_Met = tempMT2 + (vMaxMT2 - vMinMT2)*binMet;
+
+  // _HTvisible_Met
+  float tempHTvisible = _htvisible; if (tempHTvisible<vMinHTvisible) tempHTvisible = vMinHTvisible; if (tempHTvisible>=vMaxHTvisible) tempHTvisible = vMaxHTvisible - 0.1;
+  _HTvisible_Met = tempHTvisible + (vMaxHTvisible - vMinHTvisible)*binMet;
+
+  // _MetMeff_Met
+  float tempMetMeff = _metmeff; if (tempMetMeff<vMinMetMeff) tempMetMeff = vMinMetMeff; if (tempMetMeff>=vMaxMetMeff) tempMetMeff = vMaxMetMeff - 0.01;
+  _MetMeff_Met = tempMetMeff + (vMaxMetMeff - vMinMetMeff)*binMet;
+
+  // _R2_Met
+  float tempR2 = _metmeff; if (tempR2<vMinR2) tempR2 = vMinR2; if (tempR2>=vMaxR2) tempR2 = vMaxR2 - 0.01;
+  _R2_Met = tempR2 + (vMaxR2 - vMinR2)*binMet;
+
+}
 
 //------------------------------------------------------------------------------
 // FillAnalysisHistograms
@@ -208,6 +283,12 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mlb2true         [ichannel][icut][ijet]->Fill(_mlb2true,       _event_weight);
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb1true, _mt2lblbtrue,       _event_weight);
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
+  h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
+
+  h_MT2_Met          [ichannel][icut][ijet]->Fill(_MT2_Met,        _event_weight);
+  h_HTvisible_Met    [ichannel][icut][ijet]->Fill(_HTvisible_Met,  _event_weight);
+  h_MetMeff_Met      [ichannel][icut][ijet]->Fill(_MetMeff_Met,    _event_weight);
+  h_R2_Met           [ichannel][icut][ijet]->Fill(_R2_Met,         _event_weight);
 }
 
 
@@ -230,187 +311,187 @@ void AnalysisStop::SetStopNeutralinoMap() {
 
   MassPoint mp0 (150, 1);
   StopCrossSection cs0 (249.409, 36.7821);
-  MassPointParameters mpp0 (cs0, 511540);
+  MassPointParameters mpp0 (cs0, 812165);
   StopNeutralinoMap.insert(std::make_pair(mp0, mpp0));
 
   MassPoint mp1 (150, 25);
   StopCrossSection cs1 (249.409, 36.7821);
-  MassPointParameters mpp1 (cs1, 509783);
+  MassPointParameters mpp1 (cs1, 809375);
   StopNeutralinoMap.insert(std::make_pair(mp1, mpp1));
 
   MassPoint mp2 (150, 50);
   StopCrossSection cs2 (249.409, 36.7821);
-  MassPointParameters mpp2 (cs2, 493441);
+  MassPointParameters mpp2 (cs2, 783429);
   StopNeutralinoMap.insert(std::make_pair(mp2, mpp2));
 
   MassPoint mp3 (150, 63);
   StopCrossSection cs3 (249.409, 36.7821);
-  MassPointParameters mpp3 (cs3, 520210);
+  MassPointParameters mpp3 (cs3, 825930);
   StopNeutralinoMap.insert(std::make_pair(mp3, mpp3));
 
   MassPoint mp4 (167, 1);
   StopCrossSection cs4 (151.469, 22.263);
-  MassPointParameters mpp4 (cs4, 494839);
+  MassPointParameters mpp4 (cs4, 785649);
   StopNeutralinoMap.insert(std::make_pair(mp4, mpp4));
 
   MassPoint mp5 (175, 1);
   StopCrossSection cs5 (121.416, 17.7681);
-  MassPointParameters mpp5 (cs5, 477804);
+  MassPointParameters mpp5 (cs5, 758602);
   StopNeutralinoMap.insert(std::make_pair(mp5, mpp5));
 
   MassPoint mp6 (175, 25);
   StopCrossSection cs6 (121.416, 17.7681);
-  MassPointParameters mpp6 (cs6, 462989);
+  MassPointParameters mpp6 (cs6, 735081);
   StopNeutralinoMap.insert(std::make_pair(mp6, mpp6));
 
   MassPoint mp7 (175, 50);
   StopCrossSection cs7 (121.416, 17.7681);
-  MassPointParameters mpp7 (cs7, 466467);
+  MassPointParameters mpp7 (cs7, 740603);
   StopNeutralinoMap.insert(std::make_pair(mp7, mpp7));
 
   MassPoint mp8 (175, 75);
   StopCrossSection cs8 (121.416, 17.7681);
-  MassPointParameters mpp8 (cs8, 470315);
+  MassPointParameters mpp8 (cs8, 746712);
   StopNeutralinoMap.insert(std::make_pair(mp8, mpp8));
 
   MassPoint mp9 (175, 88);
   StopCrossSection cs9 (121.416, 17.7681);
-  MassPointParameters mpp9 (cs9, 471080);
+  MassPointParameters mpp9 (cs9, 747927);
   StopNeutralinoMap.insert(std::make_pair(mp9, mpp9));
 
   MassPoint mp10 (183, 1);
   StopCrossSection cs10 (98.4784, 14.1473);
-  MassPointParameters mpp10 (cs10, 461583);
+  MassPointParameters mpp10 (cs10, 732848);
   StopNeutralinoMap.insert(std::make_pair(mp10, mpp10));
 
   MassPoint mp11 (192, 25);
   StopCrossSection cs11 (78.4483, 11.3431);
-  MassPointParameters mpp11 (cs11, 451233);
+  MassPointParameters mpp11 (cs11, 716416);
   StopNeutralinoMap.insert(std::make_pair(mp11, mpp11));
 
   MassPoint mp12 (200, 1);
   StopCrossSection cs12 (64.5085, 9.29555);
-  MassPointParameters mpp12 (cs12, 603141);
+  MassPointParameters mpp12 (cs12, 957598);
   StopNeutralinoMap.insert(std::make_pair(mp12, mpp12));
 
   MassPoint mp13 (200, 25);
   StopCrossSection cs13 (64.5085, 9.29555);
-  MassPointParameters mpp13 (cs13, 618584);
+  MassPointParameters mpp13 (cs13, 982117);
   StopNeutralinoMap.insert(std::make_pair(mp13, mpp13));
 
   MassPoint mp14 (200, 50);
   StopCrossSection cs14 (64.5085, 9.29555);
-  MassPointParameters mpp14 (cs14, 605968);
+  MassPointParameters mpp14 (cs14, 962087);
   StopNeutralinoMap.insert(std::make_pair(mp14, mpp14));
 
   MassPoint mp15 (200, 75);
   StopCrossSection cs15 (64.5085, 9.29555);
-  MassPointParameters mpp15 (cs15, 609486);
+  MassPointParameters mpp15 (cs15, 967672);
   StopNeutralinoMap.insert(std::make_pair(mp15, mpp15));
 
   MassPoint mp16 (200, 100);
   StopCrossSection cs16 (64.5085, 9.29555);
-  MassPointParameters mpp16 (cs16, 618446);
+  MassPointParameters mpp16 (cs16, 981898);
   StopNeutralinoMap.insert(std::make_pair(mp16, mpp16));
 
   MassPoint mp17 (200, 113);
   StopCrossSection cs17 (64.5085, 9.29555);
-  MassPointParameters mpp17 (cs17, 627087);
+  MassPointParameters mpp17 (cs17, 995617);
   StopNeutralinoMap.insert(std::make_pair(mp17, mpp17));
 
   MassPoint mp18 (208, 25);
   StopCrossSection cs18 (53.4447, 7.65327);
-  MassPointParameters mpp18 (cs18, 608873);
+  MassPointParameters mpp18 (cs18, 966699);
   StopNeutralinoMap.insert(std::make_pair(mp18, mpp18));
 
   MassPoint mp19 (217, 50);
   StopCrossSection cs19 (43.4633, 6.22129);
-  MassPointParameters mpp19 (cs19, 590927);
+  MassPointParameters mpp19 (cs19, 938206);
   StopNeutralinoMap.insert(std::make_pair(mp19, mpp19));
 
   MassPoint mp20 (225, 1);
   StopCrossSection cs20 (36.3818, 5.17309);
-  MassPointParameters mpp20 (cs20, 576221);
+  MassPointParameters mpp20 (cs20, 914858);
   StopNeutralinoMap.insert(std::make_pair(mp20, mpp20));
 
   MassPoint mp21 (225, 25);
   StopCrossSection cs21 (36.3818, 5.17309);
-  MassPointParameters mpp21 (cs21, 595652);
+  MassPointParameters mpp21 (cs21, 945708);
   StopNeutralinoMap.insert(std::make_pair(mp21, mpp21));
 
   MassPoint mp22 (225, 50);
   StopCrossSection cs22 (36.3818, 5.17309);
-  MassPointParameters mpp22 (cs22, 579557);
+  MassPointParameters mpp22 (cs22, 920154);
   StopNeutralinoMap.insert(std::make_pair(mp22, mpp22));
 
   MassPoint mp23 (225, 75);
   StopCrossSection cs23 (36.3818, 5.17309);
-  MassPointParameters mpp23 (cs23, 603362);
+  MassPointParameters mpp23 (cs23, 957949);
   StopNeutralinoMap.insert(std::make_pair(mp23, mpp23));
 
   MassPoint mp24 (225, 100);
   StopCrossSection cs24 (36.3818, 5.17309);
-  MassPointParameters mpp24 (cs24, 612652);
+  MassPointParameters mpp24 (cs24, 972699);
   StopNeutralinoMap.insert(std::make_pair(mp24, mpp24));
 
   MassPoint mp25 (225, 125);
   StopCrossSection cs25 (36.3818, 5.17309);
-  MassPointParameters mpp25 (cs25, 585474);
+  MassPointParameters mpp25 (cs25, 929549);
   StopNeutralinoMap.insert(std::make_pair(mp25, mpp25));
 
   MassPoint mp26 (225, 138);
   StopCrossSection cs26 (36.3818, 5.17309);
-  MassPointParameters mpp26 (cs26, 589303);
+  MassPointParameters mpp26 (cs26, 935628);
   StopNeutralinoMap.insert(std::make_pair(mp26, mpp26));
 
   MassPoint mp27 (233, 50);
   StopCrossSection cs27 (30.6565, 4.35198);
-  MassPointParameters mpp27 (cs27, 570867);
+  MassPointParameters mpp27 (cs27, 906357);
   StopNeutralinoMap.insert(std::make_pair(mp27, mpp27));
 
   MassPoint mp28 (242, 75);
   StopCrossSection cs28 (25.4398, 3.58399);
-  MassPointParameters mpp28 (cs28, 540198);
+  MassPointParameters mpp28 (cs28, 857664);
   StopNeutralinoMap.insert(std::make_pair(mp28, mpp28));
 
   MassPoint mp29 (250, 1);
   StopCrossSection cs29 (21.5949, 3.03613);
-  MassPointParameters mpp29 (cs29, 553575);
+  MassPointParameters mpp29 (cs29, 878903);
   StopNeutralinoMap.insert(std::make_pair(mp29, mpp29));
 
   MassPoint mp30 (250, 25);
   StopCrossSection cs30 (21.5949, 3.03613);
-  MassPointParameters mpp30 (cs30, 559295);
+  MassPointParameters mpp30 (cs30, 887984);
   StopNeutralinoMap.insert(std::make_pair(mp30, mpp30));
 
   MassPoint mp31 (250, 50);
   StopCrossSection cs31 (21.5949, 3.03613);
-  MassPointParameters mpp31 (cs31, 553091);
+  MassPointParameters mpp31 (cs31, 878134);
   StopNeutralinoMap.insert(std::make_pair(mp31, mpp31));
 
   MassPoint mp32 (250, 75);
   StopCrossSection cs32 (21.5949, 3.03613);
-  MassPointParameters mpp32 (cs32, 535011);
+  MassPointParameters mpp32 (cs32, 849429);
   StopNeutralinoMap.insert(std::make_pair(mp32, mpp32));
 
   MassPoint mp33 (250, 100);
   StopCrossSection cs33 (21.5949, 3.03613);
-  MassPointParameters mpp33 (cs33, 552763);
+  MassPointParameters mpp33 (cs33, 877614);
   StopNeutralinoMap.insert(std::make_pair(mp33, mpp33));
 
   MassPoint mp34 (250, 125);
   StopCrossSection cs34 (21.5949, 3.03613);
-  MassPointParameters mpp34 (cs34, 549299);
+  MassPointParameters mpp34 (cs34, 872114);
   StopNeutralinoMap.insert(std::make_pair(mp34, mpp34));
 
   MassPoint mp35 (250, 150);
   StopCrossSection cs35 (21.5949, 3.03613);
-  MassPointParameters mpp35 (cs35, 557831);
+  MassPointParameters mpp35 (cs35, 885660);
   StopNeutralinoMap.insert(std::make_pair(mp35, mpp35));
 
   MassPoint mp36 (250, 163);
   StopCrossSection cs36 (21.5949, 3.03613);
-  MassPointParameters mpp36 (cs36, 545884);
+  MassPointParameters mpp36 (cs36, 866692);
   StopNeutralinoMap.insert(std::make_pair(mp36, mpp36));
 
   MassPoint mp37 (258, 75);
@@ -2625,3 +2706,158 @@ void AnalysisStop::SetStopNeutralinoMap() {
 
 }
 
+void AnalysisStop::CorrectEventWeight() {
+
+  float EventBTagSF = 1.;
+  
+  for (int ijet = 0; ijet<_njet; ijet++) {
+    
+    if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
+    
+    int ThisIndex = AnalysisJets[ijet].index;
+    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
+    float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    
+    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) 
+      EventBTagSF *= DataEfficiency/MonteCarloEfficiency;
+    else 
+      EventBTagSF *= (1. - DataEfficiency)/(1. - MonteCarloEfficiency);
+    
+  }
+  
+  _event_weight *= EventBTagSF/bPogSF_CSVM;
+  
+  if (FastSimDataset!="") { 
+    
+    int StopMass = susyMstop, NeutralinoMass = susyMLSP;
+    MassPoint ThisMassPoint (StopMass, NeutralinoMass);
+    MassPointParameters TheseMassPointParameters = StopNeutralinoMap.at(ThisMassPoint);
+    StopCrossSection ThisStopCrossSection = TheseMassPointParameters.first;
+    int SampleSize = TheseMassPointParameters.second;
+    _event_weight *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
+    
+  }
+  
+}
+
+void AnalysisStop::GetMiniTree(TFile *MiniTreeFile) {
+
+  fChain = (TTree*) MiniTreeFile->Get("latino");
+
+  fChain->SetBranchAddress("dyll",            &_dyll);
+  fChain->SetBranchAddress("ptbll",           &_ptbll);
+  fChain->SetBranchAddress("m2l",             &_m2l);
+  fChain->SetBranchAddress("mllbb",           &_mllbb);
+  fChain->SetBranchAddress("meff",            &_meff);
+  
+  fChain->SetBranchAddress("dphill",          &dphill);
+  
+  fChain->SetBranchAddress("metPfType1",      &metPfType1);
+  fChain->SetBranchAddress("metPfType1Phi",   &metPfType1Phi);
+  fChain->SetBranchAddress("dphillmet",       &_dphillmet);
+  fChain->SetBranchAddress("dphilmet1",       &dphilmet1);
+  fChain->SetBranchAddress("dphimetjet",      &_dphimetjet);
+  fChain->SetBranchAddress("dphijet1met",     &_dphijet1met);
+  fChain->SetBranchAddress("dphimetptbll",    &_dphimetptbll); 
+
+  fChain->SetBranchAddress("jet1pt",          &jetpt1);
+  fChain->SetBranchAddress("jet1phi",         &jetphi1);
+  fChain->SetBranchAddress("jet1eta",         &jeteta1);
+  fChain->SetBranchAddress("jet2pt",          &jetpt2);
+  fChain->SetBranchAddress("jet2phi",         &jetphi2);
+  fChain->SetBranchAddress("jet2eta",         &jeteta2);
+  
+  fChain->SetBranchAddress("lep1eta",         &_lep1eta); 
+  fChain->SetBranchAddress("lep1phi",         &_lep1phi);  
+  fChain->SetBranchAddress("lep1pt",          &_lep1pt);
+  fChain->SetBranchAddress("lep2eta",         &_lep2eta);
+  fChain->SetBranchAddress("lep2phi",         &_lep2phi);
+  fChain->SetBranchAddress("lep2pt",          &_lep2pt);
+
+  fChain->SetBranchAddress("ht",              &_ht);
+  fChain->SetBranchAddress("htjets",          &_htjets);
+  fChain->SetBranchAddress("htnojets",        &_htnojets);
+  fChain->SetBranchAddress("htvisible",       &_htvisible);
+  fChain->SetBranchAddress("njet",            &_njet);
+  
+  fChain->SetBranchAddress("susyMLSP",        &susyMLSP);
+  fChain->SetBranchAddress("susyMstop",       &susyMstop);
+  
+  fChain->SetBranchAddress("eventW",          &_event_weight);
+  fChain->SetBranchAddress("channel",         &_channel);
+  fChain->SetBranchAddress("njet",            &_njet); 
+
+  fChain->SetBranchAddress("nbjet30csvv2l",   &_nbjet30csvv2l);
+  fChain->SetBranchAddress("nbjet30csvv2m",   &_nbjet30csvv2m);
+  fChain->SetBranchAddress("nbjet30csvv2t",   &_nbjet30csvv2t);
+  //fChain->SetBranchAddress("LeadingPtCSVv2M", &_leadingPtCSVv2M);
+  //fChain->SetBranchAddress("LeadingPtCSVv2L", &_leadingPtCSVv2L);
+  //fChain->SetBranchAddress("LeadingPtCSVv2T", &_leadingPtCSVv2T);
+  fChain->SetBranchAddress("leadingPtCSVv2M", &_leadingPtCSVv2M);
+  fChain->SetBranchAddress("leadingPtCSVv2L", &_leadingPtCSVv2L);
+  fChain->SetBranchAddress("leadingPtCSVv2T", &_leadingPtCSVv2T);
+
+  fChain->SetBranchAddress("mt2ll",           &_mt2ll);
+  fChain->SetBranchAddress("mt2bb",           &_mt2bb);
+  fChain->SetBranchAddress("mt2lblb",         &_mt2lblb);
+  fChain->SetBranchAddress("mt2bbtrue",       &_mt2bbtrue);
+  fChain->SetBranchAddress("mt2lblbcomb",     &_mt2lblbcomb);
+  fChain->SetBranchAddress("mt2lblbtrue",     &_mt2lblbtrue);
+
+  fChain->SetBranchAddress("mlb1",            &_mlb1);
+  fChain->SetBranchAddress("mlb2",            &_mlb2);
+  fChain->SetBranchAddress("mlb1comb",        &_mlb1comb);
+  fChain->SetBranchAddress("mlb2comb",        &_mlb2comb);
+  fChain->SetBranchAddress("mlb1true",        &_mlb1true);
+  fChain->SetBranchAddress("mlb2true",        &_mlb2true);
+
+  fChain->SetBranchAddress("bjet1pt",         &_bjet1pt);
+  fChain->SetBranchAddress("bjet1eta",        &_bjet1eta);
+  fChain->SetBranchAddress("bjet1phi",        &_bjet1phi);
+  fChain->SetBranchAddress("bjet1mass",       &_bjet1mass);
+  fChain->SetBranchAddress("bjet1csvv2ivf",   &_bjet1csvv2ivf);
+  fChain->SetBranchAddress("bjet2pt",         &_bjet2pt);
+  fChain->SetBranchAddress("bjet2eta",        &_bjet2eta);
+  fChain->SetBranchAddress("bjet2phi",        &_bjet2phi);
+  fChain->SetBranchAddress("bjet2mass",       &_bjet2mass);
+  fChain->SetBranchAddress("bjet2csvv2ivf",   &_bjet2csvv2ivf);
+  fChain->SetBranchAddress("tjet1pt",         &_tjet1pt);
+  fChain->SetBranchAddress("tjet1eta",        &_tjet1eta);
+  fChain->SetBranchAddress("tjet1phi",        &_tjet1phi);
+  fChain->SetBranchAddress("tjet1mass",       &_tjet1mass);
+  fChain->SetBranchAddress("tjet1csvv2ivf",   &_tjet1csvv2ivf);
+  fChain->SetBranchAddress("tjet1assignment", &_tjet1assignment);
+  fChain->SetBranchAddress("tjet2pt",         &_tjet2pt);
+  fChain->SetBranchAddress("tjet2eta",        &_tjet2eta);
+  fChain->SetBranchAddress("tjet2phi",        &_tjet2phi);
+  fChain->SetBranchAddress("tjet2mass",       &_tjet2mass);
+  fChain->SetBranchAddress("tjet2csvv2ivf",   &_tjet2csvv2ivf);
+  fChain->SetBranchAddress("tjet2assignment", &_tjet2assignment);
+
+  fChain->SetBranchAddress("MR",              &_MR);
+  fChain->SetBranchAddress("R2",              &_R2);
+  fChain->SetBranchAddress("Rpt",             &_Rpt);
+  fChain->SetBranchAddress("invGamma",        &_invGamma);
+  fChain->SetBranchAddress("Mdr",             &_Mdr);
+  fChain->SetBranchAddress("DeltaPhiRll",     &_DeltaPhiRll);
+  
+  fChain->SetBranchAddress("dphijet1met", &_dphijet1met);
+  fChain->SetBranchAddress("dphijet2met", &_dphijet2met);//, &b_dphijet2met);
+  fChain->SetBranchAddress("dphijj", &_dphijj);//, &b_dphijj);
+  fChain->SetBranchAddress("dphijjmet", &_dphijjmet);//, &b_dphijjmet);
+  fChain->SetBranchAddress("dphilep1jet1", &_dphilep1jet1);//, &b_dphilep1jet1);
+  fChain->SetBranchAddress("dphilep1jet2", &_dphilep1jet2);//, &b_dphilep1jet2);
+  fChain->SetBranchAddress("dphilep2jet1", &_dphilep2jet1);//, &b_dphilep2jet1);
+  fChain->SetBranchAddress("dphilep2jet2", &_dphilep2jet2);//, &b_dphilep2jet2);
+  fChain->SetBranchAddress("dphill", &dphill);//, &b_dphill);
+  fChain->SetBranchAddress("dphillstar", &_dphillstar);//, &b_dphillstar);
+  fChain->SetBranchAddress("dphilmet1", &dphilmet1);//, &b_dphilmet1);
+  fChain->SetBranchAddress("dphilmet2", &dphilmet2);//, &b_dphilmet2);
+  fChain->SetBranchAddress("drll", &drll);//, &b_drll);
+  fChain->SetBranchAddress("dphimetptbll", &_dphimetptbll);//, &b_dphimetptbll);
+  fChain->SetBranchAddress("dphimetbbll", &_dphimetbbll);//, &b_dphimetbbll);
+  fChain->SetBranchAddress("dphimetjet", &_dphimetjet);//, &b_dphimetjet);
+
+}
+    
