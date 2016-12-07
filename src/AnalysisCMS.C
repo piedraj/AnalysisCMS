@@ -327,7 +327,9 @@ void AnalysisCMS::Setup(TString analysis,
 
   _isminitree = filename.Contains("minitrees") ? true : false;
 
-  const char *delim = _isminitree ? "/" : "latino_";
+  TString prefix = (_isminitree) ? "minitrees/" : "";
+
+  const char *delim = (_isminitree) ? "/" : "latino_";
 
   while (_filename.Tokenize(tok, from, delim)) {
 
@@ -353,9 +355,9 @@ void AnalysisCMS::Setup(TString analysis,
   printf("       ismc: %d\n",        _ismc);
   printf(" isminitree: %d\n",        _isminitree);
   
-  if (!_isminitree) gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
-  else gSystem->mkdir("minitrees/rootfiles/" + _systematic + "/" + _analysis, kTRUE);
-   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir(prefix + "rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+
+  gSystem->mkdir("txt/" + _systematic + "/" + _analysis, kTRUE);
 
   _dataperiod = "";
 
@@ -372,10 +374,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
 
-  if (!_isminitree)
-    root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
-  else 
-    root_output = new TFile("minitrees/rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  root_output = new TFile(prefix + "rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
 
   if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
 
@@ -484,7 +483,10 @@ void AnalysisCMS::ApplyWeights()
       float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
       float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
       
-      float sf_fastsim = 1., sf_fastsim_up = 1., sf_fastsim_do = 1.;
+      float sf_fastsim    = 1.;
+      float sf_fastsim_up = 1.;
+      float sf_fastsim_do = 1.;
+
       if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) {
 	sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
 	sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
