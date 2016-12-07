@@ -401,6 +401,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight_Triggerdo = 1.0;
   _event_weight_Recoup    = 1.0;
   _event_weight_Recodo    = 1.0;
+  _event_weight_Fastsimup = 1.0;
+  _event_weight_Fastsimdo = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
 
@@ -513,7 +515,7 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
 
-      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco);
+      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
     
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
@@ -523,6 +525,8 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Triggerdo = _event_weight * (sf_trigger_do/sf_trigger);
       _event_weight_Recoup    = _event_weight * (sf_reco_up/sf_reco);
       _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
+      _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
+      _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
     }
 
   return;
@@ -1388,6 +1392,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Triggerdo", &_event_weight_Triggerdo, "eventW_Triggerdo/F");
   minitree->Branch("eventW_Recoup",    &_event_weight_Recoup,    "eventW_Recoup/F");
   minitree->Branch("eventW_Recodo",    &_event_weight_Recodo,    "eventW_Recodo/F");
+  minitree->Branch("eventW_Fastsimup", &_event_weight_Fastsimup, "eventW_Fastsimup/F");
+  minitree->Branch("eventW_Fastsimdo", &_event_weight_Fastsimdo, "eventW_Fastsimdo/F");
+
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
