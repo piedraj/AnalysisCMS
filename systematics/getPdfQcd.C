@@ -60,6 +60,7 @@ void PrintProgress(Long64_t counter, Long64_t total);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
+// eosmount eos
 // root -l -b -q getPdfQcd.C+
 //
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
@@ -71,7 +72,7 @@ void getPdfQcd()
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root");
+  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root");
 
   TH1D* h_weights_gen = (TH1D*)file->Get("list_vectors_weights");
   TH1D* h_weights_rec = (TH1D*)h_weights_gen->Clone();
@@ -111,24 +112,26 @@ void getPdfQcd()
     
     PrintProgress(ievent, tree->GetEntries());
 
-    bool wh3l_wz_13TeV = (njet_3l    ==   0 &&
-			  metPfType1 >   40 &&
-			  zveto_3l   <   20 &&
-			  abs(chlll) ==   1 &&
-			  mlll       >  100 &&
-			  (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.715) &&
-			  (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.715) &&
-			  (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.715) &&
-			  (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.715) &&
-			  (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.715) &&
-			  (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.715) &&
-			  (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.715) &&
-			  (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.715) &&
-			  (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.715) &&
-			  (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.715));
 
-
-    if (!wh3l_wz_13TeV) continue;
+    // Make and apply your analysis selection
+    //--------------------------------------------------------------------------
+    bool pass = (njet_3l    ==   0 &&
+		 metPfType1 >   40 &&
+		 zveto_3l   <   20 &&
+		 abs(chlll) ==   1 &&
+		 mlll       >  100 &&
+		 (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.715) &&
+		 (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.715) &&
+		 (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.715) &&
+		 (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.715) &&
+		 (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.715) &&
+		 (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.715) &&
+		 (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.715) &&
+		 (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.715) &&
+		 (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.715) &&
+		 (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.715));
+    
+    if (!pass) continue;
 
 
     // Loop over weights
