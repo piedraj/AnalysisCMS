@@ -232,6 +232,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Triggerdo;
   float                  _event_weight_Recoup;
   float                  _event_weight_Recodo;
+  float                  _event_weight_Fastsimup;
+  float                  _event_weight_Fastsimdo;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
