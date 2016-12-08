@@ -27,8 +27,8 @@ const float   zmax = 106;  // [GeV]
 
 const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 45,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 45, 100};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -125,7 +125,7 @@ TString      xtitle;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
 		TString level    = "02_Routin",
-		TString variable = "mpmet",
+		TString variable = "metPfType1",
 		double  lumi_fb  = 12.9)
 {
   xtitle = "";
