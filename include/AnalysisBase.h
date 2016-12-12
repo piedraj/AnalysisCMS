@@ -466,6 +466,9 @@ public :
    vector<float>   *std_vector_lepton_recoW;
    vector<float>   *std_vector_lepton_recoW_Up;
    vector<float>   *std_vector_lepton_recoW_Down;
+   vector<float>   *std_vector_lepton_fastsimW;
+   vector<float>   *std_vector_lepton_fastsimW_Up;
+   vector<float>   *std_vector_lepton_fastsimW_Down;
    //   Float_t         mcoll;
    //   Float_t         mcollWW;
    //   Float_t         vht_pt;
@@ -916,6 +919,9 @@ public :
    TBranch        *b_std_vector_lepton_recoW;   //!
    TBranch        *b_std_vector_lepton_recoW_Up;   //!
    TBranch        *b_std_vector_lepton_recoW_Down;   //!
+   TBranch        *b_std_vector_lepton_fastsimW;   //!
+   TBranch        *b_std_vector_lepton_fastsimW_Up;   //!
+   TBranch        *b_std_vector_lepton_fastsimW_Down;   //!
    //   TBranch        *b_mcoll;   //!
    //   TBranch        *b_mcollWW;   //!
    //   TBranch        *b_vht_pt;   //!
@@ -1191,6 +1197,9 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_recoW = 0;
    std_vector_lepton_recoW_Up = 0;
    std_vector_lepton_recoW_Down = 0;
+   std_vector_lepton_fastsimW = 0;
+   std_vector_lepton_fastsimW_Up = 0;
+   std_vector_lepton_fastsimW_Down = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1617,6 +1626,9 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_recoW", &std_vector_lepton_recoW, &b_std_vector_lepton_recoW);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Up", &std_vector_lepton_recoW_Up, &b_std_vector_lepton_recoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_recoW_Down", &std_vector_lepton_recoW_Down, &b_std_vector_lepton_recoW_Down);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW", &std_vector_lepton_fastsimW, &b_std_vector_lepton_fastsimW);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW_Up", &std_vector_lepton_fastsimW_Up, &b_std_vector_lepton_fastsimW_Up);
+   fChain->SetBranchAddress("std_vector_lepton_fastsimW_Down", &std_vector_lepton_fastsimW_Down, &b_std_vector_lepton_fastsimW_Down);
    //   fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
    //   fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
    //   fChain->SetBranchAddress("vht_pt", &vht_pt, &b_vht_pt);
