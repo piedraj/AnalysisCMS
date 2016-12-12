@@ -368,6 +368,7 @@ class AnalysisCMS : public AnalysisBase
   ofstream               txt_summary;
   TFile*                 root_output;
   TFile*                 root_minitree;
+  TH1F*                  h_list_vectors_weights;
   TTree*                 minitree;
 
 
