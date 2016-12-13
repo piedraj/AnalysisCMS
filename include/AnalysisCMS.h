@@ -68,6 +68,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetGenPtllWeight  ();
 
+  void        GetGenWeightsLHE  ();
+
   void        GetJets           (float    jet_eta_max,
 				 float    jet_pt_min);
   
