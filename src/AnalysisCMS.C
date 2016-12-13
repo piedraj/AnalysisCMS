@@ -1103,7 +1103,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  GetDark();
+  //  GetDark();
 
   //  GetTopReco();
 

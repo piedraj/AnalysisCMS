@@ -8,6 +8,12 @@ enum {
   Stop_00_Has2Leptons,
   Stop_00_2LMt2upper100, 
   Stop_00_mll20,
+  // DY estimation Rout/Rin
+  Stop_04_Routin,
+  Stop_04_Jet2Routin,
+  Stop_04_TagRoutin,
+  Stop_04_NoTagRoutin,
+  //~~~~~~~~~~~~~~~~~~~~~~~
   Stop_00_Zveto,
   // We fill our testing minitre
   Stop_00_Tag,
@@ -26,6 +32,12 @@ const TString scut[ncut] = {
   "Stop/00_Has2Leptons",
   "Stop/00_2LMt2upper100",
   "Stop/00_mll20",
+  // DY estimation Rout/Rin
+  "Stop/04_Routin",
+  "Stop/04_Jet2Routin",
+  "Stop/04_TagRoutin",
+  "Stop/04_NoTagRoutin",
+  //~~~~~~~~~~~~~~~~~~~~~~
   "Stop/00_Zveto",
   "Stop/00_Tag",
   "Stop/00_NoTag",
