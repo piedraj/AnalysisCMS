@@ -384,6 +384,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   OpenMinitree();
 
+  GetGenWeightsLHE();
 
   return;
 }
@@ -2383,4 +2384,21 @@ float AnalysisCMS::GetCentrality() {
   return centrality;
 }
 
+//------------------------------------------------------------------------------
+// GetGenWeightsLHE
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetGenWeightsLHE()
+{
+  TFile* file = TFile::Open(_filename);
 
+  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
+
+  if (!dummy) return;
+
+  if (!_saveminitree) return;
+
+  root_minitree->cd();
+
+  dummy->Write();
+}
