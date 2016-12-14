@@ -8,6 +8,10 @@ enum {
   Stop_00_Has2Leptons,
   Stop_00_2LMt2upper100, 
   Stop_00_mll20,
+  // Z peak sigth
+  Stop_05_Zpeak,
+  Stop_05_NoTagZpeak,
+  Stop_05_TagZpeak,
   // DY estimation Rout/Rin
   Stop_04_Routin,
   Stop_04_Jet2Routin,
@@ -32,6 +36,10 @@ const TString scut[ncut] = {
   "Stop/00_Has2Leptons",
   "Stop/00_2LMt2upper100",
   "Stop/00_mll20",
+  // Z peak sigth
+  "Stop/05_Zpeak",
+  "Stop/05_NoTagZpeak",
+  "Stop/05_TagZpeak",
   // DY estimation Rout/Rin
   "Stop/04_Routin",
   "Stop/04_Jet2Routin",
