@@ -100,7 +100,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        Setup             (TString  analysis,
 				 TString  filename,
-				 float    luminosity);
+				 float    luminosity,
+				 TString filename_suffix = "");
 
   void        Summary           (TString  analysis,
 				 TString  precision,

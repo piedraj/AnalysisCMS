@@ -1,6 +1,7 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
-
+#include <fstream>
+#include <iostream>
 
 //------------------------------------------------------------------------------
 // AnalysisStop
@@ -25,10 +26,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 { 
   if (fChain == 0) return;
 
+  TString MassPointFlag = "";
+
+
   if (filename.Contains("T2tt")) {
 
     if (StopRefMass==-1.) {
-
+  
       if (filename.Contains("150to250"))       { StopRefMass = 150.; NeutralinoRefMass =  25.; }
       else if (filename.Contains("250to350"))  { StopRefMass = 275.; NeutralinoRefMass = 150.; }
       else if (filename.Contains("350to400"))  { StopRefMass = 350.; NeutralinoRefMass = 225.; }
@@ -38,12 +42,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     }
 
     int iStopRefMass = StopRefMass, iNeutralinoRefMass = NeutralinoRefMass;
-    TString MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
-    filename.ReplaceAll(".root", MassPointFlag + ".root");
+    MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
 
   }
 
-  Setup(analysis, filename, luminosity);
+  Setup(analysis, filename, luminosity, MassPointFlag);
   
   // Define histograms
   //----------------------------------------------------------------------------

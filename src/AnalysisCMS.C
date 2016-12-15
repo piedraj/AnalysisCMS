@@ -310,7 +310,8 @@ void AnalysisCMS::Summary(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::Setup(TString analysis,
 			TString filename,
-			float   luminosity)
+			float   luminosity,
+                        TString filename_suffix)
 {
   _analysis   = analysis;
   _filename   = filename;
@@ -374,9 +375,9 @@ void AnalysisCMS::Setup(TString analysis,
 
   if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
 
-  root_output = new TFile(prefix + "rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  root_output = new TFile(prefix + "rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + filename_suffix + _dataperiod + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + filename_suffix + _dataperiod + "_eventdump.txt");
 
 
   OpenMinitree();
