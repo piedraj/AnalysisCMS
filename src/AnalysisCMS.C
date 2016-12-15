@@ -570,8 +570,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (! _analysis.EqualTo("Stop")){ if (!std_vector_lepton_isLooseLepton->at(i)) continue;}
-
+    if (!std_vector_lepton_isLooseLepton->at(i) && !_analysis.EqualTo("Stop")) continue;
 
     if (pt < 0.) continue;
 
@@ -1323,8 +1322,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  140, 100, 40, 140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  140, 100, 40, 140);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
   h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
   h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
@@ -2146,12 +2145,12 @@ void AnalysisCMS::GetRazor()
 	       gamma_R, dphi_vBETA_R_vBETA_T,
 	       MDELTAR, costhetaRp1, UseJetsInSuperRazor);
     
-    _Rpt = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
-    _invGamma = 1./gamma_R;
-    _Mdr = SHATR/gamma_R;
+    _Rpt         = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
+    _invGamma    = 1./gamma_R;
+    _Mdr         = SHATR/gamma_R;
     _DeltaPhiRll = dphi_LL_vBETA_T;
-  
-    }*/
+  }
+  */
 }
 
 
