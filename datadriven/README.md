@@ -1,10 +1,10 @@
 # getDYScale.C
 
-This macro computes the DY scale factor for analyses that veto the Z-peak. It
-needs as input a set of two-dimensional histograms, with MET (or mpmet) in the
-x-axis and the dilepton invariant mass in the y-axis. These histograms are
-normally filled once all analysis cuts have been applied, but removing the
-Z-peak veto and any MET (or mpmet) requirement.
+This macro computes the DY scale factor for analyses that veto the Z-peak.
+It needs as input a set of two-dimensional histograms, with varx (which can
+be met, mpmet, mt2ll, etc) in the x-axis, and m2l in the y-axis. These
+histograms have been filled once all analysis cuts have been applied, but
+removing the Z-peak veto and any requirement on varx.
 
     root -l getDYScale.C
 
