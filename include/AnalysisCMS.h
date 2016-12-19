@@ -100,7 +100,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        Setup             (TString  analysis,
 				 TString  filename,
-				 float    luminosity);
+				 float    luminosity,
+				 TString  suffix = "");
 
   void        Summary           (TString  analysis,
 				 TString  precision,
@@ -196,8 +197,10 @@ class AnalysisCMS : public AnalysisBase
   TString                _dataperiod;
   TString                _isdatadriven;
   TString                _filename;
+  TString                _suffix;
   TString                _sample;
   TString                _systematic;
+  TString                _longname;
 
   float                  _channel;
   float                  _darketa_gen;   

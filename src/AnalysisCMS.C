@@ -313,26 +313,39 @@ void AnalysisCMS::Summary(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::Setup(TString analysis,
 			TString filename,
-			float   luminosity)
+			float   luminosity,
+                        TString suffix)
 {
-  _analysis   = analysis;
-  _filename   = filename;
-  _luminosity = luminosity;
-  _nentries   = fChain->GetEntries();
-
   TH1::SetDefaultSumw2();
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
-  
+
+  _analysis     = analysis;
+  _filename     = filename;
+  _luminosity   = luminosity;
+  _suffix       = suffix;
+  _nentries     = fChain->GetEntries();
+  _isminitree   = (_filename.Contains("minitrees")) ? true : false;
+  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+
+  _dataperiod = "";
+
+  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
+  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
+
+  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
+ 
   TString tok;
 
   Ssiz_t from = 0;
 
-  _isminitree = filename.Contains("minitrees") ? true : false;
-
-  TString prefix = (_isminitree) ? "minitrees/" : "";
-
-  const char *delim = (_isminitree) ? "/" : "latino_";
+  const char* delim = (_isminitree) ? "/" : "latino_";
 
   while (_filename.Tokenize(tok, from, delim)) {
 
@@ -358,29 +371,15 @@ void AnalysisCMS::Setup(TString analysis,
   printf("       ismc: %d\n",        _ismc);
   printf(" isminitree: %d\n",        _isminitree);
   
+  TString prefix = (_isminitree) ? "minitrees/" : "";
+
   gSystem->mkdir(prefix + "rootfiles/" + _systematic + "/" + _analysis, kTRUE);
 
   gSystem->mkdir("txt/" + _systematic + "/" + _analysis, kTRUE);
 
-  _dataperiod = "";
+  root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
 
-  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
-  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
-
-  _isdatadriven = "";
-
-  if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
-
-  root_output = new TFile(prefix + "rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
-
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
-
+  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump.txt");
 
   OpenMinitree();
 
@@ -572,7 +571,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (!std_vector_lepton_isLooseLepton->at(i)) continue;
+    if (!std_vector_lepton_isLooseLepton->at(i) && !_analysis.EqualTo("Stop")) continue;
 
     if (pt < 0.) continue;
 
@@ -1107,7 +1106,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  GetDark();
+  //  GetDark();
 
   //  GetTopReco();
 
@@ -1349,7 +1348,7 @@ void AnalysisCMS::OpenMinitree()
 
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _longname + ".root", "recreate");
 
 
   // Minitree branches
@@ -2159,12 +2158,12 @@ void AnalysisCMS::GetRazor()
 	       gamma_R, dphi_vBETA_R_vBETA_T,
 	       MDELTAR, costhetaRp1, UseJetsInSuperRazor);
     
-    _Rpt = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
-    _invGamma = 1./gamma_R;
-    _Mdr = SHATR/gamma_R;
+    _Rpt         = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
+    _invGamma    = 1./gamma_R;
+    _Mdr         = SHATR/gamma_R;
     _DeltaPhiRll = dphi_LL_vBETA_T;
-  
-    }*/
+  }
+  */
 }
 
 
