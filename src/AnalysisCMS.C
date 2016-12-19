@@ -382,6 +382,8 @@ void AnalysisCMS::Setup(TString analysis,
 
   GetGenWeightsLHE();
 
+  Get_mlb(); 
+
   return;
 }
 
@@ -2212,6 +2214,17 @@ void AnalysisCMS::GetDark()
   }
 }
 
+//------------------------------------------------------------------------------
+// Get_mlb (needed for GetNewTopReco)
+//------------------------------------------------------------------------------
+void AnalysisCMS::Get_mlb()
+{
+
+	TFile* fshape  = new TFile( "/afs/cern.ch/user/j/jgarciaf/mimick/mlb.root" );  
+
+	_shapemlb = (TH1F*) fshape->Get( "mlb" ); 
+
+}
 
 //------------------------------------------------------------------------------
 // GetNewTopReco
@@ -2223,10 +2236,7 @@ void AnalysisCMS::GetNewTopReco()
    	if( _nbjet30csvv2m < 1 ) return; 
 
 
-	TFile* fshape  = new TFile( "/afs/cern.ch/user/j/jgarciaf/mimick/mlb.root" );  TH1F* shapemlb = (TH1F*) fshape->Get( "mlb" );   // sacar fuera !!!
-
-
-	MassReconstructor theMass( 100, shapemlb );  
+	MassReconstructor theMass( 100, _shapemlb );  
 
        
 	//--- MET

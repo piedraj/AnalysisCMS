@@ -79,6 +79,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetDark           ();  
 
+  void        Get_mlb           (); 
+
   void        GetNewTopReco     ();
 
   void        GetMET            (float    module,
@@ -174,6 +176,8 @@ class AnalysisCMS : public AnalysisBase
   std::vector<float>     _bjet30csvv2m_eta;
   std::vector<float>     _bjet30csvv2m_phi;
   std::vector<float>     _bjet30csvv2m_pt; 
+
+  TH1F*                  _shapemlb; 
 
   bool                   _saveminitree;
   bool                   _eventdump;
