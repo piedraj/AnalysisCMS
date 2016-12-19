@@ -34,7 +34,7 @@ class AnalysisStop : public AnalysisCMS
 
   void SetStopNeutralinoMap  ();
 
-  void GetMiniTree           (TFile *MiniTreeFile);
+  void GetMiniTree           (TFile *MiniTreeFile, TString systematic);
 
   TString FastSimDataset;
   BTagSFUtil *BTagSF;

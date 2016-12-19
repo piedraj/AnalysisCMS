@@ -8,7 +8,6 @@
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
-  //SetSaveMinitree(false);
   SetStopNeutralinoMap();
 }
 
@@ -16,7 +15,8 @@ AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic)
 {
   SetSaveMinitree(false);
   SetStopNeutralinoMap();
-  GetMiniTree(MiniTreeFile);
+  GetMiniTree(MiniTreeFile, systematic);
+  _systematic = systematic;
 }
 
 //------------------------------------------------------------------------------
@@ -2736,7 +2736,7 @@ void AnalysisStop::CorrectEventWeight() {
   
 }
 
-void AnalysisStop::GetMiniTree(TFile *MiniTreeFile) {
+void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
 
   fChain = (TTree*) MiniTreeFile->Get("latino");
 
@@ -2778,8 +2778,30 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile) {
   
   fChain->SetBranchAddress("susyMLSP",        &susyMLSP);
   fChain->SetBranchAddress("susyMstop",       &susyMstop);
-  
-  fChain->SetBranchAddress("eventW",          &_event_weight);
+
+  if (systematic=="nominal") 
+    fChain->SetBranchAddress("eventW",          &_event_weight);
+  else if (systematic=="Btagup")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Btagup);
+  else if (systematic=="Btagdo")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Btagdo);
+  else if (systematic=="Idisoup")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Idisoup);
+  else if (systematic=="Idisodo")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Idisodo);
+  else if (systematic=="Triggerup")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Triggerup);
+  else if (systematic=="Triggerdo")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Triggerdo);
+  else if (systematic=="Recoup")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Recoup);
+  else if (systematic=="Recodo")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Recodo);
+  else if (systematic=="Fastsimup")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Fastsimup);
+  else if (systematic=="Fastsimdo")
+    fChain->SetBranchAddress("eventW",          &_event_weight_Fastsimdo);
+
   fChain->SetBranchAddress("channel",         &_channel);
   fChain->SetBranchAddress("njet",            &_njet); 
 
