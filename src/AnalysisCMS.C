@@ -339,8 +339,6 @@ void AnalysisCMS::Setup(TString analysis,
   if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
   if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
 
-  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
- 
   TString tok;
 
   Ssiz_t from = 0;
@@ -370,6 +368,8 @@ void AnalysisCMS::Setup(TString analysis,
   printf("   nentries: %lld\n",      _nentries);
   printf("       ismc: %d\n",        _ismc);
   printf(" isminitree: %d\n",        _isminitree);
+  
+  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
   
   TString prefix = (_isminitree) ? "minitrees/" : "";
 
