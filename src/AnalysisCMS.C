@@ -1175,7 +1175,12 @@ void AnalysisCMS::EndJob()
 
       root_minitree->Write("", TObject::kOverwrite);
 
+      //h_list_vectors_weights->Write();
+
       root_minitree->Close();
+
+      //h_list_vectors_weights->Delete();
+
     }
 
   txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
@@ -1334,10 +1339,15 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
+  //TFile* f = new TFile(_filename, "read");
+
+  //TH1F* list_vectors_weights = (TH1F*)f->Get("list_vectors_weights");
+
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
   root_minitree = new TFile("minitrees/" + _longname + ".root", "recreate");
 
+  //h_list_vectors_weights = (TH1F*)list_vectors_weights->Clone("h_list_vectors_weights"); 
 
   // Minitree branches
   //----------------------------------------------------------------------------
@@ -2225,7 +2235,7 @@ void AnalysisCMS::GetTopReco()
     jet_uncertainty.push_back(5.);  // GeV
   }
 
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+  //theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
   _topReco = nu1.size();
 
