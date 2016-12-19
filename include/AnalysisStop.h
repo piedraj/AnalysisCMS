@@ -58,8 +58,9 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_mlb2true         [nchannel][ncut][njetbin+1];
   TH2D*                  h_mt2lblbvsmlbtrue [nchannel][ncut][njetbin+1];
 
-  float _metmeff;
+  float _metmeff, _MT2ll;
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll            [nchannel][ncut][njetbin+1];
 
   float _MT2_Met; int NbinsMT2 = 7; int NbinsMet = 5;
   float vMinMT2 = 0., vMinMet = 0., vMaxMT2 = 140., vMaxMet = 500.;
