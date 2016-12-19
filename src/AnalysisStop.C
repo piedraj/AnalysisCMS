@@ -165,12 +165,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
                FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () + 0 Tag (VET0)
 
               // ---------------------------------------------------------------
-      
-      
-      if (pass && _saveminitree) minitree->Fill();
 
       pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
-      
+
+      // Leave this line at the end of this if or the results on latino trees and minitrees will be inconsistent
+      if (pass && _saveminitree) minitree->Fill();      
     
     } 
 
