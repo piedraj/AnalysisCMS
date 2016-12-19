@@ -50,7 +50,8 @@ class HistogramReader
   void     AddSignal          (const TString& filename,
 			       const TString& label,
 			       Color_t        color,
-			       Int_t          kind = roc_none);
+			       Int_t          kind  = roc_none,
+			       Float_t        scale = -1);
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -206,6 +207,7 @@ class HistogramReader
   std::vector<TH1*>     _signalhist;
   std::vector<Color_t>  _signalcolor;
   std::vector<TString>  _signallabel;
+  std::vector<Float_t>  _signalscale;
 
   std::ofstream         _yields_table;
 

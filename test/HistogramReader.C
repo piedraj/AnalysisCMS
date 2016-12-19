@@ -94,7 +94,8 @@ void HistogramReader::AddProcess(const TString& filename,
 void HistogramReader::AddSignal(const TString& filename,
 				const TString& label,
 				Color_t        color,
-				Int_t          kind)
+				Int_t          kind,
+				Float_t        scale)
 {
   TString fullname = _inputdir + "/" + filename + ".root";
   
@@ -109,6 +110,10 @@ void HistogramReader::AddSignal(const TString& filename,
   _signalfile.push_back(file);
   _signallabel.push_back(label);
   _signalcolor.push_back(color);
+  _signalscale.push_back(scale);
+
+  if (scale > 0. && scale != 1.)
+    printf("\n [HistogramReader::AddSignal] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 
   if (kind == roc_signal)     _roc_signals    .push_back(fullname);
   if (kind == roc_background) _roc_backgrounds.push_back(fullname);
@@ -222,7 +227,9 @@ void HistogramReader::Draw(TString hname,
 
     _signalhist.push_back((TH1D*)dummy->Clone());
 
-    if (_luminosity_fb > 0) _signalhist[i]->Scale(_luminosity_fb);
+    if (_luminosity_fb > 0 && _signalscale[i] > -999) _signalhist[i]->Scale(_luminosity_fb);
+
+    if (_signalscale[i] > 0) _signalhist[i]->Scale(_signalscale[i]);
 
     SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
     

@@ -27,8 +27,8 @@ const float   zmax = 106;  // [GeV]
 
 const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 45,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 45, 100};  // [GeV]
+const float   metcut [nmetcut] = {-1, 10, 20, 30, 40,  -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -124,8 +124,8 @@ TString      xtitle;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin",
-		TString variable = "mpmet",
+		TString level    = "02_Routin/2jet",
+		TString variable = "metPfType1",
 		double  lumi_fb  = 12.9)
 {
   xtitle = "";
@@ -305,9 +305,9 @@ void getDYScale(TString analysis = "Control",
   mgraph[2]->GetXaxis()->SetTitle(xtitle);
   mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  DrawLegend(0.22, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
-  DrawLegend(0.22, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
-  DrawLegend(0.22, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
+  DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
+  DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
+  DrawLegend(0.74, 0.71, (TObject*)graph_scale[em], " " + lchannel[em]);
 
   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
 

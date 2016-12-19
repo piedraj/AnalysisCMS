@@ -214,13 +214,13 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
   h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
-
   h_MR            [ichannel][icut][ijet]->Fill(_MR,             _event_weight);
   h_R2            [ichannel][icut][ijet]->Fill(_R2,             _event_weight);
   h_Rpt           [ichannel][icut][ijet]->Fill(_Rpt,            _event_weight);
   h_invGamma      [ichannel][icut][ijet]->Fill(_invGamma,       _event_weight);
   h_Mdr           [ichannel][icut][ijet]->Fill(_Mdr,            _event_weight);
   h_DeltaPhiRll   [ichannel][icut][ijet]->Fill(_DeltaPhiRll,    _event_weight);
+
 
   // TH2 histograms
   //----------------------------------------------------------------------------
@@ -310,24 +310,39 @@ void AnalysisCMS::Summary(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::Setup(TString analysis,
 			TString filename,
-			float   luminosity)
+			float   luminosity,
+                        TString suffix)
 {
-  _analysis   = analysis;
-  _filename   = filename;
-  _luminosity = luminosity;
-  _nentries   = fChain->GetEntries();
-
   TH1::SetDefaultSumw2();
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
-  
+
+  _analysis     = analysis;
+  _filename     = filename;
+  _luminosity   = luminosity;
+  _suffix       = suffix;
+  _nentries     = fChain->GetEntries();
+  _isminitree   = (_filename.Contains("minitrees")) ? true : false;
+  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+
+  _dataperiod = "";
+
+  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
+  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
+  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
+  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
+
+  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
+ 
   TString tok;
 
   Ssiz_t from = 0;
 
-  _isminitree = filename.Contains("minitrees") ? true : false;
-
-  const char *delim = _isminitree ? "/" : "latino_";
+  const char* delim = (_isminitree) ? "/" : "latino_";
 
   while (_filename.Tokenize(tok, from, delim)) {
 
@@ -353,35 +368,19 @@ void AnalysisCMS::Setup(TString analysis,
   printf("       ismc: %d\n",        _ismc);
   printf(" isminitree: %d\n",        _isminitree);
   
-  if (!_isminitree) gSystem->mkdir("rootfiles/" + _systematic + "/" + _analysis, kTRUE);
-  else gSystem->mkdir("minitrees/rootfiles/" + _systematic + "/" + _analysis, kTRUE);
-   gSystem->mkdir("txt/"       + _systematic + "/" + _analysis, kTRUE);
+  TString prefix = (_isminitree) ? "minitrees/" : "";
 
-  _dataperiod = "";
+  gSystem->mkdir(prefix + "rootfiles/" + _systematic + "/" + _analysis, kTRUE);
 
-  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
-  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
+  gSystem->mkdir("txt/" + _systematic + "/" + _analysis, kTRUE);
 
-  _isdatadriven = "";
+  root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
 
-  if (_filename.Contains("fakeW")) _isdatadriven = "fakeW_";
-
-  if (!_isminitree)
-    root_output = new TFile("rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
-  else 
-    root_output = new TFile("minitrees/rootfiles/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
-
-  if (_eventdump) txt_eventdump.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + "_eventdump.txt");
-
+  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump.txt");
 
   OpenMinitree();
 
+  GetGenWeightsLHE();
 
   return;
 }
@@ -486,7 +485,10 @@ void AnalysisCMS::ApplyWeights()
       float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
       float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
       
-      float sf_fastsim = 1., sf_fastsim_up = 1., sf_fastsim_do = 1.;
+      float sf_fastsim    = 1.;
+      float sf_fastsim_up = 1.;
+      float sf_fastsim_do = 1.;
+
       if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) {
 	sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
 	sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
@@ -566,7 +568,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (!std_vector_lepton_isLooseLepton->at(i)) continue;
+    if (!std_vector_lepton_isLooseLepton->at(i) && !_analysis.EqualTo("Stop")) continue;
 
     if (pt < 0.) continue;
 
@@ -1100,7 +1102,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
-  GetDark();
+  //  GetDark();
 
   //  GetTopReco();
 
@@ -1308,7 +1310,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_detatt_gen    [ichannel][icut][ijet] = new TH1D("h_detatt_gen"     + suffix, "",  100,    0,   10);
   h_topReco       [ichannel][icut][ijet] = new TH1D("h_topReco"        + suffix, "",    6,    0,    6);
   h_met_over_pt2l [ichannel][icut][ijet] = new TH1D("h_met_over_pt2l"  + suffix, "",  200,    0,    2);
-
   h_MR            [ichannel][icut][ijet] = new TH1D("h_MR"             + suffix, "",  100,    0, 1000);
   h_R2            [ichannel][icut][ijet] = new TH1D("h_R2"             + suffix, "",   70,    0,  1.4);
   h_Rpt           [ichannel][icut][ijet] = new TH1D("h_Rpt"            + suffix, "",  100,    0,    1);
@@ -1335,7 +1336,7 @@ void AnalysisCMS::OpenMinitree()
 
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".root", "recreate");
+  root_minitree = new TFile("minitrees/" + _longname + ".root", "recreate");
 
 
   // Minitree branches
@@ -1394,7 +1395,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Recodo",    &_event_weight_Recodo,    "eventW_Recodo/F");
   minitree->Branch("eventW_Fastsimup", &_event_weight_Fastsimup, "eventW_Fastsimup/F");
   minitree->Branch("eventW_Fastsimdo", &_event_weight_Fastsimdo, "eventW_Fastsimdo/F");
-
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
@@ -1494,12 +1494,12 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
 
   // Razor variables
-  minitree->Branch("MR",              &_MR,              "MR/F");
-  minitree->Branch("R2",              &_R2,              "R2/F");
-  minitree->Branch("Rpt",             &_Rpt,             "Rpt/F");
-  minitree->Branch("invGamma",        &_invGamma,        "invGamma/F");
-  minitree->Branch("Mdr",             &_Mdr,             "Mdr/F");
-  minitree->Branch("DeltaPhiRll",     &_DeltaPhiRll,     "DeltaPhiRll/F");
+  minitree->Branch("MR",               &_MR,               "MR/F");
+  minitree->Branch("R2",               &_R2,               "R2/F");
+  minitree->Branch("Rpt",              &_Rpt,              "Rpt/F");
+  minitree->Branch("invGamma",         &_invGamma,         "invGamma/F");
+  minitree->Branch("Mdr",              &_Mdr,              "Mdr/F");
+  minitree->Branch("DeltaPhiRll",      &_DeltaPhiRll,      "DeltaPhiRll/F");
 
   // Only available in MC
   if (std_vector_LHE_weight)
@@ -2099,13 +2099,11 @@ void AnalysisCMS::GetTops()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetRazor()
 {
-
-  _MR = -0.1;
-  _R2 = -0.1;
-  
-  _Rpt = -0.1;
-  _invGamma = -0.1;
-  _Mdr = -0.1;
+  _MR          = -0.1;
+  _R2          = -0.1;
+  _Rpt         = -0.1;
+  _invGamma    = -0.1;
+  _Mdr         = -0.1;
   _DeltaPhiRll = -0.1;
   
   // This is filled in GetLeptons()
@@ -2122,13 +2120,13 @@ void AnalysisCMS::GetRazor()
     TLorentzVector Jet2; Jet2.SetPtEtaPhiM(_tjet2pt, _tjet2eta, _tjet2phi, _tjet2mass);
     Jets.push_back(Jet1);
     Jets.push_back(Jet2);
-
   }
 
   vector<TLorentzVector> Hemispheres = getHemispheres(Jets, Leps);
   
   _MR = computeMR(Hemispheres[0], Hemispheres[1]);
   _R2 = computeR2(Hemispheres[0], Hemispheres[1], MET);
+
   /*
   bool UseJetsInSuperRazor = false;
   
@@ -2145,15 +2143,13 @@ void AnalysisCMS::GetRazor()
 	       gamma_R, dphi_vBETA_R_vBETA_T,
 	       MDELTAR, costhetaRp1, UseJetsInSuperRazor);
     
-    _Rpt = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
-    _invGamma = 1./gamma_R;
-    _Mdr = SHATR/gamma_R;
+    _Rpt         = pT_CM.Mag()/(pT_CM.Mag() + SHATR/4.);
+    _invGamma    = 1./gamma_R;
+    _Mdr         = SHATR/gamma_R;
     _DeltaPhiRll = dphi_LL_vBETA_T;
-  
-    }*/
-
+  }
+  */
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -2353,4 +2349,24 @@ float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
   _planarity = eigenvalue3 / eigenvalue2;
 
   return _planarity;
+}
+
+
+//------------------------------------------------------------------------------
+// GetGenWeightsLHE
+// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetGenWeightsLHE()
+{
+  TFile* file = TFile::Open(_filename);
+
+  TH1F* dummy = (TH1F*)file->Get("list_vectors_weights");
+
+  if (!dummy) return;
+
+  if (!_saveminitree) return;
+
+  root_minitree->cd();
+
+  dummy->Write();
 }
