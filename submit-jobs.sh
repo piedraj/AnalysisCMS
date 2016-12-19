@@ -54,11 +54,7 @@ echo "  "
 
 # Submit jobs to the queues
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if [[ "$SAMPLES" != *"minitrees"* ]]; then
-  export NJOBS=`cat $SAMPLES | grep latino | grep -v "#" | wc -l`
-else 
-  export NJOBS=`cat $SAMPLES | grep root | grep -v "#" | wc -l`
-fi
+export NJOBS=`cat $SAMPLES | grep ".root" | grep -v "#" | wc -l`
 echo "  And... submitting" $NJOBS "jobs"
 echo "  "
 mkdir -p jobs
@@ -78,10 +74,11 @@ mkdir -p jobs
 cd jobs
 
 if [[ "$SAMPLES" != *"minitrees"* ]]; then
-  bsub -q cmscaf1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
+    bsub -q 1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
 else
-  bsub -q 1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings_minitrees.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
+    bsub -q 1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings_minitrees.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
 fi
+
 
 # gridui
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
