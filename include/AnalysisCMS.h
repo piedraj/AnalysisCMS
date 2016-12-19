@@ -79,7 +79,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetDark           ();  
 
-  void        GetTopReco        ();
+  void        GetNewTopReco     ();
 
   void        GetMET            (float    module,
 				 float    phi);
@@ -204,6 +204,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _channel;
   float                  _darketa_gen;   
   float                  _darkphi_gen;
+  float 		 _darkpt; 
   float                  _darkpt_gen;
   float                  _deltarjet1met;
   float                  _deltarjet2met;
@@ -305,6 +306,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2phi_gen;
   float                  _top2pt_gen;
   float			 _topReco;
+  float			 _topRecoW; 
   float                  _sphericity;
   float                  _alignment;
   float                  _planarity;

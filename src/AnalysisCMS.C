@@ -1,7 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
-#include "../top-reco/src/MassVariations.cc"
+#include "../new-top-reco/src/MassReconstructor.cc"
 #include "../razor/Razor.C"
 //#include "../razor/SuperRazor.C"
 
@@ -1104,7 +1104,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   //  GetDark();
 
-  //  GetTopReco();
+  GetNewTopReco();
 
   GetGenPtllWeight();
 
@@ -1371,6 +1371,7 @@ void AnalysisCMS::OpenMinitree()
   // D
   minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
   minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
@@ -1499,6 +1500,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("top2eta_gen",      &_top2eta_gen,      "top2eta_gen/F");
   minitree->Branch("top2phi_gen",      &_top2phi_gen,      "top2phi_gen/F");
   minitree->Branch("top2pt_gen",       &_top2pt_gen,       "top2pt_gen/F");
+  minitree->Branch("topRecoW",         &_topRecoW,         "topRecoW/F");
   minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
@@ -2212,37 +2214,98 @@ void AnalysisCMS::GetDark()
 
 
 //------------------------------------------------------------------------------
-// GetTopReco
+// GetNewTopReco
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetTopReco()
+void AnalysisCMS::GetNewTopReco()
 {
-  MassVariations theMass;
 
-  std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> jet_uncertainty;
+	if( _njet          < 2 ) return;
+   	if( _nbjet30csvv2m < 1 ) return; 
 
-  TVector2 myMET;
 
-  // metPfType1Phi [-pi,   pi]
-  // myMET.Phi()   [  0, 2*pi]
+	TFile* fshape  = new TFile( "/afs/cern.ch/user/j/jgarciaf/mimick/mlb.root" );  TH1F* shapemlb = (TH1F*) fshape->Get( "mlb" );   // sacar fuera !!!
 
-  myMET.SetMagPhi(metPfType1, metPfType1Phi);
 
-  for (int i=0; i<AnalysisJets.size(); i++) {
+	MassReconstructor theMass( 100, shapemlb );  
 
-    myjets.push_back(AnalysisJets.at(i).v);
+       
+	//--- MET
 
-    jet_uncertainty.push_back(5.);  // GeV
-  }
+	TVector2 MET;
 
-  //theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+	MET.SetMagPhi( metPfType1, metPfType1Phi );
 
-  _topReco = nu1.size();
 
-  if (nu1.size() == 1 || nu1.size() == 3)
-    {
-      printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
-    }
+	//--- leptons
+
+	TLorentzVector l1, l2;  
+
+	l1.SetPtEtaPhiM( _lep1pt, _lep1eta, _lep1phi, _lep1mass ); 
+  	l2.SetPtEtaPhiM( _lep2pt, _lep2eta, _lep2phi, _lep2mass );
+
+
+	//--- jets
+
+	std::vector<TLorentzVector> jets;
+	std::vector<TLorentzVector> bjets;
+	std::vector<Float_t>        unc;   // unimportant, but keep it, please
+
+
+	for( int i = 0; i < _jet_pt.size(); i++ ){ 
+
+		TLorentzVector jet_tlv;
+
+		jet_tlv.SetPtEtaPhiM( _jet_pt.at(i), _jet_eta.at(i), _jet_phi.at(i), 0. ); 
+
+		jets.push_back(jet_tlv);
+
+		unc.push_back(5.);   // GeV 
+
+	}
+
+
+	for( int i = 0; i < _bjet30csvv2m_pt.size(); i++ ){
+
+		TLorentzVector bjet30csvv2m_tlv;
+
+		bjet30csvv2m_tlv.SetPtEtaPhiM( _bjet30csvv2m_pt.at(i), _bjet30csvv2m_eta.at(i), _bjet30csvv2m_phi.at(i), 0. ); 
+
+		bjets.push_back(bjet30csvv2m_tlv);
+
+	}
+
+
+	//--- arguments by reference: neutrinos & tops
+
+	std::vector<TLorentzVector> nu1, nu2;
+
+        TVector2 top1, top2;
+
+
+	//--- reco à la DESY
+	
+	theMass.startVariations( l1, l2, bjets, jets, MET, top1, top2, _topRecoW );
+	
+
+	//--- 'rosquillas' reco
+
+	if(  top1.X() == 0  &&  top1.Y() == 0  &&  top2.X() == 0  &&  top2.Y() == 0 ){
+
+		int theJet1 = -1; 
+		int theJet2 = -1; 
+
+		_darkpt = theMass.performAllVariations( 1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2 ); 
+
+	}
+
+	else{
+
+		_darkpt = 0.; 
+
+	}
+
+
+
 }
 
 
