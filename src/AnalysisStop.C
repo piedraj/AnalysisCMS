@@ -1,6 +1,7 @@
 #define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
-
+#include <fstream>
+#include <iostream>
 
 //------------------------------------------------------------------------------
 // AnalysisStop
@@ -25,10 +26,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 { 
   if (fChain == 0) return;
 
+  TString MassPointFlag = "";
+
+
   if (filename.Contains("T2tt")) {
 
     if (StopRefMass==-1.) {
-
+  
       if (filename.Contains("150to250"))       { StopRefMass = 150.; NeutralinoRefMass =  25.; }
       else if (filename.Contains("250to350"))  { StopRefMass = 275.; NeutralinoRefMass = 150.; }
       else if (filename.Contains("350to400"))  { StopRefMass = 350.; NeutralinoRefMass = 225.; }
@@ -38,12 +42,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     }
 
     int iStopRefMass = StopRefMass, iNeutralinoRefMass = NeutralinoRefMass;
-    TString MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
-    filename.ReplaceAll(".root", MassPointFlag + ".root");
+    MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
 
   }
 
-  Setup(analysis, filename, luminosity);
+  Setup(analysis, filename, luminosity, MassPointFlag);
   
   // Define histograms
   //----------------------------------------------------------------------------
@@ -84,6 +87,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
+      if ( ! _nlepton == 2) continue; // 2 and only 2 leptons
+
       if (_ismc) CorrectEventWeight(); 
   
       if (Lepton1.flavour * Lepton2.flavour > 0) continue;
@@ -91,7 +96,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       if (Lepton1.v.Pt() < 25.) continue;
       if (Lepton2.v.Pt() < 20.) continue;
     
-      if (_nlepton > 2) continue;
 
       _nelectron = 0;
 
@@ -116,7 +120,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     //--------------------------------------------------------------------------
     bool pass = true;
     bool pass_blind = true; 
-    if (filename.Contains("Data") || filename.Contains("Run")) {
+    
+   
+   
+   // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
+   if (filename.Contains("Data") || filename.Contains("Run")) {
 
       pass_blind = false;
       if (_mt2ll<40.) pass_blind = true;
@@ -126,7 +134,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
-      // 
+      
       FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
 
       FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
@@ -134,42 +142,72 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       // Basics Stop
       //-------------------------------------------------------------------------
       pass &= mll>20.;
-      
+  
       FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
       
-      pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
+              // Look in the Z-peak
+              // ---------------------------------------------------------------
+
+               bool Zpeak = pass && ( _channel == em || fabs(_m2l - Z_MASS) < 15. );  
+
+               FillLevelHistograms(Stop_05_Zpeak,      Zpeak && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak
+              
+               FillLevelHistograms(Stop_05_NoTagZpeak, Zpeak && (_leadingPtCSVv2M <  20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 0 Tag (VET0) 
+
+               FillLevelHistograms(Stop_05_TagZpeak,   Zpeak && (_leadingPtCSVv2M >= 20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 1 Tag         
+
+	      // DY estimation -> Routin Level
+	      // ---------------------------------------------------------------
+
+               FillLevelHistograms(Stop_04_Routin,      pass && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () 
+               
+               FillLevelHistograms(Stop_04_Jet2Routin,  pass &&  jetpt2 >= 30. && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded( ) + 2 Jets
+     
+               FillLevelHistograms(Stop_04_TagRoutin,   pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () + 1 Tag
+               
+               FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () + 0 Tag (VET0)
+
+              // ---------------------------------------------------------------
+      
       
       if (pass && _saveminitree) minitree->Fill();
+
+      pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
+      
     
     } 
       
-    FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
 
+//  FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+//
     FillLevelHistograms(Stop_00_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_00_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
+   
 
-    //FillLevelHistograms(Stop_00_SR1,    pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
-    //FillLevelHistograms(Stop_00_SR2,    pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
-    //FillLevelHistograms(Stop_00_SR3,    pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
+//     FillLevelHistograms(Stop_00_SR1,    pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
+//     FillLevelHistograms(Stop_00_SR2,    pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
+//     FillLevelHistograms(Stop_00_SR3,    pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
 
-    pass &= (MET.Et()>50.);
 
-    FillLevelHistograms(Stop_01_MET, pass && pass_blind && pass_masspoint);
-
-    pass &= jetpt2 >= 20.;		
-
-    FillLevelHistograms(Stop_02_Has2Jets, pass && pass_blind && pass_masspoint);
-
-    bool passMETTight = pass && (MET.Et()>80.);
-
-    FillLevelHistograms(Stop_02_METTight, passMETTight && pass_blind && pass_masspoint);
-
-    pass &= (_leadingPtCSVv2M >= 20.);
-
-    FillLevelHistograms(Stop_03_Has1BJet, pass && pass_blind && pass_masspoint);
-    
-    //bool passPt30 = (jetpt2 >= 30.) && (_leadingPtCSVv2M >= 30.);
-    //FillLevelHistograms(Stop_03_PassPt30, pass && pass_blind && passPt30 && pass_masspoint);
+//    pass &= (MET.Et()>50.);
+//
+//    FillLevelHistograms(Stop_01_MET, pass && pass_blind && pass_masspoint);
+//
+//    pass &= jetpt2 >= 20.;		
+//
+//    FillLevelHistograms(Stop_02_Has2Jets, pass && pass_blind && pass_masspoint);
+//
+//    bool passMETTight = pass && (MET.Et()>80.);
+//
+//    FillLevelHistograms(Stop_02_METTight, passMETTight && pass_blind && pass_masspoint);
+//
+//    pass &= (_leadingPtCSVv2M >= 20.);
+//
+//    FillLevelHistograms(Stop_03_Has1BJet, pass && pass_blind && pass_masspoint);
+//    
+//    //bool passPt30 = (jetpt2 >= 30.) && (_leadingPtCSVv2M >= 30.);
+//    //FillLevelHistograms(Stop_03_PassPt30, pass && pass_blind && passPt30 && pass_masspoint);
 
   }
 
