@@ -1,7 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
-#include "../new-top-reco/src/MassReconstructor.cc"
+#include "../top-reco/src/MassReconstructor.cc"
 #include "../razor/Razor.C"
 //#include "../razor/SuperRazor.C"
 
