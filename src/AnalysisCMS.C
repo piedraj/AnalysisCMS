@@ -1106,7 +1106,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   //  GetDark();
 
-  GetNewTopReco();
+  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -2215,7 +2215,7 @@ void AnalysisCMS::GetDark()
 }
 
 //------------------------------------------------------------------------------
-// Get_mlb (needed for GetNewTopReco)
+// Get_mlb (needed for GetTopReco)
 //------------------------------------------------------------------------------
 void AnalysisCMS::Get_mlb()
 {
@@ -2227,9 +2227,9 @@ void AnalysisCMS::Get_mlb()
 }
 
 //------------------------------------------------------------------------------
-// GetNewTopReco
+// GetTopReco
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetNewTopReco()
+void AnalysisCMS::GetTopReco()
 {
 
 	if( _njet          < 2 ) return;

@@ -81,7 +81,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        Get_mlb           (); 
 
-  void        GetNewTopReco     ();
+  void        GetTopReco     ();
 
   void        GetMET            (float    module,
 				 float    phi);
