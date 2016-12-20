@@ -465,8 +465,8 @@ void AnalysisCMS::ApplyWeights()
 	  _analysis.EqualTo("Control"))
 	{
 	  sf_btag    = bPogSF_CSVM;
-	  sf_btag_up = bPogSF_CSVM_Up;
-	  sf_btag_do = bPogSF_CSVM_Down;
+	  sf_btag_up = bPogSF_CSVM_up;
+	  sf_btag_do = bPogSF_CSVM_down;
 	}
       else
 	{
