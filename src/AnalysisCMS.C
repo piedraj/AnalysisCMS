@@ -1,7 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
-#include "../top-reco/src/MassVariations.cc"
+#include "../top-reco/src/MassReconstructor.cc"
 #include "../razor/Razor.C"
 //#include "../razor/SuperRazor.C"
 
@@ -382,6 +382,8 @@ void AnalysisCMS::Setup(TString analysis,
 
   GetGenWeightsLHE();
 
+  Get_mlb(); 
+
   return;
 }
 
@@ -463,8 +465,8 @@ void AnalysisCMS::ApplyWeights()
 	  _analysis.EqualTo("Control"))
 	{
 	  sf_btag    = bPogSF_CSVM;
-	  sf_btag_up = bPogSF_CSVM_Up;
-	  sf_btag_do = bPogSF_CSVM_Down;
+	  sf_btag_up = bPogSF_CSVM_up;
+	  sf_btag_do = bPogSF_CSVM_down;
 	}
       else
 	{
@@ -1104,7 +1106,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   //  GetDark();
 
-  //  GetTopReco();
+  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1175,7 +1177,12 @@ void AnalysisCMS::EndJob()
 
       root_minitree->Write("", TObject::kOverwrite);
 
+      //h_list_vectors_weights->Write();
+
       root_minitree->Close();
+
+      //h_list_vectors_weights->Delete();
+
     }
 
   txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
@@ -1334,10 +1341,15 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
+  //TFile* f = new TFile(_filename, "read");
+
+  //TH1F* list_vectors_weights = (TH1F*)f->Get("list_vectors_weights");
+
   gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
   root_minitree = new TFile("minitrees/" + _longname + ".root", "recreate");
 
+  //h_list_vectors_weights = (TH1F*)list_vectors_weights->Clone("h_list_vectors_weights"); 
 
   // Minitree branches
   //----------------------------------------------------------------------------
@@ -1361,6 +1373,7 @@ void AnalysisCMS::OpenMinitree()
   // D
   minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
   minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
@@ -1489,6 +1502,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("top2eta_gen",      &_top2eta_gen,      "top2eta_gen/F");
   minitree->Branch("top2phi_gen",      &_top2phi_gen,      "top2phi_gen/F");
   minitree->Branch("top2pt_gen",       &_top2pt_gen,       "top2pt_gen/F");
+  minitree->Branch("topRecoW",         &_topRecoW,         "topRecoW/F");
   minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
@@ -2200,39 +2214,108 @@ void AnalysisCMS::GetDark()
   }
 }
 
+//------------------------------------------------------------------------------
+// Get_mlb (needed for GetTopReco)
+//------------------------------------------------------------------------------
+void AnalysisCMS::Get_mlb()
+{
+
+	TFile* fshape  = new TFile( "top-reco/mlb.root" );  
+
+	_shapemlb = (TH1F*) fshape->Get( "mlb" ); 
+
+}
 
 //------------------------------------------------------------------------------
 // GetTopReco
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetTopReco()
 {
-  MassVariations theMass;
 
-  std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> jet_uncertainty;
+	if( _njet          < 2 ) return;
+   	if( _nbjet30csvv2m < 1 ) return; 
 
-  TVector2 myMET;
 
-  // metPfType1Phi [-pi,   pi]
-  // myMET.Phi()   [  0, 2*pi]
+	MassReconstructor theMass( 100, _shapemlb );  
 
-  myMET.SetMagPhi(metPfType1, metPfType1Phi);
+       
+	//--- MET
 
-  for (int i=0; i<AnalysisJets.size(); i++) {
+	TVector2 MET;
 
-    myjets.push_back(AnalysisJets.at(i).v);
+	MET.SetMagPhi( metPfType1, metPfType1Phi );
 
-    jet_uncertainty.push_back(5.);  // GeV
-  }
 
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
+	//--- leptons
 
-  _topReco = nu1.size();
+	TLorentzVector l1, l2;  
 
-  if (nu1.size() == 1 || nu1.size() == 3)
-    {
-      printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
-    }
+	l1.SetPtEtaPhiM( _lep1pt, _lep1eta, _lep1phi, _lep1mass ); 
+  	l2.SetPtEtaPhiM( _lep2pt, _lep2eta, _lep2phi, _lep2mass );
+
+
+	//--- jets
+
+	std::vector<TLorentzVector> jets;
+	std::vector<TLorentzVector> bjets;
+	std::vector<Float_t>        unc;   // unimportant, but keep it, please
+
+
+	for( int i = 0; i < _jet_pt.size(); i++ ){ 
+
+		TLorentzVector jet_tlv;
+
+		jet_tlv.SetPtEtaPhiM( _jet_pt.at(i), _jet_eta.at(i), _jet_phi.at(i), 0. ); 
+
+		jets.push_back(jet_tlv);
+
+		unc.push_back(5.);   // GeV 
+
+	}
+
+
+	for( int i = 0; i < _bjet30csvv2m_pt.size(); i++ ){
+
+		TLorentzVector bjet30csvv2m_tlv;
+
+		bjet30csvv2m_tlv.SetPtEtaPhiM( _bjet30csvv2m_pt.at(i), _bjet30csvv2m_eta.at(i), _bjet30csvv2m_phi.at(i), 0. ); 
+
+		bjets.push_back(bjet30csvv2m_tlv);
+
+	}
+
+
+	//--- arguments by reference: neutrinos & tops
+
+	std::vector<TLorentzVector> nu1, nu2;
+
+        TVector2 top1, top2;
+
+
+	//--- reco à la DESY
+	
+	theMass.startVariations( l1, l2, bjets, jets, MET, top1, top2, _topRecoW );
+	
+
+	//--- 'rosquillas' reco
+
+	if(  top1.X() == 0  &&  top1.Y() == 0  &&  top2.X() == 0  &&  top2.Y() == 0 ){
+
+		int theJet1 = -1; 
+		int theJet2 = -1; 
+
+		_darkpt = theMass.performAllVariations( 1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2 ); 
+
+	}
+
+	else{
+
+		_darkpt = 0.; 
+
+	}
+
+
+
 }
 
 

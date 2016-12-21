@@ -1,9 +1,9 @@
-#include "src/MassReconstructor.cc"
 #include "TLorentzVector.h"
 #include "TVector2.h"
 #include "math.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TH1F.h"
 
 #include <vector>
 
@@ -48,10 +48,6 @@ void setSetBranchAddresses(TTree *);
 int main(int argc, char **argv) {
 
 
-  TFile *fshape = new TFile("mlb.root");
-  TH1F *shapemlb = (TH1F *) fshape->Get("mlb");
-  MassReconstructor theMass(100, shapemlb);
-
   TFile *f = new TFile(argv[1]);
   f->cd();
   TTree *tree = (TTree *)f->Get("events");
@@ -59,9 +55,8 @@ int main(int argc, char **argv) {
 
   Long64_t nentries = tree->GetEntriesFast();
   Long64_t nb = 0;
-  nentries = 5000;
 
-  TH1F *weights = new TH1F(argv[2], "", 50, 0, 0.01);
+  TH1F *mlb = new TH1F("mlb", "", 200, 0, 200);
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
@@ -74,30 +69,17 @@ int main(int argc, char **argv) {
       TLorentzVector j2; j2.SetPtEtaPhiM(ev.ptb2, ev.etab2, ev.phib2, ev.mb2);
       TLorentzVector n1; n1.SetPtEtaPhiM(ev.ptnu1, ev.etanu1, ev.phinu1, ev.mnu1);
       TLorentzVector n2; n2.SetPtEtaPhiM(ev.ptnu2, ev.etanu2, ev.phinu2, ev.mnu2);
-      //Collections of jets
-      std::vector<TLorentzVector> jets; 
-      std::vector<TLorentzVector> bjets; bjets.push_back(j1); bjets.push_back(j2);
-      //MET
-      TVector2 MET(ev.ptMET*cos(ev.phiMET), ev.ptMET*sin(ev.phiMET));
-      //The tops
-      TVector2 top1, top2;
-      //And the weight
-      Float_t w = 0;
-      
-      theMass.startVariations(l1, l2, bjets, jets, MET, top1, top2, w);
-      if(w > 0) { 
-        weights->Fill(w);
-        std::cout << "Event " << jentry << " with w " << w << std::endl;
-      } 
+      mlb->Fill((l1+j1).M());
+      mlb->Fill((l2+j2).M());
   }  
 
-  weights->Scale(1.0/weights->Integral());
-  TFile *foutput = new TFile("output.root", "UPDATE");
+  mlb->Scale(1.0/mlb->Integral());
+  TFile *foutput = new TFile("mlb.root", "UPDATE");
   foutput->cd();
-  weights->Write();
+  mlb->Write();
   foutput->Close();
   f->Close();
-  fshape->Close();
+
   return 1;
 
 }

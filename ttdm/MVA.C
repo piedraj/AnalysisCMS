@@ -14,17 +14,22 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir       = "../minitrees/week-1/TTDM/";
+//const TString inputdir       = "../../../../public/minitrees_week-1/";
+const TString inputdir       = "../minitrees/diciembre/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
 
+//const float metPfType1_cut = 50.; 
+//const float mt2ll_cut      = 80.;
+
 
 // Functions
 //------------------------------------------------------------------------------
-void MVATrain  (TString signal);
+void MVATrain  (float metPfType1_cut, float mt2ll_cut, TString signal);
 
-void MVARead   (TString signal,
+void MVARead   (TString MVA_id,
+		TString signal,
 		TString filename);
 
 void AddProcess(TString kind,
@@ -42,9 +47,11 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal     = "ttDM0001scalar00010", //
+void MVA(float metPfType1_cut = 0.,
+         float mt2ll_cut      = 0.,
+	 TString signal     = "ttDM0001scalar00010", //
 	 bool    doMVATrain = 1,
-	 bool    doMVARead  = 0)
+	 bool    doMVARead  = 1)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -58,7 +65,7 @@ void MVA(TString signal     = "ttDM0001scalar00010", //
 
   // Training
   //----------------------------------------------------------------------------
-  if (doMVATrain) MVATrain(signal);
+  if (doMVATrain) MVATrain(metPfType1_cut,mt2ll_cut,signal);
 
 
   // Reading
@@ -66,23 +73,28 @@ void MVA(TString signal     = "ttDM0001scalar00010", //
   if (doMVARead)
     {
 
-      MVARead(signal, "00_Fakes");
-      MVARead(signal, "01_Data");
-      MVARead(signal, "02_WZTo3LNu");
-      MVARead(signal, "03_VZ");
-      MVARead(signal, "04_TTTo2L2Nu");
-      MVARead(signal, "05_ST");
-      MVARead(signal, "06_WW");
-      MVARead(signal, "07_ZJets");
-      MVARead(signal, "09_TTV");
-      MVARead(signal, "10_HWW");
-      MVARead(signal, "11_Wg");
-      MVARead(signal, "12_Zg");
-      MVARead(signal, "13_VVV");
-      MVARead(signal, "14_HZ");
-      MVARead(signal, "15_WgStar");
+      //TString MVA_id = Form("met%.0f_mt2ll%.0f", metPfType1_cut, mt2ll_cut); 
+      TString MVA_id = Form("mt2ll%.0f", mt2ll_cut); 
 
-      MVARead(signal, signal);
+      MVARead(MVA_id, signal, "00_Fakes_reduced_1outof6");
+      MVARead(MVA_id, signal, "01_Data_reduced_1outof6");
+      MVARead(MVA_id, signal, "02_WZTo3LNu");
+      MVARead(MVA_id, signal, "03_VZ");
+      MVARead(MVA_id, signal, "04_TTTo2L2Nu");
+      MVARead(MVA_id, signal, "05_ST");
+      MVARead(MVA_id, signal, "06_WW");
+      MVARead(MVA_id, signal, "07_ZJets");
+      MVARead(MVA_id, signal, "09_TTV");
+      MVARead(MVA_id, signal, "10_HWW");
+      MVARead(MVA_id, signal, "11_Wg");
+      MVARead(MVA_id, signal, "12_Zg");
+      MVARead(MVA_id, signal, "13_VVV");
+      MVARead(MVA_id, signal, "14_HZ");
+      MVARead(MVA_id, signal, "15_WgStar");
+      MVARead(MVA_id, signal, signal);
+      //MVARead(MVA_id, signal, "ttDM0001scalar00010");
+      //MVARead(MVA_id, signal, "ttDM0001scalar00020");
+      //MVARead(MVA_id, signal, "ttDM0001scalar00050");
 
     }
 }
@@ -91,7 +103,7 @@ void MVA(TString signal     = "ttDM0001scalar00010", //
 //------------------------------------------------------------------------------
 // MVATrain
 //------------------------------------------------------------------------------
-void MVATrain(TString signal)
+void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 {
   TFile* outputfile = TFile::Open(trainingdir + signal + ".root", "recreate");
 
@@ -107,19 +119,20 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   _mctree.clear();
 
-  AddProcess("signal"    , signal        );
+  AddProcess("signal"    , signal);//"01_Data_reduced_1outof6"); //signal
   AddProcess("background", "04_TTTo2L2Nu");
+  
+  /*AddProcess("background", "14_HZ");
+  AddProcess("background", "10_HWW");
+  AddProcess("background", "06_WW");
+  AddProcess("background", "02_WZTo3LNu");
+  AddProcess("background", "03_VZ");
+  AddProcess("background", "11_Wg");
+  AddProcess("background", "07_ZJets");
+  AddProcess("background", "09_TTV");
+  AddProcess("background", "05_ST");
+  AddProcess("background", "00_Fakes_reduced_1outof6");*/
 
-  //  AddProcess("background", "14_HZ");
-  //  AddProcess("background", "10_HWW");
-  //  AddProcess("background", "06_WW");
-  //  AddProcess("background", "02_WZTo3LNu");
-  //  AddProcess("background", "03_ZZ");
-  //  AddProcess("background", "11_Wg");
-  //  AddProcess("background", "07_ZJets");
-  //  AddProcess("background", "09_TTV");
-  //  AddProcess("background", "05_ST");
-  //  AddProcess("background", "00_Fakes");
 
   Double_t weight = 1.0;
 
@@ -135,8 +148,8 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-	//factory->AddVariable("darkpt"       , "", "", 'F');
-	factory->AddVariable("topRecoW"     , "", "", 'F');
+	factory->AddVariable("newdarkpt"       , "", "", 'F');
+	//factory->AddVariable("topRecoW"     , "", "", 'F');
 	//factory->AddVariable("lep1pt"       , "", "", 'F');
 	//factory->AddVariable("lep1eta"      , "", "", 'F');
 	//factory->AddVariable("lep1phi"      , "", "", 'F'); 
@@ -187,13 +200,17 @@ void MVATrain(TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree("darkpt>0.&&channel==5", "NormMode=EqualNumEvents:nTrain_Signal=400:nTest_Signal=400:nTrain_Background=400:nTest_Background=400:!V");
-
+  //factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&newdarkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=80:nTest_Signal=80:nTrain_Background=400:nTest_Background=400:!V");
+  factory->PrepareTrainingAndTestTree("mt2ll>100.&&newdarkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA
   //----------------------------------------------------------------------------
-  factory->BookMethod(TMVA::Types::kMLP, "MLP01",
-  	      	      "H:!V:NeuronType=sigmoid:NCycles=500:VarTransform=Norm:HiddenLayers=4,4:TestRate=3:LearningRate=0.005");  
+
+    factory->BookMethod(TMVA::Types::kMLP, "MLP01",
+    	      	      "H:!V:NeuronType=sigmoid:NCycles=500:VarTransform=Norm:HiddenLayers=6,3:TestRate=1:LearningRate=0.005");
+
+  //factory->BookMethod(TMVA::Types::kMLP, "MLP01",
+  //	      	      "H:!V:NeuronType=sigmoid:NCycles=500:VarTransform=Norm:HiddenLayers=4,4:TestRate=3:LearningRate=0.005");  
 
   //factory->BookMethod(TMVA::Types::kMLP, "MLP02",
   //		      "H:!V:NeuronType=sigmoid:NCycles=40:VarTransform=Norm:HiddenLayers=20,10:TestRate=3:LearningRate=0.005"); 
@@ -225,7 +242,7 @@ void MVATrain(TString signal)
 //------------------------------------------------------------------------------
 // MVARead
 //------------------------------------------------------------------------------
-void MVARead(TString signal, TString filename)
+void MVARead(TString MVA_id, TString signal, TString filename)
 {
 
   cout << "\n\n\n" << filename << "\n\n\n" << endl; 
@@ -235,8 +252,8 @@ void MVARead(TString signal, TString filename)
 
   TMVA::Reader* reader   = new TMVA::Reader("!Color:!Silent");   
 
-	//float darkpt       ;
-	float topRecoW     ;
+	float newdarkpt       ;
+	//float topRecoW     ;
 	//float lep1eta      ; 
 	//float lep1phi      ;  
 	//float lep1mass     ;
@@ -282,8 +299,8 @@ void MVARead(TString signal, TString filename)
 	//float alignment    ;
 	//float planarity    ;
 
-	//reader->AddVariable( "darkpt"       , &darkpt        );
-	reader->AddVariable( "topRecoW"     , &topRecoW      );
+	reader->AddVariable( "newdarkpt"       , &newdarkpt        );
+	//reader->AddVariable( "topRecoW"     , &topRecoW      );
 	//reader->AddVariable( "lep1eta"      , &lep1eta       );
 	//reader->AddVariable( "lep1phi "     , &lep1phi       );
 	//reader->AddVariable( "lep1mass"     , &lep1mass      );
@@ -341,8 +358,8 @@ void MVARead(TString signal, TString filename)
 	
   //----- read 
 
-	//theTree->SetBranchAddress( "darkpt"       , &darkpt        );
-	theTree->SetBranchAddress( "topRecoW"     , &topRecoW      );
+	theTree->SetBranchAddress( "newdarkpt"       , &newdarkpt        );
+	//theTree->SetBranchAddress( "topRecoW"     , &topRecoW      );
 	//theTree->SetBranchAddress( "lep1eta"      , &lep1eta       );
 	//theTree->SetBranchAddress( "lep1phi "     , &lep1phi       );
 	//theTree->SetBranchAddress( "lep1mass"     , &lep1mass      );
@@ -400,7 +417,7 @@ void MVARead(TString signal, TString filename)
   	//theTree -> GetListOfBranches() -> Remove( b_delete );
    	//theTree -> Write();
  
- 	TBranch* b_mva01 = theTree->Branch("mva01_" + signal, &mva01, "mva/F" );
+ 	TBranch* b_mva01 = theTree->Branch("ANN_" + MVA_id + "_" + signal, &mva01, "mva/F" );
   	//TBranch* b_mva02 = theTree->Branch("mva02_" + signal, &mva02, "mva/F" );
   	//TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
   	//TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
