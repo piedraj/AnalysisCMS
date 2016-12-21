@@ -48,14 +48,14 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const int  _nqcd        = 9;
-const int  _npdf        = 100;
-const bool _savefigures = true;
+const int     _nqcd        = 9;
+const int     _npdf        = 100;
+const bool    _savefigures = true;
+const TString _filename    = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root";
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// eosmount eos
 // root -l -b -q getPdfQcd.C+
 //
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
@@ -67,7 +67,7 @@ void getPdfQcd()
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root");
+  TFile* file = TFile::Open(_filename);
 
   TH1D* h_weights_gen = (TH1D*)file->Get("list_vectors_weights");
 
@@ -84,8 +84,10 @@ void getPdfQcd()
 
   TCanvas* canvas = new TCanvas("canvas", "canvas");
 
-  tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*selection);  // Reading latino
-  //  tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*selection);  // Reading minitree
+  if (_filename.Contains("latino"))
+    tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*selection);
+  else
+    tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*selection);
 
 
   // Produce the QCD uncertainties
