@@ -226,6 +226,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
   h_mpmet_m2l     [ichannel][icut][ijet]->Fill(mpmet,    _m2l,    _event_weight);
+  h_mt2ll_m2l     [ichannel][icut][ijet]->Fill(_mt2ll,   _m2l,    _event_weight);
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
@@ -1322,10 +1323,11 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
-  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
-  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 100, 0, 1000, 100,  0, 1000);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 100, 0, 1000, 100,  0,    5);
 }
 
 
