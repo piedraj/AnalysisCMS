@@ -35,4 +35,5 @@ SOBJECTS	= $(SOURCES:.$(SrcSuf)=.$(DllSuf))
 
 Example:
 	$(CXX) -L${ROOTSYS}/lib $(ROOTCFLAGS) $(ROOTLIBS) -O2 -Wall -o Example Example.C
+	$(CXX) -L${ROOTSYS}/lib $(ROOTCFLAGS) $(ROOTLIBS) -O2 -Wall -o GenerateShape GenerateShape.C
 

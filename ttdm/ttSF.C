@@ -4,28 +4,30 @@
 
 enum{ fakes, data, WZ, VZ, TT, ST, WW, DY, TTV, HWW, Wg, Zg, VVV, HZ, WgStar, nprocess }; 
 
-const int nband = 5; 
+const float theLumi = 2.15; 
+
+const int nband = 4; 
 
 TString processID[nprocess]       ; 
 TH1F*     myhisto[nprocess]       ;
-float       yield[nprocess][nband];   // 5-bands  
+float       yield[nprocess][nband];  
 float          SF          [nband];
 float         eSF          [nband];
 
-float threshold = 0.60; 
-float      step = 0.05;
+float threshold = 100.; 
+float      width = 5.;
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString  inputdir = "diciembre";  // where the minitrees are stored
 
-const TCut mycut = "eventW*(channel==5)";                 
+const TCut mycut = "eventW*(mt2ll<100.&&darkpt>0.)";                 
 
 void GetHistogram( int process );
 
 
 void ttSF(){
 
-	processID[fakes ] = "00_Fakes"     ; 
-	processID[data  ] = "01_Data"      ; 
+	processID[fakes ] = "00_Fakes_reduced_1outof6"; 
+	processID[data  ] = "01_Data_reduced_1outof6" ; 
 	processID[WZ    ] = "02_WZTo3LNu"  ; 
 	processID[VZ    ] = "03_VZ"        ; 
 	processID[TT    ] = "04_TTTo2L2Nu" ; 
@@ -47,13 +49,15 @@ void ttSF(){
 
 		GetHistogram( i ); 
 
-		float myyield = ( i > data ) ?  lumi_fb_2016*myhisto[i]->Integral() : myhisto[i]->Integral(); 
+		float myyield = ( i > data ) ?  theLumi*myhisto[i]->Integral() : myhisto[i]->Integral(); 
 
-		if( i > data ) myhisto[i]->Scale(lumi_fb_2016); 
+		//cout << myyield << endl;
+
+		if( i > data ) myhisto[i]->Scale(theLumi); 
 
 		for( int j = 0; j < nband; j++ ){
 
-			yield[i][j] = myhisto[i]->Integral( myhisto[i]->FindBin(threshold - (nband-j)*step), myhisto[i]->FindBin(threshold - (nband-j-1)*step));
+			yield[i][j] = myhisto[i]->Integral( myhisto[i]->FindBin(threshold - (nband-j)*width), myhisto[i]->FindBin(threshold - (nband-j-1)*width));
 
 		
 		}
@@ -61,7 +65,7 @@ void ttSF(){
 	}
 
 
-   	TH1F* ttSF = new TH1F( "ttSF","tt SF", 20, 0., 1.0 );
+   	TH1F* ttSF = new TH1F( "ttSF","tt SF", nband, threshold-nband*width, threshold );
  
 	for( int j = 0; j < nband; j++ ){
 
@@ -73,30 +77,39 @@ void ttSF(){
 		 SF[j] = ( yield[data][j] - bkg )/yield[TT][j];
 		eSF[j] = sqrt( yield[data][j] )  /yield[TT][j]; 
 
-		//cout << SF[j] << " +/- " << eSF[j] << endl;
+		//cout << j << " -  " << SF[j] << " +/- " << eSF[j] << endl;
 
-		ttSF -> SetBinContent( ttSF->FindBin(threshold - (nband-j)*step+step/2), SF[j]  ); 
-		ttSF -> SetBinError  ( ttSF->FindBin(threshold - (nband-j)*step+step/2), eSF[j] );  
+		ttSF -> SetBinContent( ttSF->FindBin(threshold - (nband-j)*width+width/2), SF[j]  ); 
+		ttSF -> SetBinError  ( ttSF->FindBin(threshold - (nband-j)*width+width/2), eSF[j] );  
 
 	}
 
-	cout << ttSF->Integral() << endl;
+	ttSF->Fit("pol0");
 	
-	ttSF->Fit("pol1");
+
+	TCanvas* mycanvas = new TCanvas("mycanvas", "mycanvas"); 
+
+	ttSF -> SetStats(false); 
+
+	ttSF -> Draw(); 
+
+	mycanvas -> SaveAs("figures/ttSF.pdf");
+	mycanvas -> SaveAs("figures/ttSF.png");
+	
+
 
 }
 
 
 void GetHistogram( int process ){
 
-	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" ); 
+	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
 	
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-	//mytree -> Draw( "metPfType1                >> metPfType1               ( 3000,   0  ,   3000   )", mycut );
-	mytree -> Draw( "mva01_ttDM0001scalar00500 >> mva01_ttDM0001scalar00500 ( 120,  -0.1,      1.1 )", mycut );
+	mytree -> Draw( "mt2ll >> mt2ll             ( 3000,   0  ,   3000   )", mycut );
 
-	//myhisto[process] = (TH1F*) gDirectory -> Get( "metPfType1"                );
-	myhisto[process] = (TH1F*) gDirectory -> Get( "mva01_ttDM0001scalar00500" );
+	myhisto[process] = (TH1F*) gDirectory -> Get( "mt2ll"            );
+
 
 }

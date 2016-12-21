@@ -1,7 +1,7 @@
 #define AnalysisCMS_cxx
 #include "../include/AnalysisCMS.h"
 #include "../include/lester_mt2_bisect.h"
-#include "../top-reco/src/MassVariations.cc"
+#include "../top-reco/src/MassReconstructor.cc"
 #include "../razor/Razor.C"
 //#include "../razor/SuperRazor.C"
 
@@ -229,6 +229,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
   h_mpmet_m2l     [ichannel][icut][ijet]->Fill(mpmet,    _m2l,    _event_weight);
+  h_mt2ll_m2l     [ichannel][icut][ijet]->Fill(_mt2ll,   _m2l,    _event_weight);
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
@@ -385,6 +386,8 @@ void AnalysisCMS::Setup(TString analysis,
 
   GetGenWeightsLHE();
 
+  GetMlb(); 
+
   return;
 }
 
@@ -466,8 +469,8 @@ void AnalysisCMS::ApplyWeights()
 	  _analysis.EqualTo("Control"))
 	{
 	  sf_btag    = bPogSF_CSVM;
-	  sf_btag_up = bPogSF_CSVM_Up;
-	  sf_btag_do = bPogSF_CSVM_Down;
+	  sf_btag_up = bPogSF_CSVM_up;
+	  sf_btag_do = bPogSF_CSVM_down;
 	}
       else
 	{
@@ -1108,7 +1111,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   //  GetDark();
 
-  //  GetTopReco();
+  GetTopReco();
 
   GetSphericity(GetMomentumTensor());
   GetAlignment(GetMomentumTensor());
@@ -1332,10 +1335,11 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 100, 0,  100, 100, 40, 140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
-  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
-  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 100, 0, 1000, 100,  0, 1000);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 100, 0, 1000, 100,  0,    5);
 }
 
 
@@ -1374,6 +1378,7 @@ void AnalysisCMS::OpenMinitree()
   // D
   minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
   minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
   minitree->Branch("dphijet1met",      &_dphijet1met,      "dphijet1met/F");
@@ -1502,6 +1507,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("top2eta_gen",      &_top2eta_gen,      "top2eta_gen/F");
   minitree->Branch("top2phi_gen",      &_top2phi_gen,      "top2phi_gen/F");
   minitree->Branch("top2pt_gen",       &_top2pt_gen,       "top2pt_gen/F");
+  minitree->Branch("topRecoW",         &_topRecoW,         "topRecoW/F");
   minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
@@ -2215,39 +2221,97 @@ void AnalysisCMS::GetDark()
   }
 }
 
+//------------------------------------------------------------------------------
+// GetMlb
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetMlb()
+{
+  TFile* fshape  = new TFile("/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/top-reco/mlb.root");
+
+  _shapemlb = (TH1F*)fshape->Get("mlb");
+}
+
 
 //------------------------------------------------------------------------------
 // GetTopReco
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetTopReco()
 {
-  MassVariations theMass;
+  if (_njet          < 2) return;
+  if (_nbjet30csvv2m < 1) return; 
 
-  std::vector<TLorentzVector> myjets, nu1, nu2;
-  std::vector<Float_t> jet_uncertainty;
+  MassReconstructor theMass(100, _shapemlb);
 
-  TVector2 myMET;
 
-  // metPfType1Phi [-pi,   pi]
-  // myMET.Phi()   [  0, 2*pi]
+  // MET
+  //----------------------------------------------------------------------------
+  TVector2 MET;
 
-  myMET.SetMagPhi(metPfType1, metPfType1Phi);
+  MET.SetMagPhi(metPfType1, metPfType1Phi);
 
-  for (int i=0; i<AnalysisJets.size(); i++) {
 
-    myjets.push_back(AnalysisJets.at(i).v);
+  // Leptons
+  //----------------------------------------------------------------------------
+  TLorentzVector l1, l2;
 
-    jet_uncertainty.push_back(5.);  // GeV
+  l1.SetPtEtaPhiM(_lep1pt, _lep1eta, _lep1phi, _lep1mass); 
+  l2.SetPtEtaPhiM(_lep2pt, _lep2eta, _lep2phi, _lep2mass);
+
+
+  // Jets
+  //----------------------------------------------------------------------------
+  std::vector<TLorentzVector> jets;
+  std::vector<Float_t>        unc;
+
+  for(int i=0; i<_jet_pt.size(); i++) {
+    
+    TLorentzVector jet_tlv;
+    
+    jet_tlv.SetPtEtaPhiM(_jet_pt.at(i), _jet_eta.at(i), _jet_phi.at(i), 0.);
+    
+    jets.push_back(jet_tlv);
+    
+    unc.push_back(5.);  // GeV 
   }
 
-  theMass.performAllVariations(1, 1, 1, Lepton1.v, Lepton2.v, myjets, jet_uncertainty, myMET, nu1, nu2);
 
-  _topReco = nu1.size();
+  // b-jets
+  //----------------------------------------------------------------------------
+  std::vector<TLorentzVector> bjets;
 
-  if (nu1.size() == 1 || nu1.size() == 3)
-    {
-      printf("\n [AnalysisCMS::GetTopReco] Warning, nu1.size() = %d\n\n", nu1.size());
-    }
+  for (int i=0; i<_bjet30csvv2m_pt.size(); i++) {
+    
+    TLorentzVector bjet30csvv2m_tlv;
+    
+    bjet30csvv2m_tlv.SetPtEtaPhiM(_bjet30csvv2m_pt.at(i), _bjet30csvv2m_eta.at(i), _bjet30csvv2m_phi.at(i), 0.);
+    
+    bjets.push_back(bjet30csvv2m_tlv);
+  }
+
+
+  // Neutrinos & tops
+  //----------------------------------------------------------------------------
+  std::vector<TLorentzVector> nu1, nu2;
+  
+  TVector2 top1, top2;
+
+
+  // Do the top reconstruction
+  //----------------------------------------------------------------------------
+  theMass.startVariations( l1, l2, bjets, jets, MET, top1, top2, _topRecoW );
+	
+  
+  // Extract the mediator pt
+  //----------------------------------------------------------------------------
+  _darkpt = 0.;
+
+  if (top1.X() == 0 && top1.Y() == 0 && top2.X() == 0 && top2.Y() == 0) {
+    
+    int theJet1 = -1; 
+    int theJet2 = -1; 
+    
+    _darkpt = theMass.performAllVariations(1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2);
+  }
 }
 
 
@@ -2256,9 +2320,12 @@ void AnalysisCMS::GetTopReco()
 //------------------------------------------------------------------------------
 TMatrixDSym AnalysisCMS::GetMomentumTensor()
 {
-  TMatrixDSym smatrix(3);  // TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
+  // TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
+  TMatrixDSym smatrix(3);
+
 
   // Leptons
+  //----------------------------------------------------------------------------
   smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
   smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
   smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
@@ -2285,6 +2352,7 @@ TMatrixDSym AnalysisCMS::GetMomentumTensor()
 
 
   // Jets
+  //----------------------------------------------------------------------------
   for (unsigned int i=0; i<AnalysisJets.size(); i++) {
 
     smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();

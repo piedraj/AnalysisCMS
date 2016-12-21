@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
-const Bool_t allplots   = false;
+const Bool_t allplots   = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";

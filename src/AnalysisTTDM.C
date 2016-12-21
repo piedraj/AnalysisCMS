@@ -58,6 +58,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //if ( _nentries > 1000 )  _nentries = 1000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
+    //cout << "\n" << jentry << endl;
+
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
@@ -97,8 +99,18 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // AN-16-011, IFCA ¿?
     //--------------------------------------------------------------------------
     bool pass   = true;
+<<<<<<< HEAD
     
+=======
+
+//FillLevelHistograms(step_1, pass);
+//FillLevelHistograms(step_2, pass);
+//FillLevelHistograms(step_3, pass);
+
+>>>>>>> a46cfc78e81e632d74f70129ab5bc1210d9eff22
     pass &= (std_vector_lepton_pt->at(2) < 10.);
+
+
 
     // missing: 
     // Cut applied in AN-16-105 but not in AN-16-011 = 
@@ -107,9 +119,15 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
     pass &= ( _m2l > 20.                                    );
+//FillLevelHistograms(step_4, pass);
     pass &= ( _channel == em  ||  fabs(_m2l - Z_MASS) > 15. );
+//FillLevelHistograms(step_5, pass);
     pass &= ( _njet > 1                                     );
+//FillLevelHistograms(step_6, pass);
+//pass &= ( metPfType1  > 50.                             );
+//FillLevelHistograms(step_7, pass);
     pass &= ( _nbjet30csvv2m > 0                            );
+//FillLevelHistograms(step_8, pass);
 
     FillLevelHistograms(TTDM_01_NewPresel, pass);
 

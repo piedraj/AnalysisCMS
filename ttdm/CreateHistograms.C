@@ -14,26 +14,34 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx,
       sphericity, alignment, planarity,
-      topRecoW, darkpt,
-      //mva01, 
+      darkpt,
+      mva01,
       nhisto }; 
 
 TString b_name[nhisto];
 TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
-const bool doshape = 1; 
+const bool doshape = 0; 
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString  inputdir = "tt-xs";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
 ofstream yields;   
 
-//channels: ee=3, mm=4, em=5
-//const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
-const TCut mycut = "metPfType1>80.&&mt2ll>100.&&mt2ll<140.0";                 
+const TCut mycut           = "eventW          *(mt2ll>100.&&metPfType1>80.&&newdarkpt>100.)";  
+const TCut mycut3          = "eventW          *(newdarkpt>0.)";  
+const TCut mycutx          = "eventW          *(mt2ll>75.&&mt2ll<100.&&newdarkpt>0.&&metPfType1>80.)";  
+const TCut mycut_Idisoup   = "eventW_Idisoup  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+const TCut mycut_Idisodo   = "eventW_Idisodo  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+const TCut mycut_Triggerup = "eventW_Triggerup*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+const TCut mycut_Triggerdo = "eventW_Triggerdo*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+const TCut mycut_Recoup    = "eventW_Recoup   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+const TCut mycut_Recodo    = "eventW_Recodo   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+
 
 void CreateHistograms2( TString process );
+
 
 void CreateHistograms(){
 
@@ -102,10 +110,11 @@ void CreateHistograms(){
 	b_name[alignment ] = "alignment" ;
 	b_name[planarity ] = "planarity" ;
 
-	b_name[topRecoW  ] = "topRecoW"  ;
-	b_name[darkpt    ] = "darkpt"    ;
+	//b_name[topRecoW  ] = "topRecoW"  ;
+	b_name[darkpt    ] = "newdarkpt"    ;
 
-	//b_name[mva01     ] = "mva01_ttDM0001scalar00500";
+	b_name[mva01     ] = "ANN_mt2ll0_ttDM0001scalar00010";
+
 
 	for( int i = 0; i < nhisto; i++ ){
 
@@ -125,17 +134,27 @@ void CreateHistograms(){
 	CreateHistograms2("05_ST"       );
 	CreateHistograms2("06_WW"       );
 	CreateHistograms2("07_ZJets"    );
+	CreateHistograms2("00_Fakes_reduced_1outof6");
+	CreateHistograms2("02_WZTo3LNu" );
+	CreateHistograms2("03_VZ"       );
 	CreateHistograms2("09_TTV"      );
-	CreateHistograms2("10_HWW"      );
 	CreateHistograms2("11_Wg"       );
+	CreateHistograms2("14_HZ"       );
+
+	////CreateHistograms2("TTTo2L2Nu_alphaS01108");
+
+	CreateHistograms2("10_HWW"      );
 	CreateHistograms2("12_Zg"       );
 	CreateHistograms2("13_VVV"      );
-	CreateHistograms2("14_HZ"       );
 	CreateHistograms2("15_WgStar"   );
 
-	//CreateHistograms2("ttDM0001scalar00010");
-	//CreateHistograms2("ttDM0001scalar00050");
-	CreateHistograms2("ttDM0001scalar00500");
+	//CreateHistograms2("ttDM0001pseudo00010");
+	//CreateHistograms2("ttDM0001pseudo00020");
+	//CreateHistograms2("ttDM0001pseudo00050");
+	//CreateHistograms2("ttDM0001pseudo00100");
+	//CreateHistograms2("ttDM0001pseudo00200");
+	//CreateHistograms2("ttDM0001pseudo00300");
+	//CreateHistograms2("ttDM0001pseudo00500");*/
 
 	cout << "\n \n The End !!! \n \n" << endl; 
 
@@ -149,18 +168,18 @@ void CreateHistograms2( TString process ){
         //TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
         TFile* myfile = new TFile(inputdir + process + ".root", "read"); 
 
-	cout << "\n\n" << process << "\n" << endl; 
-
-	//TFile* myfile = new TFile( "/afs/cern.ch/work/c/cprieels/public/ForJuan/minitrees/minitrees_week-1/TTDM/" + process + ".root", "read" ); 
+	TFile* myfile = new TFile( "../minitrees/diciembre/" + process + ".root", "read" ); 
 
 	TFile* storagefile; 
 	TFile* shape_f; 
 
 	if ( doshape == 0)  storagefile = new TFile( outputdir + "/" + process + ".root", "recreate" );
 
-	if ( doshape == 1)      shape_f = new TFile( outputdir + "/datacard.root"       , "update"   );
+	if ( doshape == 1)      shape_f = new TFile( "datacard.root", "update"   );
 	
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
+
+	float bines[3]={100,140,999};
 
 
 	mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", mycut );
@@ -232,10 +251,10 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", mycut );
 	mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", mycut );
 
-	mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
+	//mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
 	mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
 
-	//mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+	mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
 
 	myfile -> Close();
 
@@ -260,15 +279,17 @@ void CreateHistograms2( TString process ){
 	}
 
 
-	//if( process == "00_Fakes" || process == "01_Data" ) yields << Form( "%20s \t %10.3f \n", process.Data(),              myhisto[0]->Integral() );
-	//else                                                yields << Form( "%20s \t %10.3f \n", process.Data(), lumi_fb_2016*myhisto[0]->Integral() );
-
+	//if( process == "00_Fakes_reduced_1outof6" || process == "01_Data_reduced_1outof6" ) yields << Form( "%20s \t %10.3f \n", process.Data(), myhisto[0]->Integral() );
+	//else                                                                           yields << Form( "%20s \t %10.3f \n", process.Data(), 2.15*myhisto[0]->Integral() );
+  
 
 	if( doshape == 1 ){ 
 
 		int k = mt2ll; 
 
-		TH1F* shape_h = (TH1F*) myhisto[k] -> Clone( process );
+		TH1F* shape_h = (TH1F*) myhisto[k] -> Clone( process );// + "_Recodo" );
+
+		if( process != "00_Fakes" && process != "01_Data" ) shape_h -> Scale( lumi_fb_2016 );
 
 		shape_h -> Write(); 
 

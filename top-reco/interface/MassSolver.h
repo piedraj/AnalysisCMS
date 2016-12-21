@@ -21,7 +21,7 @@ class MassSolver
     public:
   
         MassSolver();
-        ~MassSolver() {/* cout << "MassSolver_class: destructor executing!" << endl; */};
+        ~MassSolver() {/*cout << "MassSolver_class: destructor executing!" << endl;*/};
 
         bool solve( const TVector2 & ETmiss , const TLorentzVector & b , const TLorentzVector & bbar , const TLorentzVector & lep1 , const TLorentzVector & lep2 , double mW1 , double mW2 , double mt1 , double mt2 , vector<TLorentzVector> & nu1 , vector<TLorentzVector> & nu2 );
 
@@ -38,6 +38,12 @@ class MassSolver
                          double pnux, double pnuy, double* pnuz);
         double evalterm1(vector<double> *a1, double pnux, double pnuy);
         double evalterm2(vector<double> *a2, double pnux, double pnuy);
+        void gradient(const TVector2 &met, const TLorentzVector &bq1 , const TLorentzVector &bq2 , const TLorentzVector &lep1, const TLorentzVector &lep2, 
+                      double mW1, double mW2, double mt1, double mt2, vector<double> &grad, double step, double lambda);
+        void gradient(double* ETmiss, double* b, double* bb, double* lp, double* lm, double mWp, double mWm, double mt, double mtb, vector<double> &grad, double step, double lambda);
+        double cost(const TVector2 &met, const TLorentzVector &bq1 , const TLorentzVector &bq2 , const TLorentzVector &lep1, const TLorentzVector &lep2, double mW1, double mW2, double mt1, double mt2);
+        double cost(double* ETmiss, double* b, double* bb, double* lp, double* lm, double mWp, double mWm, double mt, double mtb);
+
   
     private: 
   

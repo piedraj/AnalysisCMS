@@ -432,8 +432,8 @@ public :
    Float_t         bPogSF_CSVL_Up;
    Float_t         bPogSF_CSVL_Down;
    Float_t         bPogSF_CSVM;
-   Float_t         bPogSF_CSVM_Up;
-   Float_t         bPogSF_CSVM_Down;
+   Float_t         bPogSF_CSVM_up;
+   Float_t         bPogSF_CSVM_down;
    Float_t         bPogSF_CSVT;
    Float_t         bPogSF_CSVT_Up;
    Float_t         bPogSF_CSVT_Down;
@@ -885,8 +885,8 @@ public :
    TBranch        *b_bPogSF_CSVL_Up;   //!
    TBranch        *b_bPogSF_CSVL_Down;   //!
    TBranch        *b_bPogSF_CSVM;   //!
-   TBranch        *b_bPogSF_CSVM_Up;   //!
-   TBranch        *b_bPogSF_CSVM_Down;   //!
+   TBranch        *b_bPogSF_CSVM_up;   //!
+   TBranch        *b_bPogSF_CSVM_down;   //!
    TBranch        *b_bPogSF_CSVT;   //!
    TBranch        *b_bPogSF_CSVT_Up;   //!
    TBranch        *b_bPogSF_CSVT_Down;   //!
@@ -1592,8 +1592,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("bPogSF_CSVL_Up", &bPogSF_CSVL_Up, &b_bPogSF_CSVL_Up);
    fChain->SetBranchAddress("bPogSF_CSVL_Down", &bPogSF_CSVL_Down, &b_bPogSF_CSVL_Down);
    fChain->SetBranchAddress("bPogSF_CSVM", &bPogSF_CSVM, &b_bPogSF_CSVM);
-   fChain->SetBranchAddress("bPogSF_CSVM_Up", &bPogSF_CSVM_Up, &b_bPogSF_CSVM_Up);
-   fChain->SetBranchAddress("bPogSF_CSVM_Down", &bPogSF_CSVM_Down, &b_bPogSF_CSVM_Down);
+   fChain->SetBranchAddress("bPogSF_CSVM_up", &bPogSF_CSVM_up, &b_bPogSF_CSVM_up);
+   fChain->SetBranchAddress("bPogSF_CSVM_down", &bPogSF_CSVM_down, &b_bPogSF_CSVM_down);
    fChain->SetBranchAddress("bPogSF_CSVT", &bPogSF_CSVT, &b_bPogSF_CSVT);
    fChain->SetBranchAddress("bPogSF_CSVT_Up", &bPogSF_CSVT_Up, &b_bPogSF_CSVT_Up);
    fChain->SetBranchAddress("bPogSF_CSVT_Down", &bPogSF_CSVT_Down, &b_bPogSF_CSVT_Down);

@@ -48,47 +48,46 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const int     _nqcd        = 9;
-const int     _npdf        = 100;
-const bool    _savefigures = true;
-const TString _filename    = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root";
+const int  _nqcd        = 9;
+const int  _npdf        = 100;
+const bool _savefigures = false;
+const TCut selection = "metPfType1>0.&&mt2ll>0.";
+
+// Functions
+//------------------------------------------------------------------------------
+void PrintProgress(Long64_t counter, Long64_t total);
+void getPdfQcd(TString process);
+
+// Main
+//------------------------------------------------------------------------------
+void GetThUnc(){
+
+	getPdfQcd("WZTo3LNu");
+	
+}
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
-// root -l -b -q getPdfQcd.C+
-//
-// https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getPdfQcd()
+// getPdfQcd
+//------------------------------------------------------------------------------
+void getPdfQcd(TString process)
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  TFile* file = TFile::Open(_filename);
+  TFile* file = new TFile("../minitrees/check/TTDM/" + process + ".root");
 
   TH1D* h_weights_gen = (TH1D*)file->Get("list_vectors_weights");
 
 
-  // Fill h_weights_rec
-  //----------------------------------------------------------------------------
-  TH1D* h_weights_rec = (TH1D*)h_weights_gen->Clone("h_weights_rec");
-
-  h_weights_rec->Reset();
-
   TTree* tree = (TTree*)file->Get("latino");
 
-  TCut selection = "metPfType1 > 40 && (std_vector_jet_pt[0] < 20 || std_vector_jet_cmvav2[0] < -0.715)";
+  tree -> Draw( "0*LHEweight+Iteration$+0.5 >> myhistogram(200, 0, 200)", "LHEweight[Iteration$]"*selection );
 
-  TCanvas* canvas = new TCanvas("canvas", "canvas");
+  TH1D* h_weights_rec = (TH1D*) gDirectory->Get( "myhistogram" );
 
-  if (_filename.Contains("latino"))
-    tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*selection);
-  else
-    tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*selection);
-
+  h_weights_rec -> Draw(); 
+	
 
   // Produce the QCD uncertainties
   //----------------------------------------------------------------------------
@@ -117,6 +116,8 @@ void getPdfQcd()
 
   // Draw the PDF distribution
   //----------------------------------------------------------------------------
+  TCanvas* canvas = new TCanvas("canvas", "canvas");
+
   h_pdfratio->SetFillColor(kRed+1);
   h_pdfratio->SetFillStyle(  1001);
   h_pdfratio->SetLineColor(kRed+1);
@@ -161,12 +162,32 @@ void getPdfQcd()
 
   // Print the final uncertainties
   //----------------------------------------------------------------------------
-  printf("\n Acceptance uncertainties\n");
+  printf("\n Acceptance uncertainties for the process: %s \n", process.Data());
   printf("-----------------------------------------\n");
   printf(" nominal acceptance * eff      %4.2f%%\n", 1e2 * h_weights_rec->GetBinContent(1) / h_weights_gen->GetBinContent(1));
   printf(" QCD         mu=0.5 / mu=2.0   %4.2f%% / %4.2f%%\n", qcd_mu05, qcd_mu20);
-  printf(" alpha_s     265000 / 266000   %4.2f%% / %4.2f%%\n", alpha_265000, alpha_266000);
+  //printf(" alpha_s     265000 / 266000   %4.2f%% / %4.2f%%\n", alpha_265000, alpha_266000);
   printf(" PDF                           %4.2f%%\n", pdf);
-  printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
+  //printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
   printf("\n");
 }
+
+
+//------------------------------------------------------------------------------
+// PrintProgress
+//------------------------------------------------------------------------------
+void PrintProgress(Long64_t counter, Long64_t total)
+{
+  double progress = 1e2 * (counter+1) / total;
+
+  double fractpart, intpart;
+
+  fractpart = modf(progress, &intpart);
+
+  if (fractpart < 1e-2)
+    {
+      std::cout << " Progress: " << int(ceil(progress)) << "%\r";
+      std::cout.flush();
+    }
+}
+
