@@ -79,9 +79,9 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetDark           ();  
 
-  void        Get_mlb           (); 
+  void        GetMlb            (); 
 
-  void        GetTopReco     ();
+  void        GetTopReco        ();
 
   void        GetMET            (float    module,
 				 float    phi);
