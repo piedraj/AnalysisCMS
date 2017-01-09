@@ -18,11 +18,7 @@ void MakeDatacard(){
 
 		GetYield( i ); 
 
-		GetRelativeUncertainties( i ); 
-
 	}
-
-	//GetYield( TT ); 
 
 	WriteDatacard(); 
 
@@ -80,7 +76,11 @@ void GetYield( int process ){
 
 		if( process != data && process != fakes ) yield[process][j] *= thelumi;
 
-		relunc[process][j] = yield[process][j]/yield[process][nominal];  
+		relunc[process][j] = yield[process][j]/yield[process][nominal]; 
+
+		// protections
+
+		if( process == fakes ) relunc[process][j] = -9999.;  
 
 		//cout << systematicID[j] << "\t" << yield[process][j] << "\t" << yield[process][nominal] << "\t" << relunc[process][j] << endl; 
 
@@ -104,31 +104,34 @@ void WriteDatacard(){
 	datacard << Form("observation %5.0f \n", yield[data][nominal]);
 	datacard << "------------\n" ;
 	datacard << "\n" ;
-	datacard << "bin        \t     \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1 \n" ;
-	datacard << "process    \t     \t  DM   \t  TT   \t  ST   \t  WW   \t  DY   \t fakes \t  WZ   \t  ZZ   \t  TTV  \t  Wg   \t  HZ \n" ;
-	datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   8   \t   9   \t  10 \n" ;
-	datacard << Form("rate       \t     \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \n", 
-                    yield[ttDM][nominal], yield[TT][nominal], yield[ST][nominal] , yield[WW][nominal], yield[DY][nominal], yield[fakes][nominal], 
-                    yield[WZ][nominal] , yield[VZ][nominal], yield[TTV][nominal], yield[Wg][nominal], yield[HZ][nominal] );
+datacard << "bin        \t     \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1    \t 1   \n" ;
+datacard << "process    \t     \t  DM   \t fakes \t  TT   \t  ST   \t  DY   \t  TTV  \t  WW   \t  WZ   \t  VZ   \t  VVV  \t  Wg   \t  Zg   \t  HWW   \t  HZ  \n" ;
+datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   8   \t   9   \t  10   \t  11   \t  12    \t    13  \n" ;
+datacard << Form("rate  \t     \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \n", 
+                    yield[ttDM][nominal], yield[fakes][nominal], yield[TT][nominal], yield[ST][nominal], yield[DY][nominal], yield[TTV][nominal], 
+		    yield[WW][nominal], yield[WZ][nominal], yield[VZ][nominal], yield[VVV][nominal], yield[Wg][nominal], yield[Zg][nominal], 
+		    yield[HWW][nominal], yield[HZ][nominal] );
 	datacard << "------------ \n" ;
 
 	for(int j = 1; j < nsystematic; j++){   // systematic
+
+		if( j%2 == 0 ) continue; 
 
 		datacard << Form( "%10s \t lnN \t", systematicID[j].Data()); 
 
 		for( int i = 1; i < nprocess; i++ ){   // process
 
-			//if( rel_unc[i][j] < -9998 ){
+			if( relunc[i][j] < -9998 ){
 
-			//	datacard << Form( "%7s \t", "   -   " ); 
+				datacard << Form( "%7s \t", "   -   " ); 
 			
-			//}
+			}
 
-			//else {
+			else {
 
 				datacard << Form( "%7.3f \t", relunc[i][j] );
 
-			//}
+			}
 
 
 		}   // process	
