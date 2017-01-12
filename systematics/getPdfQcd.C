@@ -48,19 +48,14 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const int  _nqcd        = 9;
-const int  _npdf        = 100;
-const bool _savefigures = true;
-
-
-// Functions
-//------------------------------------------------------------------------------
-void PrintProgress(Long64_t counter, Long64_t total);
+const int     _nqcd        = 9;
+const int     _npdf        = 100;
+const bool    _savefigures = true;
+const TString _filename    = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root";
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// eosmount eos
 // root -l -b -q getPdfQcd.C+
 //
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
@@ -72,79 +67,27 @@ void getPdfQcd()
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
 
-  TFile* file = new TFile("eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_repro/07Jun2016_spring16_mAODv2_12pXfbm1_repro/MCl2loose__hadd__bSFL2pTEff__l2tight__vh3lSel/latino_WZTo3LNu.root");
+  TFile* file = TFile::Open(_filename);
 
   TH1D* h_weights_gen = (TH1D*)file->Get("list_vectors_weights");
-  TH1D* h_weights_rec = (TH1D*)h_weights_gen->Clone();
+
+
+  // Fill h_weights_rec
+  //----------------------------------------------------------------------------
+  TH1D* h_weights_rec = (TH1D*)h_weights_gen->Clone("h_weights_rec");
 
   h_weights_rec->Reset();
 
   TTree* tree = (TTree*)file->Get("latino");
 
-  float chlll;
-  float metPfType1;
-  float mlll;
-  float njet_3l;
-  float zveto_3l;
+  TCut selection = "metPfType1 > 40 && (std_vector_jet_pt[0] < 20 || std_vector_jet_cmvav2[0] < -0.715)";
 
-  tree->SetBranchAddress("chlll",      &chlll);
-  tree->SetBranchAddress("metPfType1", &metPfType1);
-  tree->SetBranchAddress("mlll",       &mlll);
-  tree->SetBranchAddress("njet_3l",    &njet_3l);
-  tree->SetBranchAddress("zveto_3l",   &zveto_3l);
+  TCanvas* canvas = new TCanvas("canvas", "canvas");
 
-  std::vector<float> *std_vector_LHE_weight = 0;
-  std::vector<float> *std_vector_jet_cmvav2 = 0;
-  std::vector<float> *std_vector_jet_pt     = 0;
-
-  tree->SetBranchAddress("std_vector_LHE_weight", &std_vector_LHE_weight);
-  tree->SetBranchAddress("std_vector_jet_cmvav2", &std_vector_jet_cmvav2);
-  tree->SetBranchAddress("std_vector_jet_pt",     &std_vector_jet_pt);
-
-
-  // Loop over the tree
-  //----------------------------------------------------------------------------
-  std::cout << std::endl;
-
-  for (int ievent=0; ievent<tree->GetEntries(); ievent++) {
-    
-    tree->GetEntry(ievent);
-    
-    PrintProgress(ievent, tree->GetEntries());
-
-
-    // Make and apply your analysis selection
-    //--------------------------------------------------------------------------
-    bool pass = (njet_3l    ==   0 &&
-		 metPfType1 >   40 &&
-		 zveto_3l   <   20 &&
-		 abs(chlll) ==   1 &&
-		 mlll       >  100 &&
-		 (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.715) &&
-		 (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.715) &&
-		 (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.715) &&
-		 (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.715) &&
-		 (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.715) &&
-		 (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.715) &&
-		 (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.715) &&
-		 (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.715) &&
-		 (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.715) &&
-		 (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.715));
-    
-    if (!pass) continue;
-
-
-    // Loop over weights
-    //--------------------------------------------------------------------------
-    for (int iWeight=0; iWeight<h_weights_rec->GetNbinsX(); iWeight++)
-      {
-	float ratio = std_vector_LHE_weight->at(iWeight) / std_vector_LHE_weight->at(0);
-	
-	h_weights_rec->Fill(iWeight+0.5, ratio);
-      }
-  }
-
-  std::cout << std::endl;
+  if (_filename.Contains("latino"))
+    tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*selection);
+  else
+    tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*selection);
 
 
   // Produce the QCD uncertainties
@@ -174,8 +117,6 @@ void getPdfQcd()
 
   // Draw the PDF distribution
   //----------------------------------------------------------------------------
-  TCanvas* canvas = new TCanvas("canvas", "canvas");
-
   h_pdfratio->SetFillColor(kRed+1);
   h_pdfratio->SetFillStyle(  1001);
   h_pdfratio->SetLineColor(kRed+1);
@@ -228,23 +169,4 @@ void getPdfQcd()
   printf(" PDF                           %4.2f%%\n", pdf);
   printf(" PDF+alpha_s                   %4.2f%%\n", pdf_alpha);
   printf("\n");
-}
-
-
-//------------------------------------------------------------------------------
-// PrintProgress
-//------------------------------------------------------------------------------
-void PrintProgress(Long64_t counter, Long64_t total)
-{
-  double progress = 1e2 * (counter+1) / total;
-
-  double fractpart, intpart;
-
-  fractpart = modf(progress, &intpart);
-
-  if (fractpart < 1e-2)
-    {
-      std::cout << " Progress: " << int(ceil(progress)) << "%\r";
-      std::cout.flush();
-    }
 }
