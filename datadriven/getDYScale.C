@@ -102,25 +102,17 @@ TString      xtitle;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// This macro computes the DY scale factor for analyses that veto the Z-peak. It
-// needs as input a set of two-dimensional histograms, with MET in the x-axis
-// and m2l in the y-axis. These histograms have been filled once all analysis
-// cuts have been applied, but removing the Z-peak veto and any MET requirement.
-// The scale factor for the ee channel (the procedure is identical for the mm
-// channel) is computed with equations (1) and (2).
+// root -l getDYScale.C
+//
+// This macro computes the DY scale factor for analyses that veto the Z-peak.
+// It needs as input a set of two-dimensional histograms, with varx (which can
+// be met, mpmet, mt2ll, etc) in the x-axis, and m2l in the y-axis. These
+// histograms have been filled once all analysis cuts have been applied, but
+// removing the Z-peak veto and any requirement on varx. The scale factor for
+// the ee channel is computed with equations (1) and (2).
 //
 //    (1) k_ee  = 0.5 * sqrt(n_ee / n_mm);
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
-//
-// Results for 2.318 fb-1 and MET > 45 GeV
-//
-//    SF(ee,est/DY)  1.344 +- 0.047
-//    SF(mm,est/DY)  1.405 +- 0.036
-//
-// Results for 2.318 fb-1, MET > 45 GeV and nbjet20cmvav2l > 0
-//
-//    SF(ee,est/DY)  1.351 +- 0.086
-//    SF(mm,est/DY)  1.379 +- 0.061
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Stop",
@@ -132,6 +124,7 @@ void getDYScale(TString analysis = "Stop",
 
   if (variable.EqualTo("metPfType1")) xtitle = "E_{T}^{miss} [GeV]";
   if (variable.EqualTo("mpmet"))      xtitle = "min projected E_{T}^{miss} [GeV]";
+  if (variable.EqualTo("mt2ll"))      xtitle = "m_{T2}^{ll} [GeV]";
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 

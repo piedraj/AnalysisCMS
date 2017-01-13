@@ -12,27 +12,32 @@ void ttreco2(TString process);
 
 void ttreco(){
 
-	//ttreco2("00_Fakes"    );
-	//ttreco2("01_Data"     );
+	//ttreco2("00_Fakes_reduced"    );
+	//ttreco2("01_Data_reduced"     );
 	//ttreco2("02_WZTo3LNu" );
 	//ttreco2("03_VZ"       );
-	//ttreco2("04_TTTo2L2Nu");
+	ttreco2("04_TTTo2L2Nu");
 	//ttreco2("05_ST"       );
 	//ttreco2("06_WW"       );
 	//ttreco2("07_ZJets"    );
 	//ttreco2("08_WJets"    );
-	//ttreco2("09_TTV"      );
-	//ttreco2("10_HWW"      );
-	//ttreco2("11_Wg"       );
-	//ttreco2("12_Zg"       );
-	//ttreco2("13_VVV"      );
-	//ttreco2("14_HZ"       );
-	//ttreco2("15_WgStar"   );
+	ttreco2("09_TTV"      );
+	ttreco2("10_HWW"      );
+	ttreco2("11_Wg"       );
+	ttreco2("12_Zg"       );
+	ttreco2("13_VVV"      );
+	ttreco2("14_HZ"       );
+	ttreco2("15_WgStar"   );
 
-	//ttreco2("ttDM0001scalar00010");
+	ttreco2("ttDM0001scalar00010");
 	ttreco2("ttDM0001scalar00050");
-	//ttreco2("ttDM0001scalar00500");
-
+	ttreco2("ttDM0001scalar00500");
+	ttreco2("ttDM0001scalar00020");
+	ttreco2("ttDM0001scalar00100");
+	ttreco2("ttDM0001scalar00200");
+	ttreco2("ttDM0001scalar00300");
+	ttreco2("00_Fakes_reduced_1outof6");
+	ttreco2("01_Data_reduced_1outof6");
 
 	cout << "\n \n done !!! \n \n" << endl; 
 
@@ -52,6 +57,7 @@ void ttreco2( TString process ) {
 
 	//TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "update" ); 
 	TFile myfile( "../../../../public/minitrees_week-1_with-ttReco/" + process + ".root", "update" ); 
+	//TFile myfile( "../minitrees/week-1-checks/" + process + ".root", "update" ); 
 
    	TTreeReader myreader( "latino", &myfile );
 
@@ -98,7 +104,7 @@ void ttreco2( TString process ) {
 	float darkpt  ; 
 
 	TBranch* b_topRecoW = mytree -> Branch( "topRecoW", &topRecoW, "topRecoW/F" );
-	TBranch* b_darkpt   = mytree -> Branch( "darkpt"  , &darkpt  , "darkpt/F"   );
+	TBranch* b_darkpt   = mytree -> Branch( "newdarkpt"  , &darkpt  , "darkpt/F"   );
 
 
 
@@ -188,7 +194,8 @@ void ttreco2( TString process ) {
 	
 		else{
 
-			darkpt = (top1+top2).Mod(); 
+			darkpt = 0.; 
+			//darkpt = (top1+top2).Mod(); 
 
 		}
 

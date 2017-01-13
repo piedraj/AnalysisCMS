@@ -9,7 +9,8 @@
 
 MassSolver::MassSolver() 
 {
-  return;
+    //cout << "MassSolver_class: constructor executing!" << endl;
+    return;
 }
 
 //The code is based on the following two publications:
@@ -22,6 +23,9 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
 	double mW1, double mW2, double mt1, double mt2, vector< TLorentzVector > & nu1, 
 	vector< TLorentzVector > & nu2 )
 {
+//     double lp[4], lm[4], b[4], bb[4];
+//     double ETmiss[2], nu[4], nub[4];
+
     double ETmiss[2] = { met.Px() , met.Py() };
     double b[4] = { bq1.E() , bq1.Px() , bq1.Py() , bq1.Pz() };
     double bb[4] = { bq2.E() , bq2.Px() , bq2.Py() , bq2.Pz() };
@@ -37,6 +41,7 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
         return false;
     for( unsigned int i = 0 ; i < pnux.size() ; i++ )
     {
+//         cout << pnux[i]<<" "<<pnubx[i]<<endl;
 	TLorentzVector nu1_vec , nu2_vec;
         nu1_vec.SetXYZM( pnux[i] , pnuy[i] , pnuz[i] , 0 );
         nu2_vec.SetXYZM( pnubx[i] , pnuby[i] , pnubz[i] , 0 );
@@ -44,7 +49,7 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
 	TLorentzVector lvTop2 = lep2 + nu2_vec + bq2;
 	TLorentzVector lvW1 = lep1 + nu1_vec;
 	TLorentzVector lvW2 = lep2 + nu2_vec;
-
+        //standard 0.5
 	if ((fabs (lvTop1.M() - mt1) < 0.5) && (fabs (lvTop2.M() - mt2) < 0.5) && 
 	    (fabs(lvW1.M() - mW1) < 0.5) && (fabs(lvW2.M() - mW2) < 0.5)) {
           nu1.push_back( nu1_vec );
@@ -55,6 +60,7 @@ bool MassSolver::solve( const TVector2 & met, const TLorentzVector & bq1 ,
     }
     return true;
 }
+
 
 void MassSolver::solve(double* ETmiss, double* b, double* bb, double* lp, double* lm, 
                          double mWp, double mWm, double mt, double mtb, 
@@ -164,6 +170,13 @@ void MassSolver::solve(double* ETmiss, double* b, double* bb, double* lp, double
   //int cubic_single_root_cmplx;
     quartic(polx, &pnuxt, cubic_single_root_cmplx);
 
+    //std::cout <<"The good one" << std::endl;
+    //for(unsigned int i = 0; i < 5; i++) {
+    //   std::cout << polx[i] << std::endl;
+    //}
+
+
+
     double c0 = c00;
     double c1, c2; 
     double d0 = d00;
@@ -214,6 +227,221 @@ void MassSolver::solve(double* ETmiss, double* b, double* bb, double* lp, double
     }
 
     return;
+
+};
+
+
+void MassSolver::gradient(const TVector2 & met, const TLorentzVector & bq1 , const TLorentzVector & bq2 , const TLorentzVector & lep1, const TLorentzVector & lep2, 
+	                  double mW1, double mW2, double mt1, double mt2, vector<double> &grad, double step, double lambda)
+{
+
+    double ETmiss[2] = { met.Px() , met.Py() };
+    double b[4] = { bq1.E() , bq1.Px() , bq1.Py() , bq1.Pz() };
+    double bb[4] = { bq2.E() , bq2.Px() , bq2.Py() , bq2.Pz() };
+    double lp[4] = { lep1.E() , lep1.Px() , lep1.Py() , lep1.Pz() };
+    double lm[4] = { lep2.E() , lep2.Px() , lep2.Py() , lep2.Pz() };
+    gradient(ETmiss, b, bb, lp, lm, mW1, mW2, mt1, mt2, grad, step, lambda);
+
+} 
+   
+ 
+void MassSolver::gradient(double* ETmiss, double* b, double* bb, double* lp, double* lm, double mWp, double mWm, double mt, double mtb, vector<double> &grad, double step, double lambda) {
+
+    double ETmissX = ETmiss[0]; 
+    double ETmissY = ETmiss[1];
+
+    double DeltaETmissX = step * ETmissX; 
+    double DeltaETmissY = step * ETmissY; 
+    
+    double ETmissXPlus[2]  = {ETmissX + DeltaETmissX, ETmissY};
+    double ETmissXMinus[2] = {ETmissX - DeltaETmissX, ETmissY};
+    double ETmissYPlus[2]  = {ETmissX, ETmissY + DeltaETmissY};
+    double ETmissYMinus[2] = {ETmissX, ETmissY - DeltaETmissY};
+
+    double costXPlus  = cost(ETmissXPlus , b, bb, lp, lm, mWp, mWm, mt, mtb); 
+    double costXMinus = cost(ETmissXMinus, b, bb, lp, lm, mWp, mWm, mt, mtb); 
+    double costYPlus  = cost(ETmissYPlus , b, bb, lp, lm, mWp, mWm, mt, mtb); 
+    double costYMinus = cost(ETmissYMinus, b, bb, lp, lm, mWp, mWm, mt, mtb); 
+
+    //std::cout << ((costXPlus - costXMinus) / (2.0*step*ETmissX)) << std::endl; 
+    //std::cout << ((costYPlus - costYMinus) / (2.0*step*ETmissY)) << std::endl; 
+
+    double nabla_x = ((costXPlus - costXMinus) / (2.0*DeltaETmissX)); //cout << "nabla_x = " << nabla_x << endl;
+    double nabla_y = ((costYPlus - costYMinus) / (2.0*DeltaETmissY)); //ccout << "nabla_y = " << nabla_y << endl;
+
+    //double nabla_mod = sqrt( nabla_x*nabla_x + nabla_y*nabla_y ); 
+    //cout << "nabla = " << nabla_mod << "\n\n" << endl; 
+
+    //double nabla_x_unit = nabla_x/nabla_mod; 
+    //double nabla_y_unit = nabla_y/nabla_mod; 
+
+    //grad.push_back(-lambda * nabla_x_unit);
+    //grad.push_back(-lambda * nabla_y_unit);
+ 
+    grad.push_back(nabla_x); 
+    grad.push_back(nabla_y); 
+
+}
+double MassSolver::cost(const TVector2 & met, const TLorentzVector & bq1 , const TLorentzVector & bq2 , const TLorentzVector & lep1, const TLorentzVector & lep2,
+                          double mW1, double mW2, double mt1, double mt2)
+{
+
+    std::vector<TLorentzVector> nu1, nu2;
+ 
+    nu1.clear();
+    nu2.clear();
+
+    solve(met, bq1, bq2, lep1, lep2, 80.385, 80.385, 173.34, 173.34, nu1, nu2);
+
+    double ETmiss[2] = { met.Px() , met.Py() };
+    double b[4] = { bq1.E() , bq1.Px() , bq1.Py() , bq1.Pz() };
+    double bb[4] = { bq2.E() , bq2.Px() , bq2.Py() , bq2.Pz() };
+    double lp[4] = { lep1.E() , lep1.Px() , lep1.Py() , lep1.Pz() };
+    double lm[4] = { lep2.E() , lep2.Px() , lep2.Py() , lep2.Pz() };
+
+    double vuelta = ( nu1.size() != 0 )  ?  0  : cost(ETmiss, b, bb, lp, lm, mW1, mW2, mt1, mt2); 
+
+    return vuelta; 
+
+}
+
+
+
+double MassSolver::cost(double* ETmiss, double* b, double* bb, double* lp, double* lm, double mWp, double mWm, double mt, double mtb) 
+{
+
+
+    double radic = sqr(b[0])-sqr(b[1])-sqr(b[2])-sqr(b[3]);
+    double mb = 0.;
+    if (radic > 0.) mb = sqrt(radic);
+
+    radic = sqr(bb[0])-sqr(bb[1])-sqr(bb[2])-sqr(bb[3]);
+    double mbb = 0.;
+    if (radic > 0.) mbb = sqrt(radic);
+
+    radic = sqr(lp[0])-sqr(lp[1])-sqr(lp[2])-sqr(lp[3]);
+    double mlp = 0.;
+    if (radic > 0.) mlp = sqrt(radic);
+
+    radic = sqr(lm[0])-sqr(lm[1])-sqr(lm[2])-sqr(lm[3]);
+    double mlm = 0.;
+    if (radic > 0.) mlm = sqrt(radic);
+
+  //not needed but nice to have it derived and written down:
+  //double mbnu = sqrt(sqr(mt)-sqr(mWp)+sqr(mb)+sqr(mlp)-sqr(mblp));
+
+
+    double a1 = (b[0]+lp[0])*(sqr(mWp)-sqr(mlp))-lp[0]*(sqr(mt)-sqr(mb)-sqr(mlp))+2.*b[0]*sqr(lp[0])
+                -2.*lp[0]*(b[1]*lp[1]+b[2]*lp[2]+b[3]*lp[3]);
+    double a2 = 2.*(b[0]*lp[1]-lp[0]*b[1]);
+    double a3 = 2.*(b[0]*lp[2]-lp[0]*b[2]);
+    double a4 = 2.*(b[0]*lp[3]-lp[0]*b[3]);
+
+  //c00*pnuy^2+(c10*pnux+c11)*pnuy+(c20*pnux^2+c21*pnux+c22)
+    double c22 = sqr((sqr(mWp)-sqr(mlp))*a4)-4.*(sqr(lp[0])-sqr(lp[3]))*sqr(a1)
+                -4.*(sqr(mWp)-sqr(mlp))*lp[3]*a1*a4; //c1
+    double c21 = -8.*(sqr(lp[0])-sqr(lp[3]))*a1*a2+4.*(sqr(mWp)-sqr(mlp))*(lp[1]*sqr(a4)-lp[3]*a2*a4)-8.*lp[1]*lp[3]*a1*a4; //c2
+    double c11 = -8.*(sqr(lp[0])-sqr(lp[3]))*a1*a3+4.*(sqr(mWp)-sqr(mlp))*(lp[2]*sqr(a4)-lp[3]*a3*a4)-8.*lp[2]*lp[3]*a1*a4; //c3
+    double c20 = -4.*(sqr(lp[0])-sqr(lp[1]))*sqr(a4)-4.*(sqr(lp[0])-sqr(lp[3]))*sqr(a2)-8.*lp[1]*lp[3]*a2*a4; //c4
+    double c10 = -8.*(sqr(lp[0])-sqr(lp[3]))*a2*a3+8.*lp[1]*lp[2]*sqr(a4)-8.*lp[1]*lp[3]*a3*a4-8.*lp[2]*lp[3]*a2*a4; //c5
+    double c00 = -4.*(sqr(lp[0])-sqr(lp[2]))*sqr(a4)-4.*(sqr(lp[0])-sqr(lp[3]))*sqr(a3)-8.*lp[2]*lp[3]*a3*a4; //c6
+
+
+    double b1 = (bb[0]+lm[0])*(sqr(mWm)-sqr(mlm))-lm[0]*(sqr(mtb)-sqr(mbb)-sqr(mlm))+2.*bb[0]*sqr(lm[0])
+                -2.*lm[0]*(bb[1]*lm[1]+bb[2]*lm[2]+bb[3]*lm[3]);
+    double b2 = 2.*(bb[0]*lm[1]-lm[0]*bb[1]);
+    double b3 = 2.*(bb[0]*lm[2]-lm[0]*bb[2]);
+    double b4 = 2.*(bb[0]*lm[3]-lm[0]*bb[3]);
+
+
+    double dp22 = sqr((sqr(mWm)-sqr(mlm))*b4)-4.*(sqr(lm[0])-sqr(lm[3]))*sqr(b1)
+                -4.*(sqr(mWm)-sqr(mlm))*lm[3]*b1*b4; //d1
+    double dp21 = -8.*(sqr(lm[0])-sqr(lm[3]))*b1*b2+4*(sqr(mWm)-sqr(mlm))*(lm[1]*sqr(b4)-lm[3]*b2*b4)-8.*lm[1]*lm[3]*b1*b4; //d2
+    double dp11 = -8.*(sqr(lm[0])-sqr(lm[3]))*b1*b3+4*(sqr(mWm)-sqr(mlm))*(lm[2]*sqr(b4)-lm[3]*b3*b4)-8.*lm[2]*lm[3]*b1*b4; //d3
+    double dp20 = -4.*(sqr(lm[0])-sqr(lm[1]))*sqr(b4)-4.*(sqr(lm[0])-sqr(lm[3]))*sqr(b2)-8.*lm[1]*lm[3]*b2*b4; //d4
+    double dp10 = -8.*(sqr(lm[0])-sqr(lm[3]))*b2*b3+8.*lm[1]*lm[2]*sqr(b4)-8.*lm[1]*lm[3]*b3*b4-8.*lm[2]*lm[3]*b2*b4; //d5
+    double dp00 = -4.*(sqr(lm[0])-sqr(lm[2]))*sqr(b4)-4.*(sqr(lm[0])-sqr(lm[3]))*sqr(b3)-8.*lm[2]*lm[3]*b3*b4; //d6
+// cout << b[1] <<" "<<b[2] <<" "<<b[3] <<" "<<b[4] <<endl;
+// cout << a1 <<" "<<a2 <<" "<<a3 <<" "<<a4 <<" "<<c22 <<" "<<c21 <<" "<<c11 <<" "<<c20 <<" "<<c10 <<" "<<c00 <<" "<<b1 <<" "<<b2 <<" "<<b3 <<" "<<b4 <<" "<<dp22<<" "<<dp21<<" "<<dp11<<" "<<dp20<<" "<<dp10<<" "<<dp00<<endl;
+
+    double d22 = dp22+sqr(ETmiss[0])*dp20+sqr(ETmiss[1])*dp00
+                +ETmiss[0]*ETmiss[1]*dp10+ETmiss[0]*dp21+ETmiss[1]*dp11;
+    double d20 = dp20;
+    double d00 = dp00;
+    double d10 = dp10;
+    double d21 = -dp21-2.*ETmiss[0]*dp20-ETmiss[1]*dp10;
+    double d11 = -dp11-2.*ETmiss[1]*dp00-ETmiss[0]*dp10;
+
+
+  //                  |c0    d0   |
+  // resultant(pnuy)= |c1 c0 d1 d0|
+  //                  |c2 c1 d2 d1|
+  //                  |   c2    d2|
+    //
+  //expressions c0,1,2,d0,1,2 are polynomials in pnux of degree 2, to be multiplied out below
+
+ 
+    vector<double> polx(5);
+
+  //publication formulae
+    polx[0] = sqr(c00)*sqr(d22)+c11*d22*(c11*d00-c00*d11)
+            +c00*c22*(sqr(d11)-2.*d00*d22)+c22*d00*(c22*d00-c11*d11); //x^0
+
+    polx[1] = c00*d21*(2.*c00*d22-c11*d11)+c00*d11*(2.*c22*d10+c21*d11)
+            +c22*d00*(2.*c21*d00-c11*d10)-c00*d22*(c11*d10+c10*d11) 
+            -2.*c00*d00*(c22*d21+c21*d22)-d00*d11*(c11*c21+c10*c22)
+            +c11*d00*(c11*d21+2.*c10*d22); //X^1
+
+    polx[2] = sqr(c00)*(2.*d22*d20+sqr(d21))-c00*d21*(c11*d10+c10*d11)
+            +c11*d20*(c11*d00-c00*d11)+c00*d10*(c22*d10-c10*d22)
+            +c00*d11*(2.*c21*d10+c20*d11)+sqr(d00)*(2.*c22*c20+sqr(c21))
+            -2.*c00*d00*(c22*d20+c21*d21+c20*d22) 
+            +c10*d00*(2.*c11*d21+c10*d22)-d00*d10*(c11*c21+c10*c22)
+            -d00*d11*(c11*c20+c10*c21); //x^2
+
+    polx[3] = c00*d21*(2.*c00*d20-c10*d10)-c00*d20*(c11*d10+c10*d11)
+            +c00*d10*(c21*d10+2.*c20*d11)-2.*c00*d00*(c21*d20+c20*d21)
+            +c10*d00*(2.*c11*d20+c10*d21)+c20*d00*(2.*c21*d00-c10*d11)
+            -d00*d10*(c11*c20+c10*c21); //x^3
+
+    polx[4] = sqr(c00)*sqr(d20)+c10*d20*(c10*d00-c00*d10)+c20*d10*(c00*d10-c10*d00)
+            +c20*d00*(c20*d00-2.*c00*d20); //x^4
+
+
+    
+    vector<double> polx3(4);
+
+    /*polx3[0] = polx[1];
+    polx3[1] = 2.0 * polx[2];
+    polx3[2] = 3.0 * polx[3];
+    polx3[3] = 4.0 * polx[4];*/
+
+    polx3[0] = polx[1]      /(4.0 * polx[4]);
+    polx3[1] = 2.0 * polx[2]/(4.0 * polx[4]);
+    polx3[2] = 3.0 * polx[3]/(4.0 * polx[4]);
+    polx3[3] = 1.0;
+
+    for(unsigned int i = 0; i < 4; i++) {
+       //std::cout << "i\t" << polx3[i] << std::endl;
+    }
+
+    vector<double> pnuxt;
+
+    cubic(polx3, &pnuxt);
+
+   float minDist = 1e3;
+    for(unsigned int i = 0; i < pnuxt.size(); i++) {
+        float val = TMath::Log10(fabs(polx[0] + polx[1] * pnuxt[i] + polx[2] * pnuxt[i] * pnuxt[i] +  polx[3] * pnuxt[i] * pnuxt[i] * pnuxt[i] + polx[4] * pnuxt[i] * pnuxt[i] * pnuxt[i] * pnuxt[i]));
+	//std::cout << val << std::endl;
+	//std::cout << polx[0] << " -- " << polx[1] << " -- " << polx[2] << " -- " << polx[3] << " -- " << polx[4] << " -- " << pnuxt[i] << " -- " << val << std::endl;
+        //std::cout << TMath::Log10(abs(polx[0])) << "\n" << TMath::Log10(abs(polx[1])) << "\n" << TMath::Log10(abs(polx[2])) << "\n" << TMath::Log10(abs(polx[3])) << "\n" << TMath::Log10(abs(polx[4])) << "\n" << pnuxt[i] << /*" " << val <<*/ std::endl;
+
+        if(val < minDist) {
+            minDist = val;
+        }
+    } 
+    //std::cout << minDist << std::endl;
+    return minDist;
 
 };
 
@@ -471,3 +699,6 @@ double MassSolver::evalterm1(vector<double> *a1, double pnux, double pnuy) {
 double MassSolver::evalterm2(vector<double> *a2, double pnux, double pnuy) {
     return (*a2)[0]+(*a2)[1]*pnux+(*a2)[2]*pnuy+(*a2)[3]*pnux*pnux+(*a2)[4]*pnux*pnuy+(*a2)[5]*pnuy*pnuy;
 }
+
+
+

@@ -79,6 +79,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetDark           ();  
 
+  void        GetMlb            (); 
+
   void        GetTopReco        ();
 
   void        GetMET            (float    module,
@@ -101,7 +103,7 @@ class AnalysisCMS : public AnalysisBase
   void        Setup             (TString  analysis,
 				 TString  filename,
 				 float    luminosity,
-				 TString filename_suffix = "");
+				 TString  suffix = "");
 
   void        Summary           (TString  analysis,
 				 TString  precision,
@@ -175,6 +177,8 @@ class AnalysisCMS : public AnalysisBase
   std::vector<float>     _bjet30csvv2m_phi;
   std::vector<float>     _bjet30csvv2m_pt; 
 
+  TH1F*                  _shapemlb; 
+
   bool                   _saveminitree;
   bool                   _eventdump;
   bool                   _foundsoftmuon;
@@ -196,12 +200,15 @@ class AnalysisCMS : public AnalysisBase
   TString                _dataperiod;
   TString                _isdatadriven;
   TString                _filename;
+  TString                _suffix;
   TString                _sample;
   TString                _systematic;
+  TString                _longname;
 
   float                  _channel;
   float                  _darketa_gen;   
   float                  _darkphi_gen;
+  float 		 _darkpt; 
   float                  _darkpt_gen;
   float                  _deltarjet1met;
   float                  _deltarjet2met;
@@ -303,6 +310,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2phi_gen;
   float                  _top2pt_gen;
   float			 _topReco;
+  float			 _topRecoW; 
   float                  _sphericity;
   float                  _alignment;
   float                  _planarity;
@@ -490,6 +498,7 @@ class AnalysisCMS : public AnalysisBase
   //----------------------------------------------------------------------------
   TH2D*                  h_metPfType1_m2l[nchannel][ncut][njetbin+1];
   TH2D*                  h_mpmet_m2l     [nchannel][ncut][njetbin+1];
+  TH2D*                  h_mt2ll_m2l     [nchannel][ncut][njetbin+1];
   TH2D*                  h_2ht           [nchannel][ncut][njetbin+1];
   TH2D*                  h_dym           [nchannel][ncut][njetbin+1];
 
