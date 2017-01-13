@@ -1,4 +1,4 @@
-Kujhytgfredcz#define AnalysisStop_cxx
+#define AnalysisStop_cxx
 #include "../include/AnalysisStop.h"
 #include <fstream>
 #include <iostream>
@@ -156,13 +156,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 	      // DY estimation -> Routin Level
 	      // ---------------------------------------------------------------
 
-               FillLevelHistograms(Stop_04_Routin,      pass && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () 
+               FillLevelHistograms(Stop_04_Routin,      pass && pass_masspoint);  // 2 OS Leptons, mll > 20 
                
-               FillLevelHistograms(Stop_04_Jet2Routin,  pass &&  jetpt2 >= 30. && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded( ) + 2 Jets
+               FillLevelHistograms(Stop_04_Jet2Routin,  pass &&  jetpt2 >= 30. && pass_masspoint);  // 2 OS Leptons, mll > 20,  2 Jets
      
-               FillLevelHistograms(Stop_04_TagRoutin,   pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () + 1 b Tag
+               FillLevelHistograms(Stop_04_TagRoutin,   pass && (_leadingPtCSVv2M >= 20.) && pass_masspoint);  // 2 OS Leptons, mll > 20, 1 b Tag
                
-               FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);  // 2 OS Leptons, mll > 20, blinded () + 0 b Tag (VET0)
+               FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_masspoint);  // 2 OS Leptons, mll > 20, 0 b Tag (VET0)
 
               // ---------------------------------------------------------------
 
