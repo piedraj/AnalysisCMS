@@ -77,6 +77,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetTops           ();
 
+  void        GetGenLeptonsAndNeutrinos();
+
   void        GetDark           ();  
 
   void        GetMlb            (); 
@@ -274,6 +276,14 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2eta_gen;
   float                  _lep2phi_gen;
   float                  _lep2pt_gen;
+  float                  _lep1NEWpt_gen; 
+  float                  _lep1tau_gen;
+  float                  _lep2NEWpt_gen; 
+  float                  _lep2tau_gen; 
+  float                  _nu1pt_gen; 
+  float                  _nu1tau_gen;
+  float                  _nu2pt_gen; 
+  float                  _nu2tau_gen; 
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;

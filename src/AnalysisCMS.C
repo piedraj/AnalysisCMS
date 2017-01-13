@@ -1105,6 +1105,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
+  GetGenLeptonsAndNeutrinos();
+
   //  GetDark();
 
   GetTopReco();
@@ -1422,10 +1424,14 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
+  minitree->Branch("lep1ptGEN",        &_lep1NEWpt_gen,    "lep1ptGEN/F");
+  minitree->Branch("lep1tauGEN",       &_lep1tau_gen,      "lep1tauGEN/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
+  minitree->Branch("lep2ptGEN",        &_lep2NEWpt_gen,    "lep2ptGEN/F");
+  minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
   minitree->Branch("mc",               &_mc,               "mc/F");
@@ -1465,6 +1471,10 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
+  minitree->Branch("nu1ptGEN",         &_nu1pt_gen,        "nu1ptGEN/F");
+  minitree->Branch("nu1tauGEN",        &_nu1tau_gen,       "nu1tauGEN/F");
+  minitree->Branch("nu2ptGEN",         &_nu2pt_gen,        "nu2ptGEN/F");
+  minitree->Branch("nu2tauGEN",        &_nu2tau_gen,       "nu2tauGEN/F");
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   // P
   minitree->Branch("planarity",        &_planarity,        "planarity/F");
@@ -2097,6 +2107,74 @@ void AnalysisCMS::GetTops()
       _m2t_gen = (top1 + top2).M();
     }
   }
+}
+
+//------------------------------------------------------------------------------
+// GetGenLeptonsAndNeutrinos
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
+
+  _lep1NEWpt_gen  = -999; 
+  _lep1tau_gen = -999;  
+  _lep2NEWpt_gen  = -999; 
+  _lep2tau_gen = -999; 
+  _nu1pt_gen   = -999;
+  _nu1tau_gen  = -999; 
+  _nu2pt_gen   = -999;
+  _nu2tau_gen  = -999;
+
+  if (!_ismc) return;
+
+  for (int i=0; i<std_vector_leptonGen_pt->size(); i++) {
+
+    if (abs(std_vector_leptonGen_pid->at(i)) != 11 &&  abs(std_vector_leptonGen_pid->at(i)) != 13 ) continue;
+    if (std_vector_leptonGen_isPrompt->at(i) != 1) continue;
+    
+    _lep1NEWpt_gen  = std_vector_leptonGen_pt                        ->at(i); 
+    _lep1tau_gen = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(i); 
+
+    for (int j=i+1; j<std_vector_leptonGen_pt->size(); j++) {
+
+      if (abs(std_vector_leptonGen_pid->at(j)) != 11 &&  abs(std_vector_leptonGen_pid->at(j)) != 13 ) continue;
+      if (std_vector_leptonGen_pid->at(i)*std_vector_leptonGen_pid->at(j)>0 ) continue; 
+      if (std_vector_leptonGen_isPrompt->at(j) != 1) continue;
+
+      _lep2NEWpt_gen  = std_vector_leptonGen_pt                         ->at(j); 
+      _lep2tau_gen = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
+
+      break; 
+
+    }
+
+  break;
+
+  }
+
+  for (int i=0; i<std_vector_neutrinoGen_pt->size(); i++) {
+
+    if (abs(std_vector_neutrinoGen_pid->at(i)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(i)) != 14 ) continue;
+    if (std_vector_neutrinoGen_isPrompt->at(i) != 1) continue;
+    
+    _nu1pt_gen  = std_vector_neutrinoGen_pt                           ->at(i); 
+    _nu1tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(i); 
+
+    for (int j=i+1; j<std_vector_neutrinoGen_pt->size(); j++) {
+
+      if (abs(std_vector_neutrinoGen_pid->at(j)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(j)) != 14 ) continue;
+      if (std_vector_neutrinoGen_pid->at(i)*std_vector_neutrinoGen_pid->at(j)>0 ) continue; 
+      if (std_vector_neutrinoGen_isPrompt->at(j) != 1) continue;
+
+      _nu2pt_gen  = std_vector_neutrinoGen_pt                           ->at(j); 
+      _nu2tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(j);
+
+      break; 
+
+    }
+
+  break;
+
+  }
+
 }
 
 
