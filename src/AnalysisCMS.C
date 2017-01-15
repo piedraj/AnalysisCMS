@@ -394,6 +394,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight           = 1.0;
   _event_weight_Btagup    = 1.0;
   _event_weight_Btagdo    = 1.0;
+  _event_weight_BtagFSup  = 1.0;
+  _event_weight_BtagFSdo  = 1.0;
   _event_weight_Idisoup   = 1.0;
   _event_weight_Idisodo   = 1.0;
   _event_weight_Triggerup = 1.0;   
@@ -518,7 +520,7 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
 
       _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
-    
+
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
       _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
@@ -529,6 +531,7 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
       _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
       _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
+
     }
 
   return;
@@ -1166,7 +1169,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 void AnalysisCMS::EndJob()
 {
   if (_eventdump) txt_eventdump.close();
-
+ 
   if (_saveminitree)
     {
       root_minitree->cd();
@@ -1178,28 +1181,31 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
+  if (!_isminitree) {
 
-  txt_summary << "\n";
-  txt_summary << Form("   analysis: %s\n",        _analysis.Data());
-  txt_summary << Form("   filename: %s\n",        _filename.Data());
-  txt_summary << Form("     sample: %s\n",        _sample.Data());
-  txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
-  txt_summary << Form("   nentries: %lld\n",      _nentries);
-  txt_summary << "\n";
-  
-  if (!_analysis.EqualTo("FR")) Summary(_analysis, "11.0", "raw yields");
+    txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
-  txt_summary.close();
+    txt_summary << "\n";
+    txt_summary << Form("   analysis: %s\n",        _analysis.Data());
+    txt_summary << Form("   filename: %s\n",        _filename.Data());
+    txt_summary << Form("     sample: %s\n",        _sample.Data());
+    txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
+    txt_summary << Form("   nentries: %lld\n",      _nentries);
+    txt_summary << "\n";
+   
+    if (!_analysis.EqualTo("FR")) Summary(_analysis, "11.0", "raw yields");
+   
+    txt_summary.close();   
+  }
 
   root_output->cd();
-
+  
   printf("\n\n Writing histograms. This can take a while...\n");
-
+  
   root_output->Write("", TObject::kOverwrite);
-
+  
   root_output->Close();
-
+  
   printf("\n Done with %s\n\n", _filename.Data());
 }
 
@@ -1387,6 +1393,8 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW",           &_event_weight,           "eventW/F");
   minitree->Branch("eventW_Btagup",    &_event_weight_Btagup,    "eventW_Btagup/F");
   minitree->Branch("eventW_Btagdo",    &_event_weight_Btagdo,    "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",  &_event_weight_BtagFSup,  "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSFdo", &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
   minitree->Branch("eventW_Idisoup",   &_event_weight_Idisoup,   "eventW_Idisoup/F");
   minitree->Branch("eventW_Idisodo",   &_event_weight_Idisodo,   "eventW_Idisodo/F");
   minitree->Branch("eventW_Triggerup", &_event_weight_Triggerup, "eventW_Triggerup/F");

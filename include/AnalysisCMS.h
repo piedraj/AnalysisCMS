@@ -231,6 +231,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight;
   float                  _event_weight_Btagup;
   float                  _event_weight_Btagdo;
+  float                  _event_weight_BtagFSup;
+  float                  _event_weight_BtagFSdo;
   float                  _event_weight_Idisoup;
   float                  _event_weight_Idisodo;
   float                  _event_weight_Triggerup;

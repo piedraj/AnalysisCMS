@@ -10,7 +10,7 @@
 //#include "src/AnalysisWW.C"
 //#include "src/AnalysisWZ.C"
 
-void runAnalysisMiniTrees(TString filename, TString systematic, float StopMass = -1., float NeutralinoMass = -1.)
+void runAnalysisMiniTrees(TString filename, TString systematic, int FillAllHistograms = 1, float StopMass = -1., float NeutralinoMass = -1.)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -24,7 +24,7 @@ void runAnalysisMiniTrees(TString filename, TString systematic, float StopMass =
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
   //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
-  AnalysisStop    analysis(file, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb, StopMass, NeutralinoMass);
+  AnalysisStop    analysis(file, systematic, FillAllHistograms); analysis.Loop("Stop", filename, baseW_lumi_fb, StopMass, NeutralinoMass);
   //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
   //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
@@ -47,9 +47,13 @@ int main(int argc, char ** argv)
 
   if (argc == 3)
     runAnalysisMiniTrees(argv[1], argv[2]);
+  else if (argc == 4)
+    runAnalysisMiniTrees(argv[1], argv[2], atoi(argv[3]));
   else if (argc == 5)
-    runAnalysisMiniTrees(argv[1], argv[2], atof(argv[3]), atof(argv[4]));
-    
+    runAnalysisMiniTrees(argv[1], argv[2], 1, atof(argv[3]), atof(argv[4]));
+  else if (argc == 6)
+    runAnalysisMiniTrees(argv[1], argv[2], atoi(argv[3]), atof(argv[4]), atof(argv[5]));
+
   return 0;
 }
 # endif
