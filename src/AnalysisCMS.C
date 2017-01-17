@@ -2170,7 +2170,7 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
       _lep2NEWphi_gen= std_vector_leptonGen_phi                          ->at(j);
       _lep2tau_gen   = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
       _lep2id_gen    = std_vector_leptonGen_pid                          ->at(j);
-      _lep1motherid_gen = std_vector_leptonGen_MotherPID                 ->at(j);
+      _lep2motherid_gen = std_vector_leptonGen_MotherPID                 ->at(j);
   
       break; 
 
