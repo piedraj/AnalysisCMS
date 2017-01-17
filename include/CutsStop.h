@@ -22,6 +22,8 @@ enum {
   // We fill our testing minitre
   Stop_01_Tag,
   Stop_01_NoTag,
+  Stop_02_VR1_Tag,
+  Stop_02_VR1_NoTag,
   Stop_02_SR1_Tag,
   Stop_02_SR1_NoTag,
   Stop_02_SR2_Tag,
@@ -49,6 +51,8 @@ const TString scut[ncut] = {
   "Stop/00_Zveto",
   "Stop/01_Tag",
   "Stop/01_NoTag",
+  "Stop/02_VR1_Tag",
+  "Stop/02_VR1_NoTag",
   "Stop/02_SR1_Tag",
   "Stop/02_SR1_NoTag",
   "Stop/02_SR2_Tag",
