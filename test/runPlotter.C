@@ -363,10 +363,22 @@ void runPlotter(TString level,
 
   // Cross section
   //----------------------------------------------------------------------------
-  //  root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root as _file0...
-  //  mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
-  //  1.96718e+06
   //
+  // How to extract the total number of generated events:
+  //
+  //   root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root
+  //   mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
+  //   1.96718e+06
+  //
+  // The qqWW and ggWW exclusive leptonic cross sections at 13 TeV have been taken from:
+  //
+  //   https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/samplesCrossSections.py
+  //
+  //   samples['WWTo2L2Nu']           .extend( ['xsec=12.178', 'kfact=1.000', 'ref=E'] ) 
+  //   samples['GluGluWWTo2L2Nu_MCFM'].extend( ['xsec=0.5905', 'kfact=1.000', 'ref=E'] )
+  //
+  //----------------------------------------------------------------------------
+
   if (analysis.EqualTo("Control") && level.Contains("WW"))
     {
       printf("\n Cross section\n");
