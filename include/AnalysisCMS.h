@@ -283,11 +283,13 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep1NEWphi_gen;  
   float                  _lep1tau_gen;
   float                  _lep1id_gen;
+  float                  _lep1motherid_gen;
   float                  _lep2NEWpt_gen; 
   float                  _lep2NEWeta_gen; 
   float                  _lep2NEWphi_gen; 
   float                  _lep2tau_gen; 
   float                  _lep2id_gen;
+  float                  _lep2motherid_gen;
   float                  _nu1pt_gen; 
   float                  _nu1tau_gen;
   float                  _nu2pt_gen; 

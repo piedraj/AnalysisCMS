@@ -1428,6 +1428,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
   minitree->Branch("lep1idGEN",        &_lep1id_gen,       "lep1idGEN/F");
+  minitree->Branch("lep1motheridGEN",  &_lep1motherid_gen, "lep1motheridGEN/F");
   minitree->Branch("lep1ptGEN",        &_lep1NEWpt_gen,    "lep1ptGEN/F");
   minitree->Branch("lep1etaGEN",       &_lep1NEWeta_gen,   "lep1etaGEN/F");
   minitree->Branch("lep1phiGEN",       &_lep1NEWphi_gen,   "lep1phiGEN/F");
@@ -1440,6 +1441,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2etaGEN",       &_lep2NEWeta_gen,   "lep2etaGEN/F");
   minitree->Branch("lep2phiGEN",       &_lep2NEWphi_gen,   "lep2phiGEN/F");
   minitree->Branch("lep2idGEN",        &_lep2id_gen,       "lep2idGEN/F");
+  minitree->Branch("lep2motheridGEN",  &_lep2motherid_gen, "lep2motheridGEN/F");
   minitree->Branch("lep2ptGEN",        &_lep2NEWpt_gen,    "lep2ptGEN/F");
   minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
@@ -2129,14 +2131,16 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
   _lep1NEWeta_gen = -999; 
   _lep1NEWphi_gen = -999; 
   _lep1tau_gen    = -999; 
-  _lep1id_gen    = 31416; 
+  _lep1id_gen       = 31416; 
+  _lep1motherid_gen = 31416;
   _lep2NEWpt_gen  = -999; 
   _lep2NEWeta_gen = -999; 
   _lep2NEWphi_gen = -999; 
   _lep2tau_gen    = -999; 
   _nu1pt_gen      = -999;
   _nu1tau_gen     = -999; 
-  _lep2id_gen    = 31416; 
+  _lep2id_gen       = 31416;
+  _lep2motherid_gen = 31416; 
   _nu2pt_gen      = -999;
   _nu2tau_gen     = -999;
 
@@ -2152,6 +2156,7 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
     _lep1NEWphi_gen= std_vector_leptonGen_phi                          ->at(i); 
     _lep1tau_gen   = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(i); 
     _lep1id_gen    = std_vector_leptonGen_pid                          ->at(i);
+    _lep1motherid_gen = std_vector_leptonGen_MotherPID                 ->at(i);
 
 
     for (int j=i+1; j<std_vector_leptonGen_pt->size(); j++) {
@@ -2165,7 +2170,8 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
       _lep2NEWphi_gen= std_vector_leptonGen_phi                          ->at(j);
       _lep2tau_gen   = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
       _lep2id_gen    = std_vector_leptonGen_pid                          ->at(j);
-
+      _lep1motherid_gen = std_vector_leptonGen_MotherPID                 ->at(j);
+  
       break; 
 
     }
