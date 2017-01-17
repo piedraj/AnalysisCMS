@@ -1430,10 +1430,12 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
+  minitree->Branch("lep1isfake",       &_lep1isfake,       "lep1isfake/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
+  minitree->Branch("lep2isfake",       &_lep2isfake,       "lep2isfake/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
   minitree->Branch("mc",               &_mc,               "mc/F");
@@ -1666,6 +1668,7 @@ void AnalysisCMS::GetStopVar()
   _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999;
   _tjet1assignment = _tjet2assignment = 0.;
 
+  _lep1isfake = _lep2isfake = -1.;
 
   if (_njet > 0) {
       
@@ -1949,6 +1952,7 @@ void AnalysisCMS::GetStopVar()
   // So far so good
   //----------------------------------------------------------------------------
   int IdxB1 = -999, IdxB2 = -999;
+  _lep1isfake = _lep2isfake = 1.;
 
   if (lepIndex[0] >=0) {
 
@@ -1963,6 +1967,9 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen1 = (Lepton2.v).DeltaR(LepGen1);
 
     if (std_vector_lepton_ch->at(Lepton1.index)<0 && DeltaRLep1LepGen1<0.1) {
+
+      _lep1isfake = 0.;
+
       if (bIndex[0]>=0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[0]].v.Pt();
@@ -1981,6 +1988,9 @@ void AnalysisCMS::GetStopVar()
     }
 
     if (std_vector_lepton_ch->at(Lepton2.index)<0 && DeltaRLep2LepGen1<0.1) {
+
+      _lep2isfake = 0.;
+
       if (bIndex[0] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[0]].v.Pt();
@@ -2009,6 +2019,9 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen2 = (Lepton2.v).DeltaR(LepGen2);
     
     if (std_vector_lepton_ch->at(Lepton1.index)>0 && DeltaRLep1LepGen2<0.1) {
+
+      _lep1isfake = 0.;
+
       if (bIndex[1] >= 0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[1]].v.Pt();
@@ -2027,6 +2040,9 @@ void AnalysisCMS::GetStopVar()
     }
     
     if (std_vector_lepton_ch->at(Lepton2.index)>0 && DeltaRLep2LepGen2<0.1) {
+
+      _lep2isfake = 0.;
+
       if (bIndex[1] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[1]].v.Pt();
