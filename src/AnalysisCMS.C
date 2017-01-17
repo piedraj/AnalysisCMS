@@ -543,19 +543,6 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
-  // GEN
-  //----------------------------------------------------------------------------
-  _lep1eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(0) : -999;
-  _lep1phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(0) : -999;
-  _lep1pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(0)  : -999;
-
-  _lep2eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(1) : -999;
-  _lep2phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(1) : -999;
-  _lep2pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(1)  : -999;
-
-
-  // RECO
-  //----------------------------------------------------------------------------
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
@@ -1111,7 +1098,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   //  GetDark();
 
-  //GetTopReco();
+  //  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1429,20 +1416,20 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
   minitree->Branch("lep1idGEN",        &_lep1id_gen,       "lep1idGEN/F");
   minitree->Branch("lep1motheridGEN",  &_lep1motherid_gen, "lep1motheridGEN/F");
-  minitree->Branch("lep1ptGEN",        &_lep1NEWpt_gen,    "lep1ptGEN/F");
-  minitree->Branch("lep1etaGEN",       &_lep1NEWeta_gen,   "lep1etaGEN/F");
-  minitree->Branch("lep1phiGEN",       &_lep1NEWphi_gen,   "lep1phiGEN/F");
+  minitree->Branch("lep1ptGEN",        &_lep1pt_gen,       "lep1ptGEN/F");
+  minitree->Branch("lep1etaGEN",       &_lep1eta_gen,      "lep1etaGEN/F");
+  minitree->Branch("lep1phiGEN",       &_lep1phi_gen,      "lep1phiGEN/F");
   minitree->Branch("lep1tauGEN",       &_lep1tau_gen,      "lep1tauGEN/F");
   minitree->Branch("lep2id",           &_lep2id,           "lep2id/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
-  minitree->Branch("lep2etaGEN",       &_lep2NEWeta_gen,   "lep2etaGEN/F");
-  minitree->Branch("lep2phiGEN",       &_lep2NEWphi_gen,   "lep2phiGEN/F");
+  minitree->Branch("lep2etaGEN",       &_lep2eta_gen,      "lep2etaGEN/F");
+  minitree->Branch("lep2phiGEN",       &_lep2phi_gen,      "lep2phiGEN/F");
   minitree->Branch("lep2idGEN",        &_lep2id_gen,       "lep2idGEN/F");
   minitree->Branch("lep2motheridGEN",  &_lep2motherid_gen, "lep2motheridGEN/F");
-  minitree->Branch("lep2ptGEN",        &_lep2NEWpt_gen,    "lep2ptGEN/F");
+  minitree->Branch("lep2ptGEN",        &_lep2pt_gen,       "lep2ptGEN/F");
   minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
@@ -2122,89 +2109,93 @@ void AnalysisCMS::GetTops()
   }
 }
 
+
 //------------------------------------------------------------------------------
 // GetGenLeptonsAndNeutrinos
 //------------------------------------------------------------------------------
-void AnalysisCMS::GetGenLeptonsAndNeutrinos(){
-
-  _lep1NEWpt_gen  = -999; 
-  _lep1NEWeta_gen = -999; 
-  _lep1NEWphi_gen = -999; 
-  _lep1tau_gen    = -999; 
+void AnalysisCMS::GetGenLeptonsAndNeutrinos()
+{
   _lep1id_gen       = 31416; 
   _lep1motherid_gen = 31416;
-  _lep2NEWpt_gen  = -999; 
-  _lep2NEWeta_gen = -999; 
-  _lep2NEWphi_gen = -999; 
-  _lep2tau_gen    = -999; 
-  _nu1pt_gen      = -999;
-  _nu1tau_gen     = -999; 
   _lep2id_gen       = 31416;
   _lep2motherid_gen = 31416; 
-  _nu2pt_gen      = -999;
-  _nu2tau_gen     = -999;
+
+  _lep1pt_gen  = -999; 
+  _lep1eta_gen = -999; 
+  _lep1phi_gen = -999; 
+  _lep1tau_gen = -999; 
+  _lep2pt_gen  = -999; 
+  _lep2eta_gen = -999; 
+  _lep2phi_gen = -999; 
+  _lep2tau_gen = -999; 
+  _nu1pt_gen   = -999;
+  _nu1tau_gen  = -999; 
+  _nu2pt_gen   = -999;
+  _nu2tau_gen  = -999;
 
   if (!_ismc) return;
 
+
+  // Get leptons
+  //----------------------------------------------------------------------------
   for (int i=0; i<std_vector_leptonGen_pt->size(); i++) {
 
-    if (abs(std_vector_leptonGen_pid->at(i)) != 11 &&  abs(std_vector_leptonGen_pid->at(i)) != 13 ) continue;
-    //if (std_vector_leptonGen_isPrompt->at(i) != 1) continue;
+    if (abs(std_vector_leptonGen_pid->at(i)) != 11 &&  abs(std_vector_leptonGen_pid->at(i)) != 13) continue;
+    //    if (std_vector_leptonGen_isPrompt->at(i) != 1) continue;
     
-    _lep1NEWpt_gen = std_vector_leptonGen_pt                           ->at(i); 
-    _lep1NEWeta_gen= std_vector_leptonGen_eta                          ->at(i); 
-    _lep1NEWphi_gen= std_vector_leptonGen_phi                          ->at(i); 
-    _lep1tau_gen   = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(i); 
-    _lep1id_gen    = std_vector_leptonGen_pid                          ->at(i);
-    _lep1motherid_gen = std_vector_leptonGen_MotherPID                 ->at(i);
-
+    _lep1pt_gen       = std_vector_leptonGen_pt->at(i); 
+    _lep1eta_gen      = std_vector_leptonGen_eta->at(i); 
+    _lep1phi_gen      = std_vector_leptonGen_phi->at(i); 
+    _lep1tau_gen      = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(i); 
+    _lep1id_gen       = std_vector_leptonGen_pid->at(i);
+    _lep1motherid_gen = std_vector_leptonGen_MotherPID->at(i);
 
     for (int j=i+1; j<std_vector_leptonGen_pt->size(); j++) {
 
-      if (abs(std_vector_leptonGen_pid->at(j)) != 11 &&  abs(std_vector_leptonGen_pid->at(j)) != 13 ) continue;
-      if (std_vector_leptonGen_pid->at(i)*std_vector_leptonGen_pid->at(j)>0 ) continue; 
-      //if (std_vector_leptonGen_isPrompt->at(j) != 1) continue;
+      if (abs(std_vector_leptonGen_pid->at(j)) != 11 &&  abs(std_vector_leptonGen_pid->at(j)) != 13) continue;
+      //      if (std_vector_leptonGen_isPrompt->at(j) != 1) continue;
 
-      _lep2NEWpt_gen = std_vector_leptonGen_pt                           ->at(j); 
-      _lep2NEWeta_gen= std_vector_leptonGen_eta                          ->at(j); 
-      _lep2NEWphi_gen= std_vector_leptonGen_phi                          ->at(j);
-      _lep2tau_gen   = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
-      _lep2id_gen    = std_vector_leptonGen_pid                          ->at(j);
-      _lep2motherid_gen = std_vector_leptonGen_MotherPID                 ->at(j);
+      if (std_vector_leptonGen_pid->at(i)*std_vector_leptonGen_pid->at(j) > 0) continue; 
+
+      _lep2pt_gen       = std_vector_leptonGen_pt->at(j); 
+      _lep2eta_gen      = std_vector_leptonGen_eta->at(j); 
+      _lep2phi_gen      = std_vector_leptonGen_phi->at(j);
+      _lep2tau_gen      = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
+      _lep2id_gen       = std_vector_leptonGen_pid->at(j);
+      _lep2motherid_gen = std_vector_leptonGen_MotherPID->at(j);
   
-      break; 
-
+      break;
     }
 
     break;
-
   }
 
+
+  // Get neutrinos
+  //----------------------------------------------------------------------------
   for (int i=0; i<std_vector_neutrinoGen_pt->size(); i++) {
 
-    if (abs(std_vector_neutrinoGen_pid->at(i)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(i)) != 14 ) continue;
-    //if (std_vector_neutrinoGen_isPrompt->at(i) != 1) continue;
+    if (abs(std_vector_neutrinoGen_pid->at(i)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(i)) != 14) continue;
+    //    if (std_vector_neutrinoGen_isPrompt->at(i) != 1) continue;
     
-    _nu1pt_gen  = std_vector_neutrinoGen_pt                           ->at(i); 
+    _nu1pt_gen  = std_vector_neutrinoGen_pt->at(i); 
     _nu1tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(i); 
 
     for (int j=i+1; j<std_vector_neutrinoGen_pt->size(); j++) {
 
-      if (abs(std_vector_neutrinoGen_pid->at(j)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(j)) != 14 ) continue;
-      if (std_vector_neutrinoGen_pid->at(i)*std_vector_neutrinoGen_pid->at(j)>0 ) continue; 
-      //if (std_vector_neutrinoGen_isPrompt->at(j) != 1) continue;
+      if (abs(std_vector_neutrinoGen_pid->at(j)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(j)) != 14) continue;
+      //      if (std_vector_neutrinoGen_isPrompt->at(j) != 1) continue;
 
-      _nu2pt_gen  = std_vector_neutrinoGen_pt                           ->at(j); 
+      if (std_vector_neutrinoGen_pid->at(i)*std_vector_neutrinoGen_pid->at(j) > 0) continue; 
+
+      _nu2pt_gen  = std_vector_neutrinoGen_pt->at(j); 
       _nu2tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(j);
 
-      break; 
-
+      break;
     }
 
     break;
-
   }
-  
 }
 
 
