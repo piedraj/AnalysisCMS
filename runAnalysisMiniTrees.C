@@ -10,7 +10,12 @@
 //#include "src/AnalysisWW.C"
 //#include "src/AnalysisWZ.C"
 
-void runAnalysisMiniTrees(TString filename, TString systematic, int FillAllHistograms = 1, float StopMass = -1., float NeutralinoMass = -1.)
+
+void runAnalysisMiniTrees(TString filename,
+			  TString systematic,
+			  int     FillAllHistograms = 1,
+			  float   StopMass          = -1.,
+			  float   NeutralinoMass    = -1.)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
