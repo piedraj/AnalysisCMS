@@ -534,7 +534,6 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
       _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
       _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
-
     }
 
   return;
@@ -1163,7 +1162,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 void AnalysisCMS::EndJob()
 {
   if (_eventdump) txt_eventdump.close();
- 
+
   if (_saveminitree)
     {
       root_minitree->cd();
@@ -1195,11 +1194,11 @@ void AnalysisCMS::EndJob()
   root_output->cd();
   
   printf("\n\n Writing histograms. This can take a while...\n");
-  
+
   root_output->Write("", TObject::kOverwrite);
-  
+
   root_output->Close();
-  
+
   printf("\n Done with %s\n\n", _filename.Data());
 }
 
