@@ -25,12 +25,12 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 8;
+const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {-1, 20, 40, 60, 80, 100, 120, -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 20, 40, 60, 80, 100, 120, 140};  // [GeV]
+const float   metcut [nmetcut] = {-1, 100, 140, 200, 300, -1};  // [GeV]
+const float   metdraw[nmetcut] = { 0, 100, 140, 200, 300, 400};  // [GeV]
 
-const bool    includeVZ    = true;
+const bool    includeVZ    = false;
 const bool    printResults = true;
 
 const TString outputdir = "figures";
@@ -132,8 +132,10 @@ void getDYScale(TString analysis = "Stop",
 
   TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",     "read");
   TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_VZ.root",       "read");
+  TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/97_WZ.root",       "read");
+  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/98_ZZ.root",       "read");
+  //TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
+  //TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
@@ -235,7 +237,7 @@ void getDYScale(TString analysis = "Stop",
 
   // Draw R
   //----------------------------------------------------------------------------
-  for (int k=ee; k<=mm; k++)
+/* for (int k=ee; k<=mm; k++)
     {
       canvas[k] = new TCanvas("R out/in " + schannel[k], "R out/in " + schannel[k]);
 
@@ -271,7 +273,42 @@ void getDYScale(TString analysis = "Stop",
       canvas[k]->Update();
       canvas[k]->SaveAs(outputdir + "/dy_Routin_" + schannel[k] + ".png");
     }
+*/
+  
 
+  TCanvas*    canvita = new TCanvas ( "R out/in ", "R out/in ");
+
+  TMultiGraph* mgraphY = new TMultiGraph();
+
+  mgraphY->Add(graph_R_dy [0]);
+  mgraphY->Add(graph_R_dy [1]);
+
+  mgraphY->Draw("ap");
+
+  canvita->Update();
+
+  TLine* line = new TLine(canvita->GetUxmin(), 0.0, canvita->GetUxmax(), 0.0);
+  
+  line->SetLineWidth(2);
+  line->SetLineStyle(kDotted);
+  line->Draw("same");
+
+  mgraphY->GetXaxis()->SetTitleOffset(1.5);
+  mgraphY->GetYaxis()->SetTitleOffset(2.0);
+  mgraphY->GetXaxis()->SetTitle(xtitle);
+  mgraphY->GetYaxis()->SetTitle("R^{out/in} = N^{out}_{DY} / N^{in}_{DY}");
+
+  //mgraphY->SetMinimum(-0.02);
+  //mgraphY->SetMaximum(+1.5);
+
+  DrawLegend(0.22, 0.83, (TObject*)graph_R_dy [0], " " + lchannel[0] );
+  DrawLegend(0.22, 0.77, (TObject*)graph_R_dy [1], " " + lchannel[1] );
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
+
+  canvita->Modified();
+  canvita->Update();
+  canvita->SaveAs(outputdir + "/dy_Routin.png");
 
   // Draw scale
   //----------------------------------------------------------------------------
@@ -287,7 +324,8 @@ void getDYScale(TString analysis = "Stop",
 
   canvas[2]->Update();
 
-  TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
+  //TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
+  line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
   
   line->SetLineWidth(2);
   line->SetLineStyle(kDotted);
@@ -431,6 +469,8 @@ void GetScale(int    ch,
   scale_value = n_in_est / n_in_dy;
   scale_error = errRatio(n_in_est, err_in_est, n_in_dy, err_in_dy);
 
+  float n_out_estDY     = scale_value*n_out_dy;
+  float err_n_out_estDY = sqrt( (n_out_estDY*n_out_estDY)*( (R_dy_error*R_dy_error) / (R_dy_value*R_dy_value) + (err_in_est*err_in_est) / (n_in_est*n_in_est) ) ); 
 
   // Print the results
   //----------------------------------------------------------------------------
@@ -441,13 +481,16 @@ void GetScale(int    ch,
       printf(" Nin(%s)       %8.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
       printf(" Nin(em)       %8.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
       printf(" Nin(WZ)       %8.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
+      printf(" Nout(WZ)      %8.2f +- %-5.2f\n",                      n_out_wz,     err_out_wz);
       printf(" Nin(ZZ)       %8.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
+      printf(" Nout(ZZ)      %8.2f +- %-5.2f\n",                      n_out_zz,     err_out_zz);
       printf(" Nin(DY)       %8.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
       printf(" Nin(est)      %8.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
       printf("----------------------------------\n");
-      printf(" R(%s,est)     %8.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
-      printf(" R(%s,DY)      %8.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
-      printf(" SF(%s,est/DY) %8.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
+//      printf(" R(%s,est)     %8.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
+      printf(" *Nout(%s,est)  %8.1f +- %-5.3f\n", schannel[ch].Data(), n_out_estDY,  err_n_out_estDY);   
+      printf(" *R(%s,DY)      %8.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);
+      printf(" *SF(%s,est/DY) %8.3f +- %-5.3f\n", schannel[ch].Data(), scale_value,  scale_error);
       printf("\n");
     }
 }
