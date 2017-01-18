@@ -12,12 +12,13 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
   SetStopNeutralinoMap();
 }
 
-AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic) 
+AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int FillAllHistograms) 
 {
   SetSaveMinitree(false);
   SetStopNeutralinoMap();
   GetMiniTree(MiniTreeFile, systematic);
   _systematic = systematic;
+  _FillAllHistograms = FillAllHistograms;
 }
 
 //------------------------------------------------------------------------------
@@ -57,7 +58,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   root_output->cd();
 
   FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
-  BTagSF = new BTagSFUtil("mujets", "CSVv2", "Medium", 0, FastSimDataset);
+  BTagSF       = new BTagSFUtil("mujets", "CSVv2", "Medium",   0, FastSimDataset);
+  BTagSF_Upb   = new BTagSFUtil("mujets", "CSVv2", "Medium",  -1, FastSimDataset);
+  BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
+  BTagSF_UpFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", -11, FastSimDataset);
+  BTagSF_DoFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", +11, FastSimDataset);
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -184,12 +189,14 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
     
     if (_leadingPtCSVv2M >= 20.) {
+      FillLevelHistograms(Stop_02_VR1_Tag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
       FillLevelHistograms(Stop_02_SR1_Tag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR2_Tag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_Tag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
     }
     
     if (_leadingPtCSVv2M <  20.) {
+      FillLevelHistograms(Stop_02_VR1_NoTag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
       FillLevelHistograms(Stop_02_SR1_NoTag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR2_NoTag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_NoTag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
@@ -210,6 +217,8 @@ void AnalysisStop::BookAnalysisHistograms()
 
   for (int j=0; j<ncut; j++) {
   
+    if (_isminitree && j<Stop_00_Zveto) continue; 
+      
     for (int k=0; k<=njetbin; k++) {
 
       TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
@@ -226,7 +235,7 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	TString suffix = "_" + schannel[i];
 
-	DefineHistograms(i, j, k, suffix);
+	if (_FillAllHistograms) DefineHistograms(i, j, k, suffix);
 
 	h_mt2lblbcomb       [i][j][k] = new TH1D("h_mt2lblbcomb"      + suffix, "", 3000,    0, 3000);
 	h_mt2bbtrue         [i][j][k] = new TH1D("h_mt2bbtrue"        + suffix, "", 3000,    0, 3000);
@@ -314,8 +323,7 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
-
-
+  
   h_MT2_Met          [ichannel][icut][ijet]->Fill(_MT2_Met,        _event_weight);
   h_HTvisible_Met    [ichannel][icut][ijet]->Fill(_HTvisible_Met,  _event_weight);
   h_MetMeff_Met      [ichannel][icut][ijet]->Fill(_MetMeff_Met,    _event_weight);
@@ -332,10 +340,12 @@ void AnalysisStop::FillLevelHistograms(int  icut,
 				       bool pass)
 {
   if (!pass) return;
+  
+  if (_FillAllHistograms) {
 
-
-  FillHistograms(_channel, icut, _jetbin);
-  FillHistograms(_channel, icut, njetbin);
+    FillHistograms(_channel, icut, _jetbin);
+    FillHistograms(_channel, icut, njetbin);
+  }
 
 
   FillAnalysisHistograms(_channel, icut, _jetbin);
@@ -2744,7 +2754,11 @@ void AnalysisStop::SetStopNeutralinoMap() {
 
 void AnalysisStop::CorrectEventWeight() {
 
-  float EventBTagSF = 1.;
+  float EventBTagSF       = 1.;
+  float EventBTagSF_Upb   = 1.;
+  float EventBTagSF_Dob   = 1.;
+  float EventBTagSF_UpFSb = 1.;
+  float EventBTagSF_DoFSb = 1.;
   
   for (int ijet = 0; ijet<_njet; ijet++) {
     
@@ -2753,16 +2767,41 @@ void AnalysisStop::CorrectEventWeight() {
     int ThisIndex = AnalysisJets[ijet].index;
     int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
     float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency       = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Upb   = MonteCarloEfficiency*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Dob   = MonteCarloEfficiency*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_UpFSb = MonteCarloEfficiency*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_DoFSb = MonteCarloEfficiency*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
     
-    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) 
-      EventBTagSF *= DataEfficiency/MonteCarloEfficiency;
-    else 
-      EventBTagSF *= (1. - DataEfficiency)/(1. - MonteCarloEfficiency);
-    
+    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) {
+      EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
+      EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;
+      EventBTagSF_Dob   *= DataEfficiency_Dob/MonteCarloEfficiency;
+      EventBTagSF_UpFSb *= DataEfficiency_UpFSb/MonteCarloEfficiency;
+      EventBTagSF_DoFSb *= DataEfficiency_DoFSb/MonteCarloEfficiency;
+    } else {
+      EventBTagSF       *= (1. - DataEfficiency)/(1. - MonteCarloEfficiency);
+      EventBTagSF_Upb   *= (1. - DataEfficiency_Upb)/(1. - MonteCarloEfficiency);
+      EventBTagSF_Dob   *= (1. - DataEfficiency_Dob)/(1. - MonteCarloEfficiency);
+      EventBTagSF_UpFSb *= (1. - DataEfficiency_UpFSb)/(1. - MonteCarloEfficiency);
+      EventBTagSF_DoFSb *= (1. - DataEfficiency_DoFSb)/(1. - MonteCarloEfficiency);
+    }
+
   }
   
-  _event_weight *= EventBTagSF/bPogSF_CSVM;
+  _event_weight           *= EventBTagSF/bPogSF_CSVM;
+  _event_weight_Btagup     = _event_weight*EventBTagSF_Upb/EventBTagSF; 
+  _event_weight_Btagdo     = _event_weight*EventBTagSF_Dob/EventBTagSF; 
+  _event_weight_BtagFSup   = _event_weight*EventBTagSF_UpFSb/EventBTagSF; 
+  _event_weight_BtagFSdo   = _event_weight*EventBTagSF_DoFSb/EventBTagSF; 
+  _event_weight_Idisoup   *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Idisodo   *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Triggerup *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Triggerdo *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Recoup    *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Recodo    *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Fastsimup *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Fastsimdo *= EventBTagSF/bPogSF_CSVM; 
   
   if (FastSimDataset!="") { 
     
@@ -2771,7 +2810,17 @@ void AnalysisStop::CorrectEventWeight() {
     MassPointParameters TheseMassPointParameters = StopNeutralinoMap.at(ThisMassPoint);
     StopCrossSection ThisStopCrossSection = TheseMassPointParameters.first;
     int SampleSize = TheseMassPointParameters.second;
-    _event_weight *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
+    _event_weight           *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
+    _event_weight_Btagup    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Btagdo    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Idisoup   *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Idisodo   *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Triggerup *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Triggerdo *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Recoup    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Recodo    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Fastsimup *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Fastsimdo *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
     
   }
   
@@ -2821,27 +2870,31 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("susyMstop",       &susyMstop);
 
   if (systematic=="nominal") 
-    fChain->SetBranchAddress("eventW",          &_event_weight);
+    fChain->SetBranchAddress("eventW",           &_event_weight);
   else if (systematic=="Btagup")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Btagup);
+    fChain->SetBranchAddress("eventW_Btagup",    &_event_weight);
   else if (systematic=="Btagdo")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Btagdo);
+    fChain->SetBranchAddress("eventW_Btagdo",    &_event_weight);
+  else if (systematic=="BtagFSup")
+    fChain->SetBranchAddress("eventW_BtagFSup",  &_event_weight);
+  else if (systematic=="BtagFSdo")
+    fChain->SetBranchAddress("eventW_BtagFSdo",  &_event_weight);
   else if (systematic=="Idisoup")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Idisoup);
-  else if (systematic=="Idisodo")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Idisodo);
+    fChain->SetBranchAddress("eventW_Idisoup",   &_event_weight);
+  else if (systematic=="Idisodo") 
+    fChain->SetBranchAddress("eventW_Idisodo",   &_event_weight);
   else if (systematic=="Triggerup")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Triggerup);
+    fChain->SetBranchAddress("eventW_Triggerup", &_event_weight);
   else if (systematic=="Triggerdo")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Triggerdo);
+    fChain->SetBranchAddress("eventW_Triggerdo", &_event_weight);
   else if (systematic=="Recoup")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Recoup);
+    fChain->SetBranchAddress("eventW_Recoup",    &_event_weight);
   else if (systematic=="Recodo")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Recodo);
+    fChain->SetBranchAddress("eventW_Recodo",    &_event_weight);
   else if (systematic=="Fastsimup")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Fastsimup);
+    fChain->SetBranchAddress("eventW_Fastsimup", &_event_weight);
   else if (systematic=="Fastsimdo")
-    fChain->SetBranchAddress("eventW",          &_event_weight_Fastsimdo);
+    fChain->SetBranchAddress("eventW_Fastsimdo", &_event_weight);
 
   fChain->SetBranchAddress("channel",         &_channel);
   fChain->SetBranchAddress("njet",            &_njet); 

@@ -11,7 +11,7 @@ class AnalysisStop : public AnalysisCMS
  public :
 
   AnalysisStop(TTree* tree, TString systematic);
-  AnalysisStop(TFile* file, TString systematic);
+  AnalysisStop(TFile* file, TString systematic,	int FillAllHistograms = 1);
 
   void BookAnalysisHistograms(); 
 
@@ -37,7 +37,7 @@ class AnalysisStop : public AnalysisCMS
   void GetMiniTree           (TFile *MiniTreeFile, TString systematic);
 
   TString FastSimDataset;
-  BTagSFUtil *BTagSF;
+  BTagSFUtil *BTagSF, *BTagSF_Upb, *BTagSF_Dob, *BTagSF_UpFSb, *BTagSF_DoFSb;
 
   typedef pair<int, int> MassPoint;
   typedef pair<float, float> StopCrossSection;
@@ -57,6 +57,8 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_mlb1true         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb2true         [nchannel][ncut][njetbin+1];
   TH2D*                  h_mt2lblbvsmlbtrue [nchannel][ncut][njetbin+1];
+
+  bool _FillAllHistograms;
 
   float _metmeff, _MT2ll;
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
