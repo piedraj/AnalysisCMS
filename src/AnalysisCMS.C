@@ -413,7 +413,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
+  _event_weight = PassTrigger(); 
+  
+  if (_analysis.EqualTo("Stop")) _event_weight = PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
@@ -1323,7 +1325,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   // TH2 histograms
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 500, 0,  500, 100, 40, 140);
-  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l" + suffix, "", 150, 0, 150, 100, 40, 140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0, 150, 100, 40, 140);
   h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
   h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
   h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
