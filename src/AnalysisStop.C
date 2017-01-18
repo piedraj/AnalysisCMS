@@ -45,9 +45,11 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     MassPointFlag = "_Sm"; MassPointFlag += iStopRefMass; MassPointFlag += "_Xm"; MassPointFlag += iNeutralinoRefMass;
 
   }
+ 
 
   Setup(analysis, filename, luminosity, MassPointFlag);
   
+
   // Define histograms
   //----------------------------------------------------------------------------
   BookAnalysisHistograms();
@@ -74,7 +76,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
-
+   
     bool pass_masspoint = true;
     if (filename.Contains("T2tt")) 
       pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
@@ -112,6 +114,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     // Get analysis variables
     //--------------------------------------------------------------------------
+ 
     GetAnalysisVariables();
 
 
@@ -131,10 +134,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
-      
-      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
+           
+       FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
 
-      FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
+       FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
 
       // Basics Stop
       //-------------------------------------------------------------------------
@@ -254,6 +257,7 @@ void AnalysisStop::BookAnalysisHistograms()
 //------------------------------------------------------------------------------
 void AnalysisStop::GetAnalysisVariables()
 {
+
   // Met
   if (_isminitree) MET.SetPtEtaPhiM(metPfType1, 0.0, metPfType1Phi, 0.0); 
 
@@ -297,6 +301,7 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 {
   if (ichannel != ll) FillAnalysisHistograms(ll, icut, ijet);
 
+
   h_mt2lblbcomb      [ichannel][icut][ijet]->Fill(_mt2lblbcomb,    _event_weight);
   h_mt2bbtrue        [ichannel][icut][ijet]->Fill(_mt2bbtrue,      _event_weight);
   h_mt2lblbtrue      [ichannel][icut][ijet]->Fill(_mt2lblbtrue,    _event_weight);
@@ -310,10 +315,13 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
 
+
   h_MT2_Met          [ichannel][icut][ijet]->Fill(_MT2_Met,        _event_weight);
   h_HTvisible_Met    [ichannel][icut][ijet]->Fill(_HTvisible_Met,  _event_weight);
   h_MetMeff_Met      [ichannel][icut][ijet]->Fill(_MetMeff_Met,    _event_weight);
   h_R2_Met           [ichannel][icut][ijet]->Fill(_R2_Met,         _event_weight);
+  
+
 }
 
 
@@ -325,11 +333,14 @@ void AnalysisStop::FillLevelHistograms(int  icut,
 {
   if (!pass) return;
 
+
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 
+
   FillAnalysisHistograms(_channel, icut, _jetbin);
   FillAnalysisHistograms(_channel, icut, njetbin);
+  
 }
 
 void AnalysisStop::SetStopNeutralinoMap() {
