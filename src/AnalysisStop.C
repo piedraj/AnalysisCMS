@@ -64,8 +64,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
   BTagSF_UpFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", -11, FastSimDataset);
   BTagSF_DoFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", +11, FastSimDataset);
-  // LS temporary fix to run on ReReco data and Spring16 MC
-  //if (!_ismc) CSVv2M = 0.8484;
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -2777,7 +2775,7 @@ void AnalysisStop::CorrectEventWeight() {
     float DataEfficiency_DoFSb = MonteCarloEfficiency*1.05*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
 
     float btagcut = CSVv2M;
-    if (!_ismc) btagcut = 0.8484;
+    if (!_ismc && _filename.Contains("23Sep2016")) btagcut = 0.8484;
     if (AnalysisJets[ijet].csvv2ivf>/*CSVv2M*/btagcut) {
       EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
       EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;
