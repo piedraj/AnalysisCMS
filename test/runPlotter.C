@@ -52,6 +52,7 @@ void runPlotter(TString level,
   float lumi = lumi_fb_2016;
 
   if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
+  if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
 
   Bool_t scale = linY;
 
@@ -157,8 +158,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("Stop"))
     {
-      plotter.AddSignal("T2tt_mStop??", "m_{Stop}350-400",  color_Signal);  
-      plotter.AddSignal("T2tt_mStop??", "m_{Stop}400-1200", color_Signal+2);  
+      plotter.AddSignal("T2tt_mStop-150to250_Sm150_Xm25",  "m_{ref}150-25",  color_Signal);  
+      plotter.AddSignal("T2tt_mStop-250to350_Sm275_Xm150", "m_{ref}275-150", color_Signal+2);  
     }
 
 
@@ -242,10 +243,10 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
-	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", scale, true, 0,   30);
-	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
-	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0, 200);
+	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", scale, true, 0,  30);
+	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0, 150);
+	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",               -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",              -1, 1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                5, 2, "rad",  scale);

@@ -86,8 +86,8 @@ TH2D*        h2_dy  [ll];  // ee, mm, em
 TH2D*        h2_wz  [ll];  // ee, mm, em
 TH2D*        h2_zz  [ll];  // ee, mm, em
 
-TCanvas*     canvas[3];    // R_ee, R_mm, scale
-TMultiGraph* mgraph[3];    // R_ee, R_mm, scale
+TCanvas*     canvas[4];    // R_ee, R_mm, R_MC, scale
+TMultiGraph* mgraph[4];    // R_ee, R_mm, R_MC, scale
 
 float        k_value[2];   // ee, mm
 float        k_error[2];   // ee, mm
@@ -118,7 +118,7 @@ TString      xtitle;
 void getDYScale(TString analysis = "Control",
 		TString level    = "02_Routin/2jet",
 		TString variable = "metPfType1",
-		double  lumi_fb  = 12.9)
+		double  lumi_fb  = 4.4)
 {
   xtitle = "";
 
@@ -171,9 +171,10 @@ void getDYScale(TString analysis = "Control",
 
   // Do the work
   //----------------------------------------------------------------------------
-  TGraphErrors* graph_R_data[2];  // ee, mm
-  TGraphErrors* graph_R_dy  [2];  // ee, mm
-  TGraphErrors* graph_scale [3];  // ee, mm, em
+  TGraphErrors* graph_R_data   [2];  // ee, mm
+  TGraphErrors* graph_R_dy     [2];  // ee, mm
+  TGraphErrors* graph_R_dy_copy[2];  // ee, mm
+  TGraphErrors* graph_scale    [3];  // ee, mm, em
 
   for (int k=ee; k<=em; k++)
     {
@@ -181,8 +182,9 @@ void getDYScale(TString analysis = "Control",
 
       if (k == em) continue;
 
-      graph_R_data[k] = new TGraphErrors();
-      graph_R_dy  [k] = new TGraphErrors();
+      graph_R_data   [k] = new TGraphErrors();
+      graph_R_dy     [k] = new TGraphErrors();
+      graph_R_dy_copy[k] = new TGraphErrors();
     }
 
   for (int j=0; j<nmetcut-1; j++)
@@ -216,6 +218,9 @@ void getDYScale(TString analysis = "Control",
 
 	  graph_R_dy[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy[k]);
 	  graph_R_dy[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err[k]);
+
+	  graph_R_dy_copy[k]->SetPoint     (j, 0.5* (metdraw[j+1] + metdraw[j]), R_dy[k]);
+	  graph_R_dy_copy[k]->SetPointError(j, 0.5* (metdraw[j+1] - metdraw[j]), R_dy_err[k]);
 	}
     }
 
@@ -224,16 +229,23 @@ void getDYScale(TString analysis = "Control",
 
   // Cosmetics
   //----------------------------------------------------------------------------
-  SetGraph(graph_R_data[ee], kBlack,  kFullCircle);
-  SetGraph(graph_R_data[mm], kBlack,  kFullCircle);
-  SetGraph(graph_R_dy[ee],   kRed+1,  kOpenSquare);
-  SetGraph(graph_R_dy[mm],   kRed+1,  kOpenSquare);
-  SetGraph(graph_scale[ee],  kBlack,  kOpenSquare);
-  SetGraph(graph_scale[mm],  kRed+1,  kFullCircle);
-  SetGraph(graph_scale[em],  kGray+1, kOpenTriangleUp, kDotted);
+  SetGraph(graph_R_data[ee],    kBlack,  kFullCircle);
+  SetGraph(graph_R_data[mm],    kBlack,  kFullCircle);
+  SetGraph(graph_R_dy[ee],      kRed+1,  kOpenSquare);
+  SetGraph(graph_R_dy[mm],      kRed+1,  kOpenSquare);
+  SetGraph(graph_scale[ee],     kBlack,  kOpenSquare);
+  SetGraph(graph_scale[mm],     kRed+1,  kFullCircle);
+  SetGraph(graph_scale[em],     kGray+1, kOpenTriangleUp, kDotted);
+  SetGraph(graph_R_dy_copy[ee], kBlack,  kFullCircle);
+  SetGraph(graph_R_dy_copy[mm], kRed+1,  kOpenSquare);
 
 
-  // Draw R
+  //
+  // Draw R out/in
+  //
+  // ee data vs. MC
+  // mm data vs. MC
+  //
   //----------------------------------------------------------------------------
   for (int k=ee; k<=mm; k++)
     {
@@ -273,30 +285,71 @@ void getDYScale(TString analysis = "Control",
     }
 
 
-  // Draw scale
+  //
+  // Draw R out/in
+  // 
+  // ee MC vs. mm MC
+  //
   //----------------------------------------------------------------------------
-  canvas[2] = new TCanvas("scale", "est/DY scale");
+  canvas[2] = new TCanvas("R out/in MC", "R out/in MC");
 
   mgraph[2] = new TMultiGraph();
 
-  mgraph[2]->Add(graph_scale[em]);
-  mgraph[2]->Add(graph_scale[ee]);
-  mgraph[2]->Add(graph_scale[mm]);
+  mgraph[2]->Add(graph_R_dy_copy[ee]);
+  mgraph[2]->Add(graph_R_dy_copy[mm]);
 
   mgraph[2]->Draw("ap");
 
   canvas[2]->Update();
 
-  TLine* line = new TLine(canvas[2]->GetUxmin(), 1.0, canvas[2]->GetUxmax(), 1.0);
+  TLine* line2 = new TLine(canvas[2]->GetUxmin(), 0.0, canvas[2]->GetUxmax(), 0.0);
   
-  line->SetLineWidth(2);
-  line->SetLineStyle(kDotted);
-  line->Draw("same");
+  line2->SetLineWidth(2);
+  line2->SetLineStyle(kDotted);
+  line2->Draw("same");
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
   mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
   mgraph[2]->GetXaxis()->SetTitle(xtitle);
-  mgraph[2]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
+  mgraph[2]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
+
+  mgraph[2]->SetMinimum(-0.02);
+  mgraph[2]->SetMaximum(+0.35);
+
+  DrawLegend(0.22, 0.83, (TObject*)graph_R_dy_copy[ee], " " + lchannel[ee] + " DY");
+  DrawLegend(0.22, 0.77, (TObject*)graph_R_dy_copy[mm], " " + lchannel[mm] + " DY");
+
+  DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
+
+  canvas[2]->Modified();
+  canvas[2]->Update();
+  canvas[2]->SaveAs(outputdir + "/dy_Routin_MC.png");
+
+
+  // Draw scale
+  //----------------------------------------------------------------------------
+  canvas[3] = new TCanvas("scale", "est/DY scale");
+
+  mgraph[3] = new TMultiGraph();
+
+  mgraph[3]->Add(graph_scale[em]);
+  mgraph[3]->Add(graph_scale[ee]);
+  mgraph[3]->Add(graph_scale[mm]);
+
+  mgraph[3]->Draw("ap");
+
+  canvas[3]->Update();
+
+  TLine* line3 = new TLine(canvas[3]->GetUxmin(), 1.0, canvas[3]->GetUxmax(), 1.0);
+  
+  line3->SetLineWidth(2);
+  line3->SetLineStyle(kDotted);
+  line3->Draw("same");
+
+  mgraph[3]->GetXaxis()->SetTitleOffset(1.5);
+  mgraph[3]->GetYaxis()->SetTitleOffset(2.0);
+  mgraph[3]->GetXaxis()->SetTitle(xtitle);
+  mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
@@ -304,9 +357,9 @@ void getDYScale(TString analysis = "Control",
 
   DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", lumi_fb));
 
-  canvas[2]->Modified();
-  canvas[2]->Update();
-  canvas[2]->SaveAs(outputdir + "/dy_scale.png");
+  canvas[3]->Modified();
+  canvas[3]->Update();
+  canvas[3]->SaveAs(outputdir + "/dy_scale.png");
 }
 
 
@@ -441,9 +494,12 @@ void GetScale(int    ch,
       printf(" Nin(%s)       %8.0f +- %-5.0f\n", schannel[ch].Data(), n_in_ll,      err_in_ll);
       printf(" Nin(em)       %8.0f +- %-5.0f\n",                      n_in_em,      err_in_em);
       printf(" Nin(WZ)       %8.2f +- %-5.2f\n",                      n_in_wz,      err_in_wz);
+      printf(" Nout(WZ)      %8.2f +- %-5.2f\n",                      n_out_wz,     err_out_wz);
       printf(" Nin(ZZ)       %8.2f +- %-5.2f\n",                      n_in_zz,      err_in_zz);
+      printf(" Nout(ZZ)      %8.2f +- %-5.2f\n",                      n_out_zz,     err_out_zz);
       printf(" Nin(DY)       %8.1f +- %-5.1f\n",                      n_in_dy,      err_in_dy);
       printf(" Nin(est)      %8.1f +- %-5.1f\n",                      n_in_est,     err_in_est);
+      printf(" Nout(est)     %8.1f +- %-5.3f\n",                      n_out_est,    err_out_est);
       printf("----------------------------------\n");
       printf(" R(%s,est)     %8.3f +- %-5.3f\n", schannel[ch].Data(), R_data_value, R_data_error);
       printf(" R(%s,DY)      %8.3f +- %-5.3f\n", schannel[ch].Data(), R_dy_value,   R_dy_error);

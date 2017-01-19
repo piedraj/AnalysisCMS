@@ -139,7 +139,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mlb1          [ichannel][icut][ijet]->Fill(_mlb1,           _event_weight);
   h_mlb2          [ichannel][icut][ijet]->Fill(_mlb2,           _event_weight);
 
-
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
   h_channel       [ichannel][icut][ijet]->Fill(_channel,        _event_weight);
@@ -410,9 +409,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger();
-
-  if (_analysis.EqualTo("Stop")) _event_weight = PassTrigger()*metFilter;
+  _event_weight = PassTrigger(); 
+  
+  if (_analysis.EqualTo("Stop")) _event_weight *= metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
@@ -1323,11 +1322,11 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 100, 0, 1000, 100,  0, 1000);
-  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 100, 0, 1000, 100,  0,    5);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 300, 0,  300, 100, 40, 140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 200, 0,  800, 200,  0, 800);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
 
 

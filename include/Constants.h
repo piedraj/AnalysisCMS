@@ -22,7 +22,6 @@
 const double lumi_fb_2016       = 12.9;    // 2016B + 2016C + 2016D
 const double lumi_fb_Run2016B   =  5.892;  // From run 272007 to run 275376
 const double lumi_fb_2016_susy  =  4.394;  // From run 278820 to run 279931
-const double lumi_fb_2016_dm    =  0.0;    // To be updated
 const double lumi_fb_2015       =  2.318;  // 2015C + 2015D
 const double lumi_error_percent =  6.2;
 
@@ -97,6 +96,7 @@ const Color_t color_WW        = kAzure-9;
 const Color_t color_ZJets     = kGreen+2;
 const Color_t color_WJets     = kGray+1;
 const Color_t color_TTV       = kGreen-6;
+const Color_t color_TTZ       = kOrange+2;
 const Color_t color_HWW       = kAzure-7;
 const Color_t color_Wg        = kBlue;
 const Color_t color_WgStar    = kBlue+2;
