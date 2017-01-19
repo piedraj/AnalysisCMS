@@ -41,7 +41,7 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
       for (int i=ee; i<=ll; i++) {
 
 	TString suffix = "_" + schannel[i];
-	
+
 	DefineHistograms(i, j, k, suffix);
       }
     }
@@ -128,35 +128,8 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
     FillLevelHistograms(Shape_07_Zveto, pass);
-    /*
-    if(pass) {
-
-      printf("================================== \n");
-      for(int x=0;x<3;x++) 
-	{
-	  for(int y=0;y<3;y++)
-	    {
-	      printf("(%d,%d) : %f ", x, y, GetMomentumTensor()[x][y]);
-	    }
-	  cout<<endl; 
-	}
-
-      _miMatrix = GetMomentumTensor();
-      _sphericity = GetSphericity(_miMatrix);
-      printf("Sphericity: %f ", _sphericity); 
-
-      printf("  Before adding to the histogram     ");
-      std::cout << "Channel :" << _channel << "        Jetbin : " << _jetbin << std::endl;
-      h_sphericity[(int)_channel][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
-      h_sphericity[ll][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
-      // h_sphericity[4][Shape_07_Zveto][_jetbin]->Fill(_sphericity, _event_weight);
-      printf("After adding to the histogram \n");
-
-      printf("================================== \n");
-
-    }    
-    */
   }
+
 
   EndJob();
 }

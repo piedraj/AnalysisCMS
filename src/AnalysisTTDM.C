@@ -74,10 +74,9 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // Analysis
     //--------------------------------------------------------------------------
     //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
-
-
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
-    
+
+    //if (jentry%6 != 0) continue;
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 25.) continue;
@@ -99,15 +98,11 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // AN-16-011, IFCA ¿?
     //--------------------------------------------------------------------------
     bool pass   = true;
-<<<<<<< HEAD
-    
-=======
 
 //FillLevelHistograms(step_1, pass);
 //FillLevelHistograms(step_2, pass);
 //FillLevelHistograms(step_3, pass);
 
->>>>>>> a46cfc78e81e632d74f70129ab5bc1210d9eff22
     pass &= (std_vector_lepton_pt->at(2) < 10.);
 
 

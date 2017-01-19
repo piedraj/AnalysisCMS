@@ -1555,7 +1555,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
   minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
   minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
-
 }
 
 
