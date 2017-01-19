@@ -117,6 +117,7 @@ float AnalysisCMS::ElectronIsolation(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
+
   // TH1 histograms
   //----------------------------------------------------------------------------
   h_counterRaw    [ichannel][icut][ijet]->Fill(1);
@@ -216,7 +217,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphitt_gen    [ichannel][icut][ijet]->Fill(_dphitt_gen,     _event_weight);
   h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
-  h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
+  h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight); 
   h_MR            [ichannel][icut][ijet]->Fill(_MR,             _event_weight);
   h_R2            [ichannel][icut][ijet]->Fill(_R2,             _event_weight);
   h_Rpt           [ichannel][icut][ijet]->Fill(_Rpt,            _event_weight);
@@ -225,6 +226,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_DeltaPhiRll   [ichannel][icut][ijet]->Fill(_DeltaPhiRll,    _event_weight);
 
 
+ 
   // TH2 histograms
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
@@ -233,7 +235,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
-
+ 
   // Non-prompt systematic uncertainties
   //----------------------------------------------------------------------------
   h_fakes[ichannel][icut][ijet]->Fill(0., _fake_weight);
@@ -254,6 +256,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
     {
       if (ichannel != ll)  FillHistograms(ll, icut, ijet);
     }
+  
+   
 }
 
 
@@ -400,6 +404,8 @@ void AnalysisCMS::ApplyWeights()
   _event_weight           = 1.0;
   _event_weight_Btagup    = 1.0;
   _event_weight_Btagdo    = 1.0;
+  _event_weight_BtagFSup  = 1.0;
+  _event_weight_BtagFSdo  = 1.0;
   _event_weight_Idisoup   = 1.0;
   _event_weight_Idisodo   = 1.0;
   _event_weight_Triggerup = 1.0;   
@@ -411,7 +417,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
+  _event_weight = PassTrigger(); 
+  
+  if (_analysis.EqualTo("Stop")) _event_weight = PassTrigger() * metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
@@ -524,7 +532,7 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
 
       _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
-    
+
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
       _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
@@ -546,19 +554,6 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
-  // GEN
-  //----------------------------------------------------------------------------
-  _lep1eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(0) : -999;
-  _lep1phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(0) : -999;
-  _lep1pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(0)  : -999;
-
-  _lep2eta_gen = (_ismc) ? std_vector_leptonGen_eta->at(1) : -999;
-  _lep2phi_gen = (_ismc) ? std_vector_leptonGen_phi->at(1) : -999;
-  _lep2pt_gen  = (_ismc) ? std_vector_leptonGen_pt->at(1)  : -999;
-
-
-  // RECO
-  //----------------------------------------------------------------------------
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
@@ -631,11 +626,13 @@ void AnalysisCMS::GetLeptons()
   _lep1phi  = Lepton1.v.Phi();
   _lep1pt   = Lepton1.v.Pt();
   _lep1mass = Lepton1.v.M(); 
+  _lep1id   = Lepton1.flavour; 
 
   _lep2eta  = Lepton2.v.Eta();
   _lep2phi  = Lepton2.v.Phi();
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
+  _lep2id   = Lepton2.flavour; 
 
   _detall = fabs(_lep1eta - _lep2eta);
 }
@@ -1109,9 +1106,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetTops();
 
+  GetGenLeptonsAndNeutrinos();
+
   //  GetDark();
 
-  GetTopReco();
+  //  GetTopReco();
 
   GetSphericity(GetMomentumTensor());
   GetAlignment(GetMomentumTensor());
@@ -1190,22 +1189,25 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
+  if (!_isminitree) {
 
-  txt_summary << "\n";
-  txt_summary << Form("   analysis: %s\n",        _analysis.Data());
-  txt_summary << Form("   filename: %s\n",        _filename.Data());
-  txt_summary << Form("     sample: %s\n",        _sample.Data());
-  txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
-  txt_summary << Form("   nentries: %lld\n",      _nentries);
-  txt_summary << "\n";
-  
-  if (!_analysis.EqualTo("FR")) Summary(_analysis, "11.0", "raw yields");
+    txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
-  txt_summary.close();
+    txt_summary << "\n";
+    txt_summary << Form("   analysis: %s\n",        _analysis.Data());
+    txt_summary << Form("   filename: %s\n",        _filename.Data());
+    txt_summary << Form("     sample: %s\n",        _sample.Data());
+    txt_summary << Form(" luminosity: %.3f fb-1\n", _luminosity);
+    txt_summary << Form("   nentries: %lld\n",      _nentries);
+    txt_summary << "\n";
+   
+    if (!_analysis.EqualTo("FR")) Summary(_analysis, "11.0", "raw yields");
+   
+    txt_summary.close();   
+  }
 
   root_output->cd();
-
+  
   printf("\n\n Writing histograms. This can take a while...\n");
 
   root_output->Write("", TObject::kOverwrite);
@@ -1335,11 +1337,11 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40,  140);
-  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 100, 0, 1000, 100,  0, 1000);
-  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 100, 0, 1000, 100,  0,    5);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 500, 0,  500, 100, 40, 140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0, 150, 100, 40, 140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
+  h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
 
 
@@ -1405,6 +1407,8 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW",           &_event_weight,           "eventW/F");
   minitree->Branch("eventW_Btagup",    &_event_weight_Btagup,    "eventW_Btagup/F");
   minitree->Branch("eventW_Btagdo",    &_event_weight_Btagdo,    "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",  &_event_weight_BtagFSup,  "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSFdo", &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
   minitree->Branch("eventW_Idisoup",   &_event_weight_Idisoup,   "eventW_Idisoup/F");
   minitree->Branch("eventW_Idisodo",   &_event_weight_Idisodo,   "eventW_Idisodo/F");
   minitree->Branch("eventW_Triggerup", &_event_weight_Triggerup, "eventW_Triggerup/F");
@@ -1431,19 +1435,34 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("leadingPtCSVv2L",  &_leadingPtCSVv2L,  "leadingPtCSVv2L/F");
   minitree->Branch("leadingPtCSVv2M",  &_leadingPtCSVv2M,  "leadingPtCSVv2M/F");
   minitree->Branch("leadingPtCSVv2T",  &_leadingPtCSVv2T,  "leadingPtCSVv2T/F");
+  minitree->Branch("lep1id",           &_lep1id,           "lep1id/F");
   minitree->Branch("lep1eta",          &_lep1eta,          "lep1eta/F");
   minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
+  minitree->Branch("lep1idGEN",        &_lep1id_gen,       "lep1idGEN/F");
+  minitree->Branch("lep1motheridGEN",  &_lep1motherid_gen, "lep1motheridGEN/F");
+  minitree->Branch("lep1ptGEN",        &_lep1pt_gen,       "lep1ptGEN/F");
+  minitree->Branch("lep1etaGEN",       &_lep1eta_gen,      "lep1etaGEN/F");
+  minitree->Branch("lep1phiGEN",       &_lep1phi_gen,      "lep1phiGEN/F");
+  minitree->Branch("lep1tauGEN",       &_lep1tau_gen,      "lep1tauGEN/F");
+  minitree->Branch("lep2id",           &_lep2id,           "lep2id/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
+  minitree->Branch("lep2etaGEN",       &_lep2eta_gen,      "lep2etaGEN/F");
+  minitree->Branch("lep2phiGEN",       &_lep2phi_gen,      "lep2phiGEN/F");
+  minitree->Branch("lep2idGEN",        &_lep2id_gen,       "lep2idGEN/F");
+  minitree->Branch("lep2motheridGEN",  &_lep2motherid_gen, "lep2motheridGEN/F");
+  minitree->Branch("lep2ptGEN",        &_lep2pt_gen,       "lep2ptGEN/F");
+  minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
   minitree->Branch("mc",               &_mc,               "mc/F");
   minitree->Branch("m2l",              &_m2l,              "m2l/F");
   minitree->Branch("mpmet",            &mpmet,             "mpmet/F");
+  minitree->Branch("metGenpt",         &metGenpt,          "metGenpt/F");
   minitree->Branch("metPuppi",         &metPuppi,          "metPuppi/F");
   minitree->Branch("metPfType1",       &metPfType1,        "metPfType1/F");
   minitree->Branch("metPfType1Phi",    &metPfType1Phi,     "metPfType1Phi/F");
@@ -1478,6 +1497,10 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
+  minitree->Branch("nu1ptGEN",         &_nu1pt_gen,        "nu1ptGEN/F");
+  minitree->Branch("nu1tauGEN",        &_nu1tau_gen,       "nu1tauGEN/F");
+  minitree->Branch("nu2ptGEN",         &_nu2pt_gen,        "nu2ptGEN/F");
+  minitree->Branch("nu2tauGEN",        &_nu2tau_gen,       "nu2tauGEN/F");
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   // P
   minitree->Branch("planarity",        &planarity,        "planarity/F");
@@ -2111,6 +2134,95 @@ void AnalysisCMS::GetTops()
 
       _m2t_gen = (top1 + top2).M();
     }
+  }
+}
+
+
+//------------------------------------------------------------------------------
+// GetGenLeptonsAndNeutrinos
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetGenLeptonsAndNeutrinos()
+{
+  _lep1id_gen       = 31416; 
+  _lep1motherid_gen = 31416;
+  _lep2id_gen       = 31416;
+  _lep2motherid_gen = 31416; 
+
+  _lep1pt_gen  = -999; 
+  _lep1eta_gen = -999; 
+  _lep1phi_gen = -999; 
+  _lep1tau_gen = -999; 
+  _lep2pt_gen  = -999; 
+  _lep2eta_gen = -999; 
+  _lep2phi_gen = -999; 
+  _lep2tau_gen = -999; 
+  _nu1pt_gen   = -999;
+  _nu1tau_gen  = -999; 
+  _nu2pt_gen   = -999;
+  _nu2tau_gen  = -999;
+
+  if (!_ismc) return;
+
+
+  // Get leptons
+  //----------------------------------------------------------------------------
+  for (int i=0; i<std_vector_leptonGen_pt->size(); i++) {
+
+    if (abs(std_vector_leptonGen_pid->at(i)) != 11 &&  abs(std_vector_leptonGen_pid->at(i)) != 13) continue;
+    //    if (std_vector_leptonGen_isPrompt->at(i) != 1) continue;
+    
+    _lep1pt_gen       = std_vector_leptonGen_pt->at(i); 
+    _lep1eta_gen      = std_vector_leptonGen_eta->at(i); 
+    _lep1phi_gen      = std_vector_leptonGen_phi->at(i); 
+    _lep1tau_gen      = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(i); 
+    _lep1id_gen       = std_vector_leptonGen_pid->at(i);
+    _lep1motherid_gen = std_vector_leptonGen_MotherPID->at(i);
+
+    for (int j=i+1; j<std_vector_leptonGen_pt->size(); j++) {
+
+      if (abs(std_vector_leptonGen_pid->at(j)) != 11 &&  abs(std_vector_leptonGen_pid->at(j)) != 13) continue;
+      //      if (std_vector_leptonGen_isPrompt->at(j) != 1) continue;
+
+      if (std_vector_leptonGen_pid->at(i)*std_vector_leptonGen_pid->at(j) > 0) continue; 
+
+      _lep2pt_gen       = std_vector_leptonGen_pt->at(j); 
+      _lep2eta_gen      = std_vector_leptonGen_eta->at(j); 
+      _lep2phi_gen      = std_vector_leptonGen_phi->at(j);
+      _lep2tau_gen      = std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j);
+      _lep2id_gen       = std_vector_leptonGen_pid->at(j);
+      _lep2motherid_gen = std_vector_leptonGen_MotherPID->at(j);
+  
+      break;
+    }
+
+    break;
+  }
+
+
+  // Get neutrinos
+  //----------------------------------------------------------------------------
+  for (int i=0; i<std_vector_neutrinoGen_pt->size(); i++) {
+
+    if (abs(std_vector_neutrinoGen_pid->at(i)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(i)) != 14) continue;
+    //    if (std_vector_neutrinoGen_isPrompt->at(i) != 1) continue;
+    
+    _nu1pt_gen  = std_vector_neutrinoGen_pt->at(i); 
+    _nu1tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(i); 
+
+    for (int j=i+1; j<std_vector_neutrinoGen_pt->size(); j++) {
+
+      if (abs(std_vector_neutrinoGen_pid->at(j)) != 12 &&  abs(std_vector_neutrinoGen_pid->at(j)) != 14) continue;
+      //      if (std_vector_neutrinoGen_isPrompt->at(j) != 1) continue;
+
+      if (std_vector_neutrinoGen_pid->at(i)*std_vector_neutrinoGen_pid->at(j) > 0) continue; 
+
+      _nu2pt_gen  = std_vector_neutrinoGen_pt->at(j); 
+      _nu2tau_gen = std_vector_neutrinoGen_isDirectPromptTauDecayProduct->at(j);
+
+      break;
+    }
+
+    break;
   }
 }
 

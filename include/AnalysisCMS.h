@@ -77,6 +77,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetTops           ();
 
+  void        GetGenLeptonsAndNeutrinos();
+
   void        GetDark           ();  
 
   void        GetMlb            (); 
@@ -237,6 +239,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight;
   float                  _event_weight_Btagup;
   float                  _event_weight_Btagdo;
+  float                  _event_weight_BtagFSup;
+  float                  _event_weight_BtagFSdo;
   float                  _event_weight_Idisoup;
   float                  _event_weight_Idisodo;
   float                  _event_weight_Triggerup;
@@ -260,7 +264,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _htvisible;
   float                  _htjets;
   float                  _htnojets;
-  float 		 _detall; 	
+  float 		 _detall; 
+  float                  _lep1id;
   float                  _lep1eta;
   float                  _lep1phi;
   float                  _lep1pt;
@@ -268,6 +273,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep1eta_gen;
   float                  _lep1phi_gen;
   float                  _lep1pt_gen;
+  float                  _lep2id;
   float                  _lep2eta;
   float                  _lep2phi;
   float                  _lep2pt;
@@ -275,6 +281,16 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2eta_gen;
   float                  _lep2phi_gen;
   float                  _lep2pt_gen;
+  float                  _lep1tau_gen;
+  float                  _lep1id_gen;
+  float                  _lep1motherid_gen;
+  float                  _lep2tau_gen; 
+  float                  _lep2id_gen;
+  float                  _lep2motherid_gen;
+  float                  _nu1pt_gen; 
+  float                  _nu1tau_gen;
+  float                  _nu2pt_gen; 
+  float                  _nu2tau_gen; 
   float                  _luminosity;
   float                  _mc;
   float                  _metvar;

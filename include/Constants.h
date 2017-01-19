@@ -7,7 +7,7 @@
 //#include "CutsMonoH.h"
 //#include "CutsPR.h"
 //#include "CutsShape.h"
-//#include "CutsStop.h"
+#include "CutsStop.h"
 //#include "CutsTop.h"
 #include "CutsTTDM.h"
 //#include "CutsWW.h"
@@ -96,6 +96,7 @@ const Color_t color_WW        = kAzure-9;
 const Color_t color_ZJets     = kGreen+2;
 const Color_t color_WJets     = kGray+1;
 const Color_t color_TTV       = kGreen-6;
+const Color_t color_TTZ       = kOrange+2;
 const Color_t color_HWW       = kAzure-7;
 const Color_t color_Wg        = kBlue;
 const Color_t color_WgStar    = kBlue+2;
