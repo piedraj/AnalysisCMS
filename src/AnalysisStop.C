@@ -10,6 +10,7 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
 {
   SetSaveMinitree(true);
   SetStopNeutralinoMap();
+  _FillAllHistograms = 1;
 }
 
 AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int FillAllHistograms) 
@@ -61,6 +62,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
   BTagSF_UpFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", -11, FastSimDataset);
   BTagSF_DoFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", +11, FastSimDataset);
+  // LS temporary fix to run on ReReco data and Spring16 MC
+  //if (!_ismc) CSVv2M = 0.8484;
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -126,7 +129,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     bool pass_blind = true; 
 
     // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("ReReco")) {
+    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016")) {
 
       pass_blind = false;
       if (_mt2ll<40.) pass_blind = true;
@@ -2755,15 +2758,17 @@ void AnalysisStop::CorrectEventWeight() {
     if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
     
     int ThisIndex = AnalysisJets[ijet].index;
-    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
+    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex); // LS temporary fix for ReReco SFs 
     float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency       = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Upb   = MonteCarloEfficiency*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Dob   = MonteCarloEfficiency*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_UpFSb = MonteCarloEfficiency*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_DoFSb = MonteCarloEfficiency*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    
-    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) {
+    float DataEfficiency       = MonteCarloEfficiency*1.05*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Upb   = MonteCarloEfficiency*1.05*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Dob   = MonteCarloEfficiency*1.05*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_UpFSb = MonteCarloEfficiency*1.05*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_DoFSb = MonteCarloEfficiency*1.05*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+
+    float btagcut = CSVv2M;
+    if (!_ismc) btagcut = 0.8484;
+    if (AnalysisJets[ijet].csvv2ivf>/*CSVv2M*/btagcut) {
       EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
       EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;
       EventBTagSF_Dob   *= DataEfficiency_Dob/MonteCarloEfficiency;
@@ -2845,10 +2850,12 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   
   fChain->SetBranchAddress("lep1eta",         &_lep1eta); 
   fChain->SetBranchAddress("lep1phi",         &_lep1phi);  
-  fChain->SetBranchAddress("lep1pt",          &_lep1pt);
+  fChain->SetBranchAddress("lep1pt",          &_lep1pt); 
+  fChain->SetBranchAddress("lep1isfake",      &_lep1isfake);
   fChain->SetBranchAddress("lep2eta",         &_lep2eta);
   fChain->SetBranchAddress("lep2phi",         &_lep2phi);
   fChain->SetBranchAddress("lep2pt",          &_lep2pt);
+  fChain->SetBranchAddress("lep2isfake",      &_lep2isfake);
 
   fChain->SetBranchAddress("ht",              &_ht);
   fChain->SetBranchAddress("htjets",          &_htjets);

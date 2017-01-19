@@ -410,7 +410,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger();  // _event_weight = PassTrigger() * metFilter;
+  _event_weight = PassTrigger();
+
+  if (_analysis.EqualTo("Stop")) _event_weight = PassTrigger()*metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
@@ -691,8 +693,10 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 	_trailingPtCSVv2L = pt;
       } 
     }
-
-    if (goodjet.csvv2ivf > CSVv2M) {
+    
+    float btagcut = CSVv2M;
+    if (!_ismc && filename.Contains("23Sep2016")) btagcut = 0.8484; // This is to run on ReReco and Spring16
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
       if (pt > _leadingPtCSVv2M) {
 	_trailingPtCSVv2M = _leadingPtCSVv2M;
 	_leadingPtCSVv2M  = pt;
@@ -718,7 +722,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     // I would give these variables a more generic way (now they depends on jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
-    if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
@@ -731,7 +735,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     _jet_phi.push_back(phi);
     _jet_pt .push_back(pt); 
 
-    if (goodjet.csvv2ivf > CSVv2M) {
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
 
     	_bjet30csvv2m_eta.push_back(eta); 
     	_bjet30csvv2m_phi.push_back(phi);
@@ -1173,9 +1177,9 @@ void AnalysisCMS::EndJob()
 
       root_minitree->Close();
     }
-
-  if (!_isminitree) {
-
+  
+  if (!_isminitree && !_analysis.EqualTo("Stop")) {
+    
     txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
     txt_summary << "\n";
@@ -1705,10 +1709,12 @@ void AnalysisCMS::GetStopVar()
 
 	  int nbjetfound       = 0;
 	  int nbjetfromleading = 0;
-	  
+
+	  float btagcut = CSVv2M;
+	  if (!_ismc && filename.Contains("23Sep2016")) btagcut = 0.8484; // This is to run on ReReco and Spring16
 	  for (int ijet=0; ijet<_njet; ijet++) {
 	    if (nbjetfound < 2) {
-	      if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+	      if (AnalysisJets[ijet].csvv2ivf > /*CSVv2M*/btagcut) {
 		bjetindex[1] = bjetindex[0];
 		bjetindex[nbjetfound] = ijet;
 		nbjetfound++;
