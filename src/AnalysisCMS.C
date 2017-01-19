@@ -693,8 +693,9 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
       } 
     }
     
-    float btagcut = CSVv2M;
-    if (!_ismc && _filename.Contains("23Sep2016")) btagcut = 0.8484; // This is to run on ReReco and Spring16
+    // This is to run on ReReco and Spring16
+    float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484 : CSVv2M;
+
     if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
       if (pt > _leadingPtCSVv2M) {
 	_trailingPtCSVv2M = _leadingPtCSVv2M;
@@ -1176,9 +1177,9 @@ void AnalysisCMS::EndJob()
 
       root_minitree->Close();
     }
-  
+
   if (!_isminitree && !_analysis.EqualTo("Stop")) {
-    
+
     txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
     txt_summary << "\n";
@@ -1709,8 +1710,9 @@ void AnalysisCMS::GetStopVar()
 	  int nbjetfound       = 0;
 	  int nbjetfromleading = 0;
 
-	  float btagcut = CSVv2M;
-	  if (!_ismc && _filename.Contains("23Sep2016")) btagcut = 0.8484; // This is to run on ReReco and Spring16
+	  // This is to run on ReReco and Spring16
+	  float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484: CSVv2M;
+
 	  for (int ijet=0; ijet<_njet; ijet++) {
 	    if (nbjetfound < 2) {
 	      if (AnalysisJets[ijet].csvv2ivf > /*CSVv2M*/btagcut) {
