@@ -312,9 +312,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2pt_gen;
   float			 _topReco;
   float			 _topRecoW; 
-  float                  _sphericity;
-  float                  _alignment;
-  float                  _planarity;
+  float                  sphericity;
+  float                  alignment;
+  float                  planarity;
   float                  centrality;
   float                  _mll13;
   float                  _mll23;
