@@ -46,11 +46,11 @@ void CreateDatacardFromShape()
   //datacard << Form("observation %5.0f \n", yield[data][nominal]);
   datacard << "------------ \n";
 
-  datacard << "bin        \t     \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1    \t   1   \t   1   \t   1   \t   1  \t  1       \n" ;
-  datacard << "process    \t     \t  WZ   \t  VZ   \t  TT   \t  ST   \t  WW   \t ZJets \t  HWW   \t  Wg   \t  Zg   \t  VVV  \t  HZ  \t  WgStar  \n" ;
-  datacard << "process    \t     \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   10   \t   11  \t   12  \t   13   \t  14 \t  15      \n" ;
+  datacard << "bin        \t     \t  1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1  \t   1  \t   1   \t   1  \t  1       \n" ;
+  datacard << "process    \t     \t  WZ  \t  VZ   \t  TT   \t  ST   \t  WW   \t ZJets \t  HWW  \t  Wg  \t  Zg  \t  VVV  \t  HZ  \t  WgStar  \n" ;
+  datacard << "process    \t     \t  2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   10  \t  12  \t  12  \t   13  \t  14  \t  15      \n" ;
 
-  datacard << Form("rate       \t \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \n", yield[WZ][nominal], yield[VZ][nominal], yield[TT][nominal], yield[ST][nominal], yield[WW][nominal], yield[ZJets][nominal], yield[HWW][nominal], yield[Wg][nominal], yield[Zg][nominal], yield[VVV][nominal], yield[HZ][nominal], yield[WgStar][nominal]);
+  datacard << Form("rate  \t  \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \t%7.3f \n", yield[WZ][nominal], yield[VZ][nominal], yield[TT][nominal], yield[ST][nominal], yield[WW][nominal], yield[ZJets][nominal], yield[HWW][nominal], yield[Wg][nominal], yield[Zg][nominal], yield[VVV][nominal], yield[HZ][nominal], yield[WgStar][nominal]);
 
   datacard << "------------ \n";
 
