@@ -270,6 +270,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep1phi;
   float                  _lep1pt;
   float                  _lep1mass;
+  float                  _lep1isfake;
   float                  _lep1eta_gen;
   float                  _lep1phi_gen;
   float                  _lep1pt_gen;
@@ -278,6 +279,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2phi;
   float                  _lep2pt;
   float			 _lep2mass;
+  float			 _lep2isfake;
   float                  _lep2eta_gen;
   float                  _lep2phi_gen;
   float                  _lep2pt_gen;

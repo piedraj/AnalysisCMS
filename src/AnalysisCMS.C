@@ -117,7 +117,6 @@ float AnalysisCMS::ElectronIsolation(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
-
   // TH1 histograms
   //----------------------------------------------------------------------------
   h_counterRaw    [ichannel][icut][ijet]->Fill(1);
@@ -217,7 +216,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_dphitt_gen    [ichannel][icut][ijet]->Fill(_dphitt_gen,     _event_weight);
   h_detatt_gen    [ichannel][icut][ijet]->Fill(_detatt_gen,     _event_weight);
   h_topReco	  [ichannel][icut][ijet]->Fill(_topReco,        _event_weight);
-  h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight); 
+  h_met_over_pt2l [ichannel][icut][ijet]->Fill(MET.Et()/_pt2l,  _event_weight);
   h_MR            [ichannel][icut][ijet]->Fill(_MR,             _event_weight);
   h_R2            [ichannel][icut][ijet]->Fill(_R2,             _event_weight);
   h_Rpt           [ichannel][icut][ijet]->Fill(_Rpt,            _event_weight);
@@ -226,7 +225,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_DeltaPhiRll   [ichannel][icut][ijet]->Fill(_DeltaPhiRll,    _event_weight);
 
 
- 
   // TH2 histograms
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
@@ -235,7 +233,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
 
- 
+
   // Non-prompt systematic uncertainties
   //----------------------------------------------------------------------------
   h_fakes[ichannel][icut][ijet]->Fill(0., _fake_weight);
@@ -256,8 +254,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
     {
       if (ichannel != ll)  FillHistograms(ll, icut, ijet);
     }
-  
-   
 }
 
 
@@ -419,7 +415,7 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger(); 
   
-  if (_analysis.EqualTo("Stop")) _event_weight = PassTrigger() * metFilter;
+  if (_analysis.EqualTo("Stop")) _event_weight *= metFilter;
   
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
@@ -700,8 +696,11 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 	_trailingPtCSVv2L = pt;
       } 
     }
+    
+    // This is to run on ReReco and Spring16
+    float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484 : CSVv2M;
 
-    if (goodjet.csvv2ivf > CSVv2M) {
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
       if (pt > _leadingPtCSVv2M) {
 	_trailingPtCSVv2M = _leadingPtCSVv2M;
 	_leadingPtCSVv2M  = pt;
@@ -727,7 +726,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     // I would give these variables a more generic way (now they depends on jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
-    if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
@@ -740,7 +739,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     _jet_phi.push_back(phi);
     _jet_pt .push_back(pt); 
 
-    if (goodjet.csvv2ivf > CSVv2M) {
+    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
 
     	_bjet30csvv2m_eta.push_back(eta); 
     	_bjet30csvv2m_phi.push_back(phi);
@@ -1189,7 +1188,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  if (!_isminitree) {
+  if (!_isminitree && !_analysis.EqualTo("Stop")) {
 
     txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
 
@@ -1337,10 +1336,10 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 
   // TH2 histograms
   //----------------------------------------------------------------------------
-  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 500, 0,  500, 100, 40, 140);
-  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0, 150, 100, 40, 140);
-  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 100, 0,  100, 100, 40, 140);
-  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 300, 0,  800, 300,  0, 800);
+  h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 300, 0,  300, 100, 40, 140);
+  h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
+  h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
+  h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 200, 0,  800, 200,  0, 800);
   h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
 }
 
@@ -1440,6 +1439,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
   minitree->Branch("lep1pt",           &_lep1pt,           "lep1pt/F");
+  minitree->Branch("lep1isfake",       &_lep1isfake,       "lep1isfake/F");
   minitree->Branch("lep1idGEN",        &_lep1id_gen,       "lep1idGEN/F");
   minitree->Branch("lep1motheridGEN",  &_lep1motherid_gen, "lep1motheridGEN/F");
   minitree->Branch("lep1ptGEN",        &_lep1pt_gen,       "lep1ptGEN/F");
@@ -1451,6 +1451,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
   minitree->Branch("lep2pt",           &_lep2pt,           "lep2pt/F");
+  minitree->Branch("lep2isfake",       &_lep2isfake,       "lep2isfake/F");
   minitree->Branch("lep2etaGEN",       &_lep2eta_gen,      "lep2etaGEN/F");
   minitree->Branch("lep2phiGEN",       &_lep2phi_gen,      "lep2phiGEN/F");
   minitree->Branch("lep2idGEN",        &_lep2id_gen,       "lep2idGEN/F");
@@ -1694,6 +1695,7 @@ void AnalysisCMS::GetStopVar()
   _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999;
   _tjet1assignment = _tjet2assignment = 0.;
 
+  _lep1isfake = _lep2isfake = -1.;
 
   if (_njet > 0) {
       
@@ -1721,10 +1723,13 @@ void AnalysisCMS::GetStopVar()
 
 	  int nbjetfound       = 0;
 	  int nbjetfromleading = 0;
-	  
+
+	  // This is to run on ReReco and Spring16
+	  float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484: CSVv2M;
+
 	  for (int ijet=0; ijet<_njet; ijet++) {
 	    if (nbjetfound < 2) {
-	      if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
+	      if (AnalysisJets[ijet].csvv2ivf > /*CSVv2M*/btagcut) {
 		bjetindex[1] = bjetindex[0];
 		bjetindex[nbjetfound] = ijet;
 		nbjetfound++;
@@ -1978,6 +1983,7 @@ void AnalysisCMS::GetStopVar()
   // So far so good
   //----------------------------------------------------------------------------
   int IdxB1 = -999, IdxB2 = -999;
+  _lep1isfake = _lep2isfake = 1.;
 
   if (lepIndex[0] >=0) {
 
@@ -1992,6 +1998,9 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen1 = (Lepton2.v).DeltaR(LepGen1);
 
     if (std_vector_lepton_ch->at(Lepton1.index)<0 && DeltaRLep1LepGen1<0.1) {
+
+      _lep1isfake = 0.;
+
       if (bIndex[0]>=0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[0]].v.Pt();
@@ -2010,6 +2019,9 @@ void AnalysisCMS::GetStopVar()
     }
 
     if (std_vector_lepton_ch->at(Lepton2.index)<0 && DeltaRLep2LepGen1<0.1) {
+
+      _lep2isfake = 0.;
+
       if (bIndex[0] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[0]].v.Pt();
@@ -2038,6 +2050,9 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen2 = (Lepton2.v).DeltaR(LepGen2);
     
     if (std_vector_lepton_ch->at(Lepton1.index)>0 && DeltaRLep1LepGen2<0.1) {
+
+      _lep1isfake = 0.;
+
       if (bIndex[1] >= 0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[1]].v.Pt();
@@ -2056,6 +2071,9 @@ void AnalysisCMS::GetStopVar()
     }
     
     if (std_vector_lepton_ch->at(Lepton2.index)>0 && DeltaRLep2LepGen2<0.1) {
+
+      _lep2isfake = 0.;
+
       if (bIndex[1] >= 0) {
 
 	_bjet2pt       = AnalysisJets[bIndex[1]].v.Pt();
