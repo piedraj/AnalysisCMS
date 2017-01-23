@@ -1536,17 +1536,15 @@ void AnalysisCMS::OpenMinitree()
 
 
   // Vectors
-  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
-  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
-  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
   minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
   minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
-
-  minitree->Branch("jetGen_phi",  "std::vector<float>", &std_vector_jetGen_phi);
-  minitree->Branch("jetGen_eta",  "std::vector<float>", &std_vector_jetGen_eta);
-  minitree->Branch("jetGen_pt" ,  "std::vector<float>", &std_vector_jetGen_pt );
-
+  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
+  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
+  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
+  minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
+  minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
+  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt );
 }
 
 
