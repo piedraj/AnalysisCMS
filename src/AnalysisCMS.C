@@ -1393,7 +1393,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Btagup",    &_event_weight_Btagup,    "eventW_Btagup/F");
   minitree->Branch("eventW_Btagdo",    &_event_weight_Btagdo,    "eventW_Btagdo/F");
   minitree->Branch("eventW_BtagFSup",  &_event_weight_BtagFSup,  "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSFdo", &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_BtagFSdo",  &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
   minitree->Branch("eventW_Idisoup",   &_event_weight_Idisoup,   "eventW_Idisoup/F");
   minitree->Branch("eventW_Idisodo",   &_event_weight_Idisodo,   "eventW_Idisodo/F");
   minitree->Branch("eventW_Triggerup", &_event_weight_Triggerup, "eventW_Triggerup/F");
