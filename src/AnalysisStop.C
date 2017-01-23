@@ -60,10 +60,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
   FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
   BTagSF       = new BTagSFUtil("mujets", "CSVv2", "Medium",   0, FastSimDataset);
-  BTagSF_Upb   = new BTagSFUtil("mujets", "CSVv2", "Medium",  -1, FastSimDataset);
-  BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
-  BTagSF_UpFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", -11, FastSimDataset);
-  BTagSF_DoFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", +11, FastSimDataset);
+  BTagSF_Upb   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
+  BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  -1, FastSimDataset);
+  BTagSF_UpFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", +11, FastSimDataset);
+  BTagSF_DoFSb = new BTagSFUtil("mujets", "CSVv2", "Medium", -11, FastSimDataset);
 
   // Loop over events
   //----------------------------------------------------------------------------
@@ -2815,7 +2815,9 @@ void AnalysisStop::CorrectEventWeight() {
     int SampleSize = TheseMassPointParameters.second;
     _event_weight           *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
     _event_weight_Btagup    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
-    _event_weight_Btagdo    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_Btagdo    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
+    _event_weight_BtagFSup  *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
+    _event_weight_BtagFSdo  *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
     _event_weight_Idisoup   *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
     _event_weight_Idisodo   *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
     _event_weight_Triggerup *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 

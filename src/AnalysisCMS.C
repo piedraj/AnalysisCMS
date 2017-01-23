@@ -1407,7 +1407,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Btagup",    &_event_weight_Btagup,    "eventW_Btagup/F");
   minitree->Branch("eventW_Btagdo",    &_event_weight_Btagdo,    "eventW_Btagdo/F");
   minitree->Branch("eventW_BtagFSup",  &_event_weight_BtagFSup,  "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSFdo", &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_BtagFSdo",  &_event_weight_BtagFSdo,  "eventW_BtagFSdo/F");
   minitree->Branch("eventW_Idisoup",   &_event_weight_Idisoup,   "eventW_Idisoup/F");
   minitree->Branch("eventW_Idisodo",   &_event_weight_Idisodo,   "eventW_Idisodo/F");
   minitree->Branch("eventW_Triggerup", &_event_weight_Triggerup, "eventW_Triggerup/F");
@@ -1550,12 +1550,15 @@ void AnalysisCMS::OpenMinitree()
 
 
   // Vectors
-  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
-  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
-  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
   minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
   minitree->Branch("bjet30csvv2m_pt",  "std::vector<float>", &_bjet30csvv2m_pt);
+  minitree->Branch("jet_eta",          "std::vector<float>", &_jet_eta);
+  minitree->Branch("jet_phi",          "std::vector<float>", &_jet_phi);
+  minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
+  minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
+  minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
+  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt );
 }
 
 
