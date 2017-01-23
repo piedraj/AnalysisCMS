@@ -118,7 +118,7 @@ TString      xtitle;
 void getDYScale(TString analysis = "Control",
 		TString level    = "02_Routin/2jet",
 		TString variable = "metPfType1",
-		double  lumi_fb  = 4.4)
+		double  lumi_fb  = 12.9)
 {
   xtitle = "";
 
@@ -350,6 +350,8 @@ void getDYScale(TString analysis = "Control",
   mgraph[3]->GetYaxis()->SetTitleOffset(2.0);
   mgraph[3]->GetXaxis()->SetTitle(xtitle);
   mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
+
+  mgraph[3]->SetMaximum(1.15);
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
