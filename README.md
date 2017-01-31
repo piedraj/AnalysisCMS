@@ -311,3 +311,9 @@ Get the 2015 luminosity.
     | 47    | 115  | 33208 | 33208 | 2.398             | 2.318            |
     +-------+------+-------+-------+-------------------+------------------+
 
+
+12. CRAB output in T2_ES_IFCA
+====
+
+    ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Dec2016/data/25ns/
+    ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2017/6Jan_RogueOne/MC/
