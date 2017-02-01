@@ -8,18 +8,23 @@
 //------------------------------------------------------------------------------
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
   SetStopNeutralinoMap();
-  _FillAllHistograms = 1;
+  if (systematic=="nominal") {
+    SetSaveMinitree(true);
+    _SaveHistograms = 0;
+  } else {
+    SetSaveMinitree(false);
+    _SaveHistograms = 1;
+  }
 }
 
-AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int FillAllHistograms) 
+AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHistograms) 
 {
   SetSaveMinitree(false);
   SetStopNeutralinoMap();
   GetMiniTree(MiniTreeFile, systematic);
   _systematic = systematic;
-  _FillAllHistograms = FillAllHistograms;
+  _SaveHistograms = SaveHistograms;
 }
 
 //------------------------------------------------------------------------------
@@ -55,6 +60,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   // Define histograms
   //----------------------------------------------------------------------------
   BookAnalysisHistograms();
+  if (_SaveHistograms==2) BookSystematicHistograms();
   
   root_output->cd();
 
@@ -205,6 +211,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     
   }
 
+  if (_SaveHistograms==2) SaveSystematicHistograms();
+
   EndJob();
 }
 
@@ -236,7 +244,7 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	TString suffix = "_" + schannel[i];
 
-	if (_FillAllHistograms) DefineHistograms(i, j, k, suffix);
+	if (_SaveHistograms==0) DefineHistograms(i, j, k, suffix);
 
 	h_mt2lblbcomb       [i][j][k] = new TH1D("h_mt2lblbcomb"      + suffix, "", 3000,    0, 3000);
 	h_mt2bbtrue         [i][j][k] = new TH1D("h_mt2bbtrue"        + suffix, "", 3000,    0, 3000);
@@ -258,6 +266,52 @@ void AnalysisStop::BookAnalysisHistograms()
 
       }
     }
+  }
+
+}
+
+//------------------------------------------------------------------------------
+// BookSystematicHistograms
+//------------------------------------------------------------------------------
+void AnalysisStop::BookSystematicHistograms()
+{
+
+  TH1::SetDefaultSumw2();
+
+  for (int is = 0; is<nsystematic; is++) {
+  
+    if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
+
+    TString prefix = (_isminitree) ? "minitrees/" : "";
+    gSystem->mkdir(prefix + "rootfiles/" + ssystematic[is] + "/" + _analysis, kTRUE);
+    TString _systematiclongname = _longname;
+    _systematiclongname.ReplaceAll("nominal/", ssystematic[is] + "/");
+    root_output_systematic[is] = new TFile(prefix + "rootfiles/" + _systematiclongname + ".root", "recreate");
+
+    root_output_systematic[is]->cd();
+
+    for (int j=0; j<ncut; j++) {
+  
+      if (_isminitree && j<Stop_00_Zveto) continue; 
+      
+      TString directory = scut[j];
+
+      root_output_systematic[is]->cd();
+
+      gDirectory->mkdir(directory);
+
+      root_output_systematic[is]->cd(directory);
+      
+      for (int i=ee; i<=ll; i++) {
+
+	TString suffix = "_" + schannel[i];
+
+	h_MT2ll_systematic  [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	
+      }
+
+    }
+
   }
 
 }
@@ -335,6 +389,66 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
 
 
 //------------------------------------------------------------------------------
+// FillSystematicHistograms
+//------------------------------------------------------------------------------
+void AnalysisStop::FillSystematicHistograms(int ichannel,
+					    int icut)
+{
+  if (ichannel != ll) FillSystematicHistograms(ll, icut);
+
+  for (int is = 0; is<nsystematic; is++) {
+  
+    if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
+    
+    root_output_systematic[is]->cd();
+
+    float _event_weight_systematic = -999.;
+    if (ssystematic[is]=="Triggerup") _event_weight_systematic = _event_weight_Triggerup;
+    if (ssystematic[is]=="Triggerdo") _event_weight_systematic = _event_weight_Triggerdo;
+    if (ssystematic[is]=="Recoup")    _event_weight_systematic = _event_weight_Recoup;
+    if (ssystematic[is]=="Recodo")    _event_weight_systematic = _event_weight_Recodo;
+    if (ssystematic[is]=="Idisoup")   _event_weight_systematic = _event_weight_Idisoup;
+    if (ssystematic[is]=="Idisodo")   _event_weight_systematic = _event_weight_Idisodo;
+    if (ssystematic[is]=="Fastsimup") _event_weight_systematic = _event_weight_Fastsimup;
+    if (ssystematic[is]=="Fastsimdo") _event_weight_systematic = _event_weight_Fastsimdo;
+    if (ssystematic[is]=="Btagup")    _event_weight_systematic = _event_weight_Btagup;
+    if (ssystematic[is]=="Btagdo")    _event_weight_systematic = _event_weight_Btagdo;
+    if (ssystematic[is]=="BtagFSup")  _event_weight_systematic = _event_weight_BtagFSup;
+    if (ssystematic[is]=="BtagFSdo")  _event_weight_systematic = _event_weight_BtagFSdo;
+
+    if (_event_weight_systematic==-999.) 
+      printf("\n\n Bad name for systematics, please check!\n");
+
+    h_MT2ll_systematic   [ichannel][icut][is]->Fill(_MT2ll, _event_weight_systematic);
+
+  }
+
+}
+
+
+
+//------------------------------------------------------------------------------
+// SaveSystematicHistograms
+//------------------------------------------------------------------------------
+void AnalysisStop::SaveSystematicHistograms()
+{
+
+  printf("\n\n Writing histograms for systematics.\n");
+
+  for (int is = 0; is<nsystematic; is++) {
+  
+    if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
+
+    root_output_systematic[is]->cd();
+    root_output_systematic[is]->Write("", TObject::kOverwrite);
+    root_output_systematic[is]->Close();
+
+  }
+
+}
+
+
+//------------------------------------------------------------------------------
 // FillLevelHistograms
 //------------------------------------------------------------------------------
 void AnalysisStop::FillLevelHistograms(int  icut,
@@ -342,7 +456,7 @@ void AnalysisStop::FillLevelHistograms(int  icut,
 {
   if (!pass) return;
   
-  if (_FillAllHistograms) {
+  if (_SaveHistograms==0) {
 
     FillHistograms(_channel, icut, _jetbin);
     FillHistograms(_channel, icut, njetbin);
@@ -351,6 +465,8 @@ void AnalysisStop::FillLevelHistograms(int  icut,
 
   FillAnalysisHistograms(_channel, icut, _jetbin);
   FillAnalysisHistograms(_channel, icut, njetbin);
+
+  if (_SaveHistograms==2) FillSystematicHistograms(_channel, icut);
   
 }
 
@@ -2902,6 +3018,21 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
     fChain->SetBranchAddress("eventW_Fastsimup", &_event_weight);
   else if (systematic=="Fastsimdo")
     fChain->SetBranchAddress("eventW_Fastsimdo", &_event_weight);
+  else 
+    fChain->SetBranchAddress("eventW",           &_event_weight);
+
+  fChain->SetBranchAddress("eventW_Btagup",    &_event_weight_Btagup);
+  fChain->SetBranchAddress("eventW_Btagdo",    &_event_weight_Btagdo);
+  fChain->SetBranchAddress("eventW_BtagFSup",  &_event_weight_BtagFSup);
+  fChain->SetBranchAddress("eventW_BtagFSdo",  &_event_weight_BtagFSdo);
+  fChain->SetBranchAddress("eventW_Idisoup",   &_event_weight_Idisoup);
+  fChain->SetBranchAddress("eventW_Idisodo",   &_event_weight_Idisodo);
+  fChain->SetBranchAddress("eventW_Triggerup", &_event_weight_Triggerup);
+  fChain->SetBranchAddress("eventW_Triggerdo", &_event_weight_Triggerdo);
+  fChain->SetBranchAddress("eventW_Recoup",    &_event_weight_Recoup);
+  fChain->SetBranchAddress("eventW_Recodo",    &_event_weight_Recodo);
+  fChain->SetBranchAddress("eventW_Fastsimup", &_event_weight_Fastsimup);
+  fChain->SetBranchAddress("eventW_Fastsimdo", &_event_weight_Fastsimdo);
 
   fChain->SetBranchAddress("channel",         &_channel);
   fChain->SetBranchAddress("njet",            &_njet); 
