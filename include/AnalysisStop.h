@@ -15,14 +15,21 @@ class AnalysisStop : public AnalysisCMS
 
   void BookAnalysisHistograms(); 
 
+  void BookSystematicHistograms(); 
+
   void GetAnalysisVariables(); 
 
   void FillAnalysisHistograms(int     ichannel,
 			      int     icut,
-			      int     ijet);
+			      int     ijet); 
+
+  void FillSystematicHistograms(int     ichannel,
+				int     icut);
 
   void FillLevelHistograms   (int     icut,
 			      bool    pass);
+
+  void SaveSystematicHistograms();
 
   void Loop                  (TString analysis,
 			      TString sample,
@@ -58,7 +65,7 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_mlb2true         [nchannel][ncut][njetbin+1];
   TH2D*                  h_mt2lblbvsmlbtrue [nchannel][ncut][njetbin+1];
 
-  bool _FillAllHistograms;
+  int _SaveHistograms;
 
   float _metmeff, _MT2ll;
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
@@ -79,6 +86,10 @@ class AnalysisStop : public AnalysisCMS
   float _R2_Met; int NbinsR2 = 7;
   float vMinR2 = 0., vMaxR2 = 1.4;
   TH1D*                  h_R2_Met           [nchannel][ncut][njetbin+1];
+
+  // Systematic output
+  TFile*                 root_output_systematic[nsystematic];
+  TH1F*                  h_MT2ll_systematic [nchannel][ncut][nsystematic];
   
 };
 
