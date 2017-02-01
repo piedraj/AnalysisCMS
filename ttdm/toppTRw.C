@@ -1,4 +1,4 @@
-const TString  inputdir = "week-13";
+const TString  inputdir = "diciembre";
 
 const bool WriteBranch = 1; 
 
