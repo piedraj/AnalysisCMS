@@ -94,8 +94,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
     if (!pass_masspoint && !_saveminitree) continue;
 
-    if (!_isminitree) EventSetup(2.4, 20.);    
+    if (!_isminitree) {
 
+      // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
+      if (metPfType1!=metPfType1) continue;
+      EventSetup(2.4, 20.);    
+
+    }
     // Analysis
     //--------------------------------------------------------------------------
 
