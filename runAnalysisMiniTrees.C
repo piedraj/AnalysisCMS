@@ -13,7 +13,7 @@
 
 void runAnalysisMiniTrees(TString filename,
 			  TString systematic,
-			  int     FillAllHistograms = 1,
+			  int     SaveHistograms    =  0,
 			  float   StopMass          = -1.,
 			  float   NeutralinoMass    = -1.)
 {
@@ -29,7 +29,7 @@ void runAnalysisMiniTrees(TString filename,
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
   //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
-  AnalysisStop    analysis(file, systematic, FillAllHistograms); analysis.Loop("Stop", filename, baseW_lumi_fb, StopMass, NeutralinoMass);
+  AnalysisStop    analysis(file, systematic, SaveHistograms); analysis.Loop("Stop", filename, baseW_lumi_fb, StopMass, NeutralinoMass);
   //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
   //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
