@@ -259,6 +259,7 @@ public :
    vector<float>   *std_vector_leptonGen_pt;
    //   vector<float>   *std_vector_leptonGen_status;
    vector<float>   *std_vector_leptonGen_MotherPID;
+   vector<float>   *std_vector_DarkMatterGen_pt;
    vector<float>   *std_vector_neutrinoGen_eta;
    vector<float>   *std_vector_neutrinoGen_isDirectPromptTauDecayProduct;
    vector<float>   *std_vector_neutrinoGen_isPrompt;
@@ -713,6 +714,7 @@ public :
    TBranch        *b_std_vector_leptonGen_pt;   //!
    //   TBranch        *b_std_vector_leptonGen_status;   //!
    TBranch        *b_std_vector_leptonGen_MotherPID;   //!
+   TBranch        *b_std_vector_DarkMatterGen_pt;   //!
    TBranch        *b_std_vector_neutrinoGen_eta;   //!
    TBranch        *b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct;   //!
    TBranch        *b_std_vector_neutrinoGen_isPrompt;   //!
@@ -1075,6 +1077,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_leptonGen_pt = 0;
    //   std_vector_leptonGen_status = 0;
    std_vector_leptonGen_MotherPID = 0; 
+   std_vector_DarkMatterGen_pt = 0;
    std_vector_neutrinoGen_eta = 0;
    std_vector_neutrinoGen_isDirectPromptTauDecayProduct = 0;
    std_vector_neutrinoGen_isPrompt = 0;
@@ -1422,6 +1425,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_leptonGen_pt", &std_vector_leptonGen_pt, &b_std_vector_leptonGen_pt);
    //   fChain->SetBranchAddress("std_vector_leptonGen_status", &std_vector_leptonGen_status, &b_std_vector_leptonGen_status);
    fChain->SetBranchAddress("std_vector_leptonGen_MotherPID", &std_vector_leptonGen_MotherPID, &b_std_vector_leptonGen_MotherPID);
+   fChain->SetBranchAddress("std_vector_DarkMatterGen_pt", &std_vector_DarkMatterGen_pt, &b_std_vector_DarkMatterGen_pt);
    fChain->SetBranchAddress("std_vector_neutrinoGen_eta", &std_vector_neutrinoGen_eta, &b_std_vector_neutrinoGen_eta);
    fChain->SetBranchAddress("std_vector_neutrinoGen_isDirectPromptTauDecayProduct", &std_vector_neutrinoGen_isDirectPromptTauDecayProduct, &b_std_vector_neutrinoGen_isDirectPromptTauDecayProduct);
    fChain->SetBranchAddress("std_vector_neutrinoGen_isPrompt", &std_vector_neutrinoGen_isPrompt, &b_std_vector_neutrinoGen_isPrompt);
