@@ -1,7 +1,5 @@
 #include "ttdm.h"
 
-const bool doshape = 0; 
-
 const TString outputdir = "histos"; 
 
 void CreateHistograms2( TString process );
@@ -11,7 +9,7 @@ void CreateHistograms(){
 
 	Assign();
 
-	gSystem->mkdir(outputdir, kTRUE);
+	gSystem->mkdir( outputdir, kTRUE );
 
 	//-----
 
@@ -48,8 +46,9 @@ void CreateHistograms2( TString process ){
 
 		TFile* storagefile; 
 
-		if ( doshape == 0)  storagefile = new TFile( outputdir + "/" + process + "_" + systematicID[k] + ".root", "recreate" );
-	
+		if( k == nominal ) storagefile = new TFile( outputdir + "/" + process +                         ".root", "recreate" );
+		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + process + "_" + systematicID[k] + ".root", "recreate" );
+
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
 		if ( process == "04_TTTo2L2Nu" ) mycut[k] = Form("%4.2f", ttSF)*mycut[k]; 
@@ -131,17 +130,15 @@ void CreateHistograms2( TString process ){
 		}
 
 
-		if( doshape == 0 ){ 
+		for( int i = 0; i < nhisto; i++ ){	
 
-			for( int i = 0; i < nhisto; i++ ){	
-
-				myhisto[i] -> Write(); 
-
-			}
-
-			storagefile -> Close();
+			myhisto[i] -> Write(); 
 
 		}
+
+		storagefile -> Close();
+
+		
 
 	}
 
