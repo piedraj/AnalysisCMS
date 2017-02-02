@@ -3,8 +3,9 @@
 const TString  inputdir = "week-13";  // where the minitrees are stored
 
 const float thelumi = 2.15; 
-const float    ttSF = 0.97; 
-const float    DYSF = 1.07; 
+const float    ttSF = 0.97;  const float ettSF = 0.15;
+const float    DYSF = 1.07;  const float eDYSF = 0.07;
+			     const float efakes= 0.30;
 
 
 TCut selection= "metPfType1>80.";
@@ -56,7 +57,7 @@ enum{ ee, mm, em, ll, nchannel };
 
 enum{ soft, hard, MVA, nlevel };
 
-enum{ nrmlz, shape };
+enum{ nrmlz, shape, nsysttype };
 
 enum{ 	nominal, 
 	Btagup, 
@@ -65,9 +66,13 @@ enum{ 	nominal,
 	Idisodo, 
 	Triggerup, 
 	Triggerdo, 
+	toppTrw,
 	//QCDup,
 	//QCDdo,
 	//PDF,
+	DDtt,
+	DDDY,
+	DDfakes,
 	nsystematic }; 
 
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
@@ -91,7 +96,9 @@ TCut mycut[nsystematic];
 TString processID[nprocess];
 TString  scalarID[nscalar ];
 TString  pseudoID[npseudo ];
-TString systematicID[nsystematic]; 
+TString         systematicID[nsystematic];
+TString systematicIDdatacard[nsystematic];
+TString systtypeID[nsysttype];
 
 TString b_name[nhisto];
 TString h_name[nhisto];
@@ -103,9 +110,9 @@ void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00500"     ;  
-	processID[data ] = "01_Data" ;
-	processID[fakes] = "00_Fakes"; 
+	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
+	processID[data ] = "01_Data"                 ;
+	processID[fakes] = "00_Fakes"                ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -144,9 +151,28 @@ void Assign(){
 	systematicID[Idisodo  ] = "Idisodo"  ;
 	systematicID[Triggerup] = "Triggerup";
 	systematicID[Triggerdo] = "Triggerdo";
+	systematicID[toppTrw  ] = "toppTrw"  ;
 	//systematicID[QCDup    ] = "QCDup"    ;
 	//systematicID[QCDdo    ] = "QCDdo"    ;
 	//ssystematicID[PDF      ] = "PDF"      ;
+
+	systematicIDdatacard[nominal  ] = "nominal";
+	systematicIDdatacard[Btagup   ] = "Btag"   ;
+	systematicIDdatacard[Btagdo   ] = ""       ;
+	systematicIDdatacard[Idisoup  ] = "Idiso"  ;
+	systematicIDdatacard[Idisodo  ] = ""       ;
+	systematicIDdatacard[Triggerup] = "Trigger";
+	systematicIDdatacard[Triggerdo] = ""       ;
+	systematicIDdatacard[toppTrw  ] = "toppTrw";
+	//systematicIDdatacard[QCDup    ] = "QCD"    ;
+	//systematicIDdatacard[QCDdo    ] = ""       ;
+	//ssystematicIDdatacard[PDF      ] = "PDF"   ;
+	systematicIDdatacard[DDtt     ] = "DDtt"   ;
+	systematicIDdatacard[DDDY     ] = "DDDY"   ;
+	systematicIDdatacard[DDfakes  ] = "DDfakes";
+
+	systtypeID[nrmlz] = "nrmlz";
+	systtypeID[shape] = "shape";
 
 	//----------
 
@@ -157,6 +183,7 @@ void Assign(){
 	mycut[Idisodo  ] = "eventW_Idisodo"  *selection;
 	mycut[Triggerup] = "eventW_Triggerup"*selection;
 	mycut[Triggerdo] = "eventW_Triggerdo"*selection;
+	mycut[toppTrw  ] = "eventW"          *selection;
 
 	//----------
 
