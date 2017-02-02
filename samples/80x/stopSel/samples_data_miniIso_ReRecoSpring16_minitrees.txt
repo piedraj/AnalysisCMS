@@ -1,3 +1,3 @@
-/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_Data.root
-/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_DataB.root
-/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_DataC.root
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_Data.root  1
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_DataB.root 1
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/01_DataC.root 1
