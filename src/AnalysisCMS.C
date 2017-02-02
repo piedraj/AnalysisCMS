@@ -1363,8 +1363,8 @@ void AnalysisCMS::OpenMinitree()
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
   // D
-  //minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
-  //minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  //  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
+  //  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
   minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
@@ -2295,10 +2295,11 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
- 	//_darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
-	//_darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
-	_darkpt_gen = 2.718;   // waiting for xavier's post-processing 
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
+  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
 }
+
 
 //------------------------------------------------------------------------------
 // GetMlb
