@@ -1,0 +1,11 @@
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/02_WZTo3LNu.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/03_VZ.root       2
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/04_TTTo2L2Nu.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/05_ST.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/06_WW.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/07_ZJets.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/08_WJets.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/09_TTW.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/10_TTZ.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/11_HWW.root 2
+/eos/user/s/scodella/Stop/MiniTrees/14Jan2017_minitrees/nominal/Stop/13_VVV.root 2
