@@ -53,12 +53,16 @@ enum {
   METup,
   Btagdo,
   Btagup,
+  BtagFSdo,
+  BtagFSup,
   Idisodo,
   Idisoup,
   Triggerdo,
   Triggerup,
   Recodo,
   Recoup,
+  Fastsimdo,
+  Fastsimup,
   nsystematic  // This line should be always last
 };
 
@@ -74,12 +78,40 @@ const TString ssystematic[nsystematic] = {
   "METup",
   "Btagdo",
   "Btagup",
+  "BtagFSdo",
+  "BtagFSup",
   "Idisodo",
   "Idisoup",
   "Triggerdo",
   "Triggerup",
   "Recodo",
-  "Recoup"
+  "Recoup",
+  "Fastsimdo",
+  "Fastsimup"
+};
+
+const bool systematicfromweight[nsystematic] = {
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
 };
 
 

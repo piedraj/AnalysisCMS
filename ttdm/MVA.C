@@ -15,7 +15,7 @@
 // Constants
 //------------------------------------------------------------------------------
 //const TString inputdir       = "../../../../public/minitrees_week-1/";
-const TString inputdir       = "../minitrees/diciembre/";
+const TString inputdir       = "../minitrees/week-13/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -47,11 +47,11 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(float metPfType1_cut = 0.,
-         float mt2ll_cut      = 0.,
-	 TString signal     = "ttDM0001scalar00010", //
+void MVA(float metPfType1_cut = 80.,
+         float mt2ll_cut      = 100.,
+	 TString signal     = "ttDM0001scalar00500", //
 	 bool    doMVATrain = 1,
-	 bool    doMVARead  = 1)
+	 bool    doMVARead  = 0)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -148,7 +148,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-	factory->AddVariable("newdarkpt"       , "", "", 'F');
+	factory->AddVariable("darkpt"       , "", "", 'F');
 	//factory->AddVariable("topRecoW"     , "", "", 'F');
 	//factory->AddVariable("lep1pt"       , "", "", 'F');
 	//factory->AddVariable("lep1eta"      , "", "", 'F');
@@ -200,8 +200,8 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  //factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&newdarkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=80:nTest_Signal=80:nTrain_Background=400:nTest_Background=400:!V");
-  factory->PrepareTrainingAndTestTree("mt2ll>100.&&newdarkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
+  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=80:nTest_Signal=80:nTrain_Background=400:nTest_Background=400:!V");
+  //factory->PrepareTrainingAndTestTree("mt2ll>100.&&newdarkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA
   //----------------------------------------------------------------------------
