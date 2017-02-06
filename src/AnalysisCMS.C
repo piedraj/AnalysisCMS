@@ -614,9 +614,11 @@ void AnalysisCMS::GetLeptons()
 
     if (i == 0) Lepton1 = lep;
     if (i == 1) Lepton2 = lep;
+    if (i == 2) Lepton3 = lep;
   }
 
   _nlepton = AnalysisLeptons.size();
+  //if(_nlepton != 2) printf("_nlepton : %i\n", int(_nlepton));
 
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
@@ -629,6 +631,11 @@ void AnalysisCMS::GetLeptons()
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
   _lep2id   = Lepton2.flavour; 
+
+  _lep3pt = -999;
+  if(_nlepton > 2) {
+    _lep3pt = Lepton3.v.Pt();
+  }
 
   _detall = fabs(_lep1eta - _lep2eta);
 }
@@ -1458,6 +1465,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2motheridGEN",  &_lep2motherid_gen, "lep2motheridGEN/F");
   minitree->Branch("lep2ptGEN",        &_lep2pt_gen,       "lep2ptGEN/F");
   minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
+  minitree->Branch("lep3pt",           &_lep3pt,           "lep3pt/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
   minitree->Branch("mc",               &_mc,               "mc/F");
@@ -1498,6 +1506,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
+  minitree->Branch("nlepton",          &_nlepton,          "nlepton/I");
   minitree->Branch("nu1ptGEN",         &_nu1pt_gen,        "nu1ptGEN/F");
   minitree->Branch("nu1tauGEN",        &_nu1tau_gen,       "nu1tauGEN/F");
   minitree->Branch("nu2ptGEN",         &_nu2pt_gen,        "nu2ptGEN/F");

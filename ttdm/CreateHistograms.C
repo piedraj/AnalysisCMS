@@ -4,6 +4,7 @@
 
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       lep2pt, lep2eta, lep2phi, lep2mass,
+      lep3pt, nlepton,
       jet1pt, jet1eta, jet1phi, jet1mass,
       jet2pt, jet2eta, jet2phi, jet2mass, 
       metPfType1, metPfType1Phi,
@@ -14,8 +15,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx,
       sphericity, alignment, planarity,
-      darkpt,
-      mva01,
+      //      darkpt,
+      //      mva01,
       nhisto }; 
 
 TString b_name[nhisto];
@@ -24,20 +25,25 @@ TH1F* myhisto [nhisto];
 
 const bool doshape = 0; 
 
-const TString  inputdir = "tt-xs";  // where the minitrees are stored
+const TString inputdir = "../minitrees/nominal/TTDM/";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
 ofstream yields;   
 
-const TCut mycut           = "eventW          *(mt2ll>100.&&metPfType1>80.&&newdarkpt>100.)";  
-const TCut mycut3          = "eventW          *(newdarkpt>0.)";  
-const TCut mycutx          = "eventW          *(mt2ll>75.&&mt2ll<100.&&newdarkpt>0.&&metPfType1>80.)";  
-const TCut mycut_Idisoup   = "eventW_Idisoup  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Idisodo   = "eventW_Idisodo  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Triggerup = "eventW_Triggerup*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Triggerdo = "eventW_Triggerdo*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Recoup    = "eventW_Recoup   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Recodo    = "eventW_Recodo   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut           = "eventW          *(mt2ll>100.&&metPfType1>80.&&newdarkpt>100.)";  
+//const TCut mycut             = "eventW          *(lep3pt > 0)";  
+//const TCut mycut             = "eventW          *(fabs(m2l - 91.2) > 15. && metPfType1 > 20 && lep1pt > 50 && lep2pt > 30 && lep3pt < 0)";  
+//const TCut mycut             = "eventW        *(njet > 3 && metPfType1 > 30. && lep1pt > 40. && lep2pt > 30. && nbjet30csvv2m > 0 && mt2ll > 100)";  
+const TCut mycut             = "eventW        *(nlepton > 2 && metPfType1 > 50. && nbjet30csvv2m > 0 && mt2ll > 90. && mt2ll < 100.)";  
+//const TCut mycut             = "eventW        *(metPfType1 > 50. && mt2ll > 10. && lep1pt > 40. && lep2pt > 30.)";  
+//Const TCut mycut3          = "eventW          *(newdarkpt>0.)";  
+//const TCut mycutx          = "eventW          *(mt2ll>75.&&mt2ll<100.&&newdarkpt>0.&&metPfType1>80.)";  
+//const TCut mycut_Idisoup   = "eventW_Idisoup  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut_Idisodo   = "eventW_Idisodo  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut_Triggerup = "eventW_Triggerup*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut_Triggerdo = "eventW_Triggerdo*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut_Recoup    = "eventW_Recoup   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
+//const TCut mycut_Recodo    = "eventW_Recodo   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
 
 
 void CreateHistograms2( TString process );
@@ -55,6 +61,9 @@ void CreateHistograms(){
 	b_name[lep2phi ] = "lep2phi" ;
 	b_name[lep2mass] = "lep2mass";
 
+	b_name[lep3pt  ] = "lep3pt"  ;
+	b_name[nlepton ] = "nlepton" ;
+	
 	b_name[jet1pt  ] = "jet1pt"  ;
 	b_name[jet1eta ] = "jet1eta" ;
 	b_name[jet1phi ] = "jet1phi" ;
@@ -111,10 +120,9 @@ void CreateHistograms(){
 	b_name[planarity ] = "planarity" ;
 
 	//b_name[topRecoW  ] = "topRecoW"  ;
-	b_name[darkpt    ] = "newdarkpt"    ;
+	//b_name[darkpt    ] = "newdarkpt"    ;
 
-	b_name[mva01     ] = "ANN_mt2ll0_ttDM0001scalar00010";
-
+	//b_name[mva01     ] = "ANN_mt2ll0_ttDM0001scalar00010";
 
 	for( int i = 0; i < nhisto; i++ ){
 
@@ -134,14 +142,14 @@ void CreateHistograms(){
 	CreateHistograms2("05_ST"       );
 	CreateHistograms2("06_WW"       );
 	CreateHistograms2("07_ZJets"    );
-	CreateHistograms2("00_Fakes_reduced_1outof6");
+	//CreateHistograms2("00_Fakes_reduced_1outof6");
 	CreateHistograms2("02_WZTo3LNu" );
 	CreateHistograms2("03_VZ"       );
 	CreateHistograms2("09_TTV"      );
 	CreateHistograms2("11_Wg"       );
 	CreateHistograms2("14_HZ"       );
 
-	////CreateHistograms2("TTTo2L2Nu_alphaS01108");
+	//CreateHistograms2("TTTo2L2Nu_alphaS01108");
 
 	CreateHistograms2("10_HWW"      );
 	CreateHistograms2("12_Zg"       );
@@ -167,8 +175,7 @@ void CreateHistograms2( TString process ){
 
         //TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
         TFile* myfile = new TFile(inputdir + process + ".root", "read"); 
-
-	TFile* myfile = new TFile( "../minitrees/diciembre/" + process + ".root", "read" ); 
+	//TFile* myfile = new TFile( "../minitrees/diciembre/" + process + ".root", "read" ); 
 
 	TFile* storagefile; 
 	TFile* shape_f; 
@@ -191,6 +198,9 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[lep2eta      ] + " >> " + h_name[lep2eta      ] + "(   60, -3  ,    3   )", mycut );
 	mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", mycut );
 	mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", mycut );
+
+	mytree -> Draw( b_name[lep3pt       ] + " >> " + h_name[lep3pt       ] + "( 3000,  0  , 3000   )", mycut );
+	mytree -> Draw( b_name[nlepton      ] + " >> " + h_name[nlepton      ] + "(  100,  0  , 10     )", mycut );
 
 	mytree -> Draw( b_name[jet1pt       ] + " >> " + h_name[jet1pt       ] + "( 3000,  0  , 3000   )", mycut );
 	mytree -> Draw( b_name[jet1eta      ] + " >> " + h_name[jet1eta      ] + "(   60, -3  ,    3   )", mycut );
@@ -252,9 +262,9 @@ void CreateHistograms2( TString process ){
 	mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", mycut );
 
 	//mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
-	mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
+	//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
 
-	mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+	//mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
 
 	myfile -> Close();
 
