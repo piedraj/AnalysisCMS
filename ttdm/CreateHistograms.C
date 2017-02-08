@@ -2,7 +2,7 @@
 
 const TString outputdir = "histos"; 
 
-void CreateHistograms2( TString process );
+void CreateHistograms2( int process );
 
 
 void CreateHistograms(){
@@ -15,13 +15,13 @@ void CreateHistograms(){
 
 	for( int i = 0; i < nprocess; i++ ){
 
-		CreateHistograms2( processID[i] ); 
+		CreateHistograms2( i ); 
 
 	}
 
 	for( int i = 0; i < nscalar; i++ ){
 
-		CreateHistograms2( scalarID[i] ); 
+		CreateHistograms2( i ); 
 
 	}	
 
@@ -32,13 +32,13 @@ void CreateHistograms(){
 }
 
 
-void CreateHistograms2( TString process ){ 
+void CreateHistograms2( int process ){ 
 
-	cout << "\n \t process: " << process << endl; 
+	cout << "\n \t process: " << processID[process] << endl; 
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + process + ".root", "read" ); 
+	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
 
 	for( int k = 0; k < nsystematic; k++ ){
 
@@ -48,17 +48,54 @@ void CreateHistograms2( TString process ){
 
 		TFile* storagefile; 
 
-		if( k == nominal ) storagefile = new TFile( outputdir + "/" + process +                         ".root", "recreate" );
-		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + process + "_" + systematicID[k] + ".root", "recreate" );
+		if( k == nominal ) storagefile = new TFile( outputdir + "/" + processID[process] +                         ".root", "recreate" );
+		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
 		TCut thecut = mycut[k]; 
 
-		if ( process == "04_TTTo2L2Nu" && k != toppTrw ) thecut = Form("         %4.2f", ttSF)*thecut; 
-		if ( process == "04_TTTo2L2Nu" && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
-		if ( process == "07_ZJets"                     ) thecut = Form("         %4.2f", DYSF)*thecut; 
+		if ( process == TT && k != toppTrw ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
+		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
 
+		if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
+
+			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
+
+			if( k == QCDup ){
+
+				float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
+
+				thecut = Form("(LHEweight[8]/LHEweight[0])*%7.4f", qcd_norm_up)*thecut;
+			
+			}	
+
+			if( k == QCDdo ){
+
+				float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
+
+				thecut = Form("(LHEweight[4]/LHEweight[0])*%7.4f", qcd_norm_do)*thecut;
+			
+			}
+
+			if( k == PDFup ){
+
+				float PDF_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
+
+				thecut = Form("(LHEweight[9]/LHEweight[0])*%7.4f", PDF_norm_up)*thecut;
+			
+			}	
+
+			if( k == PDFdo ){
+
+				float PDF_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
+
+				thecut = Form("(LHEweight[10]/LHEweight[0])*%7.4f", PDF_norm_do)*thecut;
+			
+			}
+
+		}
 
 		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );

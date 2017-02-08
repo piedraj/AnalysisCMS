@@ -7,7 +7,7 @@ float relunc[nprocess][nsystematic][2];        // {norm, shape}
 
 ofstream datacard;
 
-void GetYield( int process );
+void GetRelUnc( int process );
 
 void WriteDatacard(); 
 
@@ -16,18 +16,30 @@ void MakeDatacard(){
 
 	Assign();
 
-	for( int i = 0; i < nprocess; i++ ){
+	for( int m = ttDM0001scalar00500; m < nscalar; m++ ){
 
-		GetYield( i ); 
+		int n = ( m < ttDM0001scalar00100 ) ? ttDM0001scalar00100 : m;
+
+		MVA_cut = hard_cut&&Form("ANN_met80_mt2ll100_%s>%4.2f", scalarID[n].Data(), scalarMVAcut[m]);
+
+		processID[ttDM] = scalarID[m]; 
+
+		for( int i = 0; i < nprocess; i++ ){
+
+			GetRelUnc( i ); 
+
+		}
+
+		//GetRelUnc( DY );
+
+		WriteDatacard(); 
 
 	}
-
-	WriteDatacard(); 
 
 }
 
 
-void GetYield( int process ){
+void GetRelUnc( int process ){
 
 	cout << "\n\n\n" + processID[process] + "\n" << endl;
 
@@ -89,6 +101,58 @@ void GetYield( int process ){
 	h_syst[Triggerup][MVA] = (TH1F*) gDirectory -> Get( "htemp_Triggerup_MVA" );
 	h_syst[Triggerdo][MVA] = (TH1F*) gDirectory -> Get( "htemp_Triggerdo_MVA" );
 
+
+	// QCD 
+	
+	if( process != data && process != ttDM && process != fakes && process != ST && process != HZ ){
+  
+		TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
+
+		float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
+		float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
+
+		float pdf_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
+		float pdf_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
+
+
+		mytree -> Draw( "metPfType1 >> htemp_QCDup_soft", soft_cut*"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
+		mytree -> Draw( "metPfType1 >> htemp_QCDup_hard", hard_cut*"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
+		mytree -> Draw( "metPfType1 >> htemp_QCDup_MVA" , MVA_cut *"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
+
+		mytree -> Draw( "metPfType1 >> htemp_QCDdo_soft", soft_cut*"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
+		mytree -> Draw( "metPfType1 >> htemp_QCDdo_hard", hard_cut*"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
+		mytree -> Draw( "metPfType1 >> htemp_QCDdo_MVA" , MVA_cut *"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
+
+		mytree -> Draw( "metPfType1 >> htemp_PDFup_soft", soft_cut*"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
+		mytree -> Draw( "metPfType1 >> htemp_PDFup_hard", hard_cut*"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
+		mytree -> Draw( "metPfType1 >> htemp_PDFup_MVA" , MVA_cut *"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
+
+		mytree -> Draw( "metPfType1 >> htemp_PDFdo_soft", soft_cut*"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
+		mytree -> Draw( "metPfType1 >> htemp_PDFdo_hard", hard_cut*"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
+		mytree -> Draw( "metPfType1 >> htemp_PDFdo_MVA" , MVA_cut *"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
+
+
+		h_syst[QCDup][soft] = (TH1F*) gDirectory -> Get( "htemp_QCDup_soft" );
+		h_syst[QCDup][hard] = (TH1F*) gDirectory -> Get( "htemp_QCDup_hard" );
+		h_syst[QCDup][MVA ] = (TH1F*) gDirectory -> Get( "htemp_QCDup_MVA"  );
+
+		h_syst[QCDdo][soft] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_soft" );
+		h_syst[QCDdo][hard] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_hard" );
+		h_syst[QCDdo][MVA ] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_MVA"  );
+
+		h_syst[PDFup][soft] = (TH1F*) gDirectory -> Get( "htemp_PDFup_soft" );
+		h_syst[PDFup][hard] = (TH1F*) gDirectory -> Get( "htemp_PDFup_hard" );
+		h_syst[PDFup][MVA ] = (TH1F*) gDirectory -> Get( "htemp_PDFup_MVA"  );
+
+		h_syst[PDFdo][soft] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_soft" );
+		h_syst[PDFdo][hard] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_hard" );
+		h_syst[PDFdo][MVA ] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_MVA"  );
+
+	}
+
+
+	// top pT reweighing
+
 	if( process == TT ){
 
 		mytree -> Draw( "metPfType1 >> htemp_toppTrw_soft", soft_cut*"eventW*toppTRwW" );
@@ -103,7 +167,6 @@ void GetYield( int process ){
 
 	// MET, JES, LES, minitrees  ... to be done
 
-
 	//if( process != data && process != fakes && process != ttDM && process != HZ ) getPdfQcd( filename, soft*"eventW" );//, relunc[process][QCDup], relunc[process][QCDdo], relunc[process][PDF] );
 
 	for( int j = 0; j < nsystematic; j++ ){
@@ -111,13 +174,13 @@ void GetYield( int process ){
 			relunc[process][j][nrmlz] = -9999.; 
 			relunc[process][j][shape] = -9999.; 
 
-		//if( j < QCDup){
-
 			if( j == DDtt    && process == TT    ){ relunc[process][j][nrmlz] = 1 + ettSF/ttSF; } 
 			if( j == DDDY    && process == DY    ){ relunc[process][j][nrmlz] = 1 + eDYSF/DYSF; } 
 			if( j == DDfakes && process == fakes ){ relunc[process][j][nrmlz] = 1 + efakes    ; } 
 
 			if( j > toppTrw ) continue;  
+
+			if((j >= QCDup && j <= PDFdo) && (process == data || process == ttDM || process == fakes || process == ST || process == HZ)) continue; 
 
 			if( j == toppTrw && process != TT ) continue; 
 
@@ -149,10 +212,38 @@ void GetYield( int process ){
 
 		// protections
 
+		if( j == QCDup && process == TT ){ 
+
+			relunc[ttDM][QCDup][nrmlz] = relunc[TT][QCDup][nrmlz];  
+			relunc[ttDM][QCDup][shape] = relunc[TT][QCDup][shape];
+
+		}
+
+		if( j == QCDdo && process == TT ){ 
+
+			relunc[ttDM][QCDdo][nrmlz] = relunc[TT][QCDdo][nrmlz];  
+			relunc[ttDM][QCDdo][shape] = relunc[TT][QCDdo][shape];
+
+		}
+
+		if( j == PDFup && process == TT ){ 
+
+			relunc[ttDM][PDFup][nrmlz] = relunc[TT][PDFup][nrmlz];  
+			relunc[ttDM][PDFup][shape] = relunc[TT][PDFup][shape];
+
+		}
+
+		if( j == PDFdo && process == TT ){ 
+
+			relunc[ttDM][PDFdo][nrmlz] = relunc[TT][PDFdo][nrmlz];  
+			relunc[ttDM][PDFdo][shape] = relunc[TT][PDFdo][shape];
+
+		}
+
 		// DataDriven backgrounds: 
 
 		if( process == fakes || process == TT || process == DY ) relunc[process][j][nrmlz] = -9999.; 
-
+		
 	}
 
 	c1 -> Destructor();
@@ -168,7 +259,7 @@ void WriteDatacard(){
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", nprocess-2 );
-	datacard << "kmax 10 number of nuisance parameters \n";
+	datacard << Form( "kmax %d number of nuisance parameters \n", nsystematic-1 );
 	datacard << "------------ \n" ;
 	datacard << "\n" ;
 	datacard << "bin 1 \n" ;

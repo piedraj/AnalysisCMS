@@ -70,6 +70,7 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("06_WW",        "WW",         color_WW);
   plotter.AddProcess("02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
   plotter.AddProcess("03_VZ",        "VZ",         color_VZ);
+  plotter.AddProcess("13_VVV",       "VVV",        color_VVV);
   plotter.AddProcess("11_Wg",        "W#gamma",    color_Wg);
   //plotter.AddProcess("15_WgStar",    "W#gamma*",   color_WgStar);
   plotter.AddProcess("07_ZJets",     "Z+jets",     color_ZJets);
@@ -135,7 +136,7 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "lep1eta"        , "leading lepton #eta",               -1, 1, "NULL", scale);
   //plotter.Draw( "lep1phi"        , "leading lepton #phi",                5, 2, "rad",  scale);
   //plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
-  plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
+  //plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
   //plotter.Draw( "lep2phi"        , "trailing lepton #phi",               5, 2, "rad",  scale);
   //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
   //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300);
