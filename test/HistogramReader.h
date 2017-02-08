@@ -1,9 +1,7 @@
 #ifndef HistogramReader_h
 #define HistogramReader_h
 
-
 #include "../include/Constants.h"
-
 
 #include "TCanvas.h"
 #include "TFile.h"
@@ -52,6 +50,8 @@ class HistogramReader
 			       Color_t        color,
 			       Int_t          kind  = roc_none,
 			       Float_t        scale = -1);
+
+  void     AddSystematic      (TString systematic); 
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -172,7 +172,10 @@ class HistogramReader
 			       Float_t        xmin    = -999,
 			       Float_t        xmax    = -999,
 			       TString        fom     = "S / #sqrt{B}");
-    
+
+  void 	   IncludeSystematics ( TH1* _allmchist, TString hname );  
+
+
  private :
 
   Bool_t                _datanorm;
@@ -190,6 +193,7 @@ class HistogramReader
   TString               _stackoption;
   TString               _title;
 
+  TString 		_datafilename;
   TFile*                _datafile;
   TH1*                  _datahist;
   TH1*                  _allmchist;
@@ -197,17 +201,21 @@ class HistogramReader
   TString               _datalabel;
   TString               _allmclabel;
 
+  std::vector<TString>  _mcfilename;
   std::vector<TFile*>   _mcfile;
   std::vector<TH1*>     _mchist;
   std::vector<Color_t>  _mccolor;
   std::vector<TString>  _mclabel;
   std::vector<Float_t>  _mcscale;
 
+  std::vector<TString>  _signalfilename;
   std::vector<TFile*>   _signalfile;
   std::vector<TH1*>     _signalhist;
   std::vector<Color_t>  _signalcolor;
   std::vector<TString>  _signallabel;
   std::vector<Float_t>  _signalscale;
+
+  std::vector<TString>  _systematics;
 
   std::ofstream         _yields_table;
 

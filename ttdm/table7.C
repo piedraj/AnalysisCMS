@@ -89,8 +89,8 @@ void table7(){
 			   + yield[DY][ch] + yield[TTV][ch] + yield[TT][ch] + yield[ST][ch] + yield[fakes][ch];
 
 		eallbkg[ch] = sqrt( pow( eyield[HZ][ch], 2) + pow( eyield[HWW][ch], 2) + pow( eyield[WW][ch], 2) + pow( eyield[WZ][ch], 2)
-			    + pow( eyield[VZ][ch], 2) + pow( eyield[DY][ch], 2) + pow( eyield[TTV][ch], 2) + pow( eyield[TT][ch], 2) 
-			    + pow( eyield[ST][ch], 2) + pow( eyield[fakes][ch], 2) );    
+			    + pow( eyield[VZ][ch], 2) + pow( eyield[VVV][ch], 2) + pow( eyield[DY][ch], 2) + pow( eyield[TTV][ch], 2) 
+			    + pow( eyield[TT][ch], 2) + pow( eyield[ST][ch], 2) + pow( eyield[fakes][ch], 2) );    
 
 	}
 
@@ -118,6 +118,9 @@ void table7(){
 
         mytable << Form("VZ & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
                               yield[VZ][ee], eyield[VZ][ee], yield[VZ][mm], eyield[VZ][mm], yield[VZ][em], eyield[VZ][em], yield[VZ][ll], eyield[VZ][ll]);
+
+        mytable << Form("VVV & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
+                              yield[VVV][ee], eyield[VVV][ee], yield[VVV][mm], eyield[VVV][mm], yield[VVV][em], eyield[VVV][em], yield[VVV][ll], eyield[VVV][ll]);
 
         mytable << Form("Z+jets & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
                               yield[DY][ee], eyield[DY][ee], yield[DY][mm], eyield[DY][mm], yield[DY][em], eyield[DY][em], yield[DY][ll], eyield[DY][ll]);
