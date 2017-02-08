@@ -7,6 +7,7 @@ const float    ttSF = 0.97;  const float ettSF = 0.15;
 const float    DYSF = 1.07;  const float eDYSF = 0.07;
 			     const float efakes= 0.30;
 
+const bool doshape = false; 
 
 const TCut selection= "metPfType1>80.";
 
@@ -103,7 +104,7 @@ TString systematicIDdatacard[nsystematic];
 TString systtypeID[nsysttype];
 
 TString b_name[nhisto];
-TString h_name[nhisto];
+TString g_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
@@ -273,7 +274,7 @@ void Assign(){
 
 	for( int i = 0; i < nhisto; i++ ){
 
- 		h_name[i] = b_name[i];
+ 		g_name[i] = b_name[i];
 
 	}
 

@@ -19,11 +19,11 @@ void CreateHistograms(){
 
 	}
 
-	for( int i = 0; i < nscalar; i++ ){
+	//for( int i = 0; i < nscalar; i++ ){
 
-		CreateHistograms2( i ); 
+	//	CreateHistograms2( i ); 
 
-	}	
+	//}	
 
 	//-----
 
@@ -42,7 +42,7 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k < nsystematic; k++ ){
 
-		if( k > toppTrw ) continue;
+		if( k > Btagdo ) continue; //toppTrw ) continue;
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
 
@@ -94,6 +94,16 @@ void CreateHistograms2( int process ){
 				thecut = Form("(LHEweight[10]/LHEweight[0])*%7.4f", PDF_norm_do)*thecut;
 			
 			}
+
+		}
+
+
+		TString h_name[nhisto];
+
+		for( int i = 0; i < nhisto; i++ ){ 
+
+			if ( doshape == 0 ) h_name[i] =                                                    g_name[i]; 
+			if ( doshape == 1 ) h_name[i] = processID[process] + "_" + systematicID[k] + "_" + g_name[i]; 
 
 		}
 
