@@ -141,13 +141,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     bool pass_blind = true; 
 
     // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016")) {
-
-      pass_blind = false;
-      if (_mt2ll<40.) pass_blind = true;
-      if (MET.Et()<140.) pass_blind = true;
-
-    }
+//    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016")) {
+//
+//      pass_blind = false;
+//      if (_mt2ll<40.) pass_blind = true;
+//      if (MET.Et()<140.) pass_blind = true;
+//
+//    }
 
     if (!_isminitree) {
 
