@@ -51,7 +51,7 @@ class HistogramReader
 			       Int_t          kind  = roc_none,
 			       Float_t        scale = -1);
 
-  void     AddSystematic      (TString systematic); 
+  void     AddSystematic      (TString        systematic); 
   
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
@@ -173,7 +173,8 @@ class HistogramReader
 			       Float_t        xmax    = -999,
 			       TString        fom     = "S / #sqrt{B}");
 
-  void 	   IncludeSystematics ( TH1* _allmchist, TString hname );  
+  void 	   IncludeSystematics (TH1*           hist,
+			       TString        hname);
 
 
  private :

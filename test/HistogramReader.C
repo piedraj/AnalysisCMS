@@ -50,10 +50,10 @@ void HistogramReader::AddData(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
+  _datacolor    = color;
+  _datafile     = file;
   _datafilename = filename;
-  _datafile     = file    ;
-  _datalabel    = label   ;
-  _datacolor    = color   ;
+  _datalabel    = label;
 }
 
 
@@ -76,10 +76,10 @@ void HistogramReader::AddProcess(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
-  _mcfilename.push_back(filename); 
-  _mcfile.push_back(file);
-  _mclabel.push_back(label);
   _mccolor.push_back(color);
+  _mcfile.push_back(file);
+  _mcfilename.push_back(filename); 
+  _mclabel.push_back(label);
   _mcscale.push_back(scale);
   
   if (scale > 0. && scale != 1.)
@@ -109,10 +109,10 @@ void HistogramReader::AddSignal(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
-  _signalfilename.push_back(filename);
-  _signalfile.push_back(file);
-  _signallabel.push_back(label);
   _signalcolor.push_back(color);
+  _signalfile.push_back(file);
+  _signalfilename.push_back(filename);
+  _signallabel.push_back(label);
   _signalscale.push_back(scale);
 
   if (scale > 0. && scale != 1.)
@@ -331,6 +331,7 @@ void HistogramReader::Draw(TString hname,
   // Include systematics
   //----------------------------------------------------------------------------
   IncludeSystematics(_allmchist, hname);
+
 
   // Draw
   //----------------------------------------------------------------------------
@@ -1526,52 +1527,42 @@ void HistogramReader::Roc(TString hname,
 //------------------------------------------------------------------------------
 // IncludeSystematics
 //------------------------------------------------------------------------------
-void HistogramReader::IncludeSystematics( TH1* _allmchist, TString hname ){ 
+void HistogramReader::IncludeSystematics(TH1*    hist,
+					 TString hname)
+{ 
+  std::vector<TH1D*> h_var; 
 
-	std::vector<TH1D*> h_var; 
+  for (UInt_t j=0; j<_systematics.size(); j++) { 
 
-	for (UInt_t j=0; j<_systematics.size(); j++) { 
+    h_var.clear();
 
-		h_var.clear();
+    for (UInt_t i=0; i<_mchist.size(); i++) {
 
-		for (UInt_t i=0; i<_mchist.size(); i++) {
+      TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "read");
 
-			TFile* myfile  = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "update");
+      TH1D* dummy = (TH1D*)myfile->Get(hname);
 
-			TH1D*  myhisto = (TH1D*) myfile -> Get(hname);
+      h_var.push_back((TH1D*)dummy->Clone());
 
-			myhisto -> Scale( _luminosity_fb );
+      if (_luminosity_fb > 0 && _mcscale[i] > -999) h_var[i]->Scale(_luminosity_fb);
 
-			h_var.push_back(myhisto);
-
-			//cout << _mcfilename.at(i) << " varied/nominal = " <<  h_var.at(i)->Integral() / _mchist.at(i)->Integral() << endl;
-
-			//myfile->Close();  // where should it be placed ? 
-
-		}
+      //      myfile->Close();  // Where should it be placed?
+    }
 		
-		for (Int_t ibin=0; ibin <= _mchist.at(0)->GetNbinsX(); ibin++) { 
+    for (Int_t ibin=0; ibin<=_mchist[0]->GetNbinsX(); ibin++) { 
 
-			Float_t binError = 0.;
+      Float_t binError = 0.;
 
-			for (UInt_t i=0; i<_mchist.size(); i++) {
+      for (UInt_t i=0; i<_mchist.size(); i++) {
 
-				Float_t binSystError = h_var.at(i) -> GetBinContent(ibin) - _mchist.at(i) -> GetBinContent(ibin);
+	Float_t binSystError = h_var[i]->GetBinContent(ibin) - _mchist[i]->GetBinContent(ibin);
 
-				//     wtf?   ->   TH1D::Rebin()   !!!
+	binError += (binSystError * binSystError);
+      }
 
-				//if( ibin==12 ) cout << _mcfilename.at(i) << " -- " << h_var.at(i) -> GetBinContent(ibin) << " -- " << _mchist.at(i) -> GetBinContent(ibin) << endl;
-
-				binError += (binSystError * binSystError);
-
-			}
-
-		binError = sqrt(binError);
+      binError = sqrt(binError);
 	
-		_allmchist->SetBinError(ibin, binError);
-	
-		}
-
-	}
-
+      hist->SetBinError(ibin, binError);
+    }
+  }
 }
