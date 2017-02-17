@@ -50,9 +50,10 @@ void HistogramReader::AddData(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
-  _datafile  = file;
-  _datalabel = label;
-  _datacolor = color;
+  _datafilename = filename;
+  _datafile     = file    ;
+  _datalabel    = label   ;
+  _datacolor    = color   ;
 }
 
 
@@ -75,6 +76,7 @@ void HistogramReader::AddProcess(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
+  _mcfilename.push_back(filename); 
   _mcfile.push_back(file);
   _mclabel.push_back(label);
   _mccolor.push_back(color);
@@ -107,6 +109,7 @@ void HistogramReader::AddSignal(const TString& filename,
 
   TFile* file = new TFile(fullname, "update");
 
+  _signalfilename.push_back(filename);
   _signalfile.push_back(file);
   _signallabel.push_back(label);
   _signalcolor.push_back(color);
@@ -117,6 +120,15 @@ void HistogramReader::AddSignal(const TString& filename,
 
   if (kind == roc_signal)     _roc_signals    .push_back(fullname);
   if (kind == roc_background) _roc_backgrounds.push_back(fullname);
+}
+
+
+//------------------------------------------------------------------------------
+// AddSystematic
+//------------------------------------------------------------------------------
+void HistogramReader::AddSystematic(TString systematic)
+{
+  _systematics.push_back(systematic);
 }
 
 
@@ -315,6 +327,10 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerColor(kGray+1);
   _allmchist->SetMarkerSize (      0);
 
+
+  // Include systematics
+  //----------------------------------------------------------------------------
+  IncludeSystematics(_allmchist, hname);
 
   // Draw
   //----------------------------------------------------------------------------
@@ -1504,4 +1520,58 @@ void HistogramReader::Roc(TString hname,
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
+}
+
+
+//------------------------------------------------------------------------------
+// IncludeSystematics
+//------------------------------------------------------------------------------
+void HistogramReader::IncludeSystematics( TH1* _allmchist, TString hname ){ 
+
+	std::vector<TH1D*> h_var; 
+
+	for (UInt_t j=0; j<_systematics.size(); j++) { 
+
+		h_var.clear();
+
+		for (UInt_t i=0; i<_mchist.size(); i++) {
+
+			TFile* myfile  = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "update");
+
+			TH1D*  myhisto = (TH1D*) myfile -> Get(hname);
+
+			myhisto -> Scale( _luminosity_fb );
+
+			h_var.push_back(myhisto);
+
+			//cout << _mcfilename.at(i) << " varied/nominal = " <<  h_var.at(i)->Integral() / _mchist.at(i)->Integral() << endl;
+
+			//myfile->Close();  // where should it be placed ? 
+
+		}
+		
+		for (Int_t ibin=0; ibin <= _mchist.at(0)->GetNbinsX(); ibin++) { 
+
+			Float_t binError = 0.;
+
+			for (UInt_t i=0; i<_mchist.size(); i++) {
+
+				Float_t binSystError = h_var.at(i) -> GetBinContent(ibin) - _mchist.at(i) -> GetBinContent(ibin);
+
+				//     wtf?   ->   TH1D::Rebin()   !!!
+
+				//if( ibin==12 ) cout << _mcfilename.at(i) << " -- " << h_var.at(i) -> GetBinContent(ibin) << " -- " << _mchist.at(i) -> GetBinContent(ibin) << endl;
+
+				binError += (binSystError * binSystError);
+
+			}
+
+		binError = sqrt(binError);
+	
+		_allmchist->SetBinError(ibin, binError);
+	
+		}
+
+	}
+
 }
