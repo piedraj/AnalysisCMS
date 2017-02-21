@@ -3,7 +3,8 @@
 #include "../test/HistogramReader.C"
 
 const TString inputdir  = "histos/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/tests/top-pT-rw-Fig2/";
+//const TString outputdir = "figures/";
+const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/tests/";
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -60,7 +61,6 @@ void Plotter(TString option = "hist"){
 
   // Get the data
   //----------------------------------------------------------------------------
-
   plotter.AddData("01_Data", "data", color_Data);
   //plotter.AddData("01_Data_reduced_1outof6", "data", color_Data);
 
@@ -71,10 +71,11 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("06_WW",        "WW",         color_WW);
   plotter.AddProcess("02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
   plotter.AddProcess("03_VZ",        "VZ",         color_VZ);
+  plotter.AddProcess("13_VVV",       "VVV",        color_VVV);
   plotter.AddProcess("11_Wg",        "W#gamma",    color_Wg);
-  plotter.AddProcess("15_WgStar",    "W#gamma*",   color_WgStar);
+  //plotter.AddProcess("15_WgStar",    "W#gamma*",   color_WgStar);
   plotter.AddProcess("07_ZJets",     "Z+jets",     color_ZJets);
-  plotter.AddProcess("09_TTV_updated", "ttV",        color_TTV);
+  plotter.AddProcess("09_TTV", "ttV",        color_TTV);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
   //plotter.AddProcess("TTTo2L2Nu_alphaS01108", "tt (#alpha_{S})",  color_TTTo2L2Nu);
   plotter.AddProcess("05_ST",        "tW",         color_ST);
@@ -92,8 +93,9 @@ void Plotter(TString option = "hist"){
   plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x10^{4}", color_Signal+4, roc_signal, 10000);
 
 
-
-
+  // Add systematics
+  //----------------------------------------------------------------------------
+  plotter.AddSystematic("Btagup");	
 
 >>>>>>> a1f34919e068696a44cd77f85260650f6093d144
 
@@ -136,14 +138,12 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "jet2pt"         , "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
   plotter.Draw( "lep1eta"        , "leading lepton #eta",               -1, 1, "NULL", scale);
   //plotter.Draw( "lep1phi"        , "leading lepton #phi",                5, 2, "rad",  scale);
-  plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
-  plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
+  //plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
+  //plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
   //plotter.Draw( "lep2phi"        , "trailing lepton #phi",               5, 2, "rad",  scale);
-  plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
-  plotter.Draw( "lep3pt"         , "third lepton p_{T}",                 5, 0, "GeV",  scale, false, 0,  150);
-  plotter.Draw( "nlepton"        , "number of leptons",                 10, 0, "GeV",  scale, true, 0,   10);
-  plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300);
-  plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200);
+  //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
+  //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300);
+  //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
   plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);

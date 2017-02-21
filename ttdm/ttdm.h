@@ -3,16 +3,18 @@
 const TString  inputdir = "week-13";  // where the minitrees are stored
 
 const float thelumi = 2.15; 
-const float    ttSF = 0.97; 
-const float    DYSF = 1.07; 
+const float    ttSF = 0.97;  const float ettSF = 0.15;
+const float    DYSF = 1.07;  const float eDYSF = 0.07;
+			     const float efakes= 0.30;
 
+const bool doshape = false; 
 
-TCut selection= "metPfType1>80.";
+const TCut selection= "metPfType1>80.";
 
-TCut soft_cut = "metPfType1>80."; 
-TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
-TCut  MVA_cut = hard_cut&&"ANN_met80_mt2ll100_ttDM0001scalar00500>0.50";
-
+const TCut soft_cut = "metPfType1>80."; 
+const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
+//const TCut  MVA_cut = hard_cut&&"ANN_met80_mt2ll100_ttDM0001scalar00500>0.50";
+TCut MVA_cut;
 
 enum{ data,
       ttDM,
@@ -56,7 +58,7 @@ enum{ ee, mm, em, ll, nchannel };
 
 enum{ soft, hard, MVA, nlevel };
 
-enum{ nrmlz, shape };
+enum{ nrmlz, shape, nsysttype };
 
 enum{ 	nominal, 
 	Btagup, 
@@ -65,9 +67,14 @@ enum{ 	nominal,
 	Idisodo, 
 	Triggerup, 
 	Triggerdo, 
-	//QCDup,
-	//QCDdo,
-	//PDF,
+	QCDup,
+	QCDdo,
+	PDFup,
+	PDFdo,
+	toppTrw,
+	DDtt,
+	DDDY,
+	DDfakes,
 	nsystematic }; 
 
 enum{ lep1pt, lep1eta, lep1phi, lep1mass,
@@ -89,12 +96,15 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
 TCut mycut[nsystematic];  
 
 TString processID[nprocess];
-TString  scalarID[nscalar ];
+TString   scalarID[nscalar];	
+float scalarMVAcut[nscalar]; 
 TString  pseudoID[npseudo ];
-TString systematicID[nsystematic]; 
+TString         systematicID[nsystematic];
+TString systematicIDdatacard[nsystematic];
+TString systtypeID[nsysttype];
 
 TString b_name[nhisto];
-TString h_name[nhisto];
+TString g_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
@@ -103,9 +113,9 @@ void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00500"     ;  
-	processID[data ] = "01_Data" ;
-	processID[fakes] = "00_Fakes"; 
+	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
+	processID[data ] = "01_Data"                 ;
+	processID[fakes] = "00_Fakes"                ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -127,6 +137,14 @@ void Assign(){
 	scalarID[ttDM0001scalar00300] = "ttDM0001scalar00300"; 
 	scalarID[ttDM0001scalar00500] = "ttDM0001scalar00500"; 
 
+	scalarMVAcut[ttDM0001scalar00010] = 0.45; 
+	scalarMVAcut[ttDM0001scalar00020] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00050] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00100] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00200] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00300] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00500] = 0.50; 
+
 	pseudoID[ttDM0001pseudo00010] = "ttDM0001pseudo00010"; 
 	pseudoID[ttDM0001pseudo00020] = "ttDM0001pseudo00020"; 
 	pseudoID[ttDM0001pseudo00050] = "ttDM0001pseudo00050"; 
@@ -144,9 +162,30 @@ void Assign(){
 	systematicID[Idisodo  ] = "Idisodo"  ;
 	systematicID[Triggerup] = "Triggerup";
 	systematicID[Triggerdo] = "Triggerdo";
-	//systematicID[QCDup    ] = "QCDup"    ;
-	//systematicID[QCDdo    ] = "QCDdo"    ;
-	//ssystematicID[PDF      ] = "PDF"      ;
+	systematicID[QCDup    ] = "QCDup"    ;
+	systematicID[QCDdo    ] = "QCDdo"    ;
+	systematicID[PDFup    ] = "PDFup"    ;
+	systematicID[PDFdo    ] = "PDFdo"    ;
+	systematicID[toppTrw  ] = "toppTrw"  ;
+
+	systematicIDdatacard[nominal  ] = "nominal";
+	systematicIDdatacard[Btagup   ] = "Btag"   ;
+	systematicIDdatacard[Btagdo   ] = ""       ;
+	systematicIDdatacard[Idisoup  ] = "Idiso"  ;
+	systematicIDdatacard[Idisodo  ] = ""       ;
+	systematicIDdatacard[Triggerup] = "Trigger";
+	systematicIDdatacard[Triggerdo] = ""       ;
+	systematicIDdatacard[QCDup    ] = "QCD"    ;
+	systematicIDdatacard[QCDdo    ] = ""       ;
+	systematicIDdatacard[PDFup    ] = "PDF"    ;
+	systematicIDdatacard[PDFdo    ] = ""       ;
+	systematicIDdatacard[toppTrw  ] = "toppTrw";
+	systematicIDdatacard[DDtt     ] = "DDtt"   ;
+	systematicIDdatacard[DDDY     ] = "DDDY"   ;
+	systematicIDdatacard[DDfakes  ] = "DDfakes";
+
+	systtypeID[nrmlz] = "nrmlz";
+	systtypeID[shape] = "shape";
 
 	//----------
 
@@ -157,6 +196,11 @@ void Assign(){
 	mycut[Idisodo  ] = "eventW_Idisodo"  *selection;
 	mycut[Triggerup] = "eventW_Triggerup"*selection;
 	mycut[Triggerdo] = "eventW_Triggerdo"*selection;
+	mycut[QCDup    ] = "eventW"          *selection;
+	mycut[QCDdo    ] = "eventW"          *selection;
+	mycut[PDFup    ] = "eventW"          *selection;
+	mycut[PDFdo    ] = "eventW"          *selection;
+	mycut[toppTrw  ] = "eventW"          *selection;
 
 	//----------
 
@@ -230,7 +274,7 @@ void Assign(){
 
 	for( int i = 0; i < nhisto; i++ ){
 
- 		h_name[i] = b_name[i];
+ 		g_name[i] = b_name[i];
 
 	}
 
