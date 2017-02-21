@@ -316,3 +316,10 @@ Get the 2015 luminosity.
 ====
 
     ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/
+
+To change the acl permissions
+
+    pushd /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/LatinoTrees/
+    find Run2016E -name "latino_*" -exec mmputacl -i acl_file_piedra {} \; -print
+    popd
+
