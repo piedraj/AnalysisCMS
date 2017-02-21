@@ -31,7 +31,7 @@ AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHist
 // Loop
 //------------------------------------------------------------------------------
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, float StopRefMass, float NeutralinoRefMass)
-{ 
+{
   if (fChain == 0) return;
 
   TString MassPointFlag = "";
@@ -53,9 +53,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
   }
  
-
   Setup(analysis, filename, luminosity, MassPointFlag);
-  
+ 
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -87,6 +86,22 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     fChain->GetEntry(jentry);
 
+    //if (_lep1isfake==0 && _lep2isfake==0) continue;
+    /*cout << "DDD " << endl;
+  for (int tr = 0; tr<120; tr++)
+    if (std_vector_trigger->at(tr))
+      if (tr==8) cout << " HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*" << endl;
+      else if (tr==6) cout << " HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*" << endl;
+      else if (tr==11) cout << " HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*" << endl;
+      else if (tr==13) cout << " HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v* " << endl;
+      else if (tr==42) cout << " HLT_IsoTkMu22_v*" << endl;
+      else if (tr==43) cout << " HLT_IsoMu22_v* " << endl;
+      else if (tr==0) cout << "  HLT_Ele27_eta2p1_WPLoose_Gsf_v* " << endl;
+      else if (tr==56) cout << " HLT_Ele45_WPLoose_Gsf_v*      " << endl;
+      else if (tr==46) cout << "  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*  " << endl;
+  cout << endl;
+  continue;    */
+
     PrintProgress(jentry, _nentries);
    
     bool pass_masspoint = true;
@@ -95,12 +110,16 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     if (!pass_masspoint && !_saveminitree) continue;
 
     if (!_isminitree) {
-
+      
       // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
       if (metPfType1!=metPfType1) continue;
-      EventSetup(2.4, 20.);    
+      EventSetup(2.4, 20.);
 
     }
+
+    //if (filename.Contains("DYJets") && !filename.Contains("_HT")) 
+    //if (_htvisible>100.) continue;
+
     // Analysis
     //--------------------------------------------------------------------------
 
@@ -134,14 +153,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
  
     GetAnalysisVariables();
 
-
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
     bool pass_blind = true; 
 
     // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016")) {
+    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) {
 
       pass_blind = false;
       if (_mt2ll<40.) pass_blind = true;
@@ -263,6 +281,10 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
+	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
+	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
+	h_MET_truth         [i][j][k] = new TH1F("h_MET_truth"        + suffix, "",  100,    0, 1000);
 	
 	h_MT2_Met           [i][j][k] = new TH1D("h_MT2_Met" + suffix, "", NbinsMT2*NbinsMet, vMinMT2, vMinMT2 + NbinsMet*(vMaxMT2-vMinMT2));
 	h_HTvisible_Met     [i][j][k] = new TH1D("h_HTvisible_Met" + suffix, "", NbinsHTvisible*NbinsMet, vMinHTvisible, vMinHTvisible + NbinsMet*(vMaxHTvisible-vMinHTvisible));
@@ -359,6 +381,12 @@ void AnalysisStop::GetAnalysisVariables()
   float tempR2 = _metmeff; if (tempR2<vMinR2) tempR2 = vMinR2; if (tempR2>=vMaxR2) tempR2 = vMaxR2 - 0.01;
   _R2_Met = tempR2 + (vMaxR2 - vMinR2)*binMet;
 
+  
+  // Fake
+  _nLeptonsMatched = 0;
+  if (fabs(_lep1isfake)<0.1) _nLeptonsMatched++; 
+  if (fabs(_lep2isfake)<0.1) _nLeptonsMatched++; 
+  
 }
 
 //------------------------------------------------------------------------------
@@ -383,7 +411,15 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
-  
+
+  if (_nLeptonsMatched==2) {
+    h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+    h_MET_truth      [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
+  } else { 
+    h_MT2ll_fake     [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+    h_MET_fake       [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
+  }
+
   h_MT2_Met          [ichannel][icut][ijet]->Fill(_MT2_Met,        _event_weight);
   h_HTvisible_Met    [ichannel][icut][ijet]->Fill(_HTvisible_Met,  _event_weight);
   h_MetMeff_Met      [ichannel][icut][ijet]->Fill(_MetMeff_Met,    _event_weight);
@@ -2896,7 +2932,7 @@ void AnalysisStop::CorrectEventWeight() {
     float DataEfficiency_DoFSb = MonteCarloEfficiency*1.05*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
 
     float btagcut = CSVv2M;
-    if (!_ismc && _filename.Contains("23Sep2016")) btagcut = 0.8484;
+    if (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) btagcut = 0.8484;
     if (AnalysisJets[ijet].csvv2ivf>/*CSVv2M*/btagcut) {
       EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
       EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;

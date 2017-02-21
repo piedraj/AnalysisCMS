@@ -70,6 +70,12 @@ class AnalysisStop : public AnalysisCMS
   float _metmeff, _MT2ll;
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll            [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_fake       [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_truth      [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MET_fake         [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MET_truth        [nchannel][ncut][njetbin+1];
+
+  int _nLeptonsMatched;
 
   float _MT2_Met; int NbinsMT2 = 7; int NbinsMet = 5;
   float vMinMT2 = 0., vMinMet = 0., vMaxMT2 = 140., vMaxMet = 500.;
