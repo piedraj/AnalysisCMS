@@ -94,12 +94,15 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     if (!pass_masspoint && !_saveminitree) continue;
 
     if (!_isminitree) {
-      
+
       // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
       if (metPfType1!=metPfType1) continue;
       EventSetup(2.4, 20.);
 
     }
+
+    //if (filename.Contains("DYJets") && !filename.Contains("_HT")) 
+    //if (_htvisible>100.) continue;
 
     // Analysis
     //--------------------------------------------------------------------------
