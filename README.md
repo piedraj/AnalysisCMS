@@ -317,9 +317,19 @@ Get the 2015 luminosity.
 
     ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/
 
-To change the acl permissions
+To change the ACL permissions.
 
-    pushd /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/LatinoTrees/
-    find Run2016E -name "latino_*" -exec mmputacl -i acl_file_piedra {} \; -print
+    pushd /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/data/25ns/
+
+    mmgetacl LatinoTrees > acl_file_piedra
+
+Modify, if needed, the owner line. In this case, replace **sluca** by **piedra**.
+
+    #owner:sluca
+
+Find the latino files and change their ACL permissions.
+
+    find LatinoTrees/Run2016E -name "latino_*" -exec mmputacl -i acl_file_piedra {} \; -print
+
     popd
 
