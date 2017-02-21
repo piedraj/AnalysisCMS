@@ -1103,9 +1103,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetGenLeptonsAndNeutrinos();
 
-  //  GetDark();
+  GetDark();
 
-  //  GetTopReco();
+  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1368,8 +1368,8 @@ void AnalysisCMS::OpenMinitree()
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
   // D
-  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
-  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  //  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
+  //  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
   minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
@@ -2346,48 +2346,11 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-  _darketa_gen = -999;
-  _darkphi_gen = -999;
-  _darkpt_gen  = -999;
-
-  if (!_ismc) return;
-
-  TVector3 genMET, n1, n2, dark; 
-
-  genMET.SetPtEtaPhi(metGenpt, metGeneta, metGenphi); 
- 
-  int nu_size = std_vector_neutrinoGen_pt->size();
-
-  for (int i=0; i<nu_size; i++) {
-
-    if (std_vector_neutrinoGen_isPrompt->at(i)       !=  1) continue;
-    if (abs(std_vector_neutrinoGen_MotherPID->at(i)) != 24) continue;  // Coming from W
-
-    // What about neutrinos from taus?
-    // Why not just consider all neutrinos that are prompt?
-
-    for(int j=i+1; j<nu_size; j++) {
-
-      if (std_vector_neutrinoGen_isPrompt->at(j)       !=  1) continue;
-      if (abs(std_vector_neutrinoGen_MotherPID->at(j)) != 24) continue;
-
-      if (std_vector_neutrinoGen_MotherPID->at(i) * std_vector_neutrinoGen_MotherPID->at(j) > 0) continue; 
-
-      n1.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(i), std_vector_neutrinoGen_eta->at(i), std_vector_neutrinoGen_phi->at(i));
-      n2.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(j), std_vector_neutrinoGen_eta->at(j), std_vector_neutrinoGen_phi->at(j));
-
-      dark = genMET - n1 - n2;
-
-      _darketa_gen = dark.Eta(); 
-      _darkphi_gen = dark.Phi(); 
-      _darkpt_gen  = dark.Pt();
-
-      break;  // Why this break?
-    }
-
-    break;  // Why this break?
-  }
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
+  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
 }
+
 
 //------------------------------------------------------------------------------
 // GetMlb

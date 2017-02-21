@@ -1,279 +1,187 @@
-// root -l -b -q CreateHistograms
+#include "ttdm.h"
 
-#include "../include/Constants.h"
-
-enum{ lep1pt, lep1eta, lep1phi, lep1mass,
-      lep2pt, lep2eta, lep2phi, lep2mass,
-      jet1pt, jet1eta, jet1phi, jet1mass,
-      jet2pt, jet2eta, jet2phi, jet2mass,
-      metPfType1, metPfType1Phi,
-      m2l, mt2ll, mt2lblb, mtw1, mtw2,
-      ht, htjets, htnojets,
-      njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
-      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
-      top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
-      nvtx,
-      sphericity, alignment, planarity,
-      darkpt,
-      mva01,
-      nhisto }; 
-
-TString b_name[nhisto];
-TString h_name[nhisto];
-TH1F* myhisto [nhisto];
-
-const bool doshape = 0; 
-
-const TString  inputdir = "tt-xs";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
-ofstream yields;   
-
-
-const TCut mycut           = "eventW          *(mt2ll>100.&&metPfType1>80.&&newdarkpt>100.)";  
-const TCut mycut3          = "eventW          *(newdarkpt>0.)";  
-const TCut mycutx          = "eventW          *(mt2ll>75.&&mt2ll<100.&&newdarkpt>0.&&metPfType1>80.)";  
-const TCut mycut_Idisoup   = "eventW_Idisoup  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Idisodo   = "eventW_Idisodo  *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Triggerup = "eventW_Triggerup*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Triggerdo = "eventW_Triggerdo*(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Recoup    = "eventW_Recoup   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-const TCut mycut_Recodo    = "eventW_Recodo   *(metPfType1>80.&&mt2ll>100.&&mt2ll<140.0)";                 
-
-
-void CreateHistograms2( TString process );
+void CreateHistograms2( int process );
 
 
 void CreateHistograms(){
 
- 	b_name[lep1pt  ] = "lep1pt"  ;
-	b_name[lep1eta ] = "lep1eta" ;
-	b_name[lep1phi ] = "lep1phi" ;
-	b_name[lep1mass] = "lep1mass";
+	Assign();
 
- 	b_name[lep2pt  ] = "lep2pt"  ;
-	b_name[lep2eta ] = "lep2eta" ;
-	b_name[lep2phi ] = "lep2phi" ;
-	b_name[lep2mass] = "lep2mass";
+	gSystem->mkdir( outputdir, kTRUE );
 
-	b_name[jet1pt  ] = "jet1pt"  ;
-	b_name[jet1eta ] = "jet1eta" ;
-	b_name[jet1phi ] = "jet1phi" ;
-	b_name[jet1mass] = "jet1mass";
+	//-----
 
-	b_name[jet2pt  ] = "jet2pt"  ;
-	b_name[jet2eta ] = "jet2eta" ;
-	b_name[jet2phi ] = "jet2phi" ;
-	b_name[jet2mass] = "jet2mass";
+	for( int i = 0; i < nprocess; i++ ){
 
-	b_name[metPfType1   ] = "metPfType1";
-	b_name[metPfType1Phi] = "metPfType1Phi";
-
-	b_name[m2l    ] = "m2l"    ;
-	b_name[mt2ll  ] = "mt2ll"  ;
-	b_name[mt2lblb] = "mt2lblb";
-	b_name[mtw1   ] = "mtw1"   ;
-	b_name[mtw2   ] = "mtw2"   ;
-
-	b_name[ht      ] = "ht"      ;
-	b_name[htjets  ] = "htjets"  ;
-	b_name[htnojets] = "htnojets";
-
-	b_name[njet         ] = "njet"         ;
-	b_name[nbjet30csvv2l] = "nbjet30csvv2l";
-	b_name[nbjet30csvv2m] = "nbjet30csvv2m";
-	b_name[nbjet30csvv2t] = "nbjet30csvv2t";
-
-	b_name[dphijet1met ] = "dphijet1met" ;   
-	b_name[dphijet2met ] = "dphijet2met" ;  
-	b_name[dphijj      ] = "dphijj"      ;    
-	b_name[dphijjmet   ] = "dphijjmet"   ;   
-	b_name[dphill      ] = "dphill"      ;   
-	b_name[dphilep1jet1] = "dphilep1jet1";
-	b_name[dphilep1jet2] = "dphilep1jet2";
-	b_name[dphilep2jet1] = "dphilep2jet1";
-	b_name[dphilep2jet2] = "dphilep2jet2";
-	b_name[dphilmet1   ] = "dphilmet1"   ;
-	b_name[dphilmet2   ] = "dphilmet2"   ;
-	b_name[dphillmet   ] = "dphillmet"   ;
-
-	b_name[top1eta_gen ] = "top1eta_gen" ;
-	b_name[top1phi_gen ] = "top1phi_gen" ;
-	b_name[top1pt_gen  ] = "top1pt_gen"  ;
-	b_name[top2eta_gen ] = "top2eta_gen" ;
-	b_name[top2phi_gen ] = "top2phi_gen" ;
-	b_name[top2pt_gen  ] = "top2pt_gen"  ;
-	b_name[detatt_gen  ] = "detatt_gen"  ;
-
-	b_name[nvtx        ] = "nvtx"        ;
-
-	b_name[sphericity] = "sphericity";
-	b_name[alignment ] = "alignment" ;
-	b_name[planarity ] = "planarity" ;
-
-	//b_name[topRecoW  ] = "topRecoW"  ;
-	b_name[darkpt    ] = "newdarkpt"    ;
-
-	b_name[mva01     ] = "ANN_mt2ll0_ttDM0001scalar00010";
-
-
-
-	for( int i = 0; i < nhisto; i++ ){
-
- 		h_name[i] = b_name[i];
+		CreateHistograms2( i ); 
 
 	}
 
-	gSystem->mkdir(outputdir, kTRUE);
+	//for( int i = 0; i < nscalar; i++ ){
 
-	yields.open( outputdir + "/yields.txt" );
+	//	CreateHistograms2( i ); 
 
+	//}	
 
-	CreateHistograms2("01_Data_reduced_1outof6");
-
-	CreateHistograms2("ttDM0001scalar00010");
-	//CreateHistograms2("ttDM0001scalar00020");
-	//CreateHistograms2("ttDM0001scalar00050");
-	//CreateHistograms2("ttDM0001scalar00100");
-	//CreateHistograms2("ttDM0001scalar00200");
-	//CreateHistograms2("ttDM0001scalar00300");
-	//CreateHistograms2("ttDM0001scalar00500");
-
-
-	CreateHistograms2("04_TTTo2L2Nu");
-	CreateHistograms2("05_ST"       );
-	CreateHistograms2("06_WW"       );
-	CreateHistograms2("07_ZJets"    );
-	CreateHistograms2("00_Fakes_reduced_1outof6");
-	CreateHistograms2("02_WZTo3LNu" );
-	CreateHistograms2("03_VZ"       );
-	CreateHistograms2("09_TTV"      );
-	CreateHistograms2("11_Wg"       );
-	CreateHistograms2("14_HZ"       );
-
-	////CreateHistograms2("TTTo2L2Nu_alphaS01108");
-
-	CreateHistograms2("10_HWW"      );
-	CreateHistograms2("12_Zg"       );
-	CreateHistograms2("13_VVV"      );
-	CreateHistograms2("15_WgStar"   );
-
-	//CreateHistograms2("ttDM0001pseudo00010");
-	//CreateHistograms2("ttDM0001pseudo00020");
-	//CreateHistograms2("ttDM0001pseudo00050");
-	//CreateHistograms2("ttDM0001pseudo00100");
-	//CreateHistograms2("ttDM0001pseudo00200");
-	//CreateHistograms2("ttDM0001pseudo00300");
-	//CreateHistograms2("ttDM0001pseudo00500");*/
+	//-----
 
 	cout << "\n \n The End !!! \n \n" << endl; 
-
-	yields.close();
 
 }
 
 
-void CreateHistograms2( TString process ){ 
+void CreateHistograms2( int process ){ 
 
-	cout << "\n\n" << process << "\n" << endl; 
+	cout << "\n \t process: " << processID[process] << endl; 
 
-	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
+	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	TFile* myfile = new TFile( "../minitrees/diciembre/" + process + ".root", "read" ); 
+	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
 
-	TFile* storagefile; 
-	TFile* shape_f; 
+	for( int k = 0; k < nsystematic; k++ ){
 
-	if ( doshape == 0)  storagefile = new TFile( outputdir + "/" + process + ".root", "recreate" );
+		if( k > Btagdo ) continue; //toppTrw ) continue;
 
-	if ( doshape == 1)      shape_f = new TFile( "datacard.root", "update"   );
-	
-	TTree* mytree = (TTree*) myfile -> Get( "latino" );
+		cout << "\t\t systematic: " << systematicID[k] << endl;
 
-	float bines[3]={100,140,999};
+		TFile* storagefile; 
 
+		if( k == nominal ) storagefile = new TFile( outputdir + "/" + processID[process] +                         ".root", "recreate" );
+		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
-	mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", mycut );
-	mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", mycut );
-	mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", mycut );
+		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
- 	mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", mycut );
-	mytree -> Draw( b_name[lep2eta      ] + " >> " + h_name[lep2eta      ] + "(   60, -3  ,    3   )", mycut );
-	mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", mycut );
+		TCut thecut = mycut[k]; 
 
-	mytree -> Draw( b_name[jet1pt       ] + " >> " + h_name[jet1pt       ] + "( 3000,  0  , 3000   )", mycut );
-	mytree -> Draw( b_name[jet1eta      ] + " >> " + h_name[jet1eta      ] + "(   60, -3  ,    3   )", mycut );
-	mytree -> Draw( b_name[jet1phi      ] + " >> " + h_name[jet1phi      ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[jet1mass     ] + " >> " + h_name[jet1mass     ] + "(  100,  0  ,  100   )", mycut );
+		if ( process == TT && k != toppTrw ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
+		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
 
-	mytree -> Draw( b_name[jet2pt       ] + " >> " + h_name[jet2pt       ] + "( 3000,  0  , 3000   )", mycut );
-	mytree -> Draw( b_name[jet2eta      ] + " >> " + h_name[jet2eta      ] + "(   60, -3  ,    3   )", mycut );
-	mytree -> Draw( b_name[jet2phi      ] + " >> " + h_name[jet2phi      ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", mycut );
+		if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
 
-	mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", mycut );
+			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
 
-	mytree -> Draw( b_name[m2l          ] + " >> " + h_name[m2l          ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[mt2ll        ] + " >> " + h_name[mt2ll        ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[mt2lblb      ] + " >> " + h_name[mt2lblb      ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[mtw1         ] + " >> " + h_name[mtw1         ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[mtw2         ] + " >> " + h_name[mtw2         ] + "( 3000,  0,   3000   )", mycut );
+			if( k == QCDup ){
 
-	mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", mycut );
+				float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
 
-	mytree -> Draw( b_name[njet         ] + " >> " + h_name[njet         ] + "(   10,  0,     10   )", mycut );
-	mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", mycut );
-	mytree -> Draw( b_name[nbjet30csvv2m] + " >> " + h_name[nbjet30csvv2m] + "(   10,  0,     10   )", mycut );
-	mytree -> Draw( b_name[nbjet30csvv2t] + " >> " + h_name[nbjet30csvv2t] + "(   10,  0,     10   )", mycut );
+				thecut = Form("(LHEweight[8]/LHEweight[0])*%7.4f", qcd_norm_up)*thecut;
+			
+			}	
 
-	mytree -> Draw( b_name[dphijet1met  ] + " >> " + h_name[dphijet1met  ] + "(  100,  0,      3.2 )", mycut );   
-	mytree -> Draw( b_name[dphijet2met  ] + " >> " + h_name[dphijet2met  ] + "(  100,  0,      3.2 )", mycut ); 
-	mytree -> Draw( b_name[dphijj       ] + " >> " + h_name[dphijj       ] + "(  100,  0,      3.2 )", mycut );    
-	mytree -> Draw( b_name[dphijjmet    ] + " >> " + h_name[dphijjmet    ] + "(  100,  0,      3.2 )", mycut );
-   	mytree -> Draw( b_name[dphill       ] + " >> " + h_name[dphill       ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilep1jet1 ] + " >> " + h_name[dphilep1jet1 ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilep1jet2 ] + " >> " + h_name[dphilep1jet2 ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilep2jet1 ] + " >> " + h_name[dphilep2jet1 ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilep2jet2 ] + " >> " + h_name[dphilep2jet2 ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilmet1    ] + " >> " + h_name[dphilmet1    ] + "(  100,  0,      3.2 )", mycut );
-	mytree -> Draw( b_name[dphilmet2    ] + " >> " + h_name[dphilmet2    ] + "(  100,  0,      3.2 )", mycut ); 
-	mytree -> Draw( b_name[dphillmet    ] + " >> " + h_name[dphillmet    ] + "(  100,  0,      3.2 )", mycut ); 
+			if( k == QCDdo ){
 
-	mytree -> Draw( b_name[top1eta_gen  ] + " >> " + h_name[top1eta_gen  ] + "(   60, -3,      3   )", mycut );
-	mytree -> Draw( b_name[top1phi_gen  ] + " >> " + h_name[top1phi_gen  ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[top1pt_gen   ] + " >> " + h_name[top1pt_gen   ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[top2eta_gen  ] + " >> " + h_name[top2eta_gen  ] + "(   60, -3,      3   )", mycut );
-	mytree -> Draw( b_name[top2phi_gen  ] + " >> " + h_name[top2phi_gen  ] + "(  200, -3.2,    3.2 )", mycut );
-	mytree -> Draw( b_name[top2pt_gen   ] + " >> " + h_name[top2pt_gen   ] + "( 3000,  0,   3000   )", mycut );
-	mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", mycut );
+				float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
 
-	mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", mycut );
+				thecut = Form("(LHEweight[4]/LHEweight[0])*%7.4f", qcd_norm_do)*thecut;
+			
+			}
 
-	mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", mycut );
-	mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", mycut );
-	mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", mycut );
+			if( k == PDFup ){
 
-	//mytree -> Draw( b_name[topRecoW     ] + " >> " + h_name[topRecoW     ] + "(  50,  0.00,   0.01)", mycut );
-	mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", mycut );
+				float PDF_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
 
-	mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", mycut );
+				thecut = Form("(LHEweight[9]/LHEweight[0])*%7.4f", PDF_norm_up)*thecut;
+			
+			}	
 
-	myfile -> Close();
+			if( k == PDFdo ){
+
+				float PDF_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
+
+				thecut = Form("(LHEweight[10]/LHEweight[0])*%7.4f", PDF_norm_do)*thecut;
+			
+			}
+
+		}
 
 
-	for( int i = 0; i < nhisto; i++ ){	
+		TString h_name[nhisto];
 
-		myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
+		for( int i = 0; i < nhisto; i++ ){ 
 
-	}
+			if ( doshape == 0 ) h_name[i] =                                                    g_name[i]; 
+			if ( doshape == 1 ) h_name[i] = processID[process] + "_" + systematicID[k] + "_" + g_name[i]; 
+
+		}
+
+		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );
+		mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", thecut );
+
+	 	mytree -> Draw( b_name[lep2pt       ] + " >> " + h_name[lep2pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[lep2eta      ] + " >> " + h_name[lep2eta      ] + "(   60, -3  ,    3   )", thecut );
+		mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", thecut );
+
+		mytree -> Draw( b_name[jet1pt       ] + " >> " + h_name[jet1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[jet1eta      ] + " >> " + h_name[jet1eta      ] + "(   60, -3  ,    3   )", thecut );
+		mytree -> Draw( b_name[jet1phi      ] + " >> " + h_name[jet1phi      ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[jet1mass     ] + " >> " + h_name[jet1mass     ] + "(  100,  0  ,  100   )", thecut );
+
+		mytree -> Draw( b_name[jet2pt       ] + " >> " + h_name[jet2pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[jet2eta      ] + " >> " + h_name[jet2eta      ] + "(   60, -3  ,    3   )", thecut );
+		mytree -> Draw( b_name[jet2phi      ] + " >> " + h_name[jet2phi      ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", thecut );
+
+		mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", thecut );
+
+		mytree -> Draw( b_name[m2l          ] + " >> " + h_name[m2l          ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[mt2ll        ] + " >> " + h_name[mt2ll        ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[mt2lblb      ] + " >> " + h_name[mt2lblb      ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[mtw1         ] + " >> " + h_name[mtw1         ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[mtw2         ] + " >> " + h_name[mtw2         ] + "( 3000,  0,   3000   )", thecut );
+
+		mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", thecut );
+
+		mytree -> Draw( b_name[njet         ] + " >> " + h_name[njet         ] + "(   10,  0,     10   )", thecut );
+		mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", thecut );
+		mytree -> Draw( b_name[nbjet30csvv2m] + " >> " + h_name[nbjet30csvv2m] + "(   10,  0,     10   )", thecut );
+		mytree -> Draw( b_name[nbjet30csvv2t] + " >> " + h_name[nbjet30csvv2t] + "(   10,  0,     10   )", thecut );
+
+		mytree -> Draw( b_name[dphijet1met  ] + " >> " + h_name[dphijet1met  ] + "(  100,  0,      3.2 )", thecut );   
+		mytree -> Draw( b_name[dphijet2met  ] + " >> " + h_name[dphijet2met  ] + "(  100,  0,      3.2 )", thecut ); 
+		mytree -> Draw( b_name[dphijj       ] + " >> " + h_name[dphijj       ] + "(  100,  0,      3.2 )", thecut );    
+		mytree -> Draw( b_name[dphijjmet    ] + " >> " + h_name[dphijjmet    ] + "(  100,  0,      3.2 )", thecut );
+	   	mytree -> Draw( b_name[dphill       ] + " >> " + h_name[dphill       ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilep1jet1 ] + " >> " + h_name[dphilep1jet1 ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilep1jet2 ] + " >> " + h_name[dphilep1jet2 ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilep2jet1 ] + " >> " + h_name[dphilep2jet1 ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilep2jet2 ] + " >> " + h_name[dphilep2jet2 ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilmet1    ] + " >> " + h_name[dphilmet1    ] + "(  100,  0,      3.2 )", thecut );
+		mytree -> Draw( b_name[dphilmet2    ] + " >> " + h_name[dphilmet2    ] + "(  100,  0,      3.2 )", thecut ); 
+		mytree -> Draw( b_name[dphillmet    ] + " >> " + h_name[dphillmet    ] + "(  100,  0,      3.2 )", thecut ); 
+
+		mytree -> Draw( b_name[top1eta_gen  ] + " >> " + h_name[top1eta_gen  ] + "(   60, -3,      3   )", thecut );
+		mytree -> Draw( b_name[top1phi_gen  ] + " >> " + h_name[top1phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[top1pt_gen   ] + " >> " + h_name[top1pt_gen   ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[top2eta_gen  ] + " >> " + h_name[top2eta_gen  ] + "(   60, -3,      3   )", thecut );
+		mytree -> Draw( b_name[top2phi_gen  ] + " >> " + h_name[top2phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
+		mytree -> Draw( b_name[top2pt_gen   ] + " >> " + h_name[top2pt_gen   ] + "( 3000,  0,   3000   )", thecut );
+		mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", thecut );
+
+		mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
+
+		mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", thecut );
+		mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
+		mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
+
+		//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
+		//mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", thecut );
 
 
-	if( doshape == 0 ){ 
+		for( int i = 0; i < nhisto; i++ ){	
+
+			myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
+
+		}
+
 
 		for( int i = 0; i < nhisto; i++ ){	
 
@@ -283,25 +191,12 @@ void CreateHistograms2( TString process ){
 
 		storagefile -> Close();
 
-	}
-
-
-	//if( process == "00_Fakes_reduced_1outof6" || process == "01_Data_reduced_1outof6" ) yields << Form( "%20s \t %10.3f \n", process.Data(), myhisto[0]->Integral() );
-	//else                                                                           yields << Form( "%20s \t %10.3f \n", process.Data(), 2.15*myhisto[0]->Integral() );
-  
-
-	if( doshape == 1 ){ 
-
-		int k = mt2ll; 
-
-		TH1F* shape_h = (TH1F*) myhisto[k] -> Clone( process );// + "_Recodo" );
-
-		if( process != "00_Fakes" && process != "01_Data" ) shape_h -> Scale( lumi_fb_2016 );
-
-		shape_h -> Write(); 
-
-		shape_f -> Close();
+		
 
 	}
+
+	c1 -> Destructor();
+
+	myfile -> Close();
 
 }
