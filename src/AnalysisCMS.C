@@ -528,7 +528,7 @@ void AnalysisCMS::ApplyWeights()
 	  sf_btag_up = bPogSF_CMVAL_Up;
 	  sf_btag_do = bPogSF_CMVAL_Down;
 	}
-     
+
       float sf_trigger    = effTrigW;  // To be updated for WZ
       float sf_trigger_up = effTrigW_Up;
       float sf_trigger_do = effTrigW_Down;
@@ -1133,6 +1133,7 @@ void AnalysisCMS::GetFakeWeights()
       _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
     }
 }
+
 
 //------------------------------------------------------------------------------
 // EventSetup
@@ -1923,7 +1924,7 @@ void AnalysisCMS::GetStopVar()
 	
 	float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
 
-	//if (ThisDeltaR > 0.00001) continue;
+	//	if (ThisDeltaR > 0.00001) continue;
 	if (ThisDeltaR > 0.01) continue;
 
 	lepIndex[IdxW] = lp;
