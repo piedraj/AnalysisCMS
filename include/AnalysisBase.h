@@ -372,7 +372,6 @@ public :
    //   Float_t         jettche1;
    //   Float_t         jettche2;
    Float_t         puW;
-   Float_t         puWBC;
    //   Float_t         puW6p3;
    //   Float_t         Xsec;
    Float_t         baseW;
@@ -828,7 +827,6 @@ public :
    //   TBranch        *b_jettche1;   //!
    //   TBranch        *b_jettche2;   //!
    TBranch        *b_puW;   //!
-   TBranch        *b_puWBC;   //!
    //   TBranch        *b_puW6p3;   //!
    //   TBranch        *b_Xsec;   //!
    TBranch        *b_baseW;   //!
@@ -1540,7 +1538,6 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("jettche1", &jettche1, &b_jettche1);
    //   fChain->SetBranchAddress("jettche2", &jettche2, &b_jettche2);
    fChain->SetBranchAddress("puW", &puW, &b_puW);
-   fChain->SetBranchAddress("puWBC", &puWBC, &b_puWBC);
    //   fChain->SetBranchAddress("puW6p3", &puW6p3, &b_puW6p3);
    //   fChain->SetBranchAddress("Xsec", &Xsec, &b_Xsec);
    fChain->SetBranchAddress("baseW", &baseW, &b_baseW);

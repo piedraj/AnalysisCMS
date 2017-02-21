@@ -86,22 +86,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     fChain->GetEntry(jentry);
 
-    //if (_lep1isfake==0 && _lep2isfake==0) continue;
-    /*cout << "DDD " << endl;
-  for (int tr = 0; tr<120; tr++)
-    if (std_vector_trigger->at(tr))
-      if (tr==8) cout << " HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*" << endl;
-      else if (tr==6) cout << " HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*" << endl;
-      else if (tr==11) cout << " HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*" << endl;
-      else if (tr==13) cout << " HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v* " << endl;
-      else if (tr==42) cout << " HLT_IsoTkMu22_v*" << endl;
-      else if (tr==43) cout << " HLT_IsoMu22_v* " << endl;
-      else if (tr==0) cout << "  HLT_Ele27_eta2p1_WPLoose_Gsf_v* " << endl;
-      else if (tr==56) cout << " HLT_Ele45_WPLoose_Gsf_v*      " << endl;
-      else if (tr==46) cout << "  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*  " << endl;
-  cout << endl;
-  continue;    */
-
     PrintProgress(jentry, _nentries);
    
     bool pass_masspoint = true;
@@ -116,9 +100,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       EventSetup(2.4, 20.);
 
     }
-
-    //if (filename.Contains("DYJets") && !filename.Contains("_HT")) 
-    //if (_htvisible>100.) continue;
 
     // Analysis
     //--------------------------------------------------------------------------
@@ -162,7 +143,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) {
 
       pass_blind = false;
-      if (_mt2ll<40.) pass_blind = true;
+      //if (_mt2ll<40.) pass_blind = true;
       if (MET.Et()<140.) pass_blind = true;
 
     }

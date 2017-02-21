@@ -339,7 +339,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _mll34;
   float                  _dyll;
   float                  _ptbll;
-  float                  _puWcorr;
   float                  _mt2ll;
   float                  _dphimetptbll;
   float                  _dphimetjet;

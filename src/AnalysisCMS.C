@@ -420,8 +420,6 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight *= _luminosity * baseW * puW;
 
-  _puWcorr = puWBC/puW;
-
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
   if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;
@@ -1195,18 +1193,14 @@ void AnalysisCMS::EndJob()
    
     txt_summary.close();   
   }
-
-  //if (!_saveminitree || !_analysis.EqualTo("Stop")) {
     
-    root_output->cd();
-    
-    printf("\n\n Writing histograms. This can take a while...\n");
-    
-    root_output->Write("", TObject::kOverwrite);
-    
-    root_output->Close();
-
-    //}
+  root_output->cd();
+  
+  printf("\n\n Writing histograms. This can take a while...\n");
+  
+  root_output->Write("", TObject::kOverwrite);
+  
+  root_output->Close();
 
   printf("\n Done with %s\n\n", _filename.Data());
 }
@@ -1497,7 +1491,6 @@ void AnalysisCMS::OpenMinitree()
   // P
   minitree->Branch("planarity",        &_planarity,        "planarity/F");
   minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
-  minitree->Branch("puWcorr",          &_puWcorr,          "puWcorr/F");
   // R
   minitree->Branch("run",              &run,               "run/I");
   // S
