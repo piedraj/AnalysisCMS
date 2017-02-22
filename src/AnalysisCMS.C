@@ -64,6 +64,56 @@ bool AnalysisCMS::PassTrigger()
 
 
 //------------------------------------------------------------------------------
+// ApplyMETFilters
+//------------------------------------------------------------------------------
+bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters, bool ApplyICHEPAdditionalFilters)
+{
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
+  if (_filename.Contains("T2tt")) return true;
+
+  if (!std_vector_trigger_special) return true;
+
+  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/skimEventProducer_cfi.py#L383-L392
+  // "Flag_HBHENoiseFilter"                     #0
+  // "Flag_HBHENoiseIsoFilter"                  #1
+  // "Flag_EcalDeadCellTriggerPrimitiveFilter"  #2
+  // "Flag_goodVertices"                        #3
+  // "Flag_eeBadScFilter"                       #4
+  // "Flag_globalTightHalo2016Filter"           #5
+  // "Flag_duplicateMuons"                      #6 -> 0 is good // Giovanni's filter
+  // "Flag_badMuons"                            #7 -> 0 is good // Giovanni's filter
+  // "Bad PF Muon Filter"                       #8              // ICHEP additional filter 
+  // "Bad Charged Hadrons"                      #9              // ICHEP additional filter 
+
+  // https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Moriond_2017
+  for (int nf = 0; nf<6; nf++) {
+    
+    if (_ismc && nf==4) continue;
+    
+    if (std_vector_trigger_special->at(nf)!=1) return false;
+
+  }
+
+  if (ApplyGiovanniFilters) {
+
+    if (std_vector_trigger_special->at(6)!=0) return false;
+    if (std_vector_trigger_special->at(7)!=0) return false;
+
+  }
+
+  if (ApplyICHEPAdditionalFilters) {
+
+    if (std_vector_trigger_special->at(8)!=1) return false;
+    if (std_vector_trigger_special->at(9)!=1) return false;
+
+  }
+
+  return true;
+
+}
+
+
+//------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
 float AnalysisCMS::MuonIsolation(int k)
@@ -412,7 +462,7 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger(); 
 
-  if (_analysis.EqualTo("Stop")) _event_weight *= metFilter;
+  if (_analysis.EqualTo("Stop")) _event_weight *= ApplyMETFilters();
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
