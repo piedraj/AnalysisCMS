@@ -973,10 +973,11 @@ Float_t HistogramReader::Error(TH1* hist)
 void HistogramReader::EventsByCut(TFile*  file,
 				  TString analysis,
 				  TString hname)
-{
+{std::cout<<"E1"<<std::endl;
   // Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(analysis + "/" + hname + "_evolution");
 
+std::cout<<"E2"<<std::endl;
   if (test_hist) return;
 
 
@@ -990,12 +991,14 @@ void HistogramReader::EventsByCut(TFile*  file,
       nbins++;
     }
 
+std::cout<<"E3"<<std::endl;
 
   // Create and fill the evolution histogram
   file->cd(analysis);
 
   TH1D* hist = new TH1D(hname + "_evolution", "", nbins, -0.5, nbins-0.5);
 
+std::cout<<"E4"<<std::endl;
   for (Int_t i=0, bin=0; i<ncut; i++)
     {
       if (!scut[i].Contains(analysis + "/")) continue;
@@ -1019,6 +1022,7 @@ void HistogramReader::EventsByCut(TFile*  file,
     }
 
 
+std::cout<<"E5"<<std::endl;
   // Write the evolution histogram
   hist->Write();
   file->cd();
@@ -1029,12 +1033,15 @@ void HistogramReader::EventsByCut(TFile*  file,
 // LoopEventsByCut
 //------------------------------------------------------------------------------
 void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
-{
+{std::cout << "H1" <<std::endl; 
   if (_datafile) EventsByCut(_datafile, analysis, hname);
+ std::cout << "H2" <<std::endl; 
 
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
+ std::cout << "H3" <<std::endl; 
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByCut(_signalfile[i], analysis, hname);
+ std::cout << "H4" <<std::endl; 
 }
 
 
