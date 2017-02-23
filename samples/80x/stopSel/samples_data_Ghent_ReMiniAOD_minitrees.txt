@@ -1,1 +1,0 @@
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_ReMiniAOD/nominal/Stop/01_DataB_ReMiniAOD.root 1

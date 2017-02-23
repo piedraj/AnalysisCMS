@@ -1,5 +1,0 @@
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/Trees/Oct26/LatinoSkims/26Oct2016_Run2016G_PromptReco/l2stop__hadd__EpTCorr__l2tight/latino_Run2016G_PromptReco_DoubleEG.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/Trees/Oct26/LatinoSkims/26Oct2016_Run2016G_PromptReco/l2stop__hadd__EpTCorr__l2tight/latino_Run2016G_PromptReco_DoubleMuon.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/Trees/Oct26/LatinoSkims/26Oct2016_Run2016G_PromptReco/l2stop__hadd__EpTCorr__l2tight/latino_Run2016G_PromptReco_MuonEG.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/Trees/Oct26/LatinoSkims/26Oct2016_Run2016G_PromptReco/l2stop__hadd__EpTCorr__l2tight/latino_Run2016G_PromptReco_SingleElectron.root
-root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/Trees/Oct26/LatinoSkims/26Oct2016_Run2016G_PromptReco/l2stop__hadd__EpTCorr__l2tight/latino_Run2016G_PromptReco_SingleMuon.root
