@@ -142,27 +142,28 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     bool pass = true;
     bool pass_blind = true; 
 
-    // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) {
+    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
+    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) 
+    {
 
       pass_blind = false;
       //if (_mt2ll<40.) pass_blind = true;
       if (MET.Et()<140.) pass_blind = true;
 
-    }
+     }
 
     if (!_isminitree) {
 
            
        FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
 
-       FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
+ //    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
 
       // Basics Stop
       //-------------------------------------------------------------------------
       pass &= mll>20.;
   
-      FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
+   /*   FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
       
               // Look in the Z-peak
               // ---------------------------------------------------------------
@@ -186,7 +187,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
                
                FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_masspoint);  // 2 OS Leptons, mll > 20, 0 b Tag (VET0)
 
-              // ---------------------------------------------------------------
+   */           // ---------------------------------------------------------------
 
       pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
 

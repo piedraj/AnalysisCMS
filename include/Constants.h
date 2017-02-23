@@ -1,13 +1,13 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
+//#include "CutsControl.h"
 //#include "CutsDY.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsPR.h"
 //#include "CutsShape.h"
-//#include "CutsStop.h"
+#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
@@ -21,7 +21,7 @@
 // https://hypernews.cern.ch/HyperNews/CMS/get/physics-announcements/4495.html
 const double lumi_fb_2016       = 12.610;  // 2016B + 2016C + 2016D
 const double lumi_fb_Run2016B   =  5.788;  // From run 272007 to run 275376
-const double lumi_fb_2016_susy  =  5.136;  // From run 278820 to run 279931
+const double lumi_fb_2016_susy  =  5.136;  // 2016G From run 278820 to run 279931
 const double lumi_fb_2015       =  2.318;  // 2015C + 2015D35867.060
 const double lumi_fb_2016       = 35.867;  // 2016B to 2016H
 const double lumi_error_percent =  2.6;    // Preliminary
