@@ -47,6 +47,7 @@ bool AnalysisCMS::PassTrigger()
   // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
   // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
 
+
   bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
   bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
   bool pass_SingleMuon     = (std_vector_trigger->at(42) || std_vector_trigger->at(43));
@@ -59,6 +60,53 @@ bool AnalysisCMS::PassTrigger()
   else if (_sample.Contains("DoubleEG"))       return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon &&  pass_DoubleEG);
   else if (_sample.Contains("SingleElectron")) return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon && !pass_DoubleEG && pass_SingleElectron);
   else                                         return true;
+}
+
+
+//------------------------------------------------------------------------------
+// ApplyMETFilters
+//------------------------------------------------------------------------------
+bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
+				  bool ApplyICHEPAdditionalFilters)
+{
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
+  if (_filename.Contains("T2tt")) return true;
+
+  if (!std_vector_trigger_special) return true;
+
+  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/skimEventProducer_cfi.py#L383-L392
+  // "Flag_HBHENoiseFilter"                     #0
+  // "Flag_HBHENoiseIsoFilter"                  #1
+  // "Flag_EcalDeadCellTriggerPrimitiveFilter"  #2
+  // "Flag_goodVertices"                        #3
+  // "Flag_eeBadScFilter"                       #4
+  // "Flag_globalTightHalo2016Filter"           #5
+  // "Flag_duplicateMuons"                      #6 -> 0 is good // Giovanni's filter
+  // "Flag_badMuons"                            #7 -> 0 is good // Giovanni's filter
+  // "Bad PF Muon Filter"                       #8              // ICHEP additional filter 
+  // "Bad Charged Hadrons"                      #9              // ICHEP additional filter 
+
+  // https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Moriond_2017
+  for (int nf=0; nf<6; nf++) {
+    
+    if (_ismc && nf==4) continue;
+    
+    if (std_vector_trigger_special->at(nf) != 1) return false;
+  }
+
+  if (ApplyGiovanniFilters) {
+
+    if (std_vector_trigger_special->at(6) != 0) return false;
+    if (std_vector_trigger_special->at(7) != 0) return false;
+  }
+
+  if (ApplyICHEPAdditionalFilters) {
+
+    if (std_vector_trigger_special->at(8) != 1) return false;
+    if (std_vector_trigger_special->at(9) != 1) return false;
+  }
+
+  return true;
 }
 
 
@@ -409,10 +457,8 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger(); 
-  
-  if (_analysis.EqualTo("Stop")) _event_weight *= metFilter;
-  
+  _event_weight = PassTrigger() * ApplyMETFilters();
+
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
 
   if (!_ismc) return;
@@ -453,7 +499,6 @@ void AnalysisCMS::ApplyWeights()
 	  0.000557167 * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
 	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
     }
-  
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -694,7 +739,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     }
     
     // This is to run on ReReco and Spring16
-    float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484 : CSVv2M;
+    float btagcut = (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) ? 0.8484 : CSVv2M;
 
     if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
       if (pt > _leadingPtCSVv2M) {
@@ -892,23 +937,23 @@ void AnalysisCMS::GetDeltaPhi()
   float minDeltaPhiMetJet = 999.;
   
   for (int ijet=0; ijet<_njet; ijet++) {
-      
+    
     float thisDeltaPhiMetJet = fabs(AnalysisJets[ijet].v.DeltaPhi(MET));
-
+    
     if (thisDeltaPhiMetJet < minDeltaPhiMetJet) {
-	
+      
       minDeltaPhiMetJet = thisDeltaPhiMetJet;
 
       _dphimetjet = thisDeltaPhiMetJet;
     }
   }
-
+  
 
   // Delta phi between jets, MET and leptons
   //----------------------------------------------------------------------------
   _dphillmet    = fabs((Lepton1.v + Lepton2.v).DeltaPhi(MET));
   _dphimetptbll = fabs((Lepton1.v + Lepton2.v + MET).DeltaPhi(MET));
-
+  
   if (_njet > 0)
     {
       _dphijet1met  = fabs(AnalysisJets[0].v.DeltaPhi(MET));
@@ -1102,9 +1147,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetGenLeptonsAndNeutrinos();
 
-  //  GetDark();
+  GetDark();
 
-  //  GetTopReco();
+  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1112,7 +1157,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   ApplyWeights();
 
-
+ 
   // Additional analysis variables
   //----------------------------------------------------------------------------
   GetDeltaPhi();
@@ -1151,7 +1196,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
   double fractpart, intpart;
 
   fractpart = modf(progress, &intpart);
-
+  
   if (fractpart < 1e-2)
     {
       std::cout << "   " << _sample.Data() << " progress: " << int(ceil(progress)) << "%\r";
@@ -1165,7 +1210,7 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 //------------------------------------------------------------------------------
 void AnalysisCMS::EndJob()
 {
-  if (_eventdump) txt_eventdump.close();
+  if (_eventdump && !_analysis.EqualTo("Stop")) txt_eventdump.close();
 
   if (_saveminitree)
     {
@@ -1196,7 +1241,7 @@ void AnalysisCMS::EndJob()
   }
 
   root_output->cd();
-  
+
   printf("\n\n Writing histograms. This can take a while...\n");
 
   root_output->Write("", TObject::kOverwrite);
@@ -1363,8 +1408,8 @@ void AnalysisCMS::OpenMinitree()
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
   // D
-  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
-  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
+  //  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
+  //  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
   minitree->Branch("darkpt",           &_darkpt,           "darkpt/F"); 
   minitree->Branch("darkpt_gen",       &_darkpt_gen,       "darkpt_gen/F");  
   minitree->Branch("detatt_gen",       &_detatt_gen,       "detatt_gen/F");
@@ -1684,7 +1729,7 @@ void AnalysisCMS::GetStopVar()
   _bjet1csvv2ivf   = _bjet2csvv2ivf   = _tjet1csvv2ivf = _tjet2csvv2ivf = -999;
   _tjet1assignment = _tjet2assignment = 0.;
 
-  _lep1isfake = _lep2isfake = -1.;
+  _lep1isfake = _lep2isfake = 1.;
 
   if (_njet > 0) {
       
@@ -1714,7 +1759,7 @@ void AnalysisCMS::GetStopVar()
 	  int nbjetfromleading = 0;
 
 	  // This is to run on ReReco and Spring16
-	  float btagcut = (!_ismc && _filename.Contains("23Sep2016")) ? 0.8484: CSVv2M;
+	  float btagcut = (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) ? 0.8484: CSVv2M;
 
 	  for (int ijet=0; ijet<_njet; ijet++) {
 	    if (nbjetfound < 2) {
@@ -1808,7 +1853,7 @@ void AnalysisCMS::GetStopVar()
     }
   }
 
-
+  
   // Top quark reco
   //----------------------------------------------------------------------------
   if (!_analysis.EqualTo("Stop") && !_analysis.EqualTo("TTDM")) return;
@@ -1853,14 +1898,14 @@ void AnalysisCMS::GetStopVar()
       if (Wid*std_vector_leptonGen_pid->at(lp) > 0) continue;
 
       float LeptonMass = (fabs(std_vector_leptonGen_pid->at(lp)) == 13) ? MUON_MASS : ELECTRON_MASS;
-
+      
       TLorentzVector ChargedLepton;
 
       ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp),
 				 std_vector_leptonGen_eta->at(lp),
 				 std_vector_leptonGen_phi->at(lp),
 				 LeptonMass);
-	    
+      
       for (int nt=0; nt<std_vector_neutrinoGen_pt->size(); nt++) {
 
 	if (std_vector_neutrinoGen_pt->at(nt) < 0 || lepIndex[IdxW] > -999) continue;
@@ -1874,7 +1919,8 @@ void AnalysisCMS::GetStopVar()
 	
 	float ThisDeltaR = WBoson.DeltaR(ChargedLepton + CandidateNeutrino);
 
-	if (ThisDeltaR > 0.00001) continue;
+	//	if (ThisDeltaR > 0.00001) continue;
+	if (ThisDeltaR > 0.01) continue;
 
 	lepIndex[IdxW] = lp;
 		  
@@ -1927,7 +1973,61 @@ void AnalysisCMS::GetStopVar()
     }
   }
 
+  for (int ml = 0; ml<2; ml++) {
 
+    double MinimumDeltaR = 1.;
+
+    for (int lp = 0; lp<std_vector_leptonGen_pt->size(); lp++) {
+      
+      if (std_vector_leptonGen_pt->at(lp) < 0) continue;
+      
+      int Wid = 2*ml - 1;  // -1 for ml==0 (W-), +1 for ml==1 (W+)
+      if (Wid*std_vector_leptonGen_pid->at(lp) > 0) continue;
+      if (fabs(std_vector_leptonGen_MotherPID->at(lp))!=24) continue;
+      
+      float LeptonMass = (fabs(std_vector_leptonGen_pid->at(lp)) == 13) ? MUON_MASS : ELECTRON_MASS;
+      
+      TLorentzVector ChargedLepton;
+
+      ChargedLepton.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lp),
+				 std_vector_leptonGen_eta->at(lp),
+				 std_vector_leptonGen_phi->at(lp),
+				 LeptonMass);
+
+      double DeltaRGenLepLep1 = (Lepton1.v).DeltaR(ChargedLepton);
+
+      if (DeltaRGenLepLep1<MinimumDeltaR) {
+
+	MinimumDeltaR = DeltaRGenLepLep1; 
+
+	_lep1isfake = MinimumDeltaR;
+	
+	if (std_vector_lepton_ch->at(Lepton1.index)*Wid<0) _lep1isfake *= -1;
+
+	if (MinimumDeltaR<0.04 && lepIndex[ml]<0)
+	  lepIndex[ml] = lp;
+
+      }
+
+      double DeltaRGenLepLep2 = (Lepton2.v).DeltaR(ChargedLepton);
+
+      if (DeltaRGenLepLep2<MinimumDeltaR) {
+
+	MinimumDeltaR = DeltaRGenLepLep2; 
+
+	_lep2isfake = MinimumDeltaR;
+	
+	if (std_vector_lepton_ch->at(Lepton2.index)*Wid<0) _lep2isfake *= -1;
+
+	if (MinimumDeltaR<0.04 && lepIndex[ml]<0)
+	  lepIndex[ml] = lp;
+	
+      }
+      
+    }
+    
+  }
+  
   // Get the b-jet indexes with smallest mass difference wrt. the TOP_MASS
   //----------------------------------------------------------------------------
   float MinMassDistance = 999999.;
@@ -1967,11 +2067,9 @@ void AnalysisCMS::GetStopVar()
     }
   }
 
-
   // So far so good
   //----------------------------------------------------------------------------
   int IdxB1 = -999, IdxB2 = -999;
-  _lep1isfake = _lep2isfake = 1.;
 
   if (lepIndex[0] >=0) {
 
@@ -1986,8 +2084,6 @@ void AnalysisCMS::GetStopVar()
     float DeltaRLep2LepGen1 = (Lepton2.v).DeltaR(LepGen1);
 
     if (std_vector_lepton_ch->at(Lepton1.index)<0 && DeltaRLep1LepGen1<0.1) {
-
-      _lep1isfake = 0.;
 
       if (bIndex[0]>=0) {
 
@@ -2007,8 +2103,6 @@ void AnalysisCMS::GetStopVar()
     }
 
     if (std_vector_lepton_ch->at(Lepton2.index)<0 && DeltaRLep2LepGen1<0.1) {
-
-      _lep2isfake = 0.;
 
       if (bIndex[0] >= 0) {
 
@@ -2039,8 +2133,6 @@ void AnalysisCMS::GetStopVar()
     
     if (std_vector_lepton_ch->at(Lepton1.index)>0 && DeltaRLep1LepGen2<0.1) {
 
-      _lep1isfake = 0.;
-
       if (bIndex[1] >= 0) {
 
 	_bjet1pt       = AnalysisJets[bIndex[1]].v.Pt();
@@ -2059,8 +2151,6 @@ void AnalysisCMS::GetStopVar()
     }
     
     if (std_vector_lepton_ch->at(Lepton2.index)>0 && DeltaRLep2LepGen2<0.1) {
-
-      _lep2isfake = 0.;
 
       if (bIndex[1] >= 0) {
 
@@ -2295,48 +2385,11 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-  _darketa_gen = -999;
-  _darkphi_gen = -999;
-  _darkpt_gen  = -999;
-
-  if (!_ismc) return;
-
-  TVector3 genMET, n1, n2, dark; 
-
-  genMET.SetPtEtaPhi(metGenpt, metGeneta, metGenphi); 
- 
-  int nu_size = std_vector_neutrinoGen_pt->size();
-
-  for (int i=0; i<nu_size; i++) {
-
-    if (std_vector_neutrinoGen_isPrompt->at(i)       !=  1) continue;
-    if (abs(std_vector_neutrinoGen_MotherPID->at(i)) != 24) continue;  // Coming from W
-
-    // What about neutrinos from taus?
-    // Why not just consider all neutrinos that are prompt?
-
-    for(int j=i+1; j<nu_size; j++) {
-
-      if (std_vector_neutrinoGen_isPrompt->at(j)       !=  1) continue;
-      if (abs(std_vector_neutrinoGen_MotherPID->at(j)) != 24) continue;
-
-      if (std_vector_neutrinoGen_MotherPID->at(i) * std_vector_neutrinoGen_MotherPID->at(j) > 0) continue; 
-
-      n1.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(i), std_vector_neutrinoGen_eta->at(i), std_vector_neutrinoGen_phi->at(i));
-      n2.SetPtEtaPhi(std_vector_neutrinoGen_pt->at(j), std_vector_neutrinoGen_eta->at(j), std_vector_neutrinoGen_phi->at(j));
-
-      dark = genMET - n1 - n2;
-
-      _darketa_gen = dark.Eta(); 
-      _darkphi_gen = dark.Phi(); 
-      _darkpt_gen  = dark.Pt();
-
-      break;  // Why this break?
-    }
-
-    break;  // Why this break?
-  }
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
+  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
+  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
 }
+
 
 //------------------------------------------------------------------------------
 // GetMlb
