@@ -5,7 +5,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 #
-# Create datacards for VR in Tag and NoTag selection (using configurationsVR.py)
+# Create datacards for VR in Tag and NoTag selection (using configurationsVR.py and one point of mass)
 ./createDatacardsVR.sh
 
 # combine them
