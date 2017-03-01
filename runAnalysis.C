@@ -13,8 +13,8 @@
 
 void runAnalysis(TString filename,
 		 TString systematic,
-                 float   StopMass          = -1.,
-                 float   NeutralinoMass    = -1.)
+                 float   StopMass       = -1.,
+                 float   NeutralinoMass = -1.)
 {
   gInterpreter->ExecuteMacro("test/PaperStyle.C");
 
@@ -24,14 +24,14 @@ void runAnalysis(TString filename,
 
   float baseW_lumi_fb = 1.0;  // baseW has been computed for 1.0 fb-1
 
-  //  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
+  //AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
   //  AnalysisDY      analysis(latino, systematic); analysis.Loop("DY",      filename, baseW_lumi_fb);
   //  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
   //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
- //   AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
-    AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb, StopMass, NeutralinoMass);
+   AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
+//    AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb, StopMass, NeutralinoMass);
   //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
   //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
@@ -53,7 +53,7 @@ int main(int argc, char ** argv)
       return -1;
     }
 
-  if (argc == 3) runAnalysis(argv[1], argv[2]);
+  if      (argc == 3) runAnalysis(argv[1], argv[2]);
   else if (argc == 4) runAnalysis(argv[1], argv[2],  atof(argv[3]));
   else if (argc == 5) runAnalysis(argv[1], argv[2],  atof(argv[3]), atof(argv[4]));
 

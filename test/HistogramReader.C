@@ -1046,7 +1046,7 @@ void HistogramReader::EventsByCut(TFile*  file,
 // LoopEventsByCut
 //------------------------------------------------------------------------------
 void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
-{ 
+  
   if (_datafile) EventsByCut(_datafile, analysis, hname);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
