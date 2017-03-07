@@ -395,7 +395,6 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _jetbin;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
-  unsigned int           _ntightlepton;
   
   ofstream               txt_eventdump;
   ofstream               txt_summary;
