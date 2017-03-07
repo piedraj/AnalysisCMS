@@ -109,7 +109,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
-      if ( ! _nlepton == 2) continue; // 2 and only 2 leptons
+      if (_nlepton != 2) continue; // 2 and only 2 leptons
 
       if (_ismc) CorrectEventWeight(); 
   
