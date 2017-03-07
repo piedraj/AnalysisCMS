@@ -98,7 +98,7 @@ class AnalysisCMS : public AnalysisBase
   bool        PassTrigger       ();
 
   bool        ApplyMETFilters   (bool     ApplyGiovanniFilters        = false, 
-				 bool     ApplyICHEPAdditionalFilters = false);
+				 bool     ApplyICHEPAdditionalFilters = true);
 
   void        PrintProgress     (Long64_t counter,
 				 Long64_t total);
@@ -395,6 +395,7 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _jetbin;
   unsigned int           _nelectron;
   unsigned int           _nlepton;
+  unsigned int           _ntightlepton;
   
   ofstream               txt_eventdump;
   ofstream               txt_summary;
