@@ -36,6 +36,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 bool AnalysisCMS::PassTrigger()
 {
   if (!std_vector_trigger) return true;
+  if (_ismc) return true; // Need to study, Summer16 does have the trigger info
 
   // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
