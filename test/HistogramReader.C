@@ -1046,7 +1046,7 @@ void HistogramReader::EventsByCut(TFile*  file,
 // LoopEventsByCut
 //------------------------------------------------------------------------------
 void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
-  
+{  
   if (_datafile) EventsByCut(_datafile, analysis, hname);
 
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
@@ -1530,6 +1530,8 @@ void HistogramReader::Roc(TString hname,
 void HistogramReader::IncludeSystematics(TH1*    hist,
 					 TString hname)
 { 
+  TString inputSys = "../minifiles/rootfiles/";
+  
   std::vector<TH1D*> h_var; 
 
   for (UInt_t j=0; j<_systematics.size(); j++) { 
@@ -1538,7 +1540,7 @@ void HistogramReader::IncludeSystematics(TH1*    hist,
 
     for (UInt_t i=0; i<_mchist.size(); i++) {
 
-      TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "read");
+      TFile* myfile = new TFile(inputSys + "/" + _systematics[j] + "/Stop/" + _mcfilename.at(i) + ".root", "read");
 
       TH1D* dummy = (TH1D*)myfile->Get(hname);
 
