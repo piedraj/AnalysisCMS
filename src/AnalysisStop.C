@@ -109,7 +109,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
-      if ( ! _nlepton == 2) continue; // 2 and only 2 leptons
+      if (_nlepton != 2) continue; // 2 and only 2 leptons
 
       if (_ismc) CorrectEventWeight(); 
   
@@ -2908,17 +2908,15 @@ void AnalysisStop::CorrectEventWeight() {
     if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
     
     int ThisIndex = AnalysisJets[ijet].index;
-    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex); // LS temporary fix for ReReco SFs 
+    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
     float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency       = MonteCarloEfficiency*1.05*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Upb   = MonteCarloEfficiency*1.05*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Dob   = MonteCarloEfficiency*1.05*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_UpFSb = MonteCarloEfficiency*1.05*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_DoFSb = MonteCarloEfficiency*1.05*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency       = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Upb   = MonteCarloEfficiency*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Dob   = MonteCarloEfficiency*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_UpFSb = MonteCarloEfficiency*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_DoFSb = MonteCarloEfficiency*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
 
-    float btagcut = CSVv2M;
-    if (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) btagcut = 0.8484;
-    if (AnalysisJets[ijet].csvv2ivf>/*CSVv2M*/btagcut) {
+    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) {
       EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
       EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;
       EventBTagSF_Dob   *= DataEfficiency_Dob/MonteCarloEfficiency;
