@@ -523,8 +523,8 @@ void AnalysisCMS::ApplyWeights()
       else
 	{
 	  sf_btag    = bPogSF_CMVAL;
-	  sf_btag_up = bPogSF_CMVAL_Up;
-	  sf_btag_do = bPogSF_CMVAL_Down;
+	  sf_btag_up = bPogSF_CMVAL_up;
+	  sf_btag_do = bPogSF_CMVAL_down;
 	}
 
       float sf_trigger    = effTrigW;  // To be updated for WZ
