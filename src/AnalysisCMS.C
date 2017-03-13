@@ -36,6 +36,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 bool AnalysisCMS::PassTrigger()
 {
   if (!std_vector_trigger) return true;
+  if (_ismc) return true; // Need to study, Summer16 does have the trigger info
 
   // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
@@ -72,7 +73,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  if (_ismc) return true; // Spring16 does not have correct MET filter information!!!
+  //if (_ismc) return true; // Spring16 does not have correct MET filter information!!!
 
   if (!std_vector_trigger_special) return true;
 
@@ -522,8 +523,8 @@ void AnalysisCMS::ApplyWeights()
       else
 	{
 	  sf_btag    = bPogSF_CMVAL;
-	  sf_btag_up = bPogSF_CMVAL_Up;
-	  sf_btag_do = bPogSF_CMVAL_Down;
+	  sf_btag_up = bPogSF_CMVAL_up;
+	  sf_btag_do = bPogSF_CMVAL_down;
 	}
 
       float sf_trigger    = effTrigW;  // To be updated for WZ
@@ -597,6 +598,8 @@ void AnalysisCMS::GetLeptons()
 
   AnalysisLeptons.clear();
 
+  _ntightlepton = 0;
+
   int vector_lepton_size = std_vector_lepton_pt->size();
 
   for (int i=0; i<vector_lepton_size; i++) {
@@ -608,7 +611,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (!std_vector_lepton_isLooseLepton->at(i) && !_analysis.EqualTo("Stop")) continue;
+    if (std_vector_lepton_isLooseLepton->at(i)!=1) continue;
 
     if (pt < 0.) continue;
 
@@ -652,6 +655,8 @@ void AnalysisCMS::GetLeptons()
     tlv.SetPtEtaPhiM(pt, eta, phi, mass);
 
     lep.v = tlv;
+
+    if (std_vector_lepton_isTightLepton->at(i)==1) _ntightlepton++;
 
     AnalysisLeptons.push_back(lep);
 
@@ -740,10 +745,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
       } 
     }
     
-    // This is to run on ReReco and Spring16
-    float btagcut = (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) ? 0.8484 : CSVv2M;
-
-    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
+    if (goodjet.csvv2ivf > CSVv2M) {
       if (pt > _leadingPtCSVv2M) {
 	_trailingPtCSVv2M = _leadingPtCSVv2M;
 	_leadingPtCSVv2M  = pt;
@@ -769,7 +771,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     // I would give these variables a more generic way (now they depends on jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
-    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) _nbjet30csvv2m++;
+    if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
@@ -782,7 +784,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     _jet_phi.push_back(phi);
     _jet_pt .push_back(pt); 
 
-    if (goodjet.csvv2ivf > /*CSVv2M*/btagcut) {
+    if (goodjet.csvv2ivf > CSVv2M) {
 
     	_bjet30csvv2m_eta.push_back(eta); 
     	_bjet30csvv2m_phi.push_back(phi);
@@ -1760,12 +1762,9 @@ void AnalysisCMS::GetStopVar()
 	  int nbjetfound       = 0;
 	  int nbjetfromleading = 0;
 
-	  // This is to run on ReReco and Spring16
-	  float btagcut = (!_ismc && (_filename.Contains("23Sep2016") || _filename.Contains("03Feb2017"))) ? 0.8484: CSVv2M;
-
 	  for (int ijet=0; ijet<_njet; ijet++) {
 	    if (nbjetfound < 2) {
-	      if (AnalysisJets[ijet].csvv2ivf > /*CSVv2M*/btagcut) {
+	      if (AnalysisJets[ijet].csvv2ivf > CSVv2M) {
 		bjetindex[1] = bjetindex[0];
 		bjetindex[nbjetfound] = ijet;
 		nbjetfound++;
