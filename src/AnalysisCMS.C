@@ -36,7 +36,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 bool AnalysisCMS::PassTrigger()
 {
   if (!std_vector_trigger) return true;
-  if (_ismc) return true; // Need to study, Summer16 does have the trigger info
+  if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
 
   // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
@@ -47,7 +47,6 @@ bool AnalysisCMS::PassTrigger()
   // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
   // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
   // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
-
 
   bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
   bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
@@ -73,7 +72,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //if (_ismc) return true; // Spring16 does not have correct MET filter information!!!
+  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -611,7 +610,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (std_vector_lepton_isLooseLepton->at(i)!=1) continue;
+    if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
     if (pt < 0.) continue;
 
@@ -656,7 +655,7 @@ void AnalysisCMS::GetLeptons()
 
     lep.v = tlv;
 
-    if (std_vector_lepton_isTightLepton->at(i)==1) _ntightlepton++;
+    if (std_vector_lepton_isTightLepton->at(i) == 1) _ntightlepton++;
 
     AnalysisLeptons.push_back(lep);
 
