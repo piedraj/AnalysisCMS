@@ -9,7 +9,7 @@ CRAB output.
 Latino (by Xavier) post-processing.
 
     srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/Feb2017_Run2016*_RemAOD
-    srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/Feb2017_summer16 (por el momento WW, DY y top MC)
+    srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/xjanssen/HWW2015/Feb2017_summer16
 
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/Feb2017_Run2016*_RemAOD
 
