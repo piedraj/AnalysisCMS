@@ -31,7 +31,7 @@ AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHist
 // Loop
 //------------------------------------------------------------------------------
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, float StopRefMass, float NeutralinoRefMass)
-{ 
+{
   if (fChain == 0) return;
 
   TString MassPointFlag = "";
@@ -53,9 +53,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
   }
  
-
   Setup(analysis, filename, luminosity, MassPointFlag);
-  
+ 
 
   // Define histograms
   //----------------------------------------------------------------------------
@@ -98,15 +97,19 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
       // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
       if (metPfType1!=metPfType1) continue;
-      EventSetup(2.4, 20.);    
+      EventSetup(2.4, 20.);
 
     }
+
+    //if (filename.Contains("DYJets") && !filename.Contains("_HT")) 
+    //if (_htvisible>100.) continue;
+
     // Analysis
     //--------------------------------------------------------------------------
 
     if (!_isminitree) {
 
-      if ( ! _nlepton == 2) continue; // 2 and only 2 leptons
+      if (_nlepton != 2) continue; // 2 and only 2 leptons
 
       if (_ismc) CorrectEventWeight(); 
   
@@ -134,33 +137,33 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
  
     GetAnalysisVariables();
 
-
     // Fill histograms
     //--------------------------------------------------------------------------
     bool pass = true;
     bool pass_blind = true; 
 
-    // Blinding policy: blinded () = Met < 140, MT2ll < 40; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016")) {
+    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
+    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) 
+    {
 
       pass_blind = false;
-      if (_mt2ll<40.) pass_blind = true;
+      //if (_mt2ll<40.) pass_blind = true;
       if (MET.Et()<140.) pass_blind = true;
 
-    }
+     }
 
     if (!_isminitree) {
 
            
        FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
 
-       FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
+ //    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
 
       // Basics Stop
       //-------------------------------------------------------------------------
       pass &= mll>20.;
   
-      FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
+   /*   FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
       
               // Look in the Z-peak
               // ---------------------------------------------------------------
@@ -184,7 +187,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
                
                FillLevelHistograms(Stop_04_NoTagRoutin, pass && (_leadingPtCSVv2M <  20.) && pass_masspoint);  // 2 OS Leptons, mll > 20, 0 b Tag (VET0)
 
-              // ---------------------------------------------------------------
+   */           // ---------------------------------------------------------------
 
       pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
 
@@ -263,6 +266,10 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
+	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
+	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
+	h_MET_truth         [i][j][k] = new TH1F("h_MET_truth"        + suffix, "",  100,    0, 1000);
 	
 	h_MT2_Met           [i][j][k] = new TH1D("h_MT2_Met" + suffix, "", NbinsMT2*NbinsMet, vMinMT2, vMinMT2 + NbinsMet*(vMaxMT2-vMinMT2));
 	h_HTvisible_Met     [i][j][k] = new TH1D("h_HTvisible_Met" + suffix, "", NbinsHTvisible*NbinsMet, vMinHTvisible, vMinHTvisible + NbinsMet*(vMaxHTvisible-vMinHTvisible));
@@ -359,6 +366,12 @@ void AnalysisStop::GetAnalysisVariables()
   float tempR2 = _metmeff; if (tempR2<vMinR2) tempR2 = vMinR2; if (tempR2>=vMaxR2) tempR2 = vMaxR2 - 0.01;
   _R2_Met = tempR2 + (vMaxR2 - vMinR2)*binMet;
 
+  
+  // Fake
+  _nLeptonsMatched = 0;
+  if (fabs(_lep1isfake)<0.1) _nLeptonsMatched++; 
+  if (fabs(_lep2isfake)<0.1) _nLeptonsMatched++; 
+  
 }
 
 //------------------------------------------------------------------------------
@@ -383,7 +396,15 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
-  
+
+  if (_nLeptonsMatched==2) {
+    h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+    h_MET_truth      [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
+  } else { 
+    h_MT2ll_fake     [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+    h_MET_fake       [ichannel][icut][ijet]->Fill(MET.Et(),        _event_weight);
+  }
+
   h_MT2_Met          [ichannel][icut][ijet]->Fill(_MT2_Met,        _event_weight);
   h_HTvisible_Met    [ichannel][icut][ijet]->Fill(_HTvisible_Met,  _event_weight);
   h_MetMeff_Met      [ichannel][icut][ijet]->Fill(_MetMeff_Met,    _event_weight);
@@ -2887,17 +2908,15 @@ void AnalysisStop::CorrectEventWeight() {
     if (AnalysisJets[ijet].v.Pt() <= 20.) continue; 
     
     int ThisIndex = AnalysisJets[ijet].index;
-    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex); // LS temporary fix for ReReco SFs 
+    int ThisFlavour = std_vector_jet_HadronFlavour->at(ThisIndex);
     float MonteCarloEfficiency = BTagSF->JetTagEfficiency(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency       = MonteCarloEfficiency*1.05*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Upb   = MonteCarloEfficiency*1.05*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_Dob   = MonteCarloEfficiency*1.05*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_UpFSb = MonteCarloEfficiency*1.05*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
-    float DataEfficiency_DoFSb = MonteCarloEfficiency*1.05*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency       = MonteCarloEfficiency*BTagSF->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Upb   = MonteCarloEfficiency*BTagSF_Upb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_Dob   = MonteCarloEfficiency*BTagSF_Dob->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_UpFSb = MonteCarloEfficiency*BTagSF_UpFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
+    float DataEfficiency_DoFSb = MonteCarloEfficiency*BTagSF_DoFSb->GetJetSF(ThisFlavour, AnalysisJets[ijet].v.Pt(), AnalysisJets[ijet].v.Eta());
 
-    float btagcut = CSVv2M;
-    if (!_ismc && _filename.Contains("23Sep2016")) btagcut = 0.8484;
-    if (AnalysisJets[ijet].csvv2ivf>/*CSVv2M*/btagcut) {
+    if (AnalysisJets[ijet].csvv2ivf>CSVv2M) {
       EventBTagSF       *= DataEfficiency/MonteCarloEfficiency;
       EventBTagSF_Upb   *= DataEfficiency_Upb/MonteCarloEfficiency;
       EventBTagSF_Dob   *= DataEfficiency_Dob/MonteCarloEfficiency;

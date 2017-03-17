@@ -1,0 +1,56 @@
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 300 125
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 300 150
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 300 175
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 300 200
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 300 213
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 325 150
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 325 175
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 325 200
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 325 225
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-250to350.root 2 325 238
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 350 175
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 350 200
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 350 225
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 350 250
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 350 263
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 375 200
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 375 225
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 375 250
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 375 275
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 375 288
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 400 225
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 400 250
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 400 275
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 400 300
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-350to400.root 2 400 313
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 425 250
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 425 275
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 425 300
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 425 325
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 425 338
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 450 275
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 450 300
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 450 325
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 450 350
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 450 363
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 475 300
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 475 325
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 475 350
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 475 375
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 475 388
+#####
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 500 325
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 500 350
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 500 375
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 500 400
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/MiniTrees/Feb2017_minitrees_Ghent_Spring16/nominal/Stop/T2tt_mStop-400to1200.root 2 500 413
+#####
+
