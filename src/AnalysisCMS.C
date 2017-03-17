@@ -2386,8 +2386,8 @@ void AnalysisCMS::GetRazor()
 void AnalysisCMS::GetDark()
 {
   //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
-  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
-  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
+    _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
+  //  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
 }
 
 

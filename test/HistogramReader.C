@@ -893,8 +893,8 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  xaxis->SetLabelSize(size);
-  yaxis->SetLabelSize(size);
+  xaxis->SetLabelSize(size); xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
+  yaxis->SetLabelSize(size); yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
   xaxis->SetTitleSize(size);
   yaxis->SetTitleSize(size);
 

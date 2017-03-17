@@ -19,6 +19,10 @@ void CreateHistograms(){
 
 	}
 
+//CreateHistograms2( data );
+//CreateHistograms2( ttDM );
+//CreateHistograms2( TT   );
+
 	//for( int i = 0; i < nscalar; i++ ){
 
 	//	CreateHistograms2( i ); 
@@ -42,7 +46,7 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k < nsystematic; k++ ){
 
-		if( k > Btagdo ) continue; //toppTrw ) continue;
+		if( k > nominal ) continue; //toppTrw ) continue;
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
 
@@ -173,8 +177,13 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
 		//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		//mytree -> Draw( b_name[mva01        ] + " >> " + h_name[mva01        ] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[MVA80        ] + " >> " + h_name[MVA80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[MVA90        ] + " >> " + h_name[MVA90        ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
+		//mytree -> Draw( b_name[alpha005    ] + " >> " + h_name[alpha005    ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[alpha01     ] + " >> " + h_name[alpha01     ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[alpha05     ] + " >> " + h_name[alpha05     ] + "( 120,  -0.1, 1.1   )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 
@@ -185,7 +194,7 @@ void CreateHistograms2( int process ){
 
 		for( int i = 0; i < nhisto; i++ ){	
 
-			myhisto[i] -> Write(); 
+			/*if( i == mt2ll )*/ myhisto[i] -> Write(); 
 
 		}
 
