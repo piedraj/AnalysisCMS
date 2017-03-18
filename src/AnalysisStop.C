@@ -132,7 +132,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 	if (_htgen>70.) continue;
 
       if (!_systematic.Contains("fake") && _nlepton != 2) continue; // 2 and only 2 leptons
-      if (_systematic.Contains("fake") && _nlepton <= 2) continue;
+      if (_systematic.Contains("fake") && (_nlepton <= 2 || _ntightlepton>2)) continue;
 
       if (_ismc) CorrectEventWeight(); 
 

@@ -38,7 +38,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 bool AnalysisCMS::PassTrigger()
 {
   if (!std_vector_trigger) return true;
-  if (_ismc) return true; // Need to study, Summer16 does have the trigger info
+  if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
 
   // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
@@ -80,7 +80,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //if (_ismc) return true; // Spring16 does not have correct MET filter information!!!
+  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -652,7 +652,7 @@ void AnalysisCMS::GetLeptons()
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
 
-    if (std_vector_lepton_isLooseLepton->at(i)!=1) continue;
+    if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
     if (pt < 0.) continue;
 
@@ -697,7 +697,7 @@ void AnalysisCMS::GetLeptons()
 
     lep.v = tlv;
 
-    if (std_vector_lepton_isTightLepton->at(i)==1) _ntightlepton++;
+    if (std_vector_lepton_isTightLepton->at(i) == 1) _ntightlepton++;
 
     AnalysisLeptons.push_back(lep);
 
@@ -707,31 +707,35 @@ void AnalysisCMS::GetLeptons()
 
   _nlepton = AnalysisLeptons.size();
 
-  if (_systematic.Contains("fake") && _nlepton>2) {
+  if (_systematic.Contains("fake") && _nlepton>2 && _ntightlepton==2) {
 
-    int coin = 100.*Lepton1.v.Pt();
-    if (coin%2==0) {
+    if (AnalysisLeptons[2].tpye!=1) {
       
-      if (AnalysisLeptons[2].v.Pt()>Lepton2.v.Pt())
-	Lepton1 = AnalysisLeptons[2];
-      else {
-	Lepton1 = Lepton2;
-	Lepton2 = AnalysisLeptons[2];
-      }
+      int coin = 100.*Lepton1.v.Pt();
+      if (coin%2==0) {
+	
+	if (AnalysisLeptons[2].v.Pt()>Lepton2.v.Pt())
+	  Lepton1 = AnalysisLeptons[2];
+	else {
+	  Lepton1 = Lepton2;
+	  Lepton2 = AnalysisLeptons[2];
+	}
+	
+      } else {
+	
+	if (AnalysisLeptons[2].v.Pt()<Lepton1.v.Pt())
+	  Lepton2 = AnalysisLeptons[2];
+	else {
+	  Lepton2 = Lepton1;
+	  Lepton1 = AnalysisLeptons[2];
+	}
 
-    } else {
+      }
       
-      if (AnalysisLeptons[2].v.Pt()<Lepton1.v.Pt())
-	Lepton2 = AnalysisLeptons[2];
-      else {
-	Lepton2 = Lepton1;
-	Lepton1 = AnalysisLeptons[2];
-      }
-
     }
-
+    
   }
-
+  
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
   _lep1pt   = Lepton1.v.Pt();
@@ -2461,9 +2465,7 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
-  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
-  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
+  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
 }
 
 
