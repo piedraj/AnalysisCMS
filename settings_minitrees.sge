@@ -1,0 +1,22 @@
+#!/bin/sh
+#$ -P l.gaes
+#$ -S /bin/bash
+#$ -cwd
+#$ -t 1-1
+#$ -N AnalysisCMS
+#$ -o jobs/job_$JOB_ID-$TASK_ID.out
+#$ -j y
+
+echo $WORKDIRECTORY
+echo $SAMPLES
+echo $SYSTEMATIC
+
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+eval `scramv1 runtime -sh`
+
+stat ./runAnalysisMiniTrees
+
+`cat $SAMPLES | grep ".root" | grep -v "#" | awk -v line=$SGE_TASK_ID -v syst=$SYSTEMATIC '{ if (NR==line) print "./runAnalysisMiniTrees "$1,syst,$2,$3,$4 }'`
+
+rm core.*
+
