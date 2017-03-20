@@ -1173,11 +1173,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  //  GetTops();  // FIXME. It crashes with Feb2017_Run2016D_RemAOD
+  GetTops();
 
   GetGenLeptonsAndNeutrinos();
 
-  //  GetDark();  // FIXME. It crashes with Feb2017_Run2016D_RemAOD
+  GetDark();
 
   GetTopReco();
 
@@ -2212,6 +2212,8 @@ void AnalysisCMS::GetTops()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetTops]\n");
 
+  if (!_ismc) return;
+
   _top1eta_gen = -999;
   _top1phi_gen = -999;
   _top1pt_gen  = -999;
@@ -2423,6 +2425,8 @@ void AnalysisCMS::GetRazor()
 void AnalysisCMS::GetDark()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetDark]\n");
+
+  if (!_ismc) return;
 
   _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
 
