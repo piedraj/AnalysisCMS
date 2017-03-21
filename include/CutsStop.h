@@ -32,8 +32,6 @@ enum {
   Stop_02_SR2_NoTag,
   Stop_02_SR3_Tag,
   Stop_02_SR3_NoTag,
-  Stop_03_SS_Tag2Jet,
-  Stop_03_SS_NoJet,
 
   ncut  // This line should be always last
 };
@@ -64,9 +62,7 @@ const TString scut[ncut] = {
   "Stop/02_SR2_Tag",
   "Stop/02_SR2_NoTag",
   "Stop/02_SR3_Tag",
-  "Stop/02_SR3_NoTag",
-  "Stop/03_SS_Tag2Jet",
-  "Stop/03_SS_NoJet"
+  "Stop/02_SR3_NoTag"
 
 };
 

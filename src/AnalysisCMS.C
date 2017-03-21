@@ -587,12 +587,7 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
       
-      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
-
-      // Bug in latino DY cross section ???
-      if (_sample.Contains("DY") && _sample.Contains("M-50") && !_sample.Contains("HT") && !_sample.Contains("ToTT"))
-	_event_weight *= 5763.6/6025.2;
-      
+      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);      
       // Top pt reweighithing for powheg
       _event_weight_Toppt = _event_weight;
 
@@ -709,7 +704,7 @@ void AnalysisCMS::GetLeptons()
 
   if (_systematic.Contains("fake") && _nlepton>2 && _ntightlepton==2) {
 
-    if (AnalysisLeptons[2].tpye!=1) {
+    if (AnalysisLeptons[2].type!=1) {
       
       int coin = 100.*Lepton1.v.Pt();
       if (coin%2==0) {
@@ -1229,7 +1224,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetDark();
 
-  //GetTopReco();
+  GetTopReco();
 
   GetGenPtllWeight();
 
@@ -2465,6 +2460,7 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
+  if(_analysis.EqualTo("Stop")) return;
   _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
 }
 
@@ -2485,6 +2481,8 @@ void AnalysisCMS::GetMlb()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetTopReco()
 {
+  if (_analysis.EqualTo("Stop")) return;
+
   if (_njet          < 2) return;
   if (_nbjet30csvv2m < 1) return; 
 

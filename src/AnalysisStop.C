@@ -119,7 +119,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 	pass_blind = false;
 	//if (_mt2ll<40.) pass_blind = true;
 	if (MET.Et()<140.) pass_blind = true;
-	if (run>276502) continue;
+	//if (run>276502) continue;
 	
       }
     
@@ -133,6 +133,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
       if (!_systematic.Contains("fake") && _nlepton != 2) continue; // 2 and only 2 leptons
       if (_systematic.Contains("fake") && (_nlepton <= 2 || _ntightlepton>2)) continue;
+      
+      if (!_systematic.Contains("SS") && Lepton1.flavour * Lepton2.flavour > 0) continue;
+      if (_systematic.Contains("SS") && Lepton1.flavour * Lepton2.flavour < 0) continue;
 
       if (_ismc) CorrectEventWeight(); 
 
@@ -150,17 +153,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     
       _m2l  = mll;
       _pt2l = ptll;
-      
-      if (Lepton1.flavour * Lepton2.flavour > 0) {
-
-	if (mll>20. && ( _channel == em || fabs(_m2l - Z_MASS) > 15. )) {
-	  if (njet<1 && MET.Et()>100.) FillLevelHistograms(Stop_03_SS_NoJet, pass_masspoint);  
-	  if (_leadingPtCSVv2M>=30. && njet>1 && MET.Et()>40.) FillLevelHistograms(Stop_03_SS_Tag2Jet, pass_masspoint);
-	}
-
-	continue;
-	
-      }
 
       // Fill histograms
       // -----------------------------------------------------------------------------
