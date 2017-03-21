@@ -498,7 +498,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger() * ApplyMETFilters();
+    _event_weight = PassTrigger() * ApplyMETFilters();
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
