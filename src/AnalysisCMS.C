@@ -610,7 +610,18 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
       
-      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);      
+      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
+
+
+      if (_verbosity > 0)
+	{
+	  printf(" event_weight % f  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f  trigger %d  metFilters %d",
+		 _event_weight, sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW, PassTrigger(), ApplyMETFilters());
+
+	  if (GEN_weight_SM) printf("  GEN_weight_SM % .2f\n", GEN_weight_SM); else printf("\n");
+	}
+
+
       // Top pt reweighithing for powheg
       _event_weight_Toppt = _event_weight;
 
@@ -620,6 +631,7 @@ void AnalysisCMS::ApplyWeights()
 				       exp(0.0615-0.0005*antitopLHEpt) );
 
 	_event_weight_Toppt *= TopPtReweighting;
+
 	if (_systematic_toppt) _event_weight = _event_weight_Toppt;
 
 	if (_applytopptreweighting) {
@@ -627,11 +639,9 @@ void AnalysisCMS::ApplyWeights()
 	  float _save_this_weight = _event_weight;
 	  _event_weight = _event_weight_Toppt;
 	  _event_weight_Toppt = _save_this_weight;
-
 	}
-
       }
-      
+
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
       _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
