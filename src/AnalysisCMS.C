@@ -47,24 +47,6 @@ bool AnalysisCMS::PassTrigger()
 
   if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
 
-
-  // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
-  // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
-  // HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*                      # 11
-  // HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*                    # 13
-  // HLT_IsoTkMu22_v*                                         # 42 
-  // HLT_IsoMu22_v*                                           # 43
-  // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
-  // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
-  // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
-
-
-  //bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
-  //bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
-  //bool pass_SingleMuon     = (std_vector_trigger->at(44) || std_vector_trigger->at(45));
-  //bool pass_SingleElectron = (std_vector_trigger->at(93) || std_vector_trigger->at(112));
-  //bool pass_DoubleEG       = (std_vector_trigger->at(46));
-  
   bool pass_MuonEG         = trig_EleMu;
   bool pass_DoubleMuon     = trig_DbleMu;
   bool pass_SingleMuon     = trig_SnglMu;
@@ -117,9 +99,10 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
     if (std_vector_trigger_special->at(nf) != 1) return false;
   }
 
-  // Need to fix beacuse some MC (and data?) were not produced with the lastest cfg for skimeventproducer :(
+  // Need to fix beacuse some MC (and data?) were not produced with the lastest cfg for SkimEventProducer :(
   int G1 = 6, G2 = 7, I1 = 8, I2 = 9;
-  if (std_vector_trigger_special->at(8)==-2) {
+  if (std_vector_trigger_special->at(8) == -2) {
+
     ApplyGiovanniFilters = false;
     G1 = -1; G2 = -1, I1 = 6, I2 = 7;
   }
