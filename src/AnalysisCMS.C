@@ -1191,7 +1191,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetDark();
 
-  GetTopReco();
+  //  GetTopReco();
 
   GetSphericity(GetMomentumTensor());
   GetAlignment(GetMomentumTensor());
