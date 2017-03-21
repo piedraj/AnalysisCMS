@@ -35,6 +35,8 @@ public :
    //   Float_t         Gen_ZGstar_mu2_eta;
    //   Float_t         Gen_ZGstar_mu2_phi;
    //   Float_t         Gen_ZGstar_mu2_pt;
+   Float_t         topLHEpt;
+   Float_t         antitopLHEpt;
    //   Float_t         LHE_weight_SM;
    //   Float_t         chSumEt;
    //   Float_t         chmet;
@@ -235,7 +237,7 @@ public :
    //   vector<float>   *std_vector_LHEparton_eta;
    //   vector<float>   *std_vector_LHEparton_id;
    //   vector<float>   *std_vector_LHEparton_phi;
-   //   vector<float>   *std_vector_LHEparton_pt;
+   vector<float>   *std_vector_LHEparton_pt;
    vector<float>   *std_vector_VBoson_eta;
    vector<float>   *std_vector_VBoson_mass;
    vector<float>   *std_vector_VBoson_phi;
@@ -299,6 +301,11 @@ public :
    //   Float_t         tightmu;
    Float_t         triggW;
    Float_t         trigger;
+   Float_t         trig_DbleEle;
+   Float_t         trig_SnglEle;
+   Float_t         trig_DbleMu;
+   Float_t         trig_SnglMu;
+   Float_t         trig_EleMu;
    //   Float_t         triggerFakeRate;
    //   Float_t         itpu;
    Float_t         nvtx;
@@ -511,6 +518,8 @@ public :
    //   TBranch        *b_Gen_ZGstar_mu2_eta;   //!
    //   TBranch        *b_Gen_ZGstar_mu2_phi;   //!
    //   TBranch        *b_Gen_ZGstar_mu2_pt;   //!
+   TBranch        *b_topLHEpt;   //!
+   TBranch        *b_antitopLHEpt;   //!
    //   TBranch        *b_LHE_weight_SM;   //!
    //   TBranch        *b_chSumEt;   //!
    //   TBranch        *b_chmet;   //!
@@ -690,7 +699,7 @@ public :
    //   TBranch        *b_std_vector_LHEparton_eta;   //!
    //   TBranch        *b_std_vector_LHEparton_id;   //!
    //   TBranch        *b_std_vector_LHEparton_phi;   //!
-   //   TBranch        *b_std_vector_LHEparton_pt;   //!
+   TBranch        *b_std_vector_LHEparton_pt;   //!
    TBranch        *b_std_vector_VBoson_eta;   //!
    TBranch        *b_std_vector_VBoson_mass;   //!
    TBranch        *b_std_vector_VBoson_phi;   //!
@@ -754,6 +763,11 @@ public :
    //   TBranch        *b_tightmu;   //!
    TBranch        *b_triggW;   //!
    TBranch        *b_trigger;   //!
+   TBranch        *b_trig_DbleEle;
+   TBranch        *b_trig_SnglEle;
+   TBranch        *b_trig_DbleMu;
+   TBranch        *b_trig_SnglMu;
+   TBranch        *b_trig_EleMu;
    //   TBranch        *b_triggerFakeRate;   //!
    //   TBranch        *b_itpu;   //!
    TBranch        *b_nvtx;   //!
@@ -1053,7 +1067,7 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_LHEparton_eta = 0;
    //   std_vector_LHEparton_id = 0;
    //   std_vector_LHEparton_phi = 0;
-   //   std_vector_LHEparton_pt = 0;
+   std_vector_LHEparton_pt = 0;
    std_vector_VBoson_eta = 0;
    std_vector_VBoson_mass = 0;
    std_vector_VBoson_phi = 0;
@@ -1222,6 +1236,8 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("Gen_ZGstar_mu2_eta", &Gen_ZGstar_mu2_eta, &b_Gen_ZGstar_mu2_eta);
    //   fChain->SetBranchAddress("Gen_ZGstar_mu2_phi", &Gen_ZGstar_mu2_phi, &b_Gen_ZGstar_mu2_phi);
    //   fChain->SetBranchAddress("Gen_ZGstar_mu2_pt", &Gen_ZGstar_mu2_pt, &b_Gen_ZGstar_mu2_pt);
+   fChain->SetBranchAddress("topLHEpt",     &topLHEpt,     &b_topLHEpt);
+   fChain->SetBranchAddress("antitopLHEpt", &antitopLHEpt, &b_antitopLHEpt);
    //   fChain->SetBranchAddress("LHE_weight_SM", &LHE_weight_SM, &b_LHE_weight_SM);
    //   fChain->SetBranchAddress("chSumEt", &chSumEt, &b_chSumEt);
    //   fChain->SetBranchAddress("chmet", &chmet, &b_chmet);
@@ -1401,7 +1417,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_LHEparton_eta", &std_vector_LHEparton_eta, &b_std_vector_LHEparton_eta);
    //   fChain->SetBranchAddress("std_vector_LHEparton_id", &std_vector_LHEparton_id, &b_std_vector_LHEparton_id);
    //   fChain->SetBranchAddress("std_vector_LHEparton_phi", &std_vector_LHEparton_phi, &b_std_vector_LHEparton_phi);
-   //   fChain->SetBranchAddress("std_vector_LHEparton_pt", &std_vector_LHEparton_pt, &b_std_vector_LHEparton_pt);
+   fChain->SetBranchAddress("std_vector_LHEparton_pt", &std_vector_LHEparton_pt, &b_std_vector_LHEparton_pt);
    fChain->SetBranchAddress("std_vector_VBoson_eta", &std_vector_VBoson_eta, &b_std_vector_VBoson_eta);
    fChain->SetBranchAddress("std_vector_VBoson_mass", &std_vector_VBoson_mass, &b_std_vector_VBoson_mass);
    fChain->SetBranchAddress("std_vector_VBoson_phi", &std_vector_VBoson_phi, &b_std_vector_VBoson_phi);
@@ -1465,6 +1481,11 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
    fChain->SetBranchAddress("triggW", &triggW, &b_triggW);
    fChain->SetBranchAddress("trigger", &trigger, &b_trigger);
+   fChain->SetBranchAddress("trig_DbleEle", &trig_DbleEle, &b_trig_DbleEle);
+   fChain->SetBranchAddress("trig_SnglEle", &trig_SnglEle, &b_trig_SnglEle);
+   fChain->SetBranchAddress("trig_DbleMu",  &trig_DbleMu,  &b_trig_DbleMu);
+   fChain->SetBranchAddress("trig_SnglMu",  &trig_SnglMu,  &b_trig_SnglMu);
+   fChain->SetBranchAddress("trig_EleMu",   &trig_EleMu,   &b_trig_EleMu);
    //   fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    //   fChain->SetBranchAddress("itpu", &itpu, &b_itpu);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
