@@ -16,11 +16,15 @@ void MakeDatacard(){
 
 	Assign();
 
-	for( int m = ttDM0001scalar00500; m < nscalar; m++ ){
+	for( int m = 0; m < nscalar; m++ ){
+
+		//if( m != ttDM0001scalar00010 && m!= ttDM0001scalar00100 && m != ttDM0001scalar00500 ) continue; 
+
+		if (m != ttDM0001scalar00500 ) continue;
 
 		int n = ( m < ttDM0001scalar00100 ) ? ttDM0001scalar00100 : m;
 
-		MVA_cut = hard_cut&&Form("ANN_met80_mt2ll100_%s>%4.2f", scalarID[n].Data(), scalarMVAcut[m]);
+		//MVA_cut = hard_cut&&Form("ANN_mt2ll80_%s>%4.2f", scalarID[n].Data(), scalarMVAcut[m]);
 
 		processID[ttDM] = scalarID[m]; 
 
@@ -200,7 +204,7 @@ void GetRelUnc( int process ){
 	relunc[process][j][nrmlz] = (yield[process][j][hard]/yield[process][j][soft]) / (yield[process][nominal][hard]/yield[process][nominal][soft]); 
 
 			if ( yield[process][nominal][MVA ] > 0 )
-	relunc[process][j][shape] = (yield[process][j][MVA ]/yield[process][j][hard]) / (yield[process][nominal][MVA ]/yield[process][nominal][hard]);
+	relunc[process][j][shape] = /*(yield[process][j][MVA ]/yield[process][j][hard]) /*/ (yield[process][nominal][MVA ]/yield[process][nominal][hard]);
 
 			//cout << yield[process][j][MVA ] << " -- " << yield[process][j][hard] << " -- " << yield[process][nominal][MVA ] << " -- " << yield[process][nominal][hard] << endl;
 
@@ -255,7 +259,7 @@ void WriteDatacard(){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170202/%s_%s.txt", processID[ttDM].Data(), "preliminary" ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170214/%s_%s.txt", processID[ttDM].Data(), "for-cedric" ) );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", nprocess-2 );
@@ -299,7 +303,7 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 
 				else {
 
-					datacard << Form( "%7.3f ", relunc[i][j][k] );
+					datacard << Form( "%7.3f ", relunc[i][0][k] );
 
 				}
 

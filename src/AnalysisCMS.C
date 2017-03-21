@@ -11,6 +11,10 @@
 //------------------------------------------------------------------------------
 AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::AnalysisCMS]\n");
+
+  _verbosity = 0;  // Set to 1 for debugging
+
   _ismc         = true;
   _saveminitree = false;
   _eventdump    = false;
@@ -35,8 +39,12 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 //------------------------------------------------------------------------------
 bool AnalysisCMS::PassTrigger()
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::PassTrigger]\n");
+
   if (!std_vector_trigger) return true;
+
   if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
+
 
   // HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*        #  6
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
@@ -47,6 +55,7 @@ bool AnalysisCMS::PassTrigger()
   // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
   // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
   // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
+
 
   bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
   bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
@@ -69,12 +78,15 @@ bool AnalysisCMS::PassTrigger()
 bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
 				  bool ApplyICHEPAdditionalFilters)
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyMETFilters]\n");
+
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
   //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
+
 
   // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/skimEventProducer_cfi.py#L383-L392
   // "Flag_HBHENoiseFilter"                     #0
@@ -85,8 +97,9 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // "Flag_globalTightHalo2016Filter"           #5
   // "Flag_duplicateMuons"                      #6 -> 0 is good // Giovanni's filter
   // "Flag_badMuons"                            #7 -> 0 is good // Giovanni's filter
-  // "Bad PF Muon Filter"                       #8              // ICHEP additional filter 
-  // "Bad Charged Hadrons"                      #9              // ICHEP additional filter 
+  // "Bad PF Muon Filter"                       #8              // ICHEP additional filter
+  // "Bad Charged Hadrons"                      #9              // ICHEP additional filter
+
 
   // https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Moriond_2017
   for (int nf=0; nf<6; nf++) {
@@ -314,6 +327,8 @@ void AnalysisCMS::Summary(TString analysis,
 			  TString precision,
 			  TString title)
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::Summary]\n");
+
   int firstchannel = ee;
   int lastchannel  = ll;
 
@@ -367,6 +382,8 @@ void AnalysisCMS::Setup(TString analysis,
 			float   luminosity,
                         TString suffix)
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::Setup]\n");
+
   TH1::SetDefaultSumw2();
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
@@ -447,6 +464,8 @@ void AnalysisCMS::Setup(TString analysis,
 //------------------------------------------------------------------------------
 void AnalysisCMS::ApplyWeights()
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyWeights]\n");
+
   _event_weight           = 1.0;
   _event_weight_Btagup    = 1.0;
   _event_weight_Btagdo    = 1.0;
@@ -597,6 +616,8 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetLeptons]\n");
+
   bool found_third_tight_lepton = false;
 
   AnalysisLeptons.clear();
@@ -689,6 +710,8 @@ void AnalysisCMS::GetLeptons()
   }
 
   _detall = fabs(_lep1eta - _lep2eta);
+
+  if (_verbosity > 0) printf(" Leaving >>> [AnalysisCMS::GetLeptons]\n");
 }
 
 
@@ -697,6 +720,8 @@ void AnalysisCMS::GetLeptons()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetJets]\n");
+
   AnalysisJets.clear();
 
   _jet_eta.clear();
@@ -834,6 +859,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
       jetmass2 = AnalysisJets[1].mass;
     }
   }
+
+  if (_verbosity > 0) printf(" Leaving >>> [AnalysisCMS::GetJets]\n");
 }
 
 
@@ -2207,6 +2234,10 @@ void AnalysisCMS::GetStopVar()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetTops()
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetTops]\n");
+
+  if (!_ismc) return;
+
   _top1eta_gen = -999;
   _top1phi_gen = -999;
   _top1pt_gen  = -999;
@@ -2254,6 +2285,8 @@ void AnalysisCMS::GetTops()
       _m2t_gen = (top1 + top2).M();
     }
   }
+
+  if (_verbosity > 0) printf(" Leaving >>> [AnalysisCMS::GetTops]\n");
 }
 
 
@@ -2262,6 +2295,8 @@ void AnalysisCMS::GetTops()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetGenLeptonsAndNeutrinos()
 {
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetGenLeptonsAndNeutrinos]\n");
+
   _lep1id_gen       = 31416; 
   _lep1motherid_gen = 31416;
   _lep2id_gen       = 31416;
@@ -2279,6 +2314,8 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos()
   _nu1tau_gen  = -999; 
   _nu2pt_gen   = -999;
   _nu2tau_gen  = -999;
+
+  if (_verbosity > 0) printf(" Leaving for data >>> [AnalysisCMS::GetGenLeptonsAndNeutrinos]\n");
 
   if (!_ismc) return;
 
@@ -2343,6 +2380,8 @@ void AnalysisCMS::GetGenLeptonsAndNeutrinos()
 
     break;
   }
+
+  if (_verbosity > 0) printf(" Leaving for MC >>> [AnalysisCMS::GetGenLeptonsAndNeutrinos]\n");
 }
 
 
@@ -2409,9 +2448,13 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(0);
-  //  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
-  _darkpt_gen = 2.718;  // Waiting for Xavier's post-processing 
+  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetDark]\n");
+
+  if (!_ismc) return;
+
+  _darkpt_gen = std_vector_DarkMatterGen_pt->at(1);
+
+  if (_verbosity > 0) printf(" Leaving >>> [AnalysisCMS::GetDark]\n");
 }
 
 

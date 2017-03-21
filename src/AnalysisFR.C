@@ -123,7 +123,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84;
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.283 : _event_weight *= 217.234;
 	}
 
       
@@ -131,7 +131,7 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == e)
 	{
-	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 8.51 : _event_weight *= 42.34;
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 13.866 : _event_weight *= 62.94;
 	}
 
     } else {
@@ -198,9 +198,15 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       bool pass;
       pass = (_nlepton == 1);
-      pass = (_mtw < 20.);
+      pass &= (_mtw < 20.);
 
       FillLevelHistograms(FR_00_QCD, i, pass);
+
+      pass = (_nlepton > 1);
+      pass &= (MET.Et() < 20.);
+      pass &= (_m2l > 20.);
+
+    FillLevelHistograms(FR_01_Zpic, i, pass);
 
     }
   }
