@@ -54,7 +54,7 @@ void Plotter(TString option = "hist"){
   else
     {
       plotter.SetLuminosity(lumi);
-      plotter.SetDrawRatio (true);
+      plotter.SetDrawRatio (false);
     }    
 
 
@@ -89,12 +89,11 @@ void Plotter(TString option = "hist"){
   //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100", color_Signal+2, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200", color_Signal, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300", color_Signal, roc_signal);
-  //plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x10^{4}", color_Signal+4, roc_signal, 10000);
 
 
   // Add systematics
   //----------------------------------------------------------------------------
- // plotter.AddSystematic("Btagup");	
+  //plotter.AddSystematic("Btagup");	
 
 
   // Draw distributions
@@ -147,11 +146,15 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "mtw2"           , "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6);
-  plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10);
+  //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10);
   //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
   //plotter.Draw( "topRecoW"       , "top reco weight",                  -1, 4, "NULL", scale, true, 0,  0.01);
-
-
+  plotter.Draw( "ANN_170222_mt2ll80_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.1);
+  //plotter.Draw( "ANN_170222_mt2ll90_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.0);
+  //plotter.Draw( "ANN_170222_mt2ll100_ttDM0001scalar00100", "ANN output", 10, 2, "NULL", scale, true, -0.1, 1.0);
+  //plotter.Draw( "ANN_alpha005_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
+  //plotter.Draw( "ANN_alpha01_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
+  //plotter.Draw( "ANN_alpha05_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
 
   //           hname     xtitle                      npoints  units xmin xmax
   //  ---------------------------------------------------------------------------
@@ -159,8 +162,10 @@ void Plotter(TString option = "hist"){
   //plotter.Roc( "metPfType1", sm                   , 100, "GeV", 0, 200);
   //plotter.Roc( "mt2ll"     , "M_{T2}(" + sll + ")", 50, "GeV", 0, 150);
   //plotter.Roc( "topRecoW"  , "top reco weight"    , 100, "GeV", 0, .01);
-
-
+  plotter.Roc( "ANN_170222_mt2ll80_ttDM0001scalar00100", "ANN output"    , 60, "GeV", -0.1, 1.1);
+    //plotter.Roc( "ANN_alpha005_mt2ll80_ttDM0001scalar00500", "ANN output"    , 60, "GeV", -0.1, 1.1);
+    //plotter.Roc( "ANN_alpha01_mt2ll80_ttDM0001scalar00500", "ANN output"    , 60, "GeV", -0.1, 1.1);
+    //plotter.Roc( "ANN_alpha05_mt2ll80_ttDM0001scalar00500", "ANN output"    , 60, "GeV", -0.1, 1.1);
 
   // Copy index.php in every directory
   //----------------------------------------------------------------------------

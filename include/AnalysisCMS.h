@@ -200,6 +200,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_reco_up;
   bool                   _systematic_fastsim_do;
   bool                   _systematic_fastsim_up;
+  bool                   _systematic_toppt;
+  bool                   _applytopptreweighting;
 
   TString                _analysis;
   TString                _dataperiod;
@@ -238,6 +240,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _dphillstar;
   float			 _dphitt_gen;
   float                  _detatt_gen; 
+  float                  _DY_event_weight;
   float                  _event_weight;
   float                  _event_weight_Btagup;
   float                  _event_weight_Btagdo;
@@ -251,6 +254,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Recodo;
   float                  _event_weight_Fastsimup;
   float                  _event_weight_Fastsimdo;
+  float                  _event_weight_Toppt;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
@@ -266,6 +270,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _htvisible;
   float                  _htjets;
   float                  _htnojets;
+  float                  _htgen;
   float 		 _detall; 
   float                  _lep1id;
   float                  _lep1eta;
@@ -396,6 +401,7 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _nelectron;
   unsigned int           _nlepton;
   unsigned int           _ntightlepton;
+  unsigned int           _verbosity;
   
   ofstream               txt_eventdump;
   ofstream               txt_summary;
@@ -449,6 +455,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_drll          [nchannel][ncut][njetbin+1];
   TH1D*                  h_ht            [nchannel][ncut][njetbin+1];
   TH1D*                  h_htvisible     [nchannel][ncut][njetbin+1];
+  TH1D*                  h_htgen         [nchannel][ncut][njetbin+1];
   TH1D*                  h_htjets        [nchannel][ncut][njetbin+1];
   TH1D*                  h_htnojets      [nchannel][ncut][njetbin+1];
   TH1D*                  h_jet1eta       [nchannel][ncut][njetbin+1];

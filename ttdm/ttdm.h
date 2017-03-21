@@ -9,12 +9,12 @@ const float    DYSF = 1.07;  const float eDYSF = 0.07;
 
 const bool doshape = false; 
 
-const TCut selection= "metPfType1>80.";
+const TCut selection= "metPfType1>80.&&mt2ll>80.&&darkpt>0.";
 
 const TCut soft_cut = "metPfType1>80."; 
 const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
-//const TCut  MVA_cut = hard_cut&&"ANN_met80_mt2ll100_ttDM0001scalar00500>0.50";
-TCut MVA_cut;
+const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
+//TCut MVA_cut;
 
 enum{ data,
       ttDM,
@@ -90,7 +90,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       nvtx,
       sphericity, alignment, planarity,
       //darkpt,
-      //mva01,
+      MVA80, //MVA90, MVA100,
+      //alpha005, alpha01, alpha05,	
       nhisto };
 
 TCut mycut[nsystematic];  
@@ -113,7 +114,7 @@ void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
+	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
 	processID[data ] = "01_Data"                 ;
 	processID[fakes] = "00_Fakes"                ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
@@ -270,7 +271,13 @@ void Assign(){
 	b_name[planarity ] = "planarity" ;
 
 	//b_name[darkpt    ] = "newdarkpt";
-	//b_name[mva01     ] = "ANN_mt2ll0_ttDM0001scalar00010";
+	b_name[MVA80     ] = "ANN_170222_mt2ll80_ttDM0001scalar00100";
+	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
+	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
+
+	//b_name[alpha005  ] = "ANN_alpha005_mt2ll80_ttDM0001scalar00500";
+	//b_name[alpha01   ] = "ANN_alpha01_mt2ll80_ttDM0001scalar00500";
+	//b_name[alpha05   ] = "ANN_alpha05_mt2ll80_ttDM0001scalar00500";
 
 	for( int i = 0; i < nhisto; i++ ){
 
