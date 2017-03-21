@@ -29,8 +29,10 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
   _systematic_fastsim_do = (systematic.Contains("Fastsimdo")) ? true : false;
   _systematic_fastsim_up = (systematic.Contains("Fastsimup")) ? true : false;
+  _systematic_toppt      = (systematic.Contains("Toppt"))     ? true : false;
 
   _systematic = systematic;
+  _applytopptreweighting = false;
 }
 
 
@@ -50,19 +52,25 @@ bool AnalysisCMS::PassTrigger()
   // HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*       #  8
   // HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*                      # 11
   // HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*                    # 13
-  // HLT_IsoTkMu22_v*                                         # 42
+  // HLT_IsoTkMu22_v*                                         # 42 
   // HLT_IsoMu22_v*                                           # 43
   // HLT_Ele27_eta2p1_WPLoose_Gsf_v*                          #  0
   // HLT_Ele45_WPLoose_Gsf_v*                                 # 56
   // HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*             # 46
 
 
-  bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
-  bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
-  bool pass_SingleMuon     = (std_vector_trigger->at(42) || std_vector_trigger->at(43));
-  bool pass_SingleElectron = (std_vector_trigger->at(0)  || std_vector_trigger->at(56));
-  bool pass_DoubleEG       = (std_vector_trigger->at(46));
-
+  //bool pass_MuonEG         = (std_vector_trigger->at(6)  || std_vector_trigger->at(8));
+  //bool pass_DoubleMuon     = (std_vector_trigger->at(11) || std_vector_trigger->at(13));
+  //bool pass_SingleMuon     = (std_vector_trigger->at(44) || std_vector_trigger->at(45));
+  //bool pass_SingleElectron = (std_vector_trigger->at(93) || std_vector_trigger->at(112));
+  //bool pass_DoubleEG       = (std_vector_trigger->at(46));
+  
+  bool pass_MuonEG         = trig_EleMu;
+  bool pass_DoubleMuon     = trig_DbleMu;
+  bool pass_SingleMuon     = trig_SnglMu;
+  bool pass_SingleElectron = trig_SnglEle;
+  bool pass_DoubleEG       = trig_DbleEle;
+  
   if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
   else if (_sample.Contains("DoubleMuon"))     return (!pass_MuonEG &&  pass_DoubleMuon);
   else if (_sample.Contains("SingleMuon"))     return (!pass_MuonEG && !pass_DoubleMuon &&  pass_SingleMuon);
@@ -109,16 +117,23 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
     if (std_vector_trigger_special->at(nf) != 1) return false;
   }
 
+  // Need to fix beacuse some MC (and data?) were not produced with the lastest cfg for skimeventproducer :(
+  int G1 = 6, G2 = 7, I1 = 8, I2 = 9;
+  if (std_vector_trigger_special->at(8)==-2) {
+    ApplyGiovanniFilters = false;
+    G1 = -1; G2 = -1, I1 = 6, I2 = 7;
+  }
+
   if (ApplyGiovanniFilters) {
 
-    if (std_vector_trigger_special->at(6) != 0) return false;
-    if (std_vector_trigger_special->at(7) != 0) return false;
+    if (std_vector_trigger_special->at(G1) != 0) return false;
+    if (std_vector_trigger_special->at(G2) != 0) return false;
   }
 
   if (ApplyICHEPAdditionalFilters) {
 
-    if (std_vector_trigger_special->at(8) != 1) return false;
-    if (std_vector_trigger_special->at(9) != 1) return false;
+    if (std_vector_trigger_special->at(I1) != 1) return false;
+    if (std_vector_trigger_special->at(I2) != 1) return false;
   }
 
   return true;
@@ -227,6 +242,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_htvisible     [ichannel][icut][ijet]->Fill(_htvisible,      _event_weight);
   h_htjets        [ichannel][icut][ijet]->Fill(_htjets,         _event_weight);
   h_htnojets      [ichannel][icut][ijet]->Fill(_htnojets,       _event_weight);
+  h_htgen         [ichannel][icut][ijet]->Fill(_htgen,          _event_weight);
   h_jet1eta       [ichannel][icut][ijet]->Fill(jeteta1,         _event_weight);
   h_jet1mass      [ichannel][icut][ijet]->Fill(jetmass1,        _event_weight);
   h_jet1phi       [ichannel][icut][ijet]->Fill(jetphi1,         _event_weight);
@@ -485,7 +501,7 @@ void AnalysisCMS::ApplyWeights()
   _event_weight = PassTrigger() * ApplyMETFilters();
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
-
+  
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
@@ -592,9 +608,30 @@ void AnalysisCMS::ApplyWeights()
       if (_systematic_trigger_do) sf_trigger = sf_trigger_do;
       if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
       if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
+      if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
+      
+      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);      
+      // Top pt reweighithing for powheg
+      _event_weight_Toppt = _event_weight;
 
-      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
+      if (_sample.Contains("TTTo2L2Nu")) {
 
+	float TopPtReweighting = sqrt( exp(0.0615-0.0005*topLHEpt) *
+				       exp(0.0615-0.0005*antitopLHEpt) );
+
+	_event_weight_Toppt *= TopPtReweighting;
+	if (_systematic_toppt) _event_weight = _event_weight_Toppt;
+
+	if (_applytopptreweighting) {
+
+	  float _save_this_weight = _event_weight;
+	  _event_weight = _event_weight_Toppt;
+	  _event_weight_Toppt = _save_this_weight;
+
+	}
+
+      }
+      
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
       _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
@@ -692,6 +729,35 @@ void AnalysisCMS::GetLeptons()
   _nlepton = AnalysisLeptons.size();
   //if(_nlepton != 2) printf("_nlepton : %i\n", int(_nlepton));
 
+  if (_systematic.Contains("fake") && _nlepton>2 && _ntightlepton==2) {
+
+    if (AnalysisLeptons[2].type!=1) {
+      
+      int coin = 100.*Lepton1.v.Pt();
+      if (coin%2==0) {
+	
+	if (AnalysisLeptons[2].v.Pt()>Lepton2.v.Pt())
+	  Lepton1 = AnalysisLeptons[2];
+	else {
+	  Lepton1 = Lepton2;
+	  Lepton2 = AnalysisLeptons[2];
+	}
+	
+      } else {
+	
+	if (AnalysisLeptons[2].v.Pt()<Lepton1.v.Pt())
+	  Lepton2 = AnalysisLeptons[2];
+	else {
+	  Lepton2 = Lepton1;
+	  Lepton1 = AnalysisLeptons[2];
+	}
+
+      }
+      
+    }
+    
+  }
+  
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
   _lep1pt   = Lepton1.v.Pt();
@@ -1033,6 +1099,12 @@ void AnalysisCMS::GetHt()
   }
 
   _htvisible = Lepton1.v.Pt() + Lepton2.v.Pt() + _htjets;
+
+  _htgen = 0.;
+  if (_ismc && _sample.Contains("DY")) // Some MC samples do not contain this info
+    for (int ii = 0; ii<std_vector_LHEparton_pt->size(); ii++) 
+      if (std_vector_LHEparton_pt->at(ii)>0.) 
+	_htgen += std_vector_LHEparton_pt->at(ii);
 }
 
 
@@ -1378,6 +1450,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_htvisible     [ichannel][icut][ijet] = new TH1D("h_htvisible"      + suffix, "", 2000,    0, 2000);
   h_htjets        [ichannel][icut][ijet] = new TH1D("h_htjets"         + suffix, "", 2000,    0, 2000);
   h_htnojets      [ichannel][icut][ijet] = new TH1D("h_htnojets"       + suffix, "", 2000,    0, 2000);
+  h_htgen         [ichannel][icut][ijet] = new TH1D("h_htgen"          + suffix, "", 2000,    0, 2000);
   h_mc            [ichannel][icut][ijet] = new TH1D("h_mc"             + suffix, "", 2000,    0, 2000);
   h_metPfType1    [ichannel][icut][ijet] = new TH1D("h_metPfType1"     + suffix, "", 2000,    0, 2000);
   h_metTtrk       [ichannel][icut][ijet] = new TH1D("h_metTtrk"        + suffix, "", 2000,    0, 2000);
@@ -1498,11 +1571,13 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Recodo",    &_event_weight_Recodo,    "eventW_Recodo/F");
   minitree->Branch("eventW_Fastsimup", &_event_weight_Fastsimup, "eventW_Fastsimup/F");
   minitree->Branch("eventW_Fastsimdo", &_event_weight_Fastsimdo, "eventW_Fastsimdo/F");
+  minitree->Branch("eventW_Toppt",     &_event_weight_Toppt,     "eventW_Toppt/F");
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
   minitree->Branch("htjets",           &_htjets,           "htjets/F");
   minitree->Branch("htnojets",         &_htnojets,         "htnojets/F");
+  minitree->Branch("htgen",            &_htgen,            "htgen/F");
   // J
   minitree->Branch("jet1eta",          &jeteta1,           "jet1eta/F");
   minitree->Branch("jet1mass",         &jetmass1,          "jet1mass/F");
@@ -2448,6 +2523,7 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
+
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetDark]\n");
 
   if (!_ismc) return;
@@ -2463,7 +2539,7 @@ void AnalysisCMS::GetDark()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetMlb()
 {
-  TFile* fshape  = new TFile("/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/top-reco/mlb.root");
+  TFile* fshape  = new TFile("top-reco/mlb.root");
 
   _shapemlb = (TH1F*)fshape->Get("mlb");
 }
@@ -2474,6 +2550,8 @@ void AnalysisCMS::GetMlb()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetTopReco()
 {
+  if (_analysis.EqualTo("Stop")) return;
+
   if (_njet          < 2) return;
   if (_nbjet30csvv2m < 1) return; 
 
