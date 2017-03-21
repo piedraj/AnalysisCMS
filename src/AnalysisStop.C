@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
+
   SetStopNeutralinoMap();
   if (systematic=="nominal") {
     SetSaveMinitree(true);
@@ -142,14 +143,14 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     bool pass = true;
     bool pass_blind = true; 
 
-    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
+//    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
     if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) 
     {
 
       pass_blind = false;
       //if (_mt2ll<40.) pass_blind = true;
-      if (MET.Et()<140.) pass_blind = true;
-
+      //if (MET.Et()<140.) pass_blind = true;
+      if (run < 276502) pass_blind = true; 
      }
 
     if (!_isminitree) {
@@ -166,13 +167,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
    /*   FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
       
               // Look in the Z-peak
-              // ---------------------------------------------------------------
+     */         // ---------------------------------------------------------------
 
                bool Zpeak = pass && ( _channel == em || fabs(_m2l - Z_MASS) < 15. );  
 
-               FillLevelHistograms(Stop_05_Zpeak,      Zpeak && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak
+               FillLevelHistograms(Stop_05_Zpeak,      Zpeak && pass_blind && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak
               
-               FillLevelHistograms(Stop_05_NoTagZpeak, Zpeak && (_leadingPtCSVv2M <  20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 0 b Tag (VET0) 
+    /*           FillLevelHistograms(Stop_05_NoTagZpeak, Zpeak && (_leadingPtCSVv2M <  20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 0 b Tag (VET0) 
 
                FillLevelHistograms(Stop_05_TagZpeak,   Zpeak && (_leadingPtCSVv2M >= 20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 1 b Tag         
 
@@ -197,8 +198,15 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     } 
 
     FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+
+    bool WW = pass && _njet == 0;
+    if ( _channel == em ) { WW &= MET.Et()>20 && ptll >30;} else { WW &= MET.Et()>50 && ptll >45;} 
+    FillLevelHistograms(Stop_00_WWsel, WW && pass_blind);
+    
+    bool TTbar = pass && _njet >1 && _leadingPtCSVv2M >= 20. && MET.Et()>40; 
+    FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind);
       
-    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
+/*    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
 
     FillLevelHistograms(Stop_01_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
@@ -215,7 +223,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       FillLevelHistograms(Stop_02_SR1_NoTag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR2_NoTag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_NoTag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
-    }
+    }*/
     
   }
 

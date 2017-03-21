@@ -72,7 +72,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -1146,13 +1146,13 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  GetTops();
+  //GetTops();
 
   GetGenLeptonsAndNeutrinos();
 
-  GetDark();
+  //GetDark();
 
-  GetTopReco();
+  //GetTopReco();
 
   GetGenPtllWeight();
 
@@ -2396,7 +2396,7 @@ void AnalysisCMS::GetDark()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetMlb()
 {
-  TFile* fshape  = new TFile("/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/top-reco/mlb.root");
+  TFile* fshape  = new TFile("top-reco/mlb.root");
 
   _shapemlb = (TH1F*)fshape->Get("mlb");
 }
