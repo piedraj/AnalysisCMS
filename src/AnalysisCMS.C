@@ -2439,7 +2439,7 @@ void AnalysisCMS::GetDark()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetMlb()
 {
-  TFile* fshape  = new TFile("/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/top-reco/mlb.root");
+  TFile* fshape  = new TFile("top-reco/mlb.root");
 
   _shapemlb = (TH1F*)fshape->Get("mlb");
 }
