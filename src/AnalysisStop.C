@@ -14,7 +14,7 @@ AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, 
     _SaveHistograms = 0;
   } else {
     SetSaveMinitree(false);
-    _SaveHistograms = 0;
+    _SaveHistograms = 1;
   }
 }
 
