@@ -1,6 +1,7 @@
 #include "src/AnalysisControl.C"
 //#include "src/AnalysisDY.C"
 //#include "src/AnalysisFR.C"
+//#include "src/AnalysisMET.C"
 //#include "src/AnalysisMonoH.C"
 //#include "src/AnalysisPR.C"
 //#include "src/AnalysisShape.C"
@@ -9,7 +10,7 @@
 //#include "src/AnalysisTTDM.C"
 //#include "src/AnalysisWW.C"
 //#include "src/AnalysisWZ.C"
-//#include "src/AnalysisMET.C"
+
 
 void runAnalysis(TString filename,
 		 TString systematic,
@@ -27,6 +28,7 @@ void runAnalysis(TString filename,
   AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
   //  AnalysisDY      analysis(latino, systematic); analysis.Loop("DY",      filename, baseW_lumi_fb);
   //  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
+  //  AnalysisMET     analysis(latino, systematic); analysis.Loop("MET",     filename, baseW_lumi_fb);
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
   //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
@@ -35,7 +37,6 @@ void runAnalysis(TString filename,
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
   //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
   //  AnalysisWZ      analysis(latino, systematic); analysis.Loop("WZ",      filename, baseW_lumi_fb);
-  //  AnalysisMET     analysis(latino, systematic); analysis.Loop("MET",     filename, baseW_lumi_fb);
 }
 
 

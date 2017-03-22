@@ -1,0 +1,4 @@
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__hadd/latino_T2tt_mStop-150to250.root
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__hadd/latino_T2tt_mStop-250to350.root
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__hadd/latino_T2tt_mStop-350to400.root
+root://eoscms.cern.ch//eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__hadd/latino_T2tt_mStop-400to1200.root
