@@ -309,6 +309,7 @@ public :
    //   Float_t         triggerFakeRate;
    //   Float_t         itpu;
    Float_t         nvtx;
+   Float_t         nGoodVtx;
    //   Float_t         ootpum1;
    //   Float_t         ootpum2;
    //   Float_t         ootpum3;
@@ -771,6 +772,7 @@ public :
    //   TBranch        *b_triggerFakeRate;   //!
    //   TBranch        *b_itpu;   //!
    TBranch        *b_nvtx;   //!
+   TBranch        *b_nGoodVtx;   //!
    //   TBranch        *b_ootpum1;   //!
    //   TBranch        *b_ootpum2;   //!
    //   TBranch        *b_ootpum3;   //!
@@ -1489,6 +1491,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    //   fChain->SetBranchAddress("itpu", &itpu, &b_itpu);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
+   fChain->SetBranchAddress("nGoodVtx", &nGoodVtx, &b_nGoodVtx);
    //   fChain->SetBranchAddress("ootpum1", &ootpum1, &b_ootpum1);
    //   fChain->SetBranchAddress("ootpum2", &ootpum2, &b_ootpum2);
    //   fChain->SetBranchAddress("ootpum3", &ootpum3, &b_ootpum3);
