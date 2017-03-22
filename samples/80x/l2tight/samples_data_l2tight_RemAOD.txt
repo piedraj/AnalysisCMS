@@ -30,13 +30,11 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleMuon_Run2016E-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleMuon_Run2016E-03Feb2017-v1__part1.root
 
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016E-03Feb2017-v1.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleMuon_Run2016E-03Feb2017-v1__part0.root 
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleMuon_Run2016E-03Feb2017-v1__part1.root   
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_MuonEG_Run2016E-03Feb2017-v1.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleElectron_Run2016E-03Feb2017-v1.root          
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleMuon_Run2016E-03Feb2017-v1__part1.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleMuon_Run2016E-03Feb2017-v1__part0.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016F-03Feb2017-v1.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleMuon_Run2016F-03Feb2017-v1.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_MuonEG_Run2016F-03Feb2017-v1.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleElectron_Run2016F-03Feb2017-v1.root
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleMuon_Run2016F-03Feb2017-v1.root
 
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root

@@ -1252,6 +1252,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   ApplyWeights();
 
+  GetScaleAndResolution();
+
  
   // Additional analysis variables
   //----------------------------------------------------------------------------
@@ -1641,6 +1643,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("sphericity",       &_sphericity,       "sphericity/F");
   minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
   minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
+  minitree->Branch("scale",            &_scale,            "scale"); 
   // T
   minitree->Branch("tjet1assignment",  &_tjet1assignment,  "tjet1assignment/F");
   minitree->Branch("tjet1csvv2ivf",    &_tjet1csvv2ivf,    "tjet1csvv2ivf/F");
@@ -1664,7 +1667,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("trailingPtCSVv2L", &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M", &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T", &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
-
+  // U
+  minitree->Branch("uPara",            &_uPara,            "uPara/F");
+  minitree->Branch("uPerp",            &_uPerp,            "uPerp/F");
   // Razor variables
   minitree->Branch("MR",               &_MR,               "MR/F");
   minitree->Branch("R2",               &_R2,               "R2/F");
@@ -2737,3 +2742,34 @@ void AnalysisCMS::GetGenWeightsLHE()
 
   dummy->Write();
 }
+
+
+//------------------------------------------------------------------------------
+// GetScaleAndResolution
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetScaleAndResolution()
+{
+
+  TVector2 ET, l1, l2, qT, uT; 
+
+  ET.SetMagPhi( metPfType1, metPfType1Phi );
+
+  l1.SetMagPhi( std_vector_lepton_pt->at(0), std_vector_lepton_phi->at(0) );
+
+  l2.SetMagPhi( std_vector_lepton_pt->at(1), std_vector_lepton_phi->at(1) );
+
+  qT = l1 +l2;
+
+  uT = -1* ( ET + qT ); 
+
+  _uPara = (  uT.Px() * qT.Px() + uT.Py() * qT.Py()  ) / qT.Mod();
+
+  _scale = -1. * _uPara/qT.Mod();  
+
+  _uPara += qT.Mod(); 
+
+  _uPerp = (  uT.Px() * qT.Py() - uT.Py() * qT.Px()  ) / qT.Mod();
+
+}
+
+

@@ -9,7 +9,7 @@
 //#include "src/AnalysisTTDM.C"
 //#include "src/AnalysisWW.C"
 //#include "src/AnalysisWZ.C"
-
+//#include "src/AnalysisMET.C"
 
 void runAnalysis(TString filename,
 		 TString systematic,
@@ -35,6 +35,7 @@ void runAnalysis(TString filename,
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);
   //  AnalysisWW      analysis(latino, systematic); analysis.Loop("WW",      filename, baseW_lumi_fb);
   //  AnalysisWZ      analysis(latino, systematic); analysis.Loop("WZ",      filename, baseW_lumi_fb);
+  //  AnalysisMET     analysis(latino, systematic); analysis.Loop("MET",     filename, baseW_lumi_fb);
 }
 
 
