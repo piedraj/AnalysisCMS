@@ -1,15 +1,18 @@
 #include "TCut.h"
 
-const TString  inputdir = "week-13";  // where the minitrees are stored
+const TString  inputdir = "xxx";  // where the minitrees are stored
 
-const float thelumi = 2.15; 
-const float    ttSF = 0.97;  const float ettSF = 0.15;
-const float    DYSF = 1.07;  const float eDYSF = 0.07;
-			     const float efakes= 0.30;
+const float thelumi = 1.234; 
+const float    ttSF = 1.0;  const float ettSF = 0.0;
+const float    DYSF = 1.0;  const float eDYSF = 0.0;
+			    const float efakes= 0.0;
+//const float    ttSF = 0.97;  const float ettSF = 0.15;
+//const float    DYSF = 1.07;  const float eDYSF = 0.07;
+//			       const float efakes= 0.30;
 
 const bool doshape = false; 
 
-const TCut selection= "metPfType1>80.&&mt2ll>80.&&darkpt>0.";
+const TCut selection= "1>0";
 
 const TCut soft_cut = "metPfType1>80."; 
 const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
@@ -17,8 +20,8 @@ const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
 //TCut MVA_cut;
 
 enum{ data,
-      ttDM,
-      fakes,
+      //ttDM,
+      //fakes,
       TT,
       ST,
       DY,
@@ -29,8 +32,8 @@ enum{ data,
       VVV,
       Wg,
       Zg,
-      HWW,
-      HZ,
+      //HWW,
+      //HZ,
       nprocess
 }; 
 
@@ -88,9 +91,9 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx,
-      sphericity, alignment, planarity,
+      //sphericity, alignment, planarity,
       //darkpt,
-      MVA80, //MVA90, MVA100,
+      //MVA80, //MVA90, MVA100,
       //alpha005, alpha01, alpha05,	
       nhisto };
 
@@ -114,9 +117,9 @@ void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
 	processID[data ] = "01_Data"                 ;
-	processID[fakes] = "00_Fakes"                ; 
+	//processID[fakes] = "00_Fakes"                ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -127,8 +130,8 @@ void Assign(){
 	processID[VVV  ] = "13_VVV"                  ; 
 	processID[Wg   ] = "11_Wg"                   ; 
 	processID[Zg   ] = "12_Zg"                   ; 
-	processID[HWW  ] = "10_HWW"                  ; 
-	processID[HZ   ] = "14_HZ"                   ; 
+	//processID[HWW  ] = "10_HWW"                  ; 
+	//processID[HZ   ] = "14_HZ"                   ; 
 
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
@@ -266,12 +269,12 @@ void Assign(){
 
 	b_name[nvtx        ] = "nvtx"        ;
 
-	b_name[sphericity] = "sphericity";
-	b_name[alignment ] = "alignment" ;
-	b_name[planarity ] = "planarity" ;
+	//b_name[sphericity] = "sphericity";
+	//b_name[alignment ] = "alignment" ;
+	//b_name[planarity ] = "planarity" ;
 
 	//b_name[darkpt    ] = "newdarkpt";
-	b_name[MVA80     ] = "ANN_170222_mt2ll80_ttDM0001scalar00100";
+	//b_name[MVA80     ] = "ANN_170222_mt2ll80_ttDM0001scalar00100";
 	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
 	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
 
