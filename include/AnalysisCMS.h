@@ -164,6 +164,8 @@ class AnalysisCMS : public AnalysisBase
 
   float       GetPlanarity      (TMatrixDSym    smatrix);
 
+  void        GetScaleAndResolution (); 
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -407,6 +409,10 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_output;
   TFile*                 root_minitree;
   TTree*                 minitree;
+
+  float 		_scale; 
+  float 		_uPara; 
+  float 		_uPerp; 
 
 
   // TH1 histograms

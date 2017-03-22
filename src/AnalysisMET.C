@@ -25,7 +25,7 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
-    //if ( _nentries > 1000 )  _nentries = 1000;  
+    if ( _nentries > 10000 )  _nentries = 10000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
     //cout << "\n" << jentry << endl;
@@ -38,7 +38,7 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
 
     PrintProgress(jentry, _nentries);
 
-    //EventSetup(4.0);  // We consider only jets up to |eta| < 4.0
+    EventSetup(4.0);  // We consider only jets up to |eta| < 4.0
 
 
     // Analysis
@@ -61,23 +61,33 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
     //else if (_nelectron == 1) _channel = em;
     //else if (_nelectron == 0) _channel = mm;
     
-    //_m2l  = mll;   // Needs l2Sel
+    _m2l  = mll;   // Needs l2Sel
     //_pt2l = ptll;  // Needs l2Sel
 
 
 
-    //bool pass   = true;
+    bool pass   = true;
 
-    //pass &= (std_vector_lepton_pt->at(2) < 10.);
+    //pass &= ( nLepGood20 == 2 );
 
-    //pass &= ( _m2l > 20.                                    );
+    pass &= ( abs(std_vector_lepton_eta->at(0)) < 2.4 && abs(std_vector_lepton_eta->at(1)) < 2.4 ); 
 
-    //pass &= ( _channel == em  ||  fabs(_m2l - Z_MASS) > 15. );
+    pass &= (  abs( abs(std_vector_lepton_eta->at(0))-1.5 ) > 0.1  &&  abs( abs(std_vector_lepton_eta->at(1))-1.5 ) > 0.1  ); 
 
-    //pass &= ( _njet > 1                                     );
+    pass &= ( abs(_m2l - Z_MASS) > 10. );
 
-    //pass &= ( _nbjet30csvv2m > 0                            );
+    pass &= (std_vector_lepton_pt->at(0) < 20.);
 
+    pass &= (std_vector_lepton_pt->at(1) < 20.);
+
+
+	//if( isData[process] ){   // triggers
+
+	//	if( HLT_DoubleMu == 0 && HLT_DoubleEG == 0 && HLT_SingleMu == 0 && HLT_SingleEle == 0 ) continue;
+
+	//}
+	
+		
 
     if (_saveminitree && pass ) minitree->Fill();
 
