@@ -1634,6 +1634,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nu2ptGEN",         &_nu2pt_gen,        "nu2ptGEN/F");
   minitree->Branch("nu2tauGEN",        &_nu2tau_gen,       "nu2tauGEN/F");
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
+  minitree->Branch("ntrueint",         &nGoodVtx,          "nGoodVtx/F");
   // P
   minitree->Branch("planarity",        &_planarity,        "planarity/F");
   minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
