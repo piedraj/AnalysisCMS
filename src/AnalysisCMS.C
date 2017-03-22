@@ -13,7 +13,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::AnalysisCMS]\n");
 
-  _verbosity = 0;  // Set to 1 for debugging
+  _verbosity = 0;  // Set it to 1 for debugging
 
   _ismc         = true;
   _saveminitree = false;
@@ -1252,11 +1252,11 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   ApplyWeights();
 
-  GetScaleAndResolution();
 
- 
   // Additional analysis variables
   //----------------------------------------------------------------------------
+  GetScaleAndResolution();
+
   GetDeltaPhi();
 
   GetDeltaR(); 
@@ -2750,27 +2750,25 @@ void AnalysisCMS::GetGenWeightsLHE()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetScaleAndResolution()
 {
-
   TVector2 ET, l1, l2, qT, uT; 
 
-  ET.SetMagPhi( metPfType1, metPfType1Phi );
+  ET.SetMagPhi(metPfType1, metPfType1Phi);
 
-  l1.SetMagPhi( std_vector_lepton_pt->at(0), std_vector_lepton_phi->at(0) );
+  l1.SetMagPhi(std_vector_lepton_pt->at(0), std_vector_lepton_phi->at(0));
 
-  l2.SetMagPhi( std_vector_lepton_pt->at(1), std_vector_lepton_phi->at(1) );
+  l2.SetMagPhi(std_vector_lepton_pt->at(1), std_vector_lepton_phi->at(1));
 
   qT = l1 +l2;
 
-  uT = -1* ( ET + qT ); 
+  uT = -1 * (ET + qT); 
 
-  _uPara = (  uT.Px() * qT.Px() + uT.Py() * qT.Py()  ) / qT.Mod();
+  _uPara = (uT.Px() * qT.Px() + uT.Py() * qT.Py()) / qT.Mod();
 
-  _scale = -1. * _uPara/qT.Mod();  
+  _scale = -1. * _uPara / qT.Mod();  
 
-  _uPara += qT.Mod(); 
+  _uPara += qT.Mod();
 
-  _uPerp = (  uT.Px() * qT.Py() - uT.Py() * qT.Px()  ) / qT.Mod();
-
+  _uPerp = (uT.Px() * qT.Py() - uT.Py() * qT.Px()) / qT.Mod();
 }
 
 

@@ -44,127 +44,127 @@ class AnalysisCMS : public AnalysisBase
 
   AnalysisCMS(TTree* tree = 0, TString systematic = "nominal");
 
-  void        ApplyWeights      ();
+  void        ApplyWeights         ();
 
-  void        DefineHistograms  (int      ichannel,
-				 int      icut,
-				 int      ijet,
-				 TString  suffix);
+  void        DefineHistograms     (int      ichannel,
+				    int      icut,
+				    int      ijet,
+				    TString  suffix);
   
-  float       ElectronIsolation (int      k);
+  float       ElectronIsolation    (int      k);
 
-  void        EndJob            ();
+  void        EndJob               ();
 
-  void        EventDump         ();
+  void        EventDump            ();
 
-  void        EventSetup        (float    jet_eta_max = -1,
-				 float    jet_pt_min  = 30);
+  void        EventSetup           (float    jet_eta_max = -1,
+				    float    jet_pt_min  = 30);
 
-  void        FillHistograms    (int      ichannel,
-				 int      icut,
-				 int      ijet);
+  void        FillHistograms       (int      ichannel,
+				    int      icut,
+				    int      ijet);
 
-  void        GetFakeWeights    ();
+  void        GetFakeWeights       ();
 
-  void        GetGenPtllWeight  ();
+  void        GetGenPtllWeight     ();
 
-  void        GetGenWeightsLHE  ();
+  void        GetGenWeightsLHE     ();
 
-  void        GetJets           (float    jet_eta_max,
-				 float    jet_pt_min);
+  void        GetJets              (float    jet_eta_max,
+				    float    jet_pt_min);
   
-  void        GetLeptons        ();
+  void        GetLeptons           ();
 
-  void        GetTops           ();
+  void        GetTops              ();
 
   void        GetGenLeptonsAndNeutrinos();
 
-  void        GetDark           ();  
+  void        GetDark              ();  
 
-  void        GetMlb            (); 
+  void        GetMlb               (); 
 
-  void        GetTopReco        ();
+  void        GetTopReco           ();
 
-  void        GetMET            (float    module,
-				 float    phi);
+  void        GetMET               (float    module,
+				    float    phi);
 
-  void        GetTrkMET         (float    module,
-				 float    phi);
+  void        GetTrkMET            (float    module,
+				    float    phi);
 
-  float       MuonIsolation     (int      k);
+  float       MuonIsolation        (int      k);
 
-  void        OpenMinitree      ();
+  void        OpenMinitree         ();
 
-  bool        PassTrigger       ();
+  bool        PassTrigger          ();
 
-  bool        ApplyMETFilters   (bool     ApplyGiovanniFilters        = false, 
-				 bool     ApplyICHEPAdditionalFilters = true);
+  bool        ApplyMETFilters      (bool     ApplyGiovanniFilters        = false, 
+				    bool     ApplyICHEPAdditionalFilters = true);
 
-  void        PrintProgress     (Long64_t counter,
-				 Long64_t total);
+  void        PrintProgress        (Long64_t counter,
+				    Long64_t total);
 
-  void        SetSaveMinitree   (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+  void        SetSaveMinitree      (Bool_t   saveminitree) {_saveminitree = saveminitree;}
 
-  void        Setup             (TString  analysis,
-				 TString  filename,
-				 float    luminosity,
-				 TString  suffix = "");
+  void        Setup                (TString  analysis,
+				    TString  filename,
+				    float    luminosity,
+				    TString  suffix = "");
 
-  void        Summary           (TString  analysis,
-				 TString  precision,
-				 TString  title);
+  void        Summary              (TString  analysis,
+				    TString  precision,
+				    TString  title);
 
 
   // New analysis variables
   //----------------------------------------------------------------------------
-  void        GetDeltaPhi       ();
+  void        GetDeltaPhi          ();
 
-  void        GetDeltaPhiVeto   ();
+  void        GetDeltaPhiVeto      ();
 
-  void        GetDeltaR         ();
+  void        GetDeltaR            ();
 
-  void        GetHt             ();
+  void        GetHt                ();
 
-  void        GetJetPtSum       ();
+  void        GetJetPtSum          ();
 
-  void        GetMc             ();
+  void        GetMc                ();
 
-  void        GetMetVar         ();
+  void        GetMetVar            ();
 
-  void        GetMpMet          ();
+  void        GetMpMet             ();
 
-  void        GetPtWW           ();
+  void        GetPtWW              ();
 
-  void        GetSoftMuon       ();
+  void        GetSoftMuon          ();
 
-  void        GetStarVar        ();
+  void        GetStarVar           ();
 
-  void        GetZHCRVar        ();
+  void        GetZHCRVar           ();
 
-  void        GetStopVar        ();
+  void        GetStopVar           ();
 
-  void        GetRazor          ();
+  void        GetRazor             ();
 
-  void        GetMt             (Lepton         lep,
-				 float&         transverse_mass);
+  void        GetMt                (Lepton         lep,
+				    float&         transverse_mass);
 
-  double      ComputeMT2        (TLorentzVector VisibleA,
-				 TLorentzVector VisibleB, 
-				 TLorentzVector Invisible,
-				 int            MT2Type      = 0,
-				 double         MT2Precision = 0.);
+  double      ComputeMT2           (TLorentzVector VisibleA,
+				    TLorentzVector VisibleB, 
+				    TLorentzVector Invisible,
+				    int            MT2Type      = 0,
+				    double         MT2Precision = 0.);
 
-  TMatrixDSym GetMomentumTensor ();
+  TMatrixDSym GetMomentumTensor    ();
 
-  TVectorD    GetEigenvalues    (TMatrixDSym    smatrix);
+  TVectorD    GetEigenvalues       (TMatrixDSym    smatrix);
 
-  float       GetSphericity     (TMatrixDSym    smatrix);
+  float       GetSphericity        (TMatrixDSym    smatrix);
 
-  float       GetAlignment      (TMatrixDSym    smatrix);
+  float       GetAlignment         (TMatrixDSym    smatrix);
 
-  float       GetPlanarity      (TMatrixDSym    smatrix);
+  float       GetPlanarity         (TMatrixDSym    smatrix);
 
-  void        GetScaleAndResolution (); 
+  void        GetScaleAndResolution(); 
 
 
   // Data members
