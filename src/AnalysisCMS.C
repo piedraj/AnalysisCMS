@@ -479,6 +479,8 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger() * ApplyMETFilters();
 
+  if (!_ismc) _event_weight *= veto_EMTFBug;
+
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
   if (!_ismc) return;
@@ -499,26 +501,6 @@ void AnalysisCMS::ApplyWeights()
 
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
-  // Taken from https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/samples.py
-  // Documented in slide 5 of https://indico.cern.ch/event/562201/contributions/2270962/attachments/1331900/2001984/Sep-06-Latino_Massironi.pdf
-  if (_sample.Contains("DYJetsToLL_M"))
-    {
-      _event_weight *=
-	((abs(std_vector_lepton_flavour->at(0)) == 11) +
-	 (abs(std_vector_lepton_flavour->at(0)) == 13) *
-	 (0.992739 +
-	  0.00152678  * std_vector_lepton_eta->at(0) +
-	  0.00402821  * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0) -
-	  0.000557167 * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0) -
-	  0.00133539  * std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0)*std_vector_lepton_eta->at(0))) *
-	((abs(std_vector_lepton_flavour->at(1)) == 11) +
-	 (abs(std_vector_lepton_flavour->at(1)) == 13) *
-	 (0.992739 +
-	  0.00152678  * std_vector_lepton_eta->at(1) +
-	  0.00402821  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
-	  0.000557167 * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1) -
-	  0.00133539  * std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)*std_vector_lepton_eta->at(1)));
-    }
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -548,9 +530,9 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger_up = effTrigW_Up;
       float sf_trigger_do = effTrigW_Down;
 
-      float sf_idiso    = std_vector_lepton_idisoW->at(0)      * std_vector_lepton_idisoW->at(1);
-      float sf_idiso_up = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
-      float sf_idiso_do = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+      float sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
+      float sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
+      float sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
 
       float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
       float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
@@ -568,9 +550,9 @@ void AnalysisCMS::ApplyWeights()
 
       if (_analysis.EqualTo("WZ"))
 	{
-	  sf_idiso    *= std_vector_lepton_idisoW->at(2);
-	  sf_idiso_up *= std_vector_lepton_idisoW_Up->at(2);
-	  sf_idiso_do *= std_vector_lepton_idisoW_Down->at(2);
+	  sf_idiso    *= std_vector_lepton_idisoWcut_WP_Tight80X->at(2);
+	  sf_idiso_up *= std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(2);
+	  sf_idiso_do *= std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(2);
 
 	  sf_reco    *= std_vector_lepton_recoW->at(2);
 	  sf_reco_up *= std_vector_lepton_recoW_Up->at(2);

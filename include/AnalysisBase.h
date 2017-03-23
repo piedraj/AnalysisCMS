@@ -306,6 +306,7 @@ public :
    Float_t         trig_DbleMu;
    Float_t         trig_SnglMu;
    Float_t         trig_EleMu;
+   Float_t         veto_EMTFBug;
    //   Float_t         triggerFakeRate;
    //   Float_t         itpu;
    Float_t         nvtx;
@@ -465,6 +466,9 @@ public :
    Float_t         effTrigW_Down;
    Float_t         effTrigW_Up;
    Float_t         effTrigW;
+   vector<float>   *std_vector_lepton_idisoWcut_WP_Tight80X;
+   vector<float>   *std_vector_lepton_idisoWcut_WP_Tight80X_Up;
+   vector<float>   *std_vector_lepton_idisoWcut_WP_Tight80X_Down;
    vector<float>   *std_vector_lepton_idisoW;
    vector<float>   *std_vector_lepton_idisoW_Up;
    vector<float>   *std_vector_lepton_idisoW_Down;
@@ -769,6 +773,7 @@ public :
    TBranch        *b_trig_DbleMu;
    TBranch        *b_trig_SnglMu;
    TBranch        *b_trig_EleMu;
+   TBranch        *b_veto_EMTFBug;   //!
    //   TBranch        *b_triggerFakeRate;   //!
    //   TBranch        *b_itpu;   //!
    TBranch        *b_nvtx;   //!
@@ -928,6 +933,9 @@ public :
    TBranch        *b_effTrigW_Down;   //!
    TBranch        *b_effTrigW_Up;   //!
    TBranch        *b_effTrigW;   //!
+   TBranch        *b_std_vector_lepton_idisoWcut_WP_Tight80X;   //!
+   TBranch        *b_std_vector_lepton_idisoWcut_WP_Tight80X_Up;   //!
+   TBranch        *b_std_vector_lepton_idisoWcut_WP_Tight80X_Down;   //!
    TBranch        *b_std_vector_lepton_idisoW;   //!
    TBranch        *b_std_vector_lepton_idisoW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoW_Down;   //!
@@ -1208,6 +1216,9 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_d0 = 0;
    std_vector_lepton_genmatched = 0;
    std_vector_lepton_isTightMuon = 0;
+   std_vector_lepton_idisoWcut_WP_Tight80X = 0;
+   std_vector_lepton_idisoWcut_WP_Tight80X_Up = 0;
+   std_vector_lepton_idisoWcut_WP_Tight80X_Down = 0;
    std_vector_lepton_idisoW = 0;
    std_vector_lepton_idisoW_Up = 0;
    std_vector_lepton_idisoW_Down = 0;
@@ -1488,6 +1499,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("trig_DbleMu",  &trig_DbleMu,  &b_trig_DbleMu);
    fChain->SetBranchAddress("trig_SnglMu",  &trig_SnglMu,  &b_trig_SnglMu);
    fChain->SetBranchAddress("trig_EleMu",   &trig_EleMu,   &b_trig_EleMu);
+   fChain->SetBranchAddress("veto_EMTFBug", &veto_EMTFBug, &b_veto_EMTFBug);
    //   fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    //   fChain->SetBranchAddress("itpu", &itpu, &b_itpu);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nvtx);
@@ -1647,6 +1659,9 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("effTrigW_Down", &effTrigW_Down, &b_effTrigW_Down);
    fChain->SetBranchAddress("effTrigW_Up", &effTrigW_Up, &b_effTrigW_Up);
    fChain->SetBranchAddress("effTrigW", &effTrigW, &b_effTrigW);
+   fChain->SetBranchAddress("std_vector_lepton_idisoWcut_WP_Tight80X", &std_vector_lepton_idisoWcut_WP_Tight80X, &b_std_vector_lepton_idisoWcut_WP_Tight80X);
+   fChain->SetBranchAddress("std_vector_lepton_idisoWcut_WP_Tight80X_Up", &std_vector_lepton_idisoWcut_WP_Tight80X_Up, &b_std_vector_lepton_idisoWcut_WP_Tight80X_Up);
+   fChain->SetBranchAddress("std_vector_lepton_idisoWcut_WP_Tight80X_Down", &std_vector_lepton_idisoWcut_WP_Tight80X_Down, &b_std_vector_lepton_idisoWcut_WP_Tight80X_Down);
    fChain->SetBranchAddress("std_vector_lepton_idisoW", &std_vector_lepton_idisoW, &b_std_vector_lepton_idisoW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Up", &std_vector_lepton_idisoW_Up, &b_std_vector_lepton_idisoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Down", &std_vector_lepton_idisoW_Down, &b_std_vector_lepton_idisoW_Down);
