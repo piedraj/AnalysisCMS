@@ -1681,6 +1681,25 @@ void AnalysisCMS::OpenMinitree()
 
 //------------------------------------------------------------------------------
 // GetGenPtllWeight
+//
+// https://indico.cern.ch/event/515004/contributions/2037666/attachments/1252111/1846797/Apr-04_GEN_ZpT_Massironi.pdf
+//
+// 1. Apply the following selection
+//
+//    mll > 60 GeV
+//    pt1 > 20 GeV
+//    pt2 > 10 (13) GeV for muons (electrons)
+//
+// 2. Fit ptll in the mumu channel with the following function
+//
+//    TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//
+//    f4->SetParameter(0,  10);
+//    f4->SetParameter(1,   1);
+//    f4->SetParameter(2,   1);
+//    f4->SetParameter(3, 0.1);
+//
+// 3. Apply the correction to gen_ptll and check in the ee and mumu channels
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetGenPtllWeight()
 {
