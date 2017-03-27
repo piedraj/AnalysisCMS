@@ -42,8 +42,9 @@ void CreateHistograms2( int process ){
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
-
+	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
+	TFile* myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
+ 
 	for( int k = 0; k < nsystematic; k++ ){
 
 		if( k > nominal ) continue; //toppTrw ) continue;
@@ -63,7 +64,7 @@ void CreateHistograms2( int process ){
 		if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
 
-		if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
+		/*if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
 
 			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
 
@@ -99,7 +100,7 @@ void CreateHistograms2( int process ){
 			
 			}
 
-		}
+		}*/
 
 
 		TString h_name[nhisto];
@@ -172,12 +173,12 @@ void CreateHistograms2( int process ){
 
 		mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
 
-		mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", thecut );
-		mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
-		mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
+		//mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", thecut );
+		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
+		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
 		//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		mytree -> Draw( b_name[MVA80        ] + " >> " + h_name[MVA80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[MVA80        ] + " >> " + h_name[MVA80        ] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVA90        ] + " >> " + h_name[MVA90        ] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
