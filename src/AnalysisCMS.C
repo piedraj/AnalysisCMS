@@ -1220,13 +1220,13 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  GetTops();
-
-  GetGenLeptonsAndNeutrinos();
-
-  GetDark();
-
-  GetTopReco();
+  if (!_analysis.EqualTo("Control")) GetTops();
+  
+  if (!_analysis.EqualTo("Control")) GetGenLeptonsAndNeutrinos();
+  
+  if (!_analysis.EqualTo("Control")) GetDark();
+  
+  if (!_analysis.EqualTo("Control")) GetTopReco();
 
   GetGenPtllWeight();
 

@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetSaveMinitree(false);
 }
 
 
@@ -118,14 +118,24 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     // WW
     //--------------------------------------------------------------------------
-    pass = pass_2l;
-
-    pass &= (_nbjet20cmvav2l == 0);
-    pass &= (MET.Et() > 20.);
-    pass &= (_pt2l > 30.);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (_channel == em || MET.Et() > 45.);
-    pass &= (_channel == em || _pt2l > 45.);
+    pass =
+      mll > 80                         &&
+      std_vector_lepton_pt->at(0) > 25 &&
+      std_vector_lepton_pt->at(1) > 13 &&
+      std_vector_lepton_pt->at(2) < 10 &&
+      metPfType1 > 20                  &&
+      ptll > 30                        &&
+      mth >= 60	                       &&
+      (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.5884) &&
+      (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.5884) &&
+      (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.5884) &&
+      (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.5884) &&
+      (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.5884) &&
+      (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.5884) &&
+      (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.5884) &&
+      (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.5884) &&
+      (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.5884) &&
+      (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.5884);
 
     FillLevelHistograms(Control_03_WW, pass);
 
