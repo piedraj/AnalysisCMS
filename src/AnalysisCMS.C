@@ -583,25 +583,25 @@ void AnalysisCMS::ApplyWeights()
 	}
 
 
-      // Top pt reweighithing for powheg
+      // Top pt reweight for powheg
       _event_weight_Toppt = _event_weight;
 
       if (_sample.Contains("TTTo2L2Nu")) {
 
-	float TopPtReweighting = sqrt( exp(0.0615-0.0005*topLHEpt) *
-				       exp(0.0615-0.0005*antitopLHEpt) );
-
-	_event_weight_Toppt *= TopPtReweighting;
+	// https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+	_event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 
 	if (_systematic_toppt) _event_weight = _event_weight_Toppt;
 
 	if (_applytopptreweighting) {
 
-	  float _save_this_weight = _event_weight;
-	  _event_weight = _event_weight_Toppt;
-	  _event_weight_Toppt = _save_this_weight;
+	  float save_this_weight = _event_weight;
+
+	  _event_weight       = _event_weight_Toppt;
+	  _event_weight_Toppt = save_this_weight;
 	}
       }
+
 
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
@@ -1675,7 +1675,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
   minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
   minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
-  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt );
+  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt);
 }
 
 
