@@ -22,7 +22,7 @@
 #include "TPieSlice.h"
 
 #include "StopTrees.h"
-#include "../Razor/Razor.C"
+//#include "../Razor/Razor.C"
 //#include "../Razor/SuperRazor.C"
 
 
@@ -52,10 +52,14 @@
 // -----------------------------------------------------------------------------------------------------------------
 //..................................................................................................................
 
-const int nbck    = 6; const TString sbck    [nbck]    = { "TTbar", "ST", "DYJets", "WW", "TTV", "VZ"};
-const int nsignal = 3; const TString tssignal [nsignal] = { "T2tt_Sm350_Xm175", "T2tt_Sm350_Xm225", "T2tt_Sm350_Xm263"}; const TString massP [nsignal] = { "(350,175)", "(350,225)", "(350,263)"};
-const int nsample = 7; // nbck + 1;
-const int nregion = 9; const TString sregion [nregion] = {"SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR", "CVR", "DY"};
+//const int nbck    = 6; const TString sbck    [nbck]    = { "TTbar", "ST", "DYJets", "WW", "TTV", "VZ"};
+//const int nsignal = 3; const TString tssignal [nsignal] = { "T2tt_Sm350_Xm175", "T2tt_Sm350_Xm225", "T2tt_Sm350_Xm263"}; const TString massP [nsignal] = { "(350,175)", "(350,225)", "(350,263)"};
+const int nbck    = 7; const TString sbck    [nbck]    = { "TTbar", "ST", "DYJets", "WW", "TTW", "TTZ", "VZ"};
+//const int nsignal = 3; const TString tssignal [nsignal] = { "T2tt250to350", "T2tt350to400", "T2tt400to1200"}; const TString massP [nsignal] = { "(250 to 350)", "(350 to 400)", "(400 to 1200)"};
+const int nsignal = 3; const TString tssignal [nsignal] = { "T2tt_Sm275_Xm150", "T2tt_Sm350_Xm225", "T2tt_Sm450_Xm325"}; const TString massP [nsignal] = { "(275,150)", "(350,225)", "(450,325)"};
+const int nsample = 8; // nbck + 1;
+const int nregion = 7; const TString sregion [nregion] = {"SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR"};
+//const int nregion = 9; const TString sregion [nregion] = {"SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR", "CVR", "DY"};
 //"SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR1", "VR2", "DY"};
 // "SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR1", "VR2"};
 //"SR1", "SR2", "SR3", "CR1", "CR2", "CR3", "VR", "CVR", "DY" 
@@ -91,10 +95,12 @@ float ch_totB [nregion][nchannel] = {0,0,0};
 void Table_txt () {
 
   //create the txt file
-  std::ofstream inFile("Yields/7Dic_bVETO_Yields.txt",std::ios::out);  
+  std::ofstream inFile("Yields/23March_bVETO_CRcontrol.txt",std::ios::out);  
+  //std::ofstream inFile("iplots/Yields/23March_bVETO_Yields.txt",std::ios::out);  
   
   inFile << Form ("\n  \n"); 
-  inFile << Form ("             TAG SELECTION =  BSELECTION                \n");
+  //inFile << Form ("             TAG SELECTION =  BSELECTION                \n");
+  inFile << Form ("             TAG VETO SELECTION =  B VETO                \n");
   inFile << Form ("\n  \n"); 
 
 
@@ -195,7 +201,7 @@ void Table_txt () {
   inFile << Form ("\n  \n"); 
   }
  inFile.close();
- //gSystem->cp("Yields/7Dic_bVETO_Yields.txt iplots/Yield/.", kTRUE);  
+//gSystem->cp("Yields/23March_bVETO_Yields.txt iplots/Yield/.", kTRUE);  
 } 
 
 
@@ -216,18 +222,28 @@ void PiePlot ( int SignalSample, int iregion){
   
   Table_txt();  
 
-  //type of regios
-
-  // 		s = 0 -> "T2tt_Sm350_Xm175"
-  // 		s = 1 -> "T2tt_Sm350_Xm225"
-  // 		s = 2 -> "T2tt_Sm350_Xm263"
-  //
-  // 		r = 0,1,2 -> "SR1,SR2,SR3"
-  // 		r = 3,4,5 -> "CR1,CR2,CR3"
-  // 		r = 6,7   -> "VR,CVR"
-  // 		r = 8     -> "DY"
+ std::cout << "type of signal point\n" << std::endl; 
+ std::cout << "s = 0 -> T2tt250to350  ; T2tt_Sm350_Xm175\n" << "s = 1 -> T2tt350to400  ; T2tt_Sm350_Xm225\n" << "s = 2 -> T2tt400to1200 ; T2tt_Sm350_Xm263" <<std::endl; 
+ std::cout << "type region\n" << std::endl;
+ std::cout << "r = 0,1,2 -> SR1,SR2,SR3\n" << "r = 3,4,5 -> CR1,CR2,CR3\n" << "r = 6,7   -> VR,CVR\n" << "r = 8     -> DY" << std::endl; 
 
 
+ /*
+ *
+ *          @Inputs:
+ *
+ *              s = 0 -> T2tt250to350  ; T2tt_Sm350_Xm175
+ * 		s = 1 -> T2tt350to400  ; T2tt_Sm350_Xm225
+ * 		s = 2 -> T2tt400to1200 ; T2tt_Sm350_Xm263
+ *
+ * 		r = 0,1,2 -> "SR1,SR2,SR3"
+ * 		r = 3,4,5 -> "CR1,CR2,CR3"
+ * 		r = 6,7   -> "VR,CVR"
+ * 		r = 8     -> "DY" 
+ *
+ */  
+ 
+ 
   int r  = iregion; 
   
   //set the colours
@@ -237,17 +253,18 @@ void PiePlot ( int SignalSample, int iregion){
   //	41 = "browny yellow" -> st
   //	3  = "brigth green"  -> dyjets
   //	7  = "turqoise       -> ww
-  //	8  = "dark green"    -> ttv
+  //	8  = "dark green"    -> ttw
+  //	12 = "dark brown"    -> ttz
   //	28 = "brown"         -> vz
   //
   
-  int colors[nbck +1] = {2,5,41,3,7,8,28};
+  int colors[nbck +1] = {2,5,41,3,7,8,12,28};
 
   //make the plot for each channel in the selected region for the signal sample 
   for ( int ch = 0; ch < nchannel; ch ++)
   {
    //fill values variable with each yield
-   float values [nbck +1];
+   float values [nsample];
    values [0] = {ch_S [r][SignalSample][ch]};
    for (int b = 0; b < nbck; b++){ int c = b +1; values [c] = {ch_B [r][b][ch]};}
    int nvalues = sizeof(values)/sizeof(values[0]);
@@ -259,7 +276,7 @@ void PiePlot ( int SignalSample, int iregion){
    TPie *pie = new TPie("pie_" + sregion[r] + "_" + schannel[ch] ,"  bVETO  " + sregion[r] + "   " + schannel[ch], nvalues, values ,colors);
    
    //block the labels on the slices
-   const char * label[7] = { " ", " ", " ", " ", " ", " ", " "};
+   const char * label[nsample] = { " ", " ", " ", " ", " ", " ", " "};
    pie -> SetLabels(label);
    
    //set the legend
@@ -269,12 +286,12 @@ void PiePlot ( int SignalSample, int iregion){
    pieleg -> SetX1 (.0);  pieleg -> SetX2 (.3); 
 
    //fill the legend
-   float mcTotal = ch_totB [r][ch] + values [1];
+   float mcTotal = ch_totB [r][ch] + values [0];
    for (int i = 0; i < nsample; i++)
    {
     float percent = (values [i]/mcTotal)*100;
     //char process = leglabel[i];
-    const char* leglabel[7]  = { "350_175", "TTbar", "ST", "DYJets", "WW", "TTV", "VZ"};
+    const char* leglabel[nsample]  = { tssignal[SignalSample], "TTbar", "ST", "DYJets", "WW", "TTW", "TTZ", "VZ"};
     TString flabel = Form ("%7s %4s %7.0f %.4s %s %3.1f %s", leglabel[i], " ", values[i], " ", "(", percent, ")" );
     TPieSlice * slice = pie -> GetSlice(i);
     pieleg -> AddEntry( slice ,flabel,"lpf");

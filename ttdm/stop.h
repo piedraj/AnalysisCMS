@@ -1,6 +1,7 @@
 #include "TCut.h"
 
-const TString  inputdir = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/2016/Stop/minitrees/nominal/Stop/";  // where the minitrees are stored
+//const TString  inputdir = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/2016/Stop/minitrees/nominal/Stop/";  // where the minitrees are stored
+const TString  inputdir = "../minitrees/nominal/Stop/";  // where the minitrees are stored
 
 const float thelumi = 9.983; 
 const float    ttSF = 1.;  const float ettSF = 0.0;

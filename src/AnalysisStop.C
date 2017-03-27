@@ -207,13 +207,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
 
     bool WW = pass && _njet == 0;
-    if ( _channel == em ) { WW &= ptll >30;} else { WW &= ptll >45;} 
-    FillLevelHistograms(Stop_00_WWsel, WW && pass_blind);
-    
+    FillLevelHistograms(Stop_00_WWsel, WW && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_00_WWselMET, WW && MET.Et()>= 50 && pass_blind && pass_masspoint    
     bool TTbar = pass && _njet >1 && _leadingPtCSVv2M >= 20.; 
-    FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind);
+    FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_00_TTselMET, TTbar && MET.Et()>= 50 && pass_blind && pass_masspoint);
       
-/*    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
+    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
 
     FillLevelHistograms(Stop_01_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
@@ -234,7 +234,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       FillLevelHistograms(Stop_02_SR1_NoTag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR2_NoTag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_NoTag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
-    }*/
+    }
     
   }
 

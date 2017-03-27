@@ -19,6 +19,7 @@ enum {
 //  Stop_04_NoTagRoutin,
 //  //~~~~~~~~~~~~~~~~~~~~~~~
   Stop_00_Zveto,
+ //~~~~~~~~~~~~~~~~~~~~~~ save minitree ~~~~~~~~~~~~~~~~~~
   //Stop_00_Met50,
   //Stop_00_Has2Jets,
   //Stop_00_Has1BJet,
@@ -28,18 +29,20 @@ enum {
   // ~~~~~~~~~~~~~~~~~~~ 
  
   Stop_00_WWsel,
+  Stop_00_WWselMET
   Stop_00_TTsel,
+  Stop_00_TTselMET,
 
-//  Stop_01_Tag,
-//  Stop_01_NoTag,
-//  Stop_02_VR1_Tag,
-//  Stop_02_VR1_NoTag,
-//  Stop_02_SR1_Tag,
-//  Stop_02_SR1_NoTag,
-//  Stop_02_SR2_Tag,
-//  Stop_02_SR2_NoTag,
-//  Stop_02_SR3_Tag,
-//  Stop_02_SR3_NoTag,
+  Stop_01_Tag,
+  Stop_01_NoTag,
+  Stop_02_VR1_Tag,
+  Stop_02_VR1_NoTag,
+  Stop_02_SR1_Tag,
+  Stop_02_SR1_NoTag,
+  Stop_02_SR2_Tag,
+  Stop_02_SR2_NoTag,
+  Stop_02_SR3_Tag,
+  Stop_02_SR3_NoTag,
 
   ncut  // This line should be always last
 };
@@ -48,7 +51,6 @@ const TString scut[ncut] = {
   "Stop/00_Has2Leptons",
 //  "Stop/00_2LMt2upper100",
 //  "Stop/00_mll20",
-  "Stop/00_Zveto",
  // "Stop/00_Met50",
  // "Stop/00_Has2Jets",
  // "Stop/00_Has1BJet"
@@ -64,19 +66,23 @@ const TString scut[ncut] = {
 //  "Stop/04_NoTagRoutin",
 //  //~~~~~~~~~~~~~~~~~~~~~~
 
+   "Stop/00_Zveto",
+ //~~~~~~~~~~~~~~~~~~~~~~ save minitree ~~~~~~~~~~~~~~~~~~
    "Stop/00_WWsel",
+   "Stop/00_WWselMET",
    "Stop/00_TTsel", 
+   "Stop/00_TTselMET",
 
-//  "Stop/01_Tag",
-//  "Stop/01_NoTag",
-//  "Stop/02_VR1_Tag",
-//  "Stop/02_VR1_NoTag",
-//  "Stop/02_SR1_Tag",
-//  "Stop/02_SR1_NoTag",
-//  "Stop/02_SR2_Tag",
-//  "Stop/02_SR2_NoTag",
-//  "Stop/02_SR3_Tag",
-//  "Stop/02_SR3_NoTag"
+  "Stop/01_Tag",
+  "Stop/01_NoTag",
+  "Stop/02_VR1_Tag",
+  "Stop/02_VR1_NoTag",
+  "Stop/02_SR1_Tag",
+  "Stop/02_SR1_NoTag",
+  "Stop/02_SR2_Tag",
+  "Stop/02_SR2_NoTag",
+  "Stop/02_SR3_Tag",
+  "Stop/02_SR3_NoTag"
 
 };
 

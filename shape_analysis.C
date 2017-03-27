@@ -32,9 +32,11 @@
 
 // Falta comentar el output de las funciones y/o del codigo. Es una buena idea separarlo en signal, background y data y falta poner mejor el rango o punto de masa/s ademas de hacerlo para muchos puntos de masa, mandando un job quiza?
 
-TString FileAddress = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/2016/Stop/minitrees/nominal/Stop/";
+TString FileAddress = "minitrees/nominal/Stop/";
+//TString FileAddress = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/2016/Stop/minitrees/nominal/Stop/";
 const int nsample = 8;
-TString SampleName [nsample] = {"T2tt_mStop-150to250.root", "04_TTTo2L2Nu.root", "05_ST.root",  "07_ZJets.root", "06_WW.root", "09_TTW.root", "03_VZ.root", "10_TTZ.root"};
+TString SampleName [nsample] = {"T2tt_mStop-250to350_Sm275_Xm150.root", "04_TTTo2L2Nu.root", "05_ST.root",  "07_ZJets.root", "06_WW.root", "09_TTW.root", "03_VZ.root", "10_TTZ.root"};
+//TString SampleName [nsample] = {"T2tt_mStop-150to250.root", "04_TTTo2L2Nu.root", "05_ST.root",  "07_ZJets.root", "06_WW.root", "09_TTW.root", "03_VZ.root", "10_TTZ.root"};
 TString  _sample   [nsample] = {"T2tt", "TTbar", "ST", "DYJets", "WW", "TTW", "VZ", "TTZ"};
 
 /* Signal sample: 
@@ -145,10 +147,10 @@ void defineHistograms(int ichannel, TString suffix){
      h_MT2ll_CR2   [ichannel] = new TH1F ("h_MT2ll_CR2"  +  suffix, "", 2, 0.,40.); // MT2ll < 40 && 200 <= Met < 300; 
      h_MT2ll_CR3   [ichannel] = new TH1F ("h_MT2ll_CR3"  +  suffix, "", 2, 0.,40.); // MT2ll < 40 && 300 <= Met;
      
-     h_VR          [ichannel] = new TH1F ("h_MT2ll_VR"   +  suffix, "", 5, 40.,140.); // MT2ll > 40 && 100 <= Met < 140;
-     h_CVR         [ichannel] = new TH1F ("h_MT2ll_CVR"  +  suffix, "", 2, 0., 40.);  // MT2ll < 40 && 100 <= Met < 140; 
+     h_VR          [ichannel] = new TH1F ("h_MT2ll_VR"   +  suffix, "", 5, 40.,140.); // 100 <= Met < 140;
+//     h_CVR         [ichannel] = new TH1F ("h_MT2ll_CVR"  +  suffix, "", 2, 0., 40.);  // MT2ll < 40 && 100 <= Met < 140; 
 
-     h_DY          [ichannel] = new TH1F ("h_MT2ll_DY"   +  suffix, "", 5, 0.,140.);  // Met > 100;
+//     h_DY          [ichannel] = new TH1F ("h_MT2ll_DY"   +  suffix, "", 5, 0.,140.);  // Met > 100;
  
      max_MT2ll_SR1 = h_MT2ll_SR1   [ichannel] -> GetBinLowEdge(h_MT2ll_SR1   [ichannel] -> GetNbinsX()+1);  
      max_MT2ll_SR2 = h_MT2ll_SR2   [ichannel] -> GetBinLowEdge(h_MT2ll_SR2   [ichannel] -> GetNbinsX()+1);
@@ -159,9 +161,9 @@ void defineHistograms(int ichannel, TString suffix){
      max_MT2ll_CR3 = h_MT2ll_CR3   [ichannel] -> GetBinLowEdge(h_MT2ll_CR3   [ichannel] -> GetNbinsX()+1);
 
      max_VR  = h_VR  [ichannel] -> GetBinLowEdge(h_VR  [ichannel] -> GetNbinsX()+1);  
-     max_CVR = h_CVR [ichannel] -> GetBinLowEdge(h_CVR [ichannel] -> GetNbinsX()+1);
+    // max_CVR = h_CVR [ichannel] -> GetBinLowEdge(h_CVR [ichannel] -> GetNbinsX()+1);
      
-     max_DY  = h_DY  [ichannel] -> GetBinLowEdge(h_DY [ichannel] -> GetNbinsX()+1);
+    // max_DY  = h_DY  [ichannel] -> GetBinLowEdge(h_DY [ichannel] -> GetNbinsX()+1);
 }     
      
 //----------------------------------------------------------
@@ -179,9 +181,9 @@ void resetHistograms(int ichannel, TString suffix){
      h_MT2ll_CR3   [ichannel] -> Reset();
 
      h_VR          [ichannel] -> Reset();
-     h_CVR         [ichannel] -> Reset();
+     //h_CVR         [ichannel] -> Reset();
 
-     h_DY          [ichannel] -> Reset();
+     //h_DY          [ichannel] -> Reset();
 
 }
 
@@ -213,8 +215,9 @@ void shape_Analysis( TString MassRange = "", float Smass = -1, float Xmass = -1)
        defineHistograms(ichannel, suffix);
      }
 
-     for (int s = 0; s < 1 ; s++)
-    //for (int s = 0; s < nsample ; s++)
+    // for (int s = 1; s < nsample ; s++)
+    // for (int s = 0; s < 1 ; s++)
+    for (int s = 1; s < nsample ; s++)
      {
        // reset the histograms
        for (int ichannel = 0; ichannel < nchannel; ichannel++) 
@@ -238,7 +241,7 @@ void shape_Analysis( TString MassRange = "", float Smass = -1, float Xmass = -1)
          // get the mass point events
          
          if (  Smass != -1 ||  Xmass != -1)
-         {
+         { //std::cout << Smass << "    " << Xmass << "    " <<std::endl; 
           bool stopsample = true;
           if (_sample[s].Contains("T2tt")) 
           { 
@@ -260,12 +263,11 @@ void shape_Analysis( TString MassRange = "", float Smass = -1, float Xmass = -1)
 
          //####   tagMVETO   #################
 //         if (en == 1) cout << " tagMVETO " << endl;
-//         if ( leadingPtCSVv2M > 20) continue;
+         if ( leadingPtCSVv2M > 20) continue;
 	 //###################################
 
          //####   tagMSELECTION  #############
-         if (en == 1) cout << " tagMSELECTION " << endl;
-         if ( leadingPtCSVv2M <= 20) continue;
+//         if ( leadingPtCSVv2M <= 20) continue;
          // ################################# 
 
          // SR
@@ -279,49 +281,53 @@ void shape_Analysis( TString MassRange = "", float Smass = -1, float Xmass = -1)
          if ( mt2ll < 40. && 300 <= metPfType1 )                    { if (mt2ll >= max_MT2ll_CR3) mt2ll = max_MT2ll_CR3  -0.01;  h_MT2ll_CR3 [i] -> Fill( mt2ll, eventW );}
 
          // VR
-         if ( mt2ll > 40. && 100 <= metPfType1 && metPfType1 < 140 ) { if (mt2ll >= max_VR) mt2ll = max_VR  -0.01;  h_VR [i] -> Fill( mt2ll, eventW );}
-         if ( mt2ll < 40. && 100 <= metPfType1 && metPfType1 < 140 ) { if (mt2ll >= max_CVR) mt2ll = max_CVR  -0.01;  h_CVR [i] -> Fill( mt2ll, eventW );}   
+         if ( 100 <= metPfType1 && metPfType1 < 140 ) { if (mt2ll >= max_VR) mt2ll = max_VR  -0.01;  h_VR [i] -> Fill( mt2ll, eventW );}
+        // if ( mt2ll < 40. && 100 <= metPfType1 && metPfType1 < 140 ) { if (mt2ll >= max_CVR) mt2ll = max_CVR  -0.01;  h_CVR [i] -> Fill( mt2ll, eventW );}   
 
          // DY
-         if ( metPfType1 < 100) { if (mt2ll >= max_DY) mt2ll = max_DY  -0.01;  h_DY [i] -> Fill( mt2ll, eventW );}     
+        // if ( metPfType1 < 100) { if (mt2ll >= max_DY) mt2ll = max_DY  -0.01;  h_DY [i] -> Fill( mt2ll, eventW );}     
        }
        // create the folder to save the histograms
        if (_sample[s].Contains("T2tt")) _sample[s] = "T2tt" + massP;
-//       gSystem->mkdir("SArootfilebVETO/" + _sample[s] + "/", kTRUE);
-       gSystem->mkdir("SArootfilebSEL/" + _sample[s] + "/", kTRUE);
+       gSystem->mkdir("SArootfilebVETO/" + _sample[s] + "/", kTRUE);
+//       gSystem->mkdir("SArootfilebSEL/" + _sample[s] + "/", kTRUE);
     
+       std::cout << " tagMVETO " << std::endl;
+//       std::cout << " tagMSELECTION " << std::endl;
 
        // save the histograms
        cout << " save the histograms " << endl;
        for (int ch = ee; ch < nchannel; ch ++)
        { 
-         // SR
-//          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR1.root", h_MT2ll_SR1   [ch]);
-//          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR2.root", h_MT2ll_SR2   [ch]);
-//          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR3.root", h_MT2ll_SR3   [ch]);
 
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR1.root", h_MT2ll_SR1   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR2.root", h_MT2ll_SR2   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR3.root", h_MT2ll_SR3   [ch]);
+
+         // SR
+          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR1.root", h_MT2ll_SR1   [ch]);
+          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR2.root", h_MT2ll_SR2   [ch]);
+          saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_SR3.root", h_MT2ll_SR3   [ch]);
+
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR1.root", h_MT2ll_SR1   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR2.root", h_MT2ll_SR2   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_SR3.root", h_MT2ll_SR3   [ch]);
         
          // CR
-//         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR1.root", h_MT2ll_CR1   [ch]);
-//         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR2.root", h_MT2ll_CR2   [ch]);
-//         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR3.root", h_MT2ll_CR3   [ch]);
+         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR1.root", h_MT2ll_CR1   [ch]);
+         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR2.root", h_MT2ll_CR2   [ch]);
+         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CR3.root", h_MT2ll_CR3   [ch]);
 
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR1.root", h_MT2ll_CR1   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR2.root", h_MT2ll_CR2   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR3.root", h_MT2ll_CR3   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR1.root", h_MT2ll_CR1   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR2.root", h_MT2ll_CR2   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CR3.root", h_MT2ll_CR3   [ch]);
         
          // VR
-//         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_VR.root",  h_VR   [ch]);
+         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_VR.root",  h_VR   [ch]);
 //         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_CVR.root", h_CVR   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_VR.root", h_VR   [ch]);
-         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CVR.root", h_CVR   [ch]);
+//         saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_VR.root", h_VR   [ch]);
+        // saveHistoRoot ("SArootfilebSEL/" + _sample[s] + "/h_MT2ll_CVR.root", h_CVR   [ch]);
 
         // DY
 //         saveHistoRoot ("SArootfilebVETO/" + _sample[s] + "/h_MT2ll_DY.root", h_DY   [ch]);
-        saveHistoRoot ("SArootfilebSEL/"  + _sample[s] + "/h_MT2ll_DY.root", h_DY   [ch]);
+        // saveHistoRoot ("SArootfilebSEL/"  + _sample[s] + "/h_MT2ll_DY.root", h_DY   [ch]);
    
        } 
      
