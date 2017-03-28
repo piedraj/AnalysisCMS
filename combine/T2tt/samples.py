@@ -18,7 +18,7 @@
 
 samples['T2tt'] = {  'name': ['T2tt'],    
                                         'weight' : 'baseW', 
-                                        'weights': ['1'] 
+                                       'weights': ['1'] 
                                         }
 
 #samples['01_PseudoDataTT'] = {  'name': ['01_PseudoDataTT.root'],    

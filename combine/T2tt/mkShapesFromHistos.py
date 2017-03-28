@@ -115,8 +115,10 @@ class ShapeFactory:
             for sampleName in self.data:
               inputFile = inputDir + '/nominal/' + analysisName + '/' + sampleName + '.root'
               fileIn = ROOT.TFile(inputFile, "READ")
+              print( inputFile)
               #shapeName = analysisName + "/" + cutName + '/h_' + variableName
               histo = fileIn.Get(shapeName)
+              print( "kk", histo.GetName())
               histo.SetName('histo_' + sampleName)
               if (sampleName != "01_Data") :
                   histo.Scale(lumi)
