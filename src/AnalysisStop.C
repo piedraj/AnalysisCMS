@@ -360,7 +360,7 @@ void AnalysisStop::GetAnalysisVariables()
 
   _metmeff = MET.Et()/_meff;
   _MT2ll = (_mt2ll<140.) ? _mt2ll : 139.;
-  _MT2llgen = (_mt2ll<140.) ? _mt2llgen : 139.;
+  _MT2llgen = (_mt2llgen<140.) ? _mt2llgen : 139.;
 
   // NbinsMet;
   //float tempMet = MET.Et(); if (tempMet<vMinMet) tempMet = vMinMet; if (tempMet>=vMaxMet) tempMet = vMaxMet - 0.1;
