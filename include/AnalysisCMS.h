@@ -242,6 +242,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _dphillstar;
   float			 _dphitt_gen;
   float                  _detatt_gen; 
+  float                  _DY_event_weight;
   float                  _event_weight;
   float                  _event_weight_Btagup;
   float                  _event_weight_Btagdo;

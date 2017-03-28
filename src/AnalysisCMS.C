@@ -73,7 +73,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -461,6 +461,7 @@ void AnalysisCMS::ApplyWeights()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyWeights]\n");
 
+  _DY_event_weight        = 1.0;
   _event_weight           = 1.0;
   _event_weight_Btagup    = 1.0;
   _event_weight_Btagdo    = 1.0;
@@ -1220,13 +1221,13 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  if (!_analysis.EqualTo("Control")) GetTops();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTops();
   
-  if (!_analysis.EqualTo("Control")) GetGenLeptonsAndNeutrinos();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetGenLeptonsAndNeutrinos();
   
-  if (!_analysis.EqualTo("Control")) GetDark();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetDark();
   
-  if (!_analysis.EqualTo("Control")) GetTopReco();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1664,7 +1665,6 @@ void AnalysisCMS::OpenMinitree()
   // Only available in MC
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
-
 
   // Vectors
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
