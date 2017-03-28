@@ -73,7 +73,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  //if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -461,7 +461,6 @@ void AnalysisCMS::ApplyWeights()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyWeights]\n");
 
-  _DY_event_weight        = 1.0;
   _event_weight           = 1.0;
   _event_weight_Btagup    = 1.0;
   _event_weight_Btagdo    = 1.0;

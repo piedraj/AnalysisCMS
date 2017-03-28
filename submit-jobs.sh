@@ -72,16 +72,16 @@ mkdir -p jobs
 #    -q 2nw (2 week)
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#cd jobs
-#
-#if [[ "$SAMPLES" != *"minitrees"* ]]; then
-#    bsub -q 8nh -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
-#else
-#    bsub -q 1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings_minitrees.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
-#fi
+cd jobs
+
+if [[ "$SAMPLES" != *"minitrees"* ]]; then
+    bsub -q 8nh -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
+else
+    bsub -q 1nd -J "settings[1-$NJOBS]" -o $WORKDIRECTORY/jobs $WORKDIRECTORY/settings_minitrees.lsf WORKDIRECTORY SAMPLES SYSTEMATIC
+fi
 
 
 # gridui
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-qsub -t 1-$NJOBS -v SAMPLES -v SYSTEMATIC settings.sge
+#qsub -t 1-$NJOBS -v SAMPLES -v SYSTEMATIC settings.sge
 
