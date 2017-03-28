@@ -272,6 +272,7 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2llgen          [i][j][k] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
 	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
 	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
 	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
@@ -324,7 +325,8 @@ void AnalysisStop::BookSystematicHistograms()
 
 	TString suffix = "_" + schannel[i];
 
-	h_MT2ll_systematic  [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2ll_systematic     [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2llgen_systematic  [i][j][is] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
 	
       }
 
@@ -345,6 +347,7 @@ void AnalysisStop::GetAnalysisVariables()
 
   _metmeff = MET.Et()/_meff;
   _MT2ll = (_mt2ll<140.) ? _mt2ll : 139.;
+  _MT2llgen = (_mt2ll<140.) ? _mt2llgen : 139.;
 
   // NbinsMet;
   //float tempMet = MET.Et(); if (tempMet<vMinMet) tempMet = vMinMet; if (tempMet>=vMaxMet) tempMet = vMaxMet - 0.1;
@@ -402,6 +405,7 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+  h_MT2llgen         [ichannel][icut][ijet]->Fill(_MT2llgen,       _event_weight);
 
   if (_nLeptonsMatched==2) {
     h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
@@ -454,6 +458,7 @@ void AnalysisStop::FillSystematicHistograms(int ichannel,
       printf("\n\n Bad name for systematics, please check!\n");
 
     h_MT2ll_systematic   [ichannel][icut][is]->Fill(_MT2ll, _event_weight_systematic);
+    h_MT2llgen_systematic   [ichannel][icut][is]->Fill(_MT2llgen, _event_weight_systematic);
 
   }
 
@@ -3083,6 +3088,7 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("leadingPtCSVv2T", &_leadingPtCSVv2T);
 
   fChain->SetBranchAddress("mt2ll",           &_mt2ll);
+  fChain->SetBranchAddress("mt2llgen",        &_mt2llgen);
   fChain->SetBranchAddress("mt2bb",           &_mt2bb);
   fChain->SetBranchAddress("mt2lblb",         &_mt2lblb);
   fChain->SetBranchAddress("mt2bbtrue",       &_mt2bbtrue);

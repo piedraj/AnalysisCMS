@@ -1586,6 +1586,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mtw1",             &mtw1,              "mtw1/F");
   minitree->Branch("mtw2",             &mtw2,              "mtw2/F");
   minitree->Branch("mt2ll",            &_mt2ll,            "mt2ll/F");
+  minitree->Branch("mt2llgen",         &_mt2llgen,         "mt2llgen/F");
   minitree->Branch("mllbb",            &_mllbb,            "mllbb/F");
   minitree->Branch("meff",             &_meff,             "meff/F");
   minitree->Branch("mt2bb",            &_mt2bb,            "mt2bb/F");
@@ -1810,7 +1811,9 @@ void AnalysisCMS::GetStopVar()
   _dyll  = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
   _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
   _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
-
+  TLorentzVector GenMET; GenMET.SetPtEtaPhiM(metGenpt, 0., metGenphi, 0.);
+  _mt2llgen = ComputeMT2(Lepton1.v, Lepton2.v, GenMET);
+  
   _dphimetbbll  = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;
