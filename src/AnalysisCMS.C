@@ -1807,10 +1807,13 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStopVar()
 {
-  _dyll  = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
-  _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
-  _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
-  TLorentzVector GenMET; GenMET.SetPtEtaPhiM(metGenpt, 0., metGenphi, 0.);
+  TLorentzVector GenMET;
+
+  GenMET.SetPtEtaPhiM(metGenpt, 0., metGenphi, 0.);
+
+  _dyll     = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
+  _ptbll    = (Lepton1.v + Lepton2.v + MET).Pt();
+  _mt2ll    = ComputeMT2(Lepton1.v, Lepton2.v, MET);
   _mt2llgen = ComputeMT2(Lepton1.v, Lepton2.v, GenMET);
   
   _dphimetbbll  = -0.1;
