@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo $WORKDIRECTORY
+echo $SAMPLES
+echo $SYSTEMATIC
+
+cd $WORKDIRECTORY/
+
+eval `scramv1 runtime -sh`
+
+stat ./runAnalysis
+
+`cat $SAMPLES | grep ".root" | grep -v "#" | awk -v line=$LSB_JOBINDEX -v syst=$SYSTEMATIC '{ if (NR==line) print "./runAnalysis "$1,syst,$2,$3 }'`
