@@ -270,14 +270,14 @@ void runPlotter(TString level,
 	  // S / B
 	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
-	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
+	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",  1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",       1000, "GeV", 0, 1000, "Punzi Eq.6");
+	  plotter.Roc(prefix + "drll"  + suffix, "#DeltaR_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
 
 
 	  if (!allplots) continue;
