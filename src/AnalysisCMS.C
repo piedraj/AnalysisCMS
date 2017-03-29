@@ -383,7 +383,7 @@ void AnalysisCMS::Setup(TString analysis,
   _suffix       = suffix;
   _nentries     = fChain->GetEntries();
   _isminitree   = (_filename.Contains("minitrees")) ? true : false;
-  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+  _isdatadriven = (_filename.Contains("fakeSel")) ? "fakeSel_" : "";
 
   _dataperiod = "";  // TO BE REMOVED
 
@@ -477,7 +477,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) _event_weight *= veto_EMTFBug;
 
-  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
+  if (!_ismc && _filename.Contains("fakeSel")) _event_weight *= _fake_weight;
   
   if (!_ismc) return;
 
@@ -645,7 +645,7 @@ void AnalysisCMS::GetLeptons()
 
     bool reject_lepton = false;
     
-    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
+    if (i > 1 && !_filename.Contains("fakeSel") && _analysis.EqualTo("WZ"))
       {
 	if (!found_third_tight_lepton)
 	  {
