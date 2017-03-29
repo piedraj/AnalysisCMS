@@ -3,8 +3,8 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t datadriven = true;
-const Bool_t allplots   = true;
+const Bool_t datadriven = false;
+const Bool_t allplots   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -49,7 +49,7 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = lumi_fb_2016;
+  float lumi = lumi_fb_Full2016;
 
   if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
   if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
@@ -65,6 +65,7 @@ void runPlotter(TString level,
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
   HistogramReader plotter(inputdir + analysis, outputdir);
+  //HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle(false);
@@ -113,6 +114,7 @@ void runPlotter(TString level,
     }
   else
     {
+      /*
       plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
       plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
       plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
@@ -120,11 +122,14 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
+      */
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
+      /*
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
       plotter.AddProcess("05_ST",        "tW",       color_ST);
-
+      */
+      //      plotter.AddProcess("QCD",        "QCD",       color_Fakes);
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
@@ -241,9 +246,10 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
-
+	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
+	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
+	  plotter.Draw("h_Muon_loose_pt_bin_25GeV", "Test",             -1, 0, "NULL", scale);
+	  /*
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
@@ -266,7 +272,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
 	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
-
+	  */
 
 	  // ROC
 	  //--------------------------------------------------------------------
@@ -275,6 +281,7 @@ void runPlotter(TString level,
 	  // S / B
 	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
+	  /*
 	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
@@ -283,7 +290,7 @@ void runPlotter(TString level,
 	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
-
+	  */
 	  if (!allplots) continue;
 
 
