@@ -100,7 +100,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  //	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // NOT YET AVAILABLE
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -127,7 +127,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  //	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // NOT YET AVAILABLE
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
 	}
       else
 	{

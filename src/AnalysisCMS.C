@@ -383,18 +383,18 @@ void AnalysisCMS::Setup(TString analysis,
   _suffix       = suffix;
   _nentries     = fChain->GetEntries();
   _isminitree   = (_filename.Contains("minitrees")) ? true : false;
-  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+  _isdatadriven = (_filename.Contains("fakeSel")) ? "fakeSel_" : "";
 
-  _dataperiod = "";
+  _dataperiod = "";  // TO BE REMOVED
 
-  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
-  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
+  //  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";  // TO BE REMOVED
+  //  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";  // TO BE REMOVED
 
   TString tok;
 
@@ -477,7 +477,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) _event_weight *= veto_EMTFBug;
 
-  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
+  if (!_ismc && _filename.Contains("fakeSel")) _event_weight *= _fake_weight;
   
   if (!_ismc) return;
 
@@ -645,7 +645,7 @@ void AnalysisCMS::GetLeptons()
 
     bool reject_lepton = false;
     
-    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
+    if (i > 1 && !_filename.Contains("fakeSel") && _analysis.EqualTo("WZ"))
       {
 	if (!found_third_tight_lepton)
 	  {
