@@ -220,8 +220,10 @@ class HistogramReader
 
   std::ofstream         _yields_table;
 
-  std::vector<TString>  _roc_signals;
-  std::vector<TString>  _roc_backgrounds;
+  std::vector<TFile*>   _roc_signalfile;
+  std::vector<TFile*>   _roc_backgroundfile;
+  std::vector<Float_t>  _roc_signalscale;
+  std::vector<Float_t>  _roc_backgroundscale;
 };
 
 #endif

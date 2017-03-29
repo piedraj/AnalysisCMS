@@ -4,8 +4,8 @@ tag = 'mytest'
 
 outputDir = 'Shapes'
 outputDirDatacard = 'tempDatacards'
-
-inputDir = '/afs/cern.ch/user/b/bchazinq/work/CMSSW_8_0_5/src/AnalysisCMS/minifilesOld/rootfiles'
+ 
+inputDir = '/afs/cern.ch/user/b/bchazinq/work/CMSSW_8_0_5/src/AnalysisCMS/minifiles/rootfiles'
 #inputDir = '/afs/cern.ch/user/s/scodella/work/Stop/CodeDevelopment/CMSSW_8_0_21/src/AnalysisCMS/minitreesB/rootfiles/'
 
 # luminosity to normalize to
@@ -21,7 +21,7 @@ lumi = 36.
 
 variablesFile = 'variables.py' # file with list of variables
 
-cutsFile = 'cutsVR.py' # file with list of cuts
+cutsFile = 'cuts.py' # file with list of cuts
 
 samplesFile = 'samples.py' # file with list of samples
 

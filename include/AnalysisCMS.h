@@ -353,6 +353,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _dyll;
   float                  _ptbll;
   float                  _mt2ll;
+  float                  _mt2llgen;
   float                  _dphimetptbll;
   float                  _dphimetjet;
   float                  _dphimetbbll;

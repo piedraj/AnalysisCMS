@@ -102,7 +102,7 @@ void runPlotter(TString level,
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  //	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // NOT YET AVAILABLE
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -114,30 +114,26 @@ void runPlotter(TString level,
     }
   else
     {
-      /*
-      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
-      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
+      //      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);  // NOT YET AVAILABLE
+      //      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);  // NOT YET AVAILABLE
       plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      */
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
-      /*
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
       plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
       plotter.AddProcess("05_ST",        "tW",       color_ST);
-      */
-      //      plotter.AddProcess("QCD",        "QCD",       color_Fakes);
+      
       if (datadriven)
 	{
 	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  //	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // NOT YET AVAILABLE
 	}
       else
 	{
-	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+	  //	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);  // NOT YET AVAILABLE
 	}
     }
 
@@ -155,7 +151,7 @@ void runPlotter(TString level,
     }
 
 
-  if (analysis.EqualTo("Control"))
+  if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
@@ -198,9 +194,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -216,7 +213,6 @@ void runPlotter(TString level,
   // Draw distributions
   //----------------------------------------------------------------------------
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
-  if (analysis.EqualTo("Control")) plotter.SetDrawYield(false);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
   float m2l_xmax   = (level.Contains("WZ")) ? 120 : 300;  // [GeV]
@@ -224,9 +220,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -409,7 +406,7 @@ void runPlotter(TString level,
   //
   //----------------------------------------------------------------------------
 
-  if (analysis.EqualTo("Control") && level.Contains("WW"))
+  if (analysis.EqualTo("Control") && level.Contains("WW") && 0)  // NOT YET AVAILABLE
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");
@@ -432,7 +429,9 @@ void runPlotter(TString level,
 
 
 //------------------------------------------------------------------------------
+//
 // main
+//
 //------------------------------------------------------------------------------
 # ifndef __CINT__
 int main(int argc, char ** argv)

@@ -67,9 +67,10 @@ class AnalysisStop : public AnalysisCMS
 
   int _SaveHistograms;
 
-  float _metmeff, _MT2ll;
+  float _metmeff, _MT2ll, _MT2llgen;
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll            [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llgen         [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll_fake       [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll_truth      [nchannel][ncut][njetbin+1];
   TH1F*                  h_MET_fake         [nchannel][ncut][njetbin+1];
@@ -96,6 +97,7 @@ class AnalysisStop : public AnalysisCMS
   // Systematic output
   TFile*                 root_output_systematic[nsystematic];
   TH1F*                  h_MT2ll_systematic [nchannel][ncut][nsystematic];
+  TH1F*                  h_MT2llgen_systematic [nchannel][ncut][nsystematic];
   
 };
 

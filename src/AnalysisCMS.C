@@ -73,7 +73,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -587,25 +587,25 @@ void AnalysisCMS::ApplyWeights()
 	}
 
 
-      // Top pt reweighithing for powheg
+      // Top pt reweight for powheg
       _event_weight_Toppt = _event_weight;
 
       if (_sample.Contains("TTTo2L2Nu")) {
 
-	float TopPtReweighting = sqrt( exp(0.0615-0.0005*topLHEpt) *
-				       exp(0.0615-0.0005*antitopLHEpt) );
-
-	_event_weight_Toppt *= TopPtReweighting;
+	// https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+	_event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 
 	if (_systematic_toppt) _event_weight = _event_weight_Toppt;
 
 	if (_applytopptreweighting) {
 
-	  float _save_this_weight = _event_weight;
-	  _event_weight = _event_weight_Toppt;
-	  _event_weight_Toppt = _save_this_weight;
+	  float save_this_weight = _event_weight;
+
+	  _event_weight       = _event_weight_Toppt;
+	  _event_weight_Toppt = save_this_weight;
 	}
       }
+
 
       _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
       _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
@@ -1231,19 +1231,19 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetLeptons();
 
   GetJets(jet_eta_max, jet_pt_min);
-
-  GetTops();
-
-  GetGenLeptonsAndNeutrinos();
-
-  GetDark();
-
-  //  GetTopReco();
-
+  /*
   GetSphericity(GetMomentumTensor());
   GetAlignment(GetMomentumTensor());
   GetPlanarity(GetMomentumTensor());
   GetCentrality();
+  */
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTops();
+  
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetGenLeptonsAndNeutrinos();
+  
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetDark();
+  
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1608,6 +1608,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mtw1",             &mtw1,              "mtw1/F");
   minitree->Branch("mtw2",             &mtw2,              "mtw2/F");
   minitree->Branch("mt2ll",            &_mt2ll,            "mt2ll/F");
+  minitree->Branch("mt2llgen",         &_mt2llgen,         "mt2llgen/F");
   minitree->Branch("mllbb",            &_mllbb,            "mllbb/F");
   minitree->Branch("meff",             &_meff,             "meff/F");
   minitree->Branch("mt2bb",            &_mt2bb,            "mt2bb/F");
@@ -1688,7 +1689,6 @@ void AnalysisCMS::OpenMinitree()
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
-
   // Vectors
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
   minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
@@ -1698,12 +1698,31 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
   minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
   minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
-  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt );
+  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt);
 }
 
 
 //------------------------------------------------------------------------------
 // GetGenPtllWeight
+//
+// https://indico.cern.ch/event/515004/contributions/2037666/attachments/1252111/1846797/Apr-04_GEN_ZpT_Massironi.pdf
+//
+// 1. Apply the following selection
+//
+//    mll > 60 GeV
+//    pt1 > 20 GeV
+//    pt2 > 10 (13) GeV for muons (electrons)
+//
+// 2. Fit ptll in the mumu channel with the following function
+//
+//    TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//
+//    f4->SetParameter(0,  10);
+//    f4->SetParameter(1,   1);
+//    f4->SetParameter(2,   1);
+//    f4->SetParameter(3, 0.1);
+//
+// 3. Apply the correction to gen_ptll and check in the ee and mumu channels
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetGenPtllWeight()
 {
@@ -1811,10 +1830,15 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStopVar()
 {
-  _dyll  = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
-  _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
-  _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+  TLorentzVector GenMET;
 
+  GenMET.SetPtEtaPhiM(metGenpt, 0., metGenphi, 0.);
+
+  _dyll     = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
+  _ptbll    = (Lepton1.v + Lepton2.v + MET).Pt();
+  _mt2ll    = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+  _mt2llgen = ComputeMT2(Lepton1.v, Lepton2.v, GenMET);
+  
   _dphimetbbll  = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;
