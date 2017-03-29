@@ -38,26 +38,20 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
 //------------------------------------------------------------------------------
 // PassTrigger
+//
+// https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/samples.py#L50-L56
 //------------------------------------------------------------------------------
 bool AnalysisCMS::PassTrigger()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::PassTrigger]\n");
 
-  if (!std_vector_trigger) return true;
-
   if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
 
-  bool pass_MuonEG         = trig_EleMu;
-  bool pass_DoubleMuon     = trig_DbleMu;
-  bool pass_SingleMuon     = trig_SnglMu;
-  bool pass_SingleElectron = trig_SnglEle;
-  bool pass_DoubleEG       = trig_DbleEle;
-  
-  if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
-  else if (_sample.Contains("DoubleMuon"))     return (!pass_MuonEG &&  pass_DoubleMuon);
-  else if (_sample.Contains("SingleMuon"))     return (!pass_MuonEG && !pass_DoubleMuon &&  pass_SingleMuon);
-  else if (_sample.Contains("DoubleEG"))       return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon &&  pass_DoubleEG);
-  else if (_sample.Contains("SingleElectron")) return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon && !pass_DoubleEG && pass_SingleElectron);
+  if      (_sample.Contains("MuonEG"))         return ( trig_EleMu);
+  else if (_sample.Contains("DoubleMuon"))     return (!trig_EleMu &&  trig_DbleMu);
+  else if (_sample.Contains("SingleMuon"))     return (!trig_EleMu && !trig_DbleMu &&  trig_SnglMu);
+  else if (_sample.Contains("DoubleEG"))       return (!trig_EleMu && !trig_DbleMu && !trig_SnglMu &&  trig_DbleEle);
+  else if (_sample.Contains("SingleElectron")) return (!trig_EleMu && !trig_DbleMu && !trig_SnglMu && !trig_DbleEle && trig_SnglEle);
   else                                         return true;
 }
 
@@ -477,7 +471,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger() * ApplyMETFilters();
+  _event_weight = PassTrigger();
+
+  if (!_analysis.EqualTo("Control")) _event_weight *= ApplyMETFilters();  // Not applied in "Control" while synchronizing with Xavier
 
   if (!_ismc) _event_weight *= veto_EMTFBug;
 
