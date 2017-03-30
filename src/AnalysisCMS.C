@@ -525,15 +525,22 @@ void AnalysisCMS::ApplyWeights()
       float sf_trigger    = effTrigW;  // To be updated for WZ
       float sf_trigger_up = effTrigW_Up;
       float sf_trigger_do = effTrigW_Down;
-
-      float sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
-      float sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
-      float sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
+      
+      float sf_idiso, sf_idiso_up, sf_idiso_do;
+      if (!_analysis.EqualTo("Stop")) {
+	sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
+	sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
+	sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
+      } else {
+	sf_idiso    = std_vector_lepton_idisoW->at(0)      * std_vector_lepton_idisoW->at(1);
+	sf_idiso_up = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+	sf_idiso_do = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+      }
 
       float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
       float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
       float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
-      
+
       float sf_fastsim    = 1.;
       float sf_fastsim_up = 1.;
       float sf_fastsim_do = 1.;
@@ -1229,7 +1236,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetFakeWeights();
 
   ApplyWeights();
-
 
   // Additional analysis variables
   //----------------------------------------------------------------------------
