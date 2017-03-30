@@ -71,6 +71,8 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll            [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2llgen         [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_nvtxup     [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_nvtxdo     [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll_fake       [nchannel][ncut][njetbin+1];
   TH1F*                  h_MT2ll_truth      [nchannel][ncut][njetbin+1];
   TH1F*                  h_MET_fake         [nchannel][ncut][njetbin+1];

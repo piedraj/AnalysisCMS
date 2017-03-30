@@ -66,7 +66,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   
   root_output->cd();
 
-  FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
+  FastSimDataset = _isfastsim ? "_T2" : "";
   BTagSF       = new BTagSFUtil("mujets", "CSVv2", "Medium",   0, FastSimDataset);
   BTagSF_Upb   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
   BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  -1, FastSimDataset);
@@ -286,6 +286,8 @@ void AnalysisStop::BookAnalysisHistograms()
 	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
 	h_MT2llgen          [i][j][k] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
+	h_MT2ll_nvtxup        [i][j][k] = new TH1F("h_MT2ll_nvtxup"   + suffix, "",    7,    0,  140);
+	h_MT2ll_nvtxdo        [i][j][k] = new TH1F("h_MT2ll_nvtxdo"   + suffix, "",    7,    0,  140);
 	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
 	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
 	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
@@ -419,6 +421,9 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
   h_MT2llgen         [ichannel][icut][ijet]->Fill(_MT2llgen,       _event_weight);
+
+  if (nvtx>=20) h_MT2ll_nvtxup        [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
+  else h_MT2ll_nvtxdo         [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
 
   if (_nLeptonsMatched==2) {
     h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
@@ -3006,6 +3011,7 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("m2l",             &_m2l);
   fChain->SetBranchAddress("mllbb",           &_mllbb);
   fChain->SetBranchAddress("meff",            &_meff);
+  fChain->SetBranchAddress("nvtx",            &nvtx);
   
   fChain->SetBranchAddress("dphill",          &dphill);
   

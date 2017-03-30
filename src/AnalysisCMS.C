@@ -65,7 +65,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyMETFilters]\n");
 
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
-  if (_filename.Contains("T2tt")) return true;
+  if (_isfastsim) return true;
 
   if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
@@ -417,6 +417,11 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   if (_sample.Contains("Data"))           _ismc = false;
 
+  _isfastsim = false;
+  if (_sample.Contains("T2tt")) _isfastsim = true;
+  if (_sample.Contains("T2bW")) _isfastsim = true;
+  if (_sample.Contains("T2tb")) _isfastsim = true;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
@@ -424,6 +429,7 @@ void AnalysisCMS::Setup(TString analysis,
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
   printf("       ismc: %d\n",        _ismc);
+  printf("  isfastsim: %d\n",        _isfastsim);
   printf(" isminitree: %d\n",        _isminitree);
   
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
@@ -483,7 +489,8 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;
+  _event_weight *= _luminosity * baseW;
+  if (!_isfastsim) _event_weight *= puW;
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
@@ -547,7 +554,7 @@ void AnalysisCMS::ApplyWeights()
       float sf_fastsim_up = 1.;
       float sf_fastsim_do = 1.;
 
-      if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) {
+      if (_analysis.EqualTo("Stop") && _isfastsim) {
 	sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
 	sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
 	sf_fastsim_do = std_vector_lepton_fastsimW_Down->at(0) * std_vector_lepton_fastsimW_Down->at(1); 

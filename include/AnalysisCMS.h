@@ -190,7 +190,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
-  bool                   _isminitree; 
+  bool                   _isminitree;
+  bool                   _isfastsim;
   bool                   _passdphiveto;
   bool                   _systematic_btag_do;
   bool                   _systematic_btag_up;
