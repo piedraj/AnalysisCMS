@@ -479,6 +479,8 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc && _filename.Contains("fakeSel")) _event_weight *= _fake_weight;
   
+  if (_verbosity > 0 && !_ismc) printf(" event_weight % f  trigger %d  metFilters %d\n", _event_weight, PassTrigger(), ApplyMETFilters());
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
@@ -500,7 +502,7 @@ void AnalysisCMS::ApplyWeights()
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
-  if (std_vector_lepton_idisoW)
+  if (std_vector_lepton_idisoWcut_WP_Tight80X)
     {
       float sf_btag    = 1.0;
       float sf_btag_up = 1.0; 
@@ -579,8 +581,8 @@ void AnalysisCMS::ApplyWeights()
 
       if (_verbosity > 0)
 	{
-	  printf(" event_weight % f  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f  trigger %d  metFilters %d",
-		 _event_weight, sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW, PassTrigger(), ApplyMETFilters());
+	  printf("  event_weight % f  trigger %d  metFilters %d  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f",
+		 _event_weight, PassTrigger(), ApplyMETFilters(), sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW);
 
 	  if (GEN_weight_SM) printf("  GEN_weight_SM % .2f\n", GEN_weight_SM); else printf("\n");
 	}
@@ -701,34 +703,35 @@ void AnalysisCMS::GetLeptons()
 
   _nlepton = AnalysisLeptons.size();
 
-  if (_systematic.Contains("fake") && _nlepton>2 && _ntightlepton==2) {
 
-    if (AnalysisLeptons[2].type!=1) {
+  // SUSY check of the nonprompt background shape
+  if (_systematic.Contains("fake") && _nlepton > 2 && _ntightlepton == 2) {
+
+    if (AnalysisLeptons[2].type != 1) {
       
-      int coin = 100.*Lepton1.v.Pt();
-      if (coin%2==0) {
+      int coin = 1e2 * Lepton1.v.Pt();
+
+      if (coin%2 == 0) {
 	
-	if (AnalysisLeptons[2].v.Pt()>Lepton2.v.Pt())
+	if (AnalysisLeptons[2].v.Pt() > Lepton2.v.Pt())
 	  Lepton1 = AnalysisLeptons[2];
 	else {
 	  Lepton1 = Lepton2;
 	  Lepton2 = AnalysisLeptons[2];
 	}
-	
+
       } else {
 	
-	if (AnalysisLeptons[2].v.Pt()<Lepton1.v.Pt())
+	if (AnalysisLeptons[2].v.Pt() < Lepton1.v.Pt())
 	  Lepton2 = AnalysisLeptons[2];
 	else {
 	  Lepton2 = Lepton1;
 	  Lepton1 = AnalysisLeptons[2];
 	}
-
       }
-      
     }
-    
   }
+
   
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
