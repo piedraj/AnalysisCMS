@@ -17,7 +17,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _ismc         = true;
   _saveminitree = false;
-  _eventdump    = false;
+  _eventdump    = true;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -934,20 +934,28 @@ void AnalysisCMS::GetJetPtSum()
 //------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventDump()
+void AnalysisCMS::EventDump(Bool_t leptonInfo)
 {
-  for (int i=0; i<_nlepton; i++)
-    {
-      int index = AnalysisLeptons[i].index;
+  if (!_eventdump) return;
 
-      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f\n",
-			    event,
-			    AnalysisLeptons[i].flavour,
-			    AnalysisLeptons[i].v.Pt(),
-			    AnalysisLeptons[i].v.Eta(),
-			    AnalysisLeptons[i].iso,
-			    std_vector_lepton_isTightLepton->at(index));
+  if (leptonInfo)
+    {
+      for (int i=0; i<_nlepton; i++)
+	{
+	  int index = AnalysisLeptons[i].index;
+	
+	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%.0f\n",
+				run,
+				lumi,
+				event,
+				AnalysisLeptons[i].flavour,
+				AnalysisLeptons[i].v.Pt(),
+				AnalysisLeptons[i].v.Eta(),
+				AnalysisLeptons[i].iso,
+				std_vector_lepton_isTightLepton->at(index));
+	}
     }
+  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
 }
 
 

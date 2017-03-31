@@ -140,6 +140,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(Control_03_WW, pass);
 
+    if (pass) EventDump();
+
 
     // Top
     //--------------------------------------------------------------------------

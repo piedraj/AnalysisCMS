@@ -909,8 +909,8 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // Check that it works fine with runPlotter.C
-  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // Check that it works fine with runPlotter.C
+  //  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // It works for Juan
+  //  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // It works for Juan
 
   xaxis->SetLabelSize(size);
   yaxis->SetLabelSize(size);
