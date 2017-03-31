@@ -4,9 +4,9 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t xsection   = false;
 const Bool_t datadriven = true;
 const Bool_t drawroc    = false;
+const Bool_t xsection   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -53,14 +53,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_Full2016;
 
-  if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
-  if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
-
   Bool_t scale = linY;
-
-  if (analysis.EqualTo("MonoH")) scale = logY;
-  if (analysis.EqualTo("Stop"))  scale = logY;
-  if (analysis.EqualTo("Top"))   scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -256,8 +249,8 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet2eta"        + suffix, "trailing jet #eta",                 -1, 1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet1phi"        + suffix, "leading jet #phi",                   5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "jet2phi"        + suffix, "trailing jet #phi",                  5, 2, "rad",  scale, false);
-	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
-	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0, 400);
+	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0, 400);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
 
@@ -395,7 +388,7 @@ void runPlotter(TString level,
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");
-      
+
       for (int i=firstchannel; i<=lastchannel; i++)
 	plotter.CrossSection(level,
 			     schannel[i],
