@@ -20,8 +20,14 @@ export OPTION=$1
 
 export NPEND=`bjobs | grep PEND | wc -l`
 export NRUN=`bjobs | grep RUN | wc -l`
-export NFINISH=`ls jobs/LSFJOB_*/STDOUT | wc -l`
-export NGOOD=`cat jobs/LSFJOB_*/STDOUT | grep Done | wc -l`
+
+export NFINISH=0
+export NGOOD=0
+
+if [ -d "jobs" ]; then
+    NFINISH=`ls jobs/LSFJOB_*/STDOUT | wc -l`
+    NGOOD=`cat jobs/LSFJOB_*/STDOUT | grep Done | wc -l`
+fi
 
 
 # Check the status of the jobs
@@ -49,13 +55,9 @@ if [ "$OPTION" -eq "0" ]; then
 	
 	    fi
 	done
-    else
 
-	printf " All jobs finished successfully!\n"
-
+	printf " \n"
     fi
-
-    printf " \n"
 fi
 
 
