@@ -17,7 +17,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _ismc         = true;
   _saveminitree = false;
-  _eventdump    = true;
+  _eventdump    = false;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
