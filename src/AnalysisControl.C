@@ -117,6 +117,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
 
     // WW
+    // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/cuts.py
     //--------------------------------------------------------------------------
     pass =
       mll > 80                         &&

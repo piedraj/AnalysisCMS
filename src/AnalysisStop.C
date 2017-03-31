@@ -154,8 +154,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
       pass_blind = false;
       //if (_mt2ll<40.) pass_blind = true;
-      //if (MET.Et()<140.) pass_blind = true;
-      if (run < 276502) pass_blind = true; 
+      if (MET.Et()<140.) pass_blind = true;
+      if (run > 276502) continue;
      }
 
     if (!_isminitree) {
@@ -208,7 +208,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     bool WW = pass && _njet == 0;
     FillLevelHistograms(Stop_00_WWsel, WW && pass_blind && pass_masspoint);
-    FillLevelHistograms(Stop_00_WWselMET, WW && MET.Et()>= 50 && pass_blind && pass_masspoint    
+    FillLevelHistograms(Stop_00_WWselMET, WW && MET.Et()>= 50 && pass_blind && pass_masspoint);    
     bool TTbar = pass && _njet >1 && _leadingPtCSVv2M >= 20.; 
     FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_00_TTselMET, TTbar && MET.Et()>= 50 && pass_blind && pass_masspoint);
