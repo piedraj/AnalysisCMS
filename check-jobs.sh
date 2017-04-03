@@ -7,11 +7,11 @@ if [ $# -lt 1 ]; then
     echo " "
     echo " Check the status of the jobs"
     echo " "
-    echo "   ./chek-jobs.sh 0"
+    echo "   ./check-jobs.sh 0"
     echo " "
     echo " Print the list of failed files and remove the corresponding STDOUT"
     echo " "
-    echo "   ./chek-jobs.sh 1"
+    echo "   ./check-jobs.sh 1"
     echo " "
     exit -1
 fi
