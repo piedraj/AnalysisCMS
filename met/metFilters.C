@@ -1,12 +1,12 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const TString _gridui = "/gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/";
-const TString _lxplus = "eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW6p3/";
-
-
 const Bool_t _savepdf = true;
-const Bool_t _savepng = false;
+const Bool_t _savepng = true;
+
+enum {B, C, D, E, F, G, H, nrun};
+
+TString srun[nrun] = {"B", "C", "D", "E", "F", "G", "H"};
 
 
 // Functions
@@ -34,17 +34,14 @@ TLegend* DrawLegend(Float_t     x1,
 // metFilters
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void metFilters(TString dataset   = "DoubleEG",
-		TString selection = "l2loose__hadd__EpTCorr__l2tight")
+void metFilters(TString dataset = "DoubleEG")
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   TChain* tree = new TChain("latino", "latino");
 
-  tree->Add(_lxplus + "21Jun2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "05Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016B_PromptReco/" + selection + "/latino_Run2016B_PromptReco_" + dataset + ".root");
-  tree->Add(_lxplus + "08Jul2016_Run2016C_PromptReco/" + selection + "/latino_Run2016C_PromptReco_" + dataset + ".root");
+  for (int i=0; i<nrun; i++)
+    tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016" + srun[i] + "_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_" + dataset + "_Run2016" + srun[i] + "-03Feb2017*.root");
 
   TH1D* before = new TH1D("before", "", 20, 0, 1000);
   TH1D* after  = new TH1D("after",  "", 20, 0, 1000);
@@ -56,30 +53,34 @@ void metFilters(TString dataset   = "DoubleEG",
 
   //----------------------------------------------------------------------------
   //
-  //  yes: apply for ICHEP
-  //  no:  do not apply for ICHEP
-  //  --:  not available up to 08Jul latino trees
+  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/skimEventProducer_cfi.py#L383-L392
   //
-  //  [ 0,yes] Flag_HBHENoiseFilter
-  //  [ 1,yes] Flag_HBHENoiseIsoFilter
-  //  [ 2, no] Flag_CSCTightHalo2015Filter
-  //  [ 3,yes] Flag_EcalDeadCellTriggerPrimitiveFilter
-  //  [ 4,yes] Flag_goodVertices
-  //  [ 5,yes] Flag_eeBadScFilter
-  //  [ 6, no] Flag_chargedHadronTrackResolutionFilter
-  //  [ 7, no] Flag_muonBadTrackFilter
-  //  [--,yes] Flag_globalTightHalo2016Filter
-  //  [--,yes] Flag_badChargedHadronFilter
-  //  [--,yes] Flag_badMuonFilter
+  // Flag_HBHENoiseFilter                     #0
+  // Flag_HBHENoiseIsoFilter                  #1
+  // Flag_EcalDeadCellTriggerPrimitiveFilter  #2
+  // Flag_goodVertices                        #3
+  // Flag_eeBadScFilter                       #4
+  // Flag_globalTightHalo2016Filter           #5
+  // Flag_duplicateMuons                      #6 -> 0 is good // Giovanni's filter
+  // Flag_badMuons                            #7 -> 0 is good // Giovanni's filter
+  // Bad PF Muon Filter                       #8              // ICHEP additional filter
+  // Bad Charged Hadrons                      #9              // ICHEP additional filter
   //
   //----------------------------------------------------------------------------
 
 
-  TCut triggerCut   = "trigger";
-  TCut metFilterCut = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[3]*std_vector_trigger_special[4]*std_vector_trigger_special[5]";
+  TCut trigger;
 
-  tree->Draw("metPfType1>>before", triggerCut);
-  tree->Draw("metPfType1>>after",  triggerCut && metFilterCut);
+  if (dataset.EqualTo("MuonEG"))         trigger = " trig_EleMu";
+  if (dataset.EqualTo("DoubleMuon"))     trigger = "!trig_EleMu &&  trig_DbleMu";
+  if (dataset.EqualTo("SingleMuon"))     trigger = "!trig_EleMu && !trig_DbleMu &&  trig_SnglMu";
+  if (dataset.EqualTo("DoubleEG"))       trigger = "!trig_EleMu && !trig_DbleMu && !trig_SnglMu &&  trig_DbleEle";
+  if (dataset.EqualTo("SingleElectron")) trigger = "!trig_EleMu && !trig_DbleMu && !trig_SnglMu && !trig_DbleEle && trig_SnglEle";
+
+  TCut metFilterCut = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[2]*std_vector_trigger_special[3]*std_vector_trigger_special[4]*std_vector_trigger_special[5]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]*std_vector_trigger_special[8]*std_vector_trigger_special[9]";
+
+  tree->Draw("metPfType1>>before", trigger);
+  tree->Draw("metPfType1>>after",  trigger && metFilterCut);
 
   before->SetFillColor(kGray);
   before->SetFillStyle(1001);
@@ -104,7 +105,7 @@ void metFilters(TString dataset   = "DoubleEG",
   before->SetYTitle(Form("events / %.0f GeV", before->GetBinWidth(0)));
 
   DrawLatex(42, 0.190, 0.945, 0.045, 11, dataset);
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "6.3 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
   DrawLegend(0.55, 0.83, before, "before filters", "f");
   DrawLegend(0.55, 0.77, after,  Form("after filters (%.2f%%)", efficiency), "ep");
