@@ -1266,6 +1266,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetAlignment(GetMomentumTensor());
   GetPlanarity(GetMomentumTensor());
   GetCentrality();
+  */
 
   if (_analysis.EqualTo("TTDM")) GetTops();
   
