@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos"; 
+const TString outputdir = "histos/Zmm/"; 
 
 void CreateHistograms2( int process );
 
@@ -13,15 +13,17 @@ void CreateHistograms(){
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	//for( int i = 0; i < nprocess; i++ ){
 
-		CreateHistograms2( i ); 
+		//CreateHistograms2( i ); 
 
-	}
+	//}
 
-//CreateHistograms2( data );
+CreateHistograms2( data );
 //CreateHistograms2( ttDM );
-//CreateHistograms2( TT   );
+CreateHistograms2( TT   );
+CreateHistograms2( EW   );
+CreateHistograms2( DY   );
 
 	//for( int i = 0; i < nscalar; i++ ){
 
@@ -42,8 +44,23 @@ void CreateHistograms2( int process ){
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
-	TFile* myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
+	TFile* myfile; 
+
+	myfile = new TFile( "../minitrees/" + inputdir + "/MET/" + processID[process] + ".root", "read" );
+
+	/*if ( process == data ){
+
+		myfile = new TFile( "../minitrees/Zee/MET/" + processID[process] + ".root", "read" );
+		//myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+
+	}
+
+	else{
+
+		myfile = new TFile( "../minitrees/" + inputdir + "/MET/" + processID[process] + ".root", "read" );
+		//myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
+	
+	}*/
  
 	for( int k = 0; k < nsystematic; k++ ){
 
@@ -172,6 +189,11 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", thecut );
 
 		mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
+		//mytree -> Draw( b_name[ntrueint     ] + " >> " + h_name[ntrueint     ] + "(   60,  0,     60   )", thecut );
+
+		mytree -> Draw( b_name[scale         ] + " >> " + h_name[scale         ] + "(   80,  -3,     5    )", thecut );
+		mytree -> Draw( b_name[uPara         ] + " >> " + h_name[uPara         ] + "(   80,  -200,  200   )", thecut );
+		mytree -> Draw( b_name[uPerp         ] + " >> " + h_name[uPerp         ] + "(   80,  -200,  200   )", thecut );
 
 		//mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
