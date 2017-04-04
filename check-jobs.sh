@@ -52,6 +52,10 @@ if [ "$OPTION" -eq "0" ]; then
 	    if [ $ISDONE -ne 1 ]; then
 
 		printf " %s\n" $fn
+     
+                export FILENAME=`cat $fn | grep filename`
+	    
+                echo $FILENAME
 	
 	    fi
 	done
@@ -79,7 +83,7 @@ if [ "$OPTION" -eq "1" ]; then
 	    
 		echo $FILENAME
 
-		rm -rf $fn
+#		rm -rf $fn
 	
 	    fi
 	done
