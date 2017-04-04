@@ -55,7 +55,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        EndJob               ();
 
-  void        EventDump            ();
+  void        EventDump            (Bool_t   leptonInfo = false);
 
   void        EventSetup           (float    jet_eta_max = -1,
 				    float    jet_pt_min  = 30);
@@ -349,6 +349,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _dyll;
   float                  _ptbll;
   float                  _mt2ll;
+  float                  _mt2llgen;
   float                  _dphimetptbll;
   float                  _dphimetjet;
   float                  _dphimetbbll;
@@ -402,7 +403,8 @@ class AnalysisCMS : public AnalysisBase
   unsigned int           _nelectron;
   unsigned int           _nlepton;
   unsigned int           _ntightlepton;
-  unsigned int           _verbosity;
+
+  int                    _verbosity;
   
   ofstream               txt_eventdump;
   ofstream               txt_summary;

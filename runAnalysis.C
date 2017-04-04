@@ -32,6 +32,7 @@ void runAnalysis(TString filename,
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
   //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
+  //  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
   //  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb, StopMass, NeutralinoMass);
   //  AnalysisTop     analysis(latino, systematic); analysis.Loop("Top",     filename, baseW_lumi_fb);
   //  AnalysisTTDM    analysis(latino, systematic); analysis.Loop("TTDM",    filename, baseW_lumi_fb);

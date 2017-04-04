@@ -3,8 +3,10 @@
 
 // Constants
 //------------------------------------------------------------------------------
+const Bool_t allplots   = false;
 const Bool_t datadriven = true;
-const Bool_t allplots   = true;
+const Bool_t drawroc    = false;
+const Bool_t xsection   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -49,16 +51,9 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = lumi_fb_2016;
-
-  if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
-  if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
+  float lumi = lumi_fb_Full2016;
 
   Bool_t scale = linY;
-
-  if (analysis.EqualTo("MonoH")) scale = logY;
-  if (analysis.EqualTo("Stop"))  scale = logY;
-  if (analysis.EqualTo("Top"))   scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -99,8 +94,7 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -112,8 +106,8 @@ void runPlotter(TString level,
     }
   else
     {
-      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
-      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
+      //      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);  // NOT YET AVAILABLE
+      //      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);  // NOT YET AVAILABLE
       plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
@@ -126,8 +120,7 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
 	}
       else
 	{
@@ -149,7 +142,7 @@ void runPlotter(TString level,
     }
 
 
-  if (analysis.EqualTo("Control"))
+  if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
@@ -187,9 +180,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -205,7 +199,6 @@ void runPlotter(TString level,
   // Draw distributions
   //----------------------------------------------------------------------------
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
-  if (analysis.EqualTo("Control")) plotter.SetDrawYield(false);
 
   float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
   float m2l_xmax   = (level.Contains("WZ")) ? 120 : 300;  // [GeV]
@@ -213,9 +206,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -255,33 +249,37 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet2eta"        + suffix, "trailing jet #eta",                 -1, 1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet1phi"        + suffix, "leading jet #phi",                   5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "jet2phi"        + suffix, "trailing jet #phi",                  5, 2, "rad",  scale, false);
-	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
-	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0, 400);
+	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0, 400);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
-	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
 	  // ROC
-	  //--------------------------------------------------------------------
+	  //
 	  // S / #sqrt{B}
 	  // S / #sqrt{S+B}
 	  // S / B
 	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
-	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
+	  //--------------------------------------------------------------------
+	  if (drawroc)
+	    {
+	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",  1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",       1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "drll"  + suffix, "#DeltaR_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
+	    }
 
 
 	  if (!allplots) continue;
 
 
+	  plotter.Draw(prefix + "topReco"      + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dyll"         + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"   + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphimetptbll" + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);
@@ -386,8 +384,7 @@ void runPlotter(TString level,
   //   https://arxiv.org/pdf/1105.0020v1.pdf
   //
   //----------------------------------------------------------------------------
-
-  if (analysis.EqualTo("Control") && level.Contains("WW"))
+  if (xsection && level.Contains("WW"))
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");
@@ -410,7 +407,9 @@ void runPlotter(TString level,
 
 
 //------------------------------------------------------------------------------
+//
 // main
+//
 //------------------------------------------------------------------------------
 # ifndef __CINT__
 int main(int argc, char ** argv)

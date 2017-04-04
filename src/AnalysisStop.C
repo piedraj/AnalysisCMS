@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
+
   SetStopNeutralinoMap();
   if (systematic=="nominal") {
     SetSaveMinitree(true);
@@ -102,27 +103,12 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     }
 
+    
     // Get analysis variables
     //--------------------------------------------------------------------------
-    
+ 
     GetAnalysisVariables();
-    
-    // Set blinded regions
-    //--------------------------------------------------------------------------
-    bool pass = true;
-    bool pass_blind = true; 
-    
-    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
-    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) 
-      {
-	
-	pass_blind = false;
-	//if (_mt2ll<40.) pass_blind = true;
-	if (MET.Et()<140.) pass_blind = true;
-	//if (run>276502) continue;
-	
-      }
-    
+
     // Analysis
     //--------------------------------------------------------------------------
 
@@ -154,10 +140,30 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       _m2l  = mll;
       _pt2l = ptll;
 
+    }
+
+
+    // Fill histograms
+    //--------------------------------------------------------------------------
+    bool pass = true;
+    bool pass_blind = true; 
+
+//    // Blinding policy: Just CR with 10  /fb.  For us blinded () = Met < 140; 
+    if (filename.Contains("Data") || filename.Contains("PromptReco") || filename.Contains("23Sep2016") || _filename.Contains("03Feb2017")) 
+    {
+
+      pass_blind = false;
+      //if (_mt2ll<40.) pass_blind = true;
+      if (MET.Et()<140.) pass_blind = true;
+      if (run > 276502) continue;
+     }
+
+    if (!_isminitree) {
+
       // Fill histograms
       // -----------------------------------------------------------------------------
            
-      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_masspoint);    
+      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_blind && pass_masspoint);    
       
       //    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
 
@@ -168,13 +174,13 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
    /*   FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
       
               // Look in the Z-peak
-              // ---------------------------------------------------------------
+     */         // ---------------------------------------------------------------
 
                bool Zpeak = pass && ( _channel == em || fabs(_m2l - Z_MASS) < 15. );  
 
-               FillLevelHistograms(Stop_05_Zpeak,      Zpeak && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak
+               FillLevelHistograms(Stop_05_Zpeak,      Zpeak && pass_blind && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak
               
-               FillLevelHistograms(Stop_05_NoTagZpeak, Zpeak && (_leadingPtCSVv2M <  20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 0 b Tag (VET0) 
+    /*           FillLevelHistograms(Stop_05_NoTagZpeak, Zpeak && (_leadingPtCSVv2M <  20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 0 b Tag (VET0) 
 
                FillLevelHistograms(Stop_05_TagZpeak,   Zpeak && (_leadingPtCSVv2M >= 20.) && pass_masspoint); // 2 OS Leptons, mll > 20, Z peak + 1 b Tag         
 
@@ -198,12 +204,19 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     
     } 
 
-    FillLevelHistograms(Stop_00_Zveto, pass && /*pass_blind &&*/ pass_masspoint);
+    FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+
+    bool WW = pass && _njet == 0;
+    FillLevelHistograms(Stop_00_WWsel, WW && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_00_WWselMET, WW && MET.Et()>= 50 && pass_blind && pass_masspoint);    
+    bool TTbar = pass && _njet >1 && _leadingPtCSVv2M >= 20.; 
+    FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_00_TTselMET, TTbar && MET.Et()>= 50 && pass_blind && pass_masspoint);
       
     // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
 
-    FillLevelHistograms(Stop_01_Tag,       pass && (_leadingPtCSVv2M >= 20.) && /*pass_blind &&*/ pass_masspoint);
-    FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && /*pass_blind &&*/ pass_masspoint);
+    FillLevelHistograms(Stop_01_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
+    FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
     
     if (_leadingPtCSVv2M >= 20.) {
       FillLevelHistograms(Stop_02_VR1_Tag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
@@ -272,6 +285,7 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
 	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2llgen          [i][j][k] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
 	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
 	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
 	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
@@ -324,7 +338,8 @@ void AnalysisStop::BookSystematicHistograms()
 
 	TString suffix = "_" + schannel[i];
 
-	h_MT2ll_systematic  [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2ll_systematic     [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2llgen_systematic  [i][j][is] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
 	
       }
 
@@ -345,6 +360,7 @@ void AnalysisStop::GetAnalysisVariables()
 
   _metmeff = MET.Et()/_meff;
   _MT2ll = (_mt2ll<140.) ? _mt2ll : 139.;
+  _MT2llgen = (_mt2llgen<140.) ? _mt2llgen : 139.;
 
   // NbinsMet;
   //float tempMet = MET.Et(); if (tempMet<vMinMet) tempMet = vMinMet; if (tempMet>=vMaxMet) tempMet = vMaxMet - 0.1;
@@ -402,6 +418,7 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_mt2lblbvsmlbtrue [ichannel][icut][ijet]->Fill(_mlb2true, _mt2lblbtrue,       _event_weight);
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+  h_MT2llgen         [ichannel][icut][ijet]->Fill(_MT2llgen,       _event_weight);
 
   if (_nLeptonsMatched==2) {
     h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
@@ -454,6 +471,7 @@ void AnalysisStop::FillSystematicHistograms(int ichannel,
       printf("\n\n Bad name for systematics, please check!\n");
 
     h_MT2ll_systematic   [ichannel][icut][is]->Fill(_MT2ll, _event_weight_systematic);
+    h_MT2llgen_systematic   [ichannel][icut][is]->Fill(_MT2llgen, _event_weight_systematic);
 
   }
 
@@ -3083,6 +3101,7 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("leadingPtCSVv2T", &_leadingPtCSVv2T);
 
   fChain->SetBranchAddress("mt2ll",           &_mt2ll);
+  fChain->SetBranchAddress("mt2llgen",        &_mt2llgen);
   fChain->SetBranchAddress("mt2bb",           &_mt2bb);
   fChain->SetBranchAddress("mt2lblb",         &_mt2lblb);
   fChain->SetBranchAddress("mt2bbtrue",       &_mt2bbtrue);

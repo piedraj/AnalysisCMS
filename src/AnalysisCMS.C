@@ -38,26 +38,20 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
 //------------------------------------------------------------------------------
 // PassTrigger
+//
+// https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/samples.py#L50-L56
 //------------------------------------------------------------------------------
 bool AnalysisCMS::PassTrigger()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::PassTrigger]\n");
 
-  if (!std_vector_trigger) return true;
-
   if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
 
-  bool pass_MuonEG         = trig_EleMu;
-  bool pass_DoubleMuon     = trig_DbleMu;
-  bool pass_SingleMuon     = trig_SnglMu;
-  bool pass_SingleElectron = trig_SnglEle;
-  bool pass_DoubleEG       = trig_DbleEle;
-  
-  if      (_sample.Contains("MuonEG"))         return ( pass_MuonEG);
-  else if (_sample.Contains("DoubleMuon"))     return (!pass_MuonEG &&  pass_DoubleMuon);
-  else if (_sample.Contains("SingleMuon"))     return (!pass_MuonEG && !pass_DoubleMuon &&  pass_SingleMuon);
-  else if (_sample.Contains("DoubleEG"))       return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon &&  pass_DoubleEG);
-  else if (_sample.Contains("SingleElectron")) return (!pass_MuonEG && !pass_DoubleMuon && !pass_SingleMuon && !pass_DoubleEG && pass_SingleElectron);
+  if      (_sample.Contains("MuonEG"))         return ( trig_EleMu);
+  else if (_sample.Contains("DoubleMuon"))     return (!trig_EleMu &&  trig_DbleMu);
+  else if (_sample.Contains("SingleMuon"))     return (!trig_EleMu && !trig_DbleMu &&  trig_SnglMu);
+  else if (_sample.Contains("DoubleEG"))       return (!trig_EleMu && !trig_DbleMu && !trig_SnglMu &&  trig_DbleEle);
+  else if (_sample.Contains("SingleElectron")) return (!trig_EleMu && !trig_DbleMu && !trig_SnglMu && !trig_DbleEle && trig_SnglEle);
   else                                         return true;
 }
 
@@ -73,7 +67,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -391,16 +385,16 @@ void AnalysisCMS::Setup(TString analysis,
   _isminitree   = (_filename.Contains("minitrees")) ? true : false;
   _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
 
-  _dataperiod = "";
+  _dataperiod = "";  // TO BE REMOVED
 
-  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";
-  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";
-  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";
-  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";
+  //  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";  // TO BE REMOVED
+  //  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
+  //  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";  // TO BE REMOVED
 
   TString tok;
 
@@ -477,12 +471,16 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("FR")) return;
 
-  _event_weight = PassTrigger() * ApplyMETFilters();
+  _event_weight = PassTrigger();
+
+  if (!_analysis.EqualTo("Control")) _event_weight *= ApplyMETFilters();  // Not applied in "Control" while synchronizing with Xavier
 
   if (!_ismc) _event_weight *= veto_EMTFBug;
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
+  if (_verbosity > 0 && !_ismc) printf(" event_weight % f  trigger %d  metFilters %d\n", _event_weight, PassTrigger(), ApplyMETFilters());
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW * puW;
@@ -502,118 +500,148 @@ void AnalysisCMS::ApplyWeights()
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
-  // Include btag, trigger and idiso systematic uncertainties
+  // btag scale factors
   //----------------------------------------------------------------------------
-  if (std_vector_lepton_idisoW)
-    {
-      float sf_btag    = 1.0;
-      float sf_btag_up = 1.0; 
-      float sf_btag_do = 1.0;
+  float sf_btag    = 1.0;
+  float sf_btag_up = 1.0; 
+  float sf_btag_do = 1.0;
  
-      if (_analysis.EqualTo("Top")  ||
-	  _analysis.EqualTo("TTDM") ||
-	  _analysis.EqualTo("Stop") ||
-	  _analysis.EqualTo("Control"))
-	{
-	  sf_btag    = bPogSF_CSVM;
-	  sf_btag_up = bPogSF_CSVM_up;
-	  sf_btag_do = bPogSF_CSVM_down;
-	}
-      else
-	{
-	  sf_btag    = bPogSF_CMVAL;
-	  sf_btag_up = bPogSF_CMVAL_up;
-	  sf_btag_do = bPogSF_CMVAL_down;
-	}
+  if (_analysis.EqualTo("Top")  ||
+      _analysis.EqualTo("TTDM") ||
+      _analysis.EqualTo("Stop") ||
+      _analysis.EqualTo("Control"))
+    {
+      sf_btag    = bPogSF_CSVM;
+      sf_btag_up = bPogSF_CSVM_up;
+      sf_btag_do = bPogSF_CSVM_down;
+    }
+  else
+    {
+      sf_btag    = bPogSF_CMVAL;
+      sf_btag_up = bPogSF_CMVAL_up;
+      sf_btag_do = bPogSF_CMVAL_down;
+    }
 
-      float sf_trigger    = effTrigW;  // To be updated for WZ
-      float sf_trigger_up = effTrigW_Up;
-      float sf_trigger_do = effTrigW_Down;
 
-      float sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
-      float sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
-      float sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
+  // trigger scale factors
+  //----------------------------------------------------------------------------
+  float sf_trigger    = effTrigW;  // To be updated for WZ
+  float sf_trigger_up = effTrigW_Up;
+  float sf_trigger_do = effTrigW_Down;
 
-      float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
-      float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
-      float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
-      
-      float sf_fastsim    = 1.;
-      float sf_fastsim_up = 1.;
-      float sf_fastsim_do = 1.;
 
-      if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt")) {
-	sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
-	sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
-	sf_fastsim_do = std_vector_lepton_fastsimW_Down->at(0) * std_vector_lepton_fastsimW_Down->at(1); 
-      }
+  // idiso scale factors
+  //----------------------------------------------------------------------------
+  float sf_idiso    = 1.0;
+  float sf_idiso_up = 1.0;
+  float sf_idiso_do = 1.0;
+
+  if (!_analysis.EqualTo("Stop") && std_vector_lepton_idisoWcut_WP_Tight80X)
+    {
+      sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
+      sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
+      sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
 
       if (_analysis.EqualTo("WZ"))
 	{
 	  sf_idiso    *= std_vector_lepton_idisoWcut_WP_Tight80X->at(2);
 	  sf_idiso_up *= std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(2);
 	  sf_idiso_do *= std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(2);
-
-	  sf_reco    *= std_vector_lepton_recoW->at(2);
-	  sf_reco_up *= std_vector_lepton_recoW_Up->at(2);
-	  sf_reco_do *= std_vector_lepton_recoW_Down->at(2);
 	}
-
-      if (_systematic_btag_up)    sf_btag    = sf_btag_up;
-      if (_systematic_btag_do)    sf_btag    = sf_btag_do;
-      if (_systematic_idiso_up)   sf_idiso   = sf_idiso_up;
-      if (_systematic_idiso_do)   sf_idiso   = sf_idiso_do;
-      if (_systematic_reco_up)    sf_reco    = sf_reco_up;
-      if (_systematic_reco_do)    sf_reco    = sf_reco_do;
-      if (_systematic_trigger_up) sf_trigger = sf_trigger_up;
-      if (_systematic_trigger_do) sf_trigger = sf_trigger_do;
-      if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
-      if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
-      if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
-      
-      _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
-
-
-      if (_verbosity > 0)
-	{
-	  printf(" event_weight % f  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f  trigger %d  metFilters %d",
-		 _event_weight, sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW, PassTrigger(), ApplyMETFilters());
-
-	  if (GEN_weight_SM) printf("  GEN_weight_SM % .2f\n", GEN_weight_SM); else printf("\n");
-	}
-
-
-      // Top pt reweighithing for powheg
-      _event_weight_Toppt = _event_weight;
-
-      if (_sample.Contains("TTTo2L2Nu")) {
-
-	float TopPtReweighting = sqrt( exp(0.0615-0.0005*topLHEpt) *
-				       exp(0.0615-0.0005*antitopLHEpt) );
-
-	_event_weight_Toppt *= TopPtReweighting;
-
-	if (_systematic_toppt) _event_weight = _event_weight_Toppt;
-
-	if (_applytopptreweighting) {
-
-	  float _save_this_weight = _event_weight;
-	  _event_weight = _event_weight_Toppt;
-	  _event_weight_Toppt = _save_this_weight;
-	}
-      }
-
-      _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
-      _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
-      _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
-      _event_weight_Idisodo   = _event_weight * (sf_idiso_do/sf_idiso);
-      _event_weight_Triggerup = _event_weight * (sf_trigger_up/sf_trigger);
-      _event_weight_Triggerdo = _event_weight * (sf_trigger_do/sf_trigger);
-      _event_weight_Recoup    = _event_weight * (sf_reco_up/sf_reco);
-      _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
-      _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
-      _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
     }
+
+  if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
+    {
+      sf_idiso    = std_vector_lepton_idisoW->at(0)      * std_vector_lepton_idisoW->at(1);
+      sf_idiso_up = std_vector_lepton_idisoW_Up->at(0)   * std_vector_lepton_idisoW_Up->at(1);
+      sf_idiso_do = std_vector_lepton_idisoW_Down->at(0) * std_vector_lepton_idisoW_Down->at(1);
+    }
+
+
+  // reco scale factors
+  //----------------------------------------------------------------------------
+  float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
+  float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
+  float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
+
+  if (_analysis.EqualTo("WZ"))
+    {
+      sf_reco    *= std_vector_lepton_recoW->at(2);
+      sf_reco_up *= std_vector_lepton_recoW_Up->at(2);
+      sf_reco_do *= std_vector_lepton_recoW_Down->at(2);
+    }
+
+
+  // fastsim scale factors
+  //----------------------------------------------------------------------------
+  float sf_fastsim    = 1.0;
+  float sf_fastsim_up = 1.0;
+  float sf_fastsim_do = 1.0;
+
+  if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt"))
+    {
+      sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
+      sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
+      sf_fastsim_do = std_vector_lepton_fastsimW_Down->at(0) * std_vector_lepton_fastsimW_Down->at(1); 
+  }
+
+
+  if (_systematic_btag_up)    sf_btag    = sf_btag_up;
+  if (_systematic_btag_do)    sf_btag    = sf_btag_do;
+  if (_systematic_idiso_up)   sf_idiso   = sf_idiso_up;
+  if (_systematic_idiso_do)   sf_idiso   = sf_idiso_do;
+  if (_systematic_reco_up)    sf_reco    = sf_reco_up;
+  if (_systematic_reco_do)    sf_reco    = sf_reco_do;
+  if (_systematic_trigger_up) sf_trigger = sf_trigger_up;
+  if (_systematic_trigger_do) sf_trigger = sf_trigger_do;
+  if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
+  if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
+  if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
+      
+
+  _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
+
+
+  if (_verbosity > 0)
+    {
+      printf("  event_weight % f  trigger %d  metFilters %d  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f",
+	     _event_weight, PassTrigger(), ApplyMETFilters(), sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW);
+      
+      if (GEN_weight_SM) printf("  GEN_weight_SM % .2f\n", GEN_weight_SM); else printf("\n");
+    }
+
+
+  // Top pt reweight for powheg
+  _event_weight_Toppt = _event_weight;
+
+  if (_sample.Contains("TTTo2L2Nu")) {
+
+    // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
+
+    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
+
+    if (_applytopptreweighting) {
+
+      float save_this_weight = _event_weight;
+
+      _event_weight       = _event_weight_Toppt;
+      _event_weight_Toppt = save_this_weight;
+    }
+  }
+
+
+  _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
+  _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
+  _event_weight_Idisoup   = _event_weight * (sf_idiso_up/sf_idiso);
+  _event_weight_Idisodo   = _event_weight * (sf_idiso_do/sf_idiso);
+  _event_weight_Triggerup = _event_weight * (sf_trigger_up/sf_trigger);
+  _event_weight_Triggerdo = _event_weight * (sf_trigger_do/sf_trigger);
+  _event_weight_Recoup    = _event_weight * (sf_reco_up/sf_reco);
+  _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
+  _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
+  _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
+    
 
   return;
 }
@@ -698,34 +726,35 @@ void AnalysisCMS::GetLeptons()
 
   _nlepton = AnalysisLeptons.size();
 
-  if (_systematic.Contains("fake") && _nlepton>2 && _ntightlepton==2) {
 
-    if (AnalysisLeptons[2].type!=1) {
+  // SUSY check of the nonprompt background shape
+  if (_systematic.Contains("fake") && _nlepton > 2 && _ntightlepton == 2) {
+
+    if (AnalysisLeptons[2].type != 1) {
       
-      int coin = 100.*Lepton1.v.Pt();
-      if (coin%2==0) {
+      int coin = 1e2 * Lepton1.v.Pt();
+
+      if (coin%2 == 0) {
 	
-	if (AnalysisLeptons[2].v.Pt()>Lepton2.v.Pt())
+	if (AnalysisLeptons[2].v.Pt() > Lepton2.v.Pt())
 	  Lepton1 = AnalysisLeptons[2];
 	else {
 	  Lepton1 = Lepton2;
 	  Lepton2 = AnalysisLeptons[2];
 	}
-	
+
       } else {
 	
-	if (AnalysisLeptons[2].v.Pt()<Lepton1.v.Pt())
+	if (AnalysisLeptons[2].v.Pt() < Lepton1.v.Pt())
 	  Lepton2 = AnalysisLeptons[2];
 	else {
 	  Lepton2 = Lepton1;
 	  Lepton1 = AnalysisLeptons[2];
 	}
-
       }
-      
     }
-    
   }
+
   
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
@@ -905,20 +934,28 @@ void AnalysisCMS::GetJetPtSum()
 //------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventDump()
+void AnalysisCMS::EventDump(Bool_t leptonInfo)
 {
-  for (int i=0; i<_nlepton; i++)
-    {
-      int index = AnalysisLeptons[i].index;
+  if (!_eventdump) return;
 
-      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f\n",
-			    event,
-			    AnalysisLeptons[i].flavour,
-			    AnalysisLeptons[i].v.Pt(),
-			    AnalysisLeptons[i].v.Eta(),
-			    AnalysisLeptons[i].iso,
-			    std_vector_lepton_isTightLepton->at(index));
+  if (leptonInfo)
+    {
+      for (int i=0; i<_nlepton; i++)
+	{
+	  int index = AnalysisLeptons[i].index;
+	
+	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%.0f\n",
+				run,
+				lumi,
+				event,
+				AnalysisLeptons[i].flavour,
+				AnalysisLeptons[i].v.Pt(),
+				AnalysisLeptons[i].v.Eta(),
+				AnalysisLeptons[i].iso,
+				std_vector_lepton_isTightLepton->at(index));
+	}
     }
+  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
 }
 
 
@@ -1220,13 +1257,13 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  GetTops();
-
-  GetGenLeptonsAndNeutrinos();
-
-  GetDark();
-
-  GetTopReco();
+  if (_analysis.EqualTo("TTDM")) GetTops();
+  
+  if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
+  
+  if (_analysis.EqualTo("TTDM")) GetDark();
+  
+  if (_analysis.EqualTo("TTDM")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1586,6 +1623,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("mtw1",             &mtw1,              "mtw1/F");
   minitree->Branch("mtw2",             &mtw2,              "mtw2/F");
   minitree->Branch("mt2ll",            &_mt2ll,            "mt2ll/F");
+  minitree->Branch("mt2llgen",         &_mt2llgen,         "mt2llgen/F");
   minitree->Branch("mllbb",            &_mllbb,            "mllbb/F");
   minitree->Branch("meff",             &_meff,             "meff/F");
   minitree->Branch("mt2bb",            &_mt2bb,            "mt2bb/F");
@@ -1665,7 +1703,6 @@ void AnalysisCMS::OpenMinitree()
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
 
-
   // Vectors
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
   minitree->Branch("bjet30csvv2m_phi", "std::vector<float>", &_bjet30csvv2m_phi);
@@ -1675,12 +1712,31 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("jet_pt",           "std::vector<float>", &_jet_pt);
   minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
   minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
-  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt );
+  minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt);
 }
 
 
 //------------------------------------------------------------------------------
 // GetGenPtllWeight
+//
+// https://indico.cern.ch/event/515004/contributions/2037666/attachments/1252111/1846797/Apr-04_GEN_ZpT_Massironi.pdf
+//
+// 1. Apply the following selection
+//
+//    mll > 60 GeV
+//    pt1 > 20 GeV
+//    pt2 > 10 (13) GeV for muons (electrons)
+//
+// 2. Fit ptll in the mumu channel with the following function
+//
+//    TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//
+//    f4->SetParameter(0,  10);
+//    f4->SetParameter(1,   1);
+//    f4->SetParameter(2,   1);
+//    f4->SetParameter(3, 0.1);
+//
+// 3. Apply the correction to gen_ptll and check in the ee and mumu channels
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetGenPtllWeight()
 {
@@ -1788,10 +1844,15 @@ double AnalysisCMS::ComputeMT2(TLorentzVector VisibleA,
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetStopVar()
 {
-  _dyll  = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
-  _ptbll = (Lepton1.v + Lepton2.v + MET).Pt();
-  _mt2ll = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+  TLorentzVector GenMET;
 
+  GenMET.SetPtEtaPhiM(metGenpt, 0., metGenphi, 0.);
+
+  _dyll     = fabs(Lepton1.v.Eta() - Lepton2.v.Eta());
+  _ptbll    = (Lepton1.v + Lepton2.v + MET).Pt();
+  _mt2ll    = ComputeMT2(Lepton1.v, Lepton2.v, MET);
+  _mt2llgen = ComputeMT2(Lepton1.v, Lepton2.v, GenMET);
+  
   _dphimetbbll  = -0.1;
   _mllbb        = -0.1;
   _meff         = -0.1;

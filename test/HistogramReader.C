@@ -85,8 +85,16 @@ void HistogramReader::AddProcess(const TString& filename,
   if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddProcess] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 
-  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
-  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
+  if (kind == roc_signal)
+    {
+      _roc_signalfile.push_back(file);
+      _roc_signalscale.push_back(scale);
+    }
+  else if (kind == roc_background)
+    {
+      _roc_backgroundfile.push_back(file);
+      _roc_backgroundscale.push_back(scale);
+    }
 }
 
 
@@ -118,8 +126,16 @@ void HistogramReader::AddSignal(const TString& filename,
   if (scale > 0. && scale != 1.)
     printf("\n [HistogramReader::AddSignal] Process %s will be scaled by %.2f\n\n", label.Data(), scale);
 
-  if (kind == roc_signal)     _roc_signals    .push_back(fullname);
-  if (kind == roc_background) _roc_backgrounds.push_back(fullname);
+  if (kind == roc_signal)
+    {
+      _roc_signalfile.push_back(file);
+      _roc_signalscale.push_back(scale);
+    }
+  else if (kind == roc_background)
+    {
+      _roc_backgroundfile.push_back(file);
+      _roc_backgroundscale.push_back(scale);
+    }
 }
 
 
@@ -893,8 +909,8 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // Check that it works fine with runPlotter.C
-  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // Check that it works fine with runPlotter.C
+  //  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // It works for Juan
+  //  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // It works for Juan
 
   xaxis->SetLabelSize(size);
   yaxis->SetLabelSize(size);
@@ -1302,15 +1318,13 @@ void HistogramReader::Roc(TString hname,
   //----------------------------------------------------------------------------
   THStack* stack_sig = new THStack(hname + "_stack_sig", hname + "_stack_sig");
 
-  TFile* file_sig[_roc_signals.size()];
-
-  for (int i=0; i<_roc_signals.size(); ++i)
+  for (int i=0; i<_roc_signalfile.size(); ++i)
     {
-      file_sig[i] = new TFile(_roc_signals.at(i));
+      _roc_signalfile[i]->cd();
 
-      TH1D* dummy = (TH1D*)(file_sig[i]->Get(hname))->Clone();
+      TH1D* dummy = (TH1D*)(_roc_signalfile[i]->Get(hname))->Clone();
 
-      if (_luminosity_fb > 0 && !(_roc_signals.at(i)).Contains("Fakes")) dummy->Scale(_luminosity_fb);
+      if (_luminosity_fb > 0 && _roc_signalscale[i] > -999) dummy->Scale(_luminosity_fb);
       
       stack_sig->Add(dummy);
     }
@@ -1322,15 +1336,13 @@ void HistogramReader::Roc(TString hname,
   //----------------------------------------------------------------------------
   THStack* stack_bkg = new THStack(hname + "_stack_bkg", hname + "_stack_bkg");
 
-  TFile* file_bkg[_roc_backgrounds.size()];
-
-  for (int j=0; j<_roc_backgrounds.size(); ++j)
+  for (int j=0; j<_roc_backgroundfile.size(); ++j)
     {
-      file_bkg[j] = new TFile(_roc_backgrounds.at(j));
+      _roc_backgroundfile[j]->cd();
 
-      TH1D* dummy = (TH1D*)(file_bkg[j]->Get(hname))->Clone();
+      TH1D* dummy = (TH1D*)(_roc_backgroundfile[j]->Get(hname))->Clone();
 
-      if (_luminosity_fb > 0 && !(_roc_backgrounds.at(j)).Contains("Fakes")) dummy->Scale(_luminosity_fb);
+      if (_luminosity_fb > 0 && _roc_backgroundscale[j] > -999) dummy->Scale(_luminosity_fb);
 
       stack_bkg->Add(dummy);
     }
@@ -1524,6 +1536,9 @@ void HistogramReader::Roc(TString hname,
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
+
+  dummy_min->Delete();
+  dummy_max->Delete();
 }
 
 
