@@ -13,9 +13,6 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const Bool_t _savepdf = false;
-const Bool_t _savepng = true;
-
 Bool_t _ismc = true;
 
 enum {B, C, D, E, F, G, H, nrun};
@@ -187,11 +184,11 @@ void metFilters(TString input = "NONE")
   //----------------------------------------------------------------------------
   c1->GetFrame()->DrawClone();
 
-  if (_savepdf) gSystem->mkdir("pdf", kTRUE);
-  if (_savepng) gSystem->mkdir("png", kTRUE);
+  gSystem->mkdir("pdf", kTRUE);
+  gSystem->mkdir("png", kTRUE);
 
-  if (_savepdf) c1->SaveAs("pdf/metFilters_" + input + ".pdf");
-  if (_savepng) c1->SaveAs("png/metFilters_" + input + ".png");
+  c1->SaveAs("pdf/metFilters_" + input + ".pdf");
+  c1->SaveAs("png/metFilters_" + input + ".png");
 }
 
 
