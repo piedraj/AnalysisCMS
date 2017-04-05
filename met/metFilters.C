@@ -61,11 +61,7 @@ TLegend* DrawLegend(Float_t     x1,
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void metFilters(TString input = "NONE")
 {
-  if (input.EqualTo("NONE"))
-    {
-      printf("\n Just compiling :)\n\n");
-      return;
-    }
+  if (input.EqualTo("NONE")) return;
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -75,27 +71,30 @@ void metFilters(TString input = "NONE")
   if (input.EqualTo("DoubleEG"))       _ismc = false;
   if (input.EqualTo("MuonEG"))         _ismc = false;
 
+
+  // Get the input files
+  //----------------------------------------------------------------------------
   TChain* tree = new TChain("latino", "latino");
-
-  TCut commonFilters = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[2]*std_vector_trigger_special[3]*std_vector_trigger_special[5]";
-  TCut dataFilters   = "std_vector_trigger_special[4]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]*std_vector_trigger_special[8]*std_vector_trigger_special[9]";
-  TCut mcFiltersOld  = "std_vector_trigger_special[6]*std_vector_trigger_special[7]";  // Some MC were not produced with the latest skimEventProducer_cfi.py
-  TCut mcFiltersNew  = "std_vector_trigger_special[8]*std_vector_trigger_special[9]";
-
-  TCut applyFilters;
-  TCut trigger;
 
   if (_ismc)
     {
       tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_" + input + "*.root");
-
-      trigger = "1";
     }
   else
     {
       for (int i=0; i<nrun; i++)
 	tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016" + srun[i] + "_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_" + input + "_Run2016" + srun[i] + "-03Feb2017*.root");
+    }
 
+  printf("\n Reading %lld events from %s\n\n", tree->GetEntries(), input.Data());
+
+
+  // Prepare the trigger for data
+  //----------------------------------------------------------------------------
+  TCut trigger = "1";
+
+  if (!_ismc)
+    {
       if (input.EqualTo("MuonEG"))         trigger = " trig_EleMu";
       if (input.EqualTo("DoubleMuon"))     trigger = "!trig_EleMu &&  trig_DbleMu";
       if (input.EqualTo("SingleMuon"))     trigger = "!trig_EleMu && !trig_DbleMu &&  trig_SnglMu";
@@ -103,29 +102,20 @@ void metFilters(TString input = "NONE")
       if (input.EqualTo("SingleElectron")) trigger = "!trig_EleMu && !trig_DbleMu && !trig_SnglMu && !trig_DbleEle && trig_SnglEle";
     }
 
-  printf("\n Reading %lld events from %s\n\n", tree->GetEntries(), input.Data());
 
-
-  // Check if all MET filters are available
+  // Prepare the MET filters
   //----------------------------------------------------------------------------
-  vector<float> *std_vector_trigger_special = 0;
+  TCut commonFilters = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[2]*std_vector_trigger_special[3]*std_vector_trigger_special[5]";
+  TCut dataFilters   = "std_vector_trigger_special[4]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]*std_vector_trigger_special[8]*std_vector_trigger_special[9]";
+  TCut mcFiltersOld  = "std_vector_trigger_special[6]*std_vector_trigger_special[7]";  // Some MC were not produced with the latest skimEventProducer_cfi.py
+  TCut mcFiltersNew  = "std_vector_trigger_special[8]*std_vector_trigger_special[9]";
+  TCut latinoCheck   = "std_vector_trigger_special[8] == -2";
 
-  tree->SetBranchAddress("std_vector_trigger_special", &std_vector_trigger_special);
-
-  bool latinoCheck = false;
-
-  for (int ievent=0; ievent<10; ievent++)
-    {    
-      tree->GetEntry(ievent);
-
-      if (std_vector_trigger_special->at(8) == -2.) latinoCheck = true;
-    }
-
-  if (latinoCheck) printf(" Warning: Giovanni's filters are not available for %s\n\n", input.Data());
+  TCut applyFilters;
 
   if (_ismc)
     {
-      applyFilters = (latinoCheck) ? commonFilters && mcFiltersOld : commonFilters && mcFiltersNew;
+      applyFilters = commonFilters && ((latinoCheck && mcFiltersOld) || (!latinoCheck && mcFiltersNew));
     }
   else
     {
