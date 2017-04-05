@@ -78,11 +78,11 @@ void metFilters(TString input = "NONE")
   TChain* tree = new TChain("latino", "latino");
 
   TCut commonFilters = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[2]*std_vector_trigger_special[3]*std_vector_trigger_special[5]";
-  TCut dataFilters   = "std_vector_trigger_special[4]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]";
+  TCut dataFilters   = "std_vector_trigger_special[4]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]*std_vector_trigger_special[8]*std_vector_trigger_special[9]";
   TCut mcFiltersOld  = "std_vector_trigger_special[6]*std_vector_trigger_special[7]";  // Some MC were not produced with the latest skimEventProducer_cfi.py
   TCut mcFiltersNew  = "std_vector_trigger_special[8]*std_vector_trigger_special[9]";
 
-  TCut metFilters;
+  TCut applyFilters;
   TCut trigger;
 
   if (_ismc)
@@ -125,11 +125,11 @@ void metFilters(TString input = "NONE")
 
   if (_ismc)
     {
-      metFilters = (latinoCheck) ? commonFilters && mcFiltersOld : commonFilters && mcFiltersNew;
+      applyFilters = (latinoCheck) ? commonFilters && mcFiltersOld : commonFilters && mcFiltersNew;
     }
   else
     {
-      metFilters = commonFilters && dataFilters;
+      applyFilters = commonFilters && dataFilters;
     }
 
 
@@ -143,7 +143,7 @@ void metFilters(TString input = "NONE")
   c1->SetLogy();
 
   tree->Draw("metPfType1>>before", trigger);    
-  tree->Draw("metPfType1>>after",  trigger && metFilters);
+  tree->Draw("metPfType1>>after",  trigger && applyFilters);
 
   before->SetFillColor(kGray);
   before->SetFillStyle(1001);
