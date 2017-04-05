@@ -156,8 +156,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
       pass_blind = false;
       //if (_mt2ll<40.) pass_blind = true;
-      if (MET.Et()<140.) pass_blind = true;
-      if (run > 276502) continue;
+      //if (MET.Et()<140.) pass_blind = true;
+      if (run < 276502) pass_blind = true;
      }
 
     if (!_isminitree) {

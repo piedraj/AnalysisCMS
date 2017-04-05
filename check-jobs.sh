@@ -83,7 +83,7 @@ if [ "$OPTION" -eq "1" ]; then
 	    
 		echo $FILENAME
 
-		rm -rf $fn
+#		rm -rf $fn
 	
 	    fi
 	done
