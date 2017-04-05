@@ -495,11 +495,7 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
-
-  //##### To be checked with the complete 2016 dataset ############# 
-  //   _event_weight *= _gen_ptll_weight;
-  //################################################################
-  if (!_analysis.EqualTo("Stop"))  _event_weight *= _gen_ptll_weight; 
+  if (!_analysis.EqualTo("Stop")) _event_weight *= _gen_ptll_weight;  // To be updated with 35.9 fb-1
   
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 

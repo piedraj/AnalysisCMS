@@ -32,66 +32,37 @@ fi
 
 # Check the status of the jobs
 #-------------------------------------------------------------------------------
-if [ "$OPTION" -eq "0" ]; then
+printf " \n"
+printf " %3d jobs pending\n"    $NPEND
+printf " %3d jobs running\n"    $NRUN
+printf " %3d jobs finished\n"   $NFINISH
+printf " %3d jobs successful\n" $NGOOD
+printf " \n"
 
-    printf " \n"
-    printf " %3d jobs pending\n"    $NPEND
-    printf " %3d jobs running\n"    $NRUN
-    printf " %3d jobs finished\n"   $NFINISH
-    printf " %3d jobs successful\n" $NGOOD
-    printf " \n"
+if [ $NGOOD -ne $NFINISH ]; then
 
-    if [ $NGOOD -ne $NFINISH ]; then
+    printf " The following jobs have failed\n\n"
+    
+    for fn in `ls jobs/LSFJOB_*/STDOUT`; do
 
-	printf " The following jobs have failed\n\n"
+	export ISDONE=`cat $fn | grep Done | wc -l`
+	
+	if [ $ISDONE -ne 1 ]; then
 
-	for fn in `ls jobs/LSFJOB_*/STDOUT`; do
-
-	    export ISDONE=`cat $fn | grep Done | wc -l`
-
-	    if [ $ISDONE -ne 1 ]; then
-
-		printf " %s\n" $fn
+	    printf " %s\n" $fn
      
-                export FILENAME=`cat $fn | grep filename`
+	    export FILENAME=`cat $fn | grep filename | cut -d ':' -f 2`
 	    
-                echo $FILENAME
+            echo $FILENAME
+	
+	    if [ "$OPTION" -eq "1" ]; then
+
+		rm -rf $fn
 	
 	    fi
-	done
 
-	printf " \n"
-    fi
-fi
-
-
-# Print the list of failed files and remove the corresponding STDOUT"
-#-------------------------------------------------------------------------------
-if [ "$OPTION" -eq "1" ]; then
-
-    if [ $NGOOD -ne $NFINISH ]; then
-
-	rm -rf resubmit.txt
-
-	for fn in `ls jobs/LSFJOB_*/STDOUT`; do
-
-	    export ISDONE=`cat $fn | grep Done | wc -l`
-
-	    if [ $ISDONE -ne 1 ]; then
-
-		export FILENAME=`cat $fn | grep filename | cut -d ':' -f 2`
-	    
-		echo $FILENAME
-
-#		rm -rf $fn
-	
-	    fi
-	done
-    else
-
-	printf "\n There are no jobs to resubmit\n"
-
-    fi
-
+	fi
+    done
+    
     printf " \n"
 fi
