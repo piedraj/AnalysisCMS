@@ -50,17 +50,17 @@ if [ $NGOOD -ne $NFINISH ]; then
 	if [ $ISDONE -ne 1 ]; then
 
 	    printf " %s\n" $fn
-     
-	    export FILENAME=`cat $fn | grep filename | cut -d ':' -f 2`
-	    
+
+	    export FILENAME=`cat $fn | grep '/eos/'`
+
             echo $FILENAME
-	
+	    echo " "
+
 	    if [ "$OPTION" -eq "1" ]; then
 
 		rm -rf $fn
 	
 	    fi
-
 	fi
     done
     
