@@ -34,7 +34,7 @@ AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHist
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, float StopRefMass, float NeutralinoRefMass)
 {
   if (fChain == 0) return;
- 
+
   TString MassPointFlag = "";
 
   if (filename.Contains("T2tt")) {
@@ -77,7 +77,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   //----------------------------------------------------------------------------
   
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
+    
     if (!_isminitree) {
 
       Long64_t ientry = LoadTree(jentry);
@@ -106,9 +106,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     
     // Get analysis variables
     //--------------------------------------------------------------------------
- 
+    
     GetAnalysisVariables();
-
+    
     // Analysis
     //--------------------------------------------------------------------------
 
@@ -235,7 +235,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       FillLevelHistograms(Stop_02_SR2_NoTag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_NoTag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
     }
-    
+
   }
 
   if (_SaveHistograms==2) SaveSystematicHistograms();

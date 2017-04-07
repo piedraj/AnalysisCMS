@@ -490,7 +490,7 @@ void AnalysisCMS::ApplyWeights()
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW;
-  if (!_isfastsim) _event_weight *= puW;
+  if (!_isfastsim) _event_weight *= puW; // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Pileup_lumi
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
