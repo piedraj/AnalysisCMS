@@ -43,6 +43,8 @@ class AnalysisStop : public AnalysisCMS
 
   void GetMiniTree           (TFile *MiniTreeFile, TString systematic);
 
+  bool PassFastsimJetsCleanup();
+
   TString FastSimDataset;
   BTagSFUtil *BTagSF, *BTagSF_Upb, *BTagSF_Dob, *BTagSF_UpFSb, *BTagSF_DoFSb;
 

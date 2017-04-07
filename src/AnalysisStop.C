@@ -90,6 +90,9 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     PrintProgress(jentry, _nentries);
    
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
+    if (!PassFastsimJetsCleanup()) continue;
+
     bool pass_masspoint = true;
     if (filename.Contains("T2tt")) 
       pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
@@ -3008,6 +3011,38 @@ void AnalysisStop::CorrectEventWeight() {
     _event_weight_Fastsimdo *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
     
   }
+  
+}
+
+bool AnalysisStop::PassFastsimJetsCleanup() {
+
+  // Cleaning up of fastsim jets 
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
+
+  if (!_isfastsim || _isminitree) return true;
+   
+  for (int ijet = 0; ijet<_njet; ijet++) 
+    if (AnalysisJets[ijet].v.Pt()>20 && fabs(AnalysisJets[ijet].v.Eta())<2.5) 
+      if (std_vector_jet_chargedHadronFraction->at(AnalysisJets[ijet].index)<0.1) {
+      
+	bool isgenmatched = false;
+	
+	for (int gjet = 0; gjet<std_vector_jetGen_pt->size(); gjet++) {
+
+	  TLorentzVector ThisGenJet; 
+	  ThisGenJet.SetPtEtaPhiM(std_vector_jetGen_pt->at(gjet), 
+				  std_vector_jetGen_eta->at(gjet), 
+				  std_vector_jetGen_phi->at(gjet), 0.0);
+
+	  if (fabs(AnalysisJets[ijet].v.DeltaR(ThisGenJet))<0.3) isgenmatched = true;
+
+	}
+
+	if (!isgenmatched) return false;
+      
+      }
+
+  return true;
   
 }
 
