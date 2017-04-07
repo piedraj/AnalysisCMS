@@ -824,7 +824,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     float pt  = std_vector_jet_pt ->at(i);
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
-
+    if (pt<0.) continue;
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
     TLorentzVector tlv;

@@ -89,9 +89,6 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
-   
-    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
-    if (!PassFastsimJetsCleanup()) continue;
 
     bool pass_masspoint = true;
     if (filename.Contains("T2tt")) 
@@ -103,9 +100,12 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
       if (metPfType1!=metPfType1) continue;
       EventSetup(2.4, 20.);
+   
+      // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
+      if (!PassFastsimJetsCleanup()) continue;
 
     }
-
+    
     
     // Get analysis variables
     //--------------------------------------------------------------------------
@@ -3019,15 +3019,17 @@ bool AnalysisStop::PassFastsimJetsCleanup() {
   // Cleaning up of fastsim jets 
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
 
-  if (!_isfastsim || _isminitree) return true;
-   
+  if (!_isfastsim) return true;
+  
   for (int ijet = 0; ijet<_njet; ijet++) 
     if (AnalysisJets[ijet].v.Pt()>20 && fabs(AnalysisJets[ijet].v.Eta())<2.5) 
       if (std_vector_jet_chargedHadronFraction->at(AnalysisJets[ijet].index)<0.1) {
-      
+
 	bool isgenmatched = false;
 	
 	for (int gjet = 0; gjet<std_vector_jetGen_pt->size(); gjet++) {
+	  
+	  if (std_vector_jetGen_pt->at(gjet)<0.) continue;
 
 	  TLorentzVector ThisGenJet; 
 	  ThisGenJet.SetPtEtaPhiM(std_vector_jetGen_pt->at(gjet), 
@@ -3037,7 +3039,7 @@ bool AnalysisStop::PassFastsimJetsCleanup() {
 	  if (fabs(AnalysisJets[ijet].v.DeltaR(ThisGenJet))<0.3) isgenmatched = true;
 
 	}
-
+	
 	if (!isgenmatched) return false;
       
       }
