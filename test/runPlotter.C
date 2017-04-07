@@ -3,8 +3,10 @@
 
 // Constants
 //------------------------------------------------------------------------------
+const Bool_t allplots   = false;
 const Bool_t datadriven = true;
-const Bool_t allplots   = true;
+const Bool_t drawroc    = false;
+const Bool_t xsection   = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -51,14 +53,7 @@ void runPlotter(TString level,
 
   float lumi = lumi_fb_Full2016;
 
-  if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
-  if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
-
   Bool_t scale = linY;
-
-  if (analysis.EqualTo("MonoH")) scale = logY;
-  if (analysis.EqualTo("Stop"))  scale = logY;
-  if (analysis.EqualTo("Top"))   scale = logY;
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
@@ -99,8 +94,7 @@ void runPlotter(TString level,
 
       if (datadriven)
 	{
-	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
 	  plotter.AddProcess("12_Zg",    "Z#gamma",    color_Zg);
 	}
       else
@@ -119,19 +113,18 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background, 1.0);
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, roc_background, 1.0);
       plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
 	{
-	  // -999 is needed to not scale by luminosity
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
 	}
       else
 	{
-	  //	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);  // NOT YET AVAILABLE
+	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
@@ -187,10 +180,9 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
+      if (!analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("WW")   &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -213,10 +205,9 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
+      if (!analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("WW")   &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -256,33 +247,37 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet2eta"        + suffix, "trailing jet #eta",                 -1, 1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet1phi"        + suffix, "leading jet #phi",                   5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "jet2phi"        + suffix, "trailing jet #phi",                  5, 2, "rad",  scale, false);
-	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
-	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0, 400);
+	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0, 400);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
-	  plotter.Draw(prefix + "topReco"        + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 
 
 	  // ROC
-	  //--------------------------------------------------------------------
+	  //
 	  // S / #sqrt{B}
 	  // S / #sqrt{S+B}
 	  // S / B
 	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
-	  plotter.Roc(prefix + "ht"    + suffix, "H_{T}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",  1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",       1000, "GeV", 0, 1000, "Punzi Eq.6");
-	  plotter.Roc(prefix + "drll"  + suffix, "#DeltaR_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
+	  //--------------------------------------------------------------------
+	  if (drawroc)
+	    {
+	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",  1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",       1000, "GeV", 0, 1000, "Punzi Eq.6");
+	      plotter.Roc(prefix + "drll"  + suffix, "#DeltaR_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
+	    }
 
 
 	  if (!allplots) continue;
 
 
+	  plotter.Draw(prefix + "topReco"      + suffix, "number of tt reco solutions",       -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dyll"         + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"   + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphimetptbll" + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);
@@ -387,8 +382,7 @@ void runPlotter(TString level,
   //   https://arxiv.org/pdf/1105.0020v1.pdf
   //
   //----------------------------------------------------------------------------
-
-  if (analysis.EqualTo("Control") && level.Contains("WW") && 0)  // NOT YET AVAILABLE
+  if (xsection && level.Contains("WW"))
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");

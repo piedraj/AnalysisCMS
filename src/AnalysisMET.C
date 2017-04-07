@@ -54,12 +54,12 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
 
     //_nelectron = 0;
 
-    //if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
-    //if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
 
-    //if      (_nelectron == 2) _channel = ee;
-    //else if (_nelectron == 1) _channel = em;
-    //else if (_nelectron == 0) _channel = mm;
+    if      (_nelectron == 2) _channel = ee;
+    else if (_nelectron == 1) _channel = em;
+    else if (_nelectron == 0) _channel = mm;
     
     _m2l  = mll;   // Needs l2Sel
     //_pt2l = ptll;  // Needs l2Sel
@@ -74,20 +74,12 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (  abs( abs(std_vector_lepton_eta->at(0))-1.5 ) > 0.1  &&  abs( abs(std_vector_lepton_eta->at(1))-1.5 ) > 0.1  ); 
 
-    pass &= ( abs(_m2l - Z_MASS) > 10. );
+    pass &= ( abs(_m2l - Z_MASS) < 10. );
 
-    pass &= (std_vector_lepton_pt->at(0) < 20.);
+    pass &= (std_vector_lepton_pt->at(0) > 25.);
 
-    pass &= (std_vector_lepton_pt->at(1) < 20.);
+    pass &= (std_vector_lepton_pt->at(1) > 20.);
 
-
-	//if( isData[process] ){   // triggers
-
-	//	if( HLT_DoubleMu == 0 && HLT_DoubleEG == 0 && HLT_SingleMu == 0 && HLT_SingleEle == 0 ) continue;
-
-	//}
-	
-		
 
     if (_saveminitree && pass ) minitree->Fill();
 

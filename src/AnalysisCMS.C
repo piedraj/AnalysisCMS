@@ -502,8 +502,8 @@ void AnalysisCMS::ApplyWeights()
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
-  _event_weight *= _gen_ptll_weight;
-
+  if (!_analysis.EqualTo("Stop")) _event_weight *= _gen_ptll_weight;  // To be updated with 35.9 fb-1
+  
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
@@ -943,20 +943,28 @@ void AnalysisCMS::GetJetPtSum()
 //------------------------------------------------------------------------------
 // EventDump
 //------------------------------------------------------------------------------
-void AnalysisCMS::EventDump()
+void AnalysisCMS::EventDump(Bool_t leptonInfo)
 {
-  for (int i=0; i<_nlepton; i++)
-    {
-      int index = AnalysisLeptons[i].index;
+  if (!_eventdump) return;
 
-      txt_eventdump << Form("%d:%d:%f:%f:%f:%.0f\n",
-			    event,
-			    AnalysisLeptons[i].flavour,
-			    AnalysisLeptons[i].v.Pt(),
-			    AnalysisLeptons[i].v.Eta(),
-			    AnalysisLeptons[i].iso,
-			    std_vector_lepton_isTightLepton->at(index));
+  if (leptonInfo)
+    {
+      for (int i=0; i<_nlepton; i++)
+	{
+	  int index = AnalysisLeptons[i].index;
+	
+	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%.0f\n",
+				run,
+				lumi,
+				event,
+				AnalysisLeptons[i].flavour,
+				AnalysisLeptons[i].v.Pt(),
+				AnalysisLeptons[i].v.Eta(),
+				AnalysisLeptons[i].iso,
+				std_vector_lepton_isTightLepton->at(index));
+	}
     }
+  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
 }
 
 

@@ -55,7 +55,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        EndJob               ();
 
-  void        EventDump            ();
+  void        EventDump            (Bool_t   leptonInfo = false);
 
   void        EventSetup           (float    jet_eta_max = -1,
 				    float    jet_pt_min  = 30);

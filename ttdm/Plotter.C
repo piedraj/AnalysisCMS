@@ -2,9 +2,10 @@
 
 #include "../test/HistogramReader.C"
 
-const TString inputdir  = "histos/";
+const TString inputdir  = "histos/Zmm/";
 //const TString outputdir = "figures/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170321/";
+const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/MET_170327_latino-ntuples/bolivar/Zmm/";
+//const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170321/"; 
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -60,12 +61,12 @@ void Plotter(TString option = "hist"){
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  //plotter.AddData("01_Data_FULL", "data", color_Data);
 
 
   // Add processes
   //----------------------------------------------------------------------------
-  //plotter.AddProcess("14_HZ",        "HZ",         color_HZ);
+  /*//plotter.AddProcess("14_HZ",        "HZ",         color_HZ);
   //plotter.AddProcess("10_HWW",       "HWW",        color_HWW);
   plotter.AddProcess("06_WW",        "WW",         color_WW);
   plotter.AddProcess("02_WZTo3LNu",  "WZ",         color_WZTo3LNu);
@@ -77,7 +78,14 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("09_TTV", "ttV",        color_TTV);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
   plotter.AddProcess("05_ST",        "tW",         color_ST);
-  //plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
+  //plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity*/
+
+
+  plotter.AddData   ("data_mm", "data", color_Data);
+  plotter.AddProcess("TT"  , "tt"  , kRed      );
+  plotter.AddProcess("EW"  , "EW"  , kBlue     );
+  plotter.AddProcess("DY"  , "DY"  , kYellow   );
+
 
   // Add signals
   //----------------------------------------------------------------------------
@@ -127,26 +135,26 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "jet1eta"        , "leading jet #eta",                  -1, 1, "NULL", scale, false);
   //plotter.Draw( "jet1mass"       , "leading jet mass",                  -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet1phi"        , "leading jet #phi",                   5, 2, "rad",  scale, false);
-  //plotter.Draw( "jet1pt"         , "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
+  //plotter.Draw( "jet1pt"         , "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400, 1);
   //plotter.Draw( "jet2eta"        , "trailing jet #eta",                 -1, 1, "NULL", scale, false);
   //plotter.Draw( "jet2mass"       , "trailing jet mass",                 -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet2phi"        , "trailing jet #phi",                  5, 2, "rad",  scale, false);
   //plotter.Draw( "jet2pt"         , "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "lep1eta"        , "leading lepton #eta",               -1, 1, "NULL", scale);
   //plotter.Draw( "lep1phi"        , "leading lepton #phi",                5, 2, "rad",  scale);
-  plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
+  plotter.Draw( "lep1pt"         , "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150, 1);
   //plotter.Draw( "lep2eta"        , "trailing lepton #eta",              -1, 1, "NULL", scale);
   //plotter.Draw( "lep2phi"        , "trailing lepton #phi",               5, 2, "rad",  scale);
-  //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
-  plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300);
-  plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200);
+  plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150, 1);
+  //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300, 1);
+  plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200, 1);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
-  //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200); 
+  //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200, 1); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "mtw2"           , "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
-  //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6);
-  //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10);
-  //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
+  //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6, 1);
+  //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10, 1);
+  plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
   //plotter.Draw( "topRecoW"       , "top reco weight",                  -1, 4, "NULL", scale, true, 0,  0.01);
   //plotter.Draw( "ANN_170222_mt2ll80_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.1);
   //plotter.Draw( "ANN_170222_mt2ll90_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.0);
@@ -154,6 +162,10 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "ANN_alpha005_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
   //plotter.Draw( "ANN_alpha01_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
   //plotter.Draw( "ANN_alpha05_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
+
+  plotter.Draw( "scale"           , "- u_{||} / q_{T}",                -1, 0, "NULL", scale,  true, -3, 5, 1, 1e8 );
+  plotter.Draw( "uPara"           , "u_{||} + q_{T}",                  -1, 0, "GeV", scale,  true, -200, 200, 1, 1e8 );
+  plotter.Draw( "uPerp"           , "u_{#perp}",                       -1, 0, "GeV", scale,  true, -200, 200, 1, 1e8 );
 
   //           hname     xtitle                      npoints  units xmin xmax
   //  ---------------------------------------------------------------------------

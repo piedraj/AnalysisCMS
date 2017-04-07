@@ -114,6 +114,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     if (!_isminitree) {
 
+      // To merge DY_LO and DY_HTbins( always ht >70 GeV) samples it is needed require ht > 70 in DY_LO sample; 
+      // The analysis default sample is DY_NNLO  
       if (filename.Contains("DY") && filename.Contains("LO") && !filename.Contains("HT")) 
 	if (_htgen>70.) continue;
 
@@ -154,8 +156,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
       pass_blind = false;
       //if (_mt2ll<40.) pass_blind = true;
-      if (MET.Et()<140.) pass_blind = true;
-      if (run > 276502) continue;
+      //if (MET.Et()<140.) pass_blind = true;
+      if (run < 276502) pass_blind = true;
      }
 
     if (!_isminitree) {
@@ -163,12 +165,10 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       // Fill histograms
       // -----------------------------------------------------------------------------
            
-      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_blind && pass_masspoint);    
-      
-      //    FillLevelHistograms(Stop_00_2LMt2upper100, pass && pass_blind && pass_masspoint);
-
       // Basics Stop
       //-------------------------------------------------------------------------
+      FillLevelHistograms(Stop_00_Has2Leptons, pass && pass_blind && pass_masspoint);    
+
       pass &= mll>20.;
   
    /*   FillLevelHistograms(Stop_00_mll20, pass && pass_blind && pass_masspoint);
@@ -197,14 +197,21 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
    */           // ---------------------------------------------------------------
 
+
+
       pass &= ( _channel == em || fabs(_m2l - Z_MASS) > 15. );
       
+
+       //~~~~~~~~~~~~~~~~~~~~~~ save minitree ~~~~~~~~~~~~~~~~~~
+
       // Leave this line at the end of this if or the results on latino trees and minitrees will be inconsistent
       if (pass && _saveminitree) minitree->Fill();      
-    
+       //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     } 
 
     FillLevelHistograms(Stop_00_Zveto, pass && pass_blind && pass_masspoint);
+
+    //~~~~~~~~~~~~~~~~~~~~~~ MC normalization study ~~~~~~~~~
 
     bool WW = pass && _njet == 0;
     FillLevelHistograms(Stop_00_WWsel, WW && pass_blind && pass_masspoint);
@@ -213,13 +220,15 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     FillLevelHistograms(Stop_00_TTsel, TTbar && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_00_TTselMET, TTbar && MET.Et()>= 50 && pass_blind && pass_masspoint);
       
-    // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
+   //~~~~~~~~~~~~~~~~~~~~~~ Analysis Cuts ~~~~~~~~~~~~~~~~~~ 
+
+   // Tag SELECTION -> Bin0Tag & Bin1Tag;  used in minitrees and latino trees
 
     FillLevelHistograms(Stop_01_Tag,       pass && (_leadingPtCSVv2M >= 20.) && pass_blind && pass_masspoint);
     FillLevelHistograms(Stop_01_NoTag,     pass && (_leadingPtCSVv2M <  20.) && pass_blind && pass_masspoint);
     
     if (_leadingPtCSVv2M >= 20.) {
-      FillLevelHistograms(Stop_02_VR1_Tag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
+      FillLevelHistograms(Stop_02_VR1_Tag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_blind && pass_masspoint);
       if (_leadingPtCSVv2T >= 30. && njet>1)
 	FillLevelHistograms(Stop_02_VR1_Tag2Jet,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
       FillLevelHistograms(Stop_02_SR1_Tag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
@@ -228,7 +237,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     }
     
     if (_leadingPtCSVv2M <  20.) {
-      FillLevelHistograms(Stop_02_VR1_NoTag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
+      FillLevelHistograms(Stop_02_VR1_NoTag,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_blind && pass_masspoint);
       if (njet<1)
 	FillLevelHistograms(Stop_02_VR1_NoJet,   pass && (MET.Et()>=100. && MET.Et()<140.) && pass_masspoint);
       FillLevelHistograms(Stop_02_SR1_NoTag,   pass && (MET.Et()>=140. && MET.Et()<200.) && pass_blind && pass_masspoint);
