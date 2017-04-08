@@ -1,5 +1,3 @@
-//const TCut mycut             = "eventW        *(njet > 3 && metPfType1 > 30. && lep1pt > 40. && lep2pt > 30. && nbjet30csvv2m > 0 && mt2ll > 100)";  
-//const TCut mycut             = "eventW        *(nlepton > 2 && metPfType1 > 50. && nbjet30csvv2m > 0 && mt2ll > 90. && mt2ll < 100.)";  
 #include "ttdm.h"
 
 const TString outputdir = "histos"; 
@@ -46,7 +44,7 @@ void CreateHistograms2( int process ){
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
 	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
-	TFile* myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
+	TFile* myfile = new TFile( inputdir + processID[process] + ".root", "read" );
  
 	for( int k = 0; k < nsystematic; k++ ){
 
@@ -180,9 +178,9 @@ void CreateHistograms2( int process ){
 		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
-		//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		//mytree -> Draw( b_name[MVA80        ] + " >> " + h_name[MVA80        ] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[MVA90        ] + " >> " + h_name[MVA90        ] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
+		mytree -> Draw( b_name[ANN_0704sigmoid80        ] + " >> " + h_name[ANN_0704sigmoid80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[ANN_0704tanh80        ] + " >> " + h_name[ANN_0704tanh80        ] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
 		//mytree -> Draw( b_name[alpha005    ] + " >> " + h_name[alpha005    ] + "( 120,  -0.1, 1.1   )", thecut );

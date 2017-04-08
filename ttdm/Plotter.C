@@ -3,8 +3,8 @@
 #include "../test/HistogramReader.C"
 
 const TString inputdir  = "histos/";
-//const TString outputdir = "figures/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170321/";
+const TString outputdir = "figures/";
+//const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170321/";
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -37,7 +37,8 @@ void Plotter(TString option = "hist"){
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  float lumi = lumi_fb_Full2016;
+  //float lumi = lumi_fb_Full2016;
+  float lumi = lumi_fb_Full2016/15;
 
   Bool_t scale = logY;
 
@@ -60,7 +61,7 @@ void Plotter(TString option = "hist"){
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  plotter.AddData("01_Data_1outof15", "data", color_Data);
   //plotter.AddData("01_Data_reduced_1outof6", "data", color_Data);
 
   // Add processes
@@ -77,12 +78,12 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("09_TTV", "ttV",        color_TTV);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu);
   plotter.AddProcess("05_ST",        "tW",         color_ST);
-  plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
-  //plotter.AddProcess("00_Fakes_reduced_1outof6",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
+  //plotter.AddProcess("00_Fakes",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
+  plotter.AddProcess("00_Fakes_1outof15",     "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
 
   // Add signals
   //----------------------------------------------------------------------------
-  //plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x10",  color_Signal, roc_signal, 10);
+  plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x10",  color_Signal, roc_signal, 10);
   //plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20",  color_Signal+2, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00050", "m_{#chi}1 m_{S}50",  color_Signal+4, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100", color_Signal+2, roc_signal);
@@ -152,7 +153,8 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10);
   //plotter.Draw( "nvtx"           , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30);
   //plotter.Draw( "topRecoW"       , "top reco weight",                  -1, 4, "NULL", scale, true, 0,  0.01);
-  //plotter.Draw( "ANN_170222_mt2ll80_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.1);
+  plotter.Draw( "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010", "ANN sigmoid output",  10, 2, "NULL", linY, true, -0.1, 1.1);
+  plotter.Draw( "ANN_0704tanh_mt2ll80_ttDM0001scalar00010", "ANN tanh output",  10, 2, "NULL", linY, true, -0.1, 1.1);
   //plotter.Draw( "ANN_170222_mt2ll90_ttDM0001scalar00100", "ANN output",  10, 2, "NULL", scale, true, -0.1, 1.0);
   //plotter.Draw( "ANN_170222_mt2ll100_ttDM0001scalar00100", "ANN output", 10, 2, "NULL", scale, true, -0.1, 1.0);
   //plotter.Draw( "ANN_alpha005_mt2ll80_ttDM0001scalar00500", "ANN output", 10, 2, "NULL", scale, true, 0, 1.0);
