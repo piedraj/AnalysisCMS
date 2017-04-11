@@ -28,9 +28,9 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
   //----------------------------------------------------------------------------
   TCut ee                       = "(std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -121)";
   TCut eleEta                   = "(abs(std_vector_lepton_eta[0])) < 2.5 && (abs(std_vector_lepton_eta[1]) < 2.5)"; 
-  TCut eleIdHLT                 = "std_vector_lepton_eleIdHLT[0] && std_vector_lepton_eleIdHLT[1]";
-  TCut eleIdTight               = "std_vector_lepton_eleIdTight[0] && std_vector_lepton_eleIdTight[1]";
-  TCut tripleChargeAgreement    = "std_vector_electron_tripleChargeAgreement[0] && std_vector_electron_tripleChargeAgreement[1]";
+  TCut eleIdHLT                 = "(std_vector_lepton_eleIdHLT[0] == 1) && (std_vector_lepton_eleIdHLT[1] == 1)";
+  TCut eleIdTight               = "(std_vector_lepton_eleIdTight[0] == 1) && (std_vector_lepton_eleIdTight[1] == 1)";
+  TCut tripleChargeAgreement    = "(std_vector_electron_tripleChargeAgreement[0] == 1) && (std_vector_electron_tripleChargeAgreement[1] == 1)";
   TCut expectedMissingInnerHits = "(std_vector_electron_expectedMissingInnerHits[0] < 1) && (std_vector_electron_expectedMissingInnerHits[1] < 1)";
   TCut ele1_d0                  = "(abs(std_vector_lepton_d0[0]) < (0.05 * (1 + (abs(std_vector_lepton_eta[0]) > 1.479))))";
   TCut ele2_d0                  = "(abs(std_vector_lepton_d0[1]) < (0.05 * (1 + (abs(std_vector_lepton_eta[1]) > 1.479))))";
