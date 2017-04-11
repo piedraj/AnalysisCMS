@@ -168,8 +168,8 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  //(Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84;
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.283 : _event_weight *= 217.234;
+	  //(Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84; //For 12.9fb-1
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.283 : _event_weight *= 217.234; //For 36fb-1
 	}
 
       
