@@ -5,11 +5,13 @@
 //------------------------------------------------------------------------------
 void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
 {
+  TChain* crab_tree = new TChain("latino", "latino");
+
+  crab_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/MC/LatinoTrees/latino_GluGluWWTo2L2Nu_MCFM__part0.root");
+
   TChain* l2loose_tree = new TChain("latino", "latino");
 
   l2loose_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut/latino_" + sample + ".root");
-
-  //  l2loose_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd/latino_" + sample + ".root");
 
   TChain* l2tight_tree = new TChain("latino", "latino");
 
@@ -18,22 +20,22 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
 
   // Common selection
   //----------------------------------------------------------------------------
-  TCut pt      = "std_vector_lepton_pt[0] > 25 && std_vector_lepton_pt[1] > 20"; 
-  TCut l2tight = "std_vector_lepton_isTightLepton[0] > 0.5 && std_vector_lepton_isTightLepton[1] > 0.5";
+  TCut pt      = "(std_vector_lepton_pt[0] > 25) && (std_vector_lepton_pt[1] > 20)"; 
+  TCut l2tight = "(std_vector_lepton_isTightLepton[0] > 0.5) && (std_vector_lepton_isTightLepton[1] > 0.5)";
 
 
   // Electron selection
   //----------------------------------------------------------------------------
-  TCut ee                       = "std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -121";
-  TCut eleEta                   = "abs(std_vector_lepton_eta[0]) < 2.5 && abs(std_vector_lepton_eta[1]) < 2.5"; 
+  TCut ee                       = "(std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -121)";
+  TCut eleEta                   = "(abs(std_vector_lepton_eta[0])) < 2.5 && (abs(std_vector_lepton_eta[1]) < 2.5)"; 
   TCut eleIdHLT                 = "std_vector_lepton_eleIdHLT[0] && std_vector_lepton_eleIdHLT[1]";
   TCut eleIdTight               = "std_vector_lepton_eleIdTight[0] && std_vector_lepton_eleIdTight[1]";
   TCut tripleChargeAgreement    = "std_vector_electron_tripleChargeAgreement[0] && std_vector_electron_tripleChargeAgreement[1]";
-  TCut expectedMissingInnerHits = "std_vector_electron_expectedMissingInnerHits[0] < 1 && std_vector_electron_expectedMissingInnerHits[1] < 1";
-  TCut ele1_d0                  = "abs(std_vector_lepton_d0[0]) < (0.05 * (1 + (abs(std_vector_lepton_eta[0]) > 1.479)))";
-  TCut ele2_d0                  = "abs(std_vector_lepton_d0[1]) < (0.05 * (1 + (abs(std_vector_lepton_eta[1]) > 1.479)))";
-  TCut ele1_dz                  = "abs(std_vector_lepton_dz[0]) < (0.1  * (1 + (abs(std_vector_lepton_eta[0]) > 1.479)))";
-  TCut ele2_dz                  = "abs(std_vector_lepton_dz[1]) < (0.1  * (1 + (abs(std_vector_lepton_eta[1]) > 1.479)))";
+  TCut expectedMissingInnerHits = "(std_vector_electron_expectedMissingInnerHits[0] < 1) && (std_vector_electron_expectedMissingInnerHits[1] < 1)";
+  TCut ele1_d0                  = "(abs(std_vector_lepton_d0[0]) < (0.05 * (1 + (abs(std_vector_lepton_eta[0]) > 1.479))))";
+  TCut ele2_d0                  = "(abs(std_vector_lepton_d0[1]) < (0.05 * (1 + (abs(std_vector_lepton_eta[1]) > 1.479))))";
+  TCut ele1_dz                  = "(abs(std_vector_lepton_dz[0]) < (0.1  * (1 + (abs(std_vector_lepton_eta[0]) > 1.479))))";
+  TCut ele2_dz                  = "(abs(std_vector_lepton_dz[1]) < (0.1  * (1 + (abs(std_vector_lepton_eta[1]) > 1.479))))";
   TCut eleIP                    = ele1_d0 && ele2_d0 && ele1_dz && ele2_dz;
 
 
