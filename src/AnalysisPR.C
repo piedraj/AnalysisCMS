@@ -120,8 +120,8 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
       Float_t corrected_baseW = baseW; 
 
-      if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
-      if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
+      //if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
+      //if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
       _base_weight = (corrected_baseW / 1e3) * puW * GEN_weight_SM / abs(GEN_weight_SM);
 

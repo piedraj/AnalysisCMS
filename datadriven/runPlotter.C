@@ -3,7 +3,8 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir  = "../rootfiles/nominal/FR";
+//const TString inputdir  = "../rootfiles/nominal/FR";
+const TString inputdir  = "../rootfilesNewFakes/nominal/FR";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -47,6 +48,7 @@ void runPlotter(TString level,
 
   plotter->AddData("01_Data", "data", color_Data);
 
+  plotter->AddProcess("00bis_QCD", "QCD", color_HWW);
   plotter->AddProcess("07_ZJets", "Z+jets", color_ZJets);
   plotter->AddProcess("08_WJets", "W+jets", color_WJets);
 
@@ -74,12 +76,12 @@ void DrawLeptonPlots(TString lepton,
   //----------------------------------------------------------------------------
   if (!_option.Contains("nostack")) plotter->SetDrawYield(true);
 
-  if (_level.Contains("ZRegion")) {
+  if (_level.Contains("ZPic")) {
 
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", logY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", logY, true, 0, 200);
+    //plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", linY, true, 0, 200);
+    //plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", linY, true, 0, 200);
+    //plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", logY, true, 0, 200);
+    //plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", logY, true, 0, 200);
 
     plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
     plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
