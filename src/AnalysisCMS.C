@@ -67,7 +67,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -88,13 +88,14 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Moriond_2017
   for (int nf=0; nf<6; nf++) {
     
-    if (_ismc && nf==4) continue;
+    if (_ismc && nf == 4) continue;
     
     if (std_vector_trigger_special->at(nf) != 1) return false;
   }
 
-  // Need to fix beacuse some MC (and data?) were not produced with the lastest cfg for SkimEventProducer :(
+  // Need to fix beacuse some MC were not produced with the lastest cfg for SkimEventProducer :(
   int G1 = 6, G2 = 7, I1 = 8, I2 = 9;
+
   if (std_vector_trigger_special->at(8) == -2) {
 
     ApplyGiovanniFilters = false;
