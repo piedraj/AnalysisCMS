@@ -194,10 +194,6 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
   h_mlb1          [ichannel][icut][ijet]->Fill(_mlb1,           _event_weight);
   h_mlb2          [ichannel][icut][ijet]->Fill(_mlb2,           _event_weight);
-  h_sphericity    [ichannel][icut][ijet]->Fill(sphericity,     _event_weight);
-  h_alignment     [ichannel][icut][ijet]->Fill(alignment,       _event_weight);
-  h_planarity     [ichannel][icut][ijet]->Fill(planarity,      _event_weight);
-  h_centrality    [ichannel][icut][ijet]->Fill(centrality,     _event_weight);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -727,11 +723,9 @@ void AnalysisCMS::GetLeptons()
 
     if (i == 0) Lepton1 = lep;
     if (i == 1) Lepton2 = lep;
-    if (i == 2) Lepton3 = lep;
   }
 
   _nlepton = AnalysisLeptons.size();
-  //if(_nlepton != 2) printf("_nlepton : %i\n", int(_nlepton));
 
 
   // SUSY check of the nonprompt background shape
@@ -774,11 +768,6 @@ void AnalysisCMS::GetLeptons()
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
   _lep2id   = Lepton2.flavour; 
-
-  _lep3pt = -999;
-  if(_nlepton > 2) {
-    _lep3pt = Lepton3.v.Pt();
-  }
 
   _detall = fabs(_lep1eta - _lep2eta);
 
@@ -1270,13 +1259,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  /*
-  GetSphericity(GetMomentumTensor());
-  GetAlignment(GetMomentumTensor());
-  GetPlanarity(GetMomentumTensor());
-  GetCentrality();
-  */
-
   if (_analysis.EqualTo("TTDM")) GetTops();
   
   if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
@@ -1418,10 +1400,6 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mt2lblb      [ichannel][icut][ijet] = new TH1D("h_mt2lblb"       + suffix, "", 2000, 0, 2000);
   h_mlb1         [ichannel][icut][ijet] = new TH1D("h_mlb1"          + suffix, "", 2000, 0, 2000);
   h_mlb2         [ichannel][icut][ijet] = new TH1D("h_mlb2"          + suffix, "", 2000, 0, 2000);
-  h_sphericity   [ichannel][icut][ijet] = new TH1D("h_sphericity"    + suffix, "", 1000, -1, 1);
-  h_alignment    [ichannel][icut][ijet] = new TH1D("h_alignment"     + suffix, "", 1000, -1, 1);
-  h_planarity    [ichannel][icut][ijet] = new TH1D("h_planarity"     + suffix, "", 1000, -1, 1);
-  h_centrality   [ichannel][icut][ijet] = new TH1D("h_centrality"    + suffix, "", 1000, 0,  1);
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -1533,7 +1511,7 @@ void AnalysisCMS::OpenMinitree()
   minitree = new TTree("latino", "minitree");
 
   // A
-  minitree->Branch("alignment",        &alignment,        "alignment/F");
+
   // B
   minitree->Branch("bjet1csvv2ivf",    &_bjet1csvv2ivf,    "bjet1csvv2ivf/F");
   minitree->Branch("bjet1eta",         &_bjet1eta,         "bjet1eta/F");
@@ -1547,7 +1525,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("bjet2pt",          &_bjet2pt,          "bjet2pt/F");
   // C
   minitree->Branch("channel",          &_channel,          "channel/F");
-  minitree->Branch("centrality",       &centrality,       "centrality/F");
   // D
   //  minitree->Branch("darketa_gen",      &_darketa_gen,      "darketa_gen/F");
   //  minitree->Branch("darkphi_gen",      &_darkphi_gen,      "darkphi_gen/F"); 
@@ -1632,7 +1609,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep2motheridGEN",  &_lep2motherid_gen, "lep2motheridGEN/F");
   minitree->Branch("lep2ptGEN",        &_lep2pt_gen,       "lep2ptGEN/F");
   minitree->Branch("lep2tauGEN",       &_lep2tau_gen,      "lep2tauGEN/F");
-  minitree->Branch("lep3pt",           &_lep3pt,           "lep3pt/F");
   minitree->Branch("lumi",             &lumi,              "lumi/I");
   // M
   minitree->Branch("mc",               &_mc,               "mc/F");
@@ -1682,12 +1658,10 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   minitree->Branch("ntrueint",         &nGoodVtx,          "nGoodVtx/F");
   // P
-  minitree->Branch("planarity",        &planarity,        "planarity/F");
   minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
   // R
   minitree->Branch("run",              &run,               "run/I");
   // S
-  minitree->Branch("sphericity",       &sphericity,       "sphericity/F");
   minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
   minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
   minitree->Branch("scale",            &_scale,            "scale"); 
@@ -2672,143 +2646,6 @@ void AnalysisCMS::GetTopReco()
     
     _darkpt = theMass.performAllVariations(1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2);
   }
-}
-
-
-//------------------------------------------------------------------------------
-// GetMomentumTensor
-//------------------------------------------------------------------------------
-TMatrixDSym AnalysisCMS::GetMomentumTensor()
-{
-  // TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
-  TMatrixDSym smatrix(3);
-
-
-  // Leptons
-  //----------------------------------------------------------------------------
-  smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
-  smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[1][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  smatrix[1][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Py();
-  smatrix[1][2] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[2][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-  smatrix[2][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-  smatrix[2][2] = AnalysisLeptons[0].v.Pz() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[0][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Px();
-  smatrix[0][1] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  smatrix[0][2] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-
-  smatrix[1][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  smatrix[1][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Py();
-  smatrix[1][2] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-
-  smatrix[2][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-  smatrix[2][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-  smatrix[2][2] += AnalysisLeptons[1].v.Pz() * AnalysisLeptons[1].v.Pz();
-
-
-  // Jets
-  //----------------------------------------------------------------------------
-  for (unsigned int i=0; i<AnalysisJets.size(); i++) {
-
-    smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
-    smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-
-    smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
-    smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-
-    smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-    smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-    smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
-  }
-
-
-  return smatrix;
-}
-
-
-//------------------------------------------------------------------------------
-// GetEigenvalues
-//------------------------------------------------------------------------------
-TVectorD AnalysisCMS::GetEigenvalues(TMatrixDSym smatrix)
-{
-  TMatrixDSymEigen eigen(smatrix);
-
-  TVectorD eigenvalues = eigen.GetEigenValues();
-
-  return eigenvalues;
-}
-
-
-//------------------------------------------------------------------------------
-// GetSphericity
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetSphericity(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue1 = eigenvalues[0];
-  float eigenvalue2 = eigenvalues[1];
-  float eigenvalue3 = eigenvalues[2];
-
-  sphericity = 1.5 * (eigenvalue2 + eigenvalue3) / (eigenvalue1 + eigenvalue2 + eigenvalue3);
-
-  return sphericity;
-}
-
-
-//------------------------------------------------------------------------------
-// GetAlignment
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetAlignment(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue1 = eigenvalues[0];
-  float eigenvalue2 = eigenvalues[1];
-
-  alignment = eigenvalue2 / eigenvalue1;
-
-  return alignment;
-}
-
-
-//------------------------------------------------------------------------------
-// GetPlanarity
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue2 = eigenvalues[1];
-  float eigenvalue3 = eigenvalues[2];
-
-  planarity = eigenvalue3 / eigenvalue2;
-
-  return planarity;
-}
-
-//------------------------------------------------------------------------------
-// GetCentrality
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetCentrality() {
-  float sumPt = 0.;
-  float sumEVis = 0.;
-
-  for(int i=0; i < AnalysisJets.size(); i++) {
-    sumPt += AnalysisJets[i].v.Pt();
-    sumEVis += AnalysisJets[i].v.E();
-  }
-
-  centrality = sumPt/sumEVis;
-
-  return centrality;
 }
 
 //------------------------------------------------------------------------------

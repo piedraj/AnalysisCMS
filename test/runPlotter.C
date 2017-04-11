@@ -59,7 +59,6 @@ void runPlotter(TString level,
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
   HistogramReader plotter(inputdir + analysis, outputdir);
-  //HistogramReader plotter(inputdir, outputdir);
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle(false);
@@ -149,12 +148,6 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
     }
 
-  if (analysis.EqualTo("Shape"))
-    {
-      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10",  color_Signal);
-      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500", color_Signal+2);
-    }
-
   if (analysis.EqualTo("Stop"))
     {
       plotter.AddSignal("T2tt_mStop-150to250_Sm150_Xm25",  "m_{ref}150-25",  color_Signal);  
@@ -233,8 +226,8 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
-	  //plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
@@ -356,15 +349,6 @@ void runPlotter(TString level,
 	      plotter.Draw(prefix + "zl2pt"      + suffix, "Z trailing lepton p_{T}",          10, 0, "GeV",  scale, true,  0, 150);
 	      plotter.Draw(prefix + "wlpt"       + suffix, "W lepton p_{T}",                   10, 0, "GeV",  scale, true,  0, 150);
 	      plotter.Draw(prefix + "wlzldeltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
-	    }
-
-	  // Shape histograms
-	  //--------------------------------------------------------------------
-	  if (analysis.EqualTo("Shape"))
-	    {
-	      plotter.Draw(prefix + "sphericity" + suffix, "sphericity", 20, 2, "NULL", scale, true, 0, 1);
-	      plotter.Draw(prefix + "alignment" + suffix,  "alignment",  20, 2, "NULL", scale, true, 0, 1);
-	      plotter.Draw(prefix + "planarity" + suffix,  "planarity",  20, 2, "NULL", scale, true, 0, 1);
 	    }
 
 	}

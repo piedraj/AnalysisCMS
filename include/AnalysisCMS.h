@@ -154,19 +154,7 @@ class AnalysisCMS : public AnalysisBase
 				    int            MT2Type      = 0,
 				    double         MT2Precision = 0.);
 
-  TMatrixDSym GetMomentumTensor    ();
-
-  TVectorD    GetEigenvalues       (TMatrixDSym    smatrix);
-
-  float       GetSphericity        (TMatrixDSym    smatrix);
-
-  float       GetAlignment         (TMatrixDSym    smatrix);
-
-  float       GetPlanarity         (TMatrixDSym    smatrix);
-
   void        GetScaleAndResolution(); 
-
-  float       GetCentrality     ();
 
   // Data members
   //----------------------------------------------------------------------------
@@ -174,7 +162,6 @@ class AnalysisCMS : public AnalysisBase
   std::vector<Lepton>    AnalysisLeptons;
   Lepton                 Lepton1;
   Lepton                 Lepton2;
-  Lepton                 Lepton3;
   TLorentzVector         MET;
   TLorentzVector         trkMET;
 
@@ -293,7 +280,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2eta_gen;
   float                  _lep2phi_gen;
   float                  _lep2pt_gen;
-  float                  _lep3pt;
   float                  _lep1tau_gen;
   float                  _lep1id_gen;
   float                  _lep1motherid_gen;
@@ -341,10 +327,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2pt_gen;
   float			 _topReco;
   float			 _topRecoW; 
-  float                  sphericity;
-  float                  alignment;
-  float                  planarity;
-  float                  centrality;
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;
@@ -521,10 +503,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2phi_gen   [nchannel][ncut][njetbin+1];
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
-  TH1D*                  h_sphericity    [nchannel][ncut][njetbin+1];
-  TH1D*                  h_alignment     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_planarity     [nchannel][ncut][njetbin+1];
-  TH1D*                  h_centrality    [nchannel][ncut][njetbin+1];
   TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
 
   // Razor

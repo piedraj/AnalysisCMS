@@ -15,12 +15,6 @@ class AnalysisShape : public AnalysisCMS
   void Loop                  (TString analysis,
 			      TString sample,
 			      float   luminosity);
-  
-  TMatrixDSym GetMomentumTensor();
-
-  TVectorD GetEigenvalues(TMatrixDSym _smatrix);
-
-  float GetSphericity(TMatrixDSym _smatrix);
 
 };
 
