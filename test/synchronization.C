@@ -9,6 +9,8 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
 
   l2loose_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut/latino_" + sample + ".root");
 
+  //  l2loose_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd/latino_" + sample + ".root");
+
   TChain* l2tight_tree = new TChain("latino", "latino");
 
   l2tight_tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_" + sample + ".root");
