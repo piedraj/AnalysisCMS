@@ -17,6 +17,7 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
   // Cuts
   //----------------------------------------------------------------------------
   TCut pt                       = "std_vector_lepton_pt[0] > 25. && std_vector_lepton_pt[1] > 20."; 
+  TCut eta                      = "abs(std_vector_lepton_eta[0]) < 2.5 && abs(std_vector_lepton_eta[1]) < 2.5"; 
   TCut ee                       = "std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -121";
   TCut eleIdHLT                 = "std_vector_lepton_eleIdHLT[0] * std_vector_lepton_eleIdHLT[1]";
   TCut eleIdTight               = "std_vector_lepton_eleIdTight[0] * std_vector_lepton_eleIdTight[1]";
@@ -37,7 +38,7 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
 
   TCanvas* c1 = new TCanvas("c1", "c1");
 
-  l2loose_tree->Draw("mll>>l2loose_mll_cuts",    pt && ee && eleIdHLT && tripleChargeAgreement && expectedMissingInnerHits && lep1_d0 && lep2_d0 && lep1_dz && lep2_dz);
+  l2loose_tree->Draw("mll>>l2loose_mll_cuts",    pt && ee && eta && eleIdHLT && tripleChargeAgreement && expectedMissingInnerHits && lep1_d0 && lep2_d0 && lep1_dz && lep2_dz);
   l2loose_tree->Draw("mll>>l2loose_mll_l2tight", pt && ee && l2tight);
   l2tight_tree->Draw("mll>>l2tight_mll",         pt && ee);
 
