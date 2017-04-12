@@ -885,7 +885,6 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     	_bjet30csvv2m_phi.push_back(phi);
      	_bjet30csvv2m_pt .push_back(pt); 
     }
-
   }
 
 
@@ -977,7 +976,6 @@ void AnalysisCMS::GetTrkMET(float module, float phi)
 {
   trkMET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -1401,6 +1399,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_mlb1         [ichannel][icut][ijet] = new TH1D("h_mlb1"          + suffix, "", 2000, 0, 2000);
   h_mlb2         [ichannel][icut][ijet] = new TH1D("h_mlb2"          + suffix, "", 2000, 0, 2000);
 
+
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
   h_channel       [ichannel][icut][ijet] = new TH1D("h_channel"        + suffix, "",   10,    0,   10);
@@ -1509,8 +1508,6 @@ void AnalysisCMS::OpenMinitree()
   // Minitree branches
   //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
-
-  // A
 
   // B
   minitree->Branch("bjet1csvv2ivf",    &_bjet1csvv2ivf,    "bjet1csvv2ivf/F");
@@ -2023,7 +2020,6 @@ void AnalysisCMS::GetStopVar()
     if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
 
     int Wid  = std_vector_VBoson_pid->at(wb);  // Wid  = -24 for W- and +24 for W+
-    if (fabs(Wid)!=24) continue;
     int IdxW = (Wid + 24) / 48;                // IdxW =   0 for W- and  +1 for W+
 
     if (fabs(Wid) != 24) continue;
@@ -2647,6 +2643,7 @@ void AnalysisCMS::GetTopReco()
     _darkpt = theMass.performAllVariations(1, 1, 1, l1, l2, jets, unc, MET, nu1, nu2, theJet1, theJet2);
   }
 }
+
 
 //------------------------------------------------------------------------------
 // GetGenWeightsLHE
