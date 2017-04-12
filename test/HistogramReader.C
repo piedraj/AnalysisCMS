@@ -303,7 +303,6 @@ void HistogramReader::Draw(TString hname,
 
   hfirst->SetTitle("");
 
-
   // All MC
   //----------------------------------------------------------------------------
   _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
@@ -472,7 +471,6 @@ void HistogramReader::Draw(TString hname,
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
       ny++;
     }
-
 
   // Search signals legend
   //----------------------------------------------------------------------------
@@ -1130,7 +1128,6 @@ void HistogramReader::LoopEventsByChannel(TString level)
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
 }
-
 
 //------------------------------------------------------------------------------
 // GetBestScoreX

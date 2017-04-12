@@ -74,15 +74,14 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     // Analysis
     //--------------------------------------------------------------------------
     //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
-
-
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
 
+    //if (jentry%15 != 0) continue;
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
     if (Lepton1.v.Pt() < 25.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
-
+    
     _nelectron = 0;
 
     if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
@@ -104,9 +103,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //FillLevelHistograms(step_2, pass);
 //FillLevelHistograms(step_3, pass);
 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
-
-
+    pass &= (std_vector_lepton_pt->at(2) < 10.);//!
 
     // missing: 
     // Cut applied in AN-16-105 but not in AN-16-011 = 
@@ -114,15 +111,15 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_00_Has2Leptons, pass);
 
-    pass &= ( _m2l > 20.                                    );
+        pass &= ( _m2l > 20.                                    );//!
 //FillLevelHistograms(step_4, pass);
-    pass &= ( _channel == em  ||  fabs(_m2l - Z_MASS) > 15. );
+       pass &= ( _channel == em  ||  fabs(_m2l - Z_MASS) > 15. );//!
 //FillLevelHistograms(step_5, pass);
-    pass &= ( _njet > 1                                     );
+       pass &= ( _njet > 1                                     );//!
 //FillLevelHistograms(step_6, pass);
-//pass &= ( metPfType1  > 50.                             );
+       //pass &= ( metPfType1  > 50.                             );
 //FillLevelHistograms(step_7, pass);
-    pass &= ( _nbjet30csvv2m > 0                            );
+       pass &= ( _nbjet30csvv2m > 0                            );//!
 //FillLevelHistograms(step_8, pass);
 
     FillLevelHistograms(TTDM_01_NewPresel, pass);

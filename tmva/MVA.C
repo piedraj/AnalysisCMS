@@ -14,7 +14,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir       = "../minitrees/nominal/TTDM/";
+const TString inputdir       = "../minitrees/minitrees_week-1/TTDM/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -42,9 +42,9 @@ std::vector<TTree*> _mctree;
 // MVA
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void MVA(TString signal     = "check", //
-	 bool    doMVATrain = 0,
-	 bool    doMVARead  = 1)
+void MVA(TString signal     = "ttDM0001scalar00010", //
+	 bool    doMVATrain = 1,
+	 bool    doMVARead  = 0)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -66,9 +66,6 @@ void MVA(TString signal     = "check", //
   if (doMVARead)
     {
 
-      MVARead(signal, "01_Data_application");
-      //MVARead(signal, signal);
-
       //MVARead(signal, "01_Data");
       //MVARead(signal, "14_HZ");
       //MVARead(signal, "10_HWW");
@@ -78,7 +75,7 @@ void MVA(TString signal     = "check", //
       //MVARead(signal, "11_Wg");
       //MVARead(signal, "07_ZJets");
       //MVARead(signal, "09_TTV");
-      MVARead(signal, "04_TTTo2L2Nu_application");
+      MVARead(signal, "04_TTTo2L2Nu");
       //MVARead(signal, "05_ST");
       //MVARead(signal, "00_Fakes");
     }
@@ -104,8 +101,8 @@ void MVATrain(TString signal)
   //----------------------------------------------------------------------------
   _mctree.clear();
 
-  AddProcess("signal", "04_TTTo2L2Nu_training");
-  AddProcess("background", "01_Data_training");
+  AddProcess("signal", signal);
+  AddProcess("background", "04_TTTo2L2Nu");
 
   //  AddProcess("background", "14_HZ");
   //  AddProcess("background", "10_HWW");
@@ -132,28 +129,29 @@ void MVATrain(TString signal)
   // Be careful with the order: it must be respected at the reading step
   // factory->AddVariable("<var1>+<var2>", "pretty title", "unit", 'F');
 
-  factory->AddVariable("channel",        "", "", 'F');
+  //factory->AddVariable("channel",        "", "", 'F');
   factory->AddVariable("metPfType1",     "", "", 'F');
-  factory->AddVariable("m2l",            "", "", 'F');
-  factory->AddVariable("njet",           "", "", 'F');
+  factory->AddVariable("mt2ll",     "", "", 'F');
+    //factory->AddVariable("m2l",            "", "", 'F');
+    //factory->AddVariable("njet",           "", "", 'F');
   //factory->AddVariable("nbjet30csvv2m",  "", "", 'F');
-  factory->AddVariable("lep1pt",         "", "", 'F');
-  factory->AddVariable("lep2pt",         "", "", 'F');
-  factory->AddVariable("jet1pt",         "", "", 'F');
-  factory->AddVariable("jet2pt",         "", "", 'F');
-  factory->AddVariable("ht",             "", "", 'F');
-  factory->AddVariable("mtw1",           "", "", 'F');
-  factory->AddVariable("mtw2",           "", "", 'F');
-  factory->AddVariable("dphill",         "", "", 'F');
-  factory->AddVariable("dphilep1jet1",   "", "", 'F');
-  factory->AddVariable("dphilep1jet2",   "", "", 'F');
-  factory->AddVariable("dphilmet1",      "", "", 'F');
-  factory->AddVariable("dphilep2jet1",   "", "", 'F');
-  factory->AddVariable("dphilep2jet2",   "", "", 'F');
-  factory->AddVariable("dphilmet2",      "", "", 'F');
-  factory->AddVariable("dphijj",         "", "", 'F');
-  factory->AddVariable("dphijet1met",    "", "", 'F');
-  factory->AddVariable("dphijet2met",    "", "", 'F');
+  //factory->AddVariable("lep1pt",         "", "", 'F');
+  //factory->AddVariable("lep2pt",         "", "", 'F');
+  //factory->AddVariable("jet1pt",         "", "", 'F');
+  //factory->AddVariable("jet2pt",         "", "", 'F');
+  //factory->AddVariable("ht",             "", "", 'F');
+  //factory->AddVariable("mtw1",           "", "", 'F');
+  //factory->AddVariable("mtw2",           "", "", 'F');
+  //factory->AddVariable("dphill",         "", "", 'F');
+  //factory->AddVariable("dphilep1jet1",   "", "", 'F');
+  //factory->AddVariable("dphilep1jet2",   "", "", 'F');
+  //factory->AddVariable("dphilmet1",      "", "", 'F');
+  //factory->AddVariable("dphilep2jet1",   "", "", 'F');
+  //factory->AddVariable("dphilep2jet2",   "", "", 'F');
+  //factory->AddVariable("dphilmet2",      "", "", 'F');
+  //factory->AddVariable("dphijj",         "", "", 'F');
+  //factory->AddVariable("dphijet1met",    "", "", 'F');
+  //factory->AddVariable("dphijet2met",    "", "", 'F');
   factory->AddVariable("dphillmet",      "", "", 'F');
 
 
@@ -174,8 +172,8 @@ void MVATrain(TString signal)
   		      "H:!V:NeuronType=sigmoid:NCycles=30:VarTransform=Norm:HiddenLayers=20,20:TestRate=3:LearningRate=0.005");  // 22 in-var / 920 training events / 30 cycles
 
 
-  factory->BookMethod(TMVA::Types::kBDT, "BDT04", "NTrees=50:MaxDepth=2" );
-  factory->BookMethod(TMVA::Types::kBDT, "BDT05", "NTrees=50:MaxDepth=3" );
+  //  factory->BookMethod(TMVA::Types::kBDT, "BDT04", "NTrees=50:MaxDepth=2" );
+  //  factory->BookMethod(TMVA::Types::kBDT, "BDT05", "NTrees=50:MaxDepth=3" );
 
 
 
@@ -206,6 +204,7 @@ void MVARead(TString signal, TString filename)
 
   float channel;
   float metPfType1;
+    float mt2ll;
   float m2l;
   float njet;
   float nbjet20cmvav2l;
@@ -238,6 +237,7 @@ void MVARead(TString signal, TString filename)
 
   reader->AddVariable("channel",        &channel);
   reader->AddVariable("metPfType1",     &metPfType1);
+  reader->AddVariable("mt2ll",     &mt2ll);
   reader->AddVariable("m2l",            &m2l);
   reader->AddVariable("njet",           &njet);
   //reader->AddVariable("nbjet20cmvav2l", &nbjet20cmvav2l);
@@ -263,6 +263,7 @@ void MVARead(TString signal, TString filename)
  
   // Book MVA methods
   //----------------------------------------------------------------------------
+  
   reader->BookMVA("01", weightsdir + signal + "_MLP01.weights.xml");
   reader->BookMVA("02", weightsdir + signal + "_MLP02.weights.xml");
   reader->BookMVA("03", weightsdir + signal + "_MLP03.weights.xml");
@@ -289,6 +290,7 @@ void MVARead(TString signal, TString filename)
 
   theTree->SetBranchAddress("channel",        &channel);
   theTree->SetBranchAddress("metPfType1",     &metPfType1);
+  theTree->SetBranchAddress("mt2ll",     &mt2ll);
   theTree->SetBranchAddress("m2l",            &m2l);
   //theTree->SetBranchAddress("njet",           &njet);
   //theTree->SetBranchAddress("nbjet20cmvav2l", &nbjet20cmvav2l);

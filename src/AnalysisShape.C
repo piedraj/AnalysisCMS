@@ -76,7 +76,7 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
     else if (_nelectron == 0) _channel = mm;
     
     if (Lepton1.v.Pt() < 30.) continue;
-    if (Lepton2.v.Pt() < 10.) continue;
+    if (Lepton2.v.Pt() < 15.) continue;
 
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
@@ -128,7 +128,6 @@ void AnalysisShape::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
 
     FillLevelHistograms(Shape_07_Zveto, pass);
-
   }
 
 
@@ -143,7 +142,10 @@ void AnalysisShape::FillLevelHistograms(int  icut,
 					  bool pass)
 {
   if (!pass) return;
-
+  
   FillHistograms(_channel, icut, _jetbin);
   FillHistograms(_channel, icut, njetbin);
 }
+
+
+

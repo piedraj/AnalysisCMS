@@ -154,18 +154,7 @@ class AnalysisCMS : public AnalysisBase
 				    int            MT2Type      = 0,
 				    double         MT2Precision = 0.);
 
-  TMatrixDSym GetMomentumTensor    ();
-
-  TVectorD    GetEigenvalues       (TMatrixDSym    smatrix);
-
-  float       GetSphericity        (TMatrixDSym    smatrix);
-
-  float       GetAlignment         (TMatrixDSym    smatrix);
-
-  float       GetPlanarity         (TMatrixDSym    smatrix);
-
   void        GetScaleAndResolution(); 
-
 
   // Data members
   //----------------------------------------------------------------------------
@@ -338,9 +327,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2pt_gen;
   float			 _topReco;
   float			 _topRecoW; 
-  float                  _sphericity;
-  float                  _alignment;
-  float                  _planarity;
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;
@@ -440,7 +426,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_mlb1         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb2         [nchannel][ncut][njetbin+1];
 
-
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
   TH1D*                  h_channel       [nchannel][ncut][njetbin+1];
@@ -528,7 +513,6 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_invGamma    [nchannel][ncut][njetbin+1];
   TH1D*                  h_Mdr         [nchannel][ncut][njetbin+1];
   TH1D*                  h_DeltaPhiRll [nchannel][ncut][njetbin+1];
-
 
   // TH2 histograms
   //----------------------------------------------------------------------------
