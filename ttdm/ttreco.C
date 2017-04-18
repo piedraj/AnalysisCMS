@@ -4,7 +4,9 @@
 #include <vector>
 
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString  inputdir = "minitrees_week-1"; 
+
+const bool WriteBranch = 1; 
 
 const bool WriteBranch = 1; 
 
@@ -38,7 +40,6 @@ void ttreco(){
 	ttreco2("ttDM0001scalar00300");
 	ttreco2("00_Fakes_reduced_1outof6");
 	ttreco2("01_Data_reduced_1outof6");
-
 	cout << "\n \n done !!! \n \n" << endl; 
 
 }
@@ -47,7 +48,6 @@ void ttreco2( TString process ) {
 
 	cout << "\n\n" << process << "\n" <<  endl; 
 
- 
 	TFile* fshape  = new TFile( "/afs/cern.ch/user/j/jgarciaf/mimick/mlb.root" ); 
 
 	TH1F* shapemlb = (TH1F*) fshape->Get( "mlb" );
@@ -62,7 +62,6 @@ void ttreco2( TString process ) {
    	TTreeReader myreader( "latino", &myfile );
 
 	TTree* mytree = (TTree*) myfile.Get( "latino" );
-
 
 
 	//----- read -------------------------------------------------------
@@ -97,7 +96,6 @@ void ttreco2( TString process ) {
    	//TTreeReaderValue<float> top2phi ( myreader, "top2phi_gen"  );
 
 
-
 	//----- write ------------------------------------------------------
 
 	float topRecoW;
@@ -106,9 +104,12 @@ void ttreco2( TString process ) {
 	TBranch* b_topRecoW = mytree -> Branch( "topRecoW", &topRecoW, "topRecoW/F" );
 	TBranch* b_darkpt   = mytree -> Branch( "newdarkpt"  , &darkpt  , "darkpt/F"   );
 
+	TBranch* b_mimick = mytree -> Branch( "mimick"  , &mimick  , "mimick/F"   );
 
+	
 
 	//----- loop -------------------------------------------------------
+
 
 	int nentries = myreader.GetEntries(1); 
 
@@ -126,6 +127,7 @@ void ttreco2( TString process ) {
 
 		MET.SetMagPhi( *metPfType1, *metPfType1Phi );
 
+		myreader.SetEntry(ievt);
 
 		//--- leptons
 
@@ -143,7 +145,6 @@ void ttreco2( TString process ) {
 		std::vector<TLorentzVector> jets;
  		std::vector<TLorentzVector> bjets;
 		std::vector<Float_t>        unc;   // unimportant, but keep it, please
-
 
 		for( int i = 0; i < jet_pt->size(); i++ ){
 
@@ -168,7 +169,6 @@ void ttreco2( TString process ) {
 
 		}
 
-
 		//--- arguments by reference: neutrinos & tops
 
 		std::vector<TLorentzVector> nu1, nu2;
@@ -176,8 +176,6 @@ void ttreco2( TString process ) {
 	        TVector2 top1, top2;
 
 
-		//--- reco à la DESY
-		
 		theMass.startVariations( l1, l2, bjets, jets, MET, top1, top2, topRecoW );
 		
 
@@ -216,6 +214,7 @@ void ttreco2( TString process ) {
 	if (WriteBranch) mytree -> Write( "", TObject::kOverwrite );
 
   	myfile.Close();
+
 
 }
 

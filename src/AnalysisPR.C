@@ -19,6 +19,8 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
   Setup(analysis, filename, luminosity);
 
+  root_output->cd();
+  
   // Define prompt rate histograms
   //----------------------------------------------------------------------------
   h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
@@ -44,6 +46,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
+    //    if (jentry > 1000) break;
 
     fChain->GetEntry(jentry);
 
@@ -117,10 +120,10 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
       Float_t corrected_baseW = baseW; 
 
-      if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
-      if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
+      //if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
+      //if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
 
-      _base_weight = (corrected_baseW / 1e3) * puW6p3 * GEN_weight_SM / abs(GEN_weight_SM);
+      _base_weight = (corrected_baseW / 1e3) * puW * GEN_weight_SM / abs(GEN_weight_SM);
 
       _event_weight = _base_weight;
 
@@ -129,7 +132,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 5.86 : _event_weight *= 163.84;
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.283 : _event_weight *= 217.234;
 	}
 
       
@@ -137,7 +140,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == e)
 	{
-	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 8.51 : _event_weight *= 42.34;
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 13.866 : _event_weight *= 62.94;
 	}
 
     } else {
@@ -180,26 +183,26 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
     // Prompt rate from MC
     //--------------------------------------------------------------------------
-    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight) {
-      
+    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight && _mtw < 20.) {
+
       float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
       float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
-
+      
 	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
 	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
 	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);
 
 	if (_Zlepton2type == Tight) {
-	  
+      
 	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
 	  h_Ele_tight_pt_PR    ->Fill(Zlep2pt,  _base_weight);
 	  h_Ele_tight_eta_PR   ->Fill(Zlep2eta, _base_weight);
 	}
 
       }	else if (fabs(_Zdecayflavour) == MUON_FLAVOUR) {
-	
+
 	h_Muon_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _base_weight);
 	h_Muon_loose_pt_PR    ->Fill(Zlep2pt,  _base_weight);
 	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _base_weight);

@@ -15,15 +15,16 @@ void CreateHistograms(){
 
 	//for( int i = 0; i < nprocess; i++ ){
 
-		//CreateHistograms2( i ); 
+	  //CreateHistograms2( processID[i] ); 
+	  CreateHistograms2( i ); 
 
 	//}
 
-CreateHistograms2( data );
-//CreateHistograms2( ttDM );
-CreateHistograms2( TT   );
-CreateHistograms2( EW   );
-CreateHistograms2( DY   );
+	  //CreateHistograms2( data );
+	  //CreateHistograms2( ttDM );
+	  //CreateHistograms2( TT   );
+	  //CreateHistograms2( EW   );
+	  //CreateHistograms2( DY   );
 
 	//for( int i = 0; i < nscalar; i++ ){
 
@@ -44,9 +45,8 @@ void CreateHistograms2( int process ){
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	TFile* myfile; 
-
-	myfile = new TFile( "../minitrees/" + inputdir + "/MET/" + processID[process] + ".root", "read" );
+	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
+	TFile* myfile = new TFile( inputdir + processID[process] + ".root", "read" );
 
 	/*if ( process == data ){
 
@@ -199,9 +199,9 @@ void CreateHistograms2( int process ){
 		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
-		//mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		//mytree -> Draw( b_name[MVA80        ] + " >> " + h_name[MVA80        ] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[MVA90        ] + " >> " + h_name[MVA90        ] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
+		mytree -> Draw( b_name[ANN_0704sigmoid80        ] + " >> " + h_name[ANN_0704sigmoid80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[ANN_0704tanh80        ] + " >> " + h_name[ANN_0704tanh80        ] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
 		//mytree -> Draw( b_name[alpha005    ] + " >> " + h_name[alpha005    ] + "( 120,  -0.1, 1.1   )", thecut );

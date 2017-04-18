@@ -131,28 +131,10 @@ void runPlotter(TString level,
 
   // Add signals
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("MonoH"))
-    {
-      plotter.AddSignal("monoH_2HDM_MZp-600_MA0-400",  "m_{Z'} 600",  color_Signal-4);
-      plotter.AddSignal("monoH_2HDM_MZp-800_MA0-400",  "m_{Z'} 800",  color_Signal-3);
-      plotter.AddSignal("monoH_2HDM_MZp-1200_MA0-400", "m_{Z'} 1200", color_Signal-1);
-      plotter.AddSignal("monoH_2HDM_MZp-1700_MA0-400", "m_{Z'} 1700", color_Signal+1);
-      plotter.AddSignal("monoH_2HDM_MZp-2000_MA0-400", "m_{Z'} 2000", color_Signal+2);
-      plotter.AddSignal("monoH_2HDM_MZp-2500_MA0-400", "m_{Z'} 2500", color_Signal+3);
-    }
-
-
   if (analysis.EqualTo("TTDM"))
     {
       plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
-    }
-
-
-  if (analysis.EqualTo("Stop"))
-    {
-      plotter.AddSignal("T2tt_mStop-150to250_Sm150_Xm25",  "m_{ref}150-25",  color_Signal);  
-      plotter.AddSignal("T2tt_mStop-250to350_Sm275_Xm150", "m_{ref}275-150", color_Signal+2);  
     }
 
 

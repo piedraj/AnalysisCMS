@@ -3,7 +3,8 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString inputdir  = "../rootfiles/nominal/FR";
+//const TString inputdir  = "../rootfiles/nominal/FR";
+const TString inputdir  = "../rootfiles/newFakes2/FR";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -74,7 +75,7 @@ void DrawLeptonPlots(TString lepton,
   //----------------------------------------------------------------------------
   if (!_option.Contains("nostack")) plotter->SetDrawYield(true);
 
-  if (_level.Contains("ZRegion")) {
+  if (_level.Contains("Zpeak")) {
 
     plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", linY, true, 0, 200);
     plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", linY, true, 0, 200);
@@ -86,10 +87,10 @@ void DrawLeptonPlots(TString lepton,
     plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
     plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
 
-    plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", logY, true,  0, 200);
+    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", linY, true,  0, 200);
+    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", linY, true,  0, 200);
+    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", logY, true,  0, 200);
+    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", logY, true,  0, 200);
 
   } else {
 

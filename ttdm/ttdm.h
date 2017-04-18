@@ -1,9 +1,11 @@
 #include "TCut.h"
 
-//const TString  inputdir = "n-esima";  // where the minitrees are stored
-const TString  inputdir = "rightZveto"; 
+//const TString  inputdir = "minitreesTTDM36fb/nominal/TTDM";  // where the minitrees are stored
+//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/";
+const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
 
-const float thelumi = 1.0; 
+const float thelumi = 35.9/15; 
+
 const float    ttSF = 1.0;  const float ettSF = 0.0;
 const float    DYSF = 1.0;  const float eDYSF = 0.0;
 			    const float efakes= 0.0;
@@ -23,7 +25,7 @@ const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
 
 /*enum{ data,
       //ttDM,
-      //fakes,
+      fakes,
       TT,
       ST,
       DY,
@@ -102,7 +104,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       nvtx, //ntrueint,
       scale, uPara, uPerp,
       //sphericity, alignment, planarity,
-      //darkpt,
+      darkpt,
+      ANN_0704sigmoid80, ANN_0704tanh80,
       //MVA80, //MVA90, MVA100,
       //alpha005, alpha01, alpha05,	
       nhisto };
@@ -127,9 +130,9 @@ void Assign(){
 
 	//----------
 
-	/*//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
-	processID[data ] = "01_Data_FULL"              ;
-	//processID[fakes] = "00_Fakes"                ; 
+	//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	processID[data ] = "01_Data_1outof15"         ;
+	processID[fakes] = "00_Fakes_1outof15"        ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -293,8 +296,9 @@ void Assign(){
 	//b_name[alignment ] = "alignment" ;
 	//b_name[planarity ] = "planarity" ;
 
-	//b_name[darkpt    ] = "newdarkpt";
-	//b_name[MVA80     ] = "ANN_170222_mt2ll80_ttDM0001scalar00100";
+	b_name[darkpt    ] = "darkpt";
+	b_name[ANN_0704sigmoid80     ] = "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010";
+	b_name[ANN_0704tanh80     ] = "ANN_0704tanh_mt2ll80_ttDM0001scalar00010";
 	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
 	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
 
