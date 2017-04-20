@@ -491,7 +491,9 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
   if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  // Just used in case of datadriven fake estimation
+  if (!_analysis.EqualTo("Stop")) _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1)); 
+  // This filter steals mc statistic in analysis which does not use data forfake estimation
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
