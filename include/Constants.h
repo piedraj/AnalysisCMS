@@ -1,13 +1,13 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
+//#include "CutsControl.h"
 //#include "CutsDY.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsPR.h"
 //#include "CutsShape.h"
-//#include "CutsStop.h"
+#include "CutsStop.h"
 //#include "CutsTop.h"
 //#include "CutsTTDM.h"
 //#include "CutsWW.h"
@@ -66,6 +66,8 @@ enum {
   Fastsimup,
   Topptup,
   Topptdo,
+  Isrnjetup,
+  Isrnjetdo,
   nsystematic  // This line should be always last
 };
 
@@ -92,7 +94,9 @@ const TString ssystematic[nsystematic] = {
   "Fastsimdo",
   "Fastsimup",
   "Topptup",
-  "Topptdo"
+  "Topptdo",
+  "Isrnjetup",
+  "Isrnjetdo"
 };
 
 const bool systematicfromweight[nsystematic] = {
@@ -105,6 +109,8 @@ const bool systematicfromweight[nsystematic] = {
   false,
   false,
   false,
+  true,
+  true,
   true,
   true,
   true,

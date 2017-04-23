@@ -90,9 +90,13 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetTrkMET            (float    module,
 				    float    phi);
-
+  
+  bool        IsISRJet             (float    pt,
+				    float    eta,
+				    float    phi);
+  
   float       MuonIsolation        (int      k);
-
+  
   void        OpenMinitree         ();
 
   bool        PassTrigger          ();
@@ -317,6 +321,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
+  float                  _nisrjet;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
