@@ -156,6 +156,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetScaleAndResolution(); 
 
+
   // Data members
   //----------------------------------------------------------------------------
   std::vector<Jet>       AnalysisJets;
@@ -398,9 +399,9 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_minitree;
   TTree*                 minitree;
 
-  float 		_scale; 
-  float 		_uPara; 
-  float 		_uPerp; 
+  float 		 _scale; 
+  float 		 _uPara; 
+  float 		 _uPerp; 
 
 
   // TH1 histograms
@@ -425,6 +426,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_mt2lblb      [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb1         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb2         [nchannel][ncut][njetbin+1];
+
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -505,6 +507,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
   TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
 
+
   // Razor
   //----------------------------------------------------------------------------
   TH1D*                  h_MR          [nchannel][ncut][njetbin+1];
@@ -513,6 +516,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_invGamma    [nchannel][ncut][njetbin+1];
   TH1D*                  h_Mdr         [nchannel][ncut][njetbin+1];
   TH1D*                  h_DeltaPhiRll [nchannel][ncut][njetbin+1];
+
 
   // TH2 histograms
   //----------------------------------------------------------------------------
