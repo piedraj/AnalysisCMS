@@ -33,7 +33,7 @@ if __name__ == '__main__':
     theDir = opts.theDir
     theLog = opts.theLog
 
-    outputA = subprocess.Popen("ls " + theDir + "/*.root | grep root", stdout=subprocess.PIPE, shell=True)
+    outputA = subprocess.Popen("ls " + theDir + "*.root | grep root", stdout=subprocess.PIPE, shell=True)
     outputB = outputA.communicate()[0]
     output = outputB.split("\n")
  
@@ -48,8 +48,10 @@ if __name__ == '__main__':
             theoutputB = theoutputA.communicate()[0]
             theoutput = theoutputB.split("\n")
             if theoutput == ['']:            
-                print bcolors.FAIL, "An LSF directory processing filename ", bcolors.OKBLUE, nameOfFile, bcolors.FAIL, "was not found", bcolors.ENDC
+                print bcolors.FAIL, "The LSF directory processing filename ", bcolors.OKBLUE, nameOfFile, bcolors.FAIL, "was not found", bcolors.ENDC
             ####Si lo encuentra, imprimir que directorio es el culpable
+            # else 
+            #   print bcolors.WARNING, " This is the guilty!!\n" , bcolors.BOLD, theoutput, bcolors.ENDC
         else:          
             print bcolors.OKGREEN, "File ", i, " is nice" + bcolors.ENDC
 
