@@ -1,5 +1,6 @@
 #include "TCut.h"
 
+<<<<<<< HEAD
 const TString  inputdir = "diciembre";  // where the minitrees are stored
 
 
@@ -7,6 +8,17 @@ const float thelumi = 36;
 const float    ttSF = 1.0;  const float ettSF = 0.15;
 const float    DYSF = 1.0;  const float eDYSF = 0.07;
 			    const float efakes= 0.30;
+=======
+//const TString  inputdir = "minitreesTTDM36fb/nominal/TTDM";  // where the minitrees are stored
+//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/";
+const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
+
+const float thelumi = 35.9/15; 
+
+const float    ttSF = 1.0;  const float ettSF = 0.0;
+const float    DYSF = 1.0;  const float eDYSF = 0.0;
+			    const float efakes= 0.0;
+>>>>>>> 72d163f263fe117352401e552b0ac65f9db68418
 //const float    ttSF = 0.97;  const float ettSF = 0.15;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //			       const float efakes= 0.30;
@@ -22,11 +34,16 @@ const TCut hard_cut = soft_cut&&"mt2ll>100.";//&&darkpt>0.";
 //const TCut MVA_cut = hard_cut&&"ANN_170419_tanh_mt2ll100_ttDM0001scalar00010>0.65"; //mt2ll80-light: 0.90, mt2ll100-light: 0.65, mt2ll80-heavy: 0.80, mt2ll100-heavy: 0.80, 
 TCut MVA_cut;
 
+<<<<<<< HEAD
 const float inicio = 0.50;
 const float paso   = 0.02;
 
 enum{ data,
       ttDM,
+=======
+/*enum{ data,
+      //ttDM,
+>>>>>>> 72d163f263fe117352401e552b0ac65f9db68418
       fakes,
       TT,
       ST,
@@ -109,7 +126,11 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
+<<<<<<< HEAD
       MVAtanh, MVAsigm,
+=======
+      ANN_0704sigmoid80, ANN_0704tanh80,
+>>>>>>> 72d163f263fe117352401e552b0ac65f9db68418
       //MVA80, //MVA90, MVA100,
       //alpha005, alpha01, alpha05,	
       nhisto };
@@ -134,11 +155,17 @@ void Assign(){
 
 	//----------
 
+<<<<<<< HEAD
 	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
 	processID[data ] = "01_Data_1outof15"        ;
 	//processID[data ] = "01_Data_reduced_1outof6"        ;
 	//processID[fakes] = "00_Fakes_reduced_1outof6"       ;
 	processID[fakes] = "00_Fakes_1outof15"       ;  
+=======
+	//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	processID[data ] = "01_Data_1outof15"         ;
+	processID[fakes] = "00_Fakes_1outof15"        ; 
+>>>>>>> 72d163f263fe117352401e552b0ac65f9db68418
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -305,6 +332,7 @@ void Assign(){
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
+<<<<<<< HEAD
 	b_name[MVAtanh] = "ANN_170419_tanh_mt2ll100_ttDM0001scalar00010";
 	b_name[MVAsigm] = "ANN_170419_sigm_mt2ll100_ttDM0001scalar00010";
 	//b_name[MVAtanh] = "ANN_170418_signalReduced2_tanh_mt2ll80_ttDM0001scalar00500";
@@ -312,6 +340,10 @@ void Assign(){
 
 
 	//b_name[MVA80     ] = "ANN_met80_mt2ll75_ttDM0001scalar00500";
+=======
+	b_name[ANN_0704sigmoid80     ] = "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010";
+	b_name[ANN_0704tanh80     ] = "ANN_0704tanh_mt2ll80_ttDM0001scalar00010";
+>>>>>>> 72d163f263fe117352401e552b0ac65f9db68418
 	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
 	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
 

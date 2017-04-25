@@ -63,3 +63,20 @@ then run the command below.
 
     ./submit-jobs.sh
 
+# Fake production recipe
+
+When new data or MC files are available, it is necessary to produce new rootfiles which will be
+used by Xavier to produce the fake files. The production of these rootfiles has to be done following
+the next few steps.
+
+1) Update or create a new samples.txt file, within the fakeSel directory, reflecting the latest changes.
+2) Check if the triggers used are still the same, run Brilcalc (detailed instructions available in the 
+step 11 of https://github.com/piedraj/AnalysisCMS/blob/master/README.md), in order to get the prescaled 
+lumi of the different triggers.
+3) Run AnalysisFR and AnalysisPR on the data and MC files of the fakeSel samples directory.
+4) Once all the jobs are done, run getLumiEff.C to check the data/MC agreement in the peak of the Z.
+5) Once this is checked, the fake and prompt rate plots are obtained thanks to getFakeRate.C
+6) If everything seems right, the output within the rootfilesFR and rootfilesPR directories can be
+commited to the latino repository on Github and Xavier can start the production of the new files.
+7) Once the new files ready, a SS control region study is necessary to check if the fakes seems to be
+behaving correctly or not.

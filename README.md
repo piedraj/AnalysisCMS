@@ -1,5 +1,4 @@
-0. Analysis documentation
-====
+# 0. Analysis documentation
 
 AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
@@ -9,8 +8,7 @@ AnalysisCMS is a framework that produces Physics distributions based on **latino
     https://github.com/latinos/PlotsConfigurations
 
 
-1. Everything begins here
-====
+# 1. Everything begins here
 
 Log in to gridui or lxplus.
 
@@ -69,8 +67,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 -->
 
 
-2. Always do
-====
+# 2. Always do
 
     ssh -Y gridui.ifca.es -o ServerAliveInterval=240
     source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -79,8 +76,7 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
     cd AnalysisCMS
 
 
-3. Compile and run
-====
+# 3. Compile and run
 
     ./make
 
@@ -114,8 +110,7 @@ Alternatively one can login to a node and run interactively. *Do this only if yo
     exit
 
 
-4. Draw
-====
+# 4. Draw
 
 First `hadd` the files produced in the previous step.
 
@@ -128,8 +123,7 @@ Then compile and draw your favorite distributions.
     ./runPlotter
 
 
-5. Create your website
-====
+# 5. Create your website
 
 Follow the instructions at [Permissions for your AFS folder](https://espace.cern.ch/webservices-help/websitemanagement/ConfiguringAFSSites/Pages/PermissionsforyourAFSfolder.aspx).
 
@@ -144,8 +138,7 @@ Go to the CERN Web Services and click on [Create a new website](https://webservi
 Choose the "AFS folder" site type.
 
 
-6. Share on the web
-====
+# 6. Share on the web
 
 Create a soft link to your `figures` folder.
 
@@ -171,8 +164,7 @@ And they should appear here,
     https://rocio.web.cern.ch/rocio/
 
 
-7. It is commit time
-====
+# 7. It is commit time
 
 This framework is intended to be used and developed by several people. If you want your changes to be shared by others, you should first get the latest modifications from the upstream repository, if any.
 
@@ -195,8 +187,7 @@ Finally, go to your repository and click **Pull Request**.
     https://github.com/YOUR_USERNAME/AnalysisCMS
 
 
-8. Edit a CMS Analysis Note
-====
+# 8. Edit a CMS Analysis Note
 
 The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note number used below corresponds to the IFCA/Oviedo WZ analysis at 13 TeV.
 
@@ -227,8 +218,7 @@ Commit your changes.
     svn commit -m 'Modified'
 
 
-9. EOS
-====
+# 9. EOS
 
 To access files at eos/cms.
 
@@ -250,8 +240,7 @@ Check the eos quota.
     zh         171.07 TB   250.00 TB   68.43
 
 
-10. Copy latino trees from cernbox to gridui
-====
+# 10. Copy latino trees from cernbox to gridui
 
 First of all add your lxplus pub key in [ipa](https://ipa.ifca.es/).
 
@@ -269,8 +258,7 @@ Check that the input folder has be copied at the following gridui path.
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
 
 
-11. brilcalc
-====
+# 11. brilcalc
 
 Log in to lxplus.
 
@@ -312,8 +300,7 @@ Get the 2015 luminosity.
     +-------+------+-------+-------+-------------------+------------------+
 
 
-12. CRAB output in T2_ES_IFCA
-====
+# 12. CRAB output in T2_ES_IFCA
 
     ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/
 
