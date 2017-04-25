@@ -479,9 +479,9 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
-  if (!_analysis.EqualTo("Control")) _event_weight *= ApplyMETFilters();  // Not applied in "Control" while synchronizing with Xavier
+  _event_weight *= ApplyMETFilters();
 
-  if (!_ismc) _event_weight *= veto_EMTFBug;
+  _event_weight *= veto_EMTFBug;
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
