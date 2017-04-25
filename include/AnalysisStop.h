@@ -43,6 +43,8 @@ class AnalysisStop : public AnalysisCMS
 
   void GetMiniTree           (TFile *MiniTreeFile, TString systematic);
 
+  bool PassFastsimJetsCleanup();
+
   TString FastSimDataset;
   BTagSFUtil *BTagSF, *BTagSF_Upb, *BTagSF_Dob, *BTagSF_UpFSb, *BTagSF_DoFSb;
 
@@ -68,15 +70,27 @@ class AnalysisStop : public AnalysisCMS
   int _SaveHistograms;
 
   float _metmeff, _MT2ll, _MT2llgen;
-  TH1D*                  h_metmeff          [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MT2ll            [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MT2llgen         [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MT2ll_fake       [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MT2ll_truth      [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MET_fake         [nchannel][ncut][njetbin+1];
-  TH1F*                  h_MET_truth        [nchannel][ncut][njetbin+1];
+  TH1D*                  h_metmeff            [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll              [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llgen           [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisr           [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisrgen        [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_nvtxup       [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_nvtxdo       [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llgen_nvtxup    [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llgen_nvtxdo    [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisr_nvtxup    [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisr_nvtxdo    [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisrgen_nvtxup [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2llisrgen_nvtxdo [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_fake         [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MT2ll_truth        [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MET_fake           [nchannel][ncut][njetbin+1];
+  TH1F*                  h_MET_truth          [nchannel][ncut][njetbin+1];
 
-  int _nLeptonsMatched;
+  bool  _hasisrjet;
+
+  int   _nLeptonsMatched;
 
   float _MT2_Met; int NbinsMT2 = 7; int NbinsMet = 5;
   float vMinMT2 = 0., vMinMet = 0., vMaxMT2 = 140., vMaxMet = 500.;
@@ -96,9 +110,22 @@ class AnalysisStop : public AnalysisCMS
 
   // Systematic output
   TFile*                 root_output_systematic[nsystematic];
-  TH1F*                  h_MT2ll_systematic [nchannel][ncut][nsystematic];
-  TH1F*                  h_MT2llgen_systematic [nchannel][ncut][nsystematic];
-  
+  TH1F*                  h_MT2ll_systematic       [nchannel][ncut][nsystematic];
+  TH1F*                  h_MT2llgen_systematic    [nchannel][ncut][nsystematic];
+  TH1F*                  h_MT2llisr_systematic    [nchannel][ncut][nsystematic];
+  TH1F*                  h_MT2llisrgen_systematic [nchannel][ncut][nsystematic];
+
+  // Tools for ISR jet reweighting 
+  // https://indico.cern.ch/event/592621/contributions/2398559/attachments/1383909/2105089/16-12-05_ana_manuelf_isr.pdf
+  bool _applyisrreweighting = true;
+  float _event_weight_Isrnjetup, _event_weight_Isrnjetdo;
+
+  void ApplyISRReweighting();
+
+  const int nISRMultiplicityBins = 7;
+  float ISRGlobalNormalization = 1.121;
+  float ISRBinWeight[7] = {1., 0.920, 0.821, 0.715, 0.662, 0.561, 0.511};
+    
 };
 
 #endif

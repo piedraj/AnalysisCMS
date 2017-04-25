@@ -66,6 +66,8 @@ enum {
   Fastsimup,
   Topptup,
   Topptdo,
+  Isrnjetup,
+  Isrnjetdo,
   nsystematic  // This line should be always last
 };
 
@@ -92,7 +94,9 @@ const TString ssystematic[nsystematic] = {
   "Fastsimdo",
   "Fastsimup",
   "Topptup",
-  "Topptdo"
+  "Topptdo",
+  "Isrnjetup",
+  "Isrnjetdo"
 };
 
 const bool systematicfromweight[nsystematic] = {
@@ -105,6 +109,8 @@ const bool systematicfromweight[nsystematic] = {
   false,
   false,
   false,
+  true,
+  true,
   true,
   true,
   true,

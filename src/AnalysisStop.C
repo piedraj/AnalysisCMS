@@ -34,7 +34,7 @@ AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHist
 void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, float StopRefMass, float NeutralinoRefMass)
 {
   if (fChain == 0) return;
- 
+
   TString MassPointFlag = "";
 
   if (filename.Contains("T2tt")) {
@@ -66,7 +66,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   
   root_output->cd();
 
-  FastSimDataset = (filename.Contains("T2tt") || filename.Contains("T2tb") || filename.Contains("T2bW")) ? "_T2" : "";
+  FastSimDataset = _isfastsim ? "_T2" : "";
   BTagSF       = new BTagSFUtil("mujets", "CSVv2", "Medium",   0, FastSimDataset);
   BTagSF_Upb   = new BTagSFUtil("mujets", "CSVv2", "Medium",  +1, FastSimDataset);
   BTagSF_Dob   = new BTagSFUtil("mujets", "CSVv2", "Medium",  -1, FastSimDataset);
@@ -77,7 +77,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
   //----------------------------------------------------------------------------
   
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
+    
     if (!_isminitree) {
 
       Long64_t ientry = LoadTree(jentry);
@@ -89,7 +89,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
-   
+
     bool pass_masspoint = true;
     if (filename.Contains("T2tt")) 
       pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
@@ -100,15 +100,18 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       // I found an event with metPfType1 = nan, this cause MT2 calculation to stuck
       if (metPfType1!=metPfType1) continue;
       EventSetup(2.4, 20.);
+   
+      // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
+      if (!PassFastsimJetsCleanup()) continue;
 
     }
-
+    
     
     // Get analysis variables
     //--------------------------------------------------------------------------
- 
+    
     GetAnalysisVariables();
-
+    
     // Analysis
     //--------------------------------------------------------------------------
 
@@ -144,6 +147,8 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
 
     }
 
+    // ISR reweighting
+    if (_applyisrreweighting && _isfastsim) ApplyISRReweighting();
 
     // Fill histograms
     //--------------------------------------------------------------------------
@@ -244,7 +249,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
       FillLevelHistograms(Stop_02_SR2_NoTag,   pass && (MET.Et()>=200. && MET.Et()<300.) && pass_blind && pass_masspoint);
       FillLevelHistograms(Stop_02_SR3_NoTag,   pass && (MET.Et()>=300.) && pass_blind && pass_masspoint);
     }
-    
+
   }
 
   if (_SaveHistograms==2) SaveSystematicHistograms();
@@ -282,23 +287,33 @@ void AnalysisStop::BookAnalysisHistograms()
 
 	if (_SaveHistograms==0) DefineHistograms(i, j, k, suffix);
 
-	h_mt2lblbcomb       [i][j][k] = new TH1D("h_mt2lblbcomb"      + suffix, "", 3000,    0, 3000);
-	h_mt2bbtrue         [i][j][k] = new TH1D("h_mt2bbtrue"        + suffix, "", 3000,    0, 3000);
-	h_mt2lblbtrue       [i][j][k] = new TH1D("h_mt2lblbtrue"      + suffix, "", 3000,    0, 3000);
-	h_mt2lblbmatch      [i][j][k] = new TH1D("h_mt2lblbmatch"     + suffix, "", 3000,    0, 3000);
-	h_mlb1comb          [i][j][k] = new TH1D("h_mlb1comb"         + suffix, "", 3000,    0, 3000);
-	h_mlb2comb          [i][j][k] = new TH1D("h_mlb2comb"         + suffix, "", 3000,    0, 3000);
-	h_mlb1true          [i][j][k] = new TH1D("h_mlb1true"         + suffix, "", 3000,    0, 3000);
-	h_mlb2true          [i][j][k] = new TH1D("h_mlb2true"         + suffix, "", 3000,    0, 3000);
-	h_mt2lblbvsmlbtrue  [i][j][k] = new TH2D("h_mt2lblbvsmlbtrue" + suffix, "",  100,    0, 1000,  100,    0, 1000);
+	h_mt2lblbcomb       [i][j][k] = new TH1D("h_mt2lblbcomb"        + suffix, "", 3000,    0, 3000);
+	h_mt2bbtrue         [i][j][k] = new TH1D("h_mt2bbtrue"          + suffix, "", 3000,    0, 3000);
+	h_mt2lblbtrue       [i][j][k] = new TH1D("h_mt2lblbtrue"        + suffix, "", 3000,    0, 3000);
+	h_mt2lblbmatch      [i][j][k] = new TH1D("h_mt2lblbmatch"       + suffix, "", 3000,    0, 3000);
+	h_mlb1comb          [i][j][k] = new TH1D("h_mlb1comb"           + suffix, "", 3000,    0, 3000);
+	h_mlb2comb          [i][j][k] = new TH1D("h_mlb2comb"           + suffix, "", 3000,    0, 3000);
+	h_mlb1true          [i][j][k] = new TH1D("h_mlb1true"           + suffix, "", 3000,    0, 3000);
+	h_mlb2true          [i][j][k] = new TH1D("h_mlb2true"           + suffix, "", 3000,    0, 3000);
+	h_mt2lblbvsmlbtrue  [i][j][k] = new TH2D("h_mt2lblbvsmlbtrue"   + suffix, "",  100,    0, 1000,  100,    0, 1000);
 
-	h_metmeff           [i][j][k] = new TH1D("h_metmeff"          + suffix, "",  500,    0,    5);
-	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
-	h_MT2llgen          [i][j][k] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
-	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"       + suffix, "",    7,    0,  140);
-	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"      + suffix, "",    7,    0,  140);
-	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"         + suffix, "",  100,    0, 1000);
-	h_MET_truth         [i][j][k] = new TH1F("h_MET_truth"        + suffix, "",  100,    0, 1000);
+	h_metmeff           [i][j][k] = new TH1D("h_metmeff"            + suffix, "",  500,    0,    5);
+	h_MT2ll             [i][j][k] = new TH1F("h_MT2ll"              + suffix, "",    7,    0,  140);
+	h_MT2llgen          [i][j][k] = new TH1F("h_MT2llgen"           + suffix, "",    7,    0,  140);
+	h_MT2llisr          [i][j][k] = new TH1F("h_MT2llisr"           + suffix, "",    7,    0,  140);
+	h_MT2llisrgen       [i][j][k] = new TH1F("h_MT2llisrgen"        + suffix, "",    7,    0,  140);
+	h_MT2ll_nvtxup      [i][j][k] = new TH1F("h_MT2ll_nvtxup"       + suffix, "",    7,    0,  140);
+	h_MT2ll_nvtxdo      [i][j][k] = new TH1F("h_MT2ll_nvtxdo"       + suffix, "",    7,    0,  140);
+	h_MT2llgen_nvtxup   [i][j][k] = new TH1F("h_MT2llgen_nvtxup"    + suffix, "",    7,    0,  140);
+	h_MT2llgen_nvtxdo   [i][j][k] = new TH1F("h_MT2llgen_nvtxdo"    + suffix, "",    7,    0,  140);
+	h_MT2llisr_nvtxup   [i][j][k] = new TH1F("h_MT2llisr_nvtxup"    + suffix, "",    7,    0,  140);
+	h_MT2llisr_nvtxdo   [i][j][k] = new TH1F("h_MT2llisr_nvtxdo"    + suffix, "",    7,    0,  140);
+	h_MT2llisrgen_nvtxup[i][j][k] = new TH1F("h_MT2llisrgen_nvtxup" + suffix, "",    7,    0,  140);
+	h_MT2llisrgen_nvtxdo[i][j][k] = new TH1F("h_MT2llisrgen_nvtxdo" + suffix, "",    7,    0,  140);
+	h_MT2ll_fake        [i][j][k] = new TH1F("h_MT2ll_fake"         + suffix, "",    7,    0,  140);
+	h_MT2ll_truth       [i][j][k] = new TH1F("h_MT2ll_truth"        + suffix, "",    7,    0,  140);
+	h_MET_fake          [i][j][k] = new TH1F("h_MET_fake"           + suffix, "",  100,    0, 1000);
+	h_MET_truth         [i][j][k] = new TH1F("h_MET_truth"          + suffix, "",  100,    0, 1000);
 	
 	h_MT2_Met           [i][j][k] = new TH1D("h_MT2_Met" + suffix, "", NbinsMT2*NbinsMet, vMinMT2, vMinMT2 + NbinsMet*(vMaxMT2-vMinMT2));
 	h_HTvisible_Met     [i][j][k] = new TH1D("h_HTvisible_Met" + suffix, "", NbinsHTvisible*NbinsMet, vMinHTvisible, vMinHTvisible + NbinsMet*(vMaxHTvisible-vMinHTvisible));
@@ -320,9 +335,10 @@ void AnalysisStop::BookSystematicHistograms()
   TH1::SetDefaultSumw2();
 
   for (int is = 0; is<nsystematic; is++) {
-  
+ 
     if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
-
+    if (ssystematic[is].Contains("isrnjet") && !_isfastsim) continue;
+    
     TString prefix = (_isminitree) ? "minitrees/" : "";
     gSystem->mkdir(prefix + "rootfiles/" + ssystematic[is] + "/" + _analysis, kTRUE);
     TString _systematiclongname = _longname;
@@ -347,8 +363,10 @@ void AnalysisStop::BookSystematicHistograms()
 
 	TString suffix = "_" + schannel[i];
 
-	h_MT2ll_systematic     [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
-	h_MT2llgen_systematic  [i][j][is] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
+	h_MT2ll_systematic        [i][j][is] = new TH1F("h_MT2ll"            + suffix, "",    7,    0,  140);
+	h_MT2llgen_systematic     [i][j][is] = new TH1F("h_MT2llgen"         + suffix, "",    7,    0,  140);
+	h_MT2llisr_systematic     [i][j][is] = new TH1F("h_MT2llisr"         + suffix, "",    7,    0,  140);
+	h_MT2llisrgen_systematic  [i][j][is] = new TH1F("h_MT2llisrgen"      + suffix, "",    7,    0,  140);
 	
       }
 
@@ -403,6 +421,9 @@ void AnalysisStop::GetAnalysisVariables()
   if (fabs(_lep1isfake)<0.1) _nLeptonsMatched++; 
   if (fabs(_lep2isfake)<0.1) _nLeptonsMatched++; 
   
+  // ISR jet
+  _hasisrjet = (jetpt1>150. && jetpt1!=_leadingPtCSVv2M && acos(cos(metPfType1Phi-jetphi1))>2.5) ? true : false;
+
 }
 
 //------------------------------------------------------------------------------
@@ -428,6 +449,26 @@ void AnalysisStop::FillAnalysisHistograms(int ichannel,
   h_metmeff          [ichannel][icut][ijet]->Fill(_metmeff,        _event_weight);
   h_MT2ll            [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
   h_MT2llgen         [ichannel][icut][ijet]->Fill(_MT2llgen,       _event_weight);
+
+  if (nvtx>=20) {
+    h_MT2ll_nvtxup   [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
+    h_MT2llgen_nvtxup[ichannel][icut][ijet]->Fill(_MT2llgen,    _event_weight);
+  } else {
+    h_MT2ll_nvtxdo   [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
+    h_MT2llgen_nvtxdo[ichannel][icut][ijet]->Fill(_MT2llgen,    _event_weight);
+  }
+
+  if (_hasisrjet) {
+    h_MT2llisr         [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
+    h_MT2llisrgen      [ichannel][icut][ijet]->Fill(_MT2llgen,       _event_weight);
+    if (nvtx>=20) {
+      h_MT2llisr_nvtxup   [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
+      h_MT2llisrgen_nvtxup[ichannel][icut][ijet]->Fill(_MT2llgen,    _event_weight);
+    } else {
+      h_MT2llisr_nvtxdo   [ichannel][icut][ijet]->Fill(_MT2ll,       _event_weight);
+      h_MT2llisrgen_nvtxdo[ichannel][icut][ijet]->Fill(_MT2llgen,    _event_weight);
+    }
+  }
 
   if (_nLeptonsMatched==2) {
     h_MT2ll_truth    [ichannel][icut][ijet]->Fill(_MT2ll,          _event_weight);
@@ -457,6 +498,7 @@ void AnalysisStop::FillSystematicHistograms(int ichannel,
   for (int is = 0; is<nsystematic; is++) {
   
     if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
+    if (ssystematic[is].Contains("isrnjet") && !_isfastsim) continue;
     
     root_output_systematic[is]->cd();
 
@@ -475,12 +517,18 @@ void AnalysisStop::FillSystematicHistograms(int ichannel,
     if (ssystematic[is]=="BtagFSdo")  _event_weight_systematic = _event_weight_BtagFSdo;
     if (ssystematic[is]=="Topptup")   _event_weight_systematic = _event_weight_Toppt;
     if (ssystematic[is]=="Topptdo")   _event_weight_systematic = _event_weight;
+    if (ssystematic[is]=="Isrnjetup") _event_weight_systematic = _event_weight_Isrnjetup;
+    if (ssystematic[is]=="Isrnjetdo") _event_weight_systematic = _event_weight_Isrnjetdo;
 
     if (_event_weight_systematic==-999.) 
       printf("\n\n Bad name for systematics, please check!\n");
 
-    h_MT2ll_systematic   [ichannel][icut][is]->Fill(_MT2ll, _event_weight_systematic);
+    h_MT2ll_systematic      [ichannel][icut][is]->Fill(_MT2ll,    _event_weight_systematic);
     h_MT2llgen_systematic   [ichannel][icut][is]->Fill(_MT2llgen, _event_weight_systematic);
+    if (_hasisrjet) {
+      h_MT2llisr_systematic      [ichannel][icut][is]->Fill(_MT2ll,    _event_weight_systematic);
+      h_MT2llisrgen_systematic   [ichannel][icut][is]->Fill(_MT2llgen, _event_weight_systematic);
+    }
 
   }
 
@@ -499,6 +547,7 @@ void AnalysisStop::SaveSystematicHistograms()
   for (int is = 0; is<nsystematic; is++) {
   
     if (ssystematic[is]=="nominal" || !systematicfromweight[is]) continue;
+    if (ssystematic[is].Contains("isrnjet") && !_isfastsim) continue;
 
     root_output_systematic[is]->cd();
     root_output_systematic[is]->Write("", TObject::kOverwrite);
@@ -2980,6 +3029,7 @@ void AnalysisStop::CorrectEventWeight() {
   _event_weight_Recodo    *= EventBTagSF/bPogSF_CSVM; 
   _event_weight_Fastsimup *= EventBTagSF/bPogSF_CSVM; 
   _event_weight_Fastsimdo *= EventBTagSF/bPogSF_CSVM; 
+  _event_weight_Toppt     *= EventBTagSF/bPogSF_CSVM; 
   
   if (FastSimDataset!="") { 
     
@@ -3001,9 +3051,71 @@ void AnalysisStop::CorrectEventWeight() {
     _event_weight_Recodo    *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
     _event_weight_Fastsimup *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW; 
     _event_weight_Fastsimdo *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
+    _event_weight_Toppt     *= (1000.*ThisStopCrossSection.first/SampleSize)/baseW;
     
   }
   
+}
+
+bool AnalysisStop::PassFastsimJetsCleanup() {
+
+  // Cleaning up of fastsim jets 
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Cleaning_up_of_fastsim_jets_from
+
+  if (!_isfastsim) return true;
+  
+  for (int ijet = 0; ijet<_njet; ijet++) 
+    if (AnalysisJets[ijet].v.Pt()>20 && fabs(AnalysisJets[ijet].v.Eta())<2.5) 
+      if (std_vector_jet_chargedHadronFraction->at(AnalysisJets[ijet].index)<0.1) {
+
+	bool isgenmatched = false;
+	
+	for (int gjet = 0; gjet<std_vector_jetGen_pt->size(); gjet++) {
+	  
+	  if (std_vector_jetGen_pt->at(gjet)<0.) continue;
+
+	  TLorentzVector ThisGenJet; 
+	  ThisGenJet.SetPtEtaPhiM(std_vector_jetGen_pt->at(gjet), 
+				  std_vector_jetGen_eta->at(gjet), 
+				  std_vector_jetGen_phi->at(gjet), 0.0);
+
+	  if (fabs(AnalysisJets[ijet].v.DeltaR(ThisGenJet))<0.3) isgenmatched = true;
+
+	}
+	
+	if (!isgenmatched) return false;
+      
+      }
+
+  return true;
+  
+}
+
+void AnalysisStop::ApplyISRReweighting() {
+
+  int _isrbin = (_nisrjet<nISRMultiplicityBins) ? _nisrjet : (nISRMultiplicityBins-1);
+
+  float _isr_weight = ISRGlobalNormalization*ISRBinWeight[_isrbin];
+  float _isr_weight_up = (1. + _isr_weight)/2.;
+  float _isr_weight_do = _isr_weight - (_isr_weight_up - _isr_weight);
+
+  _event_weight           *= _isr_weight;
+  _event_weight_Btagup    *= _isr_weight; 
+  _event_weight_Btagdo    *= _isr_weight;
+  _event_weight_BtagFSup  *= _isr_weight; 
+  _event_weight_BtagFSdo  *= _isr_weight; 
+  _event_weight_Idisoup   *= _isr_weight; 
+  _event_weight_Idisodo   *= _isr_weight; 
+  _event_weight_Triggerup *= _isr_weight; 
+  _event_weight_Triggerdo *= _isr_weight; 
+  _event_weight_Recoup    *= _isr_weight; 
+  _event_weight_Recodo    *= _isr_weight; 
+  _event_weight_Fastsimup *= _isr_weight; 
+  _event_weight_Fastsimdo *= _isr_weight;
+  _event_weight_Toppt     *= _isr_weight;
+  _event_weight_Isrnjetup  = _event_weight*_isr_weight_up/_isr_weight;
+  _event_weight_Isrnjetdo  = _event_weight*_isr_weight_do/_isr_weight;
+
 }
 
 void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
@@ -3015,6 +3127,7 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("m2l",             &_m2l);
   fChain->SetBranchAddress("mllbb",           &_mllbb);
   fChain->SetBranchAddress("meff",            &_meff);
+  fChain->SetBranchAddress("nvtx",            &nvtx);
   
   fChain->SetBranchAddress("dphill",          &dphill);
   
@@ -3046,6 +3159,7 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("htjets",          &_htjets);
   fChain->SetBranchAddress("htnojets",        &_htnojets);
   fChain->SetBranchAddress("htvisible",       &_htvisible);
+  fChain->SetBranchAddress("nisrjet",         &_nisrjet);
   fChain->SetBranchAddress("njet",            &_njet);
   
   fChain->SetBranchAddress("susyMLSP",        &susyMLSP);
@@ -3095,6 +3209,9 @@ void AnalysisStop::GetMiniTree(TFile *MiniTreeFile, TString systematic) {
   fChain->SetBranchAddress("eventW_Fastsimup", &_event_weight_Fastsimup);
   fChain->SetBranchAddress("eventW_Fastsimdo", &_event_weight_Fastsimdo);
   fChain->SetBranchAddress("eventW_Toppt",     &_event_weight_Toppt);
+
+  _event_weight_Isrnjetup = _event_weight;
+  _event_weight_Isrnjetdo = _event_weight;
 
   fChain->SetBranchAddress("channel",         &_channel);
   fChain->SetBranchAddress("njet",            &_njet); 
