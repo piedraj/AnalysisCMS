@@ -830,7 +830,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < 0.) continue;
 
-    if (IsISRJet(pt, eta, phi)) _nisrjet++;
+    //    if (IsISRJet(pt, eta, phi)) _nisrjet++;
 
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
