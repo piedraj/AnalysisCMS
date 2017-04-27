@@ -830,7 +830,7 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < 0.) continue;
 
-    //    if (IsISRJet(pt, eta, phi)) _nisrjet++;
+    if (IsISRJet(pt, eta, phi)) _nisrjet++;
 
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
@@ -2713,6 +2713,8 @@ void AnalysisCMS::GetScaleAndResolution()
 //------------------------------------------------------------------------------
 bool AnalysisCMS::IsISRJet(float pt, float eta, float phi)
 {
+  if (!_ismc) return false;
+
   // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L1268-L1295
   // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L373-L395
   // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/interface/jet_met_tools.hh#L34-L36
