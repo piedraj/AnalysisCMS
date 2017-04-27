@@ -100,7 +100,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
     G1 = -1; G2 = -1, I1 = 6, I2 = 7;
   }
 
-  if (ApplyGiovanniFilters) {
+  if (!_ismc && ApplyGiovanniFilters) {
 
     if (std_vector_trigger_special->at(G1) != 0) return false;
     if (std_vector_trigger_special->at(G2) != 0) return false;
