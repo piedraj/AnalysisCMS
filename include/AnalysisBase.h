@@ -328,6 +328,7 @@ public :
    //   vector<float>   *std_vector_muon_Chi2LocalPos;
    vector<float>   *std_vector_jet_phi;
    vector<float>   *std_vector_jet_mass;
+   vector<float>   *std_vector_jet_chargedHadronFraction;
    //   vector<float>   *std_vector_muon_NValidPixelHitsInTrk;
    //   vector<float>   *std_vector_electron_passConversionVeto;
    //   vector<float>   *std_vector_puppijet_eta;
@@ -795,6 +796,7 @@ public :
    //   TBranch        *b_std_vector_muon_Chi2LocalPos;   //!
    TBranch        *b_std_vector_jet_phi;   //!
    TBranch        *b_std_vector_jet_mass;   //!
+   TBranch        *b_std_vector_jet_chargedHadronFraction;   //!
    //   TBranch        *b_std_vector_muon_NValidPixelHitsInTrk;   //!
    //   TBranch        *b_std_vector_electron_passConversionVeto;   //!
    //   TBranch        *b_std_vector_puppijet_eta;   //!
@@ -1145,6 +1147,7 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_muon_Chi2LocalPos = 0;
    std_vector_jet_phi = 0;
    std_vector_jet_mass = 0;
+   std_vector_jet_chargedHadronFraction = 0;
    //   std_vector_muon_NValidPixelHitsInTrk = 0;
    //   std_vector_electron_passConversionVeto = 0;
    //   std_vector_puppijet_eta = 0;
@@ -1521,6 +1524,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_muon_Chi2LocalPos", &std_vector_muon_Chi2LocalPos, &b_std_vector_muon_Chi2LocalPos);
    fChain->SetBranchAddress("std_vector_jet_phi", &std_vector_jet_phi, &b_std_vector_jet_phi);
    fChain->SetBranchAddress("std_vector_jet_mass", &std_vector_jet_mass, &b_std_vector_jet_mass);
+   fChain->SetBranchAddress("std_vector_jet_chargedHadronFraction", &std_vector_jet_chargedHadronFraction, &b_std_vector_jet_chargedHadronFraction);
    //   fChain->SetBranchAddress("std_vector_muon_NValidPixelHitsInTrk", &std_vector_muon_NValidPixelHitsInTrk, &b_std_vector_muon_NValidPixelHitsInTrk);
    //   fChain->SetBranchAddress("std_vector_electron_passConversionVeto", &std_vector_electron_passConversionVeto, &b_std_vector_electron_passConversionVeto);
    //   fChain->SetBranchAddress("std_vector_puppijet_eta", &std_vector_puppijet_eta, &b_std_vector_puppijet_eta);
