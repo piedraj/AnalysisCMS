@@ -828,8 +828,11 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     float pt  = std_vector_jet_pt ->at(i);
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
+
     if (pt<0.) continue;
-    if (IsISRJet(pt, eta, phi)) _nisrjet++;
+
+    if (pt>30. && fabs(eta)<2.4 && std_vector_jet_isFromISR->at(i)==1) _nisrjet++;
+
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
     TLorentzVector tlv;

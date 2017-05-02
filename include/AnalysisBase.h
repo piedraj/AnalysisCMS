@@ -346,6 +346,7 @@ public :
    //   vector<float>   *std_vector_puppijet_phi;
    vector<float>   *std_vector_jet_eta;
    vector<float>   *std_vector_jet_pt;
+   vector<float>   *std_vector_jet_isFromISR;
    //   vector<float>   *std_vector_muon_NValidFractInTrk;
    //   vector<float>   *std_vector_jet_bjp;
    //   vector<float>   *std_vector_puppijet_pt;
@@ -814,6 +815,7 @@ public :
    //   TBranch        *b_std_vector_puppijet_phi;   //!
    TBranch        *b_std_vector_jet_eta;   //!
    TBranch        *b_std_vector_jet_pt;   //!
+   TBranch        *b_std_vector_jet_isFromISR;   //!
    //   TBranch        *b_std_vector_muon_NValidFractInTrk;   //!
    //   TBranch        *b_std_vector_jet_bjp;   //!
    //   TBranch        *b_std_vector_puppijet_pt;   //!
@@ -1165,6 +1167,7 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_puppijet_phi = 0;
    std_vector_jet_eta = 0;
    std_vector_jet_pt = 0;
+   std_vector_jet_isFromISR = 0;
    //   std_vector_muon_NValidFractInTrk = 0;
    //   std_vector_jet_bjp = 0;
    //   std_vector_puppijet_pt = 0;
@@ -1542,6 +1545,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_puppijet_phi", &std_vector_puppijet_phi, &b_std_vector_puppijet_phi);
    fChain->SetBranchAddress("std_vector_jet_eta", &std_vector_jet_eta, &b_std_vector_jet_eta);
    fChain->SetBranchAddress("std_vector_jet_pt", &std_vector_jet_pt, &b_std_vector_jet_pt);
+   fChain->SetBranchAddress("std_vector_jet_isFromISR", &std_vector_jet_isFromISR, &b_std_vector_jet_isFromISR);
    //   fChain->SetBranchAddress("std_vector_muon_NValidFractInTrk", &std_vector_muon_NValidFractInTrk, &b_std_vector_muon_NValidFractInTrk);
    //   fChain->SetBranchAddress("std_vector_jet_bjp", &std_vector_jet_bjp, &b_std_vector_jet_bjp);
    //   fChain->SetBranchAddress("std_vector_puppijet_pt", &std_vector_puppijet_pt, &b_std_vector_puppijet_pt);
