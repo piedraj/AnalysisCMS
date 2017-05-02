@@ -90,11 +90,7 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetTrkMET            (float    module,
 				    float    phi);
-  
-  bool        IsISRJet             (float    pt,
-				    float    eta,
-				    float    phi);
-  
+    
   float       MuonIsolation        (int      k);
   
   void        OpenMinitree         ();
