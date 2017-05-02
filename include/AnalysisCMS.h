@@ -101,7 +101,7 @@ class AnalysisCMS : public AnalysisBase
 
   bool        PassTrigger          ();
 
-  bool        ApplyMETFilters      (bool     ApplyGiovanniFilters        = true, 
+  bool        ApplyMETFilters      (bool     ApplyGiovanniFilters        = false, 
 				    bool     ApplyICHEPAdditionalFilters = true);
 
   void        PrintProgress        (Long64_t counter,
