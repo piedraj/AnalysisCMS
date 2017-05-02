@@ -38,7 +38,7 @@ enum {linY, logY};
 void runPlotter(TString level,
 		TString option = "hist")
 {
-  gInterpreter->ExecuteMacro("PaperStyle.C");
+  gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   TString tok;
 
@@ -48,8 +48,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = lumi_fb_Full2016;
-  //float lumi = lumi_fb_2016_susy;
+//  float lumi = lumi_fb_Full2016;
+  float lumi = lumi_fb_2016_susy;
 
   Bool_t scale = logY;
 
@@ -91,7 +91,7 @@ void runPlotter(TString level,
   plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
   plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
   plotter.AddProcess("05_ST",        "tW",       color_ST);
-  plotter.AddProcess("07_ZJetsHT",     "Z+jets",   color_ZJets);
+  plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
 
   //plotter.AddSignal("20_T2tt_mStop-150to1200_Sm350_Xm175", "T2tt (350,175)",  color_Signal-2);
@@ -178,7 +178,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "MT2_Met"      + suffix, "M_{T2}-Met",                         1, 0, "GeV",  scale, false);
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
 	  
-	  if (!allplots) continue;
 	  
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
@@ -191,9 +190,12 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet2phi"        + suffix, "trailing jet #phi",                  5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "jet1pt"         + suffix, "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400);
 	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  300);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",              5, 2, "rad",  scale, true, 0, 5);
-	  
+	 
+	  if (!allplots) continue;
+ 
 	  plotter.Draw(prefix + "dyll"         + suffix, "lepton #Delta#eta",                 -1, 3, "NULL", scale);
 	  plotter.Draw(prefix + "dphimetjet"   + suffix, "min #Delta#phi(jet," + sm + ")",     5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "dphimetptbll" + suffix, "#Delta#phi(llmet," + sm + ")",       5, 2, "rad",  scale);
@@ -232,7 +234,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "htvisible"    + suffix, "#sum_{jet,lepton} p_{T}",           20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htjets"       + suffix, "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htnojets"     + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
-	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  300);
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);
