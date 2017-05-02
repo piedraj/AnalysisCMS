@@ -1,0 +1,56 @@
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 300 125
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 300 150
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 300 175
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 300 200
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 300 213
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 325 150
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 325 175
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 325 200
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 325 225
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-250to350.root 2 325 238
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 350 175
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 350 200
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 350 225
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 350 250
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 350 263
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 375 200
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 375 225
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 375 250
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 375 275
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 375 288
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 400 225
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 400 250
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 400 275
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 400 300
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-350to400.root 2 400 313
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 425 250
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 425 275
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 425 300
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 425 325
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 425 338
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 450 275
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 450 300
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 450 325
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 450 350
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 450 363
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 475 300
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 475 325
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 475 350
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 475 375
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 475 388
+#####
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 500 325
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 500 350
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 500 375
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 500 400
+/afs/cern.ch/work/s/scodella/Stop/CodeDevelopment/CMSSW_8_0_26_patch1/src/AnalysisCMS/minitrees/nominal/Stop/T2tt_isr_mStop-400to1200.root 2 500 413
+#####
+
