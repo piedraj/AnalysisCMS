@@ -1,4 +1,6 @@
 #include "HistogramReader.h"
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -15,6 +17,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _luminosity_fb(-1),
   _datanorm     (false),
   _drawratio    (false),
+  _drawBinSigf  (false),
   _drawyield    (false),
   _publicstyle  (false),
   _savepdf      (false),
@@ -199,6 +202,25 @@ void HistogramReader::Draw(TString hname,
       pad2->SetBottomMargin(0.35);
       pad2->Draw();
     }
+ 
+  else if (_drawBinSigf)
+    {
+      canvas = new TCanvas(cname, cname, 550, 720);
+
+      pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+      pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
+
+      pad1->SetTopMargin   (0.08);
+      pad1->SetBottomMargin(0.02);
+      pad1->Draw();
+
+      pad2->SetTopMargin   (0.08);
+      pad2->SetBottomMargin(0.35);
+      pad2->SetGridx(); 
+      pad2->SetGridy();
+      pad2->Draw();
+    }
+
   else
     {
       canvas = new TCanvas(cname, cname, 550, 600);
@@ -485,7 +507,10 @@ void HistogramReader::Draw(TString hname,
 
   // Titles
   //----------------------------------------------------------------------------
-  Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
+  Float_t xprelim;
+  if (_drawratio && _datafile) { xprelim = 0.288;}
+  else if (_drawBinSigf) { xprelim = 0.288;}
+  else { xprelim = 0.300;}
 
   if (_title.EqualTo("inclusive"))
     {
@@ -503,7 +528,13 @@ void HistogramReader::Draw(TString hname,
     DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
   SetAxis(hfirst, xtitle, ytitle, 1.5, 1.8);
-
+  if (hname.Contains("MT2_Met"))
+   { 
+    TString Space = "   "; hfirst ->SetXTitle("SR1" + Space + Space + "SR2" + Space + Space + "SR3           MT2 [GeV]"); 
+    int totalBin = hfirst -> GetNbinsX();
+    //for (int ibin = 1; ibin <= totalBin +1; ibin++) { int xbin = 20*(((ibin-1)%totalBin)+1); TString xBin; xBin += xbin; hfirst -> GetXaxis()->SetBinLabel(ibin, "     " + xBin);}
+    int ibin1 = 0; for (int i = 0; i<3;i++){ for (int j =0; j<7; j++) { int ivalue = 20*(j+1); ibin1 = ibin1+1; TString iValue; iValue += ivalue; hfirst -> GetXaxis()->SetBinLabel(ibin1,  iValue); std::cout<< "iValue  = " << iValue  << "ibin1  = " << ibin1 << std::endl; }}
+   }
 
   //----------------------------------------------------------------------------
   // pad2
@@ -512,11 +543,6 @@ void HistogramReader::Draw(TString hname,
     {
       pad2->cd();
 
-      // This approach isn't yet working
-      //      TGraphAsymmErrors* g = new TGraphAsymmErrors();
-      //      g->Divide(_datahist, _allmchist, "cl=0.683 b(1,1) mode");
-      //      g->SetMarkerStyle(kFullCircle);
-      //      g->Draw("ap");
 
       TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
@@ -552,7 +578,7 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
+      ratio->GetYaxis()->SetRangeUser(0.0, 3.0);
 
       uncertainty->Draw("e2,same");
 
@@ -560,7 +586,82 @@ void HistogramReader::Draw(TString hname,
 
       SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
     }
+  
+  else if (_drawBinSigf )
+  {
+    pad2->cd();
 
+    // Just for three signal, the first ones you use in addSignal function
+    TH1D* signf0       = (TH1D*)_signalhist[0] ->Clone("S0_sqrt(B)");
+    TH1D* signf1       = (TH1D*)_signalhist[1] ->Clone("S1_sqrt(B)");
+    TH1D* signf2       = (TH1D*)_signalhist[2] ->Clone("S2_sqrt(B)");
+
+    for (Int_t ibin=1; ibin<=signf0->GetNbinsX(); ibin++) {
+
+      //signals
+      Float_t SignalValue0 = _signalhist[0]->GetBinContent(ibin);
+      Float_t SignalError0 = _signalhist[0]->GetBinError  (ibin);
+
+      Float_t SignalValue1 = _signalhist[1]->GetBinContent(ibin);
+      Float_t SignalError1 = _signalhist[1]->GetBinError  (ibin);
+
+      Float_t SignalValue2 = _signalhist[2]->GetBinContent(ibin);
+      Float_t SignalError2 = _signalhist[2]->GetBinError  (ibin);
+
+      //all mc
+      Float_t mcValue = _allmchist->GetBinContent(ibin);
+      Float_t mcError = _allmchist->GetBinError  (ibin);
+
+      //significance S/sqrt(B)
+      Float_t signfVal0         = 999;
+      Float_t signfErr0         = 999;
+
+      Float_t signfVal1         = 999;
+      Float_t signfErr1         = 999;
+
+      Float_t signfVal2         = 999;
+      Float_t signfErr2         = 999;
+
+      if (mcValue > 0)
+        {
+          signfVal0 = SignalValue0 / sqrt(mcValue);
+          signfErr0 = signfVal0 * sqrt( (SignalError0*SignalError0)/(SignalValue0*SignalValue0) + (mcError*mcError)/(mcValue*mcValue));
+
+          signfVal1 = SignalValue1 / sqrt(mcValue);
+          signfErr1 = signfVal1 * sqrt( (SignalError1*SignalError1)/(SignalValue1*SignalValue1) + (mcError*mcError)/(mcValue*mcValue));
+
+          signfVal2 = SignalValue2 / sqrt(mcValue);
+          signfErr2 = signfVal2 * sqrt( (SignalError2*SignalError2)/(SignalValue2*SignalValue2) + (mcError*mcError)/(mcValue*mcValue));
+        }
+   
+      //std::cout << "bin number :   " << ibin << "    "   << "SignalValue =    " << SignalValue << "     " <<  "mcValue =   " << mcValue << "  " << "sqrt(mcValue)  =   " << sqrt(mcValue) << "    " << "signfVal  =  " << signfVal << std::endl;     
+
+      signf0 -> SetBinContent(ibin, signfVal0);
+      signf0 -> SetBinError  (ibin, signfErr0);
+
+      signf1 -> SetBinContent(ibin, signfVal1);
+      signf1 -> SetBinError  (ibin, signfErr1);
+
+      signf2 -> SetBinContent(ibin, signfVal2);
+      signf2 -> SetBinError  (ibin, signfErr2);
+    }
+
+    //draw significance
+    signf0->SetTitle("");
+
+    signf0->Draw("ep");
+
+    signf0->GetXaxis()->SetRangeUser(xmin, xmax);
+    signf0->GetYaxis()->SetRangeUser(0.0, 1.0);
+
+   
+    signf1->Draw("ep,same");
+    signf2->Draw("ep,same");
+
+    SetAxis(signf0, xtitle, "S / sqrt(B)", 1.4, 0.75);
+
+
+  }
 
   //----------------------------------------------------------------------------
   // Save it
@@ -569,6 +670,7 @@ void HistogramReader::Draw(TString hname,
 
   if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
+  if (hname.Contains("MT2_Met")) canvas->SaveAs(_outputdir + cname + ".C");  
 
   if (_writeyields)
     {

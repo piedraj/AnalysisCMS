@@ -127,6 +127,8 @@ class HistogramReader
   void     SetDataNorm        (Bool_t         datanorm) {_datanorm = datanorm;}
 
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
+  
+  void     SetDrawBinSigf     (Bool_t         drawBinSigf) {_drawBinSigf = drawBinSigf;}
 
   void     SetDrawYield       (Bool_t         drawyield) {_drawyield = drawyield;}
 
@@ -181,6 +183,7 @@ class HistogramReader
 
   Bool_t                _datanorm;
   Bool_t                _drawratio;
+  Bool_t                _drawBinSigf;
   Bool_t                _drawyield;
   Bool_t                _publicstyle;
   Bool_t                _savepdf;
