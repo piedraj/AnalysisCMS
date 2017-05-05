@@ -92,7 +92,7 @@ class AnalysisCMS : public AnalysisBase
 				    float    phi);
 
   float       MuonIsolation        (int      k);
-
+  
   void        OpenMinitree         ();
 
   bool        PassTrigger          ();
@@ -154,16 +154,6 @@ class AnalysisCMS : public AnalysisBase
 				    int            MT2Type      = 0,
 				    double         MT2Precision = 0.);
 
-  TMatrixDSym GetMomentumTensor    ();
-
-  TVectorD    GetEigenvalues       (TMatrixDSym    smatrix);
-
-  float       GetSphericity        (TMatrixDSym    smatrix);
-
-  float       GetAlignment         (TMatrixDSym    smatrix);
-
-  float       GetPlanarity         (TMatrixDSym    smatrix);
-
   void        GetScaleAndResolution(); 
 
 
@@ -190,7 +180,8 @@ class AnalysisCMS : public AnalysisBase
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;
-  bool                   _isminitree; 
+  bool                   _isminitree;
+  bool                   _isfastsim;
   bool                   _passdphiveto;
   bool                   _systematic_btag_do;
   bool                   _systematic_btag_up;
@@ -326,6 +317,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _nbjet30cmvav2m;
   float                  _nbjet30cmvav2t;
   float                  _njet;
+  float                  _nisrjet;
   float                  _ptww;
   float                  _pt2l;
   float                  _sumjpt12;
@@ -338,9 +330,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _top2pt_gen;
   float			 _topReco;
   float			 _topRecoW; 
-  float                  _sphericity;
-  float                  _alignment;
-  float                  _planarity;
   float                  _mll13;
   float                  _mll23;
   float                  _mll14;
@@ -412,9 +401,9 @@ class AnalysisCMS : public AnalysisBase
   TFile*                 root_minitree;
   TTree*                 minitree;
 
-  float 		_scale; 
-  float 		_uPara; 
-  float 		_uPerp; 
+  float 		 _scale; 
+  float 		 _uPara; 
+  float 		 _uPerp; 
 
 
   // TH1 histograms
@@ -519,6 +508,7 @@ class AnalysisCMS : public AnalysisBase
   TH1D*                  h_top2pt_gen    [nchannel][ncut][njetbin+1];
   TH1D*                  h_topReco       [nchannel][ncut][njetbin+1];
   TH1D*                  h_met_over_pt2l [nchannel][ncut][njetbin+1];
+
 
   // Razor
   //----------------------------------------------------------------------------

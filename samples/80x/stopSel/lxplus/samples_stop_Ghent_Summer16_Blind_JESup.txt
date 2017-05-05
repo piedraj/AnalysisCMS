@@ -1,0 +1,56 @@
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 300 125
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 300 150
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 300 175
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 300 200
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 300 213
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 325 150
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 325 175
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 325 200
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 325 225
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-250to350.root 325 238
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 350 175
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 350 200
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 350 225
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 350 250
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 350 263
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 375 200
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 375 225
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 375 250
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 375 275
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 375 288
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 400 225
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 400 250
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 400 275
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 400 300
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-350to400.root 400 313
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 425 250
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 425 275
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 425 300
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 425 325
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 425 338
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 450 275
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 450 300
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 450 325
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 450 350
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 450 363
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 475 300
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 475 325
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 475 350
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 475 375
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 475 388
+#####
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 500 325
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 500 350
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 500 375
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 500 400
+/eos/user/s/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_others/MCl2stop__BlindSFWeights__JESup__hadd/latino_T2tt_isr_mStop-400to1200.root 500 413
+#####
+

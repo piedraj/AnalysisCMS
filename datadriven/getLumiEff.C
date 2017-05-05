@@ -23,10 +23,15 @@ void getLumiEff()
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
-  //  TFile*  tt = new TFile ("../rootfiles/nominal/FR/06_TT.root","read");
-  TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
-  TFile*  wjets  = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
+  //TFile*  data  = new TFile ("../rootfilesFR/nominal/FR/01_Data.root","read");
+  //TFile*  tt = new TFile ("../rootfilesFR/nominal/FR/06_TT.root","read");
+  //TFile*  zjets = new TFile ("../rootfilesFR/nominal/FR/07_ZJets.root","read");
+  //TFile*  wjets  = new TFile ("../rootfilesFR/nominal/FR/08_WJets.root","read");
+
+  TFile*  data  = new TFile ("../rootfiles/newFakes2/FR/01_Data.root","read");
+  //TFile*  tt = new TFile ("../rootfilesFR/nominal/FR/06_TT.root","read");
+  TFile*  zjets = new TFile ("../rootfiles/newFakes2/FR/07_ZJets.root","read");
+  TFile*  wjets  = new TFile ("../rootfiles/newFakes2/FR/08_WJets.root","read");
 
   float muonjetet = 25.;
   float elejetet = 35.;
@@ -36,10 +41,10 @@ void getLumiEff()
 
   // DATA
 
-  TH2D* h2_Ele_loose_pt_m2l_ZRegion  = (TH2D*) data -> Get("FR/03_ZRegion/h_Ele_loose_pt_m2l"  + elesuffix);
-  TH2D* h2_Ele_tight_pt_m2l_ZRegion  = (TH2D*) data -> Get("FR/03_ZRegion/h_Ele_tight_pt_m2l"  + elesuffix);
-  TH2D* h2_Muon_loose_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
-  TH2D* h2_Muon_tight_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
+  TH2D* h2_Ele_loose_pt_m2l_ZRegion  = (TH2D*) data -> Get("FR/01_Zpeak/h_Ele_loose_pt_m2l"  + elesuffix);
+  TH2D* h2_Ele_tight_pt_m2l_ZRegion  = (TH2D*) data -> Get("FR/01_Zpeak/h_Ele_tight_pt_m2l"  + elesuffix);
+  TH2D* h2_Muon_loose_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/01_Zpeak/h_Muon_loose_pt_m2l" + muonsuffix);
+  TH2D* h2_Muon_tight_pt_m2l_ZRegion = (TH2D*) data -> Get("FR/01_Zpeak/h_Muon_tight_pt_m2l" + muonsuffix);
 
   if (!highpt) {
     bin_ele_ptmin = -1;
@@ -64,10 +69,10 @@ void getLumiEff()
  
   // ZJETS
 
-  TH2D* h2_Ele_loose_pt_m2l_ZRegion_zjets  = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Ele_loose_pt_m2l"  + elesuffix);
-  TH2D* h2_Ele_tight_pt_m2l_ZRegion_zjets  = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Ele_tight_pt_m2l"  + elesuffix);
-  TH2D* h2_Muon_loose_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
-  TH2D* h2_Muon_tight_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
+  TH2D* h2_Ele_loose_pt_m2l_ZRegion_zjets  = (TH2D*) zjets -> Get("FR/01_Zpeak/h_Ele_loose_pt_m2l"  + elesuffix);
+  TH2D* h2_Ele_tight_pt_m2l_ZRegion_zjets  = (TH2D*) zjets -> Get("FR/01_Zpeak/h_Ele_tight_pt_m2l"  + elesuffix);
+  TH2D* h2_Muon_loose_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/01_Zpeak/h_Muon_loose_pt_m2l" + muonsuffix);
+  TH2D* h2_Muon_tight_pt_m2l_ZRegion_zjets = (TH2D*) zjets -> Get("FR/01_Zpeak/h_Muon_tight_pt_m2l" + muonsuffix);
   
   if (!highpt) {
     bin_ele_ptmin = -1;
@@ -92,10 +97,10 @@ void getLumiEff()
 
   // WJETS
 
-  TH2D* h2_Ele_loose_pt_m2l_ZRegion_wjets  = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Ele_loose_pt_m2l"  + elesuffix);
-  TH2D* h2_Ele_tight_pt_m2l_ZRegion_wjets  = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Ele_tight_pt_m2l"  + elesuffix);
-  TH2D* h2_Muon_loose_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Muon_loose_pt_m2l" + muonsuffix);
-  TH2D* h2_Muon_tight_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/03_ZRegion/h_Muon_tight_pt_m2l" + muonsuffix);
+  TH2D* h2_Ele_loose_pt_m2l_ZRegion_wjets  = (TH2D*) wjets -> Get("FR/01_Zpeak/h_Ele_loose_pt_m2l"  + elesuffix);
+  TH2D* h2_Ele_tight_pt_m2l_ZRegion_wjets  = (TH2D*) wjets -> Get("FR/01_Zpeak/h_Ele_tight_pt_m2l"  + elesuffix);
+  TH2D* h2_Muon_loose_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/01_Zpeak/h_Muon_loose_pt_m2l" + muonsuffix);
+  TH2D* h2_Muon_tight_pt_m2l_ZRegion_wjets = (TH2D*) wjets -> Get("FR/01_Zpeak/h_Muon_tight_pt_m2l" + muonsuffix);
 
   if (!highpt) {
     bin_ele_ptmin = -1;

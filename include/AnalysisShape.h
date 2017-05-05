@@ -3,7 +3,6 @@
 
 #include "AnalysisCMS.h"
 
-
 class AnalysisShape : public AnalysisCMS
 {
  public :
@@ -16,6 +15,7 @@ class AnalysisShape : public AnalysisCMS
   void Loop                  (TString analysis,
 			      TString sample,
 			      float   luminosity);
+
 };
 
 #endif

@@ -71,12 +71,15 @@ void getFakeRate()
   gSystem->mkdir("rootfilesFR", kTRUE);
   gSystem->mkdir("rootfilesPR", kTRUE);
 
-  dataFR  = new TFile ("../rootfilesFR/nominal/FR/01_Data.root",  "read");
-  wjetsFR = new TFile ("../rootfilesFR/nominal/FR/08_WJets.root", "read");
-  zjetsFR = new TFile ("../rootfilesFR/nominal/FR/07_ZJets.root", "read");
+  //dataFR  = new TFile ("../rootfilesNewFakes/nominal/FR/01_Data.root",  "read");
+  //wjetsFR = new TFile ("../rootfilesNewFakes/nominal/FR/08_WJets.root", "read");
+  //zjetsFR = new TFile ("../rootfilesNewFakes/nominal/FR/07_ZJets.root", "read");
+
+  dataFR  = new TFile ("../rootfiles/newFakes2/FR/01_Data.root",  "read");
+  wjetsFR = new TFile ("../rootfiles/newFakes2/FR/08_WJets.root", "read");
+  zjetsFR = new TFile ("../rootfiles/newFakes2/FR/07_ZJets.root", "read");
 
   zjetsPR = new TFile ("../rootfilesPR/nominal/PR/07_ZJets.root", "read");
-
 
   // Prompt rate
   //----------------------------------------------------------------------------
@@ -91,20 +94,23 @@ void getFakeRate()
       DrawPR("Muon", "eta", "|#eta|");
     }
 
-
   // Fake rate
   //----------------------------------------------------------------------------
   Float_t elejetet;
   Float_t muonjetet;
 
-  int njetet = (draw) ? 1 : 7;
+  //int njetet = (draw) ? 1 : 7;
+  int njetet = 7;
 
   for (int i=0; i<njetet; i++) {
 
     if (draw) {
 
-      elejetet  = elejetarray [5];
-      muonjetet = muonjetarray[3];
+      //elejetet  = elejetarray [5];
+      //muonjetet = muonjetarray[3];
+
+      elejetet  = elejetarray [i];
+      muonjetet = muonjetarray[i];
 
       DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);
       DrawFR("Muon", "pt",  "p_{T} [GeV]", muonscale, muonjetet);
@@ -183,7 +189,7 @@ void DrawFR(TString flavour,
   h_FR->Draw("ep");
   h_FR_EWK->Draw("ep,same");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
   DrawLegend(0.22, 0.83, h_FR, "Without EWK correction");
   DrawLegend(0.22, 0.80, h_FR_EWK, "With EWK correction");
 
@@ -194,7 +200,7 @@ void DrawFR(TString flavour,
 
   h_EWKrel_tight -> Draw("ep");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
   TCanvas* canvas3 = new TCanvas(title_EWKrel_loose, title_EWKrel_loose, 450, 550);
 
@@ -203,7 +209,7 @@ void DrawFR(TString flavour,
 
   h_EWKrel_loose -> Draw("ep");
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
   // Print bin values and errors
   //----------------------------------------------------------------------------
@@ -317,7 +323,7 @@ void DrawPR(TString  flavour,
   h_PR->GetXaxis()->SetTitleOffset(1.5);
   h_PR->GetYaxis()->SetTitleOffset(1.8);
 
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "12.9 fb^{-1} (13 TeV)");
+  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
 
   // Save
@@ -363,7 +369,7 @@ void WriteFR(TString flavour,
 
   // Write
   //----------------------------------------------------------------------------
-  TFile *file = new TFile(Form("rootfilesFR/%sFR_Run2016_HWW12fb_jet%0.f.root", flavour.Data(), jetet), "recreate");
+  TFile *file = new TFile(Form("rootfilesFR/%sFR_Run2016_HWW36fb_jet%0.f.root", flavour.Data(), jetet), "recreate");
 
   h_FR    ->Write("FR_pT_eta");
   h_FR_EWK->Write("FR_pT_eta_EWKcorr");
@@ -377,17 +383,18 @@ void WriteFR(TString flavour,
 //------------------------------------------------------------------------------
 void WritePR(TString flavour)
 {
+
   TH2D* h_loose_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_loose_pt_eta_PR");
   TH2D* h_tight_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_tight_pt_eta_PR");
 
   TH2D* h_PR = (TH2D*)h_tight_zjets->Clone("h_" + flavour + "_signal_pt_eta_bin");
-      
+
   h_PR->Divide(h_tight_zjets, h_loose_zjets);
 
 
   // Write
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("rootfilesPR/" + flavour + "PR_Run2016_HWW12fb.root","recreate");
+  TFile* file = new TFile("rootfilesPR/" + flavour + "PR_Run2016_HWW36fb.root","recreate");
 
   h_PR->Write();
   

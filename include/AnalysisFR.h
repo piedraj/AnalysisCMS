@@ -46,6 +46,11 @@ class AnalysisFR: public AnalysisCMS
   float _leptonPtMin;
   float _leptonEtaMax;
 
+  int   _Zlepton1type;
+  int   _Zlepton2type;
+  int   _Zlepton1index;
+  int   _Zlepton2index;
+  int   _Zdecayflavour;
 
   // Declare fake rate histograms
   //----------------------------------------------------------------------------
