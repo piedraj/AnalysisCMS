@@ -96,8 +96,8 @@ class AnalysisStop : public AnalysisCMS
 
   int   _nLeptonsMatched;
 
-  float _MT2_Met; int NbinsMT2 = 7; int NbinsMet = 5;
-  float vMinMT2 = 0., vMinMet = 0., vMaxMT2 = 140., vMaxMet = 500.;
+  float _MT2_Met; int NbinsMT2 = 7; int NbinsMet = 3;//int NbinsMet = 5;
+  float vMinMT2 = 0., vMinMet = 140., vMaxMT2 = 140., vMaxMet = 500.;
   TH1D*                  h_MT2_Met          [nchannel][ncut][njetbin+1];
 
   float _HTvisible_Met; int NbinsHTvisible = 5;

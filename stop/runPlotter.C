@@ -48,8 +48,8 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-//  float lumi = lumi_fb_Full2016;
-  float lumi = lumi_fb_2016_susy;
+//  float lumi = lumi_fb_Full2016;// lumi_fb_Full2016   = 35.867;// 2016B to 2016H 
+  float lumi = lumi_fb_2016_susy; // lumi_fb_2016_susy  =  9.983;// run<276502 -> sTop blinded
 
   Bool_t scale = logY;
 
@@ -69,13 +69,14 @@ void runPlotter(TString level,
   else
     {
       plotter.SetLuminosity(lumi);
-      plotter.SetDrawRatio (true);
+      //plotter.SetDrawRatio (true);
+      plotter.SetDrawBinSigf (true);
     }
 
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  ////////plotter.AddData("01_Data", "data", color_Data);
 
 
   // Add processes
@@ -94,11 +95,11 @@ void runPlotter(TString level,
   plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
 
-  //plotter.AddSignal("20_T2tt_mStop-150to1200_Sm350_Xm175", "T2tt (350,175)",  color_Signal-2);
-  //plotter.AddSignal("20_T2tt_mStop-150to1200_Sm350_Xm225", "T2tt (350,225)",  color_Signal);
-  //plotter.AddSignal("20_T2tt_mStop-150to1200_Sm350_Xm263", "T2tt (350,263)",  color_Signal+2);
+  plotter.AddSignal("T2tt_mStop-350to400_Sm350_Xm175", "T2tt (350,175)",  color_Signal-2);
+  plotter.AddSignal("T2tt_mStop-350to400_Sm350_Xm225", "T2tt (350,225)",  color_Signal);
+  plotter.AddSignal("T2tt_mStop-350to400_Sm350_Xm263", "T2tt (350,263)",  color_Signal+2);
   //plotter.AddSignal("T2tt_mStop-250to350_Sm275_Xm150",  "T2tt (275,150)",  color_Signal-1);
-  plotter.AddSignal("T2tt_mStop-350to400_Sm350_Xm225",  "T2tt (350,225)",  color_Signal);
+  //////plotter.AddSignal("T2tt_mStop-350to400_Sm350_Xm225",  "T2tt (350,225)",  color_Signal);
   //plotter.AddSignal("T2tt_mStop-400to1200_Sm450_Xm325", "T2tt (450,325)",  color_Signal-2);
 
   // Draw events by cut
@@ -115,7 +116,7 @@ void runPlotter(TString level,
       
       plotter.SetTitle(title);
       
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY, false);
+  //    plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY, false);
     }
   
 
@@ -133,7 +134,7 @@ void runPlotter(TString level,
       
       plotter.LoopEventsByChannel(level + jetbin);
       
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale, false);
+//      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale, false);
     }
 
   
@@ -155,7 +156,8 @@ void runPlotter(TString level,
 
       TString prefix = level + jetbin + "/h_";
 
-      for (int i=firstchannel; i<=lastchannel; i++)
+      for (int i=lastchannel; i<=lastchannel; i++)
+      //for (int i=firstchannel; i<=lastchannel; i++)
 	{
 	  TString suffix = "_" + schannel[i];
 	  
@@ -165,7 +167,7 @@ void runPlotter(TString level,
 	  
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
+/*	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",              10, 0, "GeV",  scale, true, 0,  250);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
@@ -175,11 +177,12 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",               5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", scale, true, 0,   30);
 	  plotter.Draw(prefix + "mt2ll"        + suffix, "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 400);
+*/	  plotter.Draw(prefix + "MT2ll"        + suffix, "M_{T2}(" + sll + ")",               -1, 0, "GeV",  scale);
 	  plotter.Draw(prefix + "MT2_Met"      + suffix, "M_{T2}-Met",                         1, 0, "GeV",  scale, false);
-	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  20, 0, "GeV",  scale, true, 0,  200);
 	  
 	  
-	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
+/*	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
@@ -243,7 +246,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "invGamma"     + suffix, "invGamma",                           5, 0, "NULL", scale, false);
 	  plotter.Draw(prefix + "Mdr"          + suffix, "Mdr",                                5, 0, "GeV",  scale);
 	  plotter.Draw(prefix + "DeltaPhiRll"  + suffix, "DeltaPhiRll",                        5, 2, "rad",  scale, false);
-	  
+*/	  
 	} 
       
     }
