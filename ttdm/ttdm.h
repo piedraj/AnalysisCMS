@@ -4,6 +4,10 @@ const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
 
 const float thelumi = 35.9/15; 
 
+const float xs2l = 1.0/9; 
+
+const float PUrw = 1.030108192;
+
 const float    ttSF = 1.0;  const float ettSF = 0.15;
 const float    DYSF = 1.0;  const float eDYSF = 0.07;
 			    const float efakes= 0.30;
@@ -14,7 +18,7 @@ const float    DYSF = 1.0;  const float eDYSF = 0.07;
 
 const bool doshape = false; 
 
-TCut selection = "metPfType1>80.&&mt2ll>100.&&darkpt>0."; 
+TCut selection = "metPfType1>0.&&mt2ll>0."; 
 //const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
 //const TCut selection= "lep1id*lep2id==-121&&lep1pt>25.";
 
@@ -207,7 +211,7 @@ void Assign(){
 
 	//----------
 
-	mycut[nominal  ] = "eventW*new_puW"          *selection;
+	mycut[nominal  ] = "eventW"          *selection;
 	mycut[Btagup   ] = "eventW_Btagup"   *selection;
 	mycut[Btagdo   ] = "eventW_Btagdo"   *selection;
 	mycut[Idisoup  ] = "eventW_Idisoup"  *selection;
