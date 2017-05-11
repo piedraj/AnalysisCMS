@@ -1,12 +1,11 @@
 /*
 root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00010\")"
-root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00100\")"
 root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00500\")"
+
 root -l -b -q "MVA.C(80,90,\"ttDM0001scalar00010\")"
-root -l -b -q "MVA.C(80,90,\"ttDM0001scalar00100\")"
 root -l -b -q "MVA.C(80,90,\"ttDM0001scalar00500\")"
+
 root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00010\")"
-root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00100\")"
 root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00500\")"
 */
 
@@ -28,7 +27,7 @@ root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00500\")"
 // Constants
 //------------------------------------------------------------------------------
 //const TString inputdir       = "../../../../public/week-13/";
-const TString inputdir       = "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/";
+const TString inputdir       = "../minitrees/SUSYchoosen/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -61,10 +60,10 @@ std::vector<TTree*> _mctree;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(float metPfType1_cut = 80.,
-         float mt2ll_cut      = 90.,
-	 TString signal     = "ttDM0001scalar00500", //
+         float mt2ll_cut      = 80.,
+	 TString signal     = "ttDM0001scalar00010", 
 	 bool    doMVATrain = 1,
-	 bool    doMVARead  = 1)
+	 bool    doMVARead  = 0)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -214,7 +213,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=100:nTest_Signal=100:nTrain_Background=1000:nTest_Background=1000:!V");
+  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=200:nTest_Signal=200:nTrain_Background=1000:nTest_Background=1000:!V");
   //factory->PrepareTrainingAndTestTree("mt2ll>100.&&darkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA
@@ -433,8 +432,8 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   	//theTree -> GetListOfBranches() -> Remove( b_delete );
    	//theTree -> Write();
  
- 	TBranch* b_mva01 = theTree->Branch("ANN2_tanh_" + MVA_id + "_" + signal, &mva01, "mva/F" );
-  	TBranch* b_mva02 = theTree->Branch("ANN2_sigm_" + MVA_id + "_" + signal, &mva02, "mva/F" );
+ 	TBranch* b_mva01 = theTree->Branch("ANN_tanh_" + MVA_id + "_" + signal, &mva01, "mva/F" );
+  	TBranch* b_mva02 = theTree->Branch("ANN_sigm_" + MVA_id + "_" + signal, &mva02, "mva/F" );
   	//TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
   	//TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
   	//TBranch* b_mva05 = theTree->Branch("mva05_" + signal, &mva05, "mva/F" );

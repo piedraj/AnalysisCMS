@@ -16,23 +16,22 @@ void MakeDatacard(){
 
 	Assign();
    
-	//for( int s = 0; s < (1.-inicio)/paso; s++){
+	for( int s = 0; s < (1.-inicio)/paso; s++){
 
-	int s = -25; 
+	//int s = -25; 
 
 	float threshold = inicio + s*paso; //cout << "the threshold is... " << threshold << endl; 
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			if ( m != ttDM0001scalar00010 && m != ttDM0001scalar00100 ) continue;
+			if ( m != ttDM0001scalar00010 && m != ttDM0001scalar00500 ) continue;
 
-			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll90_%s>%4.2f", scalarID[m].Data(), threshold ); //scalarMVAcut[m]);
-			MVA_cut = hard_cut; //scalarMVAcut[m]);
+			MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll100_%s>%4.2f", scalarID[m].Data(), threshold ); //scalarMVAcut[m]);
 
 			//cout << "\n\n\n" << Form("ANN_170419_tanh_mt2ll100_%s>%4.2f", scalarID[m].Data(), threshold ) << "\n\n\n" << endl; 
 
-			//processID[ttDM] = scalarID[m]; 
-			processID[ttDM] = pseudoID[m]; 
+			processID[ttDM] = scalarID[m]; 
+			//processID[ttDM] = pseudoID[m]; 
 
 			for( int i = 0; i < nprocess; i++ ){
 
@@ -51,14 +50,14 @@ void MakeDatacard(){
 
 		}
 
-	//}
+	}
 
 }
 
 
 void GetRelUnc( int process ){
 
-	//if ( process == TT ) processID[process] = processID[WW];  // to avoid to going through TT sample for checks -> fix to 'WW'
+	//if ( process == TT ) processID[process] = processID[WW];  // to avoid to going through TT sample for checks 
 
 	cout << "\n\n\n" + processID[process] + "\n" << endl;
 
@@ -66,8 +65,8 @@ void GetRelUnc( int process ){
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	//TString filename = "../minitrees/" + inputdir + "/" + processID[process] + ".root"; 
-	TString filename = "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root"; 
+	TString filename = "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root"; 
+	//TString filename = "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root"; 
 
 	TFile* myfile = new TFile( filename, "read" ); 
 
@@ -271,6 +270,8 @@ void GetRelUnc( int process ){
 	}
 
 	c1 -> Destructor();
+
+	myfile->Close();
 	
 }
 
@@ -279,7 +280,7 @@ void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170424_sync/%s_%s_%4.2f.txt", processID[ttDM].Data(), "twiki", threshold ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170505_regina/%s_%s_%4.2f.txt", processID[ttDM].Data(), "mt2ll100", threshold ) );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", nprocess-2 );
