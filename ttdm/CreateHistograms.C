@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/Zmm/"; 
+const TString outputdir = "histos/"; 
 
 void CreateHistograms2( int process );
 
@@ -13,18 +13,18 @@ void CreateHistograms(){
 
 	//-----
 
-	//for( int i = 0; i < nprocess; i++ ){
+	for( int i = 0; i < nprocess; i++ ){
 
 	  //CreateHistograms2( processID[i] ); 
 	  CreateHistograms2( i ); 
 
-	//}
 
-	  //CreateHistograms2( data );
+	}
+
+
 	  //CreateHistograms2( ttDM );
-	  //CreateHistograms2( TT   );
-	  //CreateHistograms2( EW   );
-	  //CreateHistograms2( DY   );
+
+
 
 	//for( int i = 0; i < nscalar; i++ ){
 
@@ -45,13 +45,18 @@ void CreateHistograms2( int process ){
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
-	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
-	TFile* myfile = new TFile( inputdir + processID[process] + ".root", "read" );
+
+	TFile* myfile; 
+
+	//myfile = new TFile( "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root", "read" );
+	myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+
+
 
 	/*if ( process == data ){
 
 		myfile = new TFile( "../minitrees/Zee/MET/" + processID[process] + ".root", "read" );
-		//myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+		myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
 
 	}
 
@@ -191,22 +196,19 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
 		//mytree -> Draw( b_name[ntrueint     ] + " >> " + h_name[ntrueint     ] + "(   60,  0,     60   )", thecut );
 
-		mytree -> Draw( b_name[scale         ] + " >> " + h_name[scale         ] + "(   80,  -3,     5    )", thecut );
-		mytree -> Draw( b_name[uPara         ] + " >> " + h_name[uPara         ] + "(   80,  -200,  200   )", thecut );
-		mytree -> Draw( b_name[uPerp         ] + " >> " + h_name[uPerp         ] + "(   80,  -200,  200   )", thecut );
+		//mytree -> Draw( b_name[scale         ] + " >> " + h_name[scale         ] + "(   80,  -3,     5    )", thecut );
+		//mytree -> Draw( b_name[uPara         ] + " >> " + h_name[uPara         ] + "(   80,  -200,  200   )", thecut );
+		//mytree -> Draw( b_name[uPerp         ] + " >> " + h_name[uPerp         ] + "(   80,  -200,  200   )", thecut );
 
 		//mytree -> Draw( b_name[sphericity   ] + " >> " + h_name[sphericity   ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
 		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		mytree -> Draw( b_name[ANN_0704sigmoid80        ] + " >> " + h_name[ANN_0704sigmoid80        ] + "( 120,  -0.1, 1.1   )", thecut );
-		mytree -> Draw( b_name[ANN_0704tanh80        ] + " >> " + h_name[ANN_0704tanh80        ] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
-		//mytree -> Draw( b_name[alpha005    ] + " >> " + h_name[alpha005    ] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[alpha01     ] + " >> " + h_name[alpha01     ] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[alpha05     ] + " >> " + h_name[alpha05     ] + "( 120,  -0.1, 1.1   )", thecut );
+
+		mytree -> Draw( b_name[MVAtanh] + " >> " + h_name[MVAtanh] + "( 120,  -0.1, 1.1   )", thecut );
+		mytree -> Draw( b_name[MVAsigm] + " >> " + h_name[MVAsigm] + "( 120,  -0.1, 1.1   )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 

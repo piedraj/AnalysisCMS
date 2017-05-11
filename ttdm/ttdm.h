@@ -1,30 +1,34 @@
 #include "TCut.h"
 
-//const TString  inputdir = "minitreesTTDM36fb/nominal/TTDM";  // where the minitrees are stored
-//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/";
-const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
+const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
 
 const float thelumi = 35.9/15; 
 
-const float    ttSF = 1.0;  const float ettSF = 0.0;
-const float    DYSF = 1.0;  const float eDYSF = 0.0;
-			    const float efakes= 0.0;
+const float    ttSF = 1.0;  const float ettSF = 0.15;
+const float    DYSF = 1.0;  const float eDYSF = 0.07;
+			    const float efakes= 0.30;
+
 //const float    ttSF = 0.97;  const float ettSF = 0.15;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //			       const float efakes= 0.30;
 
 const bool doshape = false; 
 
-const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
+TCut selection = "metPfType1>80.&&mt2ll>100.&&darkpt>0."; 
+//const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
 //const TCut selection= "lep1id*lep2id==-121&&lep1pt>25.";
 
 const TCut soft_cut = "metPfType1>80."; 
 const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
-const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
-//TCut MVA_cut;
+//const TCut MVA_cut = hard_cut&&"ANN_170419_tanh_mt2ll100_ttDM0001scalar00010>0.65"; //mt2ll80-light: 0.90, mt2ll100-light: 0.65, mt2ll80-heavy: 0.80, mt2ll100-heavy: 0.80, 
+TCut MVA_cut;
 
-/*enum{ data,
-      //ttDM,
+const float inicio = 0.00;
+const float paso   = 0.02;
+
+
+enum{ data,
+      ttDM,
       fakes,
       TT,
       ST,
@@ -38,15 +42,12 @@ const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
       Zg,
       //HWW,
       //HZ,
+      //ttDMlight,
+      //ttDMheavy,
       nprocess
-};*/
+};
 
-enum{ data,
-      DY,
-      TT,
-      EW, 
-      nprocess
-}; 
+
 
 enum{ ttDM0001scalar00010, 
       ttDM0001scalar00020, 
@@ -102,12 +103,10 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
       top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
       nvtx, //ntrueint,
-      scale, uPara, uPerp,
+      //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
-      ANN_0704sigmoid80, ANN_0704tanh80,
-      //MVA80, //MVA90, MVA100,
-      //alpha005, alpha01, alpha05,	
+      MVAtanh, MVAsigm,	
       nhisto };
 
 TCut mycut[nsystematic];  
@@ -130,9 +129,9 @@ void Assign(){
 
 	//----------
 
-	//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
-	processID[data ] = "01_Data_1outof15"         ;
-	processID[fakes] = "00_Fakes_1outof15"        ; 
+	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
+	processID[data ] = "01_Data_1outof15"        ;
+	processID[fakes] = "00_Fakes_1outof15"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -144,13 +143,9 @@ void Assign(){
 	processID[Wg   ] = "11_Wg"                   ; 
 	processID[Zg   ] = "12_Zg"                   ; 
 	//processID[HWW  ] = "10_HWW"                  ; 
-	//processID[HZ   ] = "14_HZ"                   ;*/
-
-	processID[data] = "data_mm";
-	processID[DY  ] = "DY"  ; 
-	processID[TT  ] = "TT"  ; 
-	processID[EW  ] = "EW"  ;
-
+	//processID[HZ   ] = "14_HZ"                   ;
+	//processID[ttDMlight] = "ttDM0001scalar00010" ; 
+	//processID[ttDMheavy] = "ttDM0001scalar00500" ; 
 
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
@@ -212,7 +207,7 @@ void Assign(){
 
 	//----------
 
-	mycut[nominal  ] = "eventW"          *selection;
+	mycut[nominal  ] = "eventW*new_puW"          *selection;
 	mycut[Btagup   ] = "eventW_Btagup"   *selection;
 	mycut[Btagdo   ] = "eventW_Btagdo"   *selection;
 	mycut[Idisoup  ] = "eventW_Idisoup"  *selection;
@@ -289,22 +284,17 @@ void Assign(){
 	b_name[nvtx        ] = "nvtx"        ;
 	//b_name[ntrueint    ] = "ntrueint"    ;
 
-	b_name[scale       ] = "scale"        ;
-	b_name[uPara       ] = "uPara"        ;
-	b_name[uPerp       ] = "uPerp"        ;
+	//b_name[scale       ] = "scale"        ;
+	//b_name[uPara       ] = "uPara"        ;
+	//b_name[uPerp       ] = "uPerp"        ;
 	//b_name[sphericity] = "sphericity";
 	//b_name[alignment ] = "alignment" ;
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
-	b_name[ANN_0704sigmoid80     ] = "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010";
-	b_name[ANN_0704tanh80     ] = "ANN_0704tanh_mt2ll80_ttDM0001scalar00010";
-	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
-	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
+	b_name[MVAtanh] = "ANN_tanh_mt2ll100_ttDM0001scalar00500";
+	b_name[MVAsigm] = "ANN_sigm_mt2ll100_ttDM0001scalar00500";
 
-	//b_name[alpha005  ] = "ANN_alpha005_mt2ll80_ttDM0001scalar00500";
-	//b_name[alpha01   ] = "ANN_alpha01_mt2ll80_ttDM0001scalar00500";
-	//b_name[alpha05   ] = "ANN_alpha05_mt2ll80_ttDM0001scalar00500";
 
 	for( int i = 0; i < nhisto; i++ ){
 
