@@ -559,13 +559,6 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep,same");
 
       SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
-
-	if( hname == "nvtx" ){	
-		TFile* myfile = new TFile("../ttdm/newPU-rw.root", "update");
-		ratio -> Write(); 
-		myfile -> Close();
-	}
-
     }
 
 
