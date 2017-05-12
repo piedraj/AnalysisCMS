@@ -54,6 +54,9 @@ class AnalysisStop : public AnalysisCMS
 
   typedef map<MassPoint, MassPointParameters> MassPointMap;
   MassPointMap StopNeutralinoMap;
+    
+  typedef map<MassPoint, float> MassPointISRMap;
+  MassPointISRMap StopNeutralinoISRMap;
 
   // Analysis histograms
   //----------------------------------------------------------------------------
@@ -66,6 +69,7 @@ class AnalysisStop : public AnalysisCMS
   TH1D*                  h_mlb1true         [nchannel][ncut][njetbin+1];
   TH1D*                  h_mlb2true         [nchannel][ncut][njetbin+1];
   TH2D*                  h_mt2lblbvsmlbtrue [nchannel][ncut][njetbin+1];
+  TH1D*                  h_nisrjet          [nchannel][ncut][njetbin+1];
 
   int _SaveHistograms;
 
@@ -123,7 +127,6 @@ class AnalysisStop : public AnalysisCMS
   void ApplyISRReweighting();
 
   const int nISRMultiplicityBins = 7;
-  float ISRGlobalNormalization = 1.121;
   float ISRBinWeight[7] = {1., 0.920, 0.821, 0.715, 0.662, 0.561, 0.511};
     
 };

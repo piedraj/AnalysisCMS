@@ -128,6 +128,8 @@ class HistogramReader
 
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
 
+  void     SetDrawSignificance(Bool_t         drawsignificance) {_drawsignificance = drawsignificance;}
+
   void     SetDrawYield       (Bool_t         drawyield) {_drawyield = drawyield;}
 
   void     SetPublicStyle     (Bool_t         publicstyle) {_publicstyle = publicstyle;}
@@ -181,6 +183,7 @@ class HistogramReader
 
   Bool_t                _datanorm;
   Bool_t                _drawratio;
+  Bool_t                _drawsignificance;
   Bool_t                _drawyield;
   Bool_t                _publicstyle;
   Bool_t                _savepdf;

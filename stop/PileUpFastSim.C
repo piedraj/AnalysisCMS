@@ -352,7 +352,7 @@ void GetPileUpHistograms(int Strategy, TString TestRegion, TString MetType = "")
 
 void BuildMassPointSystematic(int Strategy, TString MassPoint) {
 
-  TString InputRootFileName = RootFilesDirectory + "/nominal/Stop/T2tt" + MassPoint + ".root";  
+  TString InputRootFileName = RootFilesDirectory + "/nominal/Stop/T2tt_isr" + MassPoint + ".root";  
   InputRootFile = TFile::Open(InputRootFileName);
 
   TString OutputDirectoryUp = RootFilesDirectory + "/Pileupup/Stop";
@@ -361,8 +361,8 @@ void BuildMassPointSystematic(int Strategy, TString MassPoint) {
   gSystem->mkdir(OutputDirectoryUp, true);
   gSystem->mkdir(OutputDirectoryDo, true);
   
-  TFile *Pileupup = new TFile(OutputDirectoryUp + "/T2tt" + MassPoint + ".root", "recreate");
-  TFile *Pileupdo = new TFile(OutputDirectoryDo + "/T2tt" + MassPoint + ".root", "recreate");
+  TFile *Pileupup = new TFile(OutputDirectoryUp + "/T2tt_isr" + MassPoint + ".root", "recreate");
+  TFile *Pileupdo = new TFile(OutputDirectoryDo + "/T2tt_isr" + MassPoint + ".root", "recreate");
 
   TString MetTypeName[4] = {"", "gen", "isr", "isrgen"};
 

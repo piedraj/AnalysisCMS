@@ -830,7 +830,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < 0.) continue;
 
-    if (IsISRJet(pt, eta, phi)) _nisrjet++;
+    if (std_vector_jet_isFromISR)
+      if (pt > 30. && fabs(eta) < 2.4 && std_vector_jet_isFromISR->at(i) == 1) _nisrjet++;
 
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
@@ -2705,66 +2706,4 @@ void AnalysisCMS::GetScaleAndResolution()
   _uPara += qT.Mod();
 
   _uPerp = (uT.Px() * qT.Py() - uT.Py() * qT.Px()) / qT.Mod();
-}
-
-
-//------------------------------------------------------------------------------
-// IsISRJet
-//------------------------------------------------------------------------------
-bool AnalysisCMS::IsISRJet(float pt, float eta, float phi)
-{
-  if (!_ismc) return false;
-
-  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L1268-L1295
-  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L373-L395
-  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/interface/jet_met_tools.hh#L34-L36
-  if (pt <= 30. || fabs(eta) > 2.4) return false;
-
-  TLorentzVector ThisJet; ThisJet.SetPtEtaPhiM(pt, eta, phi, 0.);
-
-  for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
-
-    if (fabs(std_vector_partonGen_pid->at(i)) != 5) continue;
-    if (std_vector_partonGen_isHardProcess->at(i) != 1) continue;
-    
-    TLorentzVector bQuark; bQuark.SetPtEtaPhiM(std_vector_partonGen_pt ->at(i),
-					       std_vector_partonGen_eta->at(i),
-					       std_vector_partonGen_phi->at(i),
-					       4.18);
-    
-    for (int wb=std_vector_VBoson_pt->size()-1; wb>=0; wb--) {
-      
-      if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
-      
-      int Wid = std_vector_VBoson_pid->at(wb);  // Wid = -24 for W- and +24 for W+
-      
-      if ((Wid == +24 && std_vector_partonGen_pid->at(i) == +5) ||
-	  (Wid == -24 && std_vector_partonGen_pid->at(i) == -5)) {
-	    
-	TLorentzVector WBoson; WBoson.SetPtEtaPhiM(std_vector_VBoson_pt ->at(wb),
-						   std_vector_VBoson_eta->at(wb),
-						   std_vector_VBoson_phi->at(wb),
-						   80.385);
-	    
-	TLorentzVector tCandidate = bQuark + WBoson;
-	    
-	for (int j=0; j<std_vector_partonGen_pt->size(); j++) {
-	      
-	  if (fabs(std_vector_partonGen_pid->at(j)) != 6) continue;
-	  if (std_vector_partonGen_isHardProcess->at(j) != 1) continue;
-	  if (std_vector_partonGen_pid->at(i)*std_vector_partonGen_pid->at(j) < 0) continue;
-	      
-	  TLorentzVector tQuark; tQuark.SetPtEtaPhiM(std_vector_partonGen_pt ->at(j),
-						     std_vector_partonGen_eta->at(j),
-						     std_vector_partonGen_phi->at(j),
-						     172.44);
-  
-	  if (tQuark.DeltaR(tCandidate) < 0.1) 
-	    if (ThisJet.DeltaR(bQuark) < 0.3) return false;
-	}
-      }
-    }
-  }	  
-  
-  return true;
 }

@@ -8,17 +8,18 @@ using namespace std;
 //------------------------------------------------------------------------------
 HistogramReader::HistogramReader(const TString& inputdir,
 				 const TString& outputdir) :
-  _inputdir     (inputdir),
-  _outputdir    (outputdir),
-  _stackoption  ("nostack,hist"),
-  _title        ("inclusive"),
-  _luminosity_fb(-1),
-  _datanorm     (false),
-  _drawratio    (false),
-  _drawyield    (false),
-  _publicstyle  (false),
-  _savepdf      (false),
-  _savepng      (true)
+  _inputdir        (inputdir),
+  _outputdir       (outputdir),
+  _stackoption     ("nostack,hist"),
+  _title           ("inclusive"),
+  _luminosity_fb   (-1),
+  _datanorm        (false),
+  _drawratio       (false),
+  _drawsignificance(false),
+  _drawyield       (false),
+  _publicstyle     (false),
+  _savepdf         (false),
+  _savepng         (true)
 {
   _mcfile.clear();
   _mccolor.clear();
@@ -184,7 +185,12 @@ void HistogramReader::Draw(TString hname,
   TPad* pad1 = NULL;
   TPad* pad2 = NULL;
 
-  if (_drawratio && _datafile)
+
+  // Set drawsignificance to false if drawratio is true
+  if (_drawratio && _datafile) _drawsignificance = false;
+
+
+  if ((_drawratio && _datafile) || _drawsignificance)
     {
       canvas = new TCanvas(cname, cname, 550, 720);
 
@@ -485,7 +491,7 @@ void HistogramReader::Draw(TString hname,
 
   // Titles
   //----------------------------------------------------------------------------
-  Float_t xprelim = (_drawratio && _datafile) ? 0.288 : 0.300;
+  Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
 
   if (_title.EqualTo("inclusive"))
     {
@@ -559,6 +565,10 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep,same");
 
       SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
+    }
+  else if (_drawsignificance)
+    {
+      // Barbara's stuff
     }
 
 
