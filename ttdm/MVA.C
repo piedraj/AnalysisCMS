@@ -28,7 +28,9 @@ root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00500\")"
 // Constants
 //------------------------------------------------------------------------------
 //const TString inputdir       = "../../../../public/minitrees_week-1/";
-const TString inputdir       = "../minitrees/march/";
+//const TString inputdir       = "../minitrees/march/";
+const TString  inputdir = "/afs/cern.ch/work/c/cprieels/public/ttDM_28iv17/";
+//const TString inputdir       = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -89,8 +91,10 @@ void MVA(float metPfType1_cut = 80.,
       //TString MVA_id = Form("met%.0f_mt2ll%.0f", metPfType1_cut, mt2ll_cut); 
       TString MVA_id = Form("mt2ll%.0f", mt2ll_cut); 
 
-      MVARead(MVA_id, signal, "00_Fakes");
-      MVARead(MVA_id, signal, "01_Data");
+      //MVARead(MVA_id, signal, "00_Fakes");
+      MVARead(MVA_id, signal, "00_Fakes_1outof15");
+      //MVARead(MVA_id, signal, "01_Data");
+      MVARead(MVA_id, signal, "01_Data_1outof15");
       MVARead(MVA_id, signal, "02_WZTo3LNu");
       MVARead(MVA_id, signal, "03_VZ");
       MVARead(MVA_id, signal, "04_TTTo2L2Nu");
@@ -98,17 +102,14 @@ void MVA(float metPfType1_cut = 80.,
       MVARead(MVA_id, signal, "06_WW");
       MVARead(MVA_id, signal, "07_ZJets");
       MVARead(MVA_id, signal, "09_TTV");
-      MVARead(MVA_id, signal, "10_HWW");
+	//MVARead(MVA_id, signal, "10_HWW");
       MVARead(MVA_id, signal, "11_Wg");
       MVARead(MVA_id, signal, "12_Zg");
       MVARead(MVA_id, signal, "13_VVV");
-      MVARead(MVA_id, signal, "14_HZ");
+      //MVARead(MVA_id, signal, "14_HZ");
       MVARead(MVA_id, signal, "15_WgStar");
       MVARead(MVA_id, signal, signal);
-      MVARead(MVA_id, signal, "ttDM0001scalar00010");
-      //MVARead(MVA_id, signal, "ttDM0001scalar00020");
-      //MVARead(MVA_id, signal, "ttDM0001scalar00050");
-
+      
     }
 }
 
@@ -430,7 +431,7 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   //----- write 
 
   	float mva01; 
-  	//float mva02; 
+  	float mva02; 
   	//float mva03;
   	//float mva04;
   	//float mva05;
@@ -439,8 +440,9 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   	//theTree -> GetListOfBranches() -> Remove( b_delete );
    	//theTree -> Write();
  
- 	TBranch* b_mva01 = theTree->Branch("ANN_170302sigmoid_" + MVA_id + "_" + signal, &mva01, "mva/F" );
-  	//TBranch* b_mva02 = theTree->Branch("mva02_" + signal, &mva02, "mva/F" );
+ 	TBranch* b_mva01 = theTree->Branch("ANN_0704sigmoid_" + MVA_id + "_" + signal, &mva01, "mva/F" );
+	  TBranch* b_mva02 = theTree->Branch("ANN_0704tanh_" + MVA_id + "_" + signal, &mva02, "mva/F" );
+	  //TBranch* b_mva02 = theTree->Branch("mva02_" + signal, &mva02, "mva/F" );
   	//TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
   	//TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
   	//TBranch* b_mva05 = theTree->Branch("mva05_" + signal, &mva05, "mva/F" );
@@ -449,8 +451,8 @@ void MVARead(TString MVA_id, TString signal, TString filename)
 
   // Book MVA methods
   //----------------------------------------------------------------------------
-  reader->BookMVA("01", weightsdir + signal + "_MLP01.weights.xml");
-  //reader->BookMVA("02", weightsdir + signal + "_MLP02.weights.xml");
+  reader->BookMVA("01", weightsdir + signal + "_sigmoid.weights.xml");
+  reader->BookMVA("02", weightsdir + signal + "_tanh.weights.xml");
   //reader->BookMVA("03", weightsdir + signal + "_MLP03.weights.xml");
   //reader->BookMVA("04", weightsdir + signal + "_BDT04.weights.xml");
   //reader->BookMVA("05", weightsdir + signal + "_BDT05.weights.xml");
@@ -465,13 +467,13 @@ void MVARead(TString MVA_id, TString signal, TString filename)
     theTree->GetEntry(ievt);
 
     mva01 = reader->EvaluateMVA("01");
-   //mva02 = reader->EvaluateMVA("02");  
+    mva02 = reader->EvaluateMVA("02");  
     //mva03 = reader->EvaluateMVA("03");
     //mva04 = reader->EvaluateMVA("04");
     //mva05 = reader->EvaluateMVA("05");
 
     b_mva01->Fill();	
-    //b_mva02->Fill();
+    b_mva02->Fill();
     //b_mva03->Fill();
     //b_mva04->Fill();
     //b_mva05->Fill();

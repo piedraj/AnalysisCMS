@@ -2,7 +2,8 @@
 
 //const TString  inputdir = "minitreesTTDM36fb/nominal/TTDM";  // where the minitrees are stored
 //const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/";
-const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
+//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
+const TString  inputdir = "/afs/cern.ch/work/c/cprieels/public/ttDM_28iv17/";
 
 const float thelumi = 35.9/15; 
 
@@ -15,16 +16,19 @@ const float    DYSF = 1.0;  const float eDYSF = 0.0;
 
 const bool doshape = false; 
 
-const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
+//const TCut selection= "metPfType1>80. && mt2ll > 80.";
+const TCut selection= "1";
+//const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
 //const TCut selection= "lep1id*lep2id==-121&&lep1pt>25.";
 
 const TCut soft_cut = "metPfType1>80."; 
+//const TCut soft_cut = "1"; 
 const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
 const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
 //TCut MVA_cut;
 
-/*enum{ data,
-      //ttDM,
+enum{ data,
+      ttDM,
       fakes,
       TT,
       ST,
@@ -39,14 +43,16 @@ const TCut  MVA_cut = hard_cut&&"ANN_170214_mt2ll100_ttDM0001scalar00500>0.5";
       //HWW,
       //HZ,
       nprocess
-};*/
+};
 
+/*
 enum{ data,
       DY,
       TT,
       EW, 
       nprocess
 }; 
+*/
 
 enum{ ttDM0001scalar00010, 
       ttDM0001scalar00020, 
@@ -105,7 +111,7 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
-      ANN_0704sigmoid80, ANN_0704tanh80,
+      //ANN_0704sigmoid80, ANN_0704tanh80,
       //MVA80, //MVA90, MVA100,
       //alpha005, alpha01, alpha05,	
       nhisto };
@@ -130,7 +136,7 @@ void Assign(){
 
 	//----------
 
-	//processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
 	processID[data ] = "01_Data_1outof15"         ;
 	processID[fakes] = "00_Fakes_1outof15"        ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
@@ -144,13 +150,14 @@ void Assign(){
 	processID[Wg   ] = "11_Wg"                   ; 
 	processID[Zg   ] = "12_Zg"                   ; 
 	//processID[HWW  ] = "10_HWW"                  ; 
-	//processID[HZ   ] = "14_HZ"                   ;*/
+	//processID[HZ   ] = "14_HZ"                   ;
 
+	/*
 	processID[data] = "data_mm";
 	processID[DY  ] = "DY"  ; 
 	processID[TT  ] = "TT"  ; 
 	processID[EW  ] = "EW"  ;
-
+	*/
 
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
@@ -297,8 +304,8 @@ void Assign(){
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
-	b_name[ANN_0704sigmoid80     ] = "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010";
-	b_name[ANN_0704tanh80     ] = "ANN_0704tanh_mt2ll80_ttDM0001scalar00010";
+	//b_name[ANN_0704sigmoid80     ] = "ANN_0704sigmoid_mt2ll80_ttDM0001scalar00010";
+	//b_name[ANN_0704tanh80     ] = "ANN_0704tanh_mt2ll80_ttDM0001scalar00010";
 	//b_name[MVA90     ] = "ANN_170214_mt2ll90_ttDM0001scalar00500";
 	//b_name[MVA100    ] = "ANN_170214_mt2ll100_ttDM0001scalar00500";
 
