@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/Zmm/"; 
+const TString outputdir = "histos/"; 
 
 void CreateHistograms2( int process );
 
@@ -13,26 +13,13 @@ void CreateHistograms(){
 
 	//-----
 
-	//for( int i = 0; i < nprocess; i++ ){
-
-	  //CreateHistograms2( processID[i] ); 
+	for( int i = 0; i < nprocess; i++ ){
 	  CreateHistograms2( i ); 
-
-	//}
-
-	  //CreateHistograms2( data );
-	  //CreateHistograms2( ttDM );
-	  //CreateHistograms2( TT   );
-	  //CreateHistograms2( EW   );
-	  //CreateHistograms2( DY   );
+	}
 
 	//for( int i = 0; i < nscalar; i++ ){
-
-	//	CreateHistograms2( i ); 
-
+	//CreateHistograms2( i ); 
 	//}	
-
-	//-----
 
 	cout << "\n \n The End !!! \n \n" << endl; 
 
@@ -41,12 +28,14 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	cout << "\n \t process: " << processID[process] << endl; 
+  cout << "\n \t process: " << processID[process] << endl; 
+  //cout << "\n \t process: " << scalarID[process] << endl; 
 
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
 	//TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
 	TFile* myfile = new TFile( inputdir + processID[process] + ".root", "read" );
+	//TFile* myfile = new TFile( inputdir + scalarID[process] + ".root", "read" );
 
 	/*if ( process == data ){
 
@@ -72,6 +61,8 @@ void CreateHistograms2( int process ){
 
 		if( k == nominal ) storagefile = new TFile( outputdir + "/" + processID[process] +                         ".root", "recreate" );
 		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
+		//if( k == nominal ) storagefile = new TFile( outputdir + "/" + scalarID[process] +                         ".root", "recreate" );
+		//if( k >  nominal ) storagefile = new TFile( outputdir + "/" + scalarID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
@@ -200,8 +191,8 @@ void CreateHistograms2( int process ){
 		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
 		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
-		mytree -> Draw( b_name[ANN_0704sigmoid80        ] + " >> " + h_name[ANN_0704sigmoid80        ] + "( 120,  -0.1, 1.1   )", thecut );
-		mytree -> Draw( b_name[ANN_0704tanh80        ] + " >> " + h_name[ANN_0704tanh80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[ANN_0704sigmoid80        ] + " >> " + h_name[ANN_0704sigmoid80        ] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[ANN_0704tanh80        ] + " >> " + h_name[ANN_0704tanh80        ] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVA100       ] + " >> " + h_name[MVA100       ] + "( 120,  -0.1, 1.1   )", thecut );
 
 		//mytree -> Draw( b_name[alpha005    ] + " >> " + h_name[alpha005    ] + "( 120,  -0.1, 1.1   )", thecut );
