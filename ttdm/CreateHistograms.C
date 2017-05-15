@@ -13,14 +13,14 @@ void CreateHistograms(){
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	//for( int i = 0; i < nprocess; i++ ){
 
-	  CreateHistograms2( i ); 
+	//  CreateHistograms2( i ); 
 
-	}
+	//}
 
 
-	//CreateHistograms2( ttDM );
+	CreateHistograms2( ttDM );
 
 	//-----
 
@@ -49,7 +49,7 @@ void CreateHistograms2( int process ){
 
 	//myfile = new TFile( "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root", "read" );
 	//myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
-	myfile = new TFile( "/eos/user/j/jgarciaf/minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+	myfile = new TFile( "/eos/user/j/jgarciaf/minitrees/" + minitreeDir[process] + "/TTDM/" + processID[process] + ".root", "read" );
 
 	/*if ( process == data ){
 
@@ -69,7 +69,7 @@ void CreateHistograms2( int process ){
 
 		if(  process == data  &&  k > nominal  ) continue; 
 
-		if( k > Btagup ) continue; //toppTrw ) continue;
+		if( k > MuESdo ) continue; //toppTrw ) continue;
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
 

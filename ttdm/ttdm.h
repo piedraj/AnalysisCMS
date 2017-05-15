@@ -1,7 +1,9 @@
 #include "TCut.h"
 
 //const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
-const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
+//const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
+
+const TString theproduction = "Helsinki"; 
 
 const float thelumi = 35.9/15; 
 
@@ -124,7 +126,8 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
 
 TCut mycut[nsystematic];  
 
-TString processID[nprocess];
+TString processID  [nprocess];
+TString minitreeDir[nprocess];
 TString   scalarID[nscalar];	
 float scalarMVAcut[nscalar]; 
 TString  pseudoID[npseudo ];
@@ -197,10 +200,10 @@ void Assign(){
 	systematicID[METdo    ] = "METdo"    ;
 	systematicID[JESup    ] = "JESup"    ;
 	systematicID[JESdo    ] = "JESdo"    ;
-	systematicID[EleESup  ] = "EleESup"  ;
-	systematicID[EleESdo  ] = "EleESdo"  ;
-	systematicID[MuESup   ] = "MuESup"   ;
-	systematicID[MuESdo   ] = "MuESdo"   ;
+	systematicID[EleESup  ] = "LepElepTCutup";
+	systematicID[EleESdo  ] = "LepElepTCutdo";
+	systematicID[MuESup   ] = "LepMupTCutup" ;
+	systematicID[MuESdo   ] = "LepMupTCutdo" ;
 	systematicID[QCDup    ] = "QCDup"    ;
 	systematicID[QCDdo    ] = "QCDdo"    ;
 	systematicID[PDFup    ] = "PDFup"    ;
@@ -256,6 +259,17 @@ void Assign(){
 	mycut[PDFup    ] = "eventW"          *selection;
 	mycut[PDFdo    ] = "eventW"          *selection;
 	mycut[toppTrw  ] = "eventW"          *selection;
+
+
+
+	for( int i = 0; i <= nprocess; i++ ){
+
+		if( i >= METup && i <= MuESdo ) minitreeDir[i] = theproduction + "_" + systematicID[i];
+
+		else minitreeDir[i] = theproduction; 
+
+	} 
+
 
 	//----------
 
