@@ -405,6 +405,8 @@ class AnalysisCMS : public AnalysisBase
   float 		 _uPara; 
   float 		 _uPerp; 
 
+  TString                _minitree_storage_path = "/eos/user/j/jgarciaf/";
+
 
   // TH1 histograms
   //----------------------------------------------------------------------------
