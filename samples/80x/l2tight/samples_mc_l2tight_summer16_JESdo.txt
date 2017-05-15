@@ -35,8 +35,6 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_TTTo2L2Nu__part16.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_TTTo2L2Nu__part17.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_TTTo2L2Nu__part18.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_TTToSemiLepton__part0.root
-root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_TTToSemiLepton__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_WWTo2L2Nu.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_WZTo2L2Q__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_WZTo2L2Q__part1.root
