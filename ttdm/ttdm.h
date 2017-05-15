@@ -1,6 +1,7 @@
 #include "TCut.h"
 
-const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
+//const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
+const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
 
 const float thelumi = 35.9/15; 
 
@@ -85,7 +86,15 @@ enum{ 	nominal,
 	Idisoup, 
 	Idisodo, 
 	Triggerup, 
-	Triggerdo, 
+	Triggerdo,
+        METup,
+        METdo, 
+        JESup,
+        JESdo, 
+        EleESup,
+	EleESdo,
+        MuESup,
+        MuESdo,
 	QCDup,
 	QCDdo,
 	PDFup,
@@ -184,6 +193,14 @@ void Assign(){
 	systematicID[Idisodo  ] = "Idisodo"  ;
 	systematicID[Triggerup] = "Triggerup";
 	systematicID[Triggerdo] = "Triggerdo";
+	systematicID[METup    ] = "METup"    ;
+	systematicID[METdo    ] = "METdo"    ;
+	systematicID[JESup    ] = "JESup"    ;
+	systematicID[JESdo    ] = "JESdo"    ;
+	systematicID[EleESup  ] = "EleESup"  ;
+	systematicID[EleESdo  ] = "EleESdo"  ;
+	systematicID[MuESup   ] = "MuESup"   ;
+	systematicID[MuESdo   ] = "MuESdo"   ;
 	systematicID[QCDup    ] = "QCDup"    ;
 	systematicID[QCDdo    ] = "QCDdo"    ;
 	systematicID[PDFup    ] = "PDFup"    ;
@@ -197,6 +214,14 @@ void Assign(){
 	systematicIDdatacard[Idisodo  ] = ""       ;
 	systematicIDdatacard[Triggerup] = "Trigger";
 	systematicIDdatacard[Triggerdo] = ""       ;
+	systematicIDdatacard[METup    ] = "MET";
+	systematicIDdatacard[METdo    ] = "";
+	systematicIDdatacard[JESup    ] = "JES";
+	systematicIDdatacard[JESdo    ] = "";
+	systematicIDdatacard[EleESup  ] = "EleES";
+	systematicIDdatacard[EleESdo  ] = "";
+	systematicIDdatacard[MuESup   ] = "MuES";
+	systematicIDdatacard[MuESdo   ] = "";
 	systematicIDdatacard[QCDup    ] = "QCD"    ;
 	systematicIDdatacard[QCDdo    ] = ""       ;
 	systematicIDdatacard[PDFup    ] = "PDF"    ;
@@ -218,6 +243,14 @@ void Assign(){
 	mycut[Idisodo  ] = "eventW_Idisodo"  *selection;
 	mycut[Triggerup] = "eventW_Triggerup"*selection;
 	mycut[Triggerdo] = "eventW_Triggerdo"*selection;
+	mycut[METup    ] = "eventW"          *selection;
+	mycut[METdo    ] = "eventW"          *selection;
+	mycut[JESup    ] = "eventW"          *selection;
+	mycut[JESdo    ] = "eventW"          *selection;
+	mycut[EleESup  ] = "eventW"          *selection;
+	mycut[EleESdo  ] = "eventW"          *selection;
+	mycut[MuESup   ] = "eventW"          *selection;
+	mycut[MuESdo   ] = "eventW"          *selection;
 	mycut[QCDup    ] = "eventW"          *selection;
 	mycut[QCDdo    ] = "eventW"          *selection;
 	mycut[PDFup    ] = "eventW"          *selection;
