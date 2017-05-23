@@ -1516,9 +1516,9 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
-  gSystem->mkdir("minitrees/" + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir(_minitree_storage_path + "minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile("minitrees/" + _longname + ".root", "recreate");
+  root_minitree = new TFile(_minitree_storage_path + "minitrees/" + _longname + ".root", "recreate");
 
 
   // Minitree branches
