@@ -95,7 +95,7 @@ void Plotter(TString option = "hist"){
 
   // Add systematics
   //----------------------------------------------------------------------------
-  //plotter.AddSystematic("Btagup");	
+  plotter.AddSystematic("Btagup");	
 
   // Draw distributions
   //----------------------------------------------------------------------------

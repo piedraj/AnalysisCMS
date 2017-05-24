@@ -105,6 +105,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        SetSaveMinitree      (Bool_t   saveminitree) {_saveminitree = saveminitree;}
 
+  void        SetMinitreePath      (TString  minitreepath) {_minitreepath = minitreepath;}
+
   void        Setup                (TString  analysis,
 				    TString  filename,
 				    float    luminosity,
@@ -204,6 +206,7 @@ class AnalysisCMS : public AnalysisBase
   TString                _sample;
   TString                _systematic;
   TString                _longname;
+  TString                _minitreepath;
 
   float                  _channel;
   float                  _darketa_gen;   

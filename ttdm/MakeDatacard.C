@@ -22,7 +22,7 @@ void MakeDatacard(){
 
 		for( int m = 0; m < nscalar; m++ ){
 
-		  //if ( m != ttDM0001scalar00500 && m != ttDM0001scalar00500 ) continue;
+			if ( m != ttDM0001scalar00500 && m != ttDM0001scalar00500 ) continue;
 
 			MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
 
@@ -54,7 +54,7 @@ void MakeDatacard(){
 
 void GetRelUnc( int process ){
 
-	if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
+        //if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
 
 	cout << "\n\n\n" + processID[process] + "\n" << endl;
 
@@ -92,7 +92,7 @@ void GetRelUnc( int process ){
 
 		// QCD 
 	
-		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= PDFdo ){ //&& process != HZ
+		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= QCDdo ){ //&& process != HZ
 	  
 			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
 
@@ -144,16 +144,20 @@ void GetRelUnc( int process ){
 
 
 		// top pT reweighing
+
 		if( j == toppTrw && process == TT ){
-		
-		  mytree -> Draw( "metPfType1 >> htemp_toppTrw_soft", soft_cut*"eventW_Toppt" );
-		  mytree -> Draw( "metPfType1 >> htemp_toppTrw_hard", hard_cut*"eventW_Toppt" );
-		  mytree -> Draw( "metPfType1 >> htemp_toppTrw_MVA" , MVA_cut *"eventW_Toppt" );
-		  h_syst[toppTrw][soft] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_soft" );
-		  h_syst[toppTrw][hard] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_hard" );
-		  h_syst[toppTrw][NN  ] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_MVA"  );
-		
+
+			/*mytree -> Draw( "metPfType1 >> htemp_toppTrw_soft", soft_cut*"eventW*toppTRwW" );
+			mytree -> Draw( "metPfType1 >> htemp_toppTrw_hard", hard_cut*"eventW*toppTRwW" );
+			mytree -> Draw( "metPfType1 >> htemp_toppTrw_MVA" , MVA_cut *"eventW*toppTRwW" );
+
+			h_syst[toppTrw][soft] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_soft" );
+			h_syst[toppTrw][hard] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_hard" );
+			h_syst[toppTrw][NN  ] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_MVA"  );*/
+
 		}
+
+
 
 		relunc[process][j][nrmlz] = -9999.; 
 		relunc[process][j][shape] = -9999.; 
@@ -243,11 +247,10 @@ relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / 
 }
 
 
-void WriteDatacard( float threshold ){
+Void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	//datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170516/%s_%s_%4.2f.txt", processID[ttDM].Data(), "mt2ll100", threshold ) );
 	datacard.open( Form("/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/ttdm/datacards/%s_%s_%4.2f.txt", processID[ttDM].Data(), "mt2ll80", threshold ) );
 
 	datacard << "imax 1 number of channels \n" ;

@@ -37,7 +37,7 @@ void insertPUrw2( int process ){
 	cout << "\n\n\n\n" << processID[process] << "\n\n" <<  endl; 
 
 	//TFile myfile( "/afs/cern.ch/user/c/cprieels/work/public/ttDM_withSystematics/" + processID[process] + ".root", "update" ); 
-	TFile myfile( "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/ttV/TTDM/" + processID[process] + ".root", "update" ); 
+	TFile myfile( "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/ttV/TTDM/" + processID[process] + ".root", "update" );
 
 	TTree* mytree = (TTree*) myfile.Get( "latino" );
 

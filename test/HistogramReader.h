@@ -175,8 +175,7 @@ class HistogramReader
 			       Float_t        xmax    = -999,
 			       TString        fom     = "S / #sqrt{B}");
 
-  void 	   IncludeSystematics (TH1*           hist,
-			       TString        hname);
+  void 	   IncludeSystematics (TString        hname);
 
 
  private :
@@ -208,6 +207,7 @@ class HistogramReader
   std::vector<TString>  _mcfilename;
   std::vector<TFile*>   _mcfile;
   std::vector<TH1*>     _mchist;
+  std::vector<TH1*>     _mchist_syst;
   std::vector<Color_t>  _mccolor;
   std::vector<TString>  _mclabel;
   std::vector<Float_t>  _mcscale;

@@ -319,6 +319,12 @@ void HistogramReader::Draw(TString hname,
   // Possible modification (how to deal with systematic uncertainties?)
   //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
 
+
+  // Include systematics
+  //----------------------------------------------------------------------------
+  if (_mchist_syst.size() > 0) IncludeSystematics(hname);
+
+
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
@@ -328,17 +334,18 @@ void HistogramReader::Draw(TString hname,
 
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
       Float_t binStatError = _mchist[i]->GetBinError(ibin);
-      Float_t binSystError = 0;  // To be updated
-      
+      Float_t binSystError = (_mchist_syst.size() > 0) ? _mchist_syst[i]->GetBinContent(ibin) : 0.;
+
       binValue += binContent;
       binError += (binStatError * binStatError);
       binError += (binSystError * binSystError);
     }
-    
+
     binError = sqrt(binError);
 
     _allmchist->SetBinContent(ibin, binValue);
     _allmchist->SetBinError  (ibin, binError);
+
   }
 
   _allmclabel = "stat";
@@ -350,9 +357,7 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerSize (      0);
 
 
-  // Include systematics
-  //----------------------------------------------------------------------------
-  IncludeSystematics(_allmchist, hname);
+
 
 
   // Draw
@@ -545,7 +550,7 @@ void HistogramReader::Draw(TString hname,
 	    ratioErr         = dtError / mcValue;
 	    uncertaintyError = ratioVal * mcError / mcValue;
 	  }
-	
+
 	ratio->SetBinContent(ibin, ratioVal);
 	ratio->SetBinError  (ibin, ratioErr);
 	
@@ -1555,42 +1560,57 @@ void HistogramReader::Roc(TString hname,
 //------------------------------------------------------------------------------
 // IncludeSystematics
 //------------------------------------------------------------------------------
-void HistogramReader::IncludeSystematics(TH1*    hist,
-					 TString hname)
-{ 
-  std::vector<TH1D*> h_var; 
+void HistogramReader::IncludeSystematics(TString hname)
+{
+  int nbins = _mchist[0]->GetNbinsX();
 
-  for (UInt_t j=0; j<_systematics.size(); j++) { 
 
-    h_var.clear();
+  // Loop over all processes
+  //----------------------------------------------------------------------------
+  for (int i=0; i<_mchist.size(); i++) {
 
-    for (UInt_t i=0; i<_mchist.size(); i++) {
+    TH1D* myhisto = (TH1D*)_mchist[0]->Clone("myhisto");
+
+    float suma[nbins+1]; 
+
+    for (int k=0; k<=nbins; k++) suma[k] = 0;
+
+    TFile* myfile0 = new TFile(_inputdir + "/" + _mcfilename.at(i) + ".root", "read");
+
+    TH1D* dummy0 = (TH1D*)myfile0->Get(hname);
+
+
+    // Loop over all systematics
+    //--------------------------------------------------------------------------
+    for (int j=0; j<_systematics.size(); j++) {
 
       TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "read");
 
       TH1D* dummy = (TH1D*)myfile->Get(hname);
 
-      h_var.push_back((TH1D*)dummy->Clone());
 
-      if (_luminosity_fb > 0 && _mcscale[i] > -999) h_var[i]->Scale(_luminosity_fb);
+      // Loop over all bins
+      //------------------------------------------------------------------------
+      for (int k=0; k<=nbins; k++) {
 
-      //      myfile->Close();  // Where should it be placed?
-    }
-		
-    for (Int_t ibin=0; ibin<=_mchist[0]->GetNbinsX(); ibin++) { 
+	float diff = dummy->GetBinContent(k) - dummy0->GetBinContent(k);
+	
+	if (_mclabel[i] == "non-prompt") diff = 0; 
 
-      Float_t binError = 0.;
-
-      for (UInt_t i=0; i<_mchist.size(); i++) {
-
-	Float_t binSystError = h_var[i]->GetBinContent(ibin) - _mchist[i]->GetBinContent(ibin);
-
-	binError += (binSystError * binSystError);
+	suma[k] += diff*diff;
       }
 
-      binError = sqrt(binError);
+      myfile->Close();
+    }
+
+    
+    // Save the sum of systematic uncertainties per bin
+    //--------------------------------------------------------------------------
+    for (int k=0; k<=nbins; k++) { 
 	
-      hist->SetBinError(ibin, binError);
+      myhisto->SetBinContent(k, sqrt(suma[k]));
+
+      _mchist_syst.push_back(myhisto);
     }
   }
 }
