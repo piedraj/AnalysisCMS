@@ -1,11 +1,18 @@
 #include "TCut.h"
+#include "TH1F.h"
+//const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
+//const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
 
-//const TString  inputdir = "minitreesTTDM36fb/nominal/TTDM";  // where the minitrees are stored
-//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/";
-//const TString  inputdir = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
-const TString  inputdir = "/afs/cern.ch/work/c/cprieels/public/ttDM_28iv17/";
+const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
+//const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/ttDM_withSystematics/"; 
+const TString theproduction = "Helsinki"; 
+//const TString theproduction = ""; 
 
 const float thelumi = 35.9/15; 
+
+const float xs2l = 1.0/9; 
+
+const float PUrw = 1.030108192;
 
 const float    ttSF = 1.0;  const float ettSF = 0.15;
 const float    DYSF = 1.0;  const float eDYSF = 0.07;
@@ -17,19 +24,16 @@ const float    DYSF = 1.0;  const float eDYSF = 0.07;
 
 const bool doshape = false; 
 
-//const TCut selection= "metPfType1>80. && mt2ll > 80.";
-const TCut selection= "1";
-//const TCut selection= "lep1id*lep2id==-169&&lep1pt>25.";
-//const TCut selection= "lep1id*lep2id==-121&&lep1pt>25.";
+const TCut selection = "metPfType1>0.&&mt2ll>0."; 
+
 
 const TCut soft_cut = "metPfType1>80."; 
-//const TCut soft_cut = "1"; 
-const TCut hard_cut = soft_cut&&"mt2ll>100.&&darkpt>0."; 
-//const TCut MVA_cut = hard_cut&&"ANN_170419_tanh_mt2ll100_ttDM0001scalar00010>0.65"; //mt2ll80-light: 0.90, mt2ll100-light: 0.65, mt2ll80-heavy: 0.80, mt2ll100-heavy: 0.80, 
+const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>0."; 
 TCut MVA_cut;
 
 const float inicio = 0.00;
 const float paso   = 0.02;
+
 
 enum{ data,
       ttDM,
@@ -50,6 +54,8 @@ enum{ data,
       //ttDMheavy,
       nprocess
 };
+
+
 
 enum{ ttDM0001scalar00010, 
       ttDM0001scalar00020, 
@@ -73,7 +79,7 @@ enum{ ttDM0001pseudo00010,
 
 enum{ ee, mm, em, ll, nchannel }; 
 
-enum{ soft, hard, MVA, nlevel };
+enum{ soft, hard, NN, nlevel };
 
 enum{ nrmlz, shape, nsysttype };
 
@@ -83,7 +89,15 @@ enum{ 	nominal,
 	Idisoup, 
 	Idisodo, 
 	Triggerup, 
-	Triggerdo, 
+	Triggerdo,
+        METup,
+        METdo, 
+        JESup,
+        JESdo, 
+        EleESup,
+	EleESdo,
+        MuESup,
+        MuESdo,
 	QCDup,
 	QCDdo,
 	PDFup,
@@ -108,15 +122,16 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
-      //MVAtanh, MVAsigm,	
+      MVAtanh, MVAsigm,	
       nhisto };
 
-TCut mycut[nsystematic];  
+TCut eventW[nsystematic];  
 
-TString processID[nprocess];
-TString   scalarID[nscalar];	
-float scalarMVAcut[nscalar]; 
-TString  pseudoID[npseudo ];
+TString processID  [nprocess];
+TString minitreeDir[nsystematic];
+TString scalarID   [nscalar];
+float  scalarMVAcut[nscalar]; 
+TString  pseudoID  [npseudo ];
 TString         systematicID[nsystematic];
 TString systematicIDdatacard[nsystematic];
 TString systtypeID[nsysttype];
@@ -132,8 +147,8 @@ void Assign(){
 	//----------
 
 	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
-	processID[data ] = "01_Data_1outof15"         ;
-	processID[fakes] = "00_Fakes_1outof15"        ; 
+	processID[data ] = "01_Data_1outof15"        ;
+	processID[fakes] = "00_Fakes_1outof15"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -149,21 +164,22 @@ void Assign(){
 	//processID[ttDMlight] = "ttDM0001scalar00010" ; 
 	//processID[ttDMheavy] = "ttDM0001scalar00500" ; 
 
+
+	scalarMVAcut[ttDM0001scalar00010] = 0.74; 
+	///scalarMVAcut[ttDM0001scalar00020] = 0.50; 
+	///scalarMVAcut[ttDM0001scalar00050] = 0.50; 
+	///scalarMVAcut[ttDM0001scalar00100] = 0.50; 
+	///scalarMVAcut[ttDM0001scalar00200] = 0.50; 
+	///scalarMVAcut[ttDM0001scalar00300] = 0.50; 
+	scalarMVAcut[ttDM0001scalar00500] = 0.98; 
+
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
 	scalarID[ttDM0001scalar00050] = "ttDM0001scalar00050"; 
 	scalarID[ttDM0001scalar00100] = "ttDM0001scalar00100"; 
 	scalarID[ttDM0001scalar00200] = "ttDM0001scalar00200"; 
 	scalarID[ttDM0001scalar00300] = "ttDM0001scalar00300"; 
-	scalarID[ttDM0001scalar00500] = "ttDM0001scalar00500"; 
-
-	scalarMVAcut[ttDM0001scalar00010] = 0.45; 
-	scalarMVAcut[ttDM0001scalar00020] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00050] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00100] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00200] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00300] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00500] = 0.50; 
+	scalarID[ttDM0001scalar00500] = "ttDM0001scalar00500";
 
 	pseudoID[ttDM0001pseudo00010] = "ttDM0001pseudo00010"; 
 	pseudoID[ttDM0001pseudo00020] = "ttDM0001pseudo00020"; 
@@ -182,6 +198,14 @@ void Assign(){
 	systematicID[Idisodo  ] = "Idisodo"  ;
 	systematicID[Triggerup] = "Triggerup";
 	systematicID[Triggerdo] = "Triggerdo";
+	systematicID[METup    ] = "METup"    ;
+	systematicID[METdo    ] = "METdo"    ;
+	systematicID[JESup    ] = "JESup"    ;
+	systematicID[JESdo    ] = "JESdo"    ;
+	systematicID[EleESup  ] = "LepElepTCutup";
+	systematicID[EleESdo  ] = "LepElepTCutdo";
+	systematicID[MuESup   ] = "LepMupTCutup" ;
+	systematicID[MuESdo   ] = "LepMupTCutdo" ;
 	systematicID[QCDup    ] = "QCDup"    ;
 	systematicID[QCDdo    ] = "QCDdo"    ;
 	systematicID[PDFup    ] = "PDFup"    ;
@@ -195,6 +219,14 @@ void Assign(){
 	systematicIDdatacard[Idisodo  ] = ""       ;
 	systematicIDdatacard[Triggerup] = "Trigger";
 	systematicIDdatacard[Triggerdo] = ""       ;
+	systematicIDdatacard[METup    ] = "MET";
+	systematicIDdatacard[METdo    ] = "";
+	systematicIDdatacard[JESup    ] = "JES";
+	systematicIDdatacard[JESdo    ] = "";
+	systematicIDdatacard[EleESup  ] = "EleES";
+	systematicIDdatacard[EleESdo  ] = "";
+	systematicIDdatacard[MuESup   ] = "MuES";
+	systematicIDdatacard[MuESdo   ] = "";
 	systematicIDdatacard[QCDup    ] = "QCD"    ;
 	systematicIDdatacard[QCDdo    ] = ""       ;
 	systematicIDdatacard[PDFup    ] = "PDF"    ;
@@ -209,18 +241,37 @@ void Assign(){
 
 	//----------
 
-	mycut[nominal  ] = "eventW*new_puW"          *selection;
-	mycut[Btagup   ] = "eventW_Btagup"   *selection;
-	mycut[Btagdo   ] = "eventW_Btagdo"   *selection;
-	mycut[Idisoup  ] = "eventW_Idisoup"  *selection;
-	mycut[Idisodo  ] = "eventW_Idisodo"  *selection;
-	mycut[Triggerup] = "eventW_Triggerup"*selection;
-	mycut[Triggerdo] = "eventW_Triggerdo"*selection;
-	mycut[QCDup    ] = "eventW"          *selection;
-	mycut[QCDdo    ] = "eventW"          *selection;
-	mycut[PDFup    ] = "eventW"          *selection;
-	mycut[PDFdo    ] = "eventW"          *selection;
-	mycut[toppTrw  ] = "eventW"          *selection;
+	eventW[nominal  ] = "eventW"          *selection;
+	eventW[Btagup   ] = "eventW_Btagup"   *selection;
+	eventW[Btagdo   ] = "eventW_Btagdo"   *selection;
+	eventW[Idisoup  ] = "eventW_Idisoup"  *selection;
+	eventW[Idisodo  ] = "eventW_Idisodo"  *selection;
+	eventW[Triggerup] = "eventW_Triggerup"*selection;
+	eventW[Triggerdo] = "eventW_Triggerdo"*selection;
+	eventW[METup    ] = "eventW"          *selection;
+	eventW[METdo    ] = "eventW"          *selection;
+	eventW[JESup    ] = "eventW"          *selection;
+	eventW[JESdo    ] = "eventW"          *selection;
+	eventW[EleESup  ] = "eventW"          *selection;
+	eventW[EleESdo  ] = "eventW"          *selection;
+	eventW[MuESup   ] = "eventW"          *selection;
+	eventW[MuESdo   ] = "eventW"          *selection;
+	eventW[QCDup    ] = "eventW"          *selection;
+	eventW[QCDdo    ] = "eventW"          *selection;
+	eventW[PDFup    ] = "eventW"          *selection;
+	eventW[PDFdo    ] = "eventW"          *selection;
+	eventW[toppTrw  ] = "eventW"          *selection;
+
+
+
+	for( int i = 0; i < nsystematic; i++ ){
+
+		minitreeDir[i] = theproduction;
+
+		if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
+
+	} 
+
 
 	//----------
 
@@ -294,6 +345,9 @@ void Assign(){
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
+	b_name[MVAtanh] = "ANN_tanh_mt2ll80_ttDM0001scalar00010";
+	b_name[MVAsigm] = "ANN_sigm_mt2ll80_ttDM0001scalar00010";
+
 
 	for( int i = 0; i < nhisto; i++ ){
 
