@@ -63,7 +63,7 @@ void getFakes(TString level = "NONE")
 
   if (analysis.EqualTo("NONE")) return;
 
-  TFile* inputfile = new TFile("../rootfilesBup/nominal/" + analysis + "/00_Fakes.root", "read");
+  TFile* inputfile = new TFile("../rootfiles/nominal/" + analysis + "/00_Fakes.root", "read");
 
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
