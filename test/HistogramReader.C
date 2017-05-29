@@ -790,8 +790,11 @@ Float_t HistogramReader::GetMaximum(TH1*    hist,
 
   TAxis* axis = (TAxis*)hist->GetXaxis();
   
-  Int_t firstBin = (xmin != -999) ? axis->FindBin(xmin) : 1;
-  Int_t lastBin  = (xmax != -999) ? axis->FindBin(xmax) : nbins;
+  Int_t firstBin = (xmin > -999) ? axis->FindBin(xmin) : 1;
+  Int_t lastBin  = (xmax > -999) ? axis->FindBin(xmax) : nbins;
+
+  if (firstBin < 1)     firstBin = 1;
+  if (lastBin  > nbins) lastBin  = nbins;
 
   Float_t hmax = 0;
 
