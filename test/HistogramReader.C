@@ -333,7 +333,7 @@ void HistogramReader::Draw(TString hname,
     for (UInt_t i=0; i<_mchist.size(); i++) {
 
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
-      Float_t binStatError = _mchist[i]->GetBinError(ibin);
+      Float_t binStatError = sqrt(_mchist[i]->GetSumw2()->At(ibin));
       Float_t binSystError = (_mchist_syst.size() > 0) ? _mchist_syst[i]->GetBinContent(ibin) : 0.;
 
       binValue += binContent;
@@ -535,10 +535,10 @@ void HistogramReader::Draw(TString hname,
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
 	Float_t dtValue = _datahist->GetBinContent(ibin);
-	Float_t dtError = _datahist->GetBinError  (ibin);
+	Float_t dtError = _datahist->GetBinError(ibin);
 
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
-	Float_t mcError = _allmchist->GetBinError  (ibin);
+	Float_t mcError = sqrt(_allmchist->GetSumw2()->At(ibin));
 
 	Float_t ratioVal         = 999;
 	Float_t ratioErr         = 999;
@@ -924,9 +924,6 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  //  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // It works for Juan
-  //  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // It works for Juan
-
   xaxis->SetLabelSize(size);
   yaxis->SetLabelSize(size);
   xaxis->SetTitleSize(size);
@@ -999,9 +996,9 @@ Float_t HistogramReader::Yield(TH1* hist)
 {
   if (!hist) return 0;
 
-  Int_t nbins = hist->GetNbinsX();
+  Float_t hist_yield = hist->Integral(-1, -1);
 
-  return hist->Integral(0, nbins+1);
+  return hist_yield;
 }
 
 
