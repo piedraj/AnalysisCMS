@@ -17,12 +17,12 @@ void insertPUrw(){
 
 	//insertPUrw2( WZ ); 
 	//insertPUrw2( VZ ); 
-	insertPUrw2( TT ); 
+	//insertPUrw2( TT ); 
 	//insertPUrw2( ST ); 
 	//insertPUrw2( WW ); 
 	//insertPUrw2( DY ); 
 	//insertPUrw2( VVV );
-	//insertPUrw2( ttDM ); 
+	insertPUrw2( ttDM ); 
 
 	//for( int i = 0; i < nprocess; i++ ){
 
@@ -39,7 +39,7 @@ void insertPUrw2( int process ){
 	WriteBranch == 1    ?    cout << "\t\t ***** writing... ***** \n" << endl    :    cout << "\t\t ***** not writing... ***** \n" << endl; 
 	
 
-	for( int k = MuESup; k <= MuESdo; k++ ){ 
+	for( int k = nominal; k <= nominal; k++ ){ 
 
 		cout << "\t systematic: " << systematicID[k] << endl;
 
