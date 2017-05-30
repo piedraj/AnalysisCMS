@@ -34,7 +34,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _systematic = systematic;
 
-  _minitreepath = "";
+  _minitreepath = "/eos/user/j/jgarciaf/";
 }
 
 
@@ -501,7 +501,9 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
   if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  if (!_analysis.EqualTo("Stop")) _event_weight *= (std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1));
+  //if (!_analysis.EqualTo("Stop")) _event_weight *= (std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1));
+
+                                    _event_weight_genMatched =  std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
@@ -682,6 +684,7 @@ void AnalysisCMS::GetLeptons()
     float pt      = std_vector_lepton_pt->at(i);
     float type    = std_vector_lepton_isTightLepton->at(i);
     float idisoW  = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
+    float motherID= ( _ismc )  ?  std_vector_leptonGen_MotherPID->at(i)  :  3.1416  ;
 
     if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
@@ -708,6 +711,7 @@ void AnalysisCMS::GetLeptons()
     lep.type    = type;
     lep.flavour = flavour;
     lep.idisoW  = idisoW;
+    lep.motherID= motherID; 
       
     float mass = -999;
 
@@ -773,12 +777,14 @@ void AnalysisCMS::GetLeptons()
   _lep1pt   = Lepton1.v.Pt();
   _lep1mass = Lepton1.v.M(); 
   _lep1id   = Lepton1.flavour; 
+  _lep1mid  = Lepton1.motherID;
 
   _lep2eta  = Lepton2.v.Eta();
   _lep2phi  = Lepton2.v.Phi();
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
   _lep2id   = Lepton2.flavour; 
+  _lep2mid  = Lepton2.motherID;
 
   _detall = fabs(_lep1eta - _lep2eta);
 
@@ -1581,6 +1587,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Fastsimup", &_event_weight_Fastsimup, "eventW_Fastsimup/F");
   minitree->Branch("eventW_Fastsimdo", &_event_weight_Fastsimdo, "eventW_Fastsimdo/F");
   minitree->Branch("eventW_Toppt",     &_event_weight_Toppt,     "eventW_Toppt/F");
+  minitree->Branch("eventW_genMatched",&_event_weight_genMatched,"eventW_genMatched/O");
   // H
   minitree->Branch("ht",               &_ht,               "ht/F");
   minitree->Branch("htvisible",        &_htvisible,        "htvisible/F");
@@ -1601,6 +1608,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("leadingPtCSVv2M",  &_leadingPtCSVv2M,  "leadingPtCSVv2M/F");
   minitree->Branch("leadingPtCSVv2T",  &_leadingPtCSVv2T,  "leadingPtCSVv2T/F");
   minitree->Branch("lep1id",           &_lep1id,           "lep1id/F");
+  minitree->Branch("lep1mid",          &_lep1mid,          "lep1mid/F");
   minitree->Branch("lep1eta",          &_lep1eta,          "lep1eta/F");
   minitree->Branch("lep1mass",         &_lep1mass,         "lep1mass/F");
   minitree->Branch("lep1phi",          &_lep1phi,          "lep1phi/F");
@@ -1613,6 +1621,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("lep1phiGEN",       &_lep1phi_gen,      "lep1phiGEN/F");
   minitree->Branch("lep1tauGEN",       &_lep1tau_gen,      "lep1tauGEN/F");
   minitree->Branch("lep2id",           &_lep2id,           "lep2id/F");
+  minitree->Branch("lep2mid",          &_lep2mid,          "lep2mid/F");
   minitree->Branch("lep2eta",          &_lep2eta,          "lep2eta/F");
   minitree->Branch("lep2mass",         &_lep2mass,         "lep2mass/F");
   minitree->Branch("lep2phi",          &_lep2phi,          "lep2phi/F");
