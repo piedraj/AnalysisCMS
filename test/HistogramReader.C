@@ -26,9 +26,9 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _mclabel.clear();
   _mcscale.clear();
 
-  _datafile       = NULL;
-  _datahist       = NULL;
-  _allmchist      = NULL;
+  _datafile  = NULL;
+  _datahist  = NULL;
+  _allmchist = NULL;
 
   TH1::SetDefaultSumw2();
 }
@@ -312,14 +312,18 @@ void HistogramReader::Draw(TString hname,
 
   // All MC
   //----------------------------------------------------------------------------
-  _allmchist      = (TH1D*)_mchist[0]->Clone("allmchist");
+  _allmchist = (TH1D*)_mchist[0]->Clone("allmchist");
 
   _allmchist->SetName(_mchist[0]->GetName());
 
   // Possible modification (how to deal with systematic uncertainties?)
   //  _allmchist = (TH1D*)(mcstack->GetStack()->Last());
 
-  IncludeSystematics(hname);
+
+  // Include systematics
+  //----------------------------------------------------------------------------
+  if (_mchist_syst.size() > 0) IncludeSystematics(hname);
+
 
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
@@ -328,14 +332,13 @@ void HistogramReader::Draw(TString hname,
 
     for (UInt_t i=0; i<_mchist.size(); i++) {
 
-      Float_t binContent   = _mchist     [i]->GetBinContent(ibin);
-      Float_t binStatError = _mchist     [i]->GetBinError(ibin);
-      Float_t binSystError = _mchist_syst[i]->GetBinContent(ibin); 
- 
+      Float_t binContent   = _mchist[i]->GetBinContent(ibin);
+      Float_t binStatError = sqrt(_mchist[i]->GetSumw2()->At(ibin));
+      Float_t binSystError = (_mchist_syst.size() > 0) ? _mchist_syst[i]->GetBinContent(ibin) : 0.;
+
       binValue += binContent;
       binError += (binStatError * binStatError);
       binError += (binSystError * binSystError);
-
     }
 
     binError = sqrt(binError);
@@ -532,10 +535,10 @@ void HistogramReader::Draw(TString hname,
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
 	Float_t dtValue = _datahist->GetBinContent(ibin);
-	Float_t dtError = _datahist->GetBinError  (ibin);
+	Float_t dtError = _datahist->GetBinError(ibin);
 
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
-	Float_t mcError = _allmchist->GetBinError  (ibin);
+	Float_t mcError = sqrt(_allmchist->GetSumw2()->At(ibin));
 
 	Float_t ratioVal         = 999;
 	Float_t ratioErr         = 999;
@@ -547,7 +550,6 @@ void HistogramReader::Draw(TString hname,
 	    ratioErr         = dtError / mcValue;
 	    uncertaintyError = ratioVal * mcError / mcValue;
 	  }
-	
 
 	ratio->SetBinContent(ibin, ratioVal);
 	ratio->SetBinError  (ibin, ratioErr);
@@ -788,8 +790,11 @@ Float_t HistogramReader::GetMaximum(TH1*    hist,
 
   TAxis* axis = (TAxis*)hist->GetXaxis();
   
-  Int_t firstBin = (xmin != -999) ? axis->FindBin(xmin) : 1;
-  Int_t lastBin  = (xmax != -999) ? axis->FindBin(xmax) : nbins;
+  Int_t firstBin = (xmin > -999) ? axis->FindBin(xmin) : 1;
+  Int_t lastBin  = (xmax > -999) ? axis->FindBin(xmax) : nbins;
+
+  if (firstBin < 1)     firstBin = 1;
+  if (lastBin  > nbins) lastBin  = nbins;
 
   Float_t hmax = 0;
 
@@ -922,9 +927,6 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  //  xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());  // It works for Juan
-  //  yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());  // It works for Juan
-
   xaxis->SetLabelSize(size);
   yaxis->SetLabelSize(size);
   xaxis->SetTitleSize(size);
@@ -997,9 +999,9 @@ Float_t HistogramReader::Yield(TH1* hist)
 {
   if (!hist) return 0;
 
-  Int_t nbins = hist->GetNbinsX();
+  Float_t hist_yield = hist->Integral(-1, -1);
 
-  return hist->Integral(0, nbins+1);
+  return hist_yield;
 }
 
 
@@ -1558,56 +1560,57 @@ void HistogramReader::Roc(TString hname,
 //------------------------------------------------------------------------------
 // IncludeSystematics
 //------------------------------------------------------------------------------
-void HistogramReader::IncludeSystematics( TString hname ){
-
-	int ibin = _mchist[0]->GetNbinsX(); 
-
-	for ( int i = 0; i < _mchist.size(); i++ ){
-
-		TH1D* myhisto = (TH1D*) _mchist[0]->Clone("myhisto");
-
-  		float suma[ibin+1]; 
-
-		for( int k = 0; k <= ibin; k++ ){
-
-    			suma[k] = 0;
-
-  		}
+void HistogramReader::IncludeSystematics(TString hname)
+{
+  int nbins = _mchist[0]->GetNbinsX();
 
 
-      		TFile* myfile0 = new TFile(_inputdir + "/" + _mcfilename.at(i) + ".root", "read");
+  // Loop over all processes
+  //----------------------------------------------------------------------------
+  for (int i=0; i<_mchist.size(); i++) {
 
-      		TH1D* dummy0 = (TH1D*) myfile0 -> Get(hname);
+    TH1D* myhisto = (TH1D*)_mchist[0]->Clone("myhisto");
 
-  		for ( int j=0; j < _systematics.size(); j++ ){
+    float suma[nbins+1]; 
 
-      			TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "read");
+    for (int k=0; k<=nbins; k++) suma[k] = 0;
 
-      			TH1D* dummy = (TH1D*) myfile -> Get(hname);
+    TFile* myfile0 = new TFile(_inputdir + "/" + _mcfilename.at(i) + ".root", "read");
 
-      			for ( int k = 0; k <= ibin; k++ ) { 
+    TH1D* dummy0 = (TH1D*)myfile0->Get(hname);
 
-	  			float diff = dummy->GetBinContent(k) - dummy0->GetBinContent(k);
+
+    // Loop over all systematics
+    //--------------------------------------------------------------------------
+    for (int j=0; j<_systematics.size(); j++) {
+
+      TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j) + ".root", "read");
+
+      TH1D* dummy = (TH1D*)myfile->Get(hname);
+
+
+      // Loop over all bins
+      //------------------------------------------------------------------------
+      for (int k=0; k<=nbins; k++) {
+
+	float diff = dummy->GetBinContent(k) - dummy0->GetBinContent(k);
 	
-				if( _mclabel[i] == "non-prompt" ) diff = 0; 
+	if (_mclabel[i] == "non-prompt") diff = 0; 
 
-				//if( k == 5 ) cout << _mclabel[i] << "\t" << _systematics[j] << "\t" << k << "\t" << diff/dummy0->GetBinContent(k) << endl; 
+	suma[k] += diff*diff;
+      }
 
-          			suma[k] += diff*diff;
+      myfile->Close();
+    }
 
-      			}
-
-			myfile->Close();
-
-   		}
-
-      		for ( int k = 0; k <= ibin; k++ ) { 
+    
+    // Save the sum of systematic uncertainties per bin
+    //--------------------------------------------------------------------------
+    for (int k=0; k<=nbins; k++) { 
 	
-			myhisto -> SetBinContent( k, suma[k] );
+      myhisto->SetBinContent(k, sqrt(suma[k]));
 
-			_mchist_syst.push_back(myhisto);
-		}
-
-	}
-
+      _mchist_syst.push_back(myhisto);
+    }
+  }
 }

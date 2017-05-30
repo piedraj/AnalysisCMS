@@ -15,9 +15,10 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
-  _ismc         = true;
-  _saveminitree = false;
-  _eventdump    = false;
+  _ismc                  = true;
+  _saveminitree          = false;
+  _eventdump             = false;
+  _applytopptreweighting = false;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -32,7 +33,8 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_toppt      = (systematic.Contains("Toppt"))     ? true : false;
 
   _systematic = systematic;
-  _applytopptreweighting = false;
+
+  _minitreepath = "";
 }
 
 
@@ -1516,9 +1518,9 @@ void AnalysisCMS::OpenMinitree()
 {
   if (!_saveminitree) return;
 
-  gSystem->mkdir(_minitree_storage_path + "minitrees/" + _systematic + "/" + _analysis, kTRUE);
+  gSystem->mkdir(_minitreepath + "minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
-  root_minitree = new TFile(_minitree_storage_path + "minitrees/" + _longname + ".root", "recreate");
+  root_minitree = new TFile(_minitreepath + "minitrees/" + _longname + ".root", "recreate");
 
 
   // Minitree branches

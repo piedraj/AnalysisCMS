@@ -116,9 +116,9 @@ TString      xtitle;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin/2jet",
-		TString variable = "metPfType1",
-		double  lumi_fb  = 12.9)
+		TString level    = "02_Routin",
+		TString variable = "mt2ll",
+		double  lumi_fb  = 35.9)
 {
   xtitle = "";
 
