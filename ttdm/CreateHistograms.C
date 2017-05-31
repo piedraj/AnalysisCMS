@@ -13,13 +13,13 @@ void CreateHistograms(){
 
 	//-----
 
-	//for( int i = 0; i < nprocess; i++ ){
+	for( int i = 0; i < nprocess; i++ ){
 
 	  CreateHistograms2( i ); 
 
 	}
 
-	//CreateHistograms2(Wg);
+	//CreateHistograms2( TT );
 	//CreateHistograms2( ttDM );
 
 	//-----
@@ -39,59 +39,57 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-  cout << "\n \t process: " << processID[process] << endl; 
-  //cout << "\n \t process: " << scalarID[process] << endl; 
-  //cout << "\n \t process: " << pseudoID[process] << endl; 
+	cout << "\n \t process: " << processID[process] << endl; 
 
-	TCanvas* c1 = new TCanvas("canvas", "the canvas");
-	
-	//if( process == TT ) continue; //processID[process] = processID[WW];   // to speed-up checks: not including the TT
+	for( int k = 0; k < nsystematic; k++ ){ 
 
-	TFile* myfile = new TFile( inputdir + processID[process] + ".root", "read" );
-	//TFile* myfile = new TFile( inputdir + scalarID[process] + ".root", "read" );
-	//TFile* myfile = new TFile( inputdir + pseudoID[process] + ".root", "read" );
 
-	/*if ( process == data ){
-
-		myfile = new TFile( "xxxxxxx" + processID[process] + ".root", "read" );
-		myfile = new TFile( "yyyyyyy" + processID[process] + ".root", "read" );
-
-	}
-
-	else{
-
-		myfile = new TFile( "xxxxxxx" + processID[process] + ".root", "read" );
-		myfile = new TFile( "yyyyyyy" + processID[process] + ".root", "read" );
-	
-	}*/
-
-	for( int k = 0; k < nsystematic; k++ ){
-
-		if(  process == data  &&  k > nominal  ) continue; 
-
-		//if( k > nominal ) continue; //toppTrw ) continue;
-		if( k > MuESdo ) continue; //toppTrw ) continue;
+	  if( k > nominal ) continue; 
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
+
+
+		TCanvas* c1 = new TCanvas("canvas", "the canvas");
+	
+		//if( process == TT ) continue; //processID[process] = processID[WW];   // to speed-up checks: not including the TT
+
+		TFile* myfile;
+
+		//myfile = new TFile( "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root", "read" );
+		//myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+		//myfile = new TFile( storageSite + minitreeDir[k] + "/TTDM/" + processID[process] + ".root", "read" );
+
+
+		//if( process == data || process == fakes || process == TTV || process == Wg || process == Zg ){ 
+		if( process == data || process == fakes || process == TTZ || process == TTW || process == Wg || process == Zg ){ 
+
+			myfile = new TFile( storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root", "read" ); 
+
+		}
+
+		else{ 
+
+			myfile = new TFile( storageSite + minitreeDir[k] + "/TTDM/" + processID[process] + ".root", "read" ); 
+
+		}
+
+
+		if(  process == data  &&  k > nominal  ) continue; 
 
 		TFile* storagefile; 
 
 		if( k == nominal ) storagefile = new TFile( outputdir + "/" + processID[process] +                         ".root", "recreate" );
 		if( k >  nominal ) storagefile = new TFile( outputdir + "/" + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
-		//if( k == nominal ) storagefile = new TFile( outputdir + "/" + scalarID[process] +                         ".root", "recreate" );
-		//if( k >  nominal ) storagefile = new TFile( outputdir + "/" + scalarID[process] + "_" + systematicID[k] + ".root", "recreate" );
-		//if( k == nominal ) storagefile = new TFile( outputdir + "/" + pseudoID[process] +                         ".root", "recreate" );
-		//if( k >  nominal ) storagefile = new TFile( outputdir + "/" + pseudoID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
-		
-		if(mytree -> GetEntries() == 0) continue;
-		TCut thecut = mycut[k]; 
 
-		if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
+		TCut thecut = eventW[k]; 
+
+		thecut = selection                   *thecut;
+	        //if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
-		if ( process == TT && k != toppTrw ) thecut = Form("         %4.2f", ttSF)*thecut; 
-		if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
+		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
@@ -215,6 +213,7 @@ void CreateHistograms2( int process ){
 
 		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
 
+
 		//mytree -> Draw( b_name[MVAtanh] + " >> " + h_name[MVAtanh] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVAsigm] + " >> " + h_name[MVAsigm] + "( 120,  -0.1, 1.1   )", thecut );
 
@@ -233,10 +232,10 @@ void CreateHistograms2( int process ){
 
 		storagefile -> Close();
 
-	}
+		myfile -> Close();
 
-	c1 -> Destructor();
+		c1 -> Destructor();
 
-	myfile -> Close();
+	}  // k 
 
 }

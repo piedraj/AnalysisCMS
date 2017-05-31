@@ -23,14 +23,10 @@ root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00500\")"
 #include "TSystem.h"
 #include "TTree.h"
 
+#include "ttdm.h"
 
 // Constants
 //------------------------------------------------------------------------------
-//const TString inputdir       = "../../../../public/minitrees_week-1/";
-//const TString inputdir       = "../minitrees/march/";
-const TString  inputdir = "/afs/cern.ch/work/c/cprieels/public/ttDM_28iv17/";
-//const TString inputdir       = "/afs/cern.ch/user/c/cprieels/work/public/ttdm-april/";
-
 const TString trainingdir    = "output/training/";
 const TString weightsdir     = "output/weights/";
 const TString applicationdir = "output/application/";
@@ -45,7 +41,8 @@ void MVATrain  (float metPfType1_cut, float mt2ll_cut, TString signal);
 
 void MVARead   (TString MVA_id,
 		TString signal,
-		TString filename);
+		TString filename,
+                int     systematic);
 
 void AddProcess(TString kind,
 		TString filename);
@@ -64,11 +61,13 @@ std::vector<TTree*> _mctree;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(float metPfType1_cut = 80.,
          float mt2ll_cut      = 80.,
-	 TString signal     = "ttDM0001scalar00010", 
-	 bool    doMVATrain = 1,
-	 bool    doMVARead  = 0)
+	 TString signal     = "ttDM0001scalar00500", 
+	 bool    doMVATrain = 0,
+	 bool    doMVARead  = 1)
 {
   if (!doMVATrain && !doMVARead) return;
+
+  Assign();
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -91,30 +90,34 @@ void MVA(float metPfType1_cut = 80.,
       //TString MVA_id = Form("met%.0f_mt2ll%.0f", metPfType1_cut, mt2ll_cut); 
       TString MVA_id = Form("mt2ll%.0f", mt2ll_cut); 
 
-      MVARead(MVA_id, signal, "00_Fakes_1outof15");
-      MVARead(MVA_id, signal, "01_Data_1outof15");
-      //MVARead(MVA_id, signal, "01_Data");
-      MVARead(MVA_id, signal, "02_WZTo3LNu");
-      MVARead(MVA_id, signal, "03_VZ");
-      MVARead(MVA_id, signal, "04_TTTo2L2Nu");
-      MVARead(MVA_id, signal, "05_ST");
-      MVARead(MVA_id, signal, "06_WW");
-      MVARead(MVA_id, signal, "07_ZJets");
-      MVARead(MVA_id, signal, "09_TTV");
-      //MVARead(MVA_id, signal, "10_HWW");
-      MVARead(MVA_id, signal, "11_Wg");
-      MVARead(MVA_id, signal, "12_Zg");
-      MVARead(MVA_id, signal, "13_VVV");
-      //MVARead(MVA_id, signal, "14_HZ");
-      MVARead(MVA_id, signal, "15_WgStar");
-      MVARead(MVA_id, signal, signal);
+      for( int k = 0; k < nsystematic; k++ ){
 
-     // MVARead(MVA_id, signal, "ttDM0001scalar00010");
-      //MVARead(MVA_id, signal, "ttDM0001scalar00020");
-      //MVARead(MVA_id, signal, "ttDM0001scalar00050");
+	      if (  /* k != nominal &&*/   ( k < METup || k > MuESdo )  ) continue;
 
-    }
-}
+	     /* MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
+	      MVARead(MVA_id, signal, "01_Data_1outof15", k);
+	      MVARead(MVA_id, signal, "09_TTV", k);
+	      MVARead(MVA_id, signal, "12_Zg", k);
+	      MVARead(MVA_id, signal, "15_WgStar", k);
+	      MVARead(MVA_id, signal, "11_Wg", k);*/
+	      //MVARead(MVA_id, signal, "01_Data", k);
+	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
+	      ///MVARead(MVA_id, signal, "03_VZ", k);
+	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      ///MVARead(MVA_id, signal, "05_ST", k);
+	      ///MVARead(MVA_id, signal, "06_WW", k);
+	      ///MVARead(MVA_id, signal, "07_ZJets", k);
+	      //MVARead(MVA_id, signal, "10_HWW", k);
+	      ///MVARead(MVA_id, signal, "13_VVV", k);
+	      //MVARead(MVA_id, signal, "14_HZ", k);
+
+	      MVARead(MVA_id, signal, signal, k);
+
+      } // k 
+
+    }  // if doMVARead
+
+}  // MVA
 
 
 //------------------------------------------------------------------------------
@@ -217,7 +220,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=200:nTest_Signal=200:nTrain_Background=1000:nTest_Background=1000:!V");
+  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=400:nTest_Signal=400:nTrain_Background=1000:nTest_Background=1000:!V");
   //factory->PrepareTrainingAndTestTree("mt2ll>100.&&darkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA
@@ -261,7 +264,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 //------------------------------------------------------------------------------
 // MVARead
 //------------------------------------------------------------------------------
-void MVARead(TString MVA_id, TString signal, TString filename)
+void MVARead(TString MVA_id, TString signal, TString filename, int systematic)
 {
 
   cout << "\n\n\n" << filename << "\n\n\n" << endl; 
@@ -370,7 +373,7 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   // Get MVA response
   //----------------------------------------------------------------------------
 
-  TFile* input = TFile::Open(inputdir + filename + ".root", "update");
+  TFile* input = TFile::Open( storageSite + minitreeDir[systematic] + "/TTDM/" + filename + ".root", "update");
 
   TTree* theTree = (TTree*)input->Get("latino");
 
@@ -436,9 +439,8 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   	//theTree -> GetListOfBranches() -> Remove( b_delete );
    	//theTree -> Write();
  
- 	TBranch* b_mva01 = theTree->Branch("ANN_tanh_" + MVA_id + "_" + signal, &mva01, "mva/F" );
-  	TBranch* b_mva02 = theTree->Branch("ANN_sigm_" + MVA_id + "_" + signal, &mva02, "mva/F" );
-
+ 	TBranch* b_mva01 = theTree->Branch("ANN_tanh_" + MVA_id + "_regina_" + signal, &mva01, "mva/F" );
+  	TBranch* b_mva02 = theTree->Branch("ANN_sigm_" + MVA_id + "_regina_" + signal, &mva02, "mva/F" );
   	//TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
   	//TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
   	//TBranch* b_mva05 = theTree->Branch("mva05_" + signal, &mva05, "mva/F" );
@@ -449,7 +451,6 @@ void MVARead(TString MVA_id, TString signal, TString filename)
   //----------------------------------------------------------------------------
   reader->BookMVA("01", weightsdir + signal + "_tanh.weights.xml");
   reader->BookMVA("02", weightsdir + signal + "_sigmoid.weights.xml");
-
   //reader->BookMVA("03", weightsdir + signal + "_MLP03.weights.xml");
   //reader->BookMVA("04", weightsdir + signal + "_BDT04.weights.xml");
   //reader->BookMVA("05", weightsdir + signal + "_BDT05.weights.xml");
@@ -493,7 +494,8 @@ void MVARead(TString MVA_id, TString signal, TString filename)
 //------------------------------------------------------------------------------
 void AddProcess(TString kind, TString filename)
 {
-  TString fullname = inputdir + filename + ".root";
+
+  TString fullname = storageSite + minitreeDir[nominal] + "/TTDM/" + filename + ".root";
 
   if (gSystem->AccessPathName(fullname))
     {

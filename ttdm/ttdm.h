@@ -4,7 +4,10 @@
 //const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
 
 const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
-//const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/ttDM_withSystematics/"; 
+//const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/preSel/"; 
+//const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/sameSign/"; 
+//const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/ttV/"; 
+
 const TString theproduction = "Helsinki"; 
 //const TString theproduction = ""; 
 
@@ -24,12 +27,16 @@ const float    DYSF = 1.0;  const float eDYSF = 0.07;
 
 const bool doshape = false; 
 
-const TCut selection = "metPfType1>0.&&mt2ll>0."; 
+//const TCut selection = "darkpt>0. && mt2ll > 80. && metPfType1 > 80."; 
+const TCut selection = "mt2ll > 80. && fabs(m2l - 91.) < 15."; 
 
+const TString region = "SR";
 
 const TCut soft_cut = "metPfType1>80."; 
-const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>0."; 
+const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>=0."; 
+//const TCut MVA_cut  = soft_cut&&"          mt2ll>80&&darkpt>=0.";
 TCut MVA_cut;
+
 
 const float inicio = 0.00;
 const float paso   = 0.02;
@@ -41,7 +48,9 @@ enum{ data,
       TT,
       ST,
       DY,
-      TTV,
+      //TTV,
+      TTW,
+      TTZ,
       WW,
       WZ, 
       VZ,
@@ -122,7 +131,7 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
-      MVAtanh, MVAsigm,	
+      //MVAtanh, MVAsigm,	
       nhisto };
 
 TCut eventW[nsystematic];  
@@ -147,12 +156,16 @@ void Assign(){
 	//----------
 
 	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	//processID[data ] = "01_Data"        ;
 	processID[data ] = "01_Data_1outof15"        ;
+	//processID[fakes] = "00_Fakes"       ; 
 	processID[fakes] = "00_Fakes_1outof15"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
-	processID[TTV  ] = "09_TTV"                  ; 
+	//processID[TTV  ] = "09_TTV"                  ; 
+	processID[TTW  ] = "09_TTW"                  ; 
+	processID[TTZ  ] = "09_TTZ"                  ; 
 	processID[WW   ] = "06_WW"                   ; 
 	processID[WZ   ] = "02_WZTo3LNu"             ; 
 	processID[VZ   ] = "03_VZ"                   ; 
@@ -241,26 +254,26 @@ void Assign(){
 
 	//----------
 
-	eventW[nominal  ] = "eventW"          *selection;
-	eventW[Btagup   ] = "eventW_Btagup"   *selection;
-	eventW[Btagdo   ] = "eventW_Btagdo"   *selection;
-	eventW[Idisoup  ] = "eventW_Idisoup"  *selection;
-	eventW[Idisodo  ] = "eventW_Idisodo"  *selection;
-	eventW[Triggerup] = "eventW_Triggerup"*selection;
-	eventW[Triggerdo] = "eventW_Triggerdo"*selection;
-	eventW[METup    ] = "eventW"          *selection;
-	eventW[METdo    ] = "eventW"          *selection;
-	eventW[JESup    ] = "eventW"          *selection;
-	eventW[JESdo    ] = "eventW"          *selection;
-	eventW[EleESup  ] = "eventW"          *selection;
-	eventW[EleESdo  ] = "eventW"          *selection;
-	eventW[MuESup   ] = "eventW"          *selection;
-	eventW[MuESdo   ] = "eventW"          *selection;
-	eventW[QCDup    ] = "eventW"          *selection;
-	eventW[QCDdo    ] = "eventW"          *selection;
-	eventW[PDFup    ] = "eventW"          *selection;
-	eventW[PDFdo    ] = "eventW"          *selection;
-	eventW[toppTrw  ] = "eventW"          *selection;
+	eventW[nominal  ] = "eventW"          ;
+	eventW[Btagup   ] = "eventW_Btagup"   ;
+	eventW[Btagdo   ] = "eventW_Btagdo"   ;
+	eventW[Idisoup  ] = "eventW_Idisoup"  ;
+	eventW[Idisodo  ] = "eventW_Idisodo"  ;
+	eventW[Triggerup] = "eventW_Triggerup";
+	eventW[Triggerdo] = "eventW_Triggerdo";
+	eventW[METup    ] = "eventW"          ;
+	eventW[METdo    ] = "eventW"          ;
+	eventW[JESup    ] = "eventW"          ;
+	eventW[JESdo    ] = "eventW"          ;
+	eventW[EleESup  ] = "eventW"          ;
+	eventW[EleESdo  ] = "eventW"          ;
+	eventW[MuESup   ] = "eventW"          ;
+	eventW[MuESdo   ] = "eventW"          ;
+	eventW[QCDup    ] = "eventW"          ;
+	eventW[QCDdo    ] = "eventW"          ;
+	eventW[PDFup    ] = "eventW"          ;
+	eventW[PDFdo    ] = "eventW"          ;
+	eventW[toppTrw  ] = "eventW_Toppt"    ;
 
 
 
@@ -345,8 +358,8 @@ void Assign(){
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
-	b_name[MVAtanh] = "ANN_tanh_mt2ll80_ttDM0001scalar00010";
-	b_name[MVAsigm] = "ANN_sigm_mt2ll80_ttDM0001scalar00010";
+	//b_name[MVAtanh] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010";
+	//b_name[MVAsigm] = "ANN_sigm_mt2ll80_regina_ttDM0001scalar00010";
 
 
 	for( int i = 0; i < nhisto; i++ ){
