@@ -58,6 +58,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //if ( _nentries > 1000 )  _nentries = 1000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
+    //if (jentry%15!=0) continue; 
+
     //cout << "\n" << jentry << endl;
 
     Long64_t ientry = LoadTree(jentry);

@@ -22,9 +22,9 @@ void MakeDatacard(){
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			if ( m != ttDM0001scalar00500 && m != ttDM0001scalar00500 ) continue;
+			if ( m != ttDM0001scalar00010 && m != ttDM0001scalar00010 ) continue;
 
-			MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
+			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
 
 			processID[ttDM] = scalarID[m]; 
 			//processID[ttDM] = pseudoID[m]; 
@@ -32,18 +32,16 @@ void MakeDatacard(){
 
 			for( int i = 0; i < nprocess; i++ ){
 
+				if ( i == Wg || i == Zg ) continue; 
 		
 				GetRelUnc( i );
 
 			}
 
-			//GetRelUnc( DY );
-
-			cout << " ...writing starts " << endl; 
+			//GetRelUnc( TT );
 
 			WriteDatacard( scalarMVAcut[m] ); //threshold);
 
-			cout << " ...writing ended" << endl;
 
 		} 
 
@@ -51,10 +49,9 @@ void MakeDatacard(){
 
 }
 
-
 void GetRelUnc( int process ){
 
-	if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
+	//if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
 
 	cout << "\n\n\n" + processID[process] + "\n" << endl;
 
@@ -63,12 +60,15 @@ void GetRelUnc( int process ){
 
 	for( int j = 0; j < nsystematic; j++ ){ 
 
+		//if ( j !=toppTrw ) continue;
+
 		TCanvas* c1 = new TCanvas("canvas", "the canvas");  
 
 		TString filename;
 
-		if( process == ttDM ){ filename =  storageSite + minitreeDir[j] + "/TTDM/" + processID[process] + ".root"; }
-		else                 { filename =  storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root"; }
+		if( process == data || process == fakes || process == TTV || process == Wg || process == Zg ){ filename =  storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root"; }
+
+		else{ filename =  storageSite + minitreeDir[j] + "/TTDM/" + processID[process] + ".root"; }
 
 		TFile* myfile = new TFile( filename, "read" ); 
 
@@ -91,55 +91,30 @@ void GetRelUnc( int process ){
 	
 
 		// QCD 
-	
-		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= QCDdo ){ //&& process != HZ
+
+		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= PDFdo ){ //&& process != HZ
+
+			int bin; 
+
+			if( j == QCDup ) bin = 8; 
+			if( j == QCDdo ) bin = 4; 
+			if( j == PDFup ) bin = 9; 
+			if( j == PDFdo ) bin = 10; 
 	  
 			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
 
-			float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
-			float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
+			float norm = weights->GetBinContent(bin+1)/weights->GetBinContent(1);
 
-			float pdf_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
-			float pdf_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
-
-
-			mytree -> Draw( "metPfType1 >> htemp_QCDup_soft", soft_cut*"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
-			mytree -> Draw( "metPfType1 >> htemp_QCDup_hard", hard_cut*"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
-			mytree -> Draw( "metPfType1 >> htemp_QCDup_MVA" , MVA_cut *"eventW*(LHEweight[8]/LHEweight[0])"*Form("%7.4f", qcd_norm_up));
-
-			mytree -> Draw( "metPfType1 >> htemp_QCDdo_soft", soft_cut*"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
-			mytree -> Draw( "metPfType1 >> htemp_QCDdo_hard", hard_cut*"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
-			mytree -> Draw( "metPfType1 >> htemp_QCDdo_MVA" , MVA_cut *"eventW*(LHEweight[4]/LHEweight[0])"*Form("%7.4f", qcd_norm_do));
-
-			mytree -> Draw( "metPfType1 >> htemp_PDFup_soft", soft_cut*"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
-			mytree -> Draw( "metPfType1 >> htemp_PDFup_hard", hard_cut*"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
-			mytree -> Draw( "metPfType1 >> htemp_PDFup_MVA" , MVA_cut *"eventW*(LHEweight[9]/LHEweight[0])"*Form("%7.4f", pdf_norm_up));
-
-			mytree -> Draw( "metPfType1 >> htemp_PDFdo_soft", soft_cut*"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
-			mytree -> Draw( "metPfType1 >> htemp_PDFdo_hard", hard_cut*"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
-			mytree -> Draw( "metPfType1 >> htemp_PDFdo_MVA" , MVA_cut *"eventW*(LHEweight[10]/LHEweight[0])"*Form("%7.4f", pdf_norm_do));
+			mytree -> Draw( "metPfType1 >> htemp_theory_soft", soft_cut*Form("eventW*(LHEweight[%d]/LHEweight[0])*%7.4f", bin, norm));
+			mytree -> Draw( "metPfType1 >> htemp_theory_hard", hard_cut*Form("eventW*(LHEweight[%d]/LHEweight[0])*%7.4f", bin, norm));
+			mytree -> Draw( "metPfType1 >> htemp_theory_MVA" , MVA_cut *Form("eventW*(LHEweight[%d]/LHEweight[0])*%7.4f", bin, norm));
 
 
-			h_syst[QCDup][soft] = (TH1F*) gDirectory -> Get( "htemp_QCDup_soft" );
-			h_syst[QCDup][hard] = (TH1F*) gDirectory -> Get( "htemp_QCDup_hard" );
-			h_syst[QCDup][NN  ] = (TH1F*) gDirectory -> Get( "htemp_QCDup_MVA"  );
-
-			h_syst[QCDdo][soft] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_soft" );
-			h_syst[QCDdo][hard] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_hard" );
-			h_syst[QCDdo][NN  ] = (TH1F*) gDirectory -> Get( "htemp_QCDdo_MVA"  );
-
-			h_syst[PDFup][soft] = (TH1F*) gDirectory -> Get( "htemp_PDFup_soft" );
-			h_syst[PDFup][hard] = (TH1F*) gDirectory -> Get( "htemp_PDFup_hard" );
-			h_syst[PDFup][NN  ] = (TH1F*) gDirectory -> Get( "htemp_PDFup_MVA"  );
-
-			h_syst[PDFdo][soft] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_soft" );
-			h_syst[PDFdo][hard] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_hard" );
-			h_syst[PDFdo][NN  ] = (TH1F*) gDirectory -> Get( "htemp_PDFdo_MVA"  );
+			h_syst[j][soft] = (TH1F*) gDirectory -> Get( "htemp_theory_soft" );
+			h_syst[j][hard] = (TH1F*) gDirectory -> Get( "htemp_theory_hard" );
+			h_syst[j][NN  ] = (TH1F*) gDirectory -> Get( "htemp_theory_MVA"  );
 
 		}
-
-
-//if( process != data && process != fakes && process != ttDM && process != HZ ) getPdfQcd( filename, soft*"eventW" );//, relunc[process][QCDup], relunc[process][QCDdo], relunc[process][PDF] );   // USABLE? 
 
 
 
@@ -147,13 +122,13 @@ void GetRelUnc( int process ){
 
 		if( j == toppTrw && process == TT ){
 
-			/*mytree -> Draw( "metPfType1 >> htemp_toppTrw_soft", soft_cut*"eventW*toppTRwW" );
-			mytree -> Draw( "metPfType1 >> htemp_toppTrw_hard", hard_cut*"eventW*toppTRwW" );
-			mytree -> Draw( "metPfType1 >> htemp_toppTrw_MVA" , MVA_cut *"eventW*toppTRwW" );
+			mytree -> Draw( "metPfType1 >> htemp_toppTrw_soft", soft_cut*"eventW_Toppt" );
+			mytree -> Draw( "metPfType1 >> htemp_toppTrw_hard", hard_cut*"eventW_Toppt" );
+			mytree -> Draw( "metPfType1 >> htemp_toppTrw_MVA" , MVA_cut *"eventW_Toppt" );
 
 			h_syst[toppTrw][soft] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_soft" );
 			h_syst[toppTrw][hard] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_hard" );
-			h_syst[toppTrw][NN  ] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_MVA"  );*/
+			h_syst[toppTrw][NN  ] = (TH1F*) gDirectory -> Get( "htemp_toppTrw_MVA"  );
 
 		}
 
@@ -162,79 +137,91 @@ void GetRelUnc( int process ){
 		relunc[process][j][nrmlz] = -9999.; 
 		relunc[process][j][shape] = -9999.; 
 
-		if( j == DDtt    && process == TT    ){ relunc[process][j][nrmlz] = 1 + ettSF/ttSF; } 
+		if( j == DDtt    && process == TT    ){ relunc[process][j][nrmlz] = 100.00; }//1 + ettSF/ttSF; } 
 		if( j == DDDY    && process == DY    ){ relunc[process][j][nrmlz] = 1 + eDYSF/DYSF; } 
 		if( j == DDfakes && process == fakes ){ relunc[process][j][nrmlz] = 1 + efakes    ; } 
 
-		if( j > toppTrw ) goto closure;  
+		if( j >= DDtt ) goto closure;
+
+		if( j == toppTrw && process != TT ) goto closure;   
 
 		if((j >= QCDup && j <= PDFdo) && (process == data || process == ttDM || process == fakes || process == ST /*|| process == HZ*/)) goto closure;
 
-		if( j == toppTrw /*&& process != TT*/ ) goto closure; 
 
-/*   SPEED UP   */	if( j >= QCDup && j <= PDFdo ) goto closure;
+/*   SPEED UP   */	//if( j >= QCDup && j <= PDFdo ) goto closure;
 
 		for( int k = 0; k < nlevel; k++ ){
 
 			yield[process][j][k] = h_syst[j][k] -> Integral(); 
 
+
+			if( process == TT ){
+						
+				if( j == METup   ) yield[process][j][k] *= 1.00/0.98; 
+				if( j == METdo   ) yield[process][j][k] *= 1.00/0.98; 
+				if( j == JESup   ) yield[process][j][k] *= 0.93/0.98; 
+				if( j == JESdo   ) yield[process][j][k] *= 0.99/0.98; 
+				if( j == EleESup ) yield[process][j][k] *= 0.93/0.98; 
+				if( j == EleESdo ) yield[process][j][k] *= 0.94/0.98; 
+				if( j == MuESup  ) yield[process][j][k] *= 0.98/0.98; 
+				if( j == MuESdo  ) yield[process][j][k] *= 0.92/0.98; 
+ 						
+			}
+
+
 			if( yield[process][j][k] < 0. ) yield[process][j][k] = 0.;   // CAUTION !!!
 		
 			if( process != data && process != fakes ) yield[process][j][k] *= thelumi;
 
-			yield[TT][j][k] *= ttSF; 
+			//yield[TT][j][k] *= ttSF; 
 			yield[DY][j][k] *= DYSF; 
 
 		}
 
 
-		if ( yield[process][nominal][hard] > 0 ) 
-relunc[process][j][nrmlz] = (yield[process][j][hard]/yield[process][j][soft]) / (yield[process][nominal][hard]/yield[process][nominal][soft]); 
+		if( j >= METup  &&  j <= MuESdo ){
 
-		if ( yield[process][nominal][NN  ] > 0 )
-relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / (yield[process][nominal][NN  ]/yield[process][nominal][hard]);
+			if ( yield[process][nominal][hard] > 0 ) 
+			relunc[process][j][nrmlz] = (yield[process][j][hard]/1.0) / (yield[process][nominal][hard]/1.0); 
 
-	//if( process == Wg || process == Zg ) cout << yield[process][j][NN  ] << " -- " << yield[process][j][hard] << " -- " << yield[process][nominal][NN  ] << " -- " << yield[process][nominal][hard] << endl;
 
-		// ? }
+			if ( yield[process][nominal][NN  ] > 0 )
+			relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / (yield[process][nominal][NN  ]/yield[process][nominal][hard]);
 
-		// ? else{s
+		}
 
-		// ? }
+		if( j < METup  ||  j > MuESdo ){
+
+			if ( yield[process][nominal][hard] > 0 ) 
+			relunc[process][j][nrmlz] = (yield[process][j][hard]/yield[process][j][soft]) / (yield[process][nominal][hard]/yield[process][nominal][soft]); 
+
+
+			if ( yield[process][nominal][NN  ] > 0 )
+			relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / (yield[process][nominal][NN  ]/yield[process][nominal][hard]);
+
+		}
+
 
 		// protections
 
-		if( j == QCDup && process == TT ){ 
+		if( j >= QCDup && j <= PDFdo && process == TT ){ 
 
-			relunc[ttDM][QCDup][nrmlz] = relunc[TT][QCDup][nrmlz];  
-			relunc[ttDM][QCDup][shape] = relunc[TT][QCDup][shape];
-
-		}
-
-		if( j == QCDdo && process == TT ){ 
-
-			relunc[ttDM][QCDdo][nrmlz] = relunc[TT][QCDdo][nrmlz];  
-			relunc[ttDM][QCDdo][shape] = relunc[TT][QCDdo][shape];
+			relunc[ttDM][j][nrmlz] = relunc[TT][j][nrmlz];  
+			relunc[ttDM][j][shape] = relunc[TT][j][shape];
 
 		}
 
-		if( j == PDFup && process == TT ){ 
+		if( region == "SR" ){   // remove TT-nrmlz in SR
 
-			relunc[ttDM][PDFup][nrmlz] = relunc[TT][PDFup][nrmlz];  
-			relunc[ttDM][PDFup][shape] = relunc[TT][PDFup][shape];
-
-		}
-
-		if( j == PDFdo && process == TT ){ 
-
-			relunc[ttDM][PDFdo][nrmlz] = relunc[TT][PDFdo][nrmlz];  
-			relunc[ttDM][PDFdo][shape] = relunc[TT][PDFdo][shape];
+			if( process == fakes || process == TT || process == DY ) relunc[process][j][nrmlz] = -9999.; 
 
 		}
 
-		// DataDriven backgrounds: 
+		if( region == "CR" ){   // keep TT-nrmlz in CR
 
-		if( process == fakes || process == TT || process == DY ) relunc[process][j][nrmlz] = -9999.; 
+			if( process == fakes ||                  process == DY ) relunc[process][j][nrmlz] = -9999.; 
+
+		}
 
 		closure : 
 
@@ -251,25 +238,34 @@ void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170516/%s_%s_%4.2f.txt", processID[ttDM].Data(), "mt2ll100", threshold ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170525/%s_%s_%4.2f_%s_fixed.txt", processID[ttDM].Data(), "mt2ll80", threshold, region.Data() ) );
 
 	datacard << "imax 1 number of channels \n" ;
-	datacard << Form( "jmax %d number of backgrounds \n", nprocess-2 );
+	datacard << Form( "jmax %d number of backgrounds \n", 9 ); //nprocess );
 	datacard << Form( "kmax %d number of nuisance parameters \n", nsystematic-1 );
 	datacard << "------------ \n" ;
 	datacard << "\n" ;
-	datacard << "bin 1 \n" ;
-	datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);
+	datacard << Form("bin %s \n", region.Data());
+if( region == "SR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);   }
+if( region == "CR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][hard]); }
 	datacard << "------------\n" ;
 	datacard << "\n" ;
-datacard << "bin        \t     \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \t   1   \n";//\t   1   \t   1  \n" ;
-datacard << "process    \t     \t  DM   \t fakes \t  TT   \t  ST   \t  DY   \t  TTV  \t  WW   \t  WZ   \t  VZ   \t  VVV  \t  Wg   \t  Zg   \n";//\t  HWW  \t  HZ  \n" ;
-datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   8   \t   9   \t  10   \t  11   \n";//\t  12   \t  13  \n" ;
-datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", //%7.3f %7.3f \n", 
+datacard << Form("bin        \t     \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \n",
+	    region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data()  );//\t   1   \t   1   \n";//\t   1   \t   1  \n" ;
+datacard << "process    \t     \t  DM   \t fakes \t  TT   \t  ST   \t  DY   \t  TTV  \t  WW   \t  WZ   \t  VZ   \t  VVV  \n";//\t  Wg   \t  Zg   \n";//\t  HWW  \t  HZ  \n" ;
+datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   8   \t   9   \n";//\t  10   \t  11   \n";//\t  12   \t  13  \n" ;
+if( region == "SR" ){
+datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", /*%7.3f %7.3f \n", //%7.3f %7.3f \n",*/ 
                     yield[ttDM][nominal][NN]/9, yield[fakes][nominal][NN], yield[TT][nominal][NN], yield[ST][nominal][NN], yield[DY][nominal][NN], 
-		    yield[TTV][nominal][NN], yield[WW][nominal][NN], yield[WZ][nominal][NN], yield[VZ][nominal][NN], yield[VVV][nominal][NN], 
-		    yield[Wg][nominal][NN], yield[Zg][nominal][NN] /*yield[HWW][nominal][NN], yield[HZ][nominal][NN]*/ );
-
+		    yield[TTV][nominal][NN], yield[WW][nominal][NN], yield[WZ][nominal][NN], yield[VZ][nominal][NN], yield[VVV][nominal][NN] 
+		    /*, yield[Wg][nominal][NN], yield[Zg][nominal][NN], yield[HWW][nominal][NN], yield[HZ][nominal][NN]*/ );
+}
+if( region == "CR" ){
+datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", /*%7.3f %7.3f \n", //%7.3f %7.3f \n",*/ 
+                    yield[ttDM][nominal][hard]/9, yield[fakes][nominal][hard], yield[TT][nominal][hard], yield[ST][nominal][hard], yield[DY][nominal][hard], 
+		    yield[TTV][nominal][hard], yield[WW][nominal][hard], yield[WZ][nominal][hard], yield[VZ][nominal][hard], yield[VVV][nominal][hard]
+		    /*, yield[Wg][nominal][hard], yield[Zg][nominal][hard], yield[HWW][nominal][hard], yield[HZ][nominal][hard]*/ );
+}
 	datacard << "------------ \n" ;
 
 	for( int j = 1; j < nsystematic; j++ ){   // systematic
@@ -283,9 +279,10 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 			if( j == DDDY    && k == shape ) continue; 
 			if( j == DDfakes && k == shape ) continue; 
 
-			datacard << Form( "%s_%s \t lnN \t", systematicIDdatacard[j].Data(), systtypeID[k].Data() ); 
+			if ( j == DDtt && k == nrmlz ) datacard << Form( "%s_%s \t lnU \t", systematicIDdatacard[j].Data(), systtypeID[k].Data() ); 
+			else                           datacard << Form( "%s_%s \t lnN \t", systematicIDdatacard[j].Data(), systtypeID[k].Data() ); 
 
-			for( int i = 1; i < nprocess; i++ ){   // process
+			for( int i = 1; i <= VVV; i++ ){   // process
 
 				if( relunc[i][j][k] < 0 ){
 
@@ -294,8 +291,21 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 				}
 
 				else {
- 
-					datacard << Form( "%7.3f ", relunc[i][j][k] );
+ 					float figure = relunc[i][j][k]; 
+
+					if( j < toppTrw ){
+
+						figure = 1+(relunc[i][j][k]-relunc[i][j+1][k])/2; // (up-down)/2
+
+						if( figure < 0.80 )  figure = 0.80;   // cheating...
+						if( figure > 1.20 )  figure = 1.20;   // cheating... 
+
+					} 
+
+					if( figure < 1.0 ) figure = 2 - figure; 
+
+
+					datacard << Form( "%7.3f ", figure );					
 
 				}
 

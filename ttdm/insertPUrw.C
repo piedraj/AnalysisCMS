@@ -18,10 +18,10 @@ void insertPUrw(){
 	//insertPUrw2( WZ ); 
 	//insertPUrw2( VZ ); 
 	//insertPUrw2( TT ); 
-	insertPUrw2( ST ); 
-	insertPUrw2( WW ); 
-	insertPUrw2( DY ); 
-	insertPUrw2( VVV );
+	//insertPUrw2( ST ); 
+	//insertPUrw2( WW ); 
+	//insertPUrw2( DY ); 
+	//insertPUrw2( VVV );
 	insertPUrw2( ttDM ); 
 
 	//for( int i = 0; i < nprocess; i++ ){
@@ -34,64 +34,73 @@ void insertPUrw(){
 
 void insertPUrw2( int process ){
 
-	cout << "\n\n\n\n" << processID[process] << "\n\n" <<  endl; 
+	cout << "\n\n" << processID[process] << "\n" << endl; 	
 
-	TFile myfile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "update" ); 
+	WriteBranch == 1    ?    cout << "\t\t ***** writing... ***** \n" << endl    :    cout << "\t\t ***** not writing... ***** \n" << endl; 
+	
 
-	TTree* mytree = (TTree*) myfile.Get( "latino" );
+	for( int k = nominal; k <= nominal; k++ ){ 
 
+		cout << "\t systematic: " << systematicID[k] << endl;
 
-	//----- read -------------------------------------------------------
+		TFile myfile( storageSite + minitreeDir[k] + "/TTDM/" + processID[process] + ".root", "update" );
 
-	float nvtx; mytree -> SetBranchAddress("nvtx", &nvtx); 
-
-
-	float new_puW;
-
-	TBranch* b_new_puW = mytree -> Branch( "new_puW", &new_puW, "new_puW/F" );
+		TTree* mytree = (TTree*) myfile.Get( "latino" );
 
 
-	//----- loop -------------------------------------------------------
+		//----- read -------------------------------------------------------
 
-	int nentries = mytree->GetEntries(); 
-
-	for ( Long64_t ievt = 0; ievt < nentries; ievt++ ) {
-	//for ( Long64_t ievt = 0; ievt < 1; ievt++ ) {
-
-		if( ievt%10000 == 0 ) cout << "\n\n ievt: " << ievt << endl;
-
-		mytree->GetEntry(ievt);
-
-		if( nvtx > 29 ) nvtx = 29; 
+		float nvtx; mytree -> SetBranchAddress("nvtx", &nvtx); 
 
 
-		if( process == data ){ 
+		float new_puW;
 
-			new_puW = 1.0;
+		TBranch* b_new_puW = mytree -> Branch( "new_puW", &new_puW, "new_puW/F" );
 
-		}
 
-		else{
+		//----- loop -------------------------------------------------------
 
-			new_puW = h_pu -> GetBinContent( h_pu->FindBin(nvtx) );
+		int nentries = mytree->GetEntries(); 
 
-		}
+		for ( Long64_t ievt = 0; ievt < nentries; ievt++ ) {
+		//for ( Long64_t ievt = 0; ievt < 1; ievt++ ) {
 
-		//cout << nvtx << " --- " << new_puW << endl;
+			if( ievt%10000 == 0 ) cout << "\t\t ievt: " << ievt << endl;
 
-		//--- writing... 
+			mytree->GetEntry(ievt);
 
-		if (WriteBranch){
+			if( nvtx > 29 ) nvtx = 29; 
 
-			b_new_puW -> Fill(); 
- 
-		}
 
-	}   // ievt
+			if( process == data ){ 
 
-	if (WriteBranch) mytree -> Write( "", TObject::kOverwrite );
+				new_puW = 1.0;
 
-  	myfile.Close();
+			}
+
+			else{
+
+				new_puW = h_pu -> GetBinContent( h_pu->FindBin(nvtx) );
+
+			}
+
+			//cout << nvtx << " --- " << new_puW << endl;
+
+			//--- writing... 
+
+			if (WriteBranch){
+
+				b_new_puW -> Fill(); 
+	 
+			}
+
+		} cout << "" << endl;   // ievt
+
+		if (WriteBranch) mytree -> Write( "", TObject::kOverwrite );
+
+	  	myfile.Close();
+	
+	}   // k
 
 }
 
