@@ -386,17 +386,6 @@ void AnalysisCMS::Setup(TString analysis,
   _isminitree   = (_filename.Contains("minitrees")) ? true : false;
   _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
 
-  _dataperiod = "";  // TO BE REMOVED
-
-  //  if (_filename.Contains("21Jun2016_v2_Run2016B")) _dataperiod = "_21Jun2016";  // TO BE REMOVED
-  //  if (_filename.Contains("05Jul2016_Run2016B"))    _dataperiod = "_05Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("08Jul2016_Run2016B"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("08Jul2016_Run2016C"))    _dataperiod = "_08Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("11Jul2016_Run2016C"))    _dataperiod = "_11Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("15Jul2016_Run2016C"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("15Jul2016_Run2016D"))    _dataperiod = "_15Jul2016";  // TO BE REMOVED
-  //  if (_filename.Contains("26Jul2016_Run2016D"))    _dataperiod = "_26Jul2016";  // TO BE REMOVED
-
   TString tok;
 
   Ssiz_t from = 0;
@@ -434,7 +423,7 @@ void AnalysisCMS::Setup(TString analysis,
   printf("  isfastsim: %d\n",        _isfastsim);
   printf(" isminitree: %d\n",        _isminitree);
   
-  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
+  _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix;
   
   TString prefix = (_isminitree) ? "minitrees/" : "";
 
@@ -463,19 +452,20 @@ void AnalysisCMS::ApplyWeights()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyWeights]\n");
 
-  _event_weight           = 1.0;
-  _event_weight_Btagup    = 1.0;
-  _event_weight_Btagdo    = 1.0;
-  _event_weight_BtagFSup  = 1.0;
-  _event_weight_BtagFSdo  = 1.0;
-  _event_weight_Idisoup   = 1.0;
-  _event_weight_Idisodo   = 1.0;
-  _event_weight_Triggerup = 1.0;   
-  _event_weight_Triggerdo = 1.0;
-  _event_weight_Recoup    = 1.0;
-  _event_weight_Recodo    = 1.0;
-  _event_weight_Fastsimup = 1.0;
-  _event_weight_Fastsimdo = 1.0;
+  _event_weight            = 1.0;
+  _event_weight_Btagup     = 1.0;
+  _event_weight_Btagdo     = 1.0;
+  _event_weight_BtagFSup   = 1.0;
+  _event_weight_BtagFSdo   = 1.0;
+  _event_weight_Idisoup    = 1.0;
+  _event_weight_Idisodo    = 1.0;
+  _event_weight_Triggerup  = 1.0;   
+  _event_weight_Triggerdo  = 1.0;
+  _event_weight_Recoup     = 1.0;
+  _event_weight_Recodo     = 1.0;
+  _event_weight_Fastsimup  = 1.0;
+  _event_weight_Fastsimdo  = 1.0;
+  _event_weight_genmatched = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
 
@@ -1365,7 +1355,7 @@ void AnalysisCMS::EndJob()
 
   if (!_isminitree && !_analysis.EqualTo("Stop")) {
 
-    txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _dataperiod + ".txt");
+    txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + ".txt");
 
     txt_summary << "\n";
     txt_summary << Form("   analysis: %s\n",        _analysis.Data());
