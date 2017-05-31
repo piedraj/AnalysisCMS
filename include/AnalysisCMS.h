@@ -25,7 +25,7 @@ struct Lepton
   int            flavour;
   float          idisoW;
   float          iso;
-  float          motherID;
+  float          motherPID;
   TLorentzVector v;
 };
 
@@ -210,8 +210,6 @@ class AnalysisCMS : public AnalysisBase
   TString                _minitreepath;
 
   float                  _channel;
-  float                  _darketa_gen;   
-  float                  _darkphi_gen;
   float 		 _darkpt; 
   float                  _darkpt_gen;
   float                  _deltarjet1met;
@@ -251,7 +249,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Fastsimup;
   float                  _event_weight_Fastsimdo;
   float                  _event_weight_Toppt;
-  bool                   _event_weight_genMatched; 
+  float                  _event_weight_genmatched; 
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
