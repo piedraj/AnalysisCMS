@@ -92,7 +92,7 @@ void MVA(float metPfType1_cut = 80.,
 
       for( int k = 0; k < nsystematic; k++ ){
 
-	      if (  /* k != nominal &&*/   ( k < METup || k > MuESdo )  ) continue;
+	      if (   k != nominal /*&&  ( k < EleESup || k > MuESdo )*/  ) continue;
 
 	     /* MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
 	      MVARead(MVA_id, signal, "01_Data_1outof15", k);
@@ -103,15 +103,14 @@ void MVA(float metPfType1_cut = 80.,
 	      //MVARead(MVA_id, signal, "01_Data", k);
 	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
 	      ///MVARead(MVA_id, signal, "03_VZ", k);
-	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
 	      ///MVARead(MVA_id, signal, "05_ST", k);
 	      ///MVARead(MVA_id, signal, "06_WW", k);
 	      ///MVARead(MVA_id, signal, "07_ZJets", k);
 	      //MVARead(MVA_id, signal, "10_HWW", k);
 	      ///MVARead(MVA_id, signal, "13_VVV", k);
 	      //MVARead(MVA_id, signal, "14_HZ", k);
-
-	      MVARead(MVA_id, signal, signal, k);
+	      //MVARead(MVA_id, signal, signal, k);
 
       } // k 
 

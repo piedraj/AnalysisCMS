@@ -40,7 +40,8 @@ void insertPUrw2( int process ){
 	
 
 	//for( int k = MuESup; k <= MuESdo; k++ ){ 
-	for( int k = 0; k <= nominal; k++ ){ 
+	//for( int k = 0; k <= nominal; k++ ){ 
+	  for( int k = nominal; k <= nominal; k++ ){ 
 
 		cout << "\t systematic: " << systematicID[k] << endl;
 

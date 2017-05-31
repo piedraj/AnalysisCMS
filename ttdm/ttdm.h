@@ -8,8 +8,9 @@ const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/";
 //const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/sameSign/"; 
 //const TString storageSite   = "/afs/cern.ch/user/c/cprieels/work/public/CMSSW_8_0_5/src/AnalysisCMS/minitrees/ttV/"; 
 
-const TString theproduction = "Helsinki"; 
+//const TString theproduction = "Helsinki"; 
 //const TString theproduction = ""; 
+const TString theproduction = "Dejavu"; 
 
 const float thelumi = 35.9/15; 
 
@@ -31,12 +32,6 @@ const bool doshape = false;
 const TCut selection = "mt2ll > 80. && fabs(m2l - 91.) < 15."; 
 
 const TString region = "SR";
-
-const TCut soft_cut = "metPfType1>80."; 
-const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>=0."; 
-//const TCut MVA_cut  = soft_cut&&"          mt2ll>80&&darkpt>=0.";
-TCut MVA_cut;
-
 
 const float inicio = 0.00;
 const float paso   = 0.02;
@@ -117,20 +112,21 @@ enum{ 	nominal,
 	DDfakes,
 	nsystematic }; 
 
-enum{ lep1pt, lep1eta, lep1phi, lep1mass,
-      lep2pt, lep2eta, lep2phi, lep2mass,
-      jet1pt, jet1eta, jet1phi, jet1mass,
-      jet2pt, jet2eta, jet2phi, jet2mass,
-      metPfType1, metPfType1Phi,
-      m2l, mt2ll, mt2lblb, mtw1, mtw2,
-      ht, htjets, htnojets,
-      njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
-      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
-      top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
-      nvtx, //ntrueint,
+enum{ ///lep1pt, lep1eta, lep1phi, lep1mass,
+      ///lep2pt, lep2eta, lep2phi, lep2mass,
+      ///jet1pt, jet1eta, jet1phi, jet1mass,
+      ///jet2pt, jet2eta, jet2phi, jet2mass,
+      metPfType1, ///metPfType1Phi,
+      ///m2l, mt2ll, mt2lblb, mtw1, mtw2,
+      ///ht, htjets, htnojets,
+      ///njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
+      ///dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
+      ///top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
+      ///nvtx, //ntrueint,
       //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
       darkpt,
+      ///darkpt,
       //MVAtanh, MVAsigm,	
       nhisto };
 
@@ -288,7 +284,7 @@ void Assign(){
 
 	//----------
 
- 	b_name[lep1pt  ] = "lep1pt"  ;
+ 	/*b_name[lep1pt  ] = "lep1pt"  ;
 	b_name[lep1eta ] = "lep1eta" ;
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
@@ -306,10 +302,10 @@ void Assign(){
 	b_name[jet2pt  ] = "jet2pt"  ;
 	b_name[jet2eta ] = "jet2eta" ;
 	b_name[jet2phi ] = "jet2phi" ;
-	b_name[jet2mass] = "jet2mass";
+	b_name[jet2mass] = "jet2mass";*/
 
 	b_name[metPfType1   ] = "metPfType1";
-	b_name[metPfType1Phi] = "metPfType1Phi";
+	/*b_name[metPfType1Phi] = "metPfType1Phi";
 
 	b_name[m2l    ] = "m2l"    ;
 	b_name[mt2ll  ] = "mt2ll"  ;
@@ -347,7 +343,7 @@ void Assign(){
 	b_name[top2pt_gen  ] = "top2pt_gen"  ;
 	b_name[detatt_gen  ] = "detatt_gen"  ;
 
-	b_name[nvtx        ] = "nvtx"        ;
+	b_name[nvtx        ] = "nvtx"        ;*/
 	//b_name[ntrueint    ] = "ntrueint"    ;
 
 	//b_name[scale       ] = "scale"        ;
@@ -358,6 +354,7 @@ void Assign(){
 	//b_name[planarity ] = "planarity" ;
 
 	b_name[darkpt    ] = "darkpt";
+	///b_name[darkpt    ] = "darkpt";
 	//b_name[MVAtanh] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010";
 	//b_name[MVAsigm] = "ANN_sigm_mt2ll80_regina_ttDM0001scalar00010";
 

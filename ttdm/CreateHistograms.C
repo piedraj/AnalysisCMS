@@ -4,6 +4,8 @@ const TString outputdir = "histos/";
 
 void CreateHistograms2( int process );
 
+float cuentita = 0.0; 
+
 
 void CreateHistograms(){
 
@@ -15,12 +17,15 @@ void CreateHistograms(){
 
 	for( int i = 0; i < nprocess; i++ ){
 
-	  CreateHistograms2( i ); 
+	 	CreateHistograms2( i ); 
+
+	}
 
 	}
 
 	//CreateHistograms2( TT );
 	//CreateHistograms2( ttDM );
+	//CreateHistograms2( data );
 
 	//-----
 
@@ -32,6 +37,8 @@ void CreateHistograms(){
 
 	//-----
 
+	cout << "\n\n \t yield total = " << cuentita << endl;
+ 
 	cout << "\n \n The End !!! \n \n" << endl; 
 
 }
@@ -43,11 +50,9 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k < nsystematic; k++ ){ 
 
-
 	  if( k > nominal ) continue; 
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
-
 
 		TCanvas* c1 = new TCanvas("canvas", "the canvas");
 	
@@ -60,8 +65,8 @@ void CreateHistograms2( int process ){
 		//myfile = new TFile( storageSite + minitreeDir[k] + "/TTDM/" + processID[process] + ".root", "read" );
 
 
-		//if( process == data || process == fakes || process == TTV || process == Wg || process == Zg ){ 
-		if( process == data || process == fakes || process == TTZ || process == TTW || process == Wg || process == Zg ){ 
+		if( process == data || process == fakes || process == TTV || process == Wg || process == Zg ){ 
+
 
 			myfile = new TFile( storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root", "read" ); 
 
@@ -85,9 +90,9 @@ void CreateHistograms2( int process ){
 
 		TCut thecut = eventW[k]; 
 
-		thecut = selection                   *thecut;
-	        //if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
-                if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
+                                                     thecut = selection                   *thecut;
+		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
+                //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
 		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
@@ -141,7 +146,7 @@ void CreateHistograms2( int process ){
 
 		}
 
-		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		/*mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", thecut );
 		mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", thecut );
@@ -159,10 +164,10 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[jet2pt       ] + " >> " + h_name[jet2pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[jet2eta      ] + " >> " + h_name[jet2eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[jet2phi      ] + " >> " + h_name[jet2phi      ] + "(  200, -3.2,    3.2 )", thecut );
-		mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", thecut );
+		mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", thecut );*/
 
 		mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", thecut );
-		mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", thecut );
+		/*mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", thecut );
 
 		mytree -> Draw( b_name[m2l          ] + " >> " + h_name[m2l          ] + "( 3000,  0,   3000   )", thecut );
 		mytree -> Draw( b_name[mt2ll        ] + " >> " + h_name[mt2ll        ] + "( 3000,  0,   3000   )", thecut );
@@ -227,6 +232,12 @@ void CreateHistograms2( int process ){
 		for( int i = 0; i < nhisto; i++ ){	
 
 			/*if( i == mt2ll )*/ myhisto[i] -> Write(); 
+
+			float yield = ( process == data || process == fakes ) ? myhisto[i]-> Integral() : 2.391*myhisto[i]-> Integral();
+
+			cout << "\t\t" << yield << endl; 
+
+			if( process != data && process != ttDM ) cuentita += yield;
 
 		}
 

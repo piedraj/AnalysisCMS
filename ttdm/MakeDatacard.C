@@ -24,7 +24,7 @@ void MakeDatacard(){
 
 			if ( m != ttDM0001scalar00010 && m != ttDM0001scalar00010 ) continue;
 
-			MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
+			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
 
 			processID[ttDM] = scalarID[m]; 
 			//processID[ttDM] = pseudoID[m]; 
@@ -49,10 +49,9 @@ void MakeDatacard(){
 
 }
 
-
 void GetRelUnc( int process ){
 
-	if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
+	//if ( process == TT ) processID[process] = processID[WW];  // to avoid to go through TT sample -> for checks 
 
 	cout << "\n\n\n" + processID[process] + "\n" << endl;
 
@@ -92,7 +91,6 @@ void GetRelUnc( int process ){
 	
 
 		// QCD 
-
 		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= PDFdo ){ //&& process != HZ
 
 			int bin; 
@@ -154,6 +152,21 @@ void GetRelUnc( int process ){
 		for( int k = 0; k < nlevel; k++ ){
 
 			yield[process][j][k] = h_syst[j][k] -> Integral(); 
+
+
+			if( process == TT ){
+						
+				if( j == METup   ) yield[process][j][k] *= 1.00/0.98; 
+				if( j == METdo   ) yield[process][j][k] *= 1.00/0.98; 
+				if( j == JESup   ) yield[process][j][k] *= 0.93/0.98; 
+				if( j == JESdo   ) yield[process][j][k] *= 0.99/0.98; 
+				if( j == EleESup ) yield[process][j][k] *= 0.93/0.98; 
+				if( j == EleESdo ) yield[process][j][k] *= 0.94/0.98; 
+				if( j == MuESup  ) yield[process][j][k] *= 0.98/0.98; 
+				if( j == MuESdo  ) yield[process][j][k] *= 0.92/0.98; 
+ 						
+			}
+
 
 			if( yield[process][j][k] < 0. ) yield[process][j][k] = 0.;   // CAUTION !!!
 		
@@ -224,7 +237,7 @@ void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170523/%s_%s_%4.2f_%s_definitiva_averaging.txt", processID[ttDM].Data(), "mt2ll80", threshold, region.Data() ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170525/%s_%s_%4.2f_%s_fixed.txt", processID[ttDM].Data(), "mt2ll80", threshold, region.Data() ) );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", 9 ); //nprocess );
@@ -232,7 +245,8 @@ void WriteDatacard( float threshold ){
 	datacard << "------------ \n" ;
 	datacard << "\n" ;
 	datacard << Form("bin %s \n", region.Data());
-	datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);
+	if( region == "SR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);   }
+	if( region == "CR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][hard]); }
 	datacard << "------------\n" ;
 	datacard << "\n" ;
 datacard << Form("bin        \t     \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \n",
@@ -286,6 +300,8 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 						if( figure > 1.20 )  figure = 1.20;   // cheating... 
 
 					} 
+
+					if( figure < 1.0 ) figure = 2 - figure; 
 
 					datacard << Form( "%7.3f ", figure );					
 
