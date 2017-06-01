@@ -1,3 +1,4 @@
+#include "TCanvas.h"
 #include "TFile.h"
 #include "TLorentzVector.h"
 #include "TTree.h"
@@ -30,7 +31,7 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //    fraction of duplicates            = 0.103%
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part7.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part0.root")
 {
   TFile* file = TFile::Open(filename);
 
@@ -152,11 +153,9 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
 	  deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
 
-	  if (abs(std_vector_leptonGen_MotherPID->at(j)) == 11 ||
-	      abs(std_vector_leptonGen_MotherPID->at(j)) == 13 ||
-	      abs(std_vector_leptonGen_MotherPID->at(j)) == 15 ||
-	      abs(std_vector_leptonGen_MotherPID->at(j)) == 23 ||
-	      abs(std_vector_leptonGen_MotherPID->at(j)) == 24) {
+	  if (abs(std_vector_leptonGen_MotherPID->at(j)) == 15 ||  // tau
+	      abs(std_vector_leptonGen_MotherPID->at(j)) == 23 ||  // Z
+	      abs(std_vector_leptonGen_MotherPID->at(j)) == 24) {  // W
 
 	    event_genpromptmatched = true;
 	  }
@@ -165,14 +164,35 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     }
 
     if (event_genpromptmatched) counter_genpromptmatched++;
+
+    if (firstLeptonGen < 999 && secondLeptonGen < 999) {
+
+      if (event_genpromptmatched) continue;  // Comment out this line to see all mothers
+
+      printf("-------\n");
+
+      printf(" RECO lepton 0 matched to GEN lepton %d, with pt,eta,phi,motherPID = %f,%f,%f,%.0f\n",
+	     firstLeptonGen,
+	     std_vector_leptonGen_pt->at(firstLeptonGen),
+	     std_vector_leptonGen_eta->at(firstLeptonGen),
+	     std_vector_leptonGen_phi->at(firstLeptonGen),
+	     std_vector_leptonGen_MotherPID->at(firstLeptonGen));
+
+      printf(" RECO lepton 1 matched to GEN lepton %d, with pt,eta,phi,motherPID = %f,%f,%f,%.0f\n",
+	     secondLeptonGen,
+	     std_vector_leptonGen_pt->at(secondLeptonGen),
+	     std_vector_leptonGen_eta->at(secondLeptonGen),
+	     std_vector_leptonGen_phi->at(secondLeptonGen),
+	     std_vector_leptonGen_MotherPID->at(secondLeptonGen));
+    }
   }
 
 
   // Print the results
   //----------------------------------------------------------------------------
   printf("\n");
-  printf(" number of events genmatched       = %d\n",     counter_genmatched);
-  printf(" number of events genpromptmatched = %d\n",     counter_genpromptmatched);
-  printf(" fraction of duplicates            = %.3f%%\n", 1e2 - 1e2*counter_genpromptmatched/counter_genmatched);
+  printf(" number of events genmatched       = %d\n", counter_genmatched);
+  printf(" number of events genpromptmatched = %d\n", counter_genpromptmatched);
+  printf(" fraction of duplicates            = %.2f%% for %s\n", 1e2 - 1e2*counter_genpromptmatched/counter_genmatched, filename.Data());
   printf("\n");
 }
