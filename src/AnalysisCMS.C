@@ -2281,7 +2281,11 @@ void AnalysisCMS::GetStopVar()
   if (lepIndex[1]>=0) {
     
     TLorentzVector LepGen2;
-    LepGen2.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lepIndex[1]), std_vector_leptonGen_eta->at(lepIndex[1]), std_vector_leptonGen_phi->at(lepIndex[1]), 0.1); // Mass does not matter here
+
+    LepGen2.SetPtEtaPhiM(std_vector_leptonGen_pt->at(lepIndex[1]),
+			 std_vector_leptonGen_eta->at(lepIndex[1]),
+			 std_vector_leptonGen_phi->at(lepIndex[1]),
+			 0.1);  // Mass does not matter here
     
     float DeltaRLep1LepGen2 = (Lepton1.v).DeltaR(LepGen2);
     float DeltaRLep2LepGen2 = (Lepton2.v).DeltaR(LepGen2);
