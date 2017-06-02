@@ -25,7 +25,7 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //    root -l -b -q checkGenMatch.C+
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_WZTo2L2Q__part0.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part0.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
