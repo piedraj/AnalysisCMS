@@ -24,12 +24,6 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //
 //    root -l -b -q checkGenMatch.C+
 //
-// Results reading the latino_TTTo2L2Nu__part7.root tree,
-//
-//    number of events genmatched       = 807582
-//    number of events genpromptmatched = 806753
-//    fraction of duplicates            = 0.103%
-//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part0.root")
 {
@@ -164,27 +158,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     }
 
     if (event_genpromptmatched) counter_genpromptmatched++;
-
-    if (firstLeptonGen < 999 && secondLeptonGen < 999) {
-
-      if (event_genpromptmatched) continue;  // Comment out this line to see all mothers
-
-      printf("-------\n");
-
-      printf(" RECO lepton 0 matched to GEN lepton %d, with pt,eta,phi,motherPID = %f,%f,%f,%.0f\n",
-	     firstLeptonGen,
-	     std_vector_leptonGen_pt->at(firstLeptonGen),
-	     std_vector_leptonGen_eta->at(firstLeptonGen),
-	     std_vector_leptonGen_phi->at(firstLeptonGen),
-	     std_vector_leptonGen_MotherPID->at(firstLeptonGen));
-
-      printf(" RECO lepton 1 matched to GEN lepton %d, with pt,eta,phi,motherPID = %f,%f,%f,%.0f\n",
-	     secondLeptonGen,
-	     std_vector_leptonGen_pt->at(secondLeptonGen),
-	     std_vector_leptonGen_eta->at(secondLeptonGen),
-	     std_vector_leptonGen_phi->at(secondLeptonGen),
-	     std_vector_leptonGen_MotherPID->at(secondLeptonGen));
-    }
   }
 
 
