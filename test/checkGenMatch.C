@@ -182,15 +182,11 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     }
 
 
-    // Fill the counters
+    // Fill the 1st lepton counters
     //--------------------------------------------------------------------------
-    if (firstLeptonGen  == 999) ++counter1_nonprompt;
-    if (secondLeptonGen == 999) ++counter2_nonprompt;
-
-    if (firstLeptonGen < 999 && secondLeptonGen < 999) {
+    if (firstLeptonGen < 999) {
 
       int lep1mpid = abs(std_vector_leptonGen_MotherPID->at(firstLeptonGen));
-      int lep2mpid = abs(std_vector_leptonGen_MotherPID->at(secondLeptonGen));
 
       if      (lep1mpid ==    1) ++counter1_mother_1_d;
       else if (lep1mpid ==    2) ++counter1_mother_2_u;
@@ -210,6 +206,15 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 	++counter1_mother_other;
 	printf(" lep1mpid: %d\n", lep1mpid);
       }
+    }
+    else ++counter1_nonprompt;
+
+
+    // Fill the 2nd lepton counters
+    //--------------------------------------------------------------------------
+    if (secondLeptonGen < 999) {
+
+      int lep2mpid = abs(std_vector_leptonGen_MotherPID->at(secondLeptonGen));
 
       if      (lep2mpid ==    1) ++counter2_mother_1_d;
       else if (lep2mpid ==    2) ++counter2_mother_2_u;
@@ -230,6 +235,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 	printf(" lep2mpid: %d\n", lep2mpid);
       }
     }
+    else ++counter2_nonprompt;
   }
 
 
