@@ -59,6 +59,17 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
     if (ientry < 0) break;
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    //    fChain->SetBranchStatus("*", 0);
+    //    fChain->SetBranchStatus("GEN_weight_SM", 1);
+    //    fChain->SetBranchStatus("Gen_ZGstar_mass", 1);
+    //    fChain->SetBranchStatus("Gen_ZGstar_MomId", 1);
+    //    ...
+    //    ...
+    ////////////////////////////////////////////////////////////////////////////
+
+
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
