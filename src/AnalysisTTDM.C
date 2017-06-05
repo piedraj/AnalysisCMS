@@ -55,10 +55,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
-    //if ( _nentries > 1000 )  _nentries = 1000;  
+    //if ( _nentries > 10000 )  _nentries = 10000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
-    //if (jentry%15!=0) continue; 
+    //if (jentry%50!=0) continue; 
 
     //cout << "\n" << jentry << endl;
 

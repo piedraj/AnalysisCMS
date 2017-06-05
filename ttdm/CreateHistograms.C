@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/ttCR/"; 
+const TString outputdir = "histos/blablabla/"; 
 
 void CreateHistograms2( int process );
 
@@ -15,14 +15,14 @@ void CreateHistograms(){
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	/*for( int i = 0; i < nprocess; i++ ){
 
-	 	CreateHistograms2( i ); 
+		CreateHistograms2( i ); 
 
-	}
+	}*/
 
 
-	//CreateHistograms2( ttDM );
+	CreateHistograms2( fakes );
 
 	//-----
 
@@ -49,7 +49,8 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k < nsystematic; k++ ){ 
 
-		if( k > nominal ) continue; 
+		if( k > nominal          ) continue; 
+		//if( k > MuESdo || k%2==0 ) continue; 
 
 		//cout << "\t\t systematic: " << systematicID[k] << endl;
 
@@ -87,22 +88,24 @@ void CreateHistograms2( int process ){
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-		TCut thecut = eventW[k];
+		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
 
 		TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
 
 		//TCut newselection = ( process == TT   || process == TTSemi ) ? selection&&RemovingFakes : selection               ; 
 
-		TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+		//TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+
+		TCut newselection = selection; 
 
 
                                                      thecut = newselection                *thecut;
-		//if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
+
 		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
-		//if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
-		//if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
+		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
 		/*if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
@@ -153,7 +156,7 @@ void CreateHistograms2( int process ){
 
 		}
 
-		/*mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", thecut );
 		mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", thecut );
@@ -227,9 +230,9 @@ void CreateHistograms2( int process ){
 
 
 		//mytree -> Draw( b_name[MVAtanh] + " >> " + h_name[MVAtanh] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[MVAtanh200] + " >> " + h_name[MVAtanh200] + "( 120,  -0.1, 1.1   )", thecut );*/
+		//mytree -> Draw( b_name[MVAtanh200] + " >> " + h_name[MVAtanh200] + "( 120,  -0.1, 1.1   )", thecut );
 
-		mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 120,  -0.1, 1.1  )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 
@@ -244,7 +247,11 @@ void CreateHistograms2( int process ){
 
 			if(i == 0){ 
 
-				float yield = ( process == data || process == fakes ) ? myhisto[i]-> Integral() : 2.391*myhisto[i]-> Integral();
+				float yield;
+
+				if( process == data                     ) yield =         myhisto[i]-> Integral();
+				if( process == fakes                    ) yield =     1.0*myhisto[i]-> Integral();
+                                if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral();
 
 				cout << "\t\t" << yield << endl; 
 
