@@ -250,6 +250,7 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Fastsimdo;
   float                  _event_weight_Toppt;
   float                  _event_weight_genmatched = true; 
+  float                  _event_weight_truegenmatched = true; 
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;

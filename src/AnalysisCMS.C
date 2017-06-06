@@ -34,7 +34,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _systematic = systematic;
 
-  _minitreepath = "";
+  _minitreepath = "/eos/user/j/jgarciaf/";
 }
 
 
@@ -492,6 +492,9 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
   _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
+
+  _event_weight_truegenmatched = (  std_vector_leptonGen_isPrompt->at(0) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0)  )  
+                               &&(  std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)  );
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
@@ -1576,6 +1579,7 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("eventW_Fastsimdo",  &_event_weight_Fastsimdo,  "eventW_Fastsimdo/F");
   minitree->Branch("eventW_Toppt",      &_event_weight_Toppt,      "eventW_Toppt/F");
   minitree->Branch("eventW_genmatched", &_event_weight_genmatched, "eventW_genmatched/F");
+  minitree->Branch("eventW_truegenmatched", &_event_weight_truegenmatched, "eventW_truegenmatched/F");
   // H
   minitree->Branch("ht",                &_ht,               "ht/F");
   minitree->Branch("htvisible",         &_htvisible,        "htvisible/F");

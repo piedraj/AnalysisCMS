@@ -1,9 +1,9 @@
 // root -l -b -q Plotter.C 
 #include "../test/HistogramReader.C"
 
-const TString inputdir  = "histos/allsyst_wo-fakes/";
+const TString inputdir  = "histos/D-day_CR_em/";
 //const TString outputdir = "figures/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170602_includes-syst/";
+const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170606_no-3-lepton-veto_no-bjet-cut/em/";
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -78,7 +78,7 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("04_TTTo2L2Nu",       "tt #rightarrow 2l",         color_TTTo2L2Nu, roc_background);//, 1.030108192);
   //plotter.AddProcess("04_TTToSemiLepton",  "tt #rightarrow l#nuqq", kYellow+2, roc_background);
   plotter.AddProcess("05_ST",              "tW",         color_ST, roc_background);//, 1.030108192);
-  plotter.AddProcess("00_Fakes_1outof15",  "non-prompt", color_Fakes, roc_background); // -999 is needed to not scale by luminosity
+  //plotter.AddProcess("00_Fakes_1outof15",  "non-prompt", color_Fakes, roc_background); // -999 is needed to not scale by luminosity
 
 
   // Add signals
@@ -89,7 +89,7 @@ void Plotter(TString option = "hist"){
   //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100", color_Signal+2, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200", color_Signal, roc_signal);
   //plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300", color_Signal, roc_signal);
-  plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x10^{4}", color_Signal+4, roc_signal, 10000);
+  //plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x10^{4}", color_Signal+4, roc_signal, 10000);
 
 
   // Add systematics

@@ -5,6 +5,7 @@
 
 const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
 
+//const TString theproduction = "D-day_CR"; 
 const TString theproduction = "fucking-mom"; 
 //const TString theproduction = "Dejavu"; 
 
@@ -24,7 +25,7 @@ const float    DYSF = 1.00 ;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-const TCut selection = "1>0"; 
+const TCut selection = "channel==5"; 
 
 const TString region = "SR";
 

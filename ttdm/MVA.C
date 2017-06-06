@@ -61,7 +61,7 @@ std::vector<TTree*> _mctree;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(float metPfType1_cut = 80.,
          float mt2ll_cut      = 80.,
-	 TString signal     = "ttDM0001scalar00500", 
+	 TString signal     = "ttDM0001scalar00100", 
 	 bool    doMVATrain = 1,
 	 bool    doMVARead  = 1)
 {
@@ -94,26 +94,26 @@ void MVA(float metPfType1_cut = 80.,
 
 	      if (   k != nominal /*&&  ( k < METup || k > MuESdo ) */ ) continue;
 
-	      ///MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
-	      ///MVARead(MVA_id, signal, "01_Data_1outof15", k);
-	      MVARead(MVA_id, signal, "01_Data_Full2016", k);
-	      ///MVARead(MVA_id, signal, "09_TTV", k);
-	      ///MVARead(MVA_id, signal, "12_Zg", k);
+	      MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
+	      MVARead(MVA_id, signal, "01_Data_1outof15", k);
+	      ///MVARead(MVA_id, signal, "01_Data_Full2016", k);
+	      MVARead(MVA_id, signal, "09_TTV", k);
+	      MVARead(MVA_id, signal, "12_Zg", k);
 	      //MVARead(MVA_id, signal, "15_WgStar", k);
-	      ///MVARead(MVA_id, signal, "11_Wg", k);
+	      MVARead(MVA_id, signal, "11_Wg", k);
 	      //MVARead(MVA_id, signal, "01_Data", k);
-	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
-	      ///MVARead(MVA_id, signal, "03_VZ", k);
-	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
-	      ///MVARead(MVA_id, signal, "04_TTToSemiLepton", k);
-	      ///MVARead(MVA_id, signal, "05_ST", k);
-	      ///MVARead(MVA_id, signal, "06_WW", k);
-	      ///MVARead(MVA_id, signal, "07_ZJets", k);
+	      MVARead(MVA_id, signal, "02_WZTo3LNu", k);
+	      MVARead(MVA_id, signal, "03_VZ", k);
+	      MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      //MVARead(MVA_id, signal, "04_TTToSemiLepton", k);
+	      MVARead(MVA_id, signal, "05_ST", k);
+	      MVARead(MVA_id, signal, "06_WW", k);
+	      MVARead(MVA_id, signal, "07_ZJets", k);
 	      //MVARead(MVA_id, signal, "10_HWW", k);
-	      ///MVARead(MVA_id, signal, "13_VVV", k);
+	      MVARead(MVA_id, signal, "13_VVV", k);
 	      //MVARead(MVA_id, signal, "14_HZ", k);
 
-	      ///MVARead(MVA_id, signal, signal, k);
+	      MVARead(MVA_id, signal, signal, k);
 
       } // k 
 
@@ -222,7 +222,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=400:nTest_Signal=400:nTrain_Background=1000:nTest_Background=1000:!V");
+  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=200:nTest_Signal=200:nTrain_Background=1000:nTest_Background=1000:!V");
   //factory->PrepareTrainingAndTestTree("mt2ll>100.&&darkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA

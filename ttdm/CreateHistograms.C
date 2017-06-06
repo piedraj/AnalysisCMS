@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/blablabla/"; 
+const TString outputdir = "histos/D-day_CR_em/"; 
 
 void CreateHistograms2( int process );
 
@@ -15,14 +15,14 @@ void CreateHistograms(){
 
 	//-----
 
-	/*for( int i = 0; i < nprocess; i++ ){
+	for( int i = 0; i < nprocess; i++ ){
 
 		CreateHistograms2( i ); 
 
-	}*/
+	}
 
 
-	CreateHistograms2( fakes );
+	//CreateHistograms2( DY );
 
 	//-----
 
@@ -43,7 +43,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	//if( process == ttDM ) return; 
+	if( process == ttDM || process == fakes ) return; 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
@@ -90,13 +90,15 @@ void CreateHistograms2( int process ){
 
 		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
 
-		TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
+
+		TCut RemovingFakes = "eventW_truegenmatched";
+		//TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
 
 		//TCut newselection = ( process == TT   || process == TTSemi ) ? selection&&RemovingFakes : selection               ; 
 
-		//TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+		TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
 
-		TCut newselection = selection; 
+		//TCut newselection = selection; 
 
 
                                                      thecut = newselection                *thecut;
