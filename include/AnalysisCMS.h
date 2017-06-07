@@ -67,8 +67,6 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetFakeWeights       ();
 
-  void        GetGenPtllWeight     ();
-
   void        GetGenWeightsLHE     ();
 
   void        GetJets              (float    jet_eta_max,
@@ -158,6 +156,8 @@ class AnalysisCMS : public AnalysisBase
 				    double         MT2Precision = 0.);
 
   void        GetScaleAndResolution(); 
+
+  void        GetSampleWeight(); 
 
 
   // Data members
@@ -249,8 +249,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Fastsimup;
   float                  _event_weight_Fastsimdo;
   float                  _event_weight_Toppt;
-  float                  _event_weight_genmatched = true; 
-  float                  _event_weight_truegenmatched = true; 
+  float                  _event_weight_genmatched;
+  float                  _event_weight_truegenmatched;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
@@ -260,7 +260,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
-  float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
   float                  _htvisible;
