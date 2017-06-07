@@ -91,7 +91,7 @@ void CreateHistograms2( int process ){
 		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
 
 
-		TCut RemovingFakes = "eventW_truegenmatched";
+		TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
 		//TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
 
 		//TCut newselection = ( process == TT   || process == TTSemi ) ? selection&&RemovingFakes : selection               ; 
