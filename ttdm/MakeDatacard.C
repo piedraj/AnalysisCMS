@@ -14,23 +14,31 @@ void WriteDatacard( float threshold );
 
 void MakeDatacard(){
 
-	Assign();
+	Assign(); 
    
-	///for( int s = 0; s < (1.-inicio)/paso; s++){
+	int ndatacard = (1.-inicio)/paso; 
 
-	///float threshold = inicio + s*paso; //cout << "the threshold is... " << threshold << endl; 
+	//for( int s = 0; s < ndatacard; s++){
+
+		//float threshold = inicio + s*paso; //cout << "the threshold is... " << threshold << endl; 
+
+		float threshold = 3.141592; 
+
+		cout << "\n \t\t THE THRESHOLD IS... " << threshold << endl; 
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			if ( m != ttDM0001scalar00010 && m != ttDM0001scalar00010 ) continue;
+			if ( m != ttDM0001scalar00500 /*&& m != ttDM0001scalar00010*/ ) continue;
 
-			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), scalarMVAcut[m] ); //threshold);
+			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), threshold); //scalarMVAcut[m] ); //threshold);
+
+			MVA_cut = "metPfType1>80.&&mt2ll>80.&&darkpt>0.";
+
 
 			processID[ttDM] = scalarID[m]; 
 			//processID[ttDM] = pseudoID[m]; 
 
-
-			for( int i = 0; i < nprocess; i++ ){
+			for( int i = 0; i < nprocess; i++ ){ 
 
 				if ( i == Wg || i == Zg ) continue; 
 		
@@ -40,12 +48,12 @@ void MakeDatacard(){
 
 			//GetRelUnc( TT );
 
-			WriteDatacard( scalarMVAcut[m] ); //threshold);
+			WriteDatacard( threshold ); //scalarMVAcut[m]);
 
 
 		} 
 
-	///}   // 's'
+	//}   // 's'
 
 }
 
@@ -67,7 +75,7 @@ void GetRelUnc( int process ){
 		TString filename;
 
 		if( process == data || process == fakes || process == TTV || process == Wg || process == Zg ){ filename =  storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root"; }
-
+		//if( process != TT ){ filename =  storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root"; }
 		else{ filename =  storageSite + minitreeDir[j] + "/TTDM/" + processID[process] + ".root"; }
 
 		TFile* myfile = new TFile( filename, "read" ); 
@@ -77,7 +85,7 @@ void GetRelUnc( int process ){
 
 		if ( j <= MuESdo ){
 
-			TCut myeventW = eventW[j];
+			TCut myeventW = ( process == data || process == fakes )  ?  eventW[nominal] :  eventW[j];
 	
 			mytree -> Draw( "metPfType1 >> htemp_soft", soft_cut*myeventW ); 
 			mytree -> Draw( "metPfType1 >> htemp_hard", hard_cut*myeventW );
@@ -88,6 +96,8 @@ void GetRelUnc( int process ){
 			h_syst[j][NN  ] = (TH1F*) gDirectory -> Get( "htemp_MVA"  );
 
 		}
+
+
 	
 
 		// QCD 
@@ -137,7 +147,7 @@ void GetRelUnc( int process ){
 		relunc[process][j][nrmlz] = -9999.; 
 		relunc[process][j][shape] = -9999.; 
 
-		if( j == DDtt    && process == TT    ){ relunc[process][j][nrmlz] = 100.00; }//1 + ettSF/ttSF; } 
+		if( j == DDtt    && process == TT    ){ relunc[process][j][nrmlz] = 1 + ettSF/ttSF; } 
 		if( j == DDDY    && process == DY    ){ relunc[process][j][nrmlz] = 1 + eDYSF/DYSF; } 
 		if( j == DDfakes && process == fakes ){ relunc[process][j][nrmlz] = 1 + efakes    ; } 
 
@@ -154,43 +164,37 @@ void GetRelUnc( int process ){
 
 			yield[process][j][k] = h_syst[j][k] -> Integral(); 
 
-
-			if( process == TT ){
-						
-				if( j == METup   ) yield[process][j][k] *= 1.00/0.98; 
-				if( j == METdo   ) yield[process][j][k] *= 1.00/0.98; 
-				if( j == JESup   ) yield[process][j][k] *= 0.93/0.98; 
-				if( j == JESdo   ) yield[process][j][k] *= 0.99/0.98; 
-				if( j == EleESup ) yield[process][j][k] *= 0.93/0.98; 
-				if( j == EleESdo ) yield[process][j][k] *= 0.94/0.98; 
-				if( j == MuESup  ) yield[process][j][k] *= 0.98/0.98; 
-				if( j == MuESdo  ) yield[process][j][k] *= 0.92/0.98; 
- 						
-			}
-
-
 			if( yield[process][j][k] < 0. ) yield[process][j][k] = 0.;   // CAUTION !!!
 		
 			if( process != data && process != fakes ) yield[process][j][k] *= thelumi;
 
-			//yield[TT][j][k] *= ttSF; 
+			yield[TT][j][k] *= ttSF; 
 			yield[DY][j][k] *= DYSF; 
 
 		}
 
 
-		if( j >= METup  &&  j <= MuESdo ){
+		//if( j >= METup  &&  j <= MuESdo ){
 
 			if ( yield[process][nominal][hard] > 0 ) 
 			relunc[process][j][nrmlz] = (yield[process][j][hard]/1.0) / (yield[process][nominal][hard]/1.0); 
 
 
-			if ( yield[process][nominal][NN  ] > 0 )
+			if ( yield[process][nominal][NN  ] > 0 ){
+
+			if ( process == ttDM || process == TT ){
+			relunc[process][j][shape] = (yield[process][j][NN  ]/1.0) / (yield[process][nominal][NN  ]/1.0); 
+			}
+
+			else{
 			relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / (yield[process][nominal][NN  ]/yield[process][nominal][hard]);
+			}
 
-		}
+			}
 
-		if( j < METup  ||  j > MuESdo ){
+		//}
+
+		/*if( j < METup  ||  j > MuESdo ){
 
 			if ( yield[process][nominal][hard] > 0 ) 
 			relunc[process][j][nrmlz] = (yield[process][j][hard]/yield[process][j][soft]) / (yield[process][nominal][hard]/yield[process][nominal][soft]); 
@@ -199,7 +203,7 @@ void GetRelUnc( int process ){
 			if ( yield[process][nominal][NN  ] > 0 )
 			relunc[process][j][shape] = (yield[process][j][NN  ]/yield[process][j][hard]) / (yield[process][nominal][NN  ]/yield[process][nominal][hard]);
 
-		}
+		}*/
 
 
 		// protections
@@ -213,7 +217,7 @@ void GetRelUnc( int process ){
 
 		if( region == "SR" ){   // remove TT-nrmlz in SR
 
-			if( process == fakes || process == TT || process == DY ) relunc[process][j][nrmlz] = -9999.; 
+			if( process == fakes || /*process == TT ||*/ process == DY ) relunc[process][j][nrmlz] = -9999.; 
 
 		}
 
@@ -238,7 +242,7 @@ void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170525/%s_%s_%4.2f_%s_fixed.txt", processID[ttDM].Data(), "mt2ll80", threshold, region.Data() ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170601/%s_%s_%4.2f_%s_WTF.txt", processID[ttDM].Data(), "regina", threshold, region.Data() ) );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", 9 ); //nprocess );

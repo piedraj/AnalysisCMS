@@ -55,10 +55,10 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
-    //if ( _nentries > 1000 )  _nentries = 1000;  
+    //if ( _nentries > 10000 )  _nentries = 10000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
 
-    //if (jentry%15!=0) continue; 
+    //if (jentry%50!=0) continue; 
 
     //cout << "\n" << jentry << endl;
 
@@ -106,7 +106,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //FillLevelHistograms(step_2, pass);
 //FillLevelHistograms(step_3, pass);
 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    //pass &= (std_vector_lepton_pt->at(2) < 10.);
 
 
 
@@ -124,7 +124,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //FillLevelHistograms(step_6, pass);
 //pass &= ( metPfType1  > 50.                             );
 //FillLevelHistograms(step_7, pass);
-    pass &= ( _nbjet30csvv2m > 0                            );
+    //pass &= ( _nbjet30csvv2m > 0                            );
 //FillLevelHistograms(step_8, pass);
 
 //FillLevelHistograms(TTDM_01_NewPresel, pass);

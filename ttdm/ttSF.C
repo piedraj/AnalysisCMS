@@ -2,11 +2,11 @@
 
 #include "../include/Constants.h"
 
-enum{ fakes, data, WZ, VZ, TT, ST, WW, DY, TTV, HWW, Wg, Zg, VVV, HZ, WgStar, nprocess }; 
+enum{ fakes, data, WZ, VZ, TT, ST, WW, DY, TTV, Wg, Zg, VVV, nprocess }; 
 
-const float theLumi = 2.15; 
+const float theLumi = 35.87; 
 
-const int nband = 20; 
+const int nband = 8; 
 
 TString processID[nprocess]       ; 
 TH1F*     myhisto[nprocess]       ;
@@ -14,20 +14,20 @@ float       yield[nprocess][nband];
 float          SF          [nband];
 float         eSF          [nband];
 
-float threshold = 100.; 
+float threshold = 80.; 
 float      width = 5.;
 
-const TString  inputdir = "diciembre";  // where the minitrees are stored
+const TString  inputdir = "/eos/user/j/jgarciaf/minitrees/fucking-mom/";  // where the minitrees are stored
 
-const TCut mycut = "eventW*(mt2ll<100.&&njet>=3)";                 
+const TCut mycut = "mt2ll<80.&&darkpt>=0.";                 
 
 void GetHistogram( int process );
 
 
 void ttSF(){
 
-	processID[fakes ] = "00_Fakes_reduced_1outof6"; 
-	processID[data  ] = "01_Data_reduced_1outof6" ; 
+	processID[fakes ] = "00_Fakes_1outof15"; 
+	processID[data  ] = "01_Data_Full2016" ; 
 	processID[WZ    ] = "02_WZTo3LNu"  ; 
 	processID[VZ    ] = "03_VZ"        ; 
 	processID[TT    ] = "04_TTTo2L2Nu" ; 
@@ -35,12 +35,11 @@ void ttSF(){
 	processID[WW    ] = "06_WW"        ; 
 	processID[DY    ] = "07_ZJets"     ; 
 	processID[TTV   ] = "09_TTV"       ; 
-	processID[HWW   ] = "10_HWW"       ; 
 	processID[Wg    ] = "11_Wg"        ; 
 	processID[Zg    ] = "12_Zg"        ; 
 	processID[VVV   ] = "13_VVV"       ; 
-	processID[HZ    ] = "14_HZ"        ; 
-	processID[WgStar] = "15_WgStar"    ; 
+
+
 
 
 	for( int i = 0; i < nprocess; i++ ){
@@ -49,11 +48,17 @@ void ttSF(){
 
 		GetHistogram( i ); 
 
-		float myyield = ( i > data ) ?  theLumi*myhisto[i]->Integral() : myhisto[i]->Integral(); 
+		float myyield;
 
-		//cout << myyield << endl;
+		if ( i == fakes              ) myyield =    15.0*myhisto[i]->Integral(); 
+		if ( i == data               ) myyield =         myhisto[i]->Integral(); 
+		if ( i != fakes && i != data ) myyield = theLumi*myhisto[i]->Integral(); 
 
-		if( i > data ) myhisto[i]->Scale(theLumi); 
+		cout << myyield << endl;
+
+		if ( i == fakes              ) myhisto[i]->Scale(15.    ); 
+		if ( i != fakes && i != data ) myhisto[i]->Scale(theLumi); 
+		if ( i == DY )                 myhisto[i]->Scale(0.93); 
 
 		for( int j = 0; j < nband; j++ ){
 
@@ -72,14 +77,13 @@ void ttSF(){
 	for( int j = 0; j < nband; j++ ){
 
 		float bkg = yield[fakes][j] + yield[WZ][j] + yield[VZ][j] + yield[ST][j] + 
-                            yield[WW][j] + yield[DY][j] + yield[TTV][j] + yield[HWW][j] +
-                            yield[Wg][j] + yield[Zg][j] + yield[VVV][j] + yield[HZ][j] + 
-                            yield[WgStar][j];
+                            yield[WW][j] + yield[DY][j] + yield[TTV][j] +
+                            yield[Wg][j] + yield[Zg][j] + yield[VVV][j];
 		
 		 SF[j] = ( yield[data][j] - bkg )/yield[TT][j];
 		eSF[j] = sqrt( yield[data][j] )  /yield[TT][j]; 
 
-		//cout << j << " -  " << SF[j] << " +/- " << eSF[j] << endl;
+		cout << j << "\t" << yield[data][j] << "\t" << bkg << "\t" << yield[TT][j] << "\t" << SF[j] << "\t" << eSF[j] << endl;
 
 		ttSF -> SetBinContent( ttSF->FindBin(threshold - (nband-j)*width+width/2), SF[j]  ); 
 		ttSF -> SetBinError  ( ttSF->FindBin(threshold - (nband-j)*width+width/2), eSF[j] ); 
@@ -107,7 +111,7 @@ void ttSF(){
 
 
 	ttSF2->Fit("pol0");
-	ttSF3->Fit("pol0");
+	//ttSF3->Fit("pol0");
 	
 	TCanvas* mycanvas = new TCanvas("mycanvas", "mycanvas"); 
 
@@ -118,17 +122,17 @@ void ttSF(){
 	ttSF -> Draw();
 	ttSF2-> Draw("same");
 	//ttSF3 ->SetLineColor(kBlack);
- 	ttSF3-> Draw("same");
+ 	//ttSF3-> Draw("same");
 
-	mycanvas -> SaveAs("~/www/figures/tests/test/jets/ttSF-njet3-split.pdf");
-	mycanvas -> SaveAs("~/www/figures/tests/test/jets/ttSF-njet3-split.png");
+	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short.pdf");
+	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short.png");
 	
 
 
 }
 
 
-void GetHistogram( int process ){
+/*void GetHistogram( int process ){
 
 	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/" + processID[process] + ".root", "read" ); 
 	
@@ -139,4 +143,15 @@ void GetHistogram( int process ){
 	myhisto[process] = (TH1F*) gDirectory -> Get( "mt2ll"            );
 
 
+}*/
+
+void GetHistogram( int process ){
+
+	TFile* myfile = new TFile( "histos/ttCR-extended/" + processID[process] + ".root", "read" ); 
+
+	myhisto[process] = (TH1F*) myfile -> Get( "mt2ll" );
+
 }
+
+
+

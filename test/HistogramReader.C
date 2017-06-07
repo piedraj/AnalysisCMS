@@ -322,9 +322,8 @@ void HistogramReader::Draw(TString hname,
 
   // Include systematics
   //----------------------------------------------------------------------------
-  if (_mchist_syst.size() > 0) IncludeSystematics(hname);
-
-
+  if (_systematics.size() > 0) IncludeSystematics(hname); 
+  
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;
@@ -1609,6 +1608,8 @@ void HistogramReader::IncludeSystematics(TString hname)
     for (int k=0; k<=nbins; k++) { 
 	
       myhisto->SetBinContent(k, sqrt(suma[k]));
+
+	//cout << _mcfilename.at(i) << "\t" << k << "\t" << sqrt(suma[k]) << endl;
 
       _mchist_syst.push_back(myhisto);
     }
