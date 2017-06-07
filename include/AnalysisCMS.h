@@ -25,7 +25,7 @@ struct Lepton
   int            flavour;
   float          idisoW;
   float          iso;
-  float          motherPID;
+  int            mom_position;
   TLorentzVector v;
 };
 
@@ -159,6 +159,8 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetSampleWeight(); 
 
+  void        GetTrueMom(); 
+
 
   // Data members
   //----------------------------------------------------------------------------
@@ -291,8 +293,10 @@ class AnalysisCMS : public AnalysisBase
   float                  _lep2tau_gen; 
   float                  _lep2id_gen;
   float                  _lep2motherid_gen;
-  float                  _lep1mid;
-  float	                 _lep2mid;
+  int 			 _firstLeptonGen  = 999;
+  int 			 _secondLeptonGen = 999;
+  float                  _lep1mid = -999999;
+  float	                 _lep2mid = -999999;
   float                  _nu1pt_gen; 
   float                  _nu1tau_gen;
   float                  _nu2pt_gen; 

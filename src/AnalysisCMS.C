@@ -34,7 +34,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _systematic = systematic;
 
-  _minitreepath = "";
+  _minitreepath = "/eos/user/j/jgarciaf/";
 }
 
 
@@ -633,7 +633,6 @@ void AnalysisCMS::GetLeptons()
     float pt        = std_vector_lepton_pt->at(i);
     float type      = std_vector_lepton_isTightLepton->at(i);
     float idisoW    = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
-    float motherPID = (_ismc) ? std_vector_leptonGen_MotherPID->at(i) : -999999;
 
     if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
@@ -660,7 +659,7 @@ void AnalysisCMS::GetLeptons()
     lep.type      = type;
     lep.flavour   = flavour;
     lep.idisoW    = idisoW;
-    lep.motherPID = motherPID; 
+    lep.mom_position = -1;
       
     float mass = -999;
 
@@ -688,6 +687,8 @@ void AnalysisCMS::GetLeptons()
     if (i == 0) Lepton1 = lep;
     if (i == 1) Lepton2 = lep;
   }
+
+  if (_ismc) GetTrueMom();
 
   _nlepton = AnalysisLeptons.size();
 
@@ -726,14 +727,14 @@ void AnalysisCMS::GetLeptons()
   _lep1pt   = Lepton1.v.Pt();
   _lep1mass = Lepton1.v.M(); 
   _lep1id   = Lepton1.flavour; 
-  _lep1mid  = Lepton1.motherPID;
+  if (_ismc) _lep1mid  = std_vector_leptonGen_MotherPID->at(Lepton1.mom_position);
 
   _lep2eta  = Lepton2.v.Eta();
   _lep2phi  = Lepton2.v.Phi();
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
   _lep2id   = Lepton2.flavour; 
-  _lep2mid  = Lepton2.motherPID;
+  if (_ismc) _lep2mid  = std_vector_leptonGen_MotherPID->at(Lepton2.mom_position);
 
   _detall = fabs(_lep1eta - _lep2eta);
 
@@ -2714,4 +2715,59 @@ void AnalysisCMS::GetSampleWeight()
       _event_weight_Toppt = save_this_weight;
     }
   }
+}
+
+
+
+
+void AnalysisCMS::GetTrueMom()
+{
+    // Loop over RECO leptons
+    //--------------------------------------------------------------------------
+    for (UInt_t i=0; i<2; i++) {
+
+      TLorentzVector lepton_tlorentz = ( i == 0 )  ?  lepton_tlorentz = Lepton1.v  :  lepton_tlorentz = Lepton2.v ; 
+
+      // Loop over GEN leptons
+      //------------------------------------------------------------------------
+      float deltaRMin = 0.3;
+
+      for (UInt_t j=0; j<std_vector_leptonGen_pt->size(); j++) {
+
+	if (std_vector_leptonGen_pt->at(j) < 0) continue;
+
+	if (std_vector_leptonGen_status->at(j) != 1) continue;
+
+	if (abs(std_vector_leptonGen_pid->at(j)) != 11 && abs(std_vector_leptonGen_pid->at(j)) != 13) continue;
+
+	if (std_vector_leptonGen_isPrompt->at(j) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j) != 1) continue;
+
+	float std_vector_leptonGen_mass = (abs(std_vector_leptonGen_pid->at(j)) == 11) ? ELECTRON_MASS : MUON_MASS;
+
+	TLorentzVector leptonGen_tlorentz;
+
+	leptonGen_tlorentz.SetPtEtaPhiM(std_vector_leptonGen_pt->at(j),
+					std_vector_leptonGen_eta->at(j),
+					std_vector_leptonGen_phi->at(j),
+					std_vector_leptonGen_mass);
+
+
+	// Get the mother PID
+	//----------------------------------------------------------------------
+	if (lepton_tlorentz.DeltaR(leptonGen_tlorentz) < deltaRMin) {
+
+	  if (i == 0) _firstLeptonGen = j;
+
+	  if (i == 1 && j == _firstLeptonGen) continue;
+
+	  if (i == 1) _secondLeptonGen = j;
+
+	  deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
+	}
+      }
+    }
+
+    Lepton1.mom_position = _firstLeptonGen; 
+    Lepton2.mom_position = _secondLeptonGen; 
+
 }
