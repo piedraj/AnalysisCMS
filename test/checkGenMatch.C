@@ -33,7 +33,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   TTree* tree = (TTree*)file->Get("latino");
 
-
   // Get the variables of interest
   //----------------------------------------------------------------------------
   vector<float> *std_vector_lepton_eta = 0;

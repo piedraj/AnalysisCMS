@@ -67,8 +67,6 @@ class AnalysisCMS : public AnalysisBase
 
   void        GetFakeWeights       ();
 
-  void        GetGenPtllWeight     ();
-
   void        GetGenWeightsLHE     ();
 
   void        GetJets              (float    jet_eta_max,
@@ -158,6 +156,8 @@ class AnalysisCMS : public AnalysisBase
 				    double         MT2Precision = 0.);
 
   void        GetScaleAndResolution(); 
+
+  void        GetSampleWeight(); 
 
 
   // Data members
@@ -259,7 +259,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
-  float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
   float                  _htvisible;

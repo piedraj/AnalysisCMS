@@ -162,9 +162,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -187,9 +188,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-      if (!analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("WW")   &&
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";

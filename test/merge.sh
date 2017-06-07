@@ -37,7 +37,7 @@ rm -rf 15_WgStar.root
  hadd -f -k 04_TTTo2L2Nu.root TTTo2L2Nu__part*.root
  hadd -f -k 05_ST.root        ST_tW_antitop.root ST_tW_top.root
  hadd -f -k 06_WW.root        WWTo2L2Nu.root #GluGluWWTo2L2Nu_MCFM.root
- hadd -f -k 07_ZJets.root     DYJetsToLL_M-10to50.root DYJetsToLL_M-50*.root
+ hadd -f -k 07_ZJets.root     DYJetsToLL_M-10to50.root DYJetsToLL_M-50*.root DYJetsToTT_MuEle_M-50*.root
 #hadd -f -k 08_WJets.root     WJetsToLNu.root
  hadd -f -k 09_TTV.root       TTWJetsToLNu.root TTWJetsToLNu_ext2.root TTWJetsToQQ.root TTZToQQ.root TTZToLLNuNu_M-10.root 
 #hadd -f -k 10_HWW.root       GluGluHToWWTo2L2NuAMCNLO_M125.root VBFHToWWTo2L2Nu_M125.root GluGluHToTauTau_M125.root VBFHToTauTau_M125.root HWminusJ_HToWW_M125.root HWplusJ_HToWW_M125.root
