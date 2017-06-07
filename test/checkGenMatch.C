@@ -132,7 +132,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     counter_genmatched++;
 
 
-    // Loop over RECO leptons
+    // Loop over 1st and 2nd RECO leptons
     //--------------------------------------------------------------------------
     UInt_t firstLeptonGen         = 999;
     UInt_t secondLeptonGen        = 999;
@@ -175,7 +175,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 					std_vector_leptonGen_mass);
 
 
-	// Get the mother PID
+	// Get the 1st and 2nd GEN lepton index
 	//----------------------------------------------------------------------
 	if (lepton_tlorentz.DeltaR(leptonGen_tlorentz) < deltaRMin) {
 
