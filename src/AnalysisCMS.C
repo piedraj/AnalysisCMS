@@ -637,10 +637,9 @@ void AnalysisCMS::GetLeptons()
 
     Lepton lep;
       
-    lep.index     = i;
-    lep.type      = type;
-    lep.flavour   = flavour;
-    lep.gen_index = -1;
+    lep.index   = i;
+    lep.type    = type;
+    lep.flavour = flavour;
       
     float mass = -999;
 

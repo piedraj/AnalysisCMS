@@ -24,7 +24,6 @@ struct Lepton
   int            type;
   int            flavour;
   float          iso;
-  int            gen_index;
   TLorentzVector v;
 };
 
