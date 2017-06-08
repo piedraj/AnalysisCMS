@@ -477,28 +477,23 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
-  if (_verbosity > 0 && !_ismc) printf(" event_weight % f  trigger %d  metFilters %d\n", _event_weight, PassTrigger(), ApplyMETFilters());
-
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW;
 
   if (!_isfastsim) _event_weight *= puW;  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Pileup_lumi
 
-  if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
-  if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
-  if (_sample.EqualTo("WgStarLNuMuMu"))    _event_weight *= 1.4;
-  if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
-  if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+  GetSampleWeight();
 
   _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
+
+  _event_weight_truegenmatched = ((std_vector_leptonGen_isPrompt->at(0) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0)) &&
+				  (std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)));
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
-  if (!_analysis.EqualTo("Stop")) _event_weight *= _gen_ptll_weight;  // To be updated with 35.9 fb-1
-  
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
@@ -510,8 +505,7 @@ void AnalysisCMS::ApplyWeights()
  
   if (_analysis.EqualTo("Top")  ||
       _analysis.EqualTo("TTDM") ||
-      _analysis.EqualTo("Stop") ||
-      _analysis.EqualTo("Control"))
+      _analysis.EqualTo("Stop"))
     {
       sf_btag    = bPogSF_CSVM;
       sf_btag_up = bPogSF_CSVM_up;
@@ -532,7 +526,6 @@ void AnalysisCMS::ApplyWeights()
   float sf_trigger_do = effTrigW_Down;
 
 
-
   // idiso scale factors
   //----------------------------------------------------------------------------
   float sf_idiso    = 1.0;
@@ -544,7 +537,6 @@ void AnalysisCMS::ApplyWeights()
       sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
       sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
       sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
-
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -589,7 +581,6 @@ void AnalysisCMS::ApplyWeights()
       sf_fastsim_do = std_vector_lepton_fastsimW_Down->at(0) * std_vector_lepton_fastsimW_Down->at(1); 
   }
 
-
   if (_systematic_btag_up)    sf_btag    = sf_btag_up;
   if (_systematic_btag_do)    sf_btag    = sf_btag_do;
   if (_systematic_idiso_up)   sf_idiso   = sf_idiso_up;
@@ -601,39 +592,8 @@ void AnalysisCMS::ApplyWeights()
   if (_systematic_fastsim_up) sf_fastsim = sf_fastsim_up;
   if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
   if (_systematic_fastsim_do) sf_fastsim = sf_fastsim_do;
-      
 
   _event_weight *= (sf_btag * sf_trigger * sf_idiso * sf_reco * sf_fastsim);
-
-
-  if (_verbosity > 0)
-    {
-      printf("  event_weight % f  trigger %d  metFilters %d  sf_btag %.2f  sf_trigger %.2f  sf_idiso %.2f  sf_reco %.2f  sf_fastsim %.2f  lumi %.2f  baseW %f  puW %.2f",
-	     _event_weight, PassTrigger(), ApplyMETFilters(), sf_btag, sf_trigger, sf_idiso, sf_reco, sf_fastsim, _luminosity, baseW, puW);
-      
-      if (GEN_weight_SM) printf("  GEN_weight_SM % .2f\n", GEN_weight_SM); else printf("\n");
-    }
-
-
-  // Top pt reweight for powheg
-  _event_weight_Toppt = _event_weight;
-
-  if (_sample.Contains("TTTo2L2Nu")) {
-
-    // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
-    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
-
-    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
-
-    if (_applytopptreweighting) {
-
-      float save_this_weight = _event_weight;
-
-      _event_weight       = _event_weight_Toppt;
-      _event_weight_Toppt = save_this_weight;
-    }
-  }
-
 
   _event_weight_Btagup    = _event_weight * (sf_btag_up/sf_btag);
   _event_weight_Btagdo    = _event_weight * (sf_btag_do/sf_btag);
@@ -645,7 +605,6 @@ void AnalysisCMS::ApplyWeights()
   _event_weight_Recodo    = _event_weight * (sf_reco_do/sf_reco);
   _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
   _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
-    
 
   return;
 }
@@ -658,8 +617,6 @@ void AnalysisCMS::GetLeptons()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetLeptons]\n");
 
-  bool found_third_tight_lepton = false;
-
   AnalysisLeptons.clear();
 
   _ntightlepton = 0;
@@ -668,40 +625,21 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    float eta       = std_vector_lepton_eta->at(i);
-    float flavour   = std_vector_lepton_flavour->at(i);
-    float phi       = std_vector_lepton_phi->at(i);
-    float pt        = std_vector_lepton_pt->at(i);
-    float type      = std_vector_lepton_isTightLepton->at(i);
-    float idisoW    = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
-    float motherPID = (_ismc) ? std_vector_leptonGen_MotherPID->at(i) : -999999;
+    float eta     = std_vector_lepton_eta->at(i);
+    float flavour = std_vector_lepton_flavour->at(i);
+    float phi     = std_vector_lepton_phi->at(i);
+    float pt      = std_vector_lepton_pt->at(i);
+    float type    = std_vector_lepton_isTightLepton->at(i);
 
     if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
     if (pt < 0.) continue;
 
-    bool reject_lepton = false;
-    
-    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
-      {
-	if (!found_third_tight_lepton)
-	  {
-	    if (type != Tight)
-	      reject_lepton = true;
-	    else
-	      found_third_tight_lepton = true;
-	  }
-      }
-
-    if (reject_lepton) continue;
-
     Lepton lep;
       
-    lep.index     = i;
-    lep.type      = type;
-    lep.flavour   = flavour;
-    lep.idisoW    = idisoW;
-    lep.motherPID = motherPID; 
+    lep.index   = i;
+    lep.type    = type;
+    lep.flavour = flavour;
       
     float mass = -999;
 
@@ -734,6 +672,7 @@ void AnalysisCMS::GetLeptons()
 
 
   // SUSY check of the nonprompt background shape
+  //----------------------------------------------------------------------------
   if (_systematic.Contains("fake") && _nlepton > 2 && _ntightlepton == 2) {
 
     if (AnalysisLeptons[2].type != 1) {
@@ -761,20 +700,20 @@ void AnalysisCMS::GetLeptons()
     }
   }
 
-  
+
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
   _lep1pt   = Lepton1.v.Pt();
   _lep1mass = Lepton1.v.M(); 
   _lep1id   = Lepton1.flavour; 
-  _lep1mid  = Lepton1.motherPID;
+  _lep1mid  = GetMotherPID(0);
 
   _lep2eta  = Lepton2.v.Eta();
   _lep2phi  = Lepton2.v.Phi();
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
-  _lep2id   = Lepton2.flavour; 
-  _lep2mid  = Lepton2.motherPID;
+  _lep2id   = Lepton2.flavour;
+  _lep2mid  = GetMotherPID(1);
 
   _detall = fabs(_lep1eta - _lep2eta);
 
@@ -1115,9 +1054,10 @@ void AnalysisCMS::GetHt()
   _htvisible = Lepton1.v.Pt() + Lepton2.v.Pt() + _htjets;
 
   _htgen = 0.;
+
   if (_ismc && _sample.Contains("DY")) // Some MC samples do not contain this info
-    for (int ii = 0; ii<std_vector_LHEparton_pt->size(); ii++) 
-      if (std_vector_LHEparton_pt->at(ii)>0.) 
+    for (int ii=0; ii<std_vector_LHEparton_pt->size(); ii++) 
+      if (std_vector_LHEparton_pt->at(ii) > 0.)
 	_htgen += std_vector_LHEparton_pt->at(ii);
 }
 
@@ -1278,8 +1218,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   if (_analysis.EqualTo("TTDM")) GetDark();
   
   if (_analysis.EqualTo("TTDM")) GetTopReco();
-
-  GetGenPtllWeight();
 
   GetFakeWeights();
 
@@ -1560,22 +1498,23 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("drll",              &drll,              "drll/F");
   minitree->Branch("dyll",              &_dyll,             "dyll/F");
   // E
-  minitree->Branch("event",             &event,                    "event/I");
-  minitree->Branch("eventW",            &_event_weight,            "eventW/F");
-  minitree->Branch("eventW_Btagup",     &_event_weight_Btagup,     "eventW_Btagup/F");
-  minitree->Branch("eventW_Btagdo",     &_event_weight_Btagdo,     "eventW_Btagdo/F");
-  minitree->Branch("eventW_BtagFSup",   &_event_weight_BtagFSup,   "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSdo",   &_event_weight_BtagFSdo,   "eventW_BtagFSdo/F");
-  minitree->Branch("eventW_Idisoup",    &_event_weight_Idisoup,    "eventW_Idisoup/F");
-  minitree->Branch("eventW_Idisodo",    &_event_weight_Idisodo,    "eventW_Idisodo/F");
-  minitree->Branch("eventW_Triggerup",  &_event_weight_Triggerup,  "eventW_Triggerup/F");
-  minitree->Branch("eventW_Triggerdo",  &_event_weight_Triggerdo,  "eventW_Triggerdo/F");
-  minitree->Branch("eventW_Recoup",     &_event_weight_Recoup,     "eventW_Recoup/F");
-  minitree->Branch("eventW_Recodo",     &_event_weight_Recodo,     "eventW_Recodo/F");
-  minitree->Branch("eventW_Fastsimup",  &_event_weight_Fastsimup,  "eventW_Fastsimup/F");
-  minitree->Branch("eventW_Fastsimdo",  &_event_weight_Fastsimdo,  "eventW_Fastsimdo/F");
-  minitree->Branch("eventW_Toppt",      &_event_weight_Toppt,      "eventW_Toppt/F");
-  minitree->Branch("eventW_genmatched", &_event_weight_genmatched, "eventW_genmatched/F");
+  minitree->Branch("event",                 &event,                        "event/I");
+  minitree->Branch("eventW",                &_event_weight,                "eventW/F");
+  minitree->Branch("eventW_Btagup",         &_event_weight_Btagup,         "eventW_Btagup/F");
+  minitree->Branch("eventW_Btagdo",         &_event_weight_Btagdo,         "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",       &_event_weight_BtagFSup,       "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSdo",       &_event_weight_BtagFSdo,       "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_Idisoup",        &_event_weight_Idisoup,        "eventW_Idisoup/F");
+  minitree->Branch("eventW_Idisodo",        &_event_weight_Idisodo,        "eventW_Idisodo/F");
+  minitree->Branch("eventW_Triggerup",      &_event_weight_Triggerup,      "eventW_Triggerup/F");
+  minitree->Branch("eventW_Triggerdo",      &_event_weight_Triggerdo,      "eventW_Triggerdo/F");
+  minitree->Branch("eventW_Recoup",         &_event_weight_Recoup,         "eventW_Recoup/F");
+  minitree->Branch("eventW_Recodo",         &_event_weight_Recodo,         "eventW_Recodo/F");
+  minitree->Branch("eventW_Fastsimup",      &_event_weight_Fastsimup,      "eventW_Fastsimup/F");
+  minitree->Branch("eventW_Fastsimdo",      &_event_weight_Fastsimdo,      "eventW_Fastsimdo/F");
+  minitree->Branch("eventW_Toppt",          &_event_weight_Toppt,          "eventW_Toppt/F");
+  minitree->Branch("eventW_genmatched",     &_event_weight_genmatched,     "eventW_genmatched/F");
+  minitree->Branch("eventW_truegenmatched", &_event_weight_truegenmatched, "eventW_truegenmatched/F");
   // H
   minitree->Branch("ht",                &_ht,               "ht/F");
   minitree->Branch("htvisible",         &_htvisible,        "htvisible/F");
@@ -1726,38 +1665,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("jetGen_eta",       "std::vector<float>", &std_vector_jetGen_eta);
   minitree->Branch("jetGen_phi",       "std::vector<float>", &std_vector_jetGen_phi);
   minitree->Branch("jetGen_pt" ,       "std::vector<float>", &std_vector_jetGen_pt);
-}
-
-
-//------------------------------------------------------------------------------
-// GetGenPtllWeight
-//
-// https://indico.cern.ch/event/515004/contributions/2037666/attachments/1252111/1846797/Apr-04_GEN_ZpT_Massironi.pdf
-//
-// 1. Apply the following selection
-//
-//    mll > 60 GeV
-//    pt1 > 20 GeV
-//    pt2 > 10 (13) GeV for muons (electrons)
-//
-// 2. Fit ptll in the mumu channel with the following function
-//
-//    TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
-//
-//    f4->SetParameter(0,  10);
-//    f4->SetParameter(1,   1);
-//    f4->SetParameter(2,   1);
-//    f4->SetParameter(3, 0.1);
-//
-// 3. Apply the correction to gen_ptll and check in the ee and mumu channels
-//------------------------------------------------------------------------------
-void AnalysisCMS::GetGenPtllWeight()
-{
-  _gen_ptll_weight = 1.0;
-
-  if (!_sample.Contains("DYJetsToLL_M")) return;
-
-  _gen_ptll_weight = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
 }
 
 
@@ -2706,4 +2613,135 @@ void AnalysisCMS::GetScaleAndResolution()
   _uPara += qT.Mod();
 
   _uPerp = (uT.Px() * qT.Py() - uT.Py() * qT.Px()) / qT.Mod();
+}
+
+
+//------------------------------------------------------------------------------
+// GetSampleWeight
+//
+// Should be synchronized with
+//
+// https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/samples.py
+//------------------------------------------------------------------------------
+// DYJetsToLL_M
+//
+//     https://indico.cern.ch/event/515004/contributions/2037666/attachments/1252111/1846797/Apr-04_GEN_ZpT_Massironi.pdf
+//
+//     1. Apply the following selection
+//
+//        mll > 60 GeV
+//        pt1 > 20 GeV
+//        pt2 > 10 (13) GeV for muons (electrons)
+//
+//     2. Fit ptll in the mumu channel with the following function
+//
+//        TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//
+//        f4->SetParameter(0,  10);
+//        f4->SetParameter(1,   1);
+//        f4->SetParameter(2,   1);
+//        f4->SetParameter(3, 0.1);
+//
+//     3. Apply the correction to gen_ptll and check in the ee and mumu channels
+//------------------------------------------------------------------------------
+void AnalysisCMS::GetSampleWeight()
+{
+  float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
+
+  if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
+  if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
+  if (_sample.EqualTo ("WgStarLNuMuMu"))         _event_weight *= 1.4;
+  if (_sample.EqualTo ("Wg_MADGRAPHMLM"))        _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+  if (_sample.Contains("Zg"))                    _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
+  if (_sample.Contains("DYJetsToLL_M"))          _event_weight *= ptllDYW_NLO;
+  if (_sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= ptllDYW_NLO;
+
+
+  // Remove different flavour from DYJetsToLL_M-50
+  //----------------------------------------------------------------------------
+  if (_sample.Contains("DYJetsToLL_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) != 11*13);
+
+
+  // Remove same flavour from DYJetsToTT_MuEle_M-50
+  //----------------------------------------------------------------------------
+  if (_sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) == 11*13);
+
+
+  // Samples with extensions
+  //----------------------------------------------------------------------------
+  if (_sample.EqualTo("TTWJetsToLNu"))                 _event_weight *= 0.410;  // 1.11272e+06 / (1.11272e+06 + 1.60353e+06);
+  if (_sample.EqualTo("TTWJetsToLNu_ext2"))            _event_weight *= 0.590;  // 1.60353e+06 / (1.11272e+06 + 1.60353e+06);
+  if (_sample.Contains("DYJetsToTT_MuEle_M-50__part")) _event_weight *= 0.514;  // (1.15736e+07 + 6.24353e+06) / (1.15736e+07 + 6.24353e+06 + 1.15703e+07 + 5.25829e+06);
+  if (_sample.Contains("DYJetsToTT_MuEle_M-50_ext1"))  _event_weight *= 0.486;  // (1.15703e+07 + 5.25829e+06) / (1.15736e+07 + 6.24353e+06 + 1.15703e+07 + 5.25829e+06);
+
+
+  // Top pt reweight for POWHEG
+  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+  //----------------------------------------------------------------------------
+  _event_weight_Toppt = _event_weight;
+
+  if (_sample.Contains("TTTo2L2Nu")) {
+
+    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
+
+    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
+
+    if (_applytopptreweighting) {
+
+      float save_this_weight = _event_weight;
+
+      _event_weight       = _event_weight_Toppt;
+      _event_weight_Toppt = save_this_weight;
+    }
+  }
+}
+
+
+//------------------------------------------------------------------------------
+// GetMotherPID
+//------------------------------------------------------------------------------
+int AnalysisCMS::GetMotherPID(int index)
+{
+  int motherPID = -9999;
+
+  if (!_ismc || index > 1) return motherPID;
+
+  TLorentzVector lepton_tlorentz = (index == 0) ? Lepton1.v : Lepton2.v;
+
+
+  // Loop over GEN leptons
+  //----------------------------------------------------------------------------
+  float deltaRMin = 0.3;
+
+  for (UInt_t j=0; j<std_vector_leptonGen_pt->size(); j++) {
+
+    if (std_vector_leptonGen_pt->at(j) < 0) continue;
+
+    if (std_vector_leptonGen_status->at(j) != 1) continue;
+
+    if (abs(std_vector_leptonGen_pid->at(j)) != 11 && abs(std_vector_leptonGen_pid->at(j)) != 13) continue;
+
+    if (std_vector_leptonGen_isPrompt->at(j) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j) != 1) continue;
+
+    float std_vector_leptonGen_mass = (abs(std_vector_leptonGen_pid->at(j)) == 11) ? ELECTRON_MASS : MUON_MASS;
+
+    TLorentzVector leptonGen_tlorentz;
+
+    leptonGen_tlorentz.SetPtEtaPhiM(std_vector_leptonGen_pt->at(j),
+				    std_vector_leptonGen_eta->at(j),
+				    std_vector_leptonGen_phi->at(j),
+				    std_vector_leptonGen_mass);
+
+
+    // Get the GEN lepton index
+    //--------------------------------------------------------------------------
+    if (lepton_tlorentz.DeltaR(leptonGen_tlorentz) < deltaRMin) {
+
+      motherPID = std_vector_leptonGen_MotherPID->at(j);
+
+      deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
+    }
+  }
+
+  return motherPID;
 }

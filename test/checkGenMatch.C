@@ -1,5 +1,6 @@
 #include "TCanvas.h"
 #include "TFile.h"
+#include "TH1F.h"
 #include "TLorentzVector.h"
 #include "TTree.h"
 #include <fstream>
@@ -25,13 +26,19 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //    root -l -b -q checkGenMatch.C+
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part0.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part18.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
   TFile* file = TFile::Open(filename);
 
   TTree* tree = (TTree*)file->Get("latino");
+
+
+  // Prepare histograms
+  //----------------------------------------------------------------------------
+  TH1F* h_firstLepton_deltaRMin  = new TH1F("h_firstLepton_deltaRMin",  "h_firstLepton_deltaRMin",  100, 0, 0.01);
+  TH1F* h_secondLepton_deltaRMin = new TH1F("h_secondLepton_deltaRMin", "h_secondLepton_deltaRMin", 100, 0, 0.01);
 
 
   // Get the variables of interest
@@ -107,7 +114,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   //----------------------------------------------------------------------------
   Long64_t nentries = tree->GetEntries();
 
-  if (nentries > 1e5) nentries = 1e5;
+  if (nentries > 2e5) nentries = 2e5;
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
@@ -125,10 +132,12 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     counter_genmatched++;
 
 
-    // Loop over RECO leptons
+    // Loop over 1st and 2nd RECO leptons
     //--------------------------------------------------------------------------
-    UInt_t firstLeptonGen  = 999;
-    UInt_t secondLeptonGen = 999;
+    UInt_t firstLeptonGen         = 999;
+    UInt_t secondLeptonGen        = 999;
+    float  firstLepton_deltaRMin  = 999;
+    float  secondLepton_deltaRMin = 999;
 
     for (UInt_t i=0; i<2; i++) {
 
@@ -166,7 +175,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 					std_vector_leptonGen_mass);
 
 
-	// Get the mother PID
+	// Get the 1st and 2nd GEN lepton index
 	//----------------------------------------------------------------------
 	if (lepton_tlorentz.DeltaR(leptonGen_tlorentz) < deltaRMin) {
 
@@ -177,6 +186,9 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 	  if (i == 1) secondLeptonGen = j;
 
 	  deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
+
+	  if (i == 0) firstLepton_deltaRMin  = deltaRMin;
+	  if (i == 1) secondLepton_deltaRMin = deltaRMin;
 	}
       }
     }
@@ -185,6 +197,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     // Fill the 1st lepton counters
     //--------------------------------------------------------------------------
     if (firstLeptonGen < 999) {
+
+      (firstLepton_deltaRMin > 0.00995) ? h_firstLepton_deltaRMin->Fill(0.00995) : h_firstLepton_deltaRMin->Fill(firstLepton_deltaRMin);
 
       int lep1mpid = abs(std_vector_leptonGen_MotherPID->at(firstLeptonGen));
 
@@ -213,6 +227,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     // Fill the 2nd lepton counters
     //--------------------------------------------------------------------------
     if (secondLeptonGen < 999) {
+
+      (secondLepton_deltaRMin > 0.00995) ? h_secondLepton_deltaRMin->Fill(0.00995) : h_secondLepton_deltaRMin->Fill(secondLepton_deltaRMin);
 
       int lep2mpid = abs(std_vector_leptonGen_MotherPID->at(secondLeptonGen));
 
@@ -264,4 +280,16 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   printf(" proton     | %6.2f%% | %6.2f%%\n", factor * counter1_mother_2212_proton, factor * counter2_mother_2212_proton);
   printf(" other      | %6.2f%% | %6.2f%%\n", factor * counter1_mother_other,       factor * counter2_mother_other);
   printf("\n");
+
+
+  // Draw
+  //----------------------------------------------------------------------------
+  TCanvas* c1 = new TCanvas("c1", "c1");
+
+  c1->SetLogy();
+
+  h_secondLepton_deltaRMin->SetLineColor(kRed+1);
+
+  h_firstLepton_deltaRMin ->Draw();
+  h_secondLepton_deltaRMin->Draw("same");
 }

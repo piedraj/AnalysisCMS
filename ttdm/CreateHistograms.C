@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/"; 
+const TString outputdir = "histos/D-day_CR_em/"; 
 
 void CreateHistograms2( int process );
 
@@ -17,7 +17,7 @@ void CreateHistograms(){
 
 	for( int i = 0; i < nprocess; i++ ){
 
-	 	CreateHistograms2( i ); 
+		CreateHistograms2( i ); 
 
 	}
 
@@ -26,6 +26,7 @@ void CreateHistograms(){
 	//CreateHistograms2( TT );
 	//CreateHistograms2( ttDM );
 	//CreateHistograms2( data );
+	//CreateHistograms2( DY );
 
 	//-----
 
@@ -45,6 +46,8 @@ void CreateHistograms(){
 
 
 void CreateHistograms2( int process ){ 
+
+	if( process == ttDM || process == fakes ) return; 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
@@ -88,9 +91,21 @@ void CreateHistograms2( int process ){
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-		TCut thecut = eventW[k]; 
+		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
 
-                                                     thecut = selection                   *thecut;
+
+		TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
+		//TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
+
+		//TCut newselection = ( process == TT   || process == TTSemi ) ? selection&&RemovingFakes : selection               ; 
+
+		TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+
+		//TCut newselection = selection; 
+
+
+                                                     thecut = newselection                *thecut;
+
 		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
 		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
@@ -146,7 +161,7 @@ void CreateHistograms2( int process ){
 
 		}
 
-		/*mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", thecut );
 		mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", thecut );
@@ -164,10 +179,10 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[jet2pt       ] + " >> " + h_name[jet2pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[jet2eta      ] + " >> " + h_name[jet2eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[jet2phi      ] + " >> " + h_name[jet2phi      ] + "(  200, -3.2,    3.2 )", thecut );
-		mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", thecut );*/
+		mytree -> Draw( b_name[jet2mass     ] + " >> " + h_name[jet2mass     ] + "(  100,  0  ,  100   )", thecut );
 
 		mytree -> Draw( b_name[metPfType1   ] + " >> " + h_name[metPfType1   ] + "( 3000,  0,   3000   )", thecut );
-		/*mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", thecut );
+		//mytree -> Draw( b_name[metPfType1Phi] + " >> " + h_name[metPfType1Phi] + "(  100,  0,     3.2  )", thecut );
 
 		mytree -> Draw( b_name[m2l          ] + " >> " + h_name[m2l          ] + "( 3000,  0,   3000   )", thecut );
 		mytree -> Draw( b_name[mt2ll        ] + " >> " + h_name[mt2ll        ] + "( 3000,  0,   3000   )", thecut );
@@ -175,9 +190,9 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[mtw1         ] + " >> " + h_name[mtw1         ] + "( 3000,  0,   3000   )", thecut );
 		mytree -> Draw( b_name[mtw2         ] + " >> " + h_name[mtw2         ] + "( 3000,  0,   3000   )", thecut );
 
-		mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", thecut );
-		mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", thecut );
-		mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[ht           ] + " >> " + h_name[ht           ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[htjets       ] + " >> " + h_name[htjets       ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[htnojets     ] + " >> " + h_name[htnojets     ] + "( 3000,  0,   3000   )", thecut );
 
 		mytree -> Draw( b_name[njet         ] + " >> " + h_name[njet         ] + "(   10,  0,     10   )", thecut );
 		mytree -> Draw( b_name[nbjet30csvv2l] + " >> " + h_name[nbjet30csvv2l] + "(   10,  0,     10   )", thecut );
@@ -197,15 +212,15 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[dphilmet2    ] + " >> " + h_name[dphilmet2    ] + "(  100,  0,      3.2 )", thecut ); 
 		mytree -> Draw( b_name[dphillmet    ] + " >> " + h_name[dphillmet    ] + "(  100,  0,      3.2 )", thecut ); 
 
-		mytree -> Draw( b_name[top1eta_gen  ] + " >> " + h_name[top1eta_gen  ] + "(   60, -3,      3   )", thecut );
-		mytree -> Draw( b_name[top1phi_gen  ] + " >> " + h_name[top1phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
-		mytree -> Draw( b_name[top1pt_gen   ] + " >> " + h_name[top1pt_gen   ] + "( 3000,  0,   3000   )", thecut );
-		mytree -> Draw( b_name[top2eta_gen  ] + " >> " + h_name[top2eta_gen  ] + "(   60, -3,      3   )", thecut );
-		mytree -> Draw( b_name[top2phi_gen  ] + " >> " + h_name[top2phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
-		mytree -> Draw( b_name[top2pt_gen   ] + " >> " + h_name[top2pt_gen   ] + "( 3000,  0,   3000   )", thecut );
-		mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", thecut );
+		//mytree -> Draw( b_name[top1eta_gen  ] + " >> " + h_name[top1eta_gen  ] + "(   60, -3,      3   )", thecut );
+		//mytree -> Draw( b_name[top1phi_gen  ] + " >> " + h_name[top1phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
+		//mytree -> Draw( b_name[top1pt_gen   ] + " >> " + h_name[top1pt_gen   ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[top2eta_gen  ] + " >> " + h_name[top2eta_gen  ] + "(   60, -3,      3   )", thecut );
+		//mytree -> Draw( b_name[top2phi_gen  ] + " >> " + h_name[top2phi_gen  ] + "(  200, -3.2,    3.2 )", thecut );
+		//mytree -> Draw( b_name[top2pt_gen   ] + " >> " + h_name[top2pt_gen   ] + "( 3000,  0,   3000   )", thecut );
+		//mytree -> Draw( b_name[detatt_gen   ] + " >> " + h_name[detatt_gen   ] + "(   60,  0,      6   )", thecut );
 
-		mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
+		//mytree -> Draw( b_name[nvtx         ] + " >> " + h_name[nvtx         ] + "(   60,  0,     60   )", thecut );
 		//mytree -> Draw( b_name[ntrueint     ] + " >> " + h_name[ntrueint     ] + "(   60,  0,     60   )", thecut );
 
 		//mytree -> Draw( b_name[scale         ] + " >> " + h_name[scale         ] + "(   80,  -3,     5    )", thecut );
@@ -220,7 +235,8 @@ void CreateHistograms2( int process ){
 
 
 		//mytree -> Draw( b_name[MVAtanh] + " >> " + h_name[MVAtanh] + "( 120,  -0.1, 1.1   )", thecut );
-		//mytree -> Draw( b_name[MVAsigm] + " >> " + h_name[MVAsigm] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[MVAtanh200] + " >> " + h_name[MVAtanh200] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 120,  -0.1, 1.1  )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 
@@ -233,11 +249,19 @@ void CreateHistograms2( int process ){
 
 			/*if( i == mt2ll )*/ myhisto[i] -> Write(); 
 
-			float yield = ( process == data || process == fakes ) ? myhisto[i]-> Integral() : 2.391*myhisto[i]-> Integral();
+			if(i == 0){ 
 
-			cout << "\t\t" << yield << endl; 
+				float yield;
 
-			if( process != data && process != ttDM ) cuentita += yield;
+				if( process == data                     ) yield =         myhisto[i]-> Integral();
+				if( process == fakes                    ) yield =     1.0*myhisto[i]-> Integral();
+                                if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral();
+
+				cout << "\t\t" << yield << endl; 
+
+				if( process != data && process != ttDM ) cuentita += yield;
+
+			}
 
 		}
 

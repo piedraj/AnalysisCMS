@@ -23,9 +23,7 @@ struct Lepton
   int            index;
   int            type;
   int            flavour;
-  float          idisoW;
   float          iso;
-  float          motherPID;
   TLorentzVector v;
 };
 
@@ -66,8 +64,6 @@ class AnalysisCMS : public AnalysisBase
 				    int      ijet);
 
   void        GetFakeWeights       ();
-
-  void        GetGenPtllWeight     ();
 
   void        GetGenWeightsLHE     ();
 
@@ -157,7 +153,11 @@ class AnalysisCMS : public AnalysisBase
 				    int            MT2Type      = 0,
 				    double         MT2Precision = 0.);
 
+  int         GetMotherPID         (int            index);
+
   void        GetScaleAndResolution(); 
+
+  void        GetSampleWeight      (); 
 
 
   // Data members
@@ -249,8 +249,8 @@ class AnalysisCMS : public AnalysisBase
   float                  _event_weight_Fastsimup;
   float                  _event_weight_Fastsimdo;
   float                  _event_weight_Toppt;
-  //  float                  _event_weight_genmatched = true; 
-  float                  _event_weight_genmatched; 
+  float                  _event_weight_genmatched;
+  float                  _event_weight_truegenmatched;
   float                  _fake_weight;
   float                  _fake_weight_elUp;
   float                  _fake_weight_elDown;
@@ -260,7 +260,6 @@ class AnalysisCMS : public AnalysisBase
   float                  _fake_weight_muDown;
   float                  _fake_weight_muStatUp;
   float                  _fake_weight_muStatDown;
-  float                  _gen_ptll_weight;
   float                  _fullpmet;
   float                  _ht;
   float                  _htvisible;

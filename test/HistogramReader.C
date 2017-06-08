@@ -322,9 +322,9 @@ void HistogramReader::Draw(TString hname,
 
   // Include systematics
   //----------------------------------------------------------------------------
-  if (_mchist_syst.size() > 0) IncludeSystematics(hname);
+  if (_systematics.size() > 0) IncludeSystematics(hname);
 
-
+  
   for (Int_t ibin=0; ibin<=_allmchist->GetNbinsX(); ibin++) {
 
     Float_t binValue = 0.;

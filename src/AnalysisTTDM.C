@@ -107,7 +107,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //FillLevelHistograms(step_2, pass);
 //FillLevelHistograms(step_3, pass);
 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
+    //pass &= (std_vector_lepton_pt->at(2) < 10.);
 
     // missing: 
     // Cut applied in AN-16-105 but not in AN-16-011 = 
