@@ -55,10 +55,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
-    //if ( _nentries > 1000 )  _nentries = 1000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
-    //if (jentry%15!=0) continue; 
 
     //cout << "\n" << jentry << endl;
 
@@ -129,15 +126,17 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= ( _nbjet30csvv2m > 0                            );
     //FillLevelHistograms(step_8, pass);
 
+    //pass &= (_event_weight_genmatched && ( fabs(_lep1mid)==24. || fabs(_lep1mid)==15. || fabs(_lep1mid)==21. || fabs(_lep1mid)==23. ) &&  ( fabs(_lep2mid)==24. || fabs(_lep2mid)==15. || fabs(_lep2mid)==21. || fabs(_lep2mid)==23. ));
+
     //FillLevelHistograms(TTDM_01_NewPresel, pass);
     //if (_saveminitree && pass ) minitree->Fill();
 
     // TTV Three Leptons Control Region
     //--------------------------------------------------------------------------
-    /*    
+    /*  
     pass  = true; 
     pass &= (std_vector_lepton_pt->at(2) > 10.);
-    pass &= (MET.Et() > 50.); 
+    //pass &= (MET.Et() > 50.); 
     pass &= (_nbjet30csvv2m > 0);
 
     //Reconstruction of the Z
@@ -164,7 +163,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     */
     // TTV Same Sign Control Region
     //--------------------------------------------------------------------------
-    /*
+    
     pass  = true; 
     pass &= (std_vector_lepton_pt->at(2) < 10.);
     pass &= (MET.Et() > 30.); 
@@ -173,8 +172,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(TTDM_Control_ttV, pass);
     if (_saveminitree && pass ) minitree->Fill();
-    */
-
+    
     // TT Control Region
     //--------------------------------------------------------------------------
     /*pass  = true; 
