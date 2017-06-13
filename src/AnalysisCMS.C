@@ -34,7 +34,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _systematic = systematic;
 
-  _minitreepath = "";
+  _minitreepath = "/eos/user/j/jgarciaf/";
 }
 
 

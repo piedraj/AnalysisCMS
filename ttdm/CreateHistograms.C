@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/D-day_CR_em/"; 
+const TString outputdir = "histos/fig2/"; 
 
 void CreateHistograms2( int process );
 
@@ -15,18 +15,19 @@ void CreateHistograms(){
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	//for( int i = TTV; i < nprocess; i++ ){
 
-		CreateHistograms2( i ); 
+	//	CreateHistograms2( i ); 
 
-	}
+	//}
 
 
-	//CreateHistograms2( DY );
+	CreateHistograms2( ttDM );
+	//CreateHistograms2( TT   );
 
 	//-----
 
-	//for( int i = 0; i < nscalar; i++ ){  // -> change 'processID[]' by 'scalarID[]' in 'myfile = new TFile ...'
+	//for( int i = 0; i < npseudo; i++ ){  // -> change 'processID[]' by 'scalarID[]' in 'myfile = new TFile ...'
 
 	//	CreateHistograms2( i ); 
 
@@ -43,7 +44,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	if( process == ttDM || process == fakes ) return; 
+	//if( process == ttDM ) return; 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
@@ -91,12 +92,14 @@ void CreateHistograms2( int process ){
 		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
 
 
-		TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
-		//TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 || abs(lep1mid)==21 || abs(lep1mid)==23 ) &&  ( abs(lep2mid)==24 || abs(lep2mid)==15 || abs(lep2mid)==21 || abs(lep2mid)==23 )"; 
+		//TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
+		TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
 
-		//TCut newselection = ( process == TT   || process == TTSemi ) ? selection&&RemovingFakes : selection               ; 
 
-		TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+
+		TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection               ; 
+
+		//TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
 
 		//TCut newselection = selection; 
 
@@ -168,6 +171,8 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[lep2phi      ] + " >> " + h_name[lep2phi      ] + "(  200, -3.2,    3.2 )", thecut );
 		mytree -> Draw( b_name[lep2mass     ] + " >> " + h_name[lep2mass     ] + "(  100,  0  ,  100   )", thecut );
 
+		mytree -> Draw( b_name[nlepton      ] + " >> " + h_name[nlepton      ] + "(   10,  0  ,   10   )", thecut );
+
 		mytree -> Draw( b_name[jet1pt       ] + " >> " + h_name[jet1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[jet1eta      ] + " >> " + h_name[jet1eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[jet1phi      ] + " >> " + h_name[jet1phi      ] + "(  200, -3.2,    3.2 )", thecut );
@@ -231,10 +236,10 @@ void CreateHistograms2( int process ){
 		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
 
 
-		//mytree -> Draw( b_name[MVAtanh] + " >> " + h_name[MVAtanh] + "( 120,  -0.1, 1.1   )", thecut );
+		//mytree -> Draw( b_name[MVA] + " >> " + h_name[MVA] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVAtanh200] + " >> " + h_name[MVAtanh200] + "( 120,  -0.1, 1.1   )", thecut );
 
-		//mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 120,  -0.1, 1.1  )", thecut );
+		//mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 3000,  0, 3000  )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 

@@ -28,7 +28,7 @@ void DarkGenVsRecoPlot2(TString process, TCut selection);
 
 void DarkGenVsRecoPlot(){
 
-	selection = "darkpt>0&&1>0"; 
+	selection = "darkpt==00&&1>0"; 
 
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
@@ -89,8 +89,8 @@ void DarkGenVsRecoPlot2(TString process, TCut selection){
 	myhisto -> GetXaxis() -> SetTitle("m_{T2}^{ll} [GeV]");
 	myhisto -> GetYaxis() -> SetTitle("RECO  p_{T}^{" + spin0 + "} [GeV]");
 
-	mycanvas -> SaveAs( "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170612_darkpt-gen-reco/mt2ll-vs-darkpt_" + process + ".png" ); 
-	mycanvas -> SaveAs( "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170612_darkpt-gen-reco/mt2ll-vs-darkpt_" + process + ".pdf" ); 
+	mycanvas -> SaveAs( "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170613_Pupi/mt2ll-vs-darkpt_" + process + ".png" ); 
+	mycanvas -> SaveAs( "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170613_Pupi/mt2ll-vs-darkpt_" + process + ".pdf" ); 
 
 	myfile -> Close(); 
 
