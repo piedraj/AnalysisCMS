@@ -17,7 +17,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _drawratio       (false),
   _drawsignificance(false),
   _drawyield       (false),
-  _isminitree      (false),
+  _minitreebased   (false),
   _publicstyle     (false),
   _savepdf         (false),
   _savepng         (true)
