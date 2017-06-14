@@ -114,18 +114,18 @@ void MVA(float metPfType1_cut = 80.,
 	      //MVARead(MVA_id, signal, "15_WgStar", k);
 	      MVARead(MVA_id, signal, "11_Wg", k);
 	      //MVARead(MVA_id, signal, "01_Data", k);
-	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
-	      ///MVARead(MVA_id, signal, "03_VZ", k);
-	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      MVARead(MVA_id, signal, "02_WZTo3LNu", k);
+	      MVARead(MVA_id, signal, "03_VZ", k);
+	      MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
 	      //MVARead(MVA_id, signal, "04_TTToSemiLepton", k);
-	      ///MVARead(MVA_id, signal, "05_ST", k);
-	      ///MVARead(MVA_id, signal, "06_WW", k);
-	      ///MVARead(MVA_id, signal, "07_ZJets", k);
+	      MVARead(MVA_id, signal, "05_ST", k);
+	      MVARead(MVA_id, signal, "06_WW", k);
+	      MVARead(MVA_id, signal, "07_ZJets", k);
 	      //MVARead(MVA_id, signal, "10_HWW", k);
-	      ///MVARead(MVA_id, signal, "13_VVV", k);
+	      MVARead(MVA_id, signal, "13_VVV", k);
 	      //MVARead(MVA_id, signal, "14_HZ", k);
 
-	      ///MVARead(MVA_id, signal, signal, k);
+	      MVARead(MVA_id, signal, signal, k);
 
       } // k 
 
@@ -387,7 +387,8 @@ void MVARead(TString MVA_id, TString signal, TString filename, int systematic)
   // Get MVA response
   //----------------------------------------------------------------------------
 
-  TFile* input = TFile::Open( storageSite + minitreeDir[systematic] + "/TTDM/" + filename + ".root", "update");
+  //TFile* input = TFile::Open( storageSite + minitreeDir[systematic] + "/TTDM/" + filename + ".root", "update");
+  TFile* input = TFile::Open( "/eos/user/j/jgarciaf/minitrees/fucking-mom/TTDM/" + filename + ".root", "update");
 
   TTree* theTree = (TTree*)input->Get("latino");
 
@@ -509,7 +510,8 @@ void MVARead(TString MVA_id, TString signal, TString filename, int systematic)
 void AddProcess(TString kind, TString filename)
 {
 
-  TString fullname = storageSite + minitreeDir[nominal] + "/TTDM/" + filename + ".root";
+  //TString fullname = storageSite + minitreeDir[nominal] + "/TTDM/" + filename + ".root";
+  TString fullname = "/eos/user/j/jgarciaf/minitrees/fucking-mom/TTDM/" + filename + ".root";
 
   if (gSystem->AccessPathName(fullname))
     {

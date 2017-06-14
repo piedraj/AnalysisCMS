@@ -5,18 +5,18 @@
 
 const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
 
-//const TString theproduction = "Omaha"; 
-const TString theproduction = "fucking-mom"; 
+const TString theproduction = "Omaha"; 
+//const TString theproduction = "fucking-mom"; 
 //const TString theproduction = "Dejavu"; 
 
-const float thelumi = 35.9/15.; 
+const float thelumi = 35.9; 
 
 const float xs2l = 1.0/9; 
 
 const float PUrw = 1.030108192;
 
-const float    ttSF = 0.97 ;  const float ettSF = 0.05;
-const float    DYSF = 1.01 ;  const float eDYSF = 0.04;
+const float    ttSF = 1.00/*0.97*/ ;  const float ettSF = 0.05;
+const float    DYSF = 1.00/*1.01*/ ;  const float eDYSF = 0.04;
 			      const float efakes= 0.30;
 
 //const float    ttSF = 0.97;  const float ettSF = 0.15;
@@ -25,7 +25,7 @@ const float    DYSF = 1.01 ;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-const TCut selection = "metPfType1>80.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+const TCut selection = "nbjet30csvv2m==0";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
 //const TCut selection = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010>0.74&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
 
 const TString region = "SR";
@@ -44,9 +44,9 @@ const float paso   = 0.05;
 enum{ data,
       ttDM,
       fakes,
-      TT,
-      //TT1,
-      //TT2,
+      //TT,
+      TT1,
+      TT2,
       //TTSemi,
       ST,
       DY,
@@ -118,7 +118,7 @@ enum{ 	nominal,
 	DDfakes,
 	nsystematic }; 
 
-enum{ lep1pt, lep1eta, lep1phi, lep1mass,
+enum{ /*lep1pt, lep1eta, lep1phi, lep1mass,
       lep2pt, lep2eta, lep2phi, lep2mass, nlepton,
       jet1pt, jet1eta, jet1phi, jet1mass,
       jet2pt, jet2eta, jet2phi, jet2mass,
@@ -131,9 +131,9 @@ enum{ lep1pt, lep1eta, lep1phi, lep1mass,
       ///nvtx, //ntrueint,
       //scale, uPara, uPerp,
       //sphericity, alignment, planarity,
-      darkpt,
+      darkpt,*/
       //MVA, //MVAtanh200,
-      //alone,
+      alone,
       nhisto };
 
 TCut eventW[nsystematic];  
@@ -158,13 +158,13 @@ void Assign(){
 	//----------
 
 	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
-	processID[data ] = "01_Data_1outof15"        ;
-	//processID[data ] = "01_Data_Full2016"        ;
-	processID[fakes] = "00_Fakes_1outof15"       ; 
-	//processID[fakes] = "00_Fakes_Full2016"       ; 
-	processID[TT   ] = "04_TTTo2L2Nu"            ; 
-	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
-	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
+	//processID[data ] = "01_Data_1outof15"        ;
+	processID[data ] = "01_Data_Full2016"        ;
+	//processID[fakes] = "00_Fakes_1outof15"       ; 
+	processID[fakes] = "00_Fakes_Full2016"       ; 
+	//processID[TT   ] = "04_TTTo2L2Nu"            ; 
+	processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
+	processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
  	//processID[TTSemi]= "04_TTToSemiLepton"       ;
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -292,7 +292,7 @@ void Assign(){
 
 	//----------
 
- 	b_name[lep1pt  ] = "lep1pt"  ;
+ 	/*b_name[lep1pt  ] = "lep1pt"  ;
 	b_name[lep1eta ] = "lep1eta" ;
 	b_name[lep1phi ] = "lep1phi" ;
 	b_name[lep1mass] = "lep1mass";
@@ -365,9 +365,9 @@ void Assign(){
 
 	b_name[darkpt    ] = "darkpt";
 	//b_name[MVA] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010";
-	//b_name[MVAtanh200] = "ANN_tanh_mt2ll80_200_ttDM0001scalar00010";
+	//b_name[MVAtanh200] = "ANN_tanh_mt2ll80_200_ttDM0001scalar00010";*/
 
-	//b_name[alone] = "mt2ll";
+	b_name[alone] = "mt2ll";
 
 	for( int i = 0; i < nhisto; i++ ){
 
