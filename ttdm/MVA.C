@@ -7,6 +7,18 @@ root -l -b -q "MVA.C(80,90,\"ttDM0001scalar00500\")"
 
 root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00010\")"
 root -l -b -q "MVA.C(80,100,\"ttDM0001scalar00500\")"
+
+
+root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00050\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00200\")"
+
+
+root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00020\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001scalar00300\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001pseudo00020\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001pseudo00050\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001pseudo00200\")"
+root -l -b -q "MVA.C(80,80,\"ttDM0001pseudo00300\")"
 */
 
 
@@ -92,28 +104,28 @@ void MVA(float metPfType1_cut = 80.,
 
       for( int k = 0; k < nsystematic; k++ ){
 
-	      if (   /*k != nominal && */ ( k < METup || k > MuESdo ) ) continue;
+	      if (   k != nominal /*&& ( k < METup || k > MuESdo )*/ ) continue;
 
-	      ///MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
-	      ///MVARead(MVA_id, signal, "01_Data_1outof15", k);
+	      MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
+	      MVARead(MVA_id, signal, "01_Data_1outof15", k);
 	      ///MVARead(MVA_id, signal, "01_Data_Full2016", k);
-	      ///MVARead(MVA_id, signal, "09_TTV", k);
-	      ///MVARead(MVA_id, signal, "12_Zg", k);
-	      ///MVARead(MVA_id, signal, "15_WgStar", k);
-	      ///MVARead(MVA_id, signal, "11_Wg", k);
+	      MVARead(MVA_id, signal, "09_TTV", k);
+	      MVARead(MVA_id, signal, "12_Zg", k);
+	      //MVARead(MVA_id, signal, "15_WgStar", k);
+	      MVARead(MVA_id, signal, "11_Wg", k);
 	      //MVARead(MVA_id, signal, "01_Data", k);
-	      MVARead(MVA_id, signal, "02_WZTo3LNu", k);
-	      MVARead(MVA_id, signal, "03_VZ", k);
-	      MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
+	      ///MVARead(MVA_id, signal, "03_VZ", k);
+	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
 	      //MVARead(MVA_id, signal, "04_TTToSemiLepton", k);
-	      MVARead(MVA_id, signal, "05_ST", k);
-	      MVARead(MVA_id, signal, "06_WW", k);
-	      MVARead(MVA_id, signal, "07_ZJets", k);
+	      ///MVARead(MVA_id, signal, "05_ST", k);
+	      ///MVARead(MVA_id, signal, "06_WW", k);
+	      ///MVARead(MVA_id, signal, "07_ZJets", k);
 	      //MVARead(MVA_id, signal, "10_HWW", k);
-	      MVARead(MVA_id, signal, "13_VVV", k);
+	      ///MVARead(MVA_id, signal, "13_VVV", k);
 	      //MVARead(MVA_id, signal, "14_HZ", k);
 
-	      MVARead(MVA_id, signal, signal, k);
+	      ///MVARead(MVA_id, signal, signal, k);
 
       } // k 
 
