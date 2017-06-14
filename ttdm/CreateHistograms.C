@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/fig2/"; 
+const TString outputdir = "histos/mt2ll-for-nbjet0/ll/"; 
 
 void CreateHistograms2( int process );
 
@@ -15,14 +15,14 @@ void CreateHistograms(){
 
 	//-----
 
-	//for( int i = TTV; i < nprocess; i++ ){
+	for( int i = 0; i < nprocess; i++ ){
 
-	//	CreateHistograms2( i ); 
+		CreateHistograms2( i ); 
 
-	//}
+	}
 
 
-	CreateHistograms2( ttDM );
+	//CreateHistograms2( ttDM );
 	//CreateHistograms2( TT   );
 
 	//-----
@@ -44,7 +44,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	//if( process == ttDM ) return; 
+	if( process == ttDM ) return; 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
@@ -93,22 +93,22 @@ void CreateHistograms2( int process ){
 
 
 		//TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
-		TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
+		//TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
 
 
 
-		TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection               ; 
+		//TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection               ; 
 
 		//TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
 
-		//TCut newselection = selection; 
+		TCut newselection = selection; 
 
 
                                                      thecut = newselection                *thecut;
 
 		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
-		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		//if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
@@ -161,7 +161,7 @@ void CreateHistograms2( int process ){
 
 		}
 
-		mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
+		/*mytree -> Draw( b_name[lep1pt       ] + " >> " + h_name[lep1pt       ] + "( 3000,  0  , 3000   )", thecut );
 		mytree -> Draw( b_name[lep1eta      ] + " >> " + h_name[lep1eta      ] + "(   60, -3  ,    3   )", thecut );
 		mytree -> Draw( b_name[lep1phi      ] + " >> " + h_name[lep1phi      ] + "(  200, -3.2,    3.2 )", thecut );
 		mytree -> Draw( b_name[lep1mass     ] + " >> " + h_name[lep1mass     ] + "(  100,  0  ,  100   )", thecut );
@@ -233,13 +233,13 @@ void CreateHistograms2( int process ){
 		//mytree -> Draw( b_name[alignment    ] + " >> " + h_name[alignment    ] + "(  200, -1,      1   )", thecut );
 		//mytree -> Draw( b_name[planarity    ] + " >> " + h_name[planarity    ] + "(  200, -1,      1   )", thecut );
 
-		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );
+		mytree -> Draw( b_name[darkpt       ] + " >> " + h_name[darkpt       ] + "( 310,  -100,3000   )", thecut );*/
 
 
 		//mytree -> Draw( b_name[MVA] + " >> " + h_name[MVA] + "( 120,  -0.1, 1.1   )", thecut );
 		//mytree -> Draw( b_name[MVAtanh200] + " >> " + h_name[MVAtanh200] + "( 120,  -0.1, 1.1   )", thecut );
 
-		//mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 3000,  0, 3000  )", thecut );
+		mytree -> Draw( b_name[alone] + " >> " + h_name[alone] + "( 3000,  0, 3000  )", thecut );
 
 		for( int i = 0; i < nhisto; i++ ){	
 
