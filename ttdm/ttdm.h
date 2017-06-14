@@ -5,19 +5,19 @@
 
 const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
 
-const TString theproduction = "Omaha"; 
-//const TString theproduction = "fucking-mom"; 
+//const TString theproduction = "Omaha"; 
+const TString theproduction = "fucking-mom"; 
 //const TString theproduction = "Dejavu"; 
 
-const float thelumi = 35.9; 
+const float thelumi = 35.867/15.; 
 
 const float xs2l = 1.0/9; 
 
 const float PUrw = 1.030108192;
 
-const float    ttSF = 1.00/*0.97*/ ;  const float ettSF = 0.05;
-const float    DYSF = 1.00/*1.01*/ ;  const float eDYSF = 0.04;
-			      const float efakes= 0.30;
+const float    ttSF = 0.97;  const float ettSF = 0.05;
+const float    DYSF = 1.01;  const float eDYSF = 0.04;
+			     const float efakes= 0.30;
 
 //const float    ttSF = 0.97;  const float ettSF = 0.15;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
@@ -25,8 +25,9 @@ const float    DYSF = 1.00/*1.01*/ ;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-const TCut selection = "nbjet30csvv2m==0";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
 //const TCut selection = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010>0.74&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
+
 
 const TString region = "SR";
 
@@ -44,9 +45,9 @@ const float paso   = 0.05;
 enum{ data,
       ttDM,
       fakes,
-      //TT,
-      TT1,
-      TT2,
+      TT,
+      //TT1,
+      //TT2,
       //TTSemi,
       ST,
       DY,
@@ -118,22 +119,19 @@ enum{ 	nominal,
 	DDfakes,
 	nsystematic }; 
 
-enum{ /*lep1pt, lep1eta, lep1phi, lep1mass,
-      lep2pt, lep2eta, lep2phi, lep2mass, nlepton,
+enum{ nlepton,
+      lep1pt, lep1eta, lep1phi, lep1mass,
+      lep2pt, lep2eta, lep2phi, lep2mass, 
       jet1pt, jet1eta, jet1phi, jet1mass,
       jet2pt, jet2eta, jet2phi, jet2mass,
-      metPfType1, ///metPfType1Phi,
+      metPfType1, metPfType1Phi,
       m2l, mt2ll, mt2lblb, mtw1, mtw2,
-      ///ht, htjets, htnojets,
+      htjets, htnojets,
       njet, nbjet30csvv2l, nbjet30csvv2m, nbjet30csvv2t,  
-      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2, dphillmet,	
-      ///top1eta_gen, top1phi_gen, top1pt_gen, top2eta_gen, top2phi_gen, top2pt_gen, detatt_gen,  
-      ///nvtx, //ntrueint,
-      //scale, uPara, uPerp,
-      //sphericity, alignment, planarity,
-      darkpt,*/
-      //MVA, //MVAtanh200,
-      alone,
+      dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2,dphillmet,	
+      nvtx, 
+      darkpt,
+      MVA,
       nhisto };
 
 TCut eventW[nsystematic];  
@@ -148,23 +146,23 @@ TString systematicIDdatacard[nsystematic];
 TString systtypeID[nsysttype];
 
 TString b_name[nhisto];
-TString g_name[nhisto];
 TH1F* myhisto [nhisto];
-
-
+int    nbinraw[nhisto];
+float   lowraw[nhisto];
+float    upraw[nhisto];
 
 void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
-	//processID[data ] = "01_Data_1outof15"        ;
-	processID[data ] = "01_Data_Full2016"        ;
-	//processID[fakes] = "00_Fakes_1outof15"       ; 
-	processID[fakes] = "00_Fakes_Full2016"       ; 
-	//processID[TT   ] = "04_TTTo2L2Nu"            ; 
-	processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
-	processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
+	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
+	processID[data ] = "01_Data_1outof15"        ;
+	//processID[data ] = "01_Data_Full2016"        ;
+	processID[fakes] = "00_Fakes_1outof15"       ; 
+	//processID[fakes] = "00_Fakes_Full2016"       ; 
+	processID[TT   ] = "04_TTTo2L2Nu"            ; 
+	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
+	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
  	//processID[TTSemi]= "04_TTToSemiLepton"       ;
 	processID[ST   ] = "05_ST"                   ; 
 	processID[DY   ] = "07_ZJets"                ; 
@@ -287,93 +285,69 @@ void Assign(){
 
 		if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
 
-	} 
+	}      
 
 
-	//----------
+	//----------     
 
- 	/*b_name[lep1pt  ] = "lep1pt"  ;
-	b_name[lep1eta ] = "lep1eta" ;
-	b_name[lep1phi ] = "lep1phi" ;
-	b_name[lep1mass] = "lep1mass";
+	b_name[nlepton]  = "nlepton" ;		         nbinraw[nlepton]      =  10;	lowraw[nlepton]      =   0. ;	upraw[nlepton]      =  10. ;
 
- 	b_name[lep2pt  ] = "lep2pt"  ;
-	b_name[lep2eta ] = "lep2eta" ;
-	b_name[lep2phi ] = "lep2phi" ;
-	b_name[lep2mass] = "lep2mass";
+ 	b_name[lep1pt  ] = "lep1pt"  ;		         nbinraw[lep1pt  ]     =3000;	lowraw[lep1pt  ]     =   0. ;	upraw[lep1pt  ]     =3000. ;
+	b_name[lep1eta ] = "lep1eta" ;		         nbinraw[lep1eta ]     =  60;	lowraw[lep1eta ]     =  -3. ;	upraw[lep1eta ]     =   3. ;
+	b_name[lep1phi ] = "lep1phi" ;		         nbinraw[lep1phi ]     = 200;	lowraw[lep1phi ]     =  -3.2;	upraw[lep1phi ]     =   3.2;
+	b_name[lep1mass] = "lep1mass";		         nbinraw[lep1mass]     = 100;	lowraw[lep1mass]     =   0. ;	upraw[lep1mass]     = 100. ;
 
-	b_name[nlepton] = "nlepton";
+ 	b_name[lep2pt  ] = "lep2pt"  ;		         nbinraw[lep2pt  ]     =3000;	lowraw[lep2pt  ]     =   0. ;	upraw[lep2pt  ]     =3000. ;	
+	b_name[lep2eta ] = "lep2eta" ;		         nbinraw[lep2eta ]     =  60;	lowraw[lep2eta ]     =  -3. ;	upraw[lep2eta ]     =   3. ;
+	b_name[lep2phi ] = "lep2phi" ;		         nbinraw[lep2phi ]     = 200;	lowraw[lep2phi ]     =  -3.2;	upraw[lep2phi ]     =   3.2;
+	b_name[lep2mass] = "lep2mass";		         nbinraw[lep2mass]     = 100;	lowraw[lep2mass]     =   0. ;	upraw[lep2mass]     = 100. ;
 
-	b_name[jet1pt  ] = "jet1pt"  ;
-	b_name[jet1eta ] = "jet1eta" ;
-	b_name[jet1phi ] = "jet1phi" ;
-	b_name[jet1mass] = "jet1mass";
+	b_name[jet1pt  ] = "jet1pt"  ;		         nbinraw[jet1pt  ]     =3000;	lowraw[jet1pt  ]     =   0. ;	upraw[jet1pt  ]     =3000. ;
+	b_name[jet1eta ] = "jet1eta" ;		         nbinraw[jet1eta ]     =  60;	lowraw[jet1eta ]     =  -3. ;	upraw[jet1eta ]     =   3. ;
+	b_name[jet1phi ] = "jet1phi" ;		         nbinraw[jet1phi ]     = 200;	lowraw[jet1phi ]     =  -3.2;	upraw[jet1phi ]     =   3.2;
+	b_name[jet1mass] = "jet1mass";		         nbinraw[jet1mass]     = 100;	lowraw[jet1mass]     =   0. ;	upraw[jet1mass]     = 100. ;
 
-	b_name[jet2pt  ] = "jet2pt"  ;
-	b_name[jet2eta ] = "jet2eta" ;
-	b_name[jet2phi ] = "jet2phi" ;
-	b_name[jet2mass] = "jet2mass";
+	b_name[jet2pt  ] = "jet2pt"  ;		         nbinraw[jet2pt  ]     =3000;	lowraw[jet2pt  ]     =   0. ;	upraw[jet2pt  ]     =3000. ;
+	b_name[jet2eta ] = "jet2eta" ;		         nbinraw[jet2eta ]     =  60;	lowraw[jet2eta ]     =  -3. ;	upraw[jet2eta ]     =   3. ;
+	b_name[jet2phi ] = "jet2phi" ;		         nbinraw[jet2phi ]     = 200;	lowraw[jet2phi ]     =  -3.2;	upraw[jet2phi ]     =   3.2;
+	b_name[jet2mass] = "jet2mass";		         nbinraw[jet2mass]     = 100;	lowraw[jet2mass]     =   0. ;	upraw[jet2mass]     = 100. ;
 
-	b_name[metPfType1   ] = "metPfType1";
-	//b_name[metPfType1Phi] = "metPfType1Phi";
+	b_name[metPfType1   ] = "metPfType1"   ;         nbinraw[metPfType1   ]=3000;	lowraw[metPfType1   ]=   0. ;	upraw[metPfType1   ]=3000. ;
+	b_name[metPfType1Phi] = "metPfType1Phi";         nbinraw[metPfType1Phi]= 200;	lowraw[metPfType1Phi]=  -3.2;	upraw[metPfType1Phi]=   3.2;
 
-	b_name[m2l    ] = "m2l"    ;
-	b_name[mt2ll  ] = "mt2ll"  ;
-	b_name[mt2lblb] = "mt2lblb";
-	b_name[mtw1   ] = "mtw1"   ;
-	b_name[mtw2   ] = "mtw2"   ;
+	b_name[m2l    ] = "m2l"    ;                     nbinraw[m2l    ]      =3000;	lowraw[m2l    ]      =   0. ;	upraw[m2l    ]      =3000. ;
+	b_name[mt2ll  ] = "mt2ll"  ;                     nbinraw[mt2ll  ]      =3000;	lowraw[mt2ll  ]      =   0. ;	upraw[mt2ll  ]      =3000. ;        
+	b_name[mt2lblb] = "mt2lblb";                     nbinraw[mt2lblb]      =3000;	lowraw[mt2lblb]      =   0. ;	upraw[mt2lblb]      =3000. ;
+	b_name[mtw1   ] = "mtw1"   ;                     nbinraw[mtw1   ]      =3000;	lowraw[mtw1   ]      =   0. ;	upraw[mtw1   ]      =3000. ;
+	b_name[mtw2   ] = "mtw2"   ;                     nbinraw[mtw2   ]      =3000;	lowraw[mtw2   ]      =   0. ;	upraw[mtw2   ]      =3000. ;
 
-	//b_name[ht      ] = "ht"      ;
-	//b_name[htjets  ] = "htjets"  ;
-	//b_name[htnojets] = "htnojets";
+	b_name[htjets  ] = "htjets"  ;                   nbinraw[htjets  ]     =3000;	lowraw[htjets  ]     =   0. ;	upraw[htjets  ]     =3000. ;
+	b_name[htnojets] = "htnojets";                   nbinraw[htnojets]     =3000;	lowraw[htnojets]     =   0. ;	upraw[htnojets]     =3000. ;
 
-	b_name[njet         ] = "njet"         ;
-	b_name[nbjet30csvv2l] = "nbjet30csvv2l";
-	b_name[nbjet30csvv2m] = "nbjet30csvv2m";
-	b_name[nbjet30csvv2t] = "nbjet30csvv2t";
+	b_name[njet         ] = "njet"         ;         nbinraw[njet         ]=  10;	lowraw[njet         ]=   0. ;	upraw[njet         ]=  10. ;
+	b_name[nbjet30csvv2l] = "nbjet30csvv2l";         nbinraw[nbjet30csvv2l]=  10;	lowraw[nbjet30csvv2l]=   0. ;	upraw[nbjet30csvv2l]=  10. ;
+	b_name[nbjet30csvv2m] = "nbjet30csvv2m";         nbinraw[nbjet30csvv2m]=  10;	lowraw[nbjet30csvv2m]=   0. ;	upraw[nbjet30csvv2m]=  10. ;
+	b_name[nbjet30csvv2t] = "nbjet30csvv2t";         nbinraw[nbjet30csvv2t]=  10;	lowraw[nbjet30csvv2t]=   0. ;	upraw[nbjet30csvv2t]=  10. ;
 
-	b_name[dphijet1met ] = "dphijet1met" ;   
-	b_name[dphijet2met ] = "dphijet2met" ;  
-	b_name[dphijj      ] = "dphijj"      ;    
-	b_name[dphijjmet   ] = "dphijjmet"   ;   
-	b_name[dphill      ] = "dphill"      ;   
-	b_name[dphilep1jet1] = "dphilep1jet1";
-	b_name[dphilep1jet2] = "dphilep1jet2";
-	b_name[dphilep2jet1] = "dphilep2jet1";
-	b_name[dphilep2jet2] = "dphilep2jet2";
-	b_name[dphilmet1   ] = "dphilmet1"   ;
-	b_name[dphilmet2   ] = "dphilmet2"   ;
-	b_name[dphillmet   ] = "dphillmet"   ;
+	b_name[dphijet1met ] = "dphijet1met" ;           nbinraw[dphijet1met ] = 100;	lowraw[dphijet1met ] =   0. ;	upraw[dphijet1met ] =   3.2;   
+	b_name[dphijet2met ] = "dphijet2met" ;           nbinraw[dphijet2met ] = 100;	lowraw[dphijet2met ] =   0. ;	upraw[dphijet2met ] =   3.2;   
+	b_name[dphijj      ] = "dphijj"      ;           nbinraw[dphijj      ] = 100;	lowraw[dphijj      ] =   0. ;	upraw[dphijj      ] =   3.2;     
+	b_name[dphijjmet   ] = "dphijjmet"   ;           nbinraw[dphijjmet   ] = 100;	lowraw[dphijjmet   ] =   0. ;	upraw[dphijjmet   ] =   3.2;    
+	b_name[dphill      ] = "dphill"      ;           nbinraw[dphill      ] = 100;	lowraw[dphill      ] =   0. ;	upraw[dphill      ] =   3.2;    
+	b_name[dphilep1jet1] = "dphilep1jet1";           nbinraw[dphilep1jet1] = 100;	lowraw[dphilep1jet1] =   0. ;	upraw[dphilep1jet1] =   3.2; 
+	b_name[dphilep1jet2] = "dphilep1jet2";           nbinraw[dphilep1jet2] = 100;	lowraw[dphilep1jet2] =   0. ;	upraw[dphilep1jet2] =   3.2; 
+	b_name[dphilep2jet1] = "dphilep2jet1";           nbinraw[dphilep2jet1] = 100;	lowraw[dphilep2jet1] =   0. ;	upraw[dphilep2jet1] =   3.2;
+	b_name[dphilep2jet2] = "dphilep2jet2";           nbinraw[dphilep2jet2] = 100;	lowraw[dphilep2jet2] =   0. ;	upraw[dphilep2jet2] =   3.2; 
+	b_name[dphilmet1   ] = "dphilmet1"   ;           nbinraw[dphilmet1   ] = 100;	lowraw[dphilmet1   ] =   0. ;	upraw[dphilmet1   ] =   3.2; 
+	b_name[dphilmet2   ] = "dphilmet2"   ;           nbinraw[dphilmet2   ] = 100;	lowraw[dphilmet2   ] =   0. ;	upraw[dphilmet2   ] =   3.2; 
+	b_name[dphillmet   ] = "dphillmet"   ;           nbinraw[dphillmet   ] = 100;	lowraw[dphillmet   ] =   0. ;	upraw[dphillmet   ] =   3.2; 
 
-	//b_name[top1eta_gen ] = "top1eta_gen" ;
-	//b_name[top1phi_gen ] = "top1phi_gen" ;
-	//b_name[top1pt_gen  ] = "top1pt_gen"  ;
-	//b_name[top2eta_gen ] = "top2eta_gen" ;
-	//b_name[top2phi_gen ] = "top2phi_gen" ;
-	//b_name[top2pt_gen  ] = "top2pt_gen"  ;
-	//b_name[detatt_gen  ] = "detatt_gen"  ;
+	b_name[nvtx] = "nvtx";                           nbinraw[nvtx]         =  60;	lowraw[nvtx]         =   0. ;	upraw[nvtx]         =  60. ;
 
-	//b_name[nvtx        ] = "nvtx"        ;
-	//b_name[ntrueint    ] = "ntrueint"    ;
+	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
 
-	//b_name[scale       ] = "scale"        ;
-	//b_name[uPara       ] = "uPara"        ;
-	//b_name[uPerp       ] = "uPerp"        ;
-	//b_name[sphericity] = "sphericity";
-	//b_name[alignment ] = "alignment" ;
-	//b_name[planarity ] = "planarity" ;
-
-	b_name[darkpt    ] = "darkpt";
-	//b_name[MVA] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010";
-	//b_name[MVAtanh200] = "ANN_tanh_mt2ll80_200_ttDM0001scalar00010";*/
-
-	b_name[alone] = "mt2ll";
-
-	for( int i = 0; i < nhisto; i++ ){
-
- 		g_name[i] = b_name[i];
-
-	}
+	b_name[MVA] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00500";   
+                                                         nbinraw[MVA]          = 120;   lowraw[MVA]          =  -0.1;   upraw[MVA]          =   1.1;
 
 	//----------
 
