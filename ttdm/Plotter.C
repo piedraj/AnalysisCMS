@@ -45,6 +45,7 @@ void Plotter(TString option = "hist"){
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle(false);
+  plotter.SetMinitreeBased(true);
   plotter.SetSavePdf    (true);
 
   if (option.Contains("nostack"))
