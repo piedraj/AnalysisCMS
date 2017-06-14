@@ -143,6 +143,8 @@ class HistogramReader
   void     SetSavePdf         (Bool_t         savepdf) {_savepdf = savepdf;}
 
   void     SetSavePng         (Bool_t         savepng) {_savepng = savepng;}
+
+  void     SetMinitreeBased   (Bool_t         minitreebased) {_minitreebased = minitreebased;}
   
   Float_t  Yield              (TH1*           hist);
 
@@ -189,6 +191,7 @@ class HistogramReader
   Bool_t                _savepng;
   Bool_t                _writelabels;
   Bool_t                _writeyields;
+  Bool_t                _minitreebased;
 
   Float_t               _luminosity_fb;
   TString               _inputdir;

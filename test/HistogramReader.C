@@ -17,6 +17,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _drawratio       (false),
   _drawsignificance(false),
   _drawyield       (false),
+  _minitreebased   (false),
   _publicstyle     (false),
   _savepdf         (false),
   _savepng         (true)
@@ -927,8 +928,14 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  xaxis->SetLabelSize(size);xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
-  yaxis->SetLabelSize(size);yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
+  xaxis->SetLabelSize(size);
+  yaxis->SetLabelSize(size);
+
+  if (_minitreebased) {
+    xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
+    yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
+  }
+
   xaxis->SetTitleSize(size);
   yaxis->SetTitleSize(size);
 
