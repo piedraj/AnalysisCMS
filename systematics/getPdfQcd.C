@@ -61,6 +61,8 @@ const TString _filename    = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Fu
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getPdfQcd()
 {
+  printf("\n Reading %s\n\n", _filename.Data());
+
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
   if (_savefigures) gSystem->mkdir("figures", kTRUE);
@@ -78,14 +80,14 @@ void getPdfQcd()
 
   TTree* tree = (TTree*)file->Get("latino");
 
-  TCut selection = "metPfType1 > 40 && (std_vector_jet_pt[0] < 20 || std_vector_jet_cmvav2[0] < -0.715)";
+  TCut cut_hww2l2v_13TeV_of0j = "mll > 12 && (std_vector_lepton_pt[0] > 20) && (std_vector_lepton_pt[1] > 10) && (std_vector_lepton_pt[2] < 10) && (metPfType1 > 20) && (ptll > 30) && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -11*13) && (abs(std_vector_lepton_flavour[1]) == 13 || std_vector_lepton_pt[1] > 13) && (mth >= 60) && (std_vector_jet_pt[0] < 30) && (std_vector_jet_pt[0] < 20 || std_vector_jet_cmvav2[0] < -0.715) && ( std_vector_jet_pt[1] < 20 || std_vector_jet_cmvav2[1] < -0.715) && (std_vector_jet_pt[2] < 20 || std_vector_jet_cmvav2[2] < -0.715) && ( std_vector_jet_pt[3] < 20 || std_vector_jet_cmvav2[3] < -0.715) && (std_vector_jet_pt[4] < 20 || std_vector_jet_cmvav2[4] < -0.715) && (std_vector_jet_pt[5] < 20 || std_vector_jet_cmvav2[5] < -0.715) && (std_vector_jet_pt[6] < 20 || std_vector_jet_cmvav2[6] < -0.715) && (std_vector_jet_pt[7] < 20 || std_vector_jet_cmvav2[7] < -0.715) && (std_vector_jet_pt[8] < 20 || std_vector_jet_cmvav2[8] < -0.715) && (std_vector_jet_pt[9] < 20 || std_vector_jet_cmvav2[9] < -0.715)";
 
   TCanvas* canvas = new TCanvas("canvas", "canvas");
 
   if (_filename.Contains("latino"))
-    tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*selection);
+    tree->Draw("0*std_vector_LHE_weight+Iteration$+0.5>>h_weights_rec", "std_vector_LHE_weight[Iteration$]/std_vector_LHE_weight[0]"*cut_hww2l2v_13TeV_of0j);
   else
-    tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*selection);
+    tree->Draw("0*LHEweight+Iteration$+0.5>>h_weights_rec", "LHEweight[Iteration$]/LHEweight[0]"*cut_hww2l2v_13TeV_of0j);
 
 
   // Produce the QCD uncertainties
