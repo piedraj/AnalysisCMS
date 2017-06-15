@@ -15,7 +15,7 @@ const float xs2l = 1.0/9;
 
 const float PUrw = 1.030108192;
 
-const float    ttSF = 0.97;  const float ettSF = 0.05;
+const float    ttSF = 1.00;  const float ettSF = 0.05;
 const float    DYSF = 1.01;  const float eDYSF = 0.04;
 			     const float efakes= 0.30;
 
@@ -25,8 +25,8 @@ const float    DYSF = 1.01;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-//const TCut selection = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00010>0.74&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
+//const TCut selection = "mt2ll>70.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
 
 
 const TString region = "SR";
@@ -131,7 +131,7 @@ enum{ nlepton,
       dphijet1met, dphijet2met, dphijj, dphijjmet, dphill, dphilep1jet1, dphilep1jet2, dphilep2jet1, dphilep2jet2, dphilmet1, dphilmet2,dphillmet,	
       nvtx, 
       darkpt,
-      MVA,
+      ANN,
       nhisto };
 
 TCut eventW[nsystematic];  
@@ -156,8 +156,8 @@ void Assign(){
 	//----------
 
 	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
-	processID[data ] = "01_Data_1outof15"        ;
-	//processID[data ] = "01_Data_Full2016"        ;
+	//processID[data ] = "01_Data_1outof15"        ;
+	processID[data ] = "01_Data_Full2016"        ;
 	processID[fakes] = "00_Fakes_1outof15"       ; 
 	//processID[fakes] = "00_Fakes_Full2016"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
@@ -346,8 +346,8 @@ void Assign(){
 
 	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
 
-	b_name[MVA] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00500";   
-                                                         nbinraw[MVA]          = 120;   lowraw[MVA]          =  -0.1;   upraw[MVA]          =   1.1;
+	b_name[ANN] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00500";   
+                                                         nbinraw[ANN]          = 120;   lowraw[ANN]          =  -0.1;   upraw[ANN]          =   1.1;
 
 	//----------
 

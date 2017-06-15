@@ -73,9 +73,9 @@ std::vector<TTree*> _mctree;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MVA(float metPfType1_cut = 80.,
          float mt2ll_cut      = 80.,
-	 TString signal     = "ttDM0001scalar00100", 
+	 TString signal     = "ttDM0001scalar00500", 
 	 bool    doMVATrain = 1,
-	 bool    doMVARead  = 1)
+	 bool    doMVARead  = 0)
 {
   if (!doMVATrain && !doMVARead) return;
 
@@ -234,7 +234,7 @@ void MVATrain(float metPfType1_cut, float mt2ll_cut, TString signal)
 
   // Preselection cuts and preparation
   //----------------------------------------------------------------------------
-  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=200:nTest_Signal=200:nTrain_Background=1000:nTest_Background=1000:!V");
+  factory->PrepareTrainingAndTestTree(Form("metPfType1>%5.2f&&mt2ll>%5.2f&&darkpt>0.", metPfType1_cut, mt2ll_cut), "NormMode=EqualNumEvents:nTrain_Signal=400:nTest_Signal=400:nTrain_Background=1000:nTest_Background=1000:!V");
   //factory->PrepareTrainingAndTestTree("mt2ll>100.&&darkpt>0.&&metPfType1>80.", "NormMode=EqualNumEvents:nTrain_Signal=0:nTest_Signal=0:nTrain_Background=0:nTest_Background=0:!V");
 
   // Book MVA

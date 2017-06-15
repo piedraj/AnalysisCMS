@@ -11,6 +11,8 @@ void GetHistogram( int process );
 void table7(){
 
 	Assign(); 
+	
+	int zoom = 1; 
 
 	for( int i = 0; i < nprocess; i++ ){
 
@@ -45,6 +47,12 @@ void table7(){
 
  		 yield[DY][ch] *= DYSF; 
 		eyield[DY][ch] *= DYSF;
+
+	         yield[ttDM][ch] *= xs2l; 
+		eyield[ttDM][ch] *= xs2l; 
+
+	         yield[ttDM][ch] *= zoom; 
+		eyield[ttDM][ch] *= zoom; 
 
 		 allbkg[ch] = yield[WW][ch] + yield[WZ][ch] + yield[VZ][ch] + yield[VVV][ch]+ 
                               yield[DY][ch] + yield[TTV][ch]+ yield[TT][ch] + yield[ST][ch] + 
@@ -95,6 +103,9 @@ void table7(){
 
 	mytable << Form("total bkg & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \\hline \n", 
                                               allbkg[ee], eallbkg[ee], allbkg[mm], eallbkg[mm], allbkg[em], eallbkg[em], allbkg[ll], eallbkg[ll]);
+
+	mytable << Form("m$_{\\chi}$ 1 m$_{\\phi}$ 10 \\,\\, x%d & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \\hline \n", 
+      zoom, yield[ttDM][ee], eyield[ttDM][ee], yield[ttDM][mm], eyield[ttDM][mm], yield[ttDM][em], eyield[ttDM][em], yield[ttDM][ll], eyield[ttDM][ll]);
 
 	mytable << Form("data & %7.0f & %7.0f & %7.0f & %7.0f \\\\ \\hline \n", 
               yield[data][ee], yield[data][mm], yield[data][em], yield[data][ll] );

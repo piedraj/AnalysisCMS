@@ -1,11 +1,12 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/blabla/"; 
+const TString outputdir = "histos/ttCR-7080_ANN-heavy/"; 
 
 void CreateHistograms2( int process );
 
 float cuentita = 0.0; 
 
+bool doLoop = 1; 
 
 void CreateHistograms(){
 
@@ -15,14 +16,22 @@ void CreateHistograms(){
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	if( doLoop == true ){
 
-		CreateHistograms2( i ); 
+		for( int i = 0; i < nprocess; i++ ){
+
+			CreateHistograms2( i ); 
+
+		}
 
 	}
 
+	else{
 
-	//CreateHistograms2( ttDM );
+		CreateHistograms2( ttDM );
+
+	}
+
 	//CreateHistograms2( TT   );
 
 	//-----
@@ -113,6 +122,9 @@ void CreateHistograms2( int process ){
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
+		float fakesreadapt = 35.9/2.4; 
+                if ( process == fakes              ) thecut = Form("         %4.2f", fakesreadapt)*thecut; 
+
 		/*if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
 
 			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
@@ -202,7 +214,8 @@ void CreateHistograms2( int process ){
 				//i == dphillmet     ||	
 				//i == nvtx          || 
 				//i == darkpt        ||
-				i == MVA               )
+				i == ANN           ||
+                                1 < 0               )
 			{
 
 				HowManyVar += 1; 
