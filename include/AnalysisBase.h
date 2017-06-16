@@ -227,6 +227,8 @@ public :
    // Full2016_Apr17 electron working points
    Float_t         LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
    Float_t         LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+   Float_t         METFilter_DATA;
+   Float_t         METFilter_MC;
    vector<float>   *std_vector_muon_isTightLepton_cut_Tight80x;
    vector<float>   *std_vector_electron_isTightLepton_cut_WP_Tight80X;
 
@@ -1013,6 +1015,8 @@ public :
    // Full2016_Apr17 electron working points
    TBranch        *b_LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;   //!
    TBranch        *b_LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;   //
+   TBranch        *b_METFilter_DATA;   //!
+   TBranch        *b_METFilter_MC;   //!
    TBranch        *b_std_vector_muon_isTightLepton_cut_Tight80x;   //!
    TBranch        *b_std_vector_electron_isTightLepton_cut_WP_Tight80X;   //!
 
@@ -1757,6 +1761,8 @@ void AnalysisBase::Init(TTree *tree)
    // Full2016_Apr17 electron working points
    fChain->SetBranchAddress("LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x", &LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x, &b_LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x);
    fChain->SetBranchAddress("LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x", &LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x, &b_LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x);
+   fChain->SetBranchAddress("METFilter_DATA", &METFilter_DATA, &b_METFilter_DATA);
+   fChain->SetBranchAddress("METFilter_MC", &METFilter_MC, &b_METFilter_MC);
    fChain->SetBranchAddress("std_vector_muon_isTightLepton_cut_Tight80x", &std_vector_muon_isTightLepton_cut_Tight80x, &b_std_vector_muon_isTightLepton_cut_Tight80x);
    fChain->SetBranchAddress("std_vector_electron_isTightLepton_cut_WP_Tight80X", &std_vector_electron_isTightLepton_cut_WP_Tight80X, &b_std_vector_electron_isTightLepton_cut_WP_Tight80X);
 

@@ -59,66 +59,6 @@ bool AnalysisCMS::PassTrigger()
 
 
 //------------------------------------------------------------------------------
-// ApplyMETFilters
-//------------------------------------------------------------------------------
-bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
-				  bool ApplyICHEPAdditionalFilters)
-{
-  if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyMETFilters]\n");
-
-  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
-  if (_isfastsim) return true;
-
-  if (!std_vector_trigger_special) return true;
-
-
-  // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/skimEventProducer_cfi.py#L383-L392
-  // "Flag_HBHENoiseFilter"                     #0
-  // "Flag_HBHENoiseIsoFilter"                  #1
-  // "Flag_EcalDeadCellTriggerPrimitiveFilter"  #2
-  // "Flag_goodVertices"                        #3
-  // "Flag_eeBadScFilter"                       #4
-  // "Flag_globalTightHalo2016Filter"           #5
-  // "Flag_duplicateMuons"                      #6 -> 0 is good // Giovanni's filter
-  // "Flag_badMuons"                            #7 -> 0 is good // Giovanni's filter
-  // "Bad PF Muon Filter"                       #8              // ICHEP additional filter
-  // "Bad Charged Hadrons"                      #9              // ICHEP additional filter
-
-
-  // https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Moriond_2017
-  for (int nf=0; nf<6; nf++) {
-    
-    if (_ismc && nf == 4) continue;
-    
-    if (std_vector_trigger_special->at(nf) != 1) return false;
-  }
-
-  // Need to fix beacuse some MC were not produced with the lastest cfg for SkimEventProducer :(
-  int G1 = 6, G2 = 7, I1 = 8, I2 = 9;
-
-  if (std_vector_trigger_special->at(8) == -2) {
-
-    ApplyGiovanniFilters = false;
-    G1 = -1; G2 = -1, I1 = 6, I2 = 7;
-  }
-
-  if (!_ismc && ApplyGiovanniFilters) {
-
-    if (std_vector_trigger_special->at(G1) != 0) return false;
-    if (std_vector_trigger_special->at(G2) != 0) return false;
-  }
-
-  if (ApplyICHEPAdditionalFilters) {
-
-    if (std_vector_trigger_special->at(I1) != 1) return false;
-    if (std_vector_trigger_special->at(I2) != 1) return false;
-  }
-
-  return true;
-}
-
-
-//------------------------------------------------------------------------------
 // MuonIsolation
 //------------------------------------------------------------------------------
 float AnalysisCMS::MuonIsolation(int k)
@@ -472,9 +412,9 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
-  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17 electron working points
+  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17
 
-  _event_weight *= ApplyMETFilters();
+  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;  // Full2016_Apr17
 
   _event_weight *= veto_EMTFBug;
 
@@ -533,7 +473,7 @@ void AnalysisCMS::ApplyWeights()
   float sf_idiso_up = 1.0;
   float sf_idiso_do = 1.0;
 
-  // Full2016_Apr17 electron working points
+  // Full2016_Apr17
   if (!_analysis.EqualTo("Stop"))
     {
       sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;

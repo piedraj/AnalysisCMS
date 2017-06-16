@@ -30,7 +30,7 @@ rm -rf 14_HZ.root
 rm -rf 15_WgStar.root
 
 
- hadd -f -k 00_Fakes.root     fakeW*.root
+#hadd -f -k 00_Fakes.root     fakeW*.root
  hadd -f -k 01_Data.root      *Run2016*.root
  hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
  hadd -f -k 03_VZ.root        ZZTo2L2Q__part*.root WZTo2L2Q__part*.root

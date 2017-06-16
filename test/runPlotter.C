@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
 
@@ -124,7 +124,7 @@ void runPlotter(TString level,
 	}
       else
 	{
-	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+	  //	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
