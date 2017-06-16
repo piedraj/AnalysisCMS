@@ -47,7 +47,7 @@ bool AnalysisCMS::PassTrigger()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::PassTrigger]\n");
 
-  if (_ismc) return true;  // Need to study, Summer16 does have the trigger info
+  if (_ismc) return true;
 
   if      (_sample.Contains("MuonEG"))         return ( trig_EleMu);
   else if (_sample.Contains("DoubleMuon"))     return (!trig_EleMu &&  trig_DbleMu);
@@ -194,6 +194,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_mt2lblb       [ichannel][icut][ijet]->Fill(_mt2lblb,        _event_weight);
   h_mlb1          [ichannel][icut][ijet]->Fill(_mlb1,           _event_weight);
   h_mlb2          [ichannel][icut][ijet]->Fill(_mlb2,           _event_weight);
+
 
   // TH1 histograms with minitree variables
   //----------------------------------------------------------------------------
@@ -471,6 +472,8 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
+  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17 electron working points
+
   _event_weight *= ApplyMETFilters();
 
   _event_weight *= veto_EMTFBug;
@@ -491,8 +494,6 @@ void AnalysisCMS::ApplyWeights()
 				  (std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)));
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
-
-  if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
@@ -521,7 +522,7 @@ void AnalysisCMS::ApplyWeights()
 
   // trigger scale factors
   //----------------------------------------------------------------------------
-  float sf_trigger    = effTrigW;  // To be updated for WZ
+  float sf_trigger    = effTrigW;
   float sf_trigger_up = effTrigW_Up;
   float sf_trigger_do = effTrigW_Down;
 
@@ -532,18 +533,12 @@ void AnalysisCMS::ApplyWeights()
   float sf_idiso_up = 1.0;
   float sf_idiso_do = 1.0;
 
-  if (!_analysis.EqualTo("Stop") && std_vector_lepton_idisoWcut_WP_Tight80X)
+  // Full2016_Apr17 electron working points
+  if (!_analysis.EqualTo("Stop"))
     {
-      sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
-      sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
-      sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
-
-      if (_analysis.EqualTo("WZ"))
-	{
-	  sf_idiso    *= std_vector_lepton_idisoWcut_WP_Tight80X->at(2);
-	  sf_idiso_up *= std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(2);
-	  sf_idiso_do *= std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(2);
-	}
+      sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
     }
 
   if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
@@ -559,13 +554,6 @@ void AnalysisCMS::ApplyWeights()
   float sf_reco    = std_vector_lepton_recoW->at(0)      * std_vector_lepton_recoW->at(1);
   float sf_reco_up = std_vector_lepton_recoW_Up->at(0)   * std_vector_lepton_recoW_Up->at(1);
   float sf_reco_do = std_vector_lepton_recoW_Down->at(0) * std_vector_lepton_recoW_Down->at(1);
-
-  if (_analysis.EqualTo("WZ"))
-    {
-      sf_reco    *= std_vector_lepton_recoW->at(2);
-      sf_reco_up *= std_vector_lepton_recoW_Up->at(2);
-      sf_reco_do *= std_vector_lepton_recoW_Down->at(2);
-    }
 
 
   // fastsim scale factors
@@ -629,29 +617,29 @@ void AnalysisCMS::GetLeptons()
     float flavour = std_vector_lepton_flavour->at(i);
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
-    float type    = std_vector_lepton_isTightLepton->at(i);
 
-    if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
+    if (std_vector_lepton_isLooseLepton->at(i) < 0.5) continue;
 
     if (pt < 0.) continue;
 
     Lepton lep;
       
     lep.index   = i;
-    lep.type    = type;
-    lep.flavour = flavour;
-      
+    lep.flavour = int(flavour);
+
     float mass = -999;
 
     if (abs(lep.flavour) == ELECTRON_FLAVOUR)
       {
-	mass    = ELECTRON_MASS;
-	lep.iso = ElectronIsolation(i);
+	mass     = ELECTRON_MASS;
+	lep.iso  = ElectronIsolation(i);
+	lep.type = std_vector_electron_isTightLepton_cut_WP_Tight80X->at(i);
       }
     else if (abs(lep.flavour) == MUON_FLAVOUR)
       {
-	mass    = MUON_MASS;
-	lep.iso = MuonIsolation(i);
+	mass     = MUON_MASS;
+	lep.iso  = MuonIsolation(i);
+	lep.type = std_vector_muon_isTightLepton_cut_Tight80x->at(i);
       }
 
     TLorentzVector tlv;
@@ -660,7 +648,7 @@ void AnalysisCMS::GetLeptons()
 
     lep.v = tlv;
 
-    if (std_vector_lepton_isTightLepton->at(i) == 1) _ntightlepton++;
+    if (lep.type == Tight) _ntightlepton++;
 
     AnalysisLeptons.push_back(lep);
 
@@ -1171,30 +1159,15 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  if (_analysis.EqualTo("WZ"))
-    {
-      _fake_weight            = fakeW3l;
-      _fake_weight_elUp       = fakeW3lElUp;
-      _fake_weight_elDown     = fakeW3lElDown;
-      _fake_weight_elStatUp   = fakeW3lstatElUp;
-      _fake_weight_elStatDown = fakeW3lstatElDown;
-      _fake_weight_muUp       = fakeW3lMuUp;
-      _fake_weight_muDown     = fakeW3lMuDown;
-      _fake_weight_muStatUp   = fakeW3lstatMuUp;
-      _fake_weight_muStatDown = fakeW3lstatMuDown;
-    }
-  else
-    {
-      _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
-      _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
-      _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
-      _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
-      _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
-      _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
-      _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
-      _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
-      _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
-    }
+  _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
+  _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
+  _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
+  _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
+  _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
+  _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
+  _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
+  _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
+  _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
 }
 
 
@@ -1203,6 +1176,10 @@ void AnalysisCMS::GetFakeWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 {
+  GetFakeWeights();
+
+  ApplyWeights();
+
   GetMET(metPfType1, metPfType1Phi);
 
   GetTrkMET(metTtrk, metTtrkPhi);
@@ -1218,10 +1195,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   if (_analysis.EqualTo("TTDM")) GetDark();
   
   if (_analysis.EqualTo("TTDM")) GetTopReco();
-
-  GetFakeWeights();
-
-  ApplyWeights();
 
 
   // Additional analysis variables
@@ -2413,6 +2386,7 @@ void AnalysisCMS::GetRazor()
   
   // This is filled in GetLeptons()
   vector<TLorentzVector> Leps;
+
   Leps.push_back(Lepton1.v);
   Leps.push_back(Lepton2.v);
   
