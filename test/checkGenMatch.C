@@ -1,6 +1,4 @@
-#include "TCanvas.h"
 #include "TFile.h"
-#include "TH1F.h"
 #include "TLorentzVector.h"
 #include "TTree.h"
 #include <fstream>
@@ -8,8 +6,9 @@
 #include <vector>
 
 
-const double ELECTRON_MASS = 0.000511;  // [GeV]
-const double MUON_MASS     = 0.106;     // [GeV]
+const double   ELECTRON_MASS = 0.000511;  // [GeV]
+const double   MUON_MASS     = 0.106;     // [GeV]
+const Long64_t MAX_ENTRIES   = 5e4;
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,7 +25,7 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //    root -l -b -q checkGenMatch.C+
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part18.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part7.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
@@ -35,14 +34,10 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   TTree* tree = (TTree*)file->Get("latino");
 
 
-  // Prepare histograms
-  //----------------------------------------------------------------------------
-  TH1F* h_firstLepton_deltaRMin  = new TH1F("h_firstLepton_deltaRMin",  "h_firstLepton_deltaRMin",  100, 0, 0.01);
-  TH1F* h_secondLepton_deltaRMin = new TH1F("h_secondLepton_deltaRMin", "h_secondLepton_deltaRMin", 100, 0, 0.01);
-
-
   // Get the variables of interest
   //----------------------------------------------------------------------------
+  float mll;
+
   vector<float> *std_vector_lepton_eta = 0;
   vector<float> *std_vector_lepton_flavour = 0;
   vector<float> *std_vector_lepton_genmatched = 0;
@@ -57,6 +52,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   vector<float> *std_vector_leptonGen_pid = 0;
   vector<float> *std_vector_leptonGen_pt = 0;
   vector<float> *std_vector_leptonGen_status = 0;
+
+  tree->SetBranchAddress("mll", &mll);
 
   tree->SetBranchAddress("std_vector_lepton_eta",        &std_vector_lepton_eta);
   tree->SetBranchAddress("std_vector_lepton_flavour",    &std_vector_lepton_flavour);
@@ -114,11 +111,13 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   //----------------------------------------------------------------------------
   Long64_t nentries = tree->GetEntries();
 
-  if (nentries > 2e5) nentries = 2e5;
+  if (MAX_ENTRIES > -1 && nentries > MAX_ENTRIES) nentries = MAX_ENTRIES;
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
     tree->GetEntry(jentry);
+
+    if (mll > 75 && mll < 105) continue;
 
     if (std_vector_lepton_pt->at(0) < 25) continue;
     if (std_vector_lepton_pt->at(1) < 10) continue;
@@ -134,10 +133,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
     // Loop over 1st and 2nd RECO leptons
     //--------------------------------------------------------------------------
-    UInt_t firstLeptonGen         = 999;
-    UInt_t secondLeptonGen        = 999;
-    float  firstLepton_deltaRMin  = 999;
-    float  secondLepton_deltaRMin = 999;
+    UInt_t firstLeptonGen  = 999;
+    UInt_t secondLeptonGen = 999;
 
     for (UInt_t i=0; i<2; i++) {
 
@@ -186,9 +183,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 	  if (i == 1) secondLeptonGen = j;
 
 	  deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
-
-	  if (i == 0) firstLepton_deltaRMin  = deltaRMin;
-	  if (i == 1) secondLepton_deltaRMin = deltaRMin;
 	}
       }
     }
@@ -197,8 +191,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     // Fill the 1st lepton counters
     //--------------------------------------------------------------------------
     if (firstLeptonGen < 999) {
-
-      (firstLepton_deltaRMin > 0.00995) ? h_firstLepton_deltaRMin->Fill(0.00995) : h_firstLepton_deltaRMin->Fill(firstLepton_deltaRMin);
 
       int lep1mpid = abs(std_vector_leptonGen_MotherPID->at(firstLeptonGen));
 
@@ -227,8 +219,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     // Fill the 2nd lepton counters
     //--------------------------------------------------------------------------
     if (secondLeptonGen < 999) {
-
-      (secondLepton_deltaRMin > 0.00995) ? h_secondLepton_deltaRMin->Fill(0.00995) : h_secondLepton_deltaRMin->Fill(secondLepton_deltaRMin);
 
       int lep2mpid = abs(std_vector_leptonGen_MotherPID->at(secondLeptonGen));
 
@@ -280,16 +270,4 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   printf(" proton     | %6.2f%% | %6.2f%%\n", factor * counter1_mother_2212_proton, factor * counter2_mother_2212_proton);
   printf(" other      | %6.2f%% | %6.2f%%\n", factor * counter1_mother_other,       factor * counter2_mother_other);
   printf("\n");
-
-
-  // Draw
-  //----------------------------------------------------------------------------
-  TCanvas* c1 = new TCanvas("c1", "c1");
-
-  c1->SetLogy();
-
-  h_secondLepton_deltaRMin->SetLineColor(kRed+1);
-
-  h_firstLepton_deltaRMin ->Draw();
-  h_secondLepton_deltaRMin->Draw("same");
 }
