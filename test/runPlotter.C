@@ -90,7 +90,7 @@ void runPlotter(TString level,
   plotter.AddProcess("11_Wg",        "W#gamma",              color_Wg);
   plotter.AddProcess("15_WgStar",    "W#gamma*",             color_WgStar);
   plotter.AddProcess("07_ZJets",     "Z+jets",               color_ZJets, roc_background, 1.0);
-  plotter.AddProcess("16_ZJetsToTT", "Z#rightarrow#tau#tau", color_ZJetsToTT);
+//plotter.AddProcess("16_ZJetsToTT", "Z#rightarrow#tau#tau", color_ZJetsToTT);
   plotter.AddProcess("09_TTV",       "ttV",                  color_TTV);
   plotter.AddProcess("04_TTTo2L2Nu", "tt",                   color_TTTo2L2Nu, roc_background, 1.0);
   plotter.AddProcess("05_ST",        "tW",                   color_ST);

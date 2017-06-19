@@ -2571,14 +2571,17 @@ void AnalysisCMS::GetSampleWeight()
   if (_sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= ptllDYW_NLO;
 
 
+  bool useDYtt = false;
+
+
   // Remove different flavour from DYJetsToLL_M-50
   //----------------------------------------------------------------------------
-  if (_sample.Contains("DYJetsToLL_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) != 11*13);
+  if (useDYtt && _sample.Contains("DYJetsToLL_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) != 11*13);
 
 
   // Remove same flavour from DYJetsToTT_MuEle_M-50
   //----------------------------------------------------------------------------
-  if (_sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) == 11*13);
+  if (useDYtt && _sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= (abs(std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1)) == 11*13);
 
 
   // Samples with extensions
