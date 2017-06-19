@@ -124,7 +124,7 @@ void runPlotter(TString level,
 	}
       else
 	{
-	  //	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
     }
 
