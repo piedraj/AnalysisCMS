@@ -54,21 +54,10 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
   for (Long64_t jentry=0; jentry<_nentries;jentry++) {
-
+  
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    //    fChain->SetBranchStatus("*", 0);
-    //    fChain->SetBranchStatus("GEN_weight_SM", 1);
-    //    fChain->SetBranchStatus("Gen_ZGstar_mass", 1);
-    //    fChain->SetBranchStatus("Gen_ZGstar_MomId", 1);
-    //    ...
-    //    ...
-    ////////////////////////////////////////////////////////////////////////////
-
 
     fChain->GetEntry(jentry);
 
@@ -87,7 +76,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     if      (_nelectron == 2) _channel = ee;
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
-    
+
     _m2l  = mll;   // Needs l2Sel
     _pt2l = ptll;  // Needs l2Sel
 

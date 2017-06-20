@@ -9,6 +9,7 @@
 AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
+  SetMinitreePath("/eos/user/j/jgarciaf/");
 }
 
 

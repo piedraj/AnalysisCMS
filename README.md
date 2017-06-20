@@ -84,7 +84,7 @@ It is recommended to first test the code.
 
     ./runAnalysis
 
-Submit jobs to the gridui batch system. It is encouraged to first read the [Basic Grid Engine Usage](https://grid.ifca.es/wiki/Cluster/Usage/GridEngine) documentation.
+If you submit jobs to the gridui batch system it is encouraged to first read the [Basic Grid Engine Usage](https://grid.ifca.es/wiki/Cluster/Usage/GridEngine) documentation.
 
     rm -rf minitrees/<systematic>
     rm -rf rootfiles/<systematic>

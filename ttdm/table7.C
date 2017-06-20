@@ -1,30 +1,6 @@
-enum{ data,
-      fakes,
-      TT,
-      ST,
-      DY,
-      TTV,
-      WW,
-      WZ, 
-      VZ,
-      VVV,
-      Wg,
-      Zg,
-      HWW,
-      HZ,
-      ttDMlight,
-      ttDMheavy,
-      nprocess
-}; 
-
-enum { ee, mm, em, ll, nchannel }; 
-
-const float thelumi = 2.15; 
-
-TCut mycut = ""; 
-
-TString processID[nprocess]   ;
-TH1F*     myhisto[nprocess][4];
+#include "ttdm.h" 
+ 
+TH1F*       histo[nprocess][4];
 float       yield[nprocess][4];
 float      eyield[nprocess][4]; 
 float      allbkg          [4];
@@ -34,23 +10,9 @@ void GetHistogram( int process );
 
 void table7(){
 
-	processID[ttDMlight] = "ttDM0001scalar00010" ;  
-	processID[ttDMheavy] = "ttDM0001scalar00010" ;  
-	processID[data ] = "01_Data_reduced_1outof6" ;
-	processID[fakes] = "00_Fakes_reduced_1outof6"; 
-	processID[TT   ] = "04_TTTo2L2Nu"            ; 
-	processID[ST   ] = "05_ST"                   ; 
-	processID[DY   ] = "07_ZJets"                ; 
-	//processID[TTV  ] = "09_TTV"                  ; 
-	processID[TTV  ] = "09_TTV_updated"          ; 
-	processID[WW   ] = "06_WW"                   ; 
-	processID[WZ   ] = "02_WZTo3LNu"             ; 
-	processID[VZ   ] = "03_VZ"                   ; 
-	processID[VVV  ] = "13_VVV"                  ; 
-	processID[Wg   ] = "11_Wg"                   ; 
-	processID[Zg   ] = "12_Zg"                   ; 
-	processID[HWW  ] = "10_HWW"                  ; 
-	processID[HZ   ] = "14_HZ"                   ;  
+	Assign(); 
+	
+	int zoom = 1; 
 
 	for( int i = 0; i < nprocess; i++ ){
 
@@ -58,13 +20,18 @@ void table7(){
 
 	}
 
+
 	for( int ch = 0; ch < nchannel; ch++ ){
 
 		for( int i = 0; i < nprocess; i++ ){
 
-			 yield[i][ch] = myhisto[i][ch] -> Integral();				if(  yield[i][ch]<0 )  yield[i][ch] = 0; 
+			yield[i][ch] = histo[i][ch] -> Integral();				
 
-			eyield[i][ch] = sqrt( myhisto[i][ch] -> GetSumw2() -> GetSum() );	if( eyield[i][ch]<0 ) eyield[i][ch] = 0;
+			if(  yield[i][ch]<0 )  yield[i][ch] = 0; 
+
+			eyield[i][ch] = sqrt( histo[i][ch] -> GetSumw2() -> GetSum() );	
+
+			if( eyield[i][ch]<0 ) eyield[i][ch] = 0;
 
 			if( i != data && i != fakes ){
 
@@ -75,22 +42,25 @@ void table7(){
 
 		}
 
-		 yield[TT][ch] *= 0.97; 
-		eyield[TT][ch] *= 0.97;
- 		 yield[DY][ch] *= 1.07; 
-		eyield[DY][ch] *= 1.07;
+		 yield[TT][ch] *= ttSF; 
+		eyield[TT][ch] *= ttSF;
 
-		 yield[ttDMlight][ch] *= 10; 
-		eyield[ttDMlight][ch] *= 10;
-	 	 yield[ttDMheavy][ch] *= 1e3; 
-		eyield[ttDMheavy][ch] *= 1e3;
+ 		 yield[DY][ch] *= DYSF; 
+		eyield[DY][ch] *= DYSF;
 
-		 allbkg[ch] = yield[HZ][ch] + yield[HWW][ch] + yield[WW][ch] + yield[WZ][ch] + yield[VZ][ch]
-			   + yield[DY][ch] + yield[TTV][ch] + yield[TT][ch] + yield[ST][ch] + yield[fakes][ch];
+	         yield[ttDM][ch] *= xs2l; 
+		eyield[ttDM][ch] *= xs2l; 
 
-		eallbkg[ch] = sqrt( pow( eyield[HZ][ch], 2) + pow( eyield[HWW][ch], 2) + pow( eyield[WW][ch], 2) + pow( eyield[WZ][ch], 2)
-			    + pow( eyield[VZ][ch], 2) + pow( eyield[VVV][ch], 2) + pow( eyield[DY][ch], 2) + pow( eyield[TTV][ch], 2) 
-			    + pow( eyield[TT][ch], 2) + pow( eyield[ST][ch], 2) + pow( eyield[fakes][ch], 2) );    
+	         yield[ttDM][ch] *= zoom; 
+		eyield[ttDM][ch] *= zoom; 
+
+		 allbkg[ch] = yield[WW][ch] + yield[WZ][ch] + yield[VZ][ch] + yield[VVV][ch]+ 
+                              yield[DY][ch] + yield[TTV][ch]+ yield[TT][ch] + yield[ST][ch] + 
+			      yield[fakes][ch];
+
+		eallbkg[ch] = sqrt( pow( eyield[WW][ch], 2) + pow( eyield[WZ][ch], 2) + pow( eyield[VZ][ch], 2) + pow( eyield[VVV][ch], 2)+ 
+				    pow( eyield[DY][ch], 2) + pow( eyield[TTV][ch], 2)+ pow( eyield[TT][ch], 2) + pow( eyield[ST][ch], 2) +
+ 				    pow( eyield[fakes][ch], 2) );    
 
 	}
 
@@ -103,12 +73,6 @@ void table7(){
 	mytable << "\\hline \n"; 
 
 	mytable << "process & ee & $\\mu\\mu$ & e$\\mu$ & $\\ell\\ell$ \\\\ \\hline \n"; 
-
-        mytable << Form("HZ & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
-                              yield[HZ][ee], eyield[HZ][ee], yield[HZ][mm], eyield[HZ][mm], yield[HZ][em], eyield[HZ][em], yield[HZ][ll], eyield[HZ][ll]);
-
-        mytable << Form("HWW & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
-                      yield[HWW][ee], eyield[HWW][ee], yield[HWW][mm], eyield[HWW][mm], yield[HWW][em], eyield[HWW][em], yield[HWW][ll], eyield[HWW][ll]);
 
         mytable << Form("WW & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
                               yield[WW][ee], eyield[WW][ee], yield[WW][mm], eyield[WW][mm], yield[WW][em], eyield[WW][em], yield[WW][ll], eyield[WW][ll]);
@@ -140,14 +104,11 @@ void table7(){
 	mytable << Form("total bkg & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \\hline \n", 
                                               allbkg[ee], eallbkg[ee], allbkg[mm], eallbkg[mm], allbkg[em], eallbkg[em], allbkg[ll], eallbkg[ll]);
 
-        mytable << Form("m$_{\\chi}$ 1 m$_{\\phi}$ 10 \\,\\, x10 & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \n", 
-                              yield[ttDMlight][ee], eyield[ttDMlight][ee], yield[ttDMlight][mm], eyield[ttDMlight][mm], yield[ttDMlight][em], eyield[ttDMlight][em], yield[ttDMlight][ll], eyield[ttDMlight][ll]);
+	mytable << Form("m$_{\\chi}$ 1 m$_{\\phi}$ 10 \\,\\, x%d & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \\hline \n", 
+      zoom, yield[ttDM][ee], eyield[ttDM][ee], yield[ttDM][mm], eyield[ttDM][mm], yield[ttDM][em], eyield[ttDM][em], yield[ttDM][ll], eyield[ttDM][ll]);
 
-        mytable << Form("m$_{\\chi}$ 1 m$_{\\phi}$ 500 \\,\\, x10$^{3}$& %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \\hline \n", 
-                              yield[ttDMheavy][ee], eyield[ttDMheavy][ee], yield[ttDMheavy][mm], eyield[ttDMheavy][mm], yield[ttDMheavy][em], eyield[ttDMheavy][em], yield[ttDMheavy][ll], eyield[ttDMheavy][ll]);
-
-	mytable << Form("data & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f & %7.2f $\\pm$ %7.2f \\\\ \\hline \n", 
-              yield[data][ee], eyield[data][ee], yield[data][mm], eyield[data][mm], yield[data][em], eyield[data][em], yield[data][ll], eyield[data][ll]);
+	mytable << Form("data & %7.0f & %7.0f & %7.0f & %7.0f \\\\ \\hline \n", 
+              yield[data][ee], yield[data][mm], yield[data][em], yield[data][ll] );
 
  	mytable.close();
 
@@ -156,25 +117,46 @@ void table7(){
 
 void GetHistogram( int process ){
 
-	TFile* myfile = new TFile( "../minitrees/diciembre/" + processID[process] + ".root", "read" ); 
+	cout << "\t\t" << processID[process] << "\n" << endl;
+
+	TCanvas* c1 = new TCanvas("canvas", "the canvas");
+
+	TFile* myfile = new TFile( storageSite + minitreeDir[0] + "/TTDM/" + processID[process] + ".root", "read" ); 
 
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
+		
+	TCut ee_ch = "channel==3"; 
+	TCut mm_ch = "channel==4"; 
+	TCut em_ch = "channel==5"; 
+		
+	TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
 
-	/*mytree -> Draw( "metPfType1 >> htemp_ee", "eventW*(metPfType1>80&&mt2ll>100&&darkpt>0.&&ANN_met80_mt2ll100_ttDM0001scalar00100>0.45&&channel==3)" );
-	mytree -> Draw( "metPfType1 >> htemp_mm", "eventW*(metPfType1>80&&mt2ll>100&&darkpt>0.&&ANN_met80_mt2ll100_ttDM0001scalar00100>0.45&&channel==4)" );
-	mytree -> Draw( "metPfType1 >> htemp_em", "eventW*(metPfType1>80&&mt2ll>100&&darkpt>0.&&ANN_met80_mt2ll100_ttDM0001scalar00100>0.45&&channel==5)" );
-	mytree -> Draw( "metPfType1 >> htemp_ll", "eventW*(metPfType1>80&&mt2ll>100&&darkpt>0.&&ANN_met80_mt2ll100_ttDM0001scalar00100>0.45&&1==1)"       );*/
+	TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection ; 
 
-	mytree -> Draw( "metPfType1 >> htemp_ee", "eventW*(metPfType1>80&&channel==3)" );
-	mytree -> Draw( "metPfType1 >> htemp_mm", "eventW*(metPfType1>80&&channel==4)" );
-	mytree -> Draw( "metPfType1 >> htemp_em", "eventW*(metPfType1>80&&channel==5)" );
-	mytree -> Draw( "metPfType1 >> htemp_ll", "eventW*(metPfType1>80&&1==1)"       );
+	TCut ee_cut = ee_ch && newselection; 
+	TCut mm_cut = mm_ch && newselection; 
+	TCut em_cut = em_ch && newselection; 
+        TCut ll_cut =          newselection;
 
-	myhisto[process][ee] = (TH1F*) gDirectory -> Get( "htemp_ee" );
-	myhisto[process][mm] = (TH1F*) gDirectory -> Get( "htemp_mm" );
-	myhisto[process][em] = (TH1F*) gDirectory -> Get( "htemp_em" );
-	myhisto[process][ll] = (TH1F*) gDirectory -> Get( "htemp_ll" );
+	ee_cut = eventW[0] * ee_cut; 
+	mm_cut = eventW[0] * mm_cut; 
+	em_cut = eventW[0] * em_cut; 
+	ll_cut = eventW[0] * ll_cut; 
+
+	mytree -> Draw( "metPfType1 >> h_ee", ee_cut );
+	mytree -> Draw( "metPfType1 >> h_mm", mm_cut );
+	mytree -> Draw( "metPfType1 >> h_em", em_cut );
+	mytree -> Draw( "metPfType1 >> h_ll", ll_cut );
+
+	histo[process][ee] = (TH1F*) gDirectory -> Get( "h_ee" );
+	histo[process][mm] = (TH1F*) gDirectory -> Get( "h_mm" );
+	histo[process][em] = (TH1F*) gDirectory -> Get( "h_em" );
+	histo[process][ll] = (TH1F*) gDirectory -> Get( "h_ll" );
 	
+	//myfile->Close(); 
+
+	c1->Destructor(); 
+
 };
 
 
