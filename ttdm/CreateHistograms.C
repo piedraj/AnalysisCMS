@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/ttCR-7080_ANN-heavy/"; 
+const TString outputdir = "histos/ttCR-extended-njetGEQ3/"; 
 
 void CreateHistograms2( int process );
 
@@ -190,7 +190,7 @@ void CreateHistograms2( int process ){
 				//i == metPfType1    || 
 				//i == metPfType1Phi ||
 				//i == m2l           || 
-				//i == mt2ll         || 
+				i == mt2ll         || 
 				//i == mt2lblb       || 
 				//i == mtw1          || 
 				//i == mtw2          ||
@@ -214,7 +214,7 @@ void CreateHistograms2( int process ){
 				//i == dphillmet     ||	
 				//i == nvtx          || 
 				//i == darkpt        ||
-				i == ANN           ||
+				//i == ANN           ||
                                 1 < 0               )
 			{
 

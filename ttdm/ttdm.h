@@ -9,7 +9,7 @@ const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/";
 const TString theproduction = "fucking-mom"; 
 //const TString theproduction = "Dejavu"; 
 
-const float thelumi = 35.867/15.; 
+const float thelumi = 35.867; 
 
 const float xs2l = 1.0/9; 
 
@@ -25,8 +25,8 @@ const float    DYSF = 1.01;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-//const TCut selection = "mt2ll>70.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
+const TCut selection = "mt2ll>40.&&mt2ll<80.&&darkpt>=0.&&njet>=3";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+//const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
 
 
 const TString region = "SR";
