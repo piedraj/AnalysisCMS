@@ -543,7 +543,6 @@ void AnalysisCMS::ApplyWeights()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetLeptons()
 {
-
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetLeptons]\n");
 
   AnalysisLeptons.clear();
@@ -558,13 +557,6 @@ void AnalysisCMS::GetLeptons()
     float flavour = std_vector_lepton_flavour->at(i);
     float phi     = std_vector_lepton_phi->at(i);
     float pt      = std_vector_lepton_pt->at(i);
-    //    float type = -999;
-
-    /*if(fabs(flavour == 11)) {  
-      type = std_vector_electron_isTightLepton_mva_90p_Iso2015->at(i);
-    } else if(fabs(flavour == 13)) {
-      type = std_vector_muon_isTightLepton_cut_Tight80x->at(i);
-    */}
 
     if (std_vector_lepton_isLooseLepton->at(i) < 0.5) continue;
 
@@ -596,7 +588,6 @@ void AnalysisCMS::GetLeptons()
 
     lep.v = tlv;
 
-    //if (std_vector_electron_isTightLepton_mva_90p_Iso2015 -> at(i) > 0.5 || std_vector_muon_isTightLepton_cut_Tight80x -> at(i) > 0.5) _ntightlepton++;
     if (lep.type == Tight) _ntightlepton++;
 
     AnalysisLeptons.push_back(lep);
@@ -842,8 +833,8 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 				AnalysisLeptons[i].flavour,
 				AnalysisLeptons[i].v.Pt(),
 				AnalysisLeptons[i].v.Eta(),
-				AnalysisLeptons[i].iso);
-				//std_vector_lepton_isTightLepton->at(index));
+				AnalysisLeptons[i].iso,
+				std_vector_lepton_isTightLepton->at(index));
 	}
     }
   else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
