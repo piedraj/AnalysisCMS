@@ -1,6 +1,4 @@
-#include "TCanvas.h"
 #include "TFile.h"
-#include "TH1F.h"
 #include "TLorentzVector.h"
 #include "TTree.h"
 #include <fstream>
@@ -8,8 +6,15 @@
 #include <vector>
 
 
-const double ELECTRON_MASS = 0.000511;  // [GeV]
-const double MUON_MASS     = 0.106;     // [GeV]
+const double   ELECTRON_MASS = 0.000511;  // [GeV]
+const double   MUON_MASS     = 0.106;     // [GeV]
+const Long64_t MAX_ENTRIES   = 2e5;
+
+
+void PrintPercent(TString label,
+		  int     counter1,
+		  int     counter2,
+		  int     denominator);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,7 +31,7 @@ const double MUON_MASS     = 0.106;     // [GeV]
 //    root -l -b -q checkGenMatch.C+
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_TTTo2L2Nu__part18.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part7.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
@@ -35,14 +40,10 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   TTree* tree = (TTree*)file->Get("latino");
 
 
-  // Prepare histograms
-  //----------------------------------------------------------------------------
-  TH1F* h_firstLepton_deltaRMin  = new TH1F("h_firstLepton_deltaRMin",  "h_firstLepton_deltaRMin",  100, 0, 0.01);
-  TH1F* h_secondLepton_deltaRMin = new TH1F("h_secondLepton_deltaRMin", "h_secondLepton_deltaRMin", 100, 0, 0.01);
-
-
   // Get the variables of interest
   //----------------------------------------------------------------------------
+  float mll;
+
   vector<float> *std_vector_lepton_eta = 0;
   vector<float> *std_vector_lepton_flavour = 0;
   vector<float> *std_vector_lepton_genmatched = 0;
@@ -57,6 +58,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   vector<float> *std_vector_leptonGen_pid = 0;
   vector<float> *std_vector_leptonGen_pt = 0;
   vector<float> *std_vector_leptonGen_status = 0;
+
+  tree->SetBranchAddress("mll", &mll);
 
   tree->SetBranchAddress("std_vector_lepton_eta",        &std_vector_lepton_eta);
   tree->SetBranchAddress("std_vector_lepton_flavour",    &std_vector_lepton_flavour);
@@ -114,11 +117,15 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   //----------------------------------------------------------------------------
   Long64_t nentries = tree->GetEntries();
 
-  if (nentries > 2e5) nentries = 2e5;
+  if (MAX_ENTRIES > -1 && nentries > MAX_ENTRIES) nentries = MAX_ENTRIES;
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
     tree->GetEntry(jentry);
+
+    //    if (mll > 75 && mll < 105) continue;  // Require to be outside of the Z-peak
+
+    if (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) != -11*13) continue;  // Require different flavour
 
     if (std_vector_lepton_pt->at(0) < 25) continue;
     if (std_vector_lepton_pt->at(1) < 10) continue;
@@ -134,10 +141,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
     // Loop over 1st and 2nd RECO leptons
     //--------------------------------------------------------------------------
-    UInt_t firstLeptonGen         = 999;
-    UInt_t secondLeptonGen        = 999;
-    float  firstLepton_deltaRMin  = 999;
-    float  secondLepton_deltaRMin = 999;
+    UInt_t firstLeptonGen  = 999;
+    UInt_t secondLeptonGen = 999;
 
     for (UInt_t i=0; i<2; i++) {
 
@@ -186,9 +191,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 	  if (i == 1) secondLeptonGen = j;
 
 	  deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
-
-	  if (i == 0) firstLepton_deltaRMin  = deltaRMin;
-	  if (i == 1) secondLepton_deltaRMin = deltaRMin;
 	}
       }
     }
@@ -197,8 +199,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     // Fill the 1st lepton counters
     //--------------------------------------------------------------------------
     if (firstLeptonGen < 999) {
-
-      (firstLepton_deltaRMin > 0.00995) ? h_firstLepton_deltaRMin->Fill(0.00995) : h_firstLepton_deltaRMin->Fill(firstLepton_deltaRMin);
 
       int lep1mpid = abs(std_vector_leptonGen_MotherPID->at(firstLeptonGen));
 
@@ -228,8 +228,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     //--------------------------------------------------------------------------
     if (secondLeptonGen < 999) {
 
-      (secondLepton_deltaRMin > 0.00995) ? h_secondLepton_deltaRMin->Fill(0.00995) : h_secondLepton_deltaRMin->Fill(secondLepton_deltaRMin);
-
       int lep2mpid = abs(std_vector_leptonGen_MotherPID->at(secondLeptonGen));
 
       if      (lep2mpid ==    1) ++counter2_mother_1_d;
@@ -257,39 +255,43 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   // Print the results
   //----------------------------------------------------------------------------
-  float factor = 1e2 / counter_genmatched;
-
   printf("\n");
   printf(" number of events genmatched: %d for %s\n\n", counter_genmatched, filename.Data());
   printf(" mother PID |    lep1 |    lep2\n");
   printf("------------+---------+---------\n");
-  printf(" non-prompt | %6.2f%% | %6.2f%%\n", factor * counter1_nonprompt,          factor * counter2_nonprompt);
-  printf(" d          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_1_d,         factor * counter2_mother_1_d);
-  printf(" u          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_2_u,         factor * counter2_mother_2_u);
-  printf(" s          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_3_s,         factor * counter2_mother_3_s);
-  printf(" c          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_4_c,         factor * counter2_mother_4_c);
-  printf(" b          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_5_b,         factor * counter2_mother_5_b);
-  printf(" t          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_6_t,         factor * counter2_mother_6_t);
-  printf(" electron   | %6.2f%% | %6.2f%%\n", factor * counter1_mother_11_electron, factor * counter2_mother_11_electron);
-  printf(" muon       | %6.2f%% | %6.2f%%\n", factor * counter1_mother_13_muon,     factor * counter2_mother_13_muon);
-  printf(" tau        | %6.2f%% | %6.2f%%\n", factor * counter1_mother_15_tau,      factor * counter2_mother_15_tau);
-  printf(" gluon      | %6.2f%% | %6.2f%%\n", factor * counter1_mother_21_gluon,    factor * counter2_mother_21_gluon);
-  printf(" photon     | %6.2f%% | %6.2f%%\n", factor * counter1_mother_22_photon,   factor * counter2_mother_22_photon);
-  printf(" Z          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_23_Z,        factor * counter2_mother_23_Z);
-  printf(" W          | %6.2f%% | %6.2f%%\n", factor * counter1_mother_24_W,        factor * counter2_mother_24_W);
-  printf(" proton     | %6.2f%% | %6.2f%%\n", factor * counter1_mother_2212_proton, factor * counter2_mother_2212_proton);
-  printf(" other      | %6.2f%% | %6.2f%%\n", factor * counter1_mother_other,       factor * counter2_mother_other);
+  PrintPercent("non-prompt", counter1_nonprompt,          counter2_nonprompt,          counter_genmatched);
+  PrintPercent("d",          counter1_mother_1_d,         counter2_mother_1_d,         counter_genmatched);
+  PrintPercent("u",          counter1_mother_2_u,         counter2_mother_2_u,         counter_genmatched);
+  PrintPercent("s",          counter1_mother_3_s,         counter2_mother_3_s,         counter_genmatched);
+  PrintPercent("c",          counter1_mother_4_c,         counter2_mother_4_c,         counter_genmatched);
+  PrintPercent("b",          counter1_mother_5_b,         counter2_mother_5_b,         counter_genmatched);
+  PrintPercent("t",          counter1_mother_6_t,         counter2_mother_6_t,         counter_genmatched);
+  PrintPercent("electron",   counter1_mother_11_electron, counter2_mother_11_electron, counter_genmatched);
+  PrintPercent("muon",       counter1_mother_13_muon,     counter2_mother_13_muon,     counter_genmatched);
+  PrintPercent("tau",        counter1_mother_15_tau,      counter2_mother_15_tau,      counter_genmatched);
+  PrintPercent("gluon",      counter1_mother_21_gluon,    counter2_mother_21_gluon,    counter_genmatched);
+  PrintPercent("photon",     counter1_mother_22_photon,   counter2_mother_22_photon,   counter_genmatched);
+  PrintPercent("Z",          counter1_mother_23_Z,        counter2_mother_23_Z,        counter_genmatched);
+  PrintPercent("W",          counter1_mother_24_W,        counter2_mother_24_W,        counter_genmatched);
+  PrintPercent("proton",     counter1_mother_2212_proton, counter2_mother_2212_proton, counter_genmatched);
+  PrintPercent("other",      counter1_mother_other,       counter2_mother_other,       counter_genmatched);
   printf("\n");
+}
 
 
-  // Draw
-  //----------------------------------------------------------------------------
-  TCanvas* c1 = new TCanvas("c1", "c1");
+//------------------------------------------------------------------------------
+// PrintPercent
+//------------------------------------------------------------------------------
+void PrintPercent(TString label,
+		  int     counter1,
+		  int     counter2,
+		  int     denominator)
+{
+  float factor = 1e2 / denominator;
 
-  c1->SetLogy();
+  if (factor * counter1 < 0.01 || factor * counter2 < 0.01) return;
 
-  h_secondLepton_deltaRMin->SetLineColor(kRed+1);
+  printf(" %-10s | %6.2f%% | % 6.2f%%\n", label.Data(), factor * counter1, factor * counter2);
 
-  h_firstLepton_deltaRMin ->Draw();
-  h_secondLepton_deltaRMin->Draw("same");
+  return;
 }

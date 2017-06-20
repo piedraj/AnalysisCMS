@@ -139,6 +139,7 @@ const Color_t color_TTTo2L2Nu = kYellow;
 const Color_t color_ST        = kYellow+3;
 const Color_t color_WW        = kAzure-9;
 const Color_t color_ZJets     = kGreen+2;
+const Color_t color_ZJetsToTT = kGreen+3;
 const Color_t color_WJets     = kGray+1;
 const Color_t color_TTV       = kGreen-6;
 const Color_t color_TTZ       = kOrange+2;
