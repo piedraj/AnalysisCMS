@@ -420,6 +420,18 @@ public :
    //   vector<float>   *std_vector_lepton_closejet_eta;
    //   vector<float>   *std_vector_lepton_SIP3D;
    vector<float>   *std_vector_lepton_isTightLepton;
+   vector<float>   *std_vector_electron_isTightLepton_cut_WP_Tight80X;
+   vector<float>   *std_vector_electron_isTightLepton_cut_WP_Tight80X_SS;
+   vector<float>   *std_vector_electron_isTightLepton_mva_80p_Iso2015;
+   vector<float>   *std_vector_electron_isTightLepton_mva_80p_Iso2016;
+   vector<float>   *std_vector_electron_isTightLepton_mva_90p_Iso2015;
+   vector<float>   *std_vector_electron_isTightLepton_mva_90p_Iso2016;
+   vector<float>   *std_vector_electron_idisoW_cut_WP_Tight80X;
+   vector<float>   *std_vector_electron_idisoW_cut_WP_Tight80X_SS;
+   vector<float>   *std_vector_electron_idisoW_mva_80p_Iso2015;
+   vector<float>   *std_vector_electron_idisoW_mva_80p_Iso2016;
+   vector<float>   *std_vector_electron_idisoW_mva_90p_Iso2015;
+   vector<float>   *std_vector_electron_idisoW_mva_90p_Iso2016;
    vector<float>   *std_vector_lepton_ch;
    vector<float>   *std_vector_lepton_flavour;
    //   vector<float>   *std_vector_lepton_closejet_drlj;
@@ -427,6 +439,8 @@ public :
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
    vector<float>   *std_vector_lepton_isTightMuon;
+   vector<float>   *std_vector_muon_isTightLepton_cut_Tight80x;
+   vector<float>   *std_vector_muon_idisoW_cut_Tight80x;
    Float_t         susyMstop;
    Float_t         susyMLSP;
    Float_t         metPfType1Phi;
@@ -891,6 +905,18 @@ public :
    //   TBranch        *b_std_vector_lepton_closejet_eta;   //!
    //   TBranch        *b_std_vector_lepton_SIP3D;   //!
    TBranch        *b_std_vector_lepton_isTightLepton;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_cut_WP_Tight80X;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_cut_WP_Tight80X_SS;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_mva_80p_Iso2015;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_mva_80p_Iso2016;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_mva_90p_Iso2015;   //!
+   TBranch        *b_std_vector_electron_isTightLepton_mva_90p_Iso2016;   //!
+   TBranch        *b_std_vector_electron_idisoW_cut_WP_Tight80X;   //!
+   TBranch        *b_std_vector_electron_idisoW_cut_WP_Tight80X_SS;   //!
+   TBranch        *b_std_vector_electron_idisoW_mva_80p_Iso2015;   //!
+   TBranch        *b_std_vector_electron_idisoW_mva_80p_Iso2016;   //!
+   TBranch        *b_std_vector_electron_idisoW_mva_90p_Iso2015;   //!
+   TBranch        *b_std_vector_electron_idisoW_mva_90p_Iso2016;   //!
    TBranch        *b_std_vector_lepton_ch;   //!
    TBranch        *b_std_vector_lepton_flavour;   //!
    //   TBranch        *b_std_vector_lepton_closejet_drlj;   //!
@@ -898,6 +924,8 @@ public :
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
+   TBranch        *b_std_vector_muon_isTightLepton_cut_Tight80x;   //!
+   TBranch        *b_std_vector_muon_idisoW_cut_Tight80x;   //!
    TBranch        *b_susyMstop;   //!
    TBranch        *b_susyMLSP;   //!
    TBranch        *b_metPfType1Phi;   //!
@@ -1221,6 +1249,18 @@ void AnalysisBase::Init(TTree *tree)
    //   std_vector_lepton_closejet_eta = 0;
    //   std_vector_lepton_SIP3D = 0;
    std_vector_lepton_isTightLepton = 0;
+   std_vector_electron_isTightLepton_cut_WP_Tight80X = 0;
+   std_vector_electron_isTightLepton_cut_WP_Tight80X_SS = 0;
+   std_vector_electron_isTightLepton_mva_80p_Iso2015 = 0;
+   std_vector_electron_isTightLepton_mva_80p_Iso2016 = 0;
+   std_vector_electron_isTightLepton_mva_90p_Iso2015 = 0;
+   std_vector_electron_isTightLepton_mva_90p_Iso2016 = 0;
+   std_vector_electron_idisoW_cut_WP_Tight80X = 0;
+   std_vector_electron_idisoW_cut_WP_Tight80X_SS = 0;
+   std_vector_electron_idisoW_mva_80p_Iso2015 = 0;
+   std_vector_electron_idisoW_mva_80p_Iso2016 = 0;
+   std_vector_electron_idisoW_mva_90p_Iso2015 = 0;
+   std_vector_electron_idisoW_mva_90p_Iso2016 = 0;
    std_vector_lepton_ch = 0;
    std_vector_lepton_flavour = 0;
    //   std_vector_lepton_closejet_drlj = 0;
@@ -1228,6 +1268,8 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_d0 = 0;
    std_vector_lepton_genmatched = 0;
    std_vector_lepton_isTightMuon = 0;
+   std_vector_muon_isTightLepton_cut_Tight80x = 0;
+   std_vector_muon_idisoW_cut_Tight80x = 0;
    std_vector_lepton_idisoWcut_WP_Tight80X = 0;
    std_vector_lepton_idisoWcut_WP_Tight80X_Up = 0;
    std_vector_lepton_idisoWcut_WP_Tight80X_Down = 0;
@@ -1625,6 +1667,18 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_eta", &std_vector_lepton_closejet_eta, &b_std_vector_lepton_closejet_eta);
    //   fChain->SetBranchAddress("std_vector_lepton_SIP3D", &std_vector_lepton_SIP3D, &b_std_vector_lepton_SIP3D);
    fChain->SetBranchAddress("std_vector_lepton_isTightLepton", &std_vector_lepton_isTightLepton, &b_std_vector_lepton_isTightLepton);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_cut_WP_Tight80X", &std_vector_electron_isTightLepton_cut_WP_Tight80X, &b_std_vector_electron_isTightLepton_cut_WP_Tight80X);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_cut_WP_Tight80X_SS", &std_vector_electron_isTightLepton_cut_WP_Tight80X_SS, &b_std_vector_electron_isTightLepton_cut_WP_Tight80X_SS);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_mva_80p_Iso2015", &std_vector_electron_isTightLepton_mva_80p_Iso2015, &b_std_vector_electron_isTightLepton_mva_80p_Iso2015);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_mva_80p_Iso2016", &std_vector_electron_isTightLepton_mva_80p_Iso2016, &b_std_vector_electron_isTightLepton_mva_80p_Iso2016);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_mva_90p_Iso2015", &std_vector_electron_isTightLepton_mva_90p_Iso2015, &b_std_vector_electron_isTightLepton_mva_90p_Iso2015);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_mva_90p_Iso2016", &std_vector_electron_isTightLepton_mva_90p_Iso2016, &b_std_vector_electron_isTightLepton_mva_90p_Iso2016);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_cut_WP_Tight80X", &std_vector_electron_idisoW_cut_WP_Tight80X, &b_std_vector_electron_idisoW_cut_WP_Tight80X);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_cut_WP_Tight80X_SS", &std_vector_electron_idisoW_cut_WP_Tight80X_SS, &b_std_vector_electron_idisoW_cut_WP_Tight80X_SS);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_mva_80p_Iso2015", &std_vector_electron_idisoW_mva_80p_Iso2015, &b_std_vector_electron_idisoW_mva_80p_Iso2015);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_mva_80p_Iso2016", &std_vector_electron_idisoW_mva_80p_Iso2016, &b_std_vector_electron_idisoW_mva_80p_Iso2016);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_mva_90p_Iso2015", &std_vector_electron_idisoW_mva_90p_Iso2015, &b_std_vector_electron_idisoW_mva_90p_Iso2015);
+   fChain->SetBranchAddress("std_vector_electron_idisoW_mva_90p_Iso2016", &std_vector_electron_idisoW_mva_90p_Iso2016, &b_std_vector_electron_idisoW_mva_90p_Iso2016);
    fChain->SetBranchAddress("std_vector_lepton_ch", &std_vector_lepton_ch, &b_std_vector_lepton_ch);
    fChain->SetBranchAddress("std_vector_lepton_flavour", &std_vector_lepton_flavour, &b_std_vector_lepton_flavour);
    //   fChain->SetBranchAddress("std_vector_lepton_closejet_drlj", &std_vector_lepton_closejet_drlj, &b_std_vector_lepton_closejet_drlj);
@@ -1632,6 +1686,8 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
+   fChain->SetBranchAddress("std_vector_muon_isTightLepton_cut_Tight80x", &std_vector_muon_isTightLepton_cut_Tight80x, &b_std_vector_muon_isTightLepton_cut_Tight80x);
+   fChain->SetBranchAddress("std_vector_muon_idisoW_cut_Tight80x", &std_vector_muon_idisoW_cut_Tight80x, &b_std_vector_muon_idisoW_cut_Tight80x);
    fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
    fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);
    fChain->SetBranchAddress("metPfType1Phi", &metPfType1Phi, &b_metPfType1Phi);
