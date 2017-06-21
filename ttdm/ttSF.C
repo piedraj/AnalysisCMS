@@ -46,18 +46,11 @@ void ttSF(){
 
 		GetHistogram( i ); 
 
-		float myyield;
-
-		if ( i == fakes              ) myyield =     1.0*myhisto[i]->Integral(); 
-		if ( i == data               ) myyield =         myhisto[i]->Integral(); 
-		if ( i != fakes && i != data ) myyield = theLumi*myhisto[i]->Integral(); 
-
-		cout << myyield << endl;
-
-		if ( i == fakes              ) myhisto[i]->Scale(1.     ); 
+		if ( i == fakes              ) myhisto[i]->Scale(15.); 
 		if ( i != fakes && i != data ) myhisto[i]->Scale(theLumi); 
 		if ( i == DY )                 myhisto[i]->Scale(1.01); 
-
+		//if ( i == TT )                 myhisto[i]->Scale(1/0.97);
+ 
 		for( int j = 0; j < nband; j++ ){
 
 			yield[i][j] = myhisto[i]->Integral( myhisto[i]->FindBin(threshold - (nband-j)*width), myhisto[i]->FindBin(threshold - (nband-j-1)*width));
@@ -118,12 +111,12 @@ void ttSF(){
 	ttSF -> GetXaxis()->SetTitle("m_{T2}^{ll}");
 	ttSF -> GetYaxis()->SetTitle("tt SF");
 	ttSF -> Draw();
-	ttSF2-> Draw("same");
+	///ttSF2-> Draw("same");
 	//ttSF3 ->SetLineColor(kBlack);
  	//ttSF3-> Draw("same");
 
-	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short_njet3.pdf");
-	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short_njet3.png");
+	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short.pdf");
+	mycanvas -> SaveAs("~/www/figures/Analysis_170601_ttCR-extended/ttSF-running_short.png");
 	
 
 
@@ -145,7 +138,7 @@ void ttSF(){
 
 void GetHistogram( int process ){
 
-	TFile* myfile = new TFile( "histos/ttCR-extended-njetGEQ3/" + processID[process] + ".root", "read" ); 
+	TFile* myfile = new TFile( "histos/ttCR-extended/" + processID[process] + ".root", "read" ); 
 
 	myhisto[process] = (TH1F*) myfile -> Get( "mt2ll" );
 

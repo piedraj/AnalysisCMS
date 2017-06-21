@@ -9,13 +9,13 @@ const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/";
 const TString theproduction = "fucking-mom"; 
 //const TString theproduction = "Dejavu"; 
 
-const float thelumi = 35.867; 
+const float thelumi = 35.867/15.; 
 
 const float xs2l = 1.0/9; 
 
 const float PUrw = 1.030108192;
 
-const float    ttSF = 1.00;  const float ettSF = 0.05;
+const float    ttSF = 0.97;  const float ettSF = 0.05;
 const float    DYSF = 1.01;  const float eDYSF = 0.04;
 			     const float efakes= 0.30;
 
@@ -25,9 +25,9 @@ const float    DYSF = 1.01;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-const TCut selection = "mt2ll>40.&&mt2ll<80.&&darkpt>=0.&&njet>=3";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-//const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
-
+//const TCut selection = "mt2ll>40.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+//const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00010>0.75"; 
+const TCut selection = "metPfType1>80."; 
 
 const TString region = "SR";
 
@@ -155,11 +155,11 @@ void Assign(){
 
 	//----------
 
-	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
-	//processID[data ] = "01_Data_1outof15"        ;
-	processID[data ] = "01_Data_Full2016"        ;
-	processID[fakes] = "00_Fakes_1outof15"       ; 
-	//processID[fakes] = "00_Fakes_Full2016"       ; 
+	processID[ttDM ] = "ttDM0001scalar00010"     ;   //     tune !
+	processID[data ] = "01_Data_1outof15"        ;
+	//processID[data ] = "01_Data_Full2016"        ;
+	//processID[fakes] = "00_Fakes_1outof15"       ; 
+	processID[fakes] = "00_Fakes_Full2016"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
 	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;

@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/ttCR-extended-njetGEQ3/"; 
+const TString outputdir = "histos/ttCR-extended/"; 
 
 void CreateHistograms2( int process );
 
@@ -53,7 +53,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	//if( process == ttDM ) return; 
+	if( process == ttDM ) return; 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
@@ -117,13 +117,13 @@ void CreateHistograms2( int process ){
 
 		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
-		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		//if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
-		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
+		//if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
-		float fakesreadapt = 35.9/2.4; 
-                if ( process == fakes              ) thecut = Form("         %4.2f", fakesreadapt)*thecut; 
+		//float fakesreadapt = 35.9/2.4; 
+                //if ( process == fakes              ) thecut = Form("         %4.2f", fakesreadapt)*thecut; 
 
 		/*if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
 
@@ -238,7 +238,7 @@ void CreateHistograms2( int process ){
 					float yield;
 
 					if( process == data                     ) yield =         myhisto[i]-> Integral();
-					if( process == fakes                    ) yield =     1.0*myhisto[i]-> Integral();
+					if( process == fakes                    ) yield =35.9/2.4*myhisto[i]-> Integral();
 		                        if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral();
 
 					cout << "\t\t" << yield << endl; 
