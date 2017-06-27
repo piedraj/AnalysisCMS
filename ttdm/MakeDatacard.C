@@ -101,6 +101,7 @@ void GetRelUnc( int process ){
 	
 
 		// QCD 
+
 		if( process != data && process != ttDM && process != fakes && process != ST && j >= QCDup && j <= PDFdo ){ //&& process != HZ
 
 			int bin; 
@@ -249,8 +250,8 @@ void WriteDatacard( float threshold ){
 	datacard << "------------ \n" ;
 	datacard << "\n" ;
 	datacard << Form("bin %s \n", region.Data());
-	if( region == "SR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);   }
-	if( region == "CR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][hard]); }
+if( region == "SR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][NN]);   }
+if( region == "CR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][hard]); }
 	datacard << "------------\n" ;
 	datacard << "\n" ;
 datacard << Form("bin        \t     \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \n",
@@ -306,6 +307,7 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 					} 
 
 					if( figure < 1.0 ) figure = 2 - figure; 
+
 
 					datacard << Form( "%7.3f ", figure );					
 

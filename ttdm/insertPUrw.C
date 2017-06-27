@@ -15,18 +15,18 @@ void insertPUrw(){
 
 	LoadHistogram(); 
 
-	insertPUrw2( WZ ); 
-	insertPUrw2( VZ ); 
+	//insertPUrw2( WZ ); 
+	//insertPUrw2( VZ ); 
 	//insertPUrw2( TT ); 
-	insertPUrw2( ST ); 
-	insertPUrw2( WW ); 
-	insertPUrw2( DY ); 
-	insertPUrw2( VVV );
-	//insertPUrw2( ttDM ); 
+	//insertPUrw2( ST ); 
+	//insertPUrw2( WW ); 
+	//insertPUrw2( DY ); 
+	//insertPUrw2( VVV );
+	insertPUrw2( ttDM ); 
 
 	//for( int i = 0; i < nprocess; i++ ){
 
-	//insertPUrw2( i ); 
+	//	insertPUrw2( i ); 
 
 	//}
 
@@ -39,9 +39,7 @@ void insertPUrw2( int process ){
 	WriteBranch == 1    ?    cout << "\t\t ***** writing... ***** \n" << endl    :    cout << "\t\t ***** not writing... ***** \n" << endl; 
 	
 
-	//for( int k = MuESup; k <= MuESdo; k++ ){ 
-	//for( int k = 0; k <= nominal; k++ ){ 
-	  for( int k = nominal; k <= nominal; k++ ){ 
+	for( int k = nominal; k <= nominal; k++ ){ 
 
 		cout << "\t systematic: " << systematicID[k] << endl;
 
