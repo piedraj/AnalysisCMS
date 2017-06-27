@@ -1,7 +1,7 @@
 /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-10to50.root
-/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part0.root
-/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part1.root
-/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part2.root
+#/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part0.root
+#/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part1.root
+#/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50-LO-ext1__part2.root
 /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50__part0.root
 /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50__part1.root
 /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl1looseCut__bSFL1pTEffCut__fakeSel__hadd/latino_DYJetsToLL_M-50__part2.root

@@ -48,6 +48,8 @@ class AnalysisFR: public AnalysisCMS
 
   int   _Zlepton1type;
   int   _Zlepton2type;
+  float _Zlepton1idisoW;
+  float _Zlepton2idisoW;
   int   _Zlepton1index;
   int   _Zlepton2index;
   int   _Zdecayflavour;
