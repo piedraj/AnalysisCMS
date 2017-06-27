@@ -71,15 +71,15 @@ void getFakeRate()
   gSystem->mkdir("rootfilesFR", kTRUE);
   gSystem->mkdir("rootfilesPR", kTRUE);
 
-  dataFR  = new TFile ("../rootfiles/SixthWP/FR/01_Data.root",  "read");
-  wjetsFR = new TFile ("../rootfiles/SixthWP/FR/08_WJets.root", "read");
-  zjetsFR = new TFile ("../rootfiles/SixthWP/FR/07_ZJets.root", "read");
+  dataFR  = new TFile ("../rootfiles/FirstWP/FR/01_Data.root",  "read");
+  wjetsFR = new TFile ("../rootfiles/FirstWP/FR/08_WJets.root", "read");
+  zjetsFR = new TFile ("../rootfiles/FirstWP/FR/07_ZJets.root", "read");
 
   //dataFR  = new TFile ("../rootfiles/newFakes2/FR/01_Data.root",  "read");
   //wjetsFR = new TFile ("../rootfiles/newFakes2/FR/08_WJets.root", "read");
   //zjetsFR = new TFile ("../rootfiles/newFakes2/FR/07_ZJets.root", "read");
 
-  zjetsPR = new TFile ("../rootfiles/SixthWPPR/PR/07_ZJets.root", "read");
+  zjetsPR = new TFile ("../rootfiles/FirstWP-PR/PR/07_ZJets.root", "read");
 
   // Prompt rate
   //----------------------------------------------------------------------------
