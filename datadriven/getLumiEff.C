@@ -23,15 +23,15 @@ void getLumiEff()
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  //TFile*  data  = new TFile ("../rootfilesFR/nominal/FR/01_Data.root","read");
+  //TFile*  data  = new TFile ("../rootfiles/nominal/FR/01_Data.root","read");
   //TFile*  tt = new TFile ("../rootfilesFR/nominal/FR/06_TT.root","read");
-  //TFile*  zjets = new TFile ("../rootfilesFR/nominal/FR/07_ZJets.root","read");
-  //TFile*  wjets  = new TFile ("../rootfilesFR/nominal/FR/08_WJets.root","read");
+  //TFile*  zjets = new TFile ("../rootfiles/nominal/FR/07_ZJets.root","read");
+  //TFile*  wjets  = new TFile ("../rootfiles/nominal/FR/08_WJets.root","read");
 
-  TFile*  data  = new TFile ("../rootfiles/newFakes2/FR/01_Data.root","read");
+  TFile*  data  = new TFile ("../rootfiles/FirstWP/FR/01_Data.root","read");
   //TFile*  tt = new TFile ("../rootfilesFR/nominal/FR/06_TT.root","read");
-  TFile*  zjets = new TFile ("../rootfiles/newFakes2/FR/07_ZJets.root","read");
-  TFile*  wjets  = new TFile ("../rootfiles/newFakes2/FR/08_WJets.root","read");
+  TFile*  zjets = new TFile ("../rootfiles/FirstWP/FR/07_ZJets.root","read");
+  TFile*  wjets  = new TFile ("../rootfiles/FirstWP/FR/08_WJets.root","read");
 
   float muonjetet = 25.;
   float elejetet = 35.;

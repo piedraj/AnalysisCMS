@@ -10,7 +10,6 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016B_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016B-03Feb2017_ver2-v2__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016B_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016B-03Feb2017_ver2-v2__part2.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016B_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016B-03Feb2017_ver2-v2__part3.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016C-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016C-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_MuonEG_Run2016C-03Feb2017-v1.root
@@ -18,7 +17,6 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleElectron_Run2016C-03Feb2017-v1__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016C-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016C_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016C-03Feb2017-v1__part1.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016D-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016D-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_MuonEG_Run2016D-03Feb2017-v1.root
@@ -26,7 +24,6 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleElectron_Run2016D-03Feb2017-v1__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016D-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016D_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016D-03Feb2017-v1__part1.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016E-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016E-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_MuonEG_Run2016E-03Feb2017-v1.root
@@ -34,13 +31,11 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleElectron_Run2016E-03Feb2017-v1__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016E-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016E_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016E-03Feb2017-v1__part1.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016F-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016F-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_MuonEG_Run2016F-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleElectron_Run2016F-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016F_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016F-03Feb2017-v1.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016G-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016G-03Feb2017-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_MuonEG_Run2016G-03Feb2017-v1.root
@@ -49,7 +44,6 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016G-03Feb2017-v1__part0.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016G-03Feb2017-v1__part1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016G_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_SingleMuon_Run2016G-03Feb2017-v1__part2.root
-
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016H_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016H_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016H_RemAOD/l1looseCut__EpTCorr__fakeSel__hadd/latino_DoubleMuon_Run2016H-03Feb2017_ver2-v1.root
