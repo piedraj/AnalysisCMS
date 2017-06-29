@@ -358,9 +358,6 @@ void HistogramReader::Draw(TString hname,
   _allmchist->SetMarkerSize (      0);
 
 
-
-
-
   // Draw
   //----------------------------------------------------------------------------
   hfirst->Draw();
@@ -398,6 +395,8 @@ void HistogramReader::Draw(TString hname,
 
   if (_stackoption.Contains("nostack"))
     {
+      theMaxMC = 0.0;
+
       for (UInt_t i=0; i<_mcfile.size(); i++)
 	{
 	  Float_t mchist_i_max = GetMaximum(_mchist[i], xmin, xmax, false);
@@ -427,7 +426,7 @@ void HistogramReader::Draw(TString hname,
       theMin = 1e-5;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
-  else if (!_stackoption.Contains("nostack"))
+  else
     {
       theMax *= 1.7;
     }

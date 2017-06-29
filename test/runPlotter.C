@@ -7,6 +7,7 @@ const Bool_t allplots   = false;
 const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
+const Bool_t basictest  = false;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -114,11 +115,14 @@ void runPlotter(TString level,
     }
 
 
+  // Make an output directory for each level
+  //----------------------------------------------------------------------------
+  gSystem->mkdir(outputdir + level, kTRUE);
+
+
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
-
-  gSystem->mkdir(outputdir + level, kTRUE);
 
   for (int i=firstchannel; i<=lastchannel; i++)
     {
@@ -143,6 +147,8 @@ void runPlotter(TString level,
 	  !analysis.EqualTo("Top")     &&
 	  !analysis.EqualTo("WW")      &&
 	  j != njetbin) continue;
+
+      if (basictest && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -164,7 +170,9 @@ void runPlotter(TString level,
 	  !analysis.EqualTo("Stop")    &&
 	  !analysis.EqualTo("Top")     &&
 	  !analysis.EqualTo("WW")      &&
-	  j != njetbin) continue;   
+	  j != njetbin) continue;
+
+      if (basictest && j != njetbin) continue;
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -183,7 +191,7 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300); if (basictest) continue;
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
