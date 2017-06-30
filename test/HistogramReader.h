@@ -194,6 +194,8 @@ class HistogramReader
   Bool_t                _minitreebased;
 
   Float_t               _luminosity_fb;
+  Float_t               _xmin;
+  Float_t               _xmax;
   TString               _inputdir;
   TString               _outputdir;
   TString               _stackoption;
