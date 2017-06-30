@@ -126,6 +126,8 @@ void runPlotter(TString level,
 
   for (int i=firstchannel; i<=lastchannel; i++)
     {
+      if (basictest && i != lastchannel) continue;
+
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
       TString title = (i < lastchannel) ? lchannel[i] : "inclusive";
@@ -182,6 +184,8 @@ void runPlotter(TString level,
 
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
+	  if (basictest && i != lastchannel) continue;
+
 	  TString suffix = "_" + schannel[i];
 	  
 	  TString title = (i < lastchannel) ? lchannel[i] : "inclusive";

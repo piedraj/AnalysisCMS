@@ -165,6 +165,9 @@ void HistogramReader::Draw(TString hname,
 			   Float_t ymin,
 			   Float_t ymax)
 {
+  _xmin = xmin;
+  _xmax = xmax;
+
   TString cname = hname;
 
   if (_stackoption.Contains("nostack")) cname += "_nostack";
@@ -1277,47 +1280,55 @@ Float_t HistogramReader::GetBestSignalScoreX(TString hname,
 void HistogramReader::WriteYields(TH1*    hist,
 				  TString label)
 {
+  if (!_writeyields) return;
+
   TString hname = hist->GetName();
 
-  if (!_writeyields) return;
+  UInt_t nbins = hist->GetNbinsX();
+
+  TAxis* axis = (TAxis*)hist->GetXaxis();
+
+  Int_t firstBin = (_xmin > -999) ? axis->FindBin(_xmin) : 1;
+  Int_t lastBin  = (_xmax > -999) ? axis->FindBin(_xmax) : nbins;
+
+  if (firstBin < 1)     firstBin = 1;
+  if (lastBin  > nbins) lastBin  = nbins;
+
+  if (_xmax > -999 && hist->GetBinLowEdge(lastBin) >= _xmax) lastBin -= 1;
 
   if (_writelabels)
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %14s", " ");
-        
-      for (int i=1; i<=hist->GetNbinsX(); i++) {
+      _yields_table << Form("\n %15s", " ");
+
+      for (int i=firstBin; i<=lastBin; i++) {
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
+
+	if (!hname.Contains("evolution")) binlabel = Form("%d", i);
 	    
-	_yields_table << Form(" | %-32s", binlabel.Data());
+	_yields_table << Form(" | %-24s", binlabel.Data());
       }
 
       _yields_table << Form("\n");
     }
 
-  _yields_table << Form(" %14s", label.Data());
+  _yields_table << Form(" %15s", label.Data());
 
-  for (int i=1; i<=hist->GetNbinsX(); i++) {
+  for (int i=firstBin; i<=lastBin; i++) {
 
     float process_yield = hist->GetBinContent(i);
     float process_error = sqrt(hist->GetSumw2()->At(i));
 
     if (label.EqualTo("data"))
       {
-	_yields_table << Form(" | %8.0f %14s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %15s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" | %11.2f +/- %7.2f", process_yield, process_error);
+	_yields_table << Form(" | %11.2f +/- %8.2f", process_yield, process_error);
       }
-
-    int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
-
-    float process_percent = 1e2 * process_yield / hist->GetBinContent(denominator);
-
-    _yields_table << Form(" (%5.1f%s)", process_percent, "%");
   }
 
   _yields_table << Form("\n");
