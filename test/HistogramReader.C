@@ -171,7 +171,8 @@ void HistogramReader::Draw(TString hname,
 
   if (setlogy) cname += "_log";
 
-  _writeyields = (hname.Contains("_evolution")) ? true : false;
+  _writeyields = (hname.Contains("_evolution") || hname.Contains("mt2ll")) ? true : false;
+  //_writeyields = (hname.Contains("_evolution")) ? true : false;
 
   if (_writeyields)
     {
@@ -585,6 +586,7 @@ void HistogramReader::Draw(TString hname,
 
   if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
+  //canvas->SaveAs(_outputdir + cname + ".C");
 
   if (_writeyields)
     {
@@ -762,7 +764,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   TString final_label = Form(" %s", label.Data());
 
   if (drawyield)
-    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
+    final_label = Form("%s (%.2f)", final_label.Data(), Yield(hist));
 
   if (Yield(hist) < 0)
     printf("\n [HistogramReader::DrawLegend] Warning: %s %s yield = %f\n\n",
@@ -1291,7 +1293,7 @@ void HistogramReader::WriteYields(TH1*    hist,
       for (int i=1; i<=hist->GetNbinsX(); i++) {
 
 	TString binlabel = (TString)hist->GetXaxis()->GetBinLabel(i);
-	    
+	
 	_yields_table << Form(" | %-32s", binlabel.Data());
       }
 
@@ -1301,9 +1303,12 @@ void HistogramReader::WriteYields(TH1*    hist,
   _yields_table << Form(" %14s", label.Data());
 
   for (int i=1; i<=hist->GetNbinsX(); i++) {
-
+    
     float process_yield = hist->GetBinContent(i);
     float process_error = sqrt(hist->GetSumw2()->At(i));
+
+    //printf("process_yield = %f \n", process_yield);
+    //printf("process_error = %f \n", process_error);
 
     if (label.EqualTo("data"))
       {
@@ -1314,9 +1319,10 @@ void HistogramReader::WriteYields(TH1*    hist,
 	_yields_table << Form(" | %11.2f +/- %7.2f", process_yield, process_error);
       }
 
-    int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
-
-    float process_percent = 1e2 * process_yield / hist->GetBinContent(denominator);
+    //int denominator = (hname.Contains("counterLum_evolution")) ? hist->GetNbinsX() : 1;
+    //    int denominator = (hname.Contains("mt2ll")) ? hist->GetNbinsX() : 1;
+     
+    float process_percent = 1e2;//1e2 * process_yield / hist->GetBinContent(denominator);
 
     _yields_table << Form(" (%5.1f%s)", process_percent, "%");
   }
