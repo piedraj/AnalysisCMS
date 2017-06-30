@@ -174,8 +174,8 @@ void HistogramReader::Draw(TString hname,
 
   if (setlogy) cname += "_log";
 
-  _writeyields = (hname.Contains("_evolution") || hname.Contains("mt2ll")) ? true : false;
-  //_writeyields = (hname.Contains("_evolution")) ? true : false;
+  //_writeyields = (hname.Contains("_evolution") || hname.Contains("mt2ll")) ? true : false;
+  _writeyields = (hname.Contains("_evolution")) ? true : false;
 
   if (_writeyields)
     {
@@ -766,7 +766,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
   TString final_label = Form(" %s", label.Data());
 
   if (drawyield)
-    final_label = Form("%s (%.2f)", final_label.Data(), Yield(hist));
+    final_label = Form("%s (%.0f)", final_label.Data(), Yield(hist));
 
   if (Yield(hist) < 0)
     printf("\n [HistogramReader::DrawLegend] Warning: %s %s yield = %f\n\n",
@@ -1322,9 +1322,6 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     float process_yield = hist->GetBinContent(i);
     float process_error = sqrt(hist->GetSumw2()->At(i));
-
-    //printf("process_yield = %f \n", process_yield);
-    //printf("process_error = %f \n", process_error);
 
     if (label.EqualTo("data"))
       {
