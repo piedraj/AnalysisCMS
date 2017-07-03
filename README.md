@@ -315,7 +315,7 @@ Get the 2015 luminosity.
     +-------+------+-------+-------+-------------------+------------------+
 
 
-# <a name="crab-output-destination"/># 12. CRAB output destination
+# <a name="crab-output-destination"/>12. CRAB output destination
 
     ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/
 
