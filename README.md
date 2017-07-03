@@ -2,7 +2,7 @@
 [1. Everything begins here](#everything-begins-here)  
 [2. Always do](#always-do)  
 [3. Compile and run](#compile-and-run)  
-[4. Draw](#Draw)  
+[4. Draw](#draw)  
 [5. Create your website](#create-your-website)  
 [6. Share on the web](#share-on-the-web)  
 [7. It is commit time](#it-is-commit-time)  
