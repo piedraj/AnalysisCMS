@@ -174,6 +174,7 @@ void HistogramReader::Draw(TString hname,
 
   if (setlogy) cname += "_log";
 
+  //_writeyields = (hname.Contains("_evolution") || hname.Contains("mt2ll")) ? true : false;
   _writeyields = (hname.Contains("_evolution")) ? true : false;
 
   if (_writeyields)
@@ -587,6 +588,7 @@ void HistogramReader::Draw(TString hname,
 
   if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
+  //canvas->SaveAs(_outputdir + cname + ".C");
 
   if (_writeyields)
     {
