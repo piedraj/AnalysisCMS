@@ -1,6 +1,6 @@
 #include "ttdm.h"
 
-const TString outputdir = "histos/ttCR-extended/"; 
+const TString outputdir = histoSite; 
 
 void CreateHistograms2( int process );
 
@@ -28,7 +28,7 @@ void CreateHistograms(){
 
 	else{
 
-		CreateHistograms2( ttDM );
+		CreateHistograms2( fakes );
 
 	}
 
@@ -117,10 +117,11 @@ void CreateHistograms2( int process ){
 
 		//if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
                 //if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
-		//if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
+		if ( process == TT                 ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		//if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
-		//if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
+		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
+                //if ( process == fakes              ) thecut = Form("         %7.5f",1/15.)*thecut;
 
 		//float fakesreadapt = 35.9/2.4; 
                 //if ( process == fakes              ) thecut = Form("         %4.2f", fakesreadapt)*thecut; 
@@ -180,17 +181,17 @@ void CreateHistograms2( int process ){
 				//i == lep2phi       || 
 				//i == lep2mass      || 
 				//i == jet1pt        || 
-				//i == jet1eta       || 
+				i == jet1eta       || 
 				//i == jet1phi       || 
 				//i == jet1mass      ||
 				//i == jet2pt        || 
-				//i == jet2eta       || 
+				i == jet2eta       || 
 				//i == jet2phi       || 
 				//i == jet2mass      ||
-				//i == metPfType1    || 
+				i == metPfType1    || 
 				//i == metPfType1Phi ||
 				//i == m2l           || 
-				i == mt2ll         || 
+				//i == mt2ll         || 
 				//i == mt2lblb       || 
 				//i == mtw1          || 
 				//i == mtw2          ||
@@ -237,9 +238,9 @@ void CreateHistograms2( int process ){
 
 					float yield;
 
-					if( process == data                     ) yield =         myhisto[i]-> Integral();
-					if( process == fakes                    ) yield =35.9/2.4*myhisto[i]-> Integral();
-		                        if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral();
+					if( process == data                     ) yield =         myhisto[i]-> Integral(-1, -1);
+					if( process == fakes                    ) yield =   1./15*myhisto[i]-> Integral(-1, -1);
+		                        if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral(-1, -1);
 
 					cout << "\t\t" << yield << endl; 
 
