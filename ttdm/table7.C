@@ -27,16 +27,23 @@ void table7(){
 
 			yield[i][ch] = histo[i][ch] -> Integral();				
 
-			if(  yield[i][ch]<0 )  yield[i][ch] = 0; 
+			//if(  yield[i][ch]<0 )  yield[i][ch] = 0; 
 
 			eyield[i][ch] = sqrt( histo[i][ch] -> GetSumw2() -> GetSum() );	
 
-			if( eyield[i][ch]<0 ) eyield[i][ch] = 0;
+			//if( eyield[i][ch]<0 ) eyield[i][ch] = 0;
 
 			if( i != data && i != fakes ){
 
 				 yield[i][ch] *= thelumi; 
 				eyield[i][ch] *= thelumi; 
+
+			}
+
+			if( i == fakes ){
+
+				 yield[i][ch] *= 1./15.; 
+				eyield[i][ch] *= 1./15.; 
 
 			}
 

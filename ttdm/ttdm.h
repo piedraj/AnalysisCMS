@@ -3,6 +3,7 @@
 //const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
 //const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
 
+const TString histoSite = "histos/jetEta24/"; 
 const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
 
 //const TString theproduction = "Omaha"; 
@@ -15,7 +16,7 @@ const float xs2l = 1.0/9;
 
 const float PUrw = 1.030108192;
 
-const float    ttSF = 1.00;  const float ettSF = 0.05;
+const float    ttSF = 0.97;  const float ettSF = 0.05;
 const float    DYSF = 1.01;  const float eDYSF = 0.04;
 			     const float efakes= 0.30;
 
@@ -25,20 +26,22 @@ const float    DYSF = 1.01;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-//const TCut selection = "mt2ll>70.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
+//const TCut selection = "mt2ll>40.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+//const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00500>0.95"; 
+const TCut selection = "metPfType1>0.&&abs(jet_eta[0])<2.4&&abs(jet_eta[1])<2.4"; 
+//const TCut selection = "nbjet30csvv2m==0";//&&nlepton==2";
 
 
 const TString region = "SR";
 
-const TCut soft_cut = "metPfType1>50."; 
-//const TCut hard_cut = soft_cut&&"metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
-const TCut hard_cut = "mt2ll>70.&&mt2ll<80.&&darkpt>=0."; 
+const TCut soft_cut = "metPfType1>80."; 
+const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>0."; 
+//const TCut hard_cut = "mt2ll>70.&&mt2ll<80.&&darkpt>=0.";  // for tt CR
 //const TCut MVA_cut  = soft_cut&&"           mt2ll>80.&&darkpt>=0.";
 TCut MVA_cut;
 
 
-const float inicio = 0.70;
+const float inicio = 0.50;
 const float paso   = 0.05;
 
 
@@ -156,10 +159,10 @@ void Assign(){
 	//----------
 
 	processID[ttDM ] = "ttDM0001scalar00500"     ;   //     tune !
-	//processID[data ] = "01_Data_1outof15"        ;
-	processID[data ] = "01_Data_Full2016"        ;
-	processID[fakes] = "00_Fakes_1outof15"       ; 
-	//processID[fakes] = "00_Fakes_Full2016"       ; 
+	processID[data ] = "01_Data_1outof15"        ;
+	//processID[data ] = "01_Data_Full2016"        ;
+	//processID[fakes] = "00_Fakes_1outof15"       ; 
+	processID[fakes] = "00_Fakes_Full2016"       ; 
 	processID[TT   ] = "04_TTTo2L2Nu"            ; 
 	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
 	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
@@ -180,13 +183,13 @@ void Assign(){
 	//processID[ttDMheavy] = "ttDM0001scalar00500" ; 
 
 
-	scalarMVAcut[ttDM0001scalar00010] = 0.74; 
+	///scalarMVAcut[ttDM0001scalar00010] = 0.74; 
 	///scalarMVAcut[ttDM0001scalar00020] = 0.50; 
 	///scalarMVAcut[ttDM0001scalar00050] = 0.50; 
 	///scalarMVAcut[ttDM0001scalar00100] = 0.50; 
 	///scalarMVAcut[ttDM0001scalar00200] = 0.50; 
 	///scalarMVAcut[ttDM0001scalar00300] = 0.50; 
-	scalarMVAcut[ttDM0001scalar00500] = 0.98; 
+	///scalarMVAcut[ttDM0001scalar00500] = 0.98; 
 
 	scalarID[ttDM0001scalar00010] = "ttDM0001scalar00010"; 
 	scalarID[ttDM0001scalar00020] = "ttDM0001scalar00020"; 
@@ -303,12 +306,12 @@ void Assign(){
 	b_name[lep2mass] = "lep2mass";		         nbinraw[lep2mass]     = 100;	lowraw[lep2mass]     =   0. ;	upraw[lep2mass]     = 100. ;
 
 	b_name[jet1pt  ] = "jet1pt"  ;		         nbinraw[jet1pt  ]     =3000;	lowraw[jet1pt  ]     =   0. ;	upraw[jet1pt  ]     =3000. ;
-	b_name[jet1eta ] = "jet1eta" ;		         nbinraw[jet1eta ]     =  60;	lowraw[jet1eta ]     =  -3. ;	upraw[jet1eta ]     =   3. ;
+	b_name[jet1eta ] = "jet1eta" ;		         nbinraw[jet1eta ]     =  80;	lowraw[jet1eta ]     =  -4. ;	upraw[jet1eta ]     =   4. ;
 	b_name[jet1phi ] = "jet1phi" ;		         nbinraw[jet1phi ]     = 200;	lowraw[jet1phi ]     =  -3.2;	upraw[jet1phi ]     =   3.2;
 	b_name[jet1mass] = "jet1mass";		         nbinraw[jet1mass]     = 100;	lowraw[jet1mass]     =   0. ;	upraw[jet1mass]     = 100. ;
 
 	b_name[jet2pt  ] = "jet2pt"  ;		         nbinraw[jet2pt  ]     =3000;	lowraw[jet2pt  ]     =   0. ;	upraw[jet2pt  ]     =3000. ;
-	b_name[jet2eta ] = "jet2eta" ;		         nbinraw[jet2eta ]     =  60;	lowraw[jet2eta ]     =  -3. ;	upraw[jet2eta ]     =   3. ;
+	b_name[jet2eta ] = "jet2eta" ;		         nbinraw[jet2eta ]     =  80;	lowraw[jet2eta ]     =  -4. ;	upraw[jet2eta ]     =   4. ;
 	b_name[jet2phi ] = "jet2phi" ;		         nbinraw[jet2phi ]     = 200;	lowraw[jet2phi ]     =  -3.2;	upraw[jet2phi ]     =   3.2;
 	b_name[jet2mass] = "jet2mass";		         nbinraw[jet2mass]     = 100;	lowraw[jet2mass]     =   0. ;	upraw[jet2mass]     = 100. ;
 
@@ -346,7 +349,7 @@ void Assign(){
 
 	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
 
-	b_name[ANN] = "ANN_tanh_mt2ll80_regina_ttDM0001scalar00500";   
+	b_name[ANN] = "ANN_tanh_mt2ll80_regina_" + processID[ttDM];   
                                                          nbinraw[ANN]          = 120;   lowraw[ANN]          =  -0.1;   upraw[ANN]          =   1.1;
 
 	//----------
