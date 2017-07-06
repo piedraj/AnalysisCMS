@@ -1599,8 +1599,8 @@ void HistogramReader::IncludeSystematics(TString hname)
 
       if ( j%2 != 0 ) continue;	
 
-      TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j  ) + ".root", "read");
-      TFile* myfile2= new TFile(_inputdir + "/" + _mcfilename.at(i) + "_" + _systematics.at(j+1) + ".root", "read");
+      TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j  ) + ".root", "read");
+      TFile* myfile2= new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j+1) + ".root", "read");
 
       TH1D* dummy = (TH1D*)myfile ->Get(hname);
       TH1D* dummy2= (TH1D*)myfile2->Get(hname);
@@ -1609,9 +1609,9 @@ void HistogramReader::IncludeSystematics(TString hname)
       //------------------------------------------------------------------------
       for (int k=0; k<=nbins; k++) {
 
-	float diff = ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) )/2.;
+	float diff = ( _systematics.at(j) != "_toppTrw" ) ? ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) )/2. : ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) );
 	
-	if (_mclabel[i] == "non-prompt") diff = 0; 
+	//if (_mclabel[i] == "non-prompt") diff = 0; 
 
 	suma[k] += diff*diff;
 
