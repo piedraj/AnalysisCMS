@@ -1593,11 +1593,6 @@ void HistogramReader::IncludeSystematics(TString hname)
 
     for (int k=0; k<=nbins; k++) suma[k] = 0;
 
-    TFile* myfile0 = new TFile(_inputdir + "/" + _mcfilename.at(i) + ".root", "read");
-
-    TH1D* dummy0 = (TH1D*)myfile0->Get(hname);
-
-
     // Loop over all systematics
     //--------------------------------------------------------------------------
     for (int j=0; j<_systematics.size(); j++) {
@@ -1614,7 +1609,7 @@ void HistogramReader::IncludeSystematics(TString hname)
       //------------------------------------------------------------------------
       for (int k=0; k<=nbins; k++) {
 
-	float diff = dummy->GetBinContent(k) - dummy2->GetBinContent(k);
+	float diff = ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) )/2.;
 	
 	if (_mclabel[i] == "non-prompt") diff = 0; 
 
