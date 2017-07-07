@@ -188,11 +188,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       passTrigger = true;
 
-      _base_weight = (baseW / 1e3) * puW;
+      _event_weight = (baseW / 1e3) * puW;
 
-      if (GEN_weight_SM) _base_weight *= GEN_weight_SM / abs(GEN_weight_SM);
-
-      _event_weight = _base_weight;
+      if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
       // Muons
@@ -278,7 +276,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
       pass &= (_nlepton == 1);
       pass &= (_mtw < 20.);
-    //pass &= (std_vector_electron_expectedMissingInnerHits->at(0) < 1);
 
       if (pass) {
 

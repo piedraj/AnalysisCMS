@@ -1,6 +1,7 @@
 #define AnalysisPR_cxx
 #include "../include/AnalysisPR.h"
 
+
 //------------------------------------------------------------------------------
 // AnalysisPR
 //------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
   root_output->cd();
   
+
   // Define prompt rate histograms
   //----------------------------------------------------------------------------
   h_Muon_loose_pt_eta_PR = new TH2D("h_Muon_loose_pt_eta_PR", "", nptbin, ptbins, netabin, etabins);
@@ -46,17 +48,12 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
-    //    if (jentry > 1000) break;
 
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
 
     EventSetup();
-
-    _Zlepton1type  = Loose;
-    _Zlepton2type  = Loose;
-    _Zdecayflavour = 0;
 
     _channel = (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) ? e : m;
 
@@ -69,10 +66,10 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
     // Make Z candidate
     //--------------------------------------------------------------------------
+    _Zlepton1type = Loose;
+    _Zlepton2type = Loose;
 
     _m2l = -999;
-    
-    _l2tight_weight = 1.;
     
     if (AnalysisLeptons.size() >= 2) { 
       
@@ -92,32 +89,38 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 	    
 	    _m2l = inv_mass;
 
-	    if(std_vector_electron_isTightLepton_cut_WP_Tight80X -> at(0) > 0.5) {
-              _Zlepton1type = Tight;
-            } else if(std_vector_muon_isTightLepton_cut_Tight80x -> at(0) > 0.5) {
-              _Zlepton1type = Tight;
-            } else {
-              _Zlepton1type = Loose;
-              //_Zlepton1idisoW = 1.;
-            }
 
-	    if(std_vector_electron_isTightLepton_cut_WP_Tight80X -> at(1) > 0.5) {
-              _Zlepton2type = Tight;
-            } else if(std_vector_muon_isTightLepton_cut_Tight80x -> at(1) > 0.5) {
-              _Zlepton2type = Tight;
-            } else {
-              _Zlepton2type = Loose;
-              //_Zlepton2idisoW = 1.;
-            }
+	    ////////////////////////////////////////////////////////////////////
+	    //
+	    //  This code needs to be fixed
+	    //  AnalysisLeptons and std_vector
+	    //  don't necessarily match
+	    //
+	    ////////////////////////////////////////////////////////////////////
 
-            if (_Zlepton1type == Tight && _Zlepton2type == Tight){
-              //_l2tight_weight = (_Zlepton1idisoW * _Zlepton2idisoW);
-            }
 
-	    _Zlepton1index = iLep1;
-	    _Zlepton2index = iLep2;
+	    // Is the first Z lepton tight?
+	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(0) > 0.5)
+	      {
+		_Zlepton1type  = Tight;
+		_Zdecayflavour = ELECTRON_FLAVOUR;
+	      }
+	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(0) > 0.5)
+	      {
+		_Zlepton1type  = Tight;
+		_Zdecayflavour = MUON_FLAVOUR;
+	      }
+
 	    
-	    _Zdecayflavour = AnalysisLeptons[iLep1].flavour; 
+	    // Is the second Z lepton tight?
+	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(1) > 0.5)
+	      {
+		_Zlepton2type = Tight;
+	      }
+	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(1) > 0.5)
+	      {
+		_Zlepton2type = Tight;
+	      }
 	  }
 	}
       }
@@ -132,21 +135,16 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
       passTrigger = true;
 
-      Float_t corrected_baseW = baseW; 
+      _event_weight = (baseW / 1e3) * puW;
 
-      //if (_sample.Contains("DYJetsToLL_M-10to50")) corrected_baseW = 0.829752445221; 
-      //if (_sample.Contains("DYJetsToLL_M-50"))     corrected_baseW = 0.318902641535;
-
-      _base_weight = (corrected_baseW / 1e3) * puW * GEN_weight_SM / abs(GEN_weight_SM);
-
-      _event_weight = _base_weight;
+      if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
 
       // Muons
       //------------------------------------------------------------------------
       if (_channel == m)
 	{
-	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.283 : _event_weight *= 217.234;
+	  (Lepton1.v.Pt() <= 20.) ? _event_weight *= 7.339 : _event_weight *= 217.553;  // For 36/fb
 	}
 
       
@@ -154,7 +152,7 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
       //------------------------------------------------------------------------
       if (_channel == e)
 	{
-	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 13.866 : _event_weight *= 62.94;
+	  (Lepton1.v.Pt() <= 25.) ? _event_weight *= 14.888 : _event_weight *= 63.046;
 	}
 
     } else {
@@ -197,22 +195,22 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
     // Prompt rate from MC
     //--------------------------------------------------------------------------
+    bool pass = true;
 
-    bool pass;
-    //pass = (std_vector_electron_tripleChargeAgreement -> at(0));
-    //pass &= (std_vector_electron_expectedMissingInnerHits -> at(0) < 1);
+    pass &= (76. < _m2l && 106. > _m2l);
+    pass &= (_mtw < 20.);
+    
+    if (pass && _sample.Contains("DYJetsToLL") && _Zlepton1type == Tight) {
 
-    if (_sample.Contains("DYJetsToLL") && 76. < _m2l && 106. > _m2l && _Zlepton1type == Tight && _mtw < 20. && pass) {
-
-      float Zlep2pt  = AnalysisLeptons[_Zlepton2index].v.Pt();
-      float Zlep2eta = fabs(AnalysisLeptons[_Zlepton2index].v.Eta());
+      float Zlep2pt  = std_vector_lepton_pt->at(1);
+      float Zlep2eta = fabs(std_vector_lepton_eta->at(1));
       
       if (fabs(_Zdecayflavour) == ELECTRON_FLAVOUR) {
       
 	h_Ele_loose_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
 	h_Ele_loose_pt_PR    ->Fill(Zlep2pt,  _event_weight);
 	h_Ele_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
-
+	
 	if (_Zlepton2type == Tight) {
       
 	  h_Ele_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
@@ -227,17 +225,14 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 	h_Muon_loose_eta_PR   ->Fill(Zlep2eta, _event_weight);
 
 	if (_Zlepton2type == Tight) {
-
+	  
 	  h_Muon_tight_pt_eta_PR->Fill(Zlep2pt, Zlep2eta, _event_weight);
 	  h_Muon_tight_pt_PR    ->Fill(Zlep2pt,  _event_weight);
 	  h_Muon_tight_eta_PR   ->Fill(Zlep2eta, _event_weight);
 	}
       }
     }
-
   }
-
 
   EndJob();
 }
-

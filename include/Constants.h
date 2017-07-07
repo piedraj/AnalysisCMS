@@ -3,9 +3,9 @@
 
 //#include "CutsControl.h"
 //#include "CutsDY.h"
-#include "CutsFR.h"
+//#include "CutsFR.h"
 //#include "CutsMonoH.h"
-//#include "CutsPR.h"
+#include "CutsPR.h"
 //#include "CutsShape.h"
 //#include "CutsStop.h"
 //#include "CutsTop.h"
