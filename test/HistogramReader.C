@@ -1626,7 +1626,7 @@ void HistogramReader::IncludeSystematics(TString hname)
 
 			float diff = ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) )/2.;   // (up-down) /2.
 
-			suma[k] += diff*diff;
+			suma[k] += diff;
 
 		}
 
@@ -1647,7 +1647,7 @@ void HistogramReader::IncludeSystematics(TString hname)
 		if ( _mcfilename.at(i) == "07_ZJets"          ) diff = 0.04 *_mchist[i]->GetBinContent(k); 
 		if ( _mcfilename.at(i) == "00_Fakes_Full2016" ) diff = 0.30 *_mchist[i]->GetBinContent(k); 
 
-		suma[k] += diff*diff;
+		suma[k] += diff;
 
 	}
 
@@ -1657,7 +1657,7 @@ void HistogramReader::IncludeSystematics(TString hname)
     //--------------------------------------------------------------------------
     for (int k=0; k<=nbins; k++) { 
 
-      myhisto->SetBinContent(k, sqrt(suma[k]));
+      myhisto->SetBinContent(k, suma[k]);
 
     }
      
