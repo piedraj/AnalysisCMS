@@ -108,6 +108,8 @@ void getFakeRate()
       elejetet  = elejetarray [i];
       muonjetet = muonjetarray[j];
 
+      // jetet = 35 GeV for electrons
+      // jetet = 25 GeV for muons
       if (draw && i == 5 && j == 3) {
 
 	DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);

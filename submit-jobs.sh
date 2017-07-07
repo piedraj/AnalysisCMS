@@ -2,7 +2,14 @@
 
 if [ $# -lt 2 ]; then
     echo "  "
-    echo "  No skim"
+    echo "  fakeSel skim"
+    echo "  "
+    echo "  ./submit-jobs.sh  samples/Full2016_Apr17/fakeSel/samples_data_l1loose_RemAOD.txt  nominal"
+    echo "  ./submit-jobs.sh  samples/Full2016_Apr17/fakeSel/samples_mc_l1loose_summer16.txt  nominal"
+    echo "  "
+    echo "  "
+    echo "  "
+    echo "  l2tightOR"
     echo "  "
     echo "  ./submit-jobs.sh  samples/Full2016_Apr17/l2tightOR/samples_data_l2tightOR_RemAOD.txt  nominal"
     echo "  ./submit-jobs.sh  samples/Full2016_Apr17/l2tightOR/samples_mc_l2tightOR_summer16.txt  nominal"
