@@ -339,7 +339,7 @@ void HistogramReader::Draw(TString hname,
       Float_t binContent   = _mchist[i]->GetBinContent(ibin);
       Float_t binStatError = sqrt(_mchist[i]->GetSumw2()->At(ibin));
       Float_t binSystError = (_mchist_syst.size() > 0) ? _mchist_syst[i]->GetBinContent(ibin) : 0.;
-      Float_t binLumiError = binContent * lumi_error_percent/100.; 
+      Float_t binLumiError = binContent * lumi_error_percent / 1e2; 
 
       binValue += binContent;
       binError += (binStatError * binStatError);
@@ -543,8 +543,7 @@ void HistogramReader::Draw(TString hname,
 	Float_t dtError = _datahist->GetBinError(ibin);
 
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
-	Float_t mcError = sqrt(_allmchist->GetSumw2()->At(ibin));
-	// why not directly!?: Float_t mcError = _allmchist->GetBinError(ibin);
+	Float_t mcError = _allmchist->GetBinError(ibin);
 
 	Float_t ratioVal         = 999;
 	Float_t ratioErr         = 999;
@@ -1584,6 +1583,8 @@ void HistogramReader::IncludeSystematics(TString hname)
 {
   int nbins = _mchist[0]->GetNbinsX();
 
+  int nsystematics = _systematics.size(); 
+
 
   // Loop over all processes
   //----------------------------------------------------------------------------
@@ -1595,71 +1596,73 @@ void HistogramReader::IncludeSystematics(TString hname)
 
     for (int k=0; k<=nbins; k++) suma[k] = 0;
 
-    bool DataDrivenBkg = ( _mcfilename.at(i) == "04_TTTo2L2Nu" || _mcfilename.at(i) == "07_ZJets" || _mcfilename.at(i) == "00_Fakes_Full2016" ) ? true : false; 
 
-    int nsystematics = _systematics.size(); 
-   
-    if( !DataDrivenBkg ){
-
-    	// Loop over all systematics
-    	//--------------------------------------------------------------------------
-    	for (int j=0; j<nsystematics; j++) {
-
-		if ( j%2 != 0 ) continue;	
-
-		TFile* myfile = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j  ) + ".root", "read");
-		TFile* myfile2= new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j+1) + ".root", "read");
-
-		TH1D* dummy = (TH1D*)myfile ->Get(hname);
-		TH1D* dummy2= (TH1D*)myfile2->Get(hname);
-
-		if (_luminosity_fb > 0 && _mcscale[i] > -999) dummy->Scale(_luminosity_fb);
-		if (_mcscale[i] > 0)                          dummy->Scale(_mcscale[i]);
-
-		if (_luminosity_fb > 0 && _mcscale[i] > -999) dummy2->Scale(_luminosity_fb);
-		if (_mcscale[i] > 0)                          dummy2->Scale(_mcscale[i]);
-
-
-		// Loop over all bins
-		//------------------------------------------------------------------------
-		for (int k=0; k<=nbins; k++) {
-
-			float diff = ( dummy->GetBinContent(k) - dummy2->GetBinContent(k) )/2.;   // (up-down) /2.
-
-			suma[k] += diff;
-
-		}
-
-         	myfile ->Close();
-      		myfile2->Close();
-
-	}
-
-    }
-
-    else{
-
+    // Data-driven systematics
+    //--------------------------------------------------------------------------
+    if (_mcfilename.at(i) == "04_TTTo2L2Nu" ||
+	_mcfilename.at(i) == "07_ZJets"     ||
+	_mcfilename.at(i) == "00_Fakes_Full2016")
+      {
+	// Loop over all bins
+	//----------------------------------------------------------------------
 	for (int k=0; k<=nbins; k++) {
 
-		float diff = 0.0; 
+	  float diff = _mchist[i]->GetBinContent(k);
 
-		if ( _mcfilename.at(i) == "04_TTTo2L2Nu"      ) diff = 0.073*_mchist[i]->GetBinContent(k); 
-		if ( _mcfilename.at(i) == "07_ZJets"          ) diff = 0.04 *_mchist[i]->GetBinContent(k); 
-		if ( _mcfilename.at(i) == "00_Fakes_Full2016" ) diff = 0.30 *_mchist[i]->GetBinContent(k); 
+	  if (_mcfilename.at(i) == "04_TTTo2L2Nu")      diff *= 0.073; 
+	  if (_mcfilename.at(i) == "07_ZJets")          diff *= 0.04;
+	  if (_mcfilename.at(i) == "00_Fakes_Full2016") diff *= 0.30;
 
-		suma[k] += diff;
-
+	  suma[k] += diff;
 	}
-
       }
-    
+
+
+    // Other systematics
+    //--------------------------------------------------------------------------
+    else
+      {
+    	for (int j=0; j<nsystematics; j++) {
+
+	  if (j%2 != 0) continue;	
+
+	  TFile* myfile1 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j)   + ".root", "read");
+	  TFile* myfile2 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j+1) + ".root", "read");
+
+	  TH1D* dummy1 = (TH1D*)myfile1->Get(hname);
+	  TH1D* dummy2 = (TH1D*)myfile2->Get(hname);
+
+	  if (_luminosity_fb > 0 && _mcscale[i] > -999)
+	    {
+	      dummy1->Scale(_luminosity_fb);
+	      dummy2->Scale(_luminosity_fb);
+	    }
+		
+	  if (_mcscale[i] > 0)
+	    {
+	      dummy1->Scale(_mcscale[i]);
+	      dummy2->Scale(_mcscale[i]);
+	    }
+
+
+	  // Loop over all bins
+	  //--------------------------------------------------------------------
+	  for (int k=0; k<=nbins; k++) {
+
+	    float diff = (dummy1->GetBinContent(k) - dummy2->GetBinContent(k)) / 2.;  // (up-down) / 2.
+	    
+	    suma[k] += diff;
+	  }
+
+	  myfile1->Close();
+	  myfile2->Close();
+	}
+      }
+   
+  
     // Save the sum of systematic uncertainties per bin
     //--------------------------------------------------------------------------
-    for (int k=0; k<=nbins; k++) { 
-
-      myhisto->SetBinContent(k, suma[k]);
-
-    }
+    for (int k=0; k<=nbins; k++) myhisto->SetBinContent(k, suma[k]);
      
     _mchist_syst.push_back(myhisto);
   }
