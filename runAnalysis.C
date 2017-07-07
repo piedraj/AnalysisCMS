@@ -1,4 +1,4 @@
-#include "src/AnalysisControl.C"
+//#include "src/AnalysisControl.C"
 //#include "src/AnalysisDY.C"
 #include "src/AnalysisFR.C"
 //#include "src/AnalysisMET.C"
@@ -25,7 +25,7 @@ void runAnalysis(TString filename,
 
   float baseW_lumi_fb = 1.0;  // baseW has been computed for 1.0 fb-1
 
-  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
+  //  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
   //  AnalysisDY      analysis(latino, systematic); analysis.Loop("DY",      filename, baseW_lumi_fb);
     AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
   //  AnalysisMET     analysis(latino, systematic); analysis.Loop("MET",     filename, baseW_lumi_fb);
