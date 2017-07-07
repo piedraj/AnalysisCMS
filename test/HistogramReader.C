@@ -588,7 +588,6 @@ void HistogramReader::Draw(TString hname,
 
   if (_savepdf) canvas->SaveAs(_outputdir + cname + ".pdf");
   if (_savepng) canvas->SaveAs(_outputdir + cname + ".png");
-  //canvas->SaveAs(_outputdir + cname + ".C");
 
   if (_writeyields)
     {

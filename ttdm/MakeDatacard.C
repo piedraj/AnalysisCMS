@@ -16,23 +16,25 @@ void MakeDatacard(){
 
 	Assign(); 
    
-	int ndatacard = (1.-inicio)/paso; 
+	//int ndatacard = (1.-inicio)/paso; 
+
+	//ndatacard = 10; 
 
 	//for( int s = 0; s < ndatacard; s++){
 
-		//float threshold = inicio + s*paso; //cout << "the threshold is... " << threshold << endl; 
+		//float threshold = inicio + s*paso; 
 
-		float threshold = 3.141592; 
+		float threshold = 0.95; 
 
 		cout << "\n \t\t THE THRESHOLD IS... " << threshold << endl; 
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			if ( m != ttDM0001scalar00500 /*&& m != ttDM0001scalar00010*/ ) continue;
+			if ( m == ttDM0001scalar00010 ||   m == ttDM0001scalar00020 ) continue;
 
-			//MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), threshold); //scalarMVAcut[m] ); //threshold);
+			MVA_cut = hard_cut&&Form("ANN_tanh_mt2ll80_regina_%s>%4.2f", scalarID[m].Data(), threshold); //scalarMVAcut[m] ); //threshold);
 
-			MVA_cut = "metPfType1>80.&&mt2ll>80.&&darkpt>0.";
+			//MVA_cut = "metPfType1>80.&&mt2ll>80.&&darkpt>0.";
 
 
 			processID[ttDM] = scalarID[m]; 
@@ -46,7 +48,7 @@ void MakeDatacard(){
 
 			}
 
-			//GetRelUnc( TT );
+			//GetRelUnc( data );
 
 			WriteDatacard( threshold ); //scalarMVAcut[m]);
 
@@ -66,7 +68,7 @@ void GetRelUnc( int process ){
 	TH1F* h_syst[nsystematic][nlevel];	
 
 
-	for( int j = 0; j < nsystematic; j++ ){ 
+	for( int j = 0; j <=nominal /*nsystematic*/; j++ ){ 
 
 		//if ( j !=toppTrw ) continue;
 
@@ -91,9 +93,10 @@ void GetRelUnc( int process ){
 			mytree -> Draw( "metPfType1 >> htemp_hard", hard_cut*myeventW );
 			mytree -> Draw( "metPfType1 >> htemp_MVA" , MVA_cut *myeventW );
 
+
 			h_syst[j][soft] = (TH1F*) gDirectory -> Get( "htemp_soft" );
 			h_syst[j][hard] = (TH1F*) gDirectory -> Get( "htemp_hard" );
-			h_syst[j][NN  ] = (TH1F*) gDirectory -> Get( "htemp_MVA"  );
+			h_syst[j][NN  ] = (TH1F*) gDirectory -> Get( "htemp_MVA"  );  
 
 		}
 
@@ -162,14 +165,14 @@ void GetRelUnc( int process ){
 
 		for( int k = 0; k < nlevel; k++ ){
 
-			yield[process][j][k] = h_syst[j][k] -> Integral(); 
+			yield[process][j][k] = h_syst[j][k] -> Integral();  
 
 			if( yield[process][j][k] < 0. ) yield[process][j][k] = 0.;   // CAUTION !!!
 		
 			if( process != data && process != fakes ) yield[process][j][k] *= thelumi;
 
-			yield[TT][j][k] *= ttSF; 
-			yield[DY][j][k] *= DYSF; 
+			if( process == TT ) yield[process][j][k] *= ttSF; 
+			if( process == DY ) yield[process][j][k] *= DYSF; 
 
 		}
 
@@ -233,7 +236,8 @@ void GetRelUnc( int process ){
 
 		myfile->Close();
 
-	}  // j 
+	}  // j - systematic
+
 	
 }
 
@@ -242,11 +246,11 @@ void WriteDatacard( float threshold ){
 
 	gSystem -> mkdir( "datacards/", kTRUE );
 
-	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170601/%s_%s_%4.2f_%s_WTF.txt", processID[ttDM].Data(), "regina", threshold, region.Data() ) );
+	datacard.open( Form("/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170622-intermedias/%s_%s_%4.2f_%s_WTF.txt", processID[ttDM].Data(), "definite", threshold, region.Data() ) );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", 9 ); //nprocess );
-	datacard << Form( "kmax %d number of nuisance parameters \n", nsystematic-1 );
+	datacard << Form( "kmax 1  number of nuisance parameters \n");//, nsystematic-1 );
 	datacard << "------------ \n" ;
 	datacard << "\n" ;
 	datacard << Form("bin %s \n", region.Data());
@@ -272,7 +276,10 @@ datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f
 }
 	datacard << "------------ \n" ;
 
-	for( int j = 1; j < nsystematic; j++ ){   // systematic
+	datacard << "DDtt_nrmlz 	 lnN 	   -       -      1.073    -       -       -       -       -       -       -    \n" ;
+
+
+	for( int j = 1; j < 1 /*nsystematic*/; j++ ){   // systematic
 
 		if(  j < toppTrw  &&  j%2 == 0  ) continue; 
 

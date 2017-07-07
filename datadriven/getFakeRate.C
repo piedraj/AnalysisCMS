@@ -1,10 +1,10 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const Bool_t verbose = false;
+const Int_t   njetet = 7;
 
-const Float_t muonjetarray[] = {10, 15, 20, 25, 30, 35, 45};
-const Float_t elejetarray [] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t muonjetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t elejetarray [njetet] = {10, 15, 20, 25, 30, 35, 45};
 
 const Float_t muonscale = -1.;
 const Float_t elescale  = -1.;
@@ -24,11 +24,17 @@ TFile* zjetsPR;
 
 // Functions
 //------------------------------------------------------------------------------
-void     DrawFR     (TString    flavour,
-		     TString    variable,
-		     TString    xtitle,
-		     Float_t    lepscale,
-		     Float_t    jetet);
+void     Cosmetics (TH1D*       hist,
+		    Option_t*   option,
+		    TString     xtitle,
+		    TString     ytitle,
+		    Color_t     color);
+
+void     DrawFR    (TString     flavour,
+		    TString     variable,
+		    TString     xtitle,
+		    Float_t     lepscale,
+		    Float_t     jetet);
 
 void     DrawPR    (TString     flavour,
 		    TString     variable,
@@ -71,15 +77,11 @@ void getFakeRate()
   gSystem->mkdir("rootfilesFR", kTRUE);
   gSystem->mkdir("rootfilesPR", kTRUE);
 
-  dataFR  = new TFile ("../rootfiles/FirstWP/FR/01_Data.root",  "read");
-  wjetsFR = new TFile ("../rootfiles/FirstWP/FR/08_WJets.root", "read");
-  zjetsFR = new TFile ("../rootfiles/FirstWP/FR/07_ZJets.root", "read");
+  dataFR  = new TFile ("../rootfiles/nominal/FR/01_Data.root",  "read");
+  wjetsFR = new TFile ("../rootfiles/nominal/FR/08_WJets.root", "read");
+  zjetsFR = new TFile ("../rootfiles/nominal/FR/07_ZJets.root", "read");
+  zjetsPR = new TFile ("../rootfiles/nominal/PR/07_ZJets.root", "read");
 
-  //dataFR  = new TFile ("../rootfiles/newFakes2/FR/01_Data.root",  "read");
-  //wjetsFR = new TFile ("../rootfiles/newFakes2/FR/08_WJets.root", "read");
-  //zjetsFR = new TFile ("../rootfiles/newFakes2/FR/07_ZJets.root", "read");
-
-  zjetsPR = new TFile ("../rootfiles/FirstWP-PR/PR/07_ZJets.root", "read");
 
   // Prompt rate
   //----------------------------------------------------------------------------
@@ -94,37 +96,31 @@ void getFakeRate()
       DrawPR("Muon", "eta", "|#eta|");
     }
 
+
   // Fake rate
   //----------------------------------------------------------------------------
   Float_t elejetet;
   Float_t muonjetet;
 
-  //int njetet = (draw) ? 1 : 7;
-  int njetet = 7;
-
-  for (int i=0; i<njetet; i++) {
-
-    if (draw) {
-
-      //elejetet  = elejetarray [5];
-      //muonjetet = muonjetarray[3];
+  for (Int_t i=0; i<njetet; i++) {
+    for (Int_t j=0; j<njetet; j++) {
 
       elejetet  = elejetarray [i];
-      muonjetet = muonjetarray[i];
+      muonjetet = muonjetarray[j];
 
-      DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);
-      DrawFR("Muon", "pt",  "p_{T} [GeV]", muonscale, muonjetet);
-      DrawFR("Ele",  "eta", "|#eta|",      elescale,  elejetet);
-      DrawFR("Muon", "eta", "|#eta|",      muonscale, muonjetet);
+      // jetet = 35 GeV for electrons
+      // jetet = 25 GeV for muons
+      if (draw && i == 5 && j == 3) {
 
-    } else {
+	DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);
+	DrawFR("Muon", "pt",  "p_{T} [GeV]", muonscale, muonjetet);
+	DrawFR("Ele",  "eta", "|#eta|",      elescale,  elejetet);
+	DrawFR("Muon", "eta", "|#eta|",      muonscale, muonjetet);
+      }
 
-      elejetet  = elejetarray [i];
-      muonjetet = muonjetarray[i];
+      WriteFR("Ele",  elescale,  elejetet);
+      WriteFR("Muon", muonscale, muonjetet);
     }
-
-    WriteFR("Ele",  elescale,  elejetet);
-    WriteFR("Muon", muonscale, muonjetet);
   }
 }
 
@@ -138,39 +134,39 @@ void DrawFR(TString flavour,
 	    Float_t lepscale,
 	    Float_t jetet)
 {
-  TString title  = Form("%s fake rate %s", flavour.Data(), variable.Data());
-  TString title_EWKrel_tight = Form("%s EWK relative correction (tight) %s", flavour.Data(), variable.Data());
-  TString title_EWKrel_loose = Form("%s EWK relative correction (loose) %s", flavour.Data(), variable.Data());
   TString suffix = Form("%s_bin_%.0fGeV", variable.Data(), jetet);
 
-  
+
   // Read loose and tight histograms
   //----------------------------------------------------------------------------
-  TH1D* h_loose_data  = (TH1D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_loose_zjets = (TH1D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_loose_wjets = (TH1D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH1D* h_tight_data  = (TH1D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH1D* h_tight_zjets = (TH1D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH1D* h_tight_wjets = (TH1D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_loose_data  = (TH1D*)dataFR ->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_loose_zjets = (TH1D*)zjetsFR->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_loose_wjets = (TH1D*)wjetsFR->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH1D* h_tight_data  = (TH1D*)dataFR ->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_tight_zjets = (TH1D*)zjetsFR->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH1D* h_tight_wjets = (TH1D*)wjetsFR->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
 
 
-  // Prepare fake rate histograms
+  // Make EWK correction histograms
   //----------------------------------------------------------------------------
-  TH1D* h_FR     = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
-  TH1D* h_FR_EWK = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable +"_EWK");
-
-  h_FR->Divide(h_tight_data, h_loose_data);
-
-  TH1D* h_tight_correction = (TH1D*)h_tight_zjets->Clone("h_" + flavour + "_FR_" + variable);;
-  TH1D* h_loose_correction = (TH1D*)h_loose_zjets->Clone("h_" + flavour + "_FR_" + variable);;
-  TH1D* h_EWKrel_tight = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
-  TH1D* h_EWKrel_loose = (TH1D*)h_loose_data->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_tight_correction = (TH1D*)h_tight_zjets->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_loose_correction = (TH1D*)h_loose_zjets->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_EWKrel_tight     = (TH1D*)h_tight_data ->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_EWKrel_loose     = (TH1D*)h_loose_data ->Clone("h_" + flavour + "_FR_" + variable);
   
   h_tight_correction->Add(h_tight_wjets, 1);
   h_loose_correction->Add(h_loose_wjets, 1);
 
   h_EWKrel_tight->Divide(h_tight_correction, h_tight_data);    
   h_EWKrel_loose->Divide(h_loose_correction, h_loose_data);    
+
+
+  // Make fake rate histograms
+  //----------------------------------------------------------------------------
+  TH1D* h_FR     = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
+  TH1D* h_FR_EWK = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable +"_EWK");
+
+  h_FR->Divide(h_tight_data, h_loose_data);
 
   if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
   if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
@@ -179,104 +175,62 @@ void DrawFR(TString flavour,
 
   h_FR_EWK->Divide(h_tight_data, h_loose_data);
 
-  // Draw
-  //----------------------------------------------------------------------------
-  TCanvas* canvas = new TCanvas(title, title, 450, 550);
-      
-  canvas->SetGridx(setgrid);
-  canvas->SetGridy(setgrid);
 
-  h_FR->Draw("ep");
-  h_FR_EWK->Draw("ep,same");
+  // Draw fake rate
+  //----------------------------------------------------------------------------
+  TString title1 = Form("%s fake rate when jet p_{T} > %.0f GeV", flavour.Data(), jetet);
+
+  TCanvas* canvas1 = new TCanvas(title1 + " " + variable, title1 + " " +  variable);
+      
+  canvas1->SetGridx(setgrid);
+  canvas1->SetGridy(setgrid);
+  
+  Cosmetics(h_FR,     "ep",      xtitle, title1, kBlack);
+  Cosmetics(h_FR_EWK, "ep,same", xtitle, title1, kRed+1);
 
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
-  DrawLegend(0.22, 0.83, h_FR, "Without EWK correction");
-  DrawLegend(0.22, 0.80, h_FR_EWK, "With EWK correction");
 
-  TCanvas* canvas2 = new TCanvas(title_EWKrel_tight, title_EWKrel_tight, 450, 550);
+  DrawLegend(0.22, 0.845, h_FR,     "Without EWK correction");
+  DrawLegend(0.22, 0.800, h_FR_EWK, "With EWK correction");
+
+
+  // Draw tight EWK correction
+  //----------------------------------------------------------------------------
+  TString title2 = Form("tight %s EWK correction when jet p_{T} > %.0f GeV", flavour.Data(), jetet);
+
+  TCanvas* canvas2 = new TCanvas(title2 + " " + variable, title2 + " " + variable);
 
   canvas2->SetGridx(setgrid);
   canvas2->SetGridy(setgrid);
 
-  h_EWKrel_tight -> Draw("ep");
+  Cosmetics(h_EWKrel_tight, "ep", xtitle, title2, kBlack);
 
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
-  TCanvas* canvas3 = new TCanvas(title_EWKrel_loose, title_EWKrel_loose, 450, 550);
+
+  // Draw loose EWK correction
+  //----------------------------------------------------------------------------
+  TString title3 = Form("loose %s EWK correction when jet p_{T} > %.0f GeV", flavour.Data(), jetet);
+
+  TCanvas* canvas3 = new TCanvas(title3 + " " + variable, title3 + " " + variable);
 
   canvas3->SetGridx(setgrid);
   canvas3->SetGridy(setgrid);
 
-  h_EWKrel_loose -> Draw("ep");
+  Cosmetics(h_EWKrel_loose, "ep", xtitle, title3, kBlack);
 
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
-  // Print bin values and errors
-  //----------------------------------------------------------------------------
-  if (variable.EqualTo("pt") && verbose)
-    {
-      printf("\n");
-
-      for (int i=1; i<=h_FR_EWK->GetNbinsX(); i++)
-	{
-	  float ptvalue = h_FR_EWK->GetBinLowEdge(i);
-	
-	  printf(" bin[%d]   pt: %.0f GeV   fr: %.3f +- %.3f\n",
-		 i,
-		 ptvalue,
-		 h_FR_EWK->GetBinContent(i),
-		 h_FR_EWK->GetBinError(i));
-	}
-
-      printf("\n");
-    }
-
-
-  // Cosmetics
-  //----------------------------------------------------------------------------
-
-  h_FR->SetAxisRange(0, 1, "Y");
-  h_FR->SetLineColor(kBlack);
-  h_FR->SetLineWidth(2);
-  h_FR->SetMarkerColor(kBlack);
-  h_FR->SetMarkerStyle(kFullCircle);
-  h_FR->SetTitle("");
-  h_FR->SetXTitle(xtitle);
-  h_FR->SetYTitle(Form("%s fake rate", flavour.Data()));
-
-  h_FR->GetXaxis()->SetTitleOffset(1.5);
-  h_FR->GetYaxis()->SetTitleOffset(1.8);
-
-  h_FR_EWK->SetLineColor(kRed+1);
-  h_FR_EWK->SetLineWidth(2);
-  h_FR_EWK->SetMarkerColor(kRed+1);
-  h_FR_EWK->SetMarkerStyle(kFullCircle);
-
-  h_EWKrel_tight->SetTitle("");
-  h_EWKrel_tight->SetXTitle(xtitle);
-  h_EWKrel_tight->SetYTitle("EWK relative correction (tight)");
-  h_EWKrel_tight->GetXaxis()->SetTitleOffset(1.5);
-  h_EWKrel_tight->GetYaxis()->SetTitleOffset(1.8);
-  h_EWKrel_tight->SetLineWidth(2);
-  h_EWKrel_tight->SetMarkerStyle(kFullCircle);
-
-  h_EWKrel_loose->SetTitle("");
-  h_EWKrel_loose->SetXTitle(xtitle);
-  h_EWKrel_loose->SetYTitle("EWK relative correction (loose)");
-  h_EWKrel_loose->GetXaxis()->SetTitleOffset(1.5);
-  h_EWKrel_loose->GetYaxis()->SetTitleOffset(1.8);
-  h_EWKrel_loose->SetLineWidth(2);
-  h_EWKrel_loose->SetMarkerStyle(kFullCircle);
 
   // Save and write
   //----------------------------------------------------------------------------
-  if (savepng) canvas->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
+  if (savepng) canvas1->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png",           flavour.Data(), variable.Data(), jetet));
   if (savepng) canvas2->SaveAs(Form("png/%s_EWKrel_tight_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
   if (savepng) canvas3->SaveAs(Form("png/%s_EWKrel_loose_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
 
   TFile* file = new TFile(Form("rootfilesFR/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
 
-  h_FR->Write();
+  h_FR    ->Write();
   h_FR_EWK->Write();
   
   file->Close();
@@ -290,8 +244,6 @@ void DrawPR(TString  flavour,
 	    TString  variable,
 	    TString  xtitle)
 {
-  TString title = Form("%s prompt rate %s", flavour.Data(), variable.Data());
-
   TH1D* h_loose_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_loose_" + variable + "_PR");
   TH1D* h_tight_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_tight_" + variable + "_PR");
 
@@ -302,28 +254,14 @@ void DrawPR(TString  flavour,
 
   // Draw
   //----------------------------------------------------------------------------
-  TCanvas* canvas = new TCanvas(title, title, 450, 550);
+  TString title = flavour + " prompt rate";
+
+  TCanvas* canvas = new TCanvas(title + " " + variable, title + " " + variable);
       
   canvas->SetGridx(setgrid);
   canvas->SetGridy(setgrid);
 
-  h_PR->Draw("ep");
-
-  // Cosmetics
-  //----------------------------------------------------------------------------
-  h_PR->SetAxisRange(0, 1, "Y");
-  h_PR->SetLineColor(kBlack);
-  h_PR->SetLineWidth(2);
-  h_PR->SetMarkerColor(kBlack);
-  h_PR->SetMarkerStyle(kFullCircle);
-  h_PR->SetTitle("");
-  h_PR->SetXTitle(xtitle);
-  h_PR->SetYTitle(Form("%s prompt rate", flavour.Data()));
-
-  h_PR->GetXaxis()->SetTitleOffset(1.5);
-  h_PR->GetYaxis()->SetTitleOffset(1.8);
-
-  DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
+  Cosmetics(h_PR, "ep", xtitle, title, kBlack);
 
 
   // Save
@@ -344,18 +282,18 @@ void WriteFR(TString flavour,
   
   // Read loose and tight histograms
   //----------------------------------------------------------------------------
-  TH2D* h_loose_data  = (TH2D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_loose_zjets = (TH2D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_loose_wjets = (TH2D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
-  TH2D* h_tight_data  = (TH2D*)dataFR  -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH2D* h_tight_zjets = (TH2D*)zjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
-  TH2D* h_tight_wjets = (TH2D*)wjetsFR -> Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_loose_data  = (TH2D*)dataFR ->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_loose_zjets = (TH2D*)zjetsFR->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_loose_wjets = (TH2D*)wjetsFR->Get("FR/00_QCD/h_" + flavour + "_loose_" + suffix);
+  TH2D* h_tight_data  = (TH2D*)dataFR ->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_tight_zjets = (TH2D*)zjetsFR->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
+  TH2D* h_tight_wjets = (TH2D*)wjetsFR->Get("FR/00_QCD/h_" + flavour + "_tight_" + suffix);
 
 
   // Prepare fake rate histograms
   //----------------------------------------------------------------------------
-  TH1D* h_FR     = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta");
-  TH1D* h_FR_EWK = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta_EWK");
+  TH2D* h_FR     = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta");
+  TH2D* h_FR_EWK = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta_EWK");
       
   h_FR->Divide(h_tight_data, h_loose_data);
 
@@ -384,8 +322,8 @@ void WriteFR(TString flavour,
 void WritePR(TString flavour)
 {
 
-  TH2D* h_loose_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_loose_pt_eta_PR");
-  TH2D* h_tight_zjets = (TH2D*)zjetsPR -> Get("h_" + flavour + "_tight_pt_eta_PR");
+  TH2D* h_loose_zjets = (TH2D*)zjetsPR->Get("h_" + flavour + "_loose_pt_eta_PR");
+  TH2D* h_tight_zjets = (TH2D*)zjetsPR->Get("h_" + flavour + "_tight_pt_eta_PR");
 
   TH2D* h_PR = (TH2D*)h_tight_zjets->Clone("h_" + flavour + "_signal_pt_eta_bin");
 
@@ -453,4 +391,30 @@ TLegend* DrawLegend(Float_t x1,
   legend->Draw();
 
   return legend;
+}
+
+
+//------------------------------------------------------------------------------
+// Cosmetics
+//------------------------------------------------------------------------------
+void Cosmetics(TH1D*     hist,
+	       Option_t* option,
+	       TString   xtitle,
+	       TString   ytitle,
+	       Color_t   color)
+{
+  hist->Draw(option);
+
+  hist->SetLineColor  (color);
+  hist->SetLineWidth  (2);
+  hist->SetMarkerColor(color);
+  hist->SetMarkerStyle(kFullCircle);
+  hist->SetTitle      ("");
+  hist->SetXTitle     (xtitle);
+  hist->SetYTitle     (ytitle);
+
+  hist->SetAxisRange(0, 1, "Y");
+
+  hist->GetXaxis()->SetTitleOffset(1.5);
+  hist->GetYaxis()->SetTitleOffset(1.8);
 }

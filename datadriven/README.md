@@ -12,11 +12,8 @@ removing the Z-peak veto and any requirement on varx.
 # AnalysisFR
 
 This macro creates the histograms needed to add the fake weights to the latino
-trees afterwards. It also creates several control regions to be able to calculate
-from data the effective luminosity associated to the Z+jets process (luminosity
-calculated in the ZRegion and then applied in the ZRegionQCD) and to 
-the W+jets process (luminosity calculated in the WRegion and then applied in the 
-WRegionQCD). The region defined to calculate the fakes is the QCDRegion.
+trees afterwards. It also creates control regions to be able to calculate
+from data the effective luminosity associated to the Z+jets and W+jets processes.
 
 Two different ways are possible to use this macro. You can either run the code
 once without any data weight, then use the getLumiEff.C macro to determine the
@@ -36,12 +33,12 @@ data or the MC.
 
 For now, this macro is designed to be working for an analysis of two triggers,
 one at low pt and another one at high pt. To get the effective luminosity of a
-given trigger, just change the value of the boolean highpt to true, or false. 
+given trigger, just change the value of the boolean highpt to true or false.
 
 
 # getFakeRate.C
 
-This macro allows the user to calculate the fake rate and the prompt rate for a given
+This macro allows the user to calculate the fake rate and prompt rates for a given
 definition of loose and tight leptons. The output of the macro is a set of histograms
 representing the fake and prompt rates with respect to the pt or the eta value of the
 leptons, and some rootfiles with 2D histograms that can be used directly within the 
@@ -55,28 +52,17 @@ result of the execution of the code will be a set of rootfiles corresponding to 
 and the PR of electrons and muons, for all the different jet energies used as input.
 
 
-# Apply the FR weights to the data
-
-It is now possible to submit to gridui the gardener jobs that apply the fake weights
-to the data. To do so, first download the latino code to your gridui account and
-then run the command below.
-
-    ./submit-jobs.sh
-
 # Fake production recipe
 
 When new data or MC files are available, it is necessary to produce new rootfiles which will be
 used by Xavier to produce the fake files. The production of these rootfiles has to be done following
-the next few steps.
+these steps.
 
 1) Update or create a new samples.txt file, within the fakeSel directory, reflecting the latest changes.
-2) Check if the triggers used are still the same, run Brilcalc (detailed instructions available in the 
-step 11 of https://github.com/piedraj/AnalysisCMS/blob/master/README.md), in order to get the prescaled 
-lumi of the different triggers.
+2) Check if the triggers used are still the same, [run brilcalc](https://github.com/piedraj/AnalysisCMS#brilcalc) in order to get the prescaled lumi of the different triggers.
 3) Run AnalysisFR and AnalysisPR on the data and MC files of the fakeSel samples directory.
 4) Once all the jobs are done, run getLumiEff.C to check the data/MC agreement in the peak of the Z.
 5) Once this is checked, the fake and prompt rate plots are obtained thanks to getFakeRate.C
 6) If everything seems right, the output within the rootfilesFR and rootfilesPR directories can be
-commited to the latino repository on Github and Xavier can start the production of the new files.
-7) Once the new files ready, a SS control region study is necessary to check if the fakes seems to be
-behaving correctly or not.
+committed to the latino repository on Github and Xavier can start the production of the new files.
+7) Once the new files are ready, a SS control region study is necessary to check if the fakes behave correctly or not.
