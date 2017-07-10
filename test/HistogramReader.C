@@ -5,6 +5,14 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 // HistogramReader
+//
+// The following is valid for both _mcscale and _signalscale
+//
+//    If the scale value for a process is equal to -999 then that process is
+//    not scaled by luminosity, as it is done for fakes
+//
+//    If the scale value for a process is greater than zero, then the process
+//    is also scaled by such scale value
 //------------------------------------------------------------------------------
 HistogramReader::HistogramReader(const TString& inputdir,
 				 const TString& outputdir) :
@@ -22,14 +30,19 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _savepdf         (false),
   _savepng         (true)
 {
+  _datafile  = NULL;
+  _datahist  = NULL;
+  _allmchist = NULL;
+
   _mcfile.clear();
   _mccolor.clear();
   _mclabel.clear();
   _mcscale.clear();
 
-  _datafile  = NULL;
-  _datahist  = NULL;
-  _allmchist = NULL;
+  _signalfile.clear();
+  _signalcolor.clear();
+  _signallabel.clear();
+  _signalscale.clear();
 
   TH1::SetDefaultSumw2();
 }
