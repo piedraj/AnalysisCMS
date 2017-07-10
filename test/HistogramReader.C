@@ -1649,8 +1649,8 @@ void HistogramReader::IncludeSystematics(TString hname)
 	    }
 	  else
 	    {
-	      myfile1 = new TFile(_inputdir + "/../" + _systematics.at(j)   + "/" + _mcfilename.at(i) + ".root", "read");
-	      myfile2 = new TFile(_inputdir + "/../" + _systematics.at(j+1) + "/" + _mcfilename.at(i) + ".root", "read");
+	      myfile1 = new TFile(_systematics.at(j)   + "/" + _mcfilename.at(i) + ".root", "read");
+	      myfile2 = new TFile(_systematics.at(j+1) + "/" + _mcfilename.at(i) + ".root", "read");
 	    }
 	      
 
