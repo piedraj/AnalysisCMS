@@ -1637,10 +1637,22 @@ void HistogramReader::IncludeSystematics(TString hname)
       {
     	for (int j=0; j<nsystematics; j++) {
 
-	  if (j%2 != 0) continue;	
+	  if (j%2 != 0) continue;
 
-	  TFile* myfile1 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j)   + ".root", "read");
-	  TFile* myfile2 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j+1) + ".root", "read");
+	  TFile* myfile1;
+	  TFile* myfile2;
+
+	  if (_minitreebased)
+	    {
+	      myfile1 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j)   + ".root", "read");
+	      myfile2 = new TFile(_inputdir + "/" + _mcfilename.at(i) + _systematics.at(j+1) + ".root", "read");
+	    }
+	  else
+	    {
+	      myfile1 = new TFile(_inputdir + "/../" _systematics.at(j)   + "/" + _mcfilename.at(i) + ".root", "read");
+	      myfile2 = new TFile(_inputdir + "/../" _systematics.at(j+1) + "/" + _mcfilename.at(i) + ".root", "read");
+	    }
+	      
 
 	  TH1D* dummy1 = (TH1D*)myfile1->Get(hname);
 	  TH1D* dummy2 = (TH1D*)myfile2->Get(hname);
