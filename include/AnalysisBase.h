@@ -448,6 +448,7 @@ public :
    vector<float>   *std_vector_lepton_eleIdTight;
    vector<float>   *std_vector_lepton_d0;
    vector<float>   *std_vector_lepton_genmatched;
+   vector<float>   *std_vector_lepton_promptgenmatched;
    vector<float>   *std_vector_lepton_isTightMuon;
    Float_t         susyMstop;
    Float_t         susyMLSP;
@@ -917,6 +918,7 @@ public :
    TBranch        *b_std_vector_lepton_eleIdTight;   //!
    TBranch        *b_std_vector_lepton_d0;   //!
    TBranch        *b_std_vector_lepton_genmatched;   //!
+   TBranch        *b_std_vector_lepton_promptgenmatched;   //!
    TBranch        *b_std_vector_lepton_isTightMuon;   //!
    TBranch        *b_susyMstop;   //!
    TBranch        *b_susyMLSP;   //!
@@ -1267,6 +1269,7 @@ void AnalysisBase::Init(TTree *tree)
    std_vector_lepton_eleIdTight = 0;
    std_vector_lepton_d0 = 0;
    std_vector_lepton_genmatched = 0;
+   std_vector_lepton_promptgenmatched = 0;
    std_vector_lepton_isTightMuon = 0;
    std_vector_lepton_idisoWcut_WP_Tight80X = 0;
    std_vector_lepton_idisoWcut_WP_Tight80X_Up = 0;
@@ -1688,6 +1691,7 @@ void AnalysisBase::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_eleIdTight", &std_vector_lepton_eleIdTight, &b_std_vector_lepton_eleIdTight);
    fChain->SetBranchAddress("std_vector_lepton_d0", &std_vector_lepton_d0, &b_std_vector_lepton_d0);
    fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
+   fChain->SetBranchAddress("std_vector_lepton_promptgenmatched", &std_vector_lepton_promptgenmatched, &b_std_vector_lepton_promptgenmatched);
    fChain->SetBranchAddress("std_vector_lepton_isTightMuon", &std_vector_lepton_isTightMuon, &b_std_vector_lepton_isTightMuon);
    fChain->SetBranchAddress("susyMstop", &susyMstop, &b_susyMstop);
    fChain->SetBranchAddress("susyMLSP", &susyMLSP, &b_susyMLSP);

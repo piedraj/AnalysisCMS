@@ -429,10 +429,7 @@ void AnalysisCMS::ApplyWeights()
   GetSampleWeight();
 
   // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
-  _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
-
-  _event_weight_truegenmatched = ((std_vector_leptonGen_isPrompt->at(0) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0)) &&
-				  (std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)));
+  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
@@ -1412,23 +1409,22 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("drll",              &drll,              "drll/F");
   minitree->Branch("dyll",              &_dyll,             "dyll/F");
   // E
-  minitree->Branch("event",                 &event,                        "event/I");
-  minitree->Branch("eventW",                &_event_weight,                "eventW/F");
-  minitree->Branch("eventW_Btagup",         &_event_weight_Btagup,         "eventW_Btagup/F");
-  minitree->Branch("eventW_Btagdo",         &_event_weight_Btagdo,         "eventW_Btagdo/F");
-  minitree->Branch("eventW_BtagFSup",       &_event_weight_BtagFSup,       "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSdo",       &_event_weight_BtagFSdo,       "eventW_BtagFSdo/F");
-  minitree->Branch("eventW_Idisoup",        &_event_weight_Idisoup,        "eventW_Idisoup/F");
-  minitree->Branch("eventW_Idisodo",        &_event_weight_Idisodo,        "eventW_Idisodo/F");
-  minitree->Branch("eventW_Triggerup",      &_event_weight_Triggerup,      "eventW_Triggerup/F");
-  minitree->Branch("eventW_Triggerdo",      &_event_weight_Triggerdo,      "eventW_Triggerdo/F");
-  minitree->Branch("eventW_Recoup",         &_event_weight_Recoup,         "eventW_Recoup/F");
-  minitree->Branch("eventW_Recodo",         &_event_weight_Recodo,         "eventW_Recodo/F");
-  minitree->Branch("eventW_Fastsimup",      &_event_weight_Fastsimup,      "eventW_Fastsimup/F");
-  minitree->Branch("eventW_Fastsimdo",      &_event_weight_Fastsimdo,      "eventW_Fastsimdo/F");
-  minitree->Branch("eventW_Toppt",          &_event_weight_Toppt,          "eventW_Toppt/F");
-  minitree->Branch("eventW_genmatched",     &_event_weight_genmatched,     "eventW_genmatched/F");
-  minitree->Branch("eventW_truegenmatched", &_event_weight_truegenmatched, "eventW_truegenmatched/F");
+  minitree->Branch("event",             &event,                    "event/I");
+  minitree->Branch("eventW",            &_event_weight,            "eventW/F");
+  minitree->Branch("eventW_Btagup",     &_event_weight_Btagup,     "eventW_Btagup/F");
+  minitree->Branch("eventW_Btagdo",     &_event_weight_Btagdo,     "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",   &_event_weight_BtagFSup,   "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSdo",   &_event_weight_BtagFSdo,   "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_Idisoup",    &_event_weight_Idisoup,    "eventW_Idisoup/F");
+  minitree->Branch("eventW_Idisodo",    &_event_weight_Idisodo,    "eventW_Idisodo/F");
+  minitree->Branch("eventW_Triggerup",  &_event_weight_Triggerup,  "eventW_Triggerup/F");
+  minitree->Branch("eventW_Triggerdo",  &_event_weight_Triggerdo,  "eventW_Triggerdo/F");
+  minitree->Branch("eventW_Recoup",     &_event_weight_Recoup,     "eventW_Recoup/F");
+  minitree->Branch("eventW_Recodo",     &_event_weight_Recodo,     "eventW_Recodo/F");
+  minitree->Branch("eventW_Fastsimup",  &_event_weight_Fastsimup,  "eventW_Fastsimup/F");
+  minitree->Branch("eventW_Fastsimdo",  &_event_weight_Fastsimdo,  "eventW_Fastsimdo/F");
+  minitree->Branch("eventW_Toppt",      &_event_weight_Toppt,      "eventW_Toppt/F");
+  minitree->Branch("eventW_genmatched", &_event_weight_genmatched, "eventW_genmatched/F");
   // H
   minitree->Branch("ht",                &_ht,               "ht/F");
   minitree->Branch("htvisible",         &_htvisible,        "htvisible/F");
