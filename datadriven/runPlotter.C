@@ -3,8 +3,7 @@
 
 // Constants
 //------------------------------------------------------------------------------
-//const TString inputdir  = "../rootfiles/nominal/FR";
-const TString inputdir  = "../rootfiles/newFakes2/FR";
+const TString inputdir  = "../rootfiles/nominal/FR";
 const TString outputdir = "figures/";
 
 enum {linY, logY};
@@ -15,6 +14,7 @@ enum {linY, logY};
 void DrawLeptonPlots(TString lepton,
 		     float   lumi,
 		     float   jetet);
+
 
 TString _level;
 TString _option;
@@ -77,32 +77,17 @@ void DrawLeptonPlots(TString lepton,
 
   if (_level.Contains("Zpeak")) {
 
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", logY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", logY, true, 0, 200);
-
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
-
-    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", linY, true,  0, 200);
-    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", linY, true,  0, 200);
-    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", logY, true,  0, 200);
-    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", logY, true,  0, 200);
+    plotter->Draw(prefix + "loose_m2l" + suffix, "loose m2l", 20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "tight_m2l" + suffix, "tight m2l", 20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "loose_m2l" + suffix, "loose m2l", 20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "tight_m2l" + suffix, "tight m2l", 20, 0, "GeV", logY, true, 0, 200);
 
   } else {
 
-    plotter->Draw(prefix + "loose_pt"  + suffix, "Loose pt",  20, 0, "GeV", linY, true, 35, 200);
-    plotter->Draw(prefix + "tight_pt"  + suffix, "Tight pt",  20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_pt"  + suffix, "Loose pt",  20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_pt"  + suffix, "Tight pt",  20, 0, "GeV", logY, true,  0, 200);
-
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
+    plotter->Draw(prefix + "loose_pt" + suffix, "loose pt",  20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "tight_pt" + suffix, "tight pt",  20, 0, "GeV", linY, true, 0, 200);
+    plotter->Draw(prefix + "loose_pt" + suffix, "loose pt",  20, 0, "GeV", logY, true, 0, 200);
+    plotter->Draw(prefix + "tight_pt" + suffix, "tight pt",  20, 0, "GeV", logY, true, 0, 200);
   }
 
 
