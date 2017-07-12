@@ -115,10 +115,10 @@ void runPlotter(TString level,
     }
 
 
-  // Add systematics -- TO BE TESTED
+  // Add systematics
   //----------------------------------------------------------------------------
-  plotter.AddSystematic("../rootfiles/METup/"     + analysis);
-  plotter.AddSystematic("../rootfiles/Triggerup/" + analysis);
+  //  plotter.AddSystematic("../rootfiles/METup/"     + analysis);
+  //  plotter.AddSystematic("../rootfiles/Triggerup/" + analysis);
 
 
   // Make an output directory for each level
