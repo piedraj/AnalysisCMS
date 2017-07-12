@@ -7,6 +7,7 @@ void compareHistograms(TString histname1 = "Control/04_Top/h_dphill_ll",
 		       TString histname2 = "Control/04_Top/h_dphill_ll",
 		       TString filename1 = "/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/05_ST.root",
 		       TString filename2 = "/afs/cern.ch/user/p/piedra/work/CMSSW_projects/CMSSW_8_0_5/src/AnalysisCMS/rootfiles/nominal/Control/04_TTTo2L2Nu.root",
+		       TString xtitle    = "#Delta#phi_{#font[12]{ll}}",
 		       Bool_t  scale     = true)
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
@@ -15,11 +16,12 @@ void compareHistograms(TString histname1 = "Control/04_Top/h_dphill_ll",
   // Talk to me
   //----------------------------------------------------------------------------
   printf("\n");
-  printf(" hist1: %s (histogram)\n", histname1.Data());
-  printf(" hist2: %s (points)\n",    histname2.Data());
-  printf(" file1: %s\n",             filename1.Data());
-  printf(" file2: %s\n",             filename2.Data());
-  printf(" scale: %s\n", (scale) ? "yes" : "no");
+  printf("  hist1: %s (histogram)\n", histname1.Data());
+  printf("  hist2: %s (points)\n",    histname2.Data());
+  printf("  file1: %s\n",             filename1.Data());
+  printf("  file2: %s\n",             filename2.Data());
+  printf(" xtitle: %s\n",             xtitle.Data());
+  printf("  scale: %s\n", (scale) ? "yes" : "no");
   printf("\n");
 
 
@@ -62,6 +64,15 @@ void compareHistograms(TString histname1 = "Control/04_Top/h_dphill_ll",
     }
 
 
+  // Scale histograms
+  //----------------------------------------------------------------------------
+  if (scale)
+    {
+      hist1->Scale(1. / hist1->Integral());
+      hist2->Scale(1. / hist2->Integral());
+    }
+
+
   // Cosmetics
   //----------------------------------------------------------------------------
   hist1->SetFillColor(kAzure-9);
@@ -77,25 +88,40 @@ void compareHistograms(TString histname1 = "Control/04_Top/h_dphill_ll",
   //----------------------------------------------------------------------------
   TCanvas* c1 = new TCanvas("c1", "c1");
 
-  if (scale)
-    {
-      hist1->Scale(1. / hist1->Integral());
-      hist2->Scale(1. / hist2->Integral());
-    }
+  TH1D* hfirst = (TH1D*)hist1->Clone("hfirst");
 
-  if (hist1->GetMaximum() > hist2->GetMaximum())
-    {
-      hist1->Draw("hist");
-      hist2->Draw("ep,same");
-      hist1->SetMinimum(0.0);
-    }
-  else
-    {
-      hist2->Draw("ep");
-      hist1->Draw("hist,same");
-      hist2->Draw("ep,same");
-      hist2->SetMinimum(0.0);
-    }
+  hfirst->Reset();
+  hfirst->SetTitle("");
+  hfirst->Draw();
 
+  hist1->Draw("hist,same");
+  hist2->Draw("ep,same");
+
+
+  // Vertical size
+  //----------------------------------------------------------------------------
+  Float_t ymin = (hist1->GetMinimum() < hist2->GetMinimum()) ? hist1->GetMinimum() : hist2->GetMinimum();
+  Float_t ymax = (hist1->GetMaximum() > hist2->GetMaximum()) ? hist1->GetMaximum() : hist2->GetMaximum();
+
+  ymax *= 1.1;
+
+  hfirst->SetMinimum(ymin);
+  hfirst->SetMaximum(ymax);
+
+  
+  // Axis and labels
+  //----------------------------------------------------------------------------
+  hfirst->SetXTitle(xtitle);
+  hfirst->SetYTitle("entries / bin");
+
+  hfirst->GetXaxis()->SetTitleOffset(1.5);
+  hfirst->GetYaxis()->SetTitleOffset(2.2);
+
+  hfirst->GetYaxis()->CenterTitle();
+
+
+  // Round up
+  //----------------------------------------------------------------------------
+  c1->RedrawAxis();
   c1->GetFrame()->DrawClone();
 }
