@@ -1,4 +1,4 @@
-Copy files from srm
+Write data and MC samples files
 ====
 
-    ./lcg-cp.sh
+    ./write-samples.sh
