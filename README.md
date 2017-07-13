@@ -17,7 +17,7 @@
 
 AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
-    https://twiki.cern.ch/twiki/bin/view/CMS/LatinosFrameworkTutorials
+    https://twiki.cern.ch/twiki/bin/view/CMS/LatinosFrameworkFor2017
     https://github.com/latinos/LatinoTrees
     https://github.com/latinos/LatinoAnalysis
     https://github.com/latinos/PlotsConfigurations
