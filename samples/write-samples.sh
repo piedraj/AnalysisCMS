@@ -47,10 +47,10 @@ if [ $# -lt 3 ]; then
     exit -1
 fi
 
-export DIRECTORY=$1
-export INPUT=$2
-export OUTPUT=$3
+export SAMPLES_PATH=$1
+export SAMPLES_NAMES=$2
+export SAMPLES_FILES=$3
 
-rm -rf $OUTPUT
+rm -rf $SAMPLES_FILES
 
-awk -v dir=$DIRECTORY '{ print "ls",dir"latino_"$1 }' $INPUT | bash > $OUTPUT
+awk -v dir=$SAMPLES_PATH '{ print "ls",dir"latino_"$1 }' $SAMPLES_NAMES | bash > $SAMPLES_FILES
