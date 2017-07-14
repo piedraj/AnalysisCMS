@@ -3,47 +3,21 @@
 if [ $# -lt 3 ]; then
     echo "  "
     echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__MCFix/ \\"
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__MCFix/' \\"
     echo "  mc-names.txt \\"
-    echo "  samples_mc.txt"
+    echo "  samples_mc_l2tightOR.txt"
     echo "  "
     echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016B_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016*_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/' \\"
     echo "  data-names.txt \\"
-    echo "  samples_data_Run2016B.txt"
+    echo "  samples_data_l2tightOR.txt"
     echo "  "
     echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016C_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016*_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__fakeSel__hadd/' \\"
     echo "  data-names.txt \\"
-    echo "  samples_data_Run2016C.txt"
+    echo "  samples_data_fakeSel.txt"
     echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016D_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
-    echo "  data-names.txt \\"
-    echo "  samples_data_Run2016D.txt"
-    echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016E_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
-    echo "  data-names.txt \\"
-    echo "  samples_data_Run2016E.txt"
-    echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016F_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
-    echo "  data-names.txt \\"
-    echo "  samples_data_Run2016F.txt"
-    echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
-    echo "  data-names.txt \\"
-    echo "  samples_data_Run2016G.txt"
-    echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/ \\"
-    echo "  data-names.txt \\"
-    echo "  samples_data_Run2016H.txt"
-    echo "  "
-    echo "  rm -rf samples_data.txt; cat samples_data_Run2016* > samples_data.txt; rm -rf samples_data_Run2016*"
-    echo "  "
+
     exit -1
 fi
 
@@ -51,6 +25,6 @@ export SAMPLES_PATH=$1
 export SAMPLES_NAMES=$2
 export SAMPLES_FILES=$3
 
-rm -rf $SAMPLES_FILES
-
-awk -v dir=$SAMPLES_PATH '{ print "ls",dir"latino_"$1 }' $SAMPLES_NAMES | bash > $SAMPLES_FILES
+for MYPATH in "${SAMPLES_PATH[@]}"; do
+    awk -v dir=$MYPATH '{ print "ls",dir"latino_"$1 }' $SAMPLES_NAMES | bash > $SAMPLES_FILES
+done
