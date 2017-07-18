@@ -204,7 +204,8 @@ Finally, go to your repository and click **Pull Request**.
 
 # <a name="edit-a-cms-analysis-note"/>8. Edit a CMS Analysis Note
 
-The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note number used below corresponds to the IFCA/Oviedo WZ analysis at 13 TeV.
+The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note AN-17-208 documents our **Search for scalar top quark pair production with three-body decays in the
+dilepton final state at 13 TeV with the CMS detector** analysis.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     svn co -N svn+ssh://svn.cern.ch/reps/tdr2 svn
