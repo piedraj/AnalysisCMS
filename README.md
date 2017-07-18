@@ -211,10 +211,10 @@ The following instructions have been extracted from the [CMS TWiki](https://twik
     cd svn
     svn update utils
     svn update -N notes
-    svn update notes/AN-16-010
-    eval `notes/tdr runtime -sh`
-    cd notes/AN-16-010/trunk
-    tdr --style=an b AN-16-010
+    svn update notes/AN-17-208
+    eval `notes/tdr runtime -csh`
+    cd notes/AN-17-208/trunk
+    tdr --style=an b AN-17-208
 
 Get the latest modifications from the note repository. Always do this first.
 
