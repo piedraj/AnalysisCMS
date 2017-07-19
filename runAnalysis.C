@@ -1,9 +1,9 @@
 //#include "src/AnalysisControl.C"
 //#include "src/AnalysisDY.C"
-#include "src/AnalysisFR.C"
+//#include "src/AnalysisFR.C"
 //#include "src/AnalysisMET.C"
 //#include "src/AnalysisMonoH.C"
-//#include "src/AnalysisPR.C"
+#include "src/AnalysisPR.C"
 //#include "src/AnalysisShape.C"
 //#include "src/AnalysisStop.C"
 //#include "src/AnalysisTop.C"
@@ -27,10 +27,10 @@ void runAnalysis(TString filename,
 
   //  AnalysisControl analysis(latino, systematic); analysis.Loop("Control", filename, baseW_lumi_fb);
   //  AnalysisDY      analysis(latino, systematic); analysis.Loop("DY",      filename, baseW_lumi_fb);
-  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
+  //  AnalysisFR      analysis(latino, systematic); analysis.Loop("FR",      filename, baseW_lumi_fb);
   //  AnalysisMET     analysis(latino, systematic); analysis.Loop("MET",     filename, baseW_lumi_fb);
   //  AnalysisMonoH   analysis(latino, systematic); analysis.Loop("MonoH",   filename, baseW_lumi_fb);
-  //  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
+  AnalysisPR      analysis(latino, systematic); analysis.Loop("PR",      filename, baseW_lumi_fb);
   //  AnalysisShape   analysis(latino, systematic); analysis.Loop("Shape",   filename, baseW_lumi_fb);
   //  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb);
   //  AnalysisStop    analysis(latino, systematic); analysis.Loop("Stop",    filename, baseW_lumi_fb, StopMass, NeutralinoMass);

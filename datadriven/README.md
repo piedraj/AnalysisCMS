@@ -66,3 +66,4 @@ these steps.
 6) If everything seems right, the output within the rootfilesFR and rootfilesPR directories can be
 committed to the latino repository on Github and Xavier can start the production of the new files.
 7) Once the new files are ready, a SS control region study is necessary to check if the fakes behave correctly or not.
+
