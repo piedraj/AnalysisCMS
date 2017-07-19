@@ -17,6 +17,11 @@ if [ $# -lt 3 ]; then
     echo "  data-names.txt \\"
     echo "  samples_data_fakeSel.txt"
     echo "  "
+    echo "  ./write-samples.sh \\"
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__fakeSelMC__hadd/' \\"
+    echo "  mc-fakeSel-names.txt \\"
+    echo "  samples_mc_fakeSel.txt"
+    echo "  "
 
     exit -1
 fi
