@@ -429,8 +429,7 @@ void AnalysisCMS::ApplyWeights()
   GetSampleWeight();
 
   // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
-  //  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);  // TO BE ADDED BY XAVIER
-  _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);                  // DEPRECATED
+  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
