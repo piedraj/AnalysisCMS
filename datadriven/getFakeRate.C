@@ -292,17 +292,20 @@ void WriteFR(TString flavour,
 
   // Prepare fake rate histograms
   //----------------------------------------------------------------------------
-  TH2D* h_FR     = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta");
-  TH2D* h_FR_EWK = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_pt_eta_EWK");
+  TH2D* h_FR                 = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR");
+  TH2D* h_FR_denominator     = (TH2D*)h_loose_data->Clone("h_" + flavour + "_FR_denominator");
+  TH2D* h_FR_EWK             = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_EWK");
+  TH2D* h_FR_EWK_denominator = (TH2D*)h_loose_data->Clone("h_" + flavour + "_FR_EWK_denominator");
       
-  h_FR->Divide(h_tight_data, h_loose_data);
+  h_FR->Divide(h_FR_denominator);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, lepscale);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, lepscale);
+  if (Zsubtraction) h_FR_EWK->Add(h_tight_zjets, lepscale);
+  if (Wsubtraction) h_FR_EWK->Add(h_tight_wjets, lepscale);
 
-  h_FR_EWK->Divide(h_tight_data, h_loose_data);
+  if (Zsubtraction) h_FR_EWK_denominator->Add(h_loose_zjets, lepscale);
+  if (Wsubtraction) h_FR_EWK_denominator->Add(h_loose_wjets, lepscale);
+
+  h_FR_EWK->Divide(h_FR_EWK_denominator);
 
 
   // Write
