@@ -36,7 +36,7 @@ void drawTH2D()
   gSystem->mkdir("png", kTRUE);
 
   DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb_jet35",  "FR_pT_eta_EWKcorr",        "ElecFR_Jet35", "electron FR jet35 (13 TeV)");
-  DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb_jet35", "FR_pT_eta_EWKcorr",        "MuonFR_Jet25", "muon FR jet25 (13 TeV)");
+  DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb_jet25", "FR_pT_eta_EWKcorr",        "MuonFR_Jet25", "muon FR jet25 (13 TeV)");
   DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",        "h_Ele_signal_pt_eta_bin",  "ElecPR",       "electron PR (13 TeV)");
   DrawIt("rootfilesPR/MuonPR_Run2016_HWW36fb",       "h_Muon_signal_pt_eta_bin", "MuonPR",       "muon PR (13 TeV)");
 }
