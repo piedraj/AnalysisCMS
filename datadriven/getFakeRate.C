@@ -3,11 +3,11 @@
 //------------------------------------------------------------------------------
 const Int_t   njetet = 7;
 
-const Float_t muonjetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
-const Float_t elejetarray [njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
 
-const Float_t muonscale = -1.;
-const Float_t elescale  = -1.;
+const Float_t muoscale = -1.;
+const Float_t elescale = -1.;
 
 bool draw         = true;
 bool savepng      = true;
@@ -100,27 +100,29 @@ void getFakeRate()
   // Fake rate
   //----------------------------------------------------------------------------
   Float_t elejetet;
-  Float_t muonjetet;
+  Float_t muojetet;
 
   for (Int_t i=0; i<njetet; i++) {
-    for (Int_t j=0; j<njetet; j++) {
 
-      elejetet  = elejetarray [i];
-      muonjetet = muonjetarray[j];
+    elejetet = elejetarray[i];
+    muojetet = muojetarray[i];
 
-      // jetet = 35 GeV for electrons
-      // jetet = 25 GeV for muons
-      if (draw && i == 5 && j == 3) {
+    WriteFR("Ele",  elescale, elejetet);
+    WriteFR("Muon", muoscale, muojetet);
 
-	DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale,  elejetet);
-	DrawFR("Muon", "pt",  "p_{T} [GeV]", muonscale, muonjetet);
-	DrawFR("Ele",  "eta", "|#eta|",      elescale,  elejetet);
-	DrawFR("Muon", "eta", "|#eta|",      muonscale, muonjetet);
+    if (!draw) continue;
+
+    if (elejetet == 35.)
+      {
+	DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale, elejetet);
+	DrawFR("Ele",  "eta", "|#eta|",      elescale, elejetet);
       }
 
-      WriteFR("Ele",  elescale,  elejetet);
-      WriteFR("Muon", muonscale, muonjetet);
-    }
+    if (muojetet == 25.)
+      {
+	DrawFR("Muon", "pt",  "p_{T} [GeV]", muoscale, muojetet);
+	DrawFR("Muon", "eta", "|#eta|",      muoscale, muojetet);
+      }
   }
 }
 

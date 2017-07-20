@@ -1,4 +1,12 @@
-const Float_t _bigLabelSize = 0.04;
+
+// Constants and data members
+//------------------------------------------------------------------------------
+const Int_t   njetet = 7;
+
+const Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+
+const Float_t bigLabelSize = 0.04;
 
 
 // Member functions
@@ -6,7 +14,8 @@ const Float_t _bigLabelSize = 0.04;
 void DrawIt       (TString     filename,
 		   TString     hname,
 		   TString     cname,
-		   TString     title);
+		   TString     title,
+		   TString     suffix = "");
 
 void AxisFonts    (TAxis*      axis,
 		   TString     title);
@@ -35,10 +44,18 @@ void drawTH2D()
 
   gSystem->mkdir("png", kTRUE);
 
-  DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb_jet35",  "FR_pT_eta_EWKcorr",        "ElecFR_Jet35", "electron FR jet35 (13 TeV)");
-  DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb_jet25", "FR_pT_eta_EWKcorr",        "MuonFR_Jet25", "muon FR jet25 (13 TeV)");
-  DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",        "h_Ele_signal_pt_eta_bin",  "ElecPR",       "electron PR (13 TeV)");
-  DrawIt("rootfilesPR/MuonPR_Run2016_HWW36fb",       "h_Muon_signal_pt_eta_bin", "MuonPR",       "muon PR (13 TeV)");
+  for (Int_t i=0; i<njetet; i++)
+    {
+      TString elejetet = Form("jet%.0f", elejetarray[i]);
+      TString muojetet = Form("jet%.0f", muojetarray[i]);
+
+      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta",         "ElecFR",         "electron FR",                 elejetet);
+      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr", "ElecFR_EWKcorr", "electron FR (EWK corrected)", elejetet);
+      DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr", "MuonFR_EWKcorr", "muon FR (EWK corrected)",     muojetet);
+    }
+
+  DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
+  DrawIt("rootfilesPR/MuonPR_Run2016_HWW36fb", "h_Muon_signal_pt_eta_bin", "MuonPR", "muon PR");
 }
 
 
@@ -48,8 +65,21 @@ void drawTH2D()
 void DrawIt(TString filename,
 	    TString hname,
 	    TString cname,
-	    TString title)
+	    TString title,
+	    TString suffix)
 {
+  // Prepare labels
+  //----------------------------------------------------------------------------
+  if (suffix.Contains("jet"))
+    {
+      filename += "_" + suffix;
+      cname    += "_" + suffix;
+      title    += " " + suffix;
+    }
+
+
+  // Read TH2D
+  //----------------------------------------------------------------------------
   TFile* inputfile = TFile::Open(filename + ".root");
 
   TH2D* h = (TH2D*)inputfile->Get(hname)->Clone(cname);
@@ -58,9 +88,10 @@ void DrawIt(TString filename,
 
   inputfile->Close();
 
-  TString name = h->GetName();
 
-  TCanvas* canvas = new TCanvas(name, name);
+  // Draw it
+  //----------------------------------------------------------------------------
+  TCanvas* canvas = new TCanvas(cname, cname);
 
   canvas->SetLeftMargin (0.9 * canvas->GetLeftMargin());
   canvas->SetRightMargin(3.5 * canvas->GetRightMargin());
@@ -73,14 +104,11 @@ void DrawIt(TString filename,
 
   h->SetTitle("");
 
-  DrawLatex(42, 0.940, 0.976, _bigLabelSize, 33, title);
+  DrawLatex(42, 0.940, 0.976, bigLabelSize, 33, title);
 
 
   // Print values
   //----------------------------------------------------------------------------
-  Double_t hmin = h->GetMinimum();
-  Double_t hmax = h->GetMaximum();
-    
   for (Int_t i=1; i<=h->GetNbinsX(); i++) {
     for (Int_t j=1; j<=h->GetNbinsY(); j++) {
 
@@ -97,7 +125,7 @@ void DrawIt(TString filename,
       latex->SetTextFont (   42);
       latex->SetTextSize (0.027);
 
-      if (value < hmin + 0.3*(hmax - hmin)) latex->SetTextColor(kWhite);
+      if (value < 0.) latex->SetTextColor(kWhite);
 	
       latex->Draw();
     }
@@ -121,7 +149,7 @@ void DrawIt(TString filename,
 
   canvas->GetFrame()->DrawClone();
 
-  canvas->SaveAs("png/" + name + ".png");
+  canvas->SaveAs("png/" + cname + ".png");
 }
 
 
@@ -136,8 +164,8 @@ void AxisFonts(TAxis*  axis,
   axis->SetNdivisions (  505);
   axis->SetTitleFont  (   42);
   axis->SetTitleOffset(  1.5);
-  axis->SetLabelSize  (_bigLabelSize);
-  axis->SetTitleSize  (_bigLabelSize);
+  axis->SetLabelSize  (bigLabelSize);
+  axis->SetTitleSize  (bigLabelSize);
 
   axis->SetTitle(title);
 }
