@@ -125,7 +125,14 @@ void DrawIt(TString filename,
       
       if (gPad->GetLogx()) xpos = h->GetXaxis()->GetBinCenterLog(i);
 
-      TLatex* latex = new TLatex(xpos, ypos, Form("%.2f", value));
+      Int_t precision = 2;
+
+      if (fabs(value) >  10.) precision = 1;
+      if (fabs(value) > 100.) precision = 0;
+
+      TString binvalue = Form("%s.%df", "%", precision);
+
+      TLatex* latex = new TLatex(xpos, ypos, Form(binvalue.Data(), value));
       
       latex->SetTextAlign(   22);
       latex->SetTextFont (   42);
