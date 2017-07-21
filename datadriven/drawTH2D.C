@@ -56,11 +56,8 @@ void drawTH2D()
       
       // Debug negative fake rates, drawing numerator and denominator
       //------------------------------------------------------------------------
-      if (i < 3)
-	{
-	  DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
-	  DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
-	}
+      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
+      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
     }
 
   DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
