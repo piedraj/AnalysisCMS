@@ -52,6 +52,12 @@ void drawTH2D()
       DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta",         "ElecFR",         "electron FR",                 elejetet);
       DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr", "ElecFR_EWKcorr", "electron FR (EWK corrected)", elejetet);
       DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr", "MuonFR_EWKcorr", "muon FR (EWK corrected)",     muojetet);
+
+      if (i < 3)
+	{
+	  DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
+	  DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
+	}
     }
 
   DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");

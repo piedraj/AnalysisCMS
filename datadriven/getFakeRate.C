@@ -18,7 +18,6 @@ bool Zsubtraction = true;
 TFile* dataFR;
 TFile* wjetsFR;
 TFile* zjetsFR;
-
 TFile* zjetsPR;
 
 
@@ -112,17 +111,11 @@ void getFakeRate()
 
     if (!draw) continue;
 
-    if (elejetet == 35.)
-      {
-	DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale, elejetet);
-	DrawFR("Ele",  "eta", "|#eta|",      elescale, elejetet);
-      }
+    DrawFR("Ele",  "pt",  "p_{T} [GeV]", elescale, elejetet);
+    DrawFR("Ele",  "eta", "|#eta|",      elescale, elejetet);
 
-    if (muojetet == 25.)
-      {
-	DrawFR("Muon", "pt",  "p_{T} [GeV]", muoscale, muojetet);
-	DrawFR("Muon", "eta", "|#eta|",      muoscale, muojetet);
-      }
+    DrawFR("Muon", "pt",  "p_{T} [GeV]", muoscale, muojetet);
+    DrawFR("Muon", "eta", "|#eta|",      muoscale, muojetet);
   }
 }
 
@@ -163,19 +156,25 @@ void DrawFR(TString flavour,
   h_EWKrel_loose->Divide(h_loose_correction, h_loose_data);    
 
 
-  // Make fake rate histograms
+  // Prepare fake rate histograms
   //----------------------------------------------------------------------------
-  TH1D* h_FR     = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable);
-  TH1D* h_FR_EWK = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_" + variable +"_EWK");
+  TH1D* h_FR                 = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_"                 + variable);
+  TH1D* h_FR_denominator     = (TH1D*)h_loose_data->Clone("h_" + flavour + "_FR_denominator_"     + variable);
+  TH1D* h_FR_EWK             = (TH1D*)h_tight_data->Clone("h_" + flavour + "_FR_EWK_"             + variable);
+  TH1D* h_FR_EWK_denominator = (TH1D*)h_loose_data->Clone("h_" + flavour + "_FR_EWK_denominator_" + variable);
 
-  h_FR->Divide(h_tight_data, h_loose_data);
 
-  if (Zsubtraction) h_loose_data->Add(h_loose_zjets, lepscale);
-  if (Wsubtraction) h_loose_data->Add(h_loose_wjets, lepscale);
-  if (Zsubtraction) h_tight_data->Add(h_tight_zjets, lepscale);
-  if (Wsubtraction) h_tight_data->Add(h_tight_wjets, lepscale);
+  // Do the math
+  //----------------------------------------------------------------------------
+  h_FR->Divide(h_FR_denominator);
 
-  h_FR_EWK->Divide(h_tight_data, h_loose_data);
+  if (Zsubtraction) h_FR_EWK->Add(h_tight_zjets, lepscale);
+  if (Wsubtraction) h_FR_EWK->Add(h_tight_wjets, lepscale);
+
+  if (Zsubtraction) h_FR_EWK_denominator->Add(h_loose_zjets, lepscale);
+  if (Wsubtraction) h_FR_EWK_denominator->Add(h_loose_wjets, lepscale);
+
+  h_FR_EWK->Divide(h_FR_EWK_denominator);
 
 
   // Draw fake rate
@@ -295,27 +294,37 @@ void WriteFR(TString flavour,
   // Prepare fake rate histograms
   //----------------------------------------------------------------------------
   TH2D* h_FR                 = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR");
+  TH2D* h_FR_numerator       = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_numerator");
   TH2D* h_FR_denominator     = (TH2D*)h_loose_data->Clone("h_" + flavour + "_FR_denominator");
   TH2D* h_FR_EWK             = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_EWK");
+  TH2D* h_FR_EWK_numerator   = (TH2D*)h_tight_data->Clone("h_" + flavour + "_FR_EWK_numerator");
   TH2D* h_FR_EWK_denominator = (TH2D*)h_loose_data->Clone("h_" + flavour + "_FR_EWK_denominator");
-      
-  h_FR->Divide(h_FR_denominator);
 
-  if (Zsubtraction) h_FR_EWK->Add(h_tight_zjets, lepscale);
-  if (Wsubtraction) h_FR_EWK->Add(h_tight_wjets, lepscale);
+
+  // Do the math
+  //----------------------------------------------------------------------------
+  h_FR->Divide(h_FR_numerator, h_FR_denominator);
+
+  if (Zsubtraction) h_FR_EWK_numerator->Add(h_tight_zjets, lepscale);
+  if (Wsubtraction) h_FR_EWK_numerator->Add(h_tight_wjets, lepscale);
 
   if (Zsubtraction) h_FR_EWK_denominator->Add(h_loose_zjets, lepscale);
   if (Wsubtraction) h_FR_EWK_denominator->Add(h_loose_wjets, lepscale);
 
-  h_FR_EWK->Divide(h_FR_EWK_denominator);
+  h_FR_EWK->Divide(h_FR_EWK_numerator, h_FR_EWK_denominator);
 
 
   // Write
   //----------------------------------------------------------------------------
   TFile *file = new TFile(Form("rootfilesFR/%sFR_Run2016_HWW36fb_jet%0.f.root", flavour.Data(), jetet), "recreate");
 
-  h_FR    ->Write("FR_pT_eta");
-  h_FR_EWK->Write("FR_pT_eta_EWKcorr");
+  h_FR            ->Write("FR_pT_eta");
+  h_FR_numerator  ->Write("FR_pT_eta_numerator");
+  h_FR_denominator->Write("FR_pT_eta_denominator");
+
+  h_FR_EWK            ->Write("FR_pT_eta_EWKcorr");
+  h_FR_EWK_numerator  ->Write("FR_pT_eta_EWKcorr_numerator");
+  h_FR_EWK_denominator->Write("FR_pT_eta_EWKcorr_denominator");
 
   file->Close();
 }
@@ -326,7 +335,6 @@ void WriteFR(TString flavour,
 //------------------------------------------------------------------------------
 void WritePR(TString flavour)
 {
-
   TH2D* h_loose_zjets = (TH2D*)zjetsPR->Get("h_" + flavour + "_loose_pt_eta_PR");
   TH2D* h_tight_zjets = (TH2D*)zjetsPR->Get("h_" + flavour + "_tight_pt_eta_PR");
 
