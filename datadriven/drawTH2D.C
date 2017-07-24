@@ -1,5 +1,5 @@
 
-// Constants and data members
+// Constants
 //------------------------------------------------------------------------------
 const Int_t   njetet = 7;
 
@@ -7,6 +7,11 @@ const Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
 const Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
 
 const Float_t bigLabelSize = 0.04;
+
+
+// Data members
+//------------------------------------------------------------------------------
+TString inputdir;
 
 
 // Member functions
@@ -38,8 +43,10 @@ void DrawLatex    (Font_t      tfont,
 // drawTH2D
 //
 //------------------------------------------------------------------------------
-void drawTH2D()
+void drawTH2D(TString inputdir_name = "test")
 {
+  inputdir = inputdir_name;
+
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   gSystem->mkdir("png", kTRUE);
@@ -49,19 +56,19 @@ void drawTH2D()
       TString elejetet = Form("jet%.0f", elejetarray[i]);
       TString muojetet = Form("jet%.0f", muojetarray[i]);
 
-      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta",         "ElecFR",         "electron FR",                 elejetet);
-      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr", "ElecFR_EWKcorr", "electron FR (EWK corrected)", elejetet);
-      DrawIt("rootfilesFR/MuonFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr", "MuonFR_EWKcorr", "muon FR (EWK corrected)",     muojetet);
+      DrawIt("EleFR_Run2016_HWW36fb",  "FR_pT_eta",         "ElecFR",         "electron FR",                 elejetet);
+      DrawIt("EleFR_Run2016_HWW36fb",  "FR_pT_eta_EWKcorr", "ElecFR_EWKcorr", "electron FR (EWK corrected)", elejetet);
+      DrawIt("MuonFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr", "MuonFR_EWKcorr", "muon FR (EWK corrected)",     muojetet);
 
       
       // Debug negative fake rates, drawing numerator and denominator
       //------------------------------------------------------------------------
-      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
-      DrawIt("rootfilesFR/EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
+      DrawIt("EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
+      DrawIt("EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
     }
 
-  DrawIt("rootfilesPR/ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
-  DrawIt("rootfilesPR/MuonPR_Run2016_HWW36fb", "h_Muon_signal_pt_eta_bin", "MuonPR", "muon PR");
+  DrawIt("ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
+  DrawIt("MuonPR_Run2016_HWW36fb", "h_Muon_signal_pt_eta_bin", "MuonPR", "muon PR");
 }
 
 
@@ -86,7 +93,7 @@ void DrawIt(TString filename,
 
   // Read TH2D
   //----------------------------------------------------------------------------
-  TFile* inputfile = TFile::Open(filename + ".root");
+  TFile* inputfile = TFile::Open(inputdir + "/" + filename + ".root");
 
   TH2D* h = (TH2D*)inputfile->Get(hname)->Clone(cname);
 

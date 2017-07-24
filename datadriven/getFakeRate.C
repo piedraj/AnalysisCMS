@@ -1,24 +1,27 @@
 
 // Constants and data members
 //------------------------------------------------------------------------------
-const Int_t   njetet = 7;
+const   Int_t   njetet = 7;
 
-const Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
-const Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const   Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const   Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
 
-const Float_t muoscale = -1.;
-const Float_t elescale = -1.;
+const   Float_t muoscale = -1.;
+const   Float_t elescale = -1.;
 
-bool draw         = true;
-bool savepng      = true;
-bool setgrid      = true;
-bool Wsubtraction = true;
-bool Zsubtraction = true;
+bool    draw         = false;
+bool    savepng      = true;
+bool    setgrid      = true;
+bool    Wsubtraction = true;
+bool    Zsubtraction = true;
 
-TFile* dataFR;
-TFile* wjetsFR;
-TFile* zjetsFR;
-TFile* zjetsPR;
+TFile*  dataFR;
+TFile*  wjetsFR;
+TFile*  zjetsFR;
+TFile*  zjetsPR;
+
+TString inputdir;
+TString outputdir;
 
 
 // Functions
@@ -67,19 +70,22 @@ TLegend* DrawLegend(Float_t     x1,
 // root -l getFakeRate.C
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getFakeRate()
+void getFakeRate(TString inputdir_name  = "../rootfiles/nominal",
+		 TString outputdir_name = "test")
 {
+  inputdir  = inputdir_name;
+  outputdir = outputdir_name;
+
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   if (savepng) gSystem->mkdir("png", kTRUE);
 
-  gSystem->mkdir("rootfilesFR", kTRUE);
-  gSystem->mkdir("rootfilesPR", kTRUE);
+  gSystem->mkdir(outputdir, kTRUE);
 
-  dataFR  = new TFile ("../rootfiles/nominal/FR/01_Data.root",  "read");
-  wjetsFR = new TFile ("../rootfiles/nominal/FR/08_WJets.root", "read");
-  zjetsFR = new TFile ("../rootfiles/nominal/FR/07_ZJets.root", "read");
-  zjetsPR = new TFile ("../rootfiles/nominal/PR/07_ZJets.root", "read");
+  dataFR  = new TFile (inputdir + "/FR/01_Data.root",  "read");
+  wjetsFR = new TFile (inputdir + "/FR/08_WJets.root", "read");
+  zjetsFR = new TFile (inputdir + "/FR/07_ZJets.root", "read");
+  zjetsPR = new TFile (inputdir + "/PR/07_ZJets.root", "read");
 
 
   // Prompt rate
@@ -223,18 +229,11 @@ void DrawFR(TString flavour,
   DrawLatex(42, 0.940, 0.945, 0.045, 31, "35.9 fb^{-1} (13 TeV)");
 
 
-  // Save and write
+  // Save
   //----------------------------------------------------------------------------
   if (savepng) canvas1->SaveAs(Form("png/%s_FR_%s_%.0fGeV.png",           flavour.Data(), variable.Data(), jetet));
   if (savepng) canvas2->SaveAs(Form("png/%s_EWKrel_tight_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
   if (savepng) canvas3->SaveAs(Form("png/%s_EWKrel_loose_%s_%.0fGeV.png", flavour.Data(), variable.Data(), jetet));
-
-  TFile* file = new TFile(Form("rootfilesFR/%s_FR_%s_%.0fGeV.root", flavour.Data(), variable.Data(), jetet), "recreate");
-
-  h_FR    ->Write();
-  h_FR_EWK->Write();
-  
-  file->Close();
 }
 
 
@@ -316,7 +315,11 @@ void WriteFR(TString flavour,
 
   // Write
   //----------------------------------------------------------------------------
-  TFile *file = new TFile(Form("rootfilesFR/%sFR_Run2016_HWW36fb_jet%0.f.root", flavour.Data(), jetet), "recreate");
+  TFile *file = new TFile(Form("%s/%sFR_Run2016_HWW36fb_jet%0.f.root",
+			       outputdir.Data(),
+			       flavour.Data(),
+			       jetet),
+			  "recreate");
 
   h_FR            ->Write("FR_pT_eta");
   h_FR_numerator  ->Write("FR_pT_eta_numerator");
@@ -345,7 +348,10 @@ void WritePR(TString flavour)
 
   // Write
   //----------------------------------------------------------------------------
-  TFile* file = new TFile("rootfilesPR/" + flavour + "PR_Run2016_HWW36fb.root","recreate");
+  TFile* file = new TFile(Form("%s/%sPR_Run2016_HWW36fb.root",
+			       outputdir.Data(),
+			       flavour.Data()),
+			  "recreate");
 
   h_PR->Write();
   
