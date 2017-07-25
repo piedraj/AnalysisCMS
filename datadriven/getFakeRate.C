@@ -70,7 +70,7 @@ TLegend* DrawLegend(Float_t     x1,
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// root -l getFakeRate.C
+// root -l -b -q getFakeRate.C
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getFakeRate(TString inputdir_name  = "../rootfiles/nominal",
@@ -98,8 +98,8 @@ void getFakeRate(TString inputdir_name  = "../rootfiles/nominal",
 
   if (draw)
     {
-      DrawPR("Ele",  "pt" , "p_{T} [GeV]");
-      DrawPR("Muon", "pt" , "p_{T} [GeV]");
+      DrawPR("Ele",  "pt",  "p_{T} [GeV]");
+      DrawPR("Muon", "pt",  "p_{T} [GeV]");
       DrawPR("Ele",  "eta", "|#eta|");
       DrawPR("Muon", "eta", "|#eta|");
     }
@@ -243,9 +243,9 @@ void DrawFR(TString flavour,
 //------------------------------------------------------------------------------
 // DrawPR
 //------------------------------------------------------------------------------
-void DrawPR(TString  flavour,
-	    TString  variable,
-	    TString  xtitle)
+void DrawPR(TString flavour,
+	    TString variable,
+	    TString xtitle)
 {
   TH1D* h_loose_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_loose_" + variable + "_PR");
   TH1D* h_tight_zjets = (TH1D*)zjetsPR -> Get("h_" + flavour + "_tight_" + variable + "_PR");

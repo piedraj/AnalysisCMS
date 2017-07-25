@@ -41,7 +41,7 @@ void DrawLatex    (Font_t      tfont,
 
 //------------------------------------------------------------------------------
 //
-// drawTH2D
+// root -l -b -q drawTH2D.C
 //
 //------------------------------------------------------------------------------
 void drawTH2D(TString ele_inputdir_name = "/afs/cern.ch/user/p/piedra/public/forXavier/36fb_ele_mva_90p_Iso2016",
@@ -54,6 +54,15 @@ void drawTH2D(TString ele_inputdir_name = "/afs/cern.ch/user/p/piedra/public/for
 
   gSystem->mkdir("png", kTRUE);
 
+
+  // Prompt rate
+  //----------------------------------------------------------------------------
+  DrawIt("ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
+  DrawIt("MuonPR_Run2016_HWW36fb", "h_Muon_signal_pt_eta_bin", "MuonPR", "muon PR");
+
+
+  // Fake rate
+  //----------------------------------------------------------------------------
   for (Int_t i=0; i<njetet; i++)
     {
       TString elejetet = Form("jet%.0f", elejetarray[i]);
@@ -68,9 +77,6 @@ void drawTH2D(TString ele_inputdir_name = "/afs/cern.ch/user/p/piedra/public/for
       //      DrawIt("EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_numerator",   "ElecFR_EWKcorr_numerator",   "electron FR (EWK corrected) numerator",   elejetet);
       //      DrawIt("EleFR_Run2016_HWW36fb", "FR_pT_eta_EWKcorr_denominator", "ElecFR_EWKcorr_denominator", "electron FR (EWK corrected) denominator", elejetet);
     }
-
-  DrawIt("ElePR_Run2016_HWW36fb",  "h_Ele_signal_pt_eta_bin",  "ElecPR", "electron PR");
-  DrawIt("MuonPR_Run2016_HWW36fb", "h_Muon_signal_pt_eta_bin", "MuonPR", "muon PR");
 }
 
 
