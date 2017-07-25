@@ -1,14 +1,17 @@
 
-// Constants and data members
+// Constants
 //------------------------------------------------------------------------------
-const   Int_t   njetet = 7;
+const Int_t   njetet = 7;
 
-const   Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
-const   Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t muojetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
+const Float_t elejetarray[njetet] = {10, 15, 20, 25, 30, 35, 45};
 
-const   Float_t muoscale = -1.;
-const   Float_t elescale = -1.;
+const Float_t muoscale = -1.;
+const Float_t elescale = -1.;
 
+
+// Data members
+//------------------------------------------------------------------------------
 bool    draw         = false;
 bool    savepng      = true;
 bool    setgrid      = true;
