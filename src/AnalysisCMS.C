@@ -319,13 +319,18 @@ void AnalysisCMS::Setup(TString analysis,
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
 
-  _analysis     = analysis;
-  _filename     = filename;
-  _luminosity   = luminosity;
-  _suffix       = suffix;
-  _nentries     = fChain->GetEntries();
-  _isminitree   = (_filename.Contains("minitrees")) ? true : false;
-  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+  _analysis   = analysis;
+  _filename   = filename;
+  _luminosity = luminosity;
+  _suffix     = suffix;
+  _nentries   = fChain->GetEntries();
+  _isminitree = (_filename.Contains("minitrees")) ? true : false;
+
+  _isdatadriven = "";
+
+  if (_filename.Contains("fake") ||
+      _filename.Contains("Fake") ||
+      _filename.Contains("FAKE")) _isdatadriven = "fakeW_";
 
   TString tok;
 
@@ -355,15 +360,16 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("T2tb")) _isfastsim = true;
 
   printf("\n");
-  printf("   analysis: %s\n",        _analysis.Data());
-  printf("   filename: %s\n",        _filename.Data());
-  printf("     sample: %s\n",        _sample.Data());
-  printf(" luminosity: %.3f fb-1\n", _luminosity);
-  printf("   nentries: %lld\n",      _nentries);
-  printf("       ismc: %d\n",        _ismc);
-  printf("  isfastsim: %d\n",        _isfastsim);
-  printf(" isminitree: %d\n",        _isminitree);
-  
+  printf("     analysis: %s\n",        _analysis.Data());
+  printf("     filename: %s\n",        _filename.Data());
+  printf("       sample: %s\n",        _sample.Data());
+  printf("   luminosity: %.3f fb-1\n", _luminosity);
+  printf("     nentries: %lld\n",      _nentries);
+  printf("         ismc: %s\n",        (_ismc)                           ? "yes" : "no");
+  printf("    isfastsim: %s\n",        (_isfastsim)                      ? "yes" : "no");
+  printf("   isminitree: %s\n",        (_isminitree)                     ? "yes" : "no");
+  printf(" isdatadriven: %s\n",        (_isdatadriven.Contains("fakeW")) ? "yes" : "no");
+
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix;
   
   TString prefix = (_isminitree) ? "minitrees/" : "";
