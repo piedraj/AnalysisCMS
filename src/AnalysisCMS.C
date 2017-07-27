@@ -1132,13 +1132,19 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  if (_analysis.EqualTo("TTDM")) GetTops();
-  
-  if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
-  
-  if (_analysis.EqualTo("TTDM")) GetDark();
-  
-  if (_analysis.EqualTo("TTDM")) GetTopReco();
+
+  // Additional TTDM variables
+  //----------------------------------------------------------------------------
+  if (_analysis.EqualTo("TTDM"))
+    {
+      GetTops();
+      
+      GetGenLeptonsAndNeutrinos();
+
+      GetDark();
+
+      GetTopReco();
+    }
 
 
   // Additional analysis variables
@@ -1168,6 +1174,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetStopVar();
 
   GetRazor();
+
+  _m2l  = mll;
+  _pt2l = ptll;
 }
 
 
