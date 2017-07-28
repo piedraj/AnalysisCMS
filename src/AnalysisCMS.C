@@ -418,14 +418,12 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
-  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17
-
-  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;  // Full2016_Apr17
-
   _event_weight *= veto_EMTFBug;
 
-  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
-  
+  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;
+
+  _event_weight *= (_isdatadriven.Contains("fakeW")) ? _fake_weight : LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW;
@@ -1103,15 +1101,17 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
-  _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
-  _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
-  _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
-  _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
-  _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
-  _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
-  _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
-  _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
+  _fake_weight            = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
+  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+
+  //  if (Nlep != 2) fakeW = "fakeW_ele_cut_WP_Tight80X_mu_cut_Tight80x_" + Nlep + "l";  // To be adapted from python to C++
 }
 
 

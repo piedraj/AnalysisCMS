@@ -44,6 +44,7 @@ public :
    //   Float_t         dataset;
    //   Float_t         effW;
    //   Float_t         fakeW;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
    Float_t         fakeW2l0j;
    Float_t         fakeW2l0jElUp;
    Float_t         fakeW2l0jElDown;
@@ -559,6 +560,7 @@ public :
    //   TBranch        *b_dataset;   //!
    //   TBranch        *b_effW;   //!
    //   TBranch        *b_fakeW;   //!
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
    TBranch        *b_fakeW3l;
    TBranch        *b_fakeW3lElUp;
    TBranch        *b_fakeW3lElDown;
@@ -1332,6 +1334,7 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("dataset", &dataset, &b_dataset);
    //   fChain->SetBranchAddress("effW", &effW, &b_effW);
    //   fChain->SetBranchAddress("fakeW", &fakeW, &b_fakeW);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x);
    fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);
    fChain->SetBranchAddress("fakeW2l0jElUp", &fakeW2l0jElUp, &b_fakeW2l0jElUp);
    fChain->SetBranchAddress("fakeW2l0jElDown", &fakeW2l0jElDown, &b_fakeW2l0jElDown);
