@@ -1,24 +1,27 @@
 #include "TCut.h"
 #include "TH1F.h"
-//const TString  inputdir = "sanIsidoro";  // where the minitrees are stored
-//const TString  inputdir = "Helsinki_LepElepTCutup";  // where the minitrees are stored
 
-const TString histoSite = "histos/jetEta24/"; 
-const TString storageSite   = "/eos/user/j/jgarciaf/minitrees/"; 
+const TString storageSite     = "/eos/user/j/jgarciaf/minitrees/"; 
+const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/";
+const TString theproduction   = "jefferson"; 
+const TString histoSite       = "histos/macrocheck/"; 
+const TString datacard_folder = "170727/";
 
-//const TString theproduction = "Omaha"; 
-const TString theproduction = "fucking-mom"; 
-//const TString theproduction = "Dejavu"; 
+const float inicio = 0.50;
+const float paso   = 0.01;
 
-const float thelumi = 35.867/15.; 
+const float thelumi = 35.867; 
 
 const float xs2l = 1.0/9; 
 
-const float PUrw = 1.030108192;
-
-const float    ttSF = 0.97;  const float ettSF = 0.05;
-const float    DYSF = 1.01;  const float eDYSF = 0.04;
+const float    ttSF = 0.97;  const float ettSF = 0.073;
+const float    DYSF = 1.07;  const float eDYSF = 0.07;
 			     const float efakes= 0.30;
+
+//---- Omaha --- 
+//const float    ttSF = 0.91;  const float ettSF = 0.05;
+//const float    DYSF = 0.827;  const float eDYSF = 0.04;
+//			      const float efakes= 0.30;
 
 //const float    ttSF = 0.97;  const float ettSF = 0.15;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
@@ -26,36 +29,34 @@ const float    DYSF = 1.01;  const float eDYSF = 0.04;
 
 const bool doshape = false; 
 
-//const TCut selection = "mt2ll>40.&&mt2ll<80.&&darkpt>=0.";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-//const TCut selection = "metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00500>0.95"; 
-const TCut selection = "metPfType1>0.&&abs(jet_eta[0])<2.4&&abs(jet_eta[1])<2.4"; 
-//const TCut selection = "nbjet30csvv2m==0";//&&nlepton==2";
+//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_camille_ttDM0001scalar00300>0.60";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
+//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00500>0.95"; 
+const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.";//&&abs(jet_eta[0])<2.4&&abs(jet_eta[1])<2.4"; 
+//const TCut selection = "lep1id*lep2id<0&&nbjet30csvv2m==0&&mt2ll>10.";//&&nlepton==2";
+
+
+// jefferson
+const TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
+
+// fucking-mum
+//const TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
 
 
 const TString region = "SR";
 
-const TCut soft_cut = "metPfType1>80."; 
-const TCut hard_cut = soft_cut&&"mt2ll>80.&&darkpt>0."; 
-//const TCut hard_cut = "mt2ll>70.&&mt2ll<80.&&darkpt>=0.";  // for tt CR
-//const TCut MVA_cut  = soft_cut&&"           mt2ll>80.&&darkpt>=0.";
-TCut MVA_cut;
-
-
-const float inicio = 0.50;
-const float paso   = 0.05;
 
 
 enum{ data,
       ttDM,
       fakes,
-      TT,
+      ST,
+      TTV,
       //TT1,
       //TT2,
       //TTSemi,
-      ST,
       DY,
       //DYTT,
-      TTV,
+      TT,
       WW,
       WZ, 
       VZ,
@@ -229,6 +230,9 @@ void Assign(){
 	systematicID[PDFup    ] = "PDFup"    ;
 	systematicID[PDFdo    ] = "PDFdo"    ;
 	systematicID[toppTrw  ] = "toppTrw"  ;
+	systematicID[DDtt     ] = "DDtt"     ;
+	systematicID[DDDY     ] = "DDDY"     ;
+	systematicID[DDfakes  ] = "DDfakes"  ;
 
 	systematicIDdatacard[nominal  ] = "nominal";
 	systematicIDdatacard[Btagup   ] = "Btag"   ;
@@ -279,7 +283,6 @@ void Assign(){
 	eventW[PDFup    ] = "eventW"          ;
 	eventW[PDFdo    ] = "eventW"          ;
 	eventW[toppTrw  ] = "eventW_Toppt"    ;
-
 
 
 	for( int i = 0; i < nsystematic; i++ ){
@@ -349,7 +352,7 @@ void Assign(){
 
 	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
 
-	b_name[ANN] = "ANN_tanh_mt2ll80_regina_" + processID[ttDM];   
+	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];   
                                                          nbinraw[ANN]          = 120;   lowraw[ANN]          =  -0.1;   upraw[ANN]          =   1.1;
 
 	//----------
