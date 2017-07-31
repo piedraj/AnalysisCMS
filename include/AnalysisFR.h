@@ -7,13 +7,16 @@
 // Constants
 //------------------------------------------------------------------------------
 const int njetet = 7; 
+
 const Double_t muonjetet[njetet] = {10, 15, 20, 25, 30, 35, 45}; 
 const Double_t elejetet [njetet] = {10, 15, 20, 25, 30, 35, 45}; 
 
 const int nptbin = 8;
+
 const Double_t ptbins[nptbin+1] = {10, 15, 20, 25, 30, 35, 40, 45, 50};
 
 const int netabin = 5;
+
 const Double_t etabins[netabin+1] = {0, 0.5, 1.0, 1.5, 2.0, 2.5};
 
 
@@ -39,9 +42,8 @@ class AnalysisFR: public AnalysisCMS
 
   // Data members
   //----------------------------------------------------------------------------
-  float _base_weight;
   float _event_weight;
-  float _l2tight_weight;  // Needs l2Sel
+  float _l2tight_weight;
   float _inputJetEt;
   float _leptonPtMin;
   float _leptonEtaMax;
@@ -50,9 +52,8 @@ class AnalysisFR: public AnalysisCMS
   int   _Zlepton2type;
   float _Zlepton1idisoW;
   float _Zlepton2idisoW;
-  int   _Zlepton1index;
-  int   _Zlepton2index;
   int   _Zdecayflavour;
+
 
   // Declare fake rate histograms
   //----------------------------------------------------------------------------
@@ -91,13 +92,13 @@ class AnalysisFR: public AnalysisCMS
   TH1D* h_Ele_loose_met [ncut][njetet];
   TH1D* h_Ele_tight_met [ncut][njetet];
 
+
   // Declare effective luminosity estimation histograms
   //----------------------------------------------------------------------------
   TH2D* h_Muon_loose_pt_m2l[ncut][njetet];
   TH2D* h_Muon_tight_pt_m2l[ncut][njetet];
   TH2D* h_Ele_loose_pt_m2l [ncut][njetet];
   TH2D* h_Ele_tight_pt_m2l [ncut][njetet];
-
 };
 
 #endif 

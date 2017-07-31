@@ -57,5 +57,3 @@ root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/F
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_ST_t-channel_top.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_ST_t-channel_antitop.root
 root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight__JESdo/latino_ST_s-channel.root
-
-

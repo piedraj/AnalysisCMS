@@ -66,26 +66,16 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     EventSetup();
 
 
-    // Analysis
+    // Define the channel based on the number of electrons
     //--------------------------------------------------------------------------
     _nelectron = 0;
 
-    if (abs(Lepton1.flavour) == ELECTRON_FLAVOUR) _nelectron++;
-    if (abs(Lepton2.flavour) == ELECTRON_FLAVOUR) _nelectron++;
+    if (abs(std_vector_lepton_flavour->at(0)) == ELECTRON_FLAVOUR) _nelectron++;
+    if (abs(std_vector_lepton_flavour->at(1)) == ELECTRON_FLAVOUR) _nelectron++;
 
     if      (_nelectron == 2) _channel = ee;
     else if (_nelectron == 1) _channel = em;
     else if (_nelectron == 0) _channel = mm;
-
-    _m2l  = mll;   // Needs l2Sel
-    _pt2l = ptll;  // Needs l2Sel
-
-    bool pass_2l = (Lepton1.flavour * Lepton2.flavour < 0);
-
-    pass_2l &= (Lepton1.v.Pt() > 25.);
-    pass_2l &= (Lepton2.v.Pt() > 20.);
-    pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_2l &= (_m2l > 20.);
 
 
     bool pass;
@@ -98,61 +88,61 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(Control_00_NoCuts, pass);
 
 
-    // Has 2 tight leptons
+    // Common cuts
     //--------------------------------------------------------------------------
-    pass = pass_2l;
+    bool pass_os = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    bool pass_ss = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) > 0);
 
-    FillLevelHistograms(Control_01_TwoLeptons, pass);
+    bool pass_pt =
+      (std_vector_lepton_pt->at(0) > 25) &&
+      (std_vector_lepton_pt->at(1) > 13) &&
+      (std_vector_lepton_pt->at(2) < 10);
 
-    if (_saveminitree && pass) minitree->Fill();
+    bool pass_zveto = (_channel == em || fabs(mll - Z_MASS) > 15);
+
+    bool pass_bveto = true;
+
+    for (int j=0; j<std_vector_jet_pt->size(); j++)
+      {
+	pass_bveto &= (std_vector_jet_pt->at(j) < 20 || std_vector_jet_cmvav2->at(j) < -0.5884);
+      }
+
+    bool pass_btag = false;
+
+    for (int j=0; j<std_vector_jet_pt->size(); j++)
+      {
+	pass_btag |= (std_vector_jet_pt->at(j) > 20 && std_vector_jet_cmvav2->at(j) > -0.715);
+      }
 
 
-    // R out/in
+    // DY
+    // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/Full2016/cuts.py
     //--------------------------------------------------------------------------
-    pass = pass_2l;
+    pass = (pass_os && pass_pt && mll > 80 && mll < 100);
 
-    pass &= (_nbjet30csvv2m > 0);
-
-    FillLevelHistograms(Control_02_Routin, pass);
+    FillLevelHistograms(Control_01_DY, pass);
 
 
     // WW
     // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/cuts.py
     //--------------------------------------------------------------------------
-    pass =
-      mll > 80                         &&
-      std_vector_lepton_pt->at(0) > 25 &&
-      std_vector_lepton_pt->at(1) > 13 &&
-      std_vector_lepton_pt->at(2) < 10 &&
-      metPfType1 > 20                  &&
-      ptll > 30                        &&
-      mth >= 60	                       &&
-      (std_vector_jet_pt->at(0) < 20 || std_vector_jet_cmvav2->at(0) < -0.5884) &&
-      (std_vector_jet_pt->at(1) < 20 || std_vector_jet_cmvav2->at(1) < -0.5884) &&
-      (std_vector_jet_pt->at(2) < 20 || std_vector_jet_cmvav2->at(2) < -0.5884) &&
-      (std_vector_jet_pt->at(3) < 20 || std_vector_jet_cmvav2->at(3) < -0.5884) &&
-      (std_vector_jet_pt->at(4) < 20 || std_vector_jet_cmvav2->at(4) < -0.5884) &&
-      (std_vector_jet_pt->at(5) < 20 || std_vector_jet_cmvav2->at(5) < -0.5884) &&
-      (std_vector_jet_pt->at(6) < 20 || std_vector_jet_cmvav2->at(6) < -0.5884) &&
-      (std_vector_jet_pt->at(7) < 20 || std_vector_jet_cmvav2->at(7) < -0.5884) &&
-      (std_vector_jet_pt->at(8) < 20 || std_vector_jet_cmvav2->at(8) < -0.5884) &&
-      (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.5884);
+    pass = (pass_os && pass_pt && pass_zveto && pass_bveto && mll > 80 && ptll > 30 && mth > 60 && metPfType1 > 20);
 
-    FillLevelHistograms(Control_03_WW, pass);
-
-    if (pass) EventDump();
+    FillLevelHistograms(Control_02_WW, pass);
 
 
     // Top
     //--------------------------------------------------------------------------
-    pass = pass_2l;
+    pass = (pass_os && pass_pt && pass_zveto && pass_btag && mll > 80 && ptll > 30 && mth > 60 && metPfType1 > 20);
 
-    pass &= (_njet > 1);
-    pass &= (_nbjet30csvv2m > 0);
-    pass &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass &= (MET.Et() > 45.);
+    FillLevelHistograms(Control_03_Top, pass);
 
-    FillLevelHistograms(Control_04_Top, pass);
+
+    // SS
+    //--------------------------------------------------------------------------
+    pass = (pass_ss && pass_pt && pass_zveto && mll > 80 && ptll > 30 && mth > 60 && metPfType1 > 20);
+
+    FillLevelHistograms(Control_04_SS, pass);
   }
 
 

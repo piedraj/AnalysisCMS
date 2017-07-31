@@ -23,17 +23,13 @@ class AnalysisPR: public AnalysisCMS
 
   // Data members
   //----------------------------------------------------------------------------
-  float _base_weight;
   float _event_weight;
-  float _l2tight_weight;  // Needs l2Sel
   float _inputJetEt;
   float _leptonPtMin;
   float _leptonEtaMax;
 
   int   _Zlepton1type;
   int   _Zlepton2type;
-  int   _Zlepton1index;
-  int   _Zlepton2index;
   int   _Zdecayflavour;
 
   // Declare prompt rate histograms

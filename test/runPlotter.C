@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t datadriven = false;
+const Bool_t datadriven = true;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
 const Bool_t basictest  = false;
@@ -113,6 +113,12 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
     }
+
+
+  // Add systematics
+  //----------------------------------------------------------------------------
+  //  plotter.AddSystematic("../rootfiles/METup/"     + analysis);
+  //  plotter.AddSystematic("../rootfiles/Triggerup/" + analysis);
 
 
   // Make an output directory for each level
