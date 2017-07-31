@@ -32,7 +32,7 @@ void Draw(TString variable,
 
 //------------------------------------------------------------------------------
 //
-//  root -l -b -q compareDataMC.C+
+//  root -l -b -q 'compareDataMC.C+("__wwSel")'
 //
 //    https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/WWVar.C#L772
 //
