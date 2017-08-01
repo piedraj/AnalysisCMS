@@ -2,9 +2,9 @@
 // root -l -b -q Plotter.C 
 #include "../test/HistogramReader.C"
 
-const TString inputdir  = "histos/jetEta24";
+const TString inputdir  = "histos/jefferson-ANN-S010/";
 //const TString outputdir = "figures/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170703_jetEta/";
+const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170725_ANNs/";
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -39,9 +39,9 @@ void Plotter(TString option = "hist"){
 
   float lumi = lumi_fb_Full2016/15.;
 
-  Bool_t scale = logY;
+  Bool_t scale = linY;
 
-  float ymin = ( scale == linY )  ?  0  :  1 ;
+  float ymin = ( scale == linY )  ?  0  :  0.1 ;
 
   HistogramReader plotter(inputdir, outputdir);
 
@@ -80,35 +80,43 @@ void Plotter(TString option = "hist"){
   plotter.AddProcess("07_ZJets",     "DY",     color_ZJets, roc_background);//, 1.030108192);
   ////plotter.AddProcess("07_ZJetsTT",         "DY (OF)",     color_ZJets+2, roc_background);//, 1.030108192);
   plotter.AddProcess("09_TTV",             "ttV",        color_TTV, roc_background);//, 1.030108192);
-  plotter.AddProcess("04_TTTo2L2Nu",       "tt #rightarrow 2l",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
-  //plotter.AddProcess("04_TTTo2L2Nu_1",       "tt #rightarrow 2l (1st)",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
-  //plotter.AddProcess("04_TTTo2L2Nu_2",       "tt #rightarrow 2l (2nd)",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
-  //plotter.AddProcess("04_TTToSemiLepton",  "tt #rightarrow l#nuqq", kYellow+2, roc_background);
   plotter.AddProcess("05_ST",              "tW",         color_ST, roc_background);//, 1.030108192);
+  plotter.AddProcess("00_Fakes_Full2016",  "non-prompt", color_Fakes, roc_background, 1/(35.9)); // -999 is needed to not scale by luminosity
+  plotter.AddProcess("04_TTTo2L2Nu",       "tt #rightarrow 2l",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
+  plotter.AddProcess("04_TTTo2L2Nu_1",       "tt #rightarrow 2l (1st)",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
+  plotter.AddProcess("04_TTTo2L2Nu_2",       "tt #rightarrow 2l (2nd)",    color_TTTo2L2Nu, roc_background);//, 1.030108192);
+  //plotter.AddProcess("04_TTToSemiLepton",  "tt #rightarrow l#nuqq", kYellow+2, roc_background);
   //plotter.AddProcess("00_Fakes_1outof15",  "non-prompt", color_Fakes, roc_background, -999); // -999 is needed to not scale by luminosity
-  plotter.AddProcess("00_Fakes_Full2016",  "non-prompt", color_Fakes, roc_background, 1/(15.*2.39)); // -999 is needed to not scale by luminosity
+
 
 
   // Add signals
   //----------------------------------------------------------------------------
-  //plotter.AddSignal("ttDM0001scalar00010", "light",  color_Signal, roc_signal );
+  plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x20",  color_Signal, roc_signal, 20. );
   //plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20 x30",  color_Signal, roc_signal, 30);
   //plotter.AddSignal("ttDM0001scalar00050", "m_{#chi}1 m_{S}50 x50",  color_Signal, roc_signal, 50);
   //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100 x100", color_Signal, roc_signal, 100);
   //plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200 x 200", color_Signal, roc_signal, 200);
   //plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300 x1000", color_Signal, roc_signal, 1000);
-  //plotter.AddSignal("ttDM0001scalar00500", "heavy x5e3", color_Signal+4, roc_signal, 5000.);
+  //plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x5e3", color_Signal, roc_signal, 5000.);
 
 
   // Add systematics
   //----------------------------------------------------------------------------
-  /*plotter.AddSystematic("Btagup"       );
-  plotter.AddSystematic("Idisoup"      );		
-  plotter.AddSystematic("Triggerup"    );		
-  plotter.AddSystematic("METup"        );		
-  plotter.AddSystematic("JESup"        );		
-  plotter.AddSystematic("LepElepTCutup");		
-  plotter.AddSystematic("LepMupTCutup" );*/		
+  /*plotter.AddSystematic("_Btagup"       );
+  plotter.AddSystematic("_Btagdo"       );
+  plotter.AddSystematic("_Idisoup"      );		
+  plotter.AddSystematic("_Triggerup"    );		
+  plotter.AddSystematic("_METup"        );		
+  plotter.AddSystematic("_JESup"        );		
+  plotter.AddSystematic("_LepElepTCutup");		
+  plotter.AddSystematic("_LepMupTCutup" );*/
+  //plotter.AddSystematic("_QCDup"        );
+  //plotter.AddSystematic("_QCDdo"        );
+  //plotter.AddSystematic("_PDFup"        );
+  //plotter.AddSystematic("_PDFdo"        );
+  //plotter.AddSystematic("_toppTrw"      );
+  //plotter.AddSystematic(""             );
 
   // Draw distributions
   //----------------------------------------------------------------------------
@@ -139,11 +147,11 @@ void Plotter(TString option = "hist"){
   ///plotter.Draw( "ht"             , "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500, 1);
   //plotter.Draw( "htjets"         , "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
   //plotter.Draw( "htnojets"       , "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
-  plotter.Draw( "jet1eta"        , "leading jet #eta",                  4, 1, "NULL", scale, false);
+  //plotter.Draw( "jet1eta"        , "leading jet #eta",                  4, 1, "NULL", scale, false);
   //plotter.Draw( "jet1mass"       , "leading jet mass",                  -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet1phi"        , "leading jet #phi",                   5, 2, "rad",  scale, false);
   //plotter.Draw( "jet1pt"         , "leading jet p_{T}",                  5, 0, "GeV",  scale, true, 0,  400, ymin);
-  plotter.Draw( "jet2eta"        , "trailing jet #eta",                 4, 1, "NULL", scale, false);
+  //plotter.Draw( "jet2eta"        , "trailing jet #eta",                 4, 1, "NULL", scale, false);
   //plotter.Draw( "jet2mass"       , "trailing jet mass",                 -1, 0, "GeV",  scale, true, 0,   50);
   //plotter.Draw( "jet2phi"        , "trailing jet #phi",                  5, 2, "rad",  scale, false);
   //plotter.Draw( "jet2pt"         , "trailing jet p_{T}",                 5, 0, "GeV",  scale, true, 0,  400, ymin);
@@ -157,13 +165,13 @@ void Plotter(TString option = "hist"){
   //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300, ymin, 1e6);
   //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200, ymin, 1e7);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
-  //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200, ymin);//, 1e5); 
+  //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, false, 0, 200, ymin, 1e8); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "mtw2"           , "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6, ymin);
   //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10, ymin);
   ///plotter.Draw( "nvtx"          , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30, 1);
-  //plotter.Draw( "ANN_tanh_mt2ll80_regina_ttDM0001scalar00500", "ANN output", 5, 2, "NULL", scale, true, 0, 1.0, ymin, 1e8 );
+  plotter.Draw( "ANN_tanh_mt2ll80_camille_ttDM0001scalar00010", "ANN output", 4, 2, "NULL", scale, true, 0, 1.0, ymin );
 
 
   //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200, 1);

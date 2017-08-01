@@ -271,8 +271,8 @@ void getDYScale(TString analysis = "Control",
       mgraph[k]->GetXaxis()->SetTitle(xtitle);
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.02);
-      mgraph[k]->SetMaximum(+0.35);
+      mgraph[k]->SetMinimum(-0.01);
+      mgraph[k]->SetMaximum(+0.19);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -313,8 +313,8 @@ void getDYScale(TString analysis = "Control",
   mgraph[2]->GetXaxis()->SetTitle(xtitle);
   mgraph[2]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-  mgraph[2]->SetMinimum(-0.02);
-  mgraph[2]->SetMaximum(+0.35);
+  mgraph[2]->SetMinimum(-0.01);
+  mgraph[2]->SetMaximum(+0.19);
 
   DrawLegend(0.22, 0.83, (TObject*)graph_R_dy_copy[ee], " " + lchannel[ee] + " DY");
   DrawLegend(0.22, 0.77, (TObject*)graph_R_dy_copy[mm], " " + lchannel[mm] + " DY");
@@ -351,7 +351,8 @@ void getDYScale(TString analysis = "Control",
   mgraph[3]->GetXaxis()->SetTitle(xtitle);
   mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  mgraph[3]->SetMaximum(1.15);
+  mgraph[3]->SetMinimum(0.85);
+  mgraph[3]->SetMaximum(1.10);
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);

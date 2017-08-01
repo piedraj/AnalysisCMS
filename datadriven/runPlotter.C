@@ -3,9 +3,10 @@
 
 // Constants
 //------------------------------------------------------------------------------
-//const TString inputdir  = "../rootfiles/nominal/FR";
-const TString inputdir  = "../rootfiles/newFakes2/FR";
+const TString inputdir  = "../rootfiles/nominal/FR";
 const TString outputdir = "figures/";
+
+const TString sll = "#font[12]{ll}";
 
 enum {linY, logY};
 
@@ -15,6 +16,7 @@ enum {linY, logY};
 void DrawLeptonPlots(TString lepton,
 		     float   lumi,
 		     float   jetet);
+
 
 TString _level;
 TString _option;
@@ -53,7 +55,14 @@ void runPlotter(TString level,
 
   gSystem->mkdir(outputdir + level, kTRUE);
 
-  DrawLeptonPlots("Ele",  -1, 35.);
+  DrawLeptonPlots("Ele", -1, 10.);
+  DrawLeptonPlots("Ele", -1, 15.);
+  DrawLeptonPlots("Ele", -1, 20.);
+  DrawLeptonPlots("Ele", -1, 25.);
+  DrawLeptonPlots("Ele", -1, 30.);
+  DrawLeptonPlots("Ele", -1, 35.);
+  DrawLeptonPlots("Ele", -1, 45.);
+
   DrawLeptonPlots("Muon", -1, 25.);
 }
 
@@ -75,35 +84,18 @@ void DrawLeptonPlots(TString lepton,
   //----------------------------------------------------------------------------
   if (!_option.Contains("nostack")) plotter->SetDrawYield(true);
 
-  if (_level.Contains("Zpeak")) {
-
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", linY, true, 0, 200);
-    plotter->Draw(prefix + "loose_m2l" + suffix, "Loose m2l", 20, 0, "GeV", logY, true, 0, 200);
-    plotter->Draw(prefix + "tight_m2l" + suffix, "Tight m2l", 20, 0, "GeV", logY, true, 0, 200);
-
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
-
-    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", linY, true,  0, 200);
-    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", linY, true,  0, 200);
-    //plotter->Draw(prefix + "loose_met" + suffix, "Loose met", 20, 0, "GeV", logY, true,  0, 200);
-    //plotter->Draw(prefix + "tight_met" + suffix, "Tight met", 20, 0, "GeV", logY, true,  0, 200);
-
-  } else {
-
-    plotter->Draw(prefix + "loose_pt"  + suffix, "Loose pt",  20, 0, "GeV", linY, true, 35, 200);
-    plotter->Draw(prefix + "tight_pt"  + suffix, "Tight pt",  20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_pt"  + suffix, "Loose pt",  20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_pt"  + suffix, "Tight pt",  20, 0, "GeV", logY, true,  0, 200);
-
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", linY, true,  0, 200);
-    plotter->Draw(prefix + "loose_mtw" + suffix, "Loose mtw", 20, 0, "GeV", logY, true,  0, 200);
-    plotter->Draw(prefix + "tight_mtw" + suffix, "Tight mtw", 20, 0, "GeV", logY, true,  0, 200);
-  }
+  if (_level.Contains("Zpeak"))
+    {
+      plotter->Draw(prefix + "loose_m2l" + suffix, "loose m_{" + sll + "}", 20, 0, "GeV", logY, true, 0, 200);
+      plotter->Draw(prefix + "tight_m2l" + suffix, "tight m_{" + sll + "}", 20, 0, "GeV", logY, true, 0, 200);
+    }
+  else
+    {
+      plotter->Draw(prefix + "loose_pt_bin"  + suffix, "loose p_{T}", -1, 0,  "GeV", linY, false);
+      plotter->Draw(prefix + "tight_pt_bin"  + suffix, "tight p_{T}", -1, 0,  "GeV", linY, false);
+      plotter->Draw(prefix + "loose_eta_bin" + suffix, "loose #eta",  -1, 1, "NULL", linY, false);
+      plotter->Draw(prefix + "tight_eta_bin" + suffix, "tight #eta",  -1, 1, "NULL", linY, false);
+    }
 
 
   // Copy index.php in every directory

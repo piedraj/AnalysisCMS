@@ -17,7 +17,7 @@
 
 AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
-    https://twiki.cern.ch/twiki/bin/view/CMS/LatinosFrameworkTutorials
+    https://twiki.cern.ch/twiki/bin/view/CMS/LatinosFrameworkFor2017
     https://github.com/latinos/LatinoTrees
     https://github.com/latinos/LatinoAnalysis
     https://github.com/latinos/PlotsConfigurations
@@ -204,17 +204,18 @@ Finally, go to your repository and click **Pull Request**.
 
 # <a name="edit-a-cms-analysis-note"/>8. Edit a CMS Analysis Note
 
-The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note number used below corresponds to the IFCA/Oviedo WZ analysis at 13 TeV.
+The following instructions have been extracted from the [CMS TWiki](https://twiki.cern.ch/twiki/bin/view/Main/HowtoNotesInCMS). The note AN-17-208 documents our **Search for scalar top quark pair production with three-body decays in the
+dilepton final state at 13 TeV with the CMS detector** analysis.
 
     ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
     svn co -N svn+ssh://svn.cern.ch/reps/tdr2 svn
     cd svn
     svn update utils
     svn update -N notes
-    svn update notes/AN-16-010
-    eval `notes/tdr runtime -sh`
-    cd notes/AN-16-010/trunk
-    tdr --style=an b AN-16-010
+    svn update notes/AN-17-208
+    eval `notes/tdr runtime -csh`
+    cd notes/AN-17-208/trunk
+    tdr --style=an b AN-17-208
 
 Get the latest modifications from the note repository. Always do this first.
 

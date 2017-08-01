@@ -319,13 +319,18 @@ void AnalysisCMS::Setup(TString analysis,
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
 
-  _analysis     = analysis;
-  _filename     = filename;
-  _luminosity   = luminosity;
-  _suffix       = suffix;
-  _nentries     = fChain->GetEntries();
-  _isminitree   = (_filename.Contains("minitrees")) ? true : false;
-  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+  _analysis   = analysis;
+  _filename   = filename;
+  _luminosity = luminosity;
+  _suffix     = suffix;
+  _nentries   = fChain->GetEntries();
+  _isminitree = (_filename.Contains("minitrees")) ? true : false;
+
+  _isdatadriven = "";
+
+  if (_filename.Contains("fake") ||
+      _filename.Contains("Fake") ||
+      _filename.Contains("FAKE")) _isdatadriven = "fakeW_";
 
   TString tok;
 
@@ -355,15 +360,16 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("T2tb")) _isfastsim = true;
 
   printf("\n");
-  printf("   analysis: %s\n",        _analysis.Data());
-  printf("   filename: %s\n",        _filename.Data());
-  printf("     sample: %s\n",        _sample.Data());
-  printf(" luminosity: %.3f fb-1\n", _luminosity);
-  printf("   nentries: %lld\n",      _nentries);
-  printf("       ismc: %d\n",        _ismc);
-  printf("  isfastsim: %d\n",        _isfastsim);
-  printf(" isminitree: %d\n",        _isminitree);
-  
+  printf("     analysis: %s\n",        _analysis.Data());
+  printf("     filename: %s\n",        _filename.Data());
+  printf("       sample: %s\n",        _sample.Data());
+  printf("   luminosity: %.3f fb-1\n", _luminosity);
+  printf("     nentries: %lld\n",      _nentries);
+  printf("         ismc: %s\n",        (_ismc)                           ? "yes" : "no");
+  printf("    isfastsim: %s\n",        (_isfastsim)                      ? "yes" : "no");
+  printf("   isminitree: %s\n",        (_isminitree)                     ? "yes" : "no");
+  printf(" isdatadriven: %s\n",        (_isdatadriven.Contains("fakeW")) ? "yes" : "no");
+
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix;
   
   TString prefix = (_isminitree) ? "minitrees/" : "";
@@ -412,14 +418,12 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
-  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17
-
-  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;  // Full2016_Apr17
-
   _event_weight *= veto_EMTFBug;
 
-  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
-  
+  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;
+
+  _event_weight *= (_isdatadriven.Contains("fakeW")) ? _fake_weight : LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW;
@@ -428,10 +432,8 @@ void AnalysisCMS::ApplyWeights()
 
   GetSampleWeight();
 
-  _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
-
-  _event_weight_truegenmatched = ((std_vector_leptonGen_isPrompt->at(0) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0)) &&
-				  (std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)));
+  // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
+  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
@@ -1099,15 +1101,17 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
-  _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
-  _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
-  _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
-  _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
-  _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
-  _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
-  _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
-  _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
+  _fake_weight            = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
+  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
+
+  //  if (Nlep != 2) fakeW = "fakeW_ele_cut_WP_Tight80X_mu_cut_Tight80x_" + Nlep + "l";  // To be adapted from python to C++
 }
 
 
@@ -1128,13 +1132,19 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  if (_analysis.EqualTo("TTDM")) GetTops();
-  
-  if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
-  
-  if (_analysis.EqualTo("TTDM")) GetDark();
-  
-  if (_analysis.EqualTo("TTDM")) GetTopReco();
+
+  // Additional TTDM variables
+  //----------------------------------------------------------------------------
+  if (_analysis.EqualTo("TTDM"))
+    {
+      GetTops();
+      
+      GetGenLeptonsAndNeutrinos();
+
+      GetDark();
+
+      GetTopReco();
+    }
 
 
   // Additional analysis variables
@@ -1164,6 +1174,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetStopVar();
 
   GetRazor();
+
+  _m2l  = mll;
+  _pt2l = ptll;
 }
 
 
@@ -1411,23 +1424,22 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("drll",              &drll,              "drll/F");
   minitree->Branch("dyll",              &_dyll,             "dyll/F");
   // E
-  minitree->Branch("event",                 &event,                        "event/I");
-  minitree->Branch("eventW",                &_event_weight,                "eventW/F");
-  minitree->Branch("eventW_Btagup",         &_event_weight_Btagup,         "eventW_Btagup/F");
-  minitree->Branch("eventW_Btagdo",         &_event_weight_Btagdo,         "eventW_Btagdo/F");
-  minitree->Branch("eventW_BtagFSup",       &_event_weight_BtagFSup,       "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSdo",       &_event_weight_BtagFSdo,       "eventW_BtagFSdo/F");
-  minitree->Branch("eventW_Idisoup",        &_event_weight_Idisoup,        "eventW_Idisoup/F");
-  minitree->Branch("eventW_Idisodo",        &_event_weight_Idisodo,        "eventW_Idisodo/F");
-  minitree->Branch("eventW_Triggerup",      &_event_weight_Triggerup,      "eventW_Triggerup/F");
-  minitree->Branch("eventW_Triggerdo",      &_event_weight_Triggerdo,      "eventW_Triggerdo/F");
-  minitree->Branch("eventW_Recoup",         &_event_weight_Recoup,         "eventW_Recoup/F");
-  minitree->Branch("eventW_Recodo",         &_event_weight_Recodo,         "eventW_Recodo/F");
-  minitree->Branch("eventW_Fastsimup",      &_event_weight_Fastsimup,      "eventW_Fastsimup/F");
-  minitree->Branch("eventW_Fastsimdo",      &_event_weight_Fastsimdo,      "eventW_Fastsimdo/F");
-  minitree->Branch("eventW_Toppt",          &_event_weight_Toppt,          "eventW_Toppt/F");
-  minitree->Branch("eventW_genmatched",     &_event_weight_genmatched,     "eventW_genmatched/F");
-  minitree->Branch("eventW_truegenmatched", &_event_weight_truegenmatched, "eventW_truegenmatched/F");
+  minitree->Branch("event",             &event,                    "event/I");
+  minitree->Branch("eventW",            &_event_weight,            "eventW/F");
+  minitree->Branch("eventW_Btagup",     &_event_weight_Btagup,     "eventW_Btagup/F");
+  minitree->Branch("eventW_Btagdo",     &_event_weight_Btagdo,     "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",   &_event_weight_BtagFSup,   "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSdo",   &_event_weight_BtagFSdo,   "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_Idisoup",    &_event_weight_Idisoup,    "eventW_Idisoup/F");
+  minitree->Branch("eventW_Idisodo",    &_event_weight_Idisodo,    "eventW_Idisodo/F");
+  minitree->Branch("eventW_Triggerup",  &_event_weight_Triggerup,  "eventW_Triggerup/F");
+  minitree->Branch("eventW_Triggerdo",  &_event_weight_Triggerdo,  "eventW_Triggerdo/F");
+  minitree->Branch("eventW_Recoup",     &_event_weight_Recoup,     "eventW_Recoup/F");
+  minitree->Branch("eventW_Recodo",     &_event_weight_Recodo,     "eventW_Recodo/F");
+  minitree->Branch("eventW_Fastsimup",  &_event_weight_Fastsimup,  "eventW_Fastsimup/F");
+  minitree->Branch("eventW_Fastsimdo",  &_event_weight_Fastsimdo,  "eventW_Fastsimdo/F");
+  minitree->Branch("eventW_Toppt",      &_event_weight_Toppt,      "eventW_Toppt/F");
+  minitree->Branch("eventW_genmatched", &_event_weight_genmatched, "eventW_genmatched/F");
   // H
   minitree->Branch("ht",                &_ht,               "ht/F");
   minitree->Branch("htvisible",         &_htvisible,        "htvisible/F");
