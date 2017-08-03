@@ -1,0 +1,54 @@
+combine -n ttDM -m 650 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.50_combined.txt
+combine -n ttDM -m 651 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.51_combined.txt
+combine -n ttDM -m 652 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.52_combined.txt
+combine -n ttDM -m 653 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.53_combined.txt
+combine -n ttDM -m 654 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.54_combined.txt
+combine -n ttDM -m 655 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.55_combined.txt
+combine -n ttDM -m 656 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.56_combined.txt
+combine -n ttDM -m 657 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.57_combined.txt
+combine -n ttDM -m 658 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.58_combined.txt
+combine -n ttDM -m 659 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.59_combined.txt
+
+combine -n ttDM -m 660 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.60_combined.txt
+combine -n ttDM -m 661 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.61_combined.txt
+combine -n ttDM -m 662 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.62_combined.txt
+combine -n ttDM -m 663 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.63_combined.txt
+combine -n ttDM -m 664 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.64_combined.txt
+combine -n ttDM -m 665 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.65_combined.txt
+combine -n ttDM -m 666 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.66_combined.txt
+combine -n ttDM -m 667 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.67_combined.txt
+combine -n ttDM -m 668 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.68_combined.txt
+combine -n ttDM -m 669 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.69_combined.txt
+
+combine -n ttDM -m 670 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.70_combined.txt
+combine -n ttDM -m 671 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.71_combined.txt
+combine -n ttDM -m 672 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.72_combined.txt
+combine -n ttDM -m 673 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.73_combined.txt
+combine -n ttDM -m 674 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.74_combined.txt
+combine -n ttDM -m 675 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.75_combined.txt
+combine -n ttDM -m 676 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.76_combined.txt
+combine -n ttDM -m 677 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.77_combined.txt
+combine -n ttDM -m 678 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.78_combined.txt
+combine -n ttDM -m 679 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.79_combined.txt
+
+combine -n ttDM -m 680 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.80_combined.txt
+combine -n ttDM -m 681 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.81_combined.txt
+combine -n ttDM -m 682 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.82_combined.txt
+combine -n ttDM -m 683 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.83_combined.txt
+combine -n ttDM -m 684 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.84_combined.txt
+combine -n ttDM -m 685 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.85_combined.txt
+combine -n ttDM -m 686 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.86_combined.txt
+combine -n ttDM -m 687 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.87_combined.txt
+combine -n ttDM -m 688 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.88_combined.txt
+combine -n ttDM -m 689 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.89_combined.txt
+
+combine -n ttDM -m 690 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.90_combined.txt
+combine -n ttDM -m 691 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.91_combined.txt
+combine -n ttDM -m 692 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.92_combined.txt
+combine -n ttDM -m 693 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.93_combined.txt
+combine -n ttDM -m 694 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.94_combined.txt
+combine -n ttDM -m 695 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.95_combined.txt
+combine -n ttDM -m 696 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.96_combined.txt
+combine -n ttDM -m 697 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.97_combined.txt
+combine -n ttDM -m 698 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.98_combined.txt
+combine -n ttDM -m 699 -M Asymptotic /afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170803/ttDM0001pseudo00300_camille_0.99_combined.txt
