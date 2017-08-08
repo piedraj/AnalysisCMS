@@ -45,6 +45,14 @@ public :
    //   Float_t         effW;
    //   Float_t         fakeW;
    Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp;
+   Float_t         fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown;
    Float_t         fakeW2l0j;
    Float_t         fakeW2l0jElUp;
    Float_t         fakeW2l0jElDown;
@@ -570,6 +578,14 @@ public :
    //   TBranch        *b_effW;   //!
    //   TBranch        *b_fakeW;   //!
    TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp;
+   TBranch        *b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown;
    TBranch        *b_fakeW3l;
    TBranch        *b_fakeW3lElUp;
    TBranch        *b_fakeW3lElDown;
@@ -1360,6 +1376,14 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("effW", &effW, &b_effW);
    //   fChain->SetBranchAddress("fakeW", &fakeW, &b_fakeW);
    fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp);
+   fChain->SetBranchAddress("fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown", &fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown, &b_fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown);
    fChain->SetBranchAddress("fakeW2l0j", &fakeW2l0j, &b_fakeW2l0j);
    fChain->SetBranchAddress("fakeW2l0jElUp", &fakeW2l0jElUp, &b_fakeW2l0jElUp);
    fChain->SetBranchAddress("fakeW2l0jElDown", &fakeW2l0jElDown, &b_fakeW2l0jElDown);

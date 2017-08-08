@@ -1113,16 +1113,14 @@ void AnalysisCMS::GetSoftMuon()
 void AnalysisCMS::GetFakeWeights()
 {
   _fake_weight            = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
-  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-
-  //  if (Nlep != 2) fakeW = "fakeW_ele_cut_WP_Tight80X_mu_cut_Tight80x_" + Nlep + "l";  // To be adapted from python to C++
+  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp;
+  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown;
+  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp;
+  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown;
+  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp;
+  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown;
+  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp;
+  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown;
 }
 
 
