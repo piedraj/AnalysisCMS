@@ -475,12 +475,23 @@ void AnalysisCMS::ApplyWeights()
   float sf_idiso_up = 1.0;
   float sf_idiso_do = 1.0;
 
-  // Full2016_Apr17
+  // The following scale factors (LepSF2l) have been implemented at
+  // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/formulasToAdd_MC.py
   if (!_analysis.EqualTo("Stop"))
     {
-      sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__Up;  // To be cross-checked with Xavier
-      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__Do;  // To be cross-checked with Xavier
+      sf_idiso = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      
+      sf_idiso_up  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(0));
+      sf_idiso_up *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(1));
+
+      sf_idiso_do  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(0));
+      sf_idiso_do *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(1));
+
+      // Xavier has split the idiso nuisance into one for electrons and one for muons
+      //      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__Up;  // idiso SF Up for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__Do;  // idiso SF Do for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Up;      // idiso SF Up for muons     only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Do;      // idiso SF Do for muons     only, used by Xavier in nuisances.py
     }
 
   if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
