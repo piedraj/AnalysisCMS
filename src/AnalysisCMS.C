@@ -479,8 +479,8 @@ void AnalysisCMS::ApplyWeights()
   if (!_analysis.EqualTo("Stop"))
     {
       sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__Up;  // To be cross-checked with Xavier
+      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__Do;  // To be cross-checked with Xavier
     }
 
   if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
