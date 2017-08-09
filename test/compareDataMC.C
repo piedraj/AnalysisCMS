@@ -96,8 +96,11 @@ void Draw(TString variable,
 
   TCanvas* canvas = new TCanvas(name, name);
 
-  latino_dt->Draw(variable + ">>" + name + "_dt", supercut);
+  latino_dt->Draw(variable + ">>" + name + "_dt", supercut);  // Faster (took 18 minutes on 2017/08/09 at lxplus)
   latino_mc->Draw(variable + ">>" + name + "_mc", supercut);
+
+  //  latino_dt->Project(name + "_dt", variable, supercut);  // Slower (took 34 minutes on 2017/08/09 at lxplus)
+  //  latino_mc->Project(name + "_mc", variable, supercut);
 
   h_dt->Scale(1. / h_dt->Integral());
   h_mc->Scale(1. / h_mc->Integral());
