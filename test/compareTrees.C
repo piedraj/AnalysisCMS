@@ -48,13 +48,16 @@ void compareTrees(TString skim = "")
   TH1::SetDefaultSumw2();
 
 
+  //----------------------------------------------------------------------------
+  //
   // Compare data and MC
+  //
   //----------------------------------------------------------------------------
   if (0) {
 
 
     // Read files
-    //------------
+    //--------------------------------------------------------------------------
     chain1 = new TChain("latino", "latino");
     chain2 = new TChain("latino", "latino");
 
@@ -73,7 +76,7 @@ void compareTrees(TString skim = "")
 
 
     // Draw
-    //------
+    //--------------------------------------------------------------------------
     gSystem->mkdir("png", kTRUE);
 
     Draw("std_vector_lepton_phi[0]", "mth > 60", "h_lep1phi_mth60", "leading lepton #phi", 60, -3.3, 3.3);
@@ -87,25 +90,38 @@ void compareTrees(TString skim = "")
   }
 
 
-  // Rough estimate of the muon energy scale systematic uncertainty
+  //----------------------------------------------------------------------------
+  //
+  // Estimate the muon energy scale systematic uncertainty
+  //
   //----------------------------------------------------------------------------
   if (1) {
 
 
     // Read files
-    //------------
+    //--------------------------------------------------------------------------
     chain1 = new TChain("latino", "latino");
     chain2 = new TChain("latino", "latino");
     chain3 = new TChain("latino", "latino");
+    
+    // latino
+    //    chain1->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC"            + skim + "/latino_ttDM0001scalar00010.root");
+    //    chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__LepMupTup" + skim + "/latino_ttDM0001scalar00010.root");
+    //    chain3->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__LepMupTdo" + skim + "/latino_ttDM0001scalar00010.root");
 
-    chain1->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC"            + skim + "/latino_ttDM0001scalar00010.root");
-    chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__LepMupTup" + skim + "/latino_ttDM0001scalar00010.root");
-    chain3->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC__LepMupTdo" + skim + "/latino_ttDM0001scalar00010.root");
+    // minitree
+    chain1->Add("/eos/user/j/jgarciaf/minitrees/loyola/TTDM/04_TTTo2L2Nu.root");
+    chain2->Add("/eos/user/j/jgarciaf/minitrees/loyola_LepMupTCutup/TTDM/04_TTTo2L2Nu.root");
+    chain3->Add("/eos/user/j/jgarciaf/minitrees/loyola_LepMupTCutdo/TTDM/04_TTTo2L2Nu.root");
 
 
     // Get yields
-    //------------
-    TCut selection = "std_vector_muon_isTightLepton_cut_Tight80x[0] > 0.5 && std_vector_muon_isTightLepton_cut_Tight80x[1] > 0.5 && std_vector_lepton_pt[0] > 25 && std_vector_lepton_pt[1] > 20 && std_vector_lepton_pt[2] < 10 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -169) && njet > 1 && mll > 20 && fabs(mll - 91.188) > 15 && metPfType1 > 80";
+    //--------------------------------------------------------------------------
+    // latino
+    //    TCut selection = "std_vector_muon_isTightLepton_cut_Tight80x[0] > 0.5 && std_vector_muon_isTightLepton_cut_Tight80x[1] > 0.5 && std_vector_lepton_pt[0] > 25 && std_vector_lepton_pt[1] > 20 && std_vector_lepton_pt[2] < 10 && (std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -169) && njet > 1 && mll > 20 && fabs(mll - 91.188) > 15 && metPfType1 > 80";
+
+    // minitree
+    TCut selection = "eventW * (metPfType1 > 80 && mt2ll > 80)";
 
     Long64_t nentries    = chain1->GetEntries(selection);
     Long64_t nentries_up = chain2->GetEntries(selection);
@@ -115,7 +131,7 @@ void compareTrees(TString skim = "")
 
     
     // Print
-    //-------
+    //--------------------------------------------------------------------------
     printf("\n");
     printf(" nominal = %lld\n", nentries);
     printf(" up      = %lld\n", nentries_up);
