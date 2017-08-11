@@ -2614,7 +2614,7 @@ void AnalysisCMS::GetSampleWeight()
 
 
   // Top pt reweight for POWHEG
-  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
   _event_weight_Toppt = _event_weight;
 
