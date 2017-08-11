@@ -3,6 +3,7 @@
 #include "TCut.h"
 #include "TH1.h"
 #include "THStack.h"
+#include "TLegend.h"
 #include "TString.h"
 #include "TSystem.h"
 
@@ -23,13 +24,22 @@ TChain* chain3;
 
 // Functions
 //------------------------------------------------------------------------------
-void Draw(TString variable,
-	  TCut    supercut,
-	  TString name,
-	  TString xtitle,
-	  Int_t   nbins,
-	  Float_t xmin,
-	  Float_t xmax);
+void     Draw      (TString variable,
+		    TCut    supercut,
+		    TString name,
+		    TString xtitle,
+		    Int_t   nbins,
+		    Float_t xmin,
+		    Float_t xmax);
+
+TLegend* DrawLegend(Float_t x1,
+		    Float_t y1,
+		    TH1*    hist,
+		    TString label,
+		    TString option  = "p",
+		    Float_t tsize   = 0.030,
+		    Float_t xoffset = 0.200,
+		    Float_t yoffset = 0.048);
 
 
 //------------------------------------------------------------------------------
@@ -53,7 +63,7 @@ void compareTrees(TString skim = "")
   // Compare data and MC
   //
   //----------------------------------------------------------------------------
-  if (0) {
+  if (1) {
 
 
     // Read files
@@ -61,18 +71,37 @@ void compareTrees(TString skim = "")
     chain1 = new TChain("latino", "latino");
     chain2 = new TChain("latino", "latino");
 
-    chain1->Add(path + "Apr2017_Run2016B_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2.root");
-    chain1->Add(path + "Apr2017_Run2016C_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
-    chain1->Add(path + "Apr2017_Run2016D_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
-    chain1->Add(path + "Apr2017_Run2016E_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
-    chain1->Add(path + "Apr2017_Run2016F_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
-    chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
-    chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
-    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
-    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
-    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
+    if (1) {
 
-    chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC" + skim + "/latino_WWTo2L2Nu.root");
+      chain1->Add(path + "Apr2017_Run2016B_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2.root");
+      chain1->Add(path + "Apr2017_Run2016C_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
+      chain1->Add(path + "Apr2017_Run2016D_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
+      chain1->Add(path + "Apr2017_Run2016E_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
+      chain1->Add(path + "Apr2017_Run2016F_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
+      chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
+      chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
+      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
+      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
+      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
+      chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC"         + skim + "/latino_WWTo2L2Nu.root");
+    }
+    else {
+
+      TString Feb2017path = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/";
+
+      chain1->Add(Feb2017path + "Feb2017_Run2016B_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2__part0.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016B_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2__part1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016C_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016D_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016E_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
+      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
+      chain2->Add(Feb2017path + "Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_WWTo2L2Nu.root");
+    }
 
 
     // Draw
@@ -95,7 +124,7 @@ void compareTrees(TString skim = "")
   // Estimate the muon energy scale systematic uncertainty
   //
   //----------------------------------------------------------------------------
-  if (1) {
+  if (0) {
 
 
     // Read files
@@ -172,11 +201,15 @@ void Draw(TString variable,
   // Cosmetics
   //----------------------------------------------------------------------------
   hist1->SetMarkerStyle(kFullCircle);
+  hist2->SetFillStyle(1001);
+  hist2->SetFillColor(kAzure-9);
+  hist2->SetLineColor(kAzure-9);
+  hist2->SetLineWidth(0);
 
 
   // Draw
   //----------------------------------------------------------------------------
-  THStack* hs = new THStack();
+  THStack* hs = new THStack("hs", supercut);
 
   hs->Add(hist2, "hist");
   hs->Add(hist1, "ep");
@@ -186,12 +219,46 @@ void Draw(TString variable,
 
   // Labels
   //----------------------------------------------------------------------------
+  hs->SetMaximum(1.3 * hs->GetMaximum("nostack"));
+
   hs->GetXaxis()->SetTitle(xtitle);
   hs->GetXaxis()->SetTitleOffset(1.7);
-  hs->SetTitle(supercut);
+
+  DrawLegend(0.22, 0.84, hist1, " DoubleEG", "lp");
+  DrawLegend(0.22, 0.79, hist2, " WW",       "f");
 
 
   // Save
   //----------------------------------------------------------------------------
   canvas->SaveAs("png/" + name + ".png");
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLegend
+//------------------------------------------------------------------------------
+TLegend* DrawLegend(Float_t x1,
+		    Float_t y1,
+		    TH1*    hist,
+		    TString label,
+		    TString option,
+		    Float_t tsize,
+		    Float_t xoffset,
+		    Float_t yoffset)
+{
+  TLegend* legend = new TLegend(x1,
+				y1,
+				x1 + xoffset,
+				y1 + yoffset);
+  
+  legend->SetBorderSize(    0);
+  legend->SetFillColor (    0);
+  legend->SetTextAlign (   12);
+  legend->SetTextFont  (   42);
+  legend->SetTextSize  (tsize);
+
+  legend->AddEntry(hist, label.Data(), option.Data());
+  legend->Draw();
+
+  return legend;
 }
