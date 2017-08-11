@@ -10,9 +10,10 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const TString path = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/";
-const TString sll  = "#font[12]{ll}";
-const TString sm   = "E_{T}^{miss}";
+const TString path  = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/";
+const TString sll   = "#font[12]{ll}";
+const TString smet  = "E_{T}^{miss}";
+const TString sdphi = "#Delta#phi(" + sll + "," + smet + ")";
 
 
 // Data members
@@ -71,51 +72,32 @@ void compareTrees(TString skim = "")
     chain1 = new TChain("latino", "latino");
     chain2 = new TChain("latino", "latino");
 
-    if (1) {
-
-      chain1->Add(path + "Apr2017_Run2016B_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2.root");
-      chain1->Add(path + "Apr2017_Run2016C_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
-      chain1->Add(path + "Apr2017_Run2016D_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
-      chain1->Add(path + "Apr2017_Run2016E_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
-      chain1->Add(path + "Apr2017_Run2016F_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
-      chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
-      chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
-      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
-      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
-      chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
-      chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC"         + skim + "/latino_WWTo2L2Nu.root");
-    }
-    else {
-
-      TString Feb2017path = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/";
-
-      chain1->Add(Feb2017path + "Feb2017_Run2016B_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2__part0.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016B_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2__part1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016C_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016D_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016E_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016F_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016G_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
-      chain1->Add(Feb2017path + "Feb2017_Run2016H_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
-      chain2->Add(Feb2017path + "Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_WWTo2L2Nu.root");
-    }
+    chain1->Add(path + "Apr2017_Run2016B_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016B-03Feb2017_ver2-v2.root");
+    chain1->Add(path + "Apr2017_Run2016C_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016C-03Feb2017-v1.root");
+    chain1->Add(path + "Apr2017_Run2016D_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016D-03Feb2017-v1.root");
+    chain1->Add(path + "Apr2017_Run2016E_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016E-03Feb2017-v1.root");
+    chain1->Add(path + "Apr2017_Run2016F_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016F-03Feb2017-v1.root");
+    chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part0.root");
+    chain1->Add(path + "Apr2017_Run2016G_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016G-03Feb2017-v1__part1.root");
+    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part0.root");
+    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver2-v1__part1.root");
+    chain1->Add(path + "Apr2017_Run2016H_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA" + skim + "/latino_DoubleEG_Run2016H-03Feb2017_ver3-v1.root");
+    chain2->Add(path + "Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC"         + skim + "/latino_WWTo2L2Nu.root");
 
 
     // Draw
     //--------------------------------------------------------------------------
+    TCut ee    = "std_vector_lepton_flavour[0] * std_vector_lepton_flavour[1] == -121";
+    TCut jetpt = "std_vector_jet_pt[0] > 20";
+
     gSystem->mkdir("png", kTRUE);
 
-    Draw("std_vector_lepton_phi[0]", "mth > 60", "h_lep1phi_mth60", "leading lepton #phi", 60, -3.3, 3.3);
-    Draw("std_vector_lepton_phi[0]", "mth < 60", "h_lep1phi",       "leading lepton #phi", 60, -3.3, 3.3);
-    
-    Draw("std_vector_jet_phi[0]", "mth > 60 && std_vector_jet_pt[0] > 20", "h_jet1phi_mth60", "leading jet #phi", 60, -3.3, 3.3);
-    Draw("std_vector_jet_phi[0]", "mth < 60 && std_vector_jet_pt[0] > 20", "h_jet1phi",       "leading jet #phi", 60, -3.3, 3.3);
-    
-    Draw("dphillmet", "mth > 60", "h_dphillmet_mth60", "#Delta#phi(" + sll + "," + sm + ")", 60, 0, 3.3);
-    Draw("dphillmet", "mth < 60", "h_dphillmet",       "#Delta#phi(" + sll + "," + sm + ")", 60, 0, 3.3);
+    Draw("std_vector_lepton_phi[0]", ee && "mth > 60",          "h_lep1phi_mth60",   "leading lepton #phi", 60, -3.3, 3.3);
+    Draw("std_vector_lepton_phi[0]", ee && "mth < 60",          "h_lep1phi",         "leading lepton #phi", 60, -3.3, 3.3);
+    Draw("std_vector_jet_phi[0]",    ee && "mth > 60" && jetpt, "h_jet1phi_mth60",   "leading jet #phi",    60, -3.3, 3.3);
+    Draw("std_vector_jet_phi[0]",    ee && "mth < 60" && jetpt, "h_jet1phi",         "leading jet #phi",    60, -3.3, 3.3);
+    Draw("dphillmet",                ee && "mth > 60",          "h_dphillmet_mth60", sdphi,                 60,    0, 3.3);
+    Draw("dphillmet",                ee && "mth < 60",          "h_dphillmet",       sdphi,                 60,    0, 3.3);
   }
 
 
@@ -183,6 +165,8 @@ void Draw(TString variable,
 	  Float_t xmin,
 	  Float_t xmax)
 {
+  printf("\n [compareTrees.C] Drawing %s when %s\n\n", variable.Data(), supercut.GetTitle());
+
   TH1D* hist1 = new TH1D(name + "1", name, nbins, xmin, xmax);
   TH1D* hist2 = new TH1D(name + "2", name, nbins, xmin, xmax);
 
