@@ -15,10 +15,9 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
-  _ismc                  = true;
-  _saveminitree          = false;
-  _eventdump             = false;
-  _applytopptreweighting = false;
+  _ismc         = true;
+  _saveminitree = false;
+  _eventdump    = false;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -30,7 +29,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
   _systematic_fastsim_do = (systematic.Contains("Fastsimdo")) ? true : false;
   _systematic_fastsim_up = (systematic.Contains("Fastsimup")) ? true : false;
-  _systematic_toppt      = (systematic.Contains("Toppt"))     ? true : false;
 
   _systematic = systematic;
 
@@ -2616,22 +2614,9 @@ void AnalysisCMS::GetSampleWeight()
   // Top pt reweight for POWHEG
   // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
-  _event_weight_Toppt = _event_weight;
+  _event_weight_Toppt = 1.0;
 
-  if (_sample.Contains("TTTo2L2Nu")) {
-
-    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
-
-    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
-
-    if (_applytopptreweighting) {
-
-      float save_this_weight = _event_weight;
-
-      _event_weight       = _event_weight_Toppt;
-      _event_weight_Toppt = save_this_weight;
-    }
-  }
+  if (_sample.Contains("TTTo2L2Nu")) _event_weight_Toppt = sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 }
 
 
