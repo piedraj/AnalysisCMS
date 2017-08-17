@@ -410,6 +410,7 @@ void AnalysisCMS::ApplyWeights()
   _event_weight_Recodo     = 1.0;
   _event_weight_Fastsimup  = 1.0;
   _event_weight_Fastsimdo  = 1.0;
+  _event_weight_Toppt      = 1.0;
   _event_weight_genmatched = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
@@ -2614,8 +2615,6 @@ void AnalysisCMS::GetSampleWeight()
   // Top pt reweight for POWHEG
   // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
-  _event_weight_Toppt = 1.0;
-
   if (_sample.Contains("TTTo2L2Nu")) _event_weight_Toppt = sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 }
 
