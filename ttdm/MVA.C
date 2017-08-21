@@ -81,30 +81,29 @@ void MVA(float metPfType1_cut = 80.,
 
       for( int k = 0; k < nsystematic; k++ ){
 
-	      if (   /*k != nominal && */( k < MuESup || k > MuESdo ) ) continue;
+	      if (   k != nominal &&  ( k < JESup || k > JESdo ) ) continue;
 	      //if( k!= EleESdo ) continue;
 
-	      ///MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
-	      //MVARead(MVA_id, signal, "00_Fakes_Full2016", k);
+	      //MVARead(MVA_id, signal, "00_Fakes_1outof15", k);
+	      ///MVARead(MVA_id, signal, "00_Fakes_Full2016", k);
 	      ///MVARead(MVA_id, signal, "01_Data_1outof15", k);
-	      //MVARead(MVA_id, signal, "01_Data_Full2016", k);
+	      ///MVARead(MVA_id, signal, "01_Data_Full2016", k);
 	      ///MVARead(MVA_id, signal, "09_TTV", k);
 
 	      ///MVARead(MVA_id, signal, "02_WZTo3LNu", k);
-	      MVARead(MVA_id, signal, "03_VZ", k);
+	      ///MVARead(MVA_id, signal, "03_VZ", k);
 
-	      //MVARead(MVA_id, signal, "04_TTToSemiLepton", k);
-
-	      MVARead(MVA_id, signal, "05_ST", k);
-	      MVARead(MVA_id, signal, "06_WW", k);
-	      MVARead(MVA_id, signal, "07_ZJets", k);
-	      MVARead(MVA_id, signal, "11_Wg", k);
-	      MVARead(MVA_id, signal, "12_Zg", k);
-	      MVARead(MVA_id, signal, "13_VVV", k);
+	      ///MVARead(MVA_id, signal, "05_ST", k);
+	      ///MVARead(MVA_id, signal, "06_WW", k);
+	      ///MVARead(MVA_id, signal, "07_ZJets", k);
+	      ///MVARead(MVA_id, signal, "11_Wg", k);
+	      ///MVARead(MVA_id, signal, "12_Zg", k);
+	      ///MVARead(MVA_id, signal, "13_VVV", k);
 
 	      MVARead(MVA_id, signal, "04_TTTo2L2Nu", k);
+	      ///MVARead(MVA_id, signal, "04_TTTo2L2Nu_2", k);
 
-	      MVARead(MVA_id, signal, signal, k);
+	      //MVARead(MVA_id, signal, signal, k);
 
       } // k 
 
@@ -424,32 +423,60 @@ void MVARead(TString MVA_id, TString signal, TString filename, int systematic)
 
   //----- write 
 
-  	float mva01; 
-  	//float mva02; 
-  	//float mva03;
-  	//float mva04;
-  	//float mva05;
+  	//float mva01; TBranch* b_mva01 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_" + signal, &mva01, "mva/F" );
 
-	//TBranch* b_delete = theTree->GetBranch( "xxx" );
-  	//theTree -> GetListOfBranches() -> Remove( b_delete );
-   	//theTree -> Write();
- 
- 	TBranch* b_mva01 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_" + signal, &mva01, "mva/F" );
-  	//TBranch* b_mva02 = theTree->Branch("ANN_sigm_" + MVA_id + "_regina_" + signal, &mva02, "mva/F" );
-  	//TBranch* b_mva03 = theTree->Branch("mva03_" + signal, &mva03, "mva/F" );
-  	//TBranch* b_mva04 = theTree->Branch("mva04_" + signal, &mva04, "mva/F" );
-  	//TBranch* b_mva05 = theTree->Branch("mva05_" + signal, &mva05, "mva/F" );
+	float s010;
+	float s020;
+	float s050;
+	float s100;
+	float s200;
+	float s300;
+	float s500;
 
+	float p010;
+	float p020;
+	float p050;
+	float p100;
+	float p200;
+	float p300;
+	float p500;
+
+ 	TBranch* b_s010 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00010", &s010, "s010/F" );
+ 	TBranch* b_s020 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00020", &s020, "s020/F" );
+ 	TBranch* b_s050 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00050", &s050, "s050/F" );
+ 	TBranch* b_s100 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00100", &s100, "s100/F" );
+ 	TBranch* b_s200 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00200", &s200, "s200/F" );
+ 	TBranch* b_s300 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00300", &s300, "s300/F" );
+ 	TBranch* b_s500 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001scalar00500", &s500, "s500/F" );
+
+ 	TBranch* b_p010 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00010", &p010, "p010/F" );
+ 	TBranch* b_p020 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00020", &p020, "p020/F" );
+ 	TBranch* b_p050 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00050", &p050, "p050/F" );
+ 	TBranch* b_p100 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00100", &p100, "p100/F" );
+ 	TBranch* b_p200 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00200", &p200, "p200/F" );
+ 	TBranch* b_p300 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00300", &p300, "p300/F" );
+ 	TBranch* b_p500 = theTree->Branch("ANN_tanh_" + MVA_id + "_camille_ttDM0001pseudo00500", &p500, "p500/F" );
 
 
   // Book MVA methods
   //----------------------------------------------------------------------------
-  reader->BookMVA("01", weightsdir + signal + "_tanh.weights.xml");
-  //reader->BookMVA("02", weightsdir + signal + "_sigmoid.weights.xml");
-  //reader->BookMVA("03", weightsdir + signal + "_MLP03.weights.xml");
-  //reader->BookMVA("04", weightsdir + signal + "_BDT04.weights.xml");
-  //reader->BookMVA("05", weightsdir + signal + "_BDT05.weights.xml");
+  //reader->BookMVA("01", weightsdir + signal + "_tanh.weights.xml");
 
+  reader->BookMVA("s010", weightsdir + "ttDM0001scalar00010_tanh.weights.xml");
+  reader->BookMVA("s020", weightsdir + "ttDM0001scalar00020_tanh.weights.xml");
+  reader->BookMVA("s050", weightsdir + "ttDM0001scalar00050_tanh.weights.xml");
+  reader->BookMVA("s100", weightsdir + "ttDM0001scalar00100_tanh.weights.xml");
+  reader->BookMVA("s200", weightsdir + "ttDM0001scalar00200_tanh.weights.xml");
+  reader->BookMVA("s300", weightsdir + "ttDM0001scalar00300_tanh.weights.xml");
+  reader->BookMVA("s500", weightsdir + "ttDM0001scalar00500_tanh.weights.xml");
+
+  reader->BookMVA("p010", weightsdir + "ttDM0001pseudo00010_tanh.weights.xml");
+  reader->BookMVA("p020", weightsdir + "ttDM0001pseudo00020_tanh.weights.xml");
+  reader->BookMVA("p050", weightsdir + "ttDM0001pseudo00050_tanh.weights.xml");
+  reader->BookMVA("p100", weightsdir + "ttDM0001pseudo00100_tanh.weights.xml");
+  reader->BookMVA("p200", weightsdir + "ttDM0001pseudo00200_tanh.weights.xml");
+  reader->BookMVA("p300", weightsdir + "ttDM0001pseudo00300_tanh.weights.xml");
+  reader->BookMVA("p500", weightsdir + "ttDM0001pseudo00500_tanh.weights.xml");
 
   Long64_t nentries = theTree->GetEntries();
 
@@ -459,17 +486,39 @@ void MVARead(TString MVA_id, TString signal, TString filename, int systematic)
 
     theTree->GetEntry(ievt);
 
-    mva01 = reader->EvaluateMVA("01");
-    //mva02 = reader->EvaluateMVA("02");  
-    //mva03 = reader->EvaluateMVA("03");
-    //mva04 = reader->EvaluateMVA("04");
-    //mva05 = reader->EvaluateMVA("05");
+    //mva01 = reader->EvaluateMVA("01"); b_mva01->Fill();
 
-    b_mva01->Fill();	
-    //b_mva02->Fill();
-    //b_mva03->Fill();
-    //b_mva04->Fill();
-    //b_mva05->Fill();
+    s010 = reader->EvaluateMVA("s010");
+    s020 = reader->EvaluateMVA("s020");
+    s050 = reader->EvaluateMVA("s050");
+    s100 = reader->EvaluateMVA("s100");
+    s200 = reader->EvaluateMVA("s200");
+    s300 = reader->EvaluateMVA("s300");
+    s500 = reader->EvaluateMVA("s500");
+
+    p010 = reader->EvaluateMVA("p010");
+    p020 = reader->EvaluateMVA("p020");
+    p050 = reader->EvaluateMVA("p050");
+    p100 = reader->EvaluateMVA("p100");
+    p200 = reader->EvaluateMVA("p200");
+    p300 = reader->EvaluateMVA("p300");
+    p500 = reader->EvaluateMVA("p500");
+
+    b_s010->Fill();
+    b_s020->Fill();
+    b_s050->Fill();
+    b_s100->Fill();
+    b_s200->Fill();
+    b_s300->Fill();
+    b_s500->Fill();
+
+    b_p010->Fill();
+    b_p020->Fill();
+    b_p050->Fill();
+    b_p100->Fill();
+    b_p200->Fill();
+    b_p300->Fill();
+    b_p500->Fill();
 
   } 
 

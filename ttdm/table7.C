@@ -16,6 +16,8 @@ void table7(){
 
 	for( int i = 0; i < nprocess; i++ ){
 
+		//if ( i == Wg || i == Zg ) continue;
+
 		GetHistogram(i); 
 
 	}
@@ -25,7 +27,7 @@ void table7(){
 
 		for( int i = 0; i < nprocess; i++ ){
 
-			yield[i][ch] = histo[i][ch] -> Integral();				
+			yield[i][ch] = histo[i][ch] -> Integral(-1 ,-1);				
 
 			//if(  yield[i][ch]<0 )  yield[i][ch] = 0; 
 
@@ -200,24 +202,27 @@ void GetHistogram( int process ){
 	TCut ee_ch = "channel==3"; 
 	TCut mm_ch = "channel==4"; 
 	TCut em_ch = "channel==5"; 
-		
-	//---fucking-mom
-	TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
-	TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection ; 
+	
 
 	//---jefferson
-	//TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
-	//TCut newselection = ( process == data || process == fakes  ) ? selection                : selection&&RemovingFakes; 
+	TCut RemovingFakes = "eventW_genmatched";
+	TCut newselection = ( process == data || process == fakes  ) ? selection : selection&&RemovingFakes; 
+
+
 
 	TCut ee_cut = ee_ch && newselection; 
 	TCut mm_cut = mm_ch && newselection; 
 	TCut em_cut = em_ch && newselection; 
         TCut ll_cut =          newselection;
 
+
+	if ( process == TT )  eventW[0] ="eventW_Toppt" * eventW[0]; 
+
 	ee_cut = eventW[0] * ee_cut; 
 	mm_cut = eventW[0] * mm_cut; 
 	em_cut = eventW[0] * em_cut; 
 	ll_cut = eventW[0] * ll_cut; 
+
 
 	mytree -> Draw( "metPfType1 >> h_ee", ee_cut );
 	mytree -> Draw( "metPfType1 >> h_mm", mm_cut );

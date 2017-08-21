@@ -9,7 +9,7 @@ ofstream datacard;
 
 void GetRelUnc( int process, float threshold );
 
-void WriteDatacard( float threshold ); 
+void WriteDatacard( float threshold, TString ttdmID ); 
 
 
 void MakeDatacard(){
@@ -28,11 +28,13 @@ void MakeDatacard(){
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			if( m > 0 ) continue;
+			//if( m != 0 ) continue;
 
-			processID[ttDM] = scalarID[m];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
+			processID[ttDM] = pseudoID[m];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
 
 			for( int i = 0; i < nprocess; i++ ){ 
+
+				//if( i == DY || i == VZ || i == VVV ) continue; 
 
 				if ( i == Wg || i == Zg ) continue; 
 		
@@ -40,7 +42,7 @@ void MakeDatacard(){
 
 			}
 
-			WriteDatacard( threshold ); //scalarMVAcut[m]);
+			WriteDatacard( threshold, processID[ttDM] ); //scalarMVAcut[m]);
 
 		} 
 
@@ -66,15 +68,15 @@ void GetRelUnc( int process, float threshold ){
 		cout << "\t\t" << systematicID[j] << endl;
 
 		relunc[process][j][lnN] = -9999.; 
-		relunc[process][j][shape] = ( process != fakes ) ? 1.000 : -9999.; 
+		relunc[process][j][shape] = ( process == fakes || (j == toppTrwup && process != TT)  ) ? -9999. : 1.000; 
 
 		if( j == DDtt    && process == TT    ){ relunc[process][j][lnN] = 1 + ettSF/ttSF; } 
-		if( j == DDDY    && process == DY    ){ relunc[process][j][lnN] = 1 + eDYSF/DYSF; } 
+		if( j == DDDY    && process == DY    ){ relunc[process][j][lnN] = 1 + 0.30; }// eDYSF/DYSF; } 
 		if( j == DDfakes && process == fakes ){ relunc[process][j][lnN] = 1 + efakes    ; }
-                if( process == fakes ) continue; 
+                if( process == fakes && j != nominal ) continue; 
 		if( j == DDttV   && process == TTV   ){ relunc[process][j][lnN] = 1 + ettV      ; }
  		if( j == pileup                      ){ relunc[process][j][lnN] = 1 + epileup   ; }
- 		if( j == luminosity && process != fakes){ relunc[process][j][lnN] = 1 + elumi     ; }
+ 		if( j == luminosity && (process != fakes && process != DY )){ relunc[process][j][lnN] = 1 + elumi   ; }
 
 	
 		if( j == toppTrwdo ) continue; 
@@ -85,8 +87,8 @@ void GetRelUnc( int process, float threshold ){
 
 		if((j >= QCDup && j <= PDFdo) && (process == data || process == ttDM || process == fakes || process == ST ))  continue;  //goto closure;
 
-		if( j == Triggerup && process != TT && process != DY && process != TTV ){ relunc[process][j][lnN] = 1.03; continue; }
-		if( j == Idisoup   && process != TT && process != DY && process != TTV ){ relunc[process][j][lnN] = 1.02; continue; }
+		if( j == Triggerup && process != DY  ){ relunc[process][j][lnN] = 1.02; continue; }
+		if( j == Idisoup   && process != DY  ){ relunc[process][j][lnN] = 1.04; continue; }
 
 		if( j != nominal ) continue;
 
@@ -96,7 +98,7 @@ void GetRelUnc( int process, float threshold ){
 		//if( process != TT ){
 			///if( j == nominal ) myfile = new TFile( pathway + processID[process] +                         ".root", "read" ); 
 			///if( j >  nominal ) myfile = new TFile( pathway + processID[process] + "_" + systematicID[j] + ".root", "read" ); 
-			myfile = new TFile( pathway + "simple-shapes-TH1.root", "read");
+			myfile = new TFile( pathway + "simple-shapes-TH1-final.root", "read");
 
 			///h_syst[j] = (TH1F*) myfile -> Get( b_name[ANN] );
 
@@ -200,23 +202,31 @@ void GetRelUnc( int process, float threshold ){
 }
 
 
-void WriteDatacard( float threshold ){
+void WriteDatacard( float threshold, TString ttdmID ){
 
-	TString pathway = datacard_dir + datacard_folder; 
+	TString pathway1 = datacard_dir        + datacard_folder + "/" + ttdmID + "/"; 
+	TString pathway2 = histoSite_datacards +    ttdmID + "/";
+ 
+	gSystem -> mkdir( pathway1, kTRUE );
+	
+	TString datacard_suffix = Form( "%s_%s.txt", processID[ttDM].Data(), "definitive" );
 
-	gSystem -> mkdir( pathway, kTRUE );
+	TString datacard_name1 = pathway1 + datacard_suffix;
+	TString datacard_name2 = pathway2 + datacard_suffix;
 
-	TString datacard_name = pathway + Form( "%s_%s.txt", processID[ttDM].Data(), "camille" );
+	cout << datacard_name1 << endl; 
 
 	//datacard.open( pathway + Form( "%s_%s_%4.2f.txt", processID[ttDM].Data(), "camille", threshold ) );
 	//datacard.open( pathway + Form( "%s_%s.txt", processID[ttDM].Data(), "camille-side" ) );
-	datacard.open( datacard_name );
+
+	datacard.open( datacard_name1 );
+        //datacard.open( datacard_name2 );
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", 9 );//nprocess );
-	datacard << Form( "kmax %d  number of nuisance parameters \n", 18 ); //nsystematic-1 );
+	datacard << Form( "kmax %d  number of nuisance parameters \n", 40 ); //nsystematic-1 );
 	datacard << "------------ \n" ;
-	datacard << "shapes * * simple-shapes-TH1.root $PROCESS $PROCESS_$SYSTEMATIC \n";
+	datacard << "shapes * * simple-shapes-TH1-final.root $PROCESS $PROCESS_$SYSTEMATIC \n";
 	datacard << "--------------- \n";	
 	datacard << "\n" ;
 	datacard << Form("bin %s \n", region.Data());
@@ -224,22 +234,52 @@ if( region == "SR" ){ datacard << Form("observation %5.0f \n", yield[data][nomin
 if( region == "CR" ){ datacard << Form("observation %5.0f \n", yield[data][nominal][hard]); }
 	datacard << "------------\n" ;
 	datacard << "\n" ;
+
+
+
+
+/*datacard << Form("bin        \t     \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t   %s   \n",
+	    region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data()  );//\t   1   \t   1   \n";//\t   1   \t   1  \n" ;
+
+datacard << "process    \t     \t signal\t fakes \t  ST   \t  TTV  \t   TT  \t  WW   \t  WZ   \n";//\t  Wg   \t  Zg   \n";//\t  HWW  \t  HZ  \n" ;
+
+datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \n";//\t  10   \t  11   \n";//\t  12   \t  13  \n" ;
+if( region == "SR" ){*/
+
+//datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", /*%7.3f %7.3f \n", //%7.3f %7.3f \n",*/ 
+//                    yield[ttDM][nominal][hard], yield[fakes][nominal][hard], yield[ST][nominal][hard], yield[TTV][nominal][hard], 
+//		    yield[TT][nominal][hard], yield[WW][nominal][hard], yield[WZ][nominal][hard] 
+//		    /*, yield[Wg][nominal][NN], yield[Zg][nominal][NN], yield[HWW][nominal][NN], yield[HZ][nominal][NN]*/ );
+//}
+
+
 datacard << Form("bin        \t     \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \t  %s   \n",
 	    region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data(), region.Data()  );//\t   1   \t   1   \n";//\t   1   \t   1  \n" ;
+
 datacard << "process    \t     \t signal\t fakes \t  ST   \t  TTV  \t  DY   \t  TT   \t  WW   \t  WZ   \t  VZ   \t  VVV  \n";//\t  Wg   \t  Zg   \n";//\t  HWW  \t  HZ  \n" ;
+
 datacard << "process    \t     \t   0   \t   1   \t   2   \t   3   \t   4   \t   5   \t   6   \t   7   \t   8   \t   9   \n";//\t  10   \t  11   \n";//\t  12   \t  13  \n" ;
 if( region == "SR" ){
+
 datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", /*%7.3f %7.3f \n", //%7.3f %7.3f \n",*/ 
                     yield[ttDM][nominal][hard], yield[fakes][nominal][hard], yield[ST][nominal][hard], yield[TTV][nominal][hard], yield[DY][nominal][hard], 
 		    yield[TT][nominal][hard], yield[WW][nominal][hard], yield[WZ][nominal][hard], yield[VZ][nominal][hard], yield[VVV][nominal][hard] 
 		    /*, yield[Wg][nominal][NN], yield[Zg][nominal][NN], yield[HWW][nominal][NN], yield[HZ][nominal][NN]*/ );
 }
+
+
+
+
 if( region == "CR" ){
 datacard << Form("rate  \t\t   \t%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n", /*%7.3f %7.3f \n", //%7.3f %7.3f \n",*/ 
                     yield[ttDM][nominal][hard], yield[fakes][nominal][hard], yield[ST][nominal][hard], yield[TTV][nominal][hard], yield[DY][nominal][hard], 
 		    yield[TT][nominal][hard], yield[WW][nominal][hard], yield[WZ][nominal][hard], yield[VZ][nominal][hard], yield[VVV][nominal][hard]
 		    /*, yield[Wg][nominal][hard], yield[Zg][nominal][hard], yield[HWW][nominal][hard], yield[HZ][nominal][hard]*/ );
 }
+
+
+
+
 	datacard << "------------ \n" ;
 
 
@@ -260,10 +300,23 @@ if( ( j == DDtt   || j == DDDY  || j == DDfakes || j == DDttV   || j == pileup |
 			if( j == pileup  && k == shape ) continue; 
 			if( j == luminosity&&k== shape ) continue;*/
 
-			datacard << Form( "%7s %5s     \t", systematicIDdatacard0[j].Data(), systtypeID[k].Data() ); 
+if( j >= METup   && j <= METdo  ) continue;
+if( j >= EleESup && j <= MuESdo ) continue; 
+if( j == DDtt )                   continue;
+//if( j == DDDY )                   continue;
+if( j == QCDup)                   continue;
 
+			if( ( j == Triggerup || j == Idisoup ) && k == lnN )
+
+				datacard << Form( "%7s2%5s     \t", systematicIDdatacard0[j].Data(), systtypeID[k].Data() ); 
+
+			else
+
+				datacard << Form( "%7s %5s     \t", systematicIDdatacard0[j].Data(), systtypeID[k].Data() ); 
+				
 			for( int i = 1; i <= VVV; i++ ){   // process
 
+				//if( i == DY || i == VZ || i == VVV ) continue; 
 
 				if( relunc[i][j][k] < 0 ){
 
@@ -293,13 +346,44 @@ if( ( j == DDtt   || j == DDDY  || j == DDfakes || j == DDttV   || j == pileup |
 
 			datacard << "\n" ; 
 
+
 		}   // lnN or shape
 
 	}   // systematic
 
 
+
+
+datacard << "QCD_signal   shape        1.0      -       -       -       -       -       -       -       -       -\n";
+datacard << "QCD_TTV      shape         -       -       -      1.0      -       -       -       -       -       -\n";
+datacard << "QCD_DY       shape         -       -       -       -      1.0      -       -       -       -       -\n";
+datacard << "QCD_TT       shape         -       -       -       -       -      1.0      -       -       -       -\n";
+datacard << "ibin_1_stat_ shape        1.0      -       -       -       -       -       -       -       -       -\n";
+datacard << "ibin_2_stat_ shape        1.0      -       -       -       -       -       -       -       -       -\n";        
+datacard << "ibin_1_stat_ shape         -       -      1.0      -       -       -       -       -       -       -\n";       
+datacard << "ibin_2_stat_ shape         -       -      1.0      -       -       -       -       -       -       -\n";         
+datacard << "ibin_1_stat_ shape         -       -       -      1.0      -       -       -       -       -       -\n";
+datacard << "ibin_2_stat_ shape         -       -       -      1.0      -       -       -       -       -       -\n";        
+datacard << "ibin_1_stat_ shape         -       -       -       -      1.0      -       -       -       -       -\n";
+datacard << "ibin_2_stat_ shape         -       -       -       -      1.0      -       -       -       -       -\n";        
+datacard << "ibin_1_stat_ shape         -       -       -       -       -      1.0      -       -       -       -\n";
+datacard << "ibin_2_stat_ shape         -       -       -       -       -      1.0      -       -       -       -\n";        
+datacard << "ibin_1_stat_ shape         -       -       -       -       -       -      1.0      -       -       -\n";      
+datacard << "ibin_2_stat_ shape         -       -       -       -       -       -      1.0      -       -       -\n"; 
+datacard << "ibin_1_stat_ shape         -       -       -       -       -       -       -      1.0      -       -\n";             
+datacard << "ibin_2_stat_ shape         -       -       -       -       -       -       -      1.0      -       -\n";       
+datacard << "ibin_1_stat_ shape         -       -       -       -       -       -       -       -      1.0      -\n";             
+datacard << "ibin_2_stat_ shape         -       -       -       -       -       -       -       -      1.0      -\n";      
+datacard << "ibin_1_stat_ shape         -       -       -       -       -       -       -       -       -     1.0\n";            
+datacard << "ibin_2_stat_ shape         -       -       -       -       -       -       -       -       -     1.0\n";         
+datacard << "ST_xs     lnN              -       -       1.2     -       -       -       -       -       -       -\n";
+datacard << "WW_xs     lnN              -       -       -       -       -       -       1.2     -       -       -\n"; 
+datacard << "WZ_xs     lnN              -       -       -       -       -       -       -      1.2      -       -\n";
+datacard << "VZ_xs     lnN              -       -       -       -       -       -       -       -      1.2      -\n";
+datacard << "VVV_xs    lnN              -       -       -       -       -       -       -       -       -      1.2\n";
+
 	datacard.close();
 
-	cout << "\n" << datacard_name << " was created"  << endl; 
+	cout << "\n" << datacard_name1 << " was created"  << endl; 
 
 }

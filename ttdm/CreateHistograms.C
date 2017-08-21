@@ -16,11 +16,11 @@ void CreateHistograms(){
 
 	for(int j = 0; j < nscalar; j++ ){
 
-		if( j != 0 ) continue;
+		if( j != ttDM0001pseudo00100 ) continue;
 
 		cuentita = 0.0; 
 
-		processID[ttDM] = scalarID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM]; 
+		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM]; 
 
 		if( doLoop == true ){
 
@@ -55,19 +55,19 @@ void CreateHistograms2( int process ){
 
 	//if ( process != WZ ) return;
 
-	if ( process == VZ ) return;
+	///if ( process == VZ ) return;
 
 	//if ( process != ST ) return;
 
 	//if ( process != WW ) return;
 
-	if ( process == DY ) return;
+	///if ( process == DY ) return;
 
 	//if ( process != Wg ) return;
 
 	//if ( process != Zg ) return;
 
-	if ( process == VVV) return;
+	///if ( process == VVV) return;
 
 	//if ( process == TT ) return;
 
@@ -78,7 +78,7 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k <= toppTrwdo; k++ ){ 
 
-		//if ( k > nominal ) continue;
+		if ( k > nominal ) continue;
 
 		//if ( processID[process] == "ttDM0001pseudo00010" && k == EleESdo ) continue;  // 1-pseudo-010 (jefferson)     VALUABLE INFORMATION, DO NOT ERASE !!! 
 
@@ -108,10 +108,10 @@ void CreateHistograms2( int process ){
 
 		TFile* storagefile; 
 
-		storagefile = new TFile( pathway + "simple-shapes-TH1.root", "update");
+		//storagefile = new TFile( pathway + "simple-shapes-TH1.root", "update");
 
-		///if( k == nominal ) storagefile = new TFile( pathway + processID[process] +                         ".root", "recreate" );
-		///if( k >  nominal ) storagefile = new TFile( pathway + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
+		if( k == nominal ) storagefile = new TFile( pathway + processID[process] +                         ".root", "recreate" );
+		if( k >  nominal ) storagefile = new TFile( pathway + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
@@ -130,6 +130,7 @@ void CreateHistograms2( int process ){
                                                            thecut = newselection          *thecut; 
 		if ( process == TT    )                    thecut = Form("%4.2f", ttSF   )*thecut; 
 		if ( process == DY    )                    thecut = Form("%4.2f", DYSF   )*thecut; 
+		if ( process == TT && k != toppTrwdo )     thecut ="eventW_Toppt"         *thecut; 
                 if ( process == ttDM  )                    thecut = Form("%4.2f", xs2l   )*thecut;
                 if ( process != data && process != fakes ) thecut = Form("%6.3f", thelumi)*thecut;
                 if ( process == fakes )                    thecut = Form("%6.3f", 1./15. )*thecut;
@@ -196,7 +197,7 @@ void CreateHistograms2( int process ){
 				//i == jet2eta       || 
 				//i == jet2phi       || 
 				//i == jet2mass      ||
-				//i == metPfType1    || 
+				i == metPfType1    || 
 				//i == metPfType1Phi ||
 				//i == m2l           || 
 				i == mt2ll         || 
@@ -220,10 +221,10 @@ void CreateHistograms2( int process ){
 				//i == dphilep2jet2  || 
 				//i == dphilmet1     || 
 				//i == dphilmet2     ||
-				//i == dphillmet     ||	
+				i == dphillmet     ||	
 				//i == nvtx          || 
-				//i == darkpt        ||
-				//i == ANN           ||
+				i == darkpt        ||
+				i == ANN           ||
                                 1 < 0               )
 			{
 
@@ -238,7 +239,7 @@ void CreateHistograms2( int process ){
 				}
 
 				//--- 1st approach: TTree::Project()
-				if( i == ANN ){
+				/*if( i == ANN ){
 
 					double cloison[] = { 0.00, 0.50, 0.95, 1.00 };
 
@@ -260,13 +261,13 @@ void CreateHistograms2( int process ){
 
 				}
 
-				mytree -> Project( h_name[i], b_name[i], thecut ); 
+				mytree -> Project( h_name[i], b_name[i], thecut );*/
 
 
 				//--- 2nd approach: TTree::Draw()
-				//mytree -> Draw( Form("%s >> %s( %d, %f, %f )", b_name[i].Data(), h_name[i].Data(), nbinraw[i], lowraw[i], upraw[i] ), thecut );
+				mytree -> Draw( Form("%s >> %s( %d, %f, %f )", b_name[i].Data(), h_name[i].Data(), nbinraw[i], lowraw[i], upraw[i] ), thecut );
 
-				//myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
+				myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
 	
 
 

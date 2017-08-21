@@ -4,11 +4,16 @@
 const TString storageSite     = "/eos/user/j/jgarciaf/minitrees/"; 
 const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/";
 
-const TString theproduction   = "loyola"; 
-const TString histoSite       = "histos/loyola_for-datacards-ALL/"; 
-const TString histoSite_datacards = "histos/loyola_for-datacards-MM/"; 
 
-const TString datacard_folder = "170809/";   // "work/";
+
+const TString theproduction   = "loyola"; 
+const TString histoSite       = "histos/loyola_AN-updating_fig-6-7/"; 
+
+
+
+const TString datacard_folder = "170818_ANN_blinded2016_toppTrw/";   // "work/";
+
+const TString histoSite_datacards = datacard_dir + datacard_folder; //"histos/loyola_sync/"; 
 
 
 
@@ -37,15 +42,14 @@ const float elumi   = 0.025;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //			       const float efakes= 0.30;
 
-const bool doshape = true; 
+const bool doshape = 0; 
 
-//const TCut selection = "metPfType1>0."; 
-const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; 
-//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00500>0.95"; 
+//const TCut selection = "metPfType1>80.&&mt2ll>100.&&channel==5";  // sync
+//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; // hard
 //const TCut selection = "((channel==3||channel==4)&&metPfType1>50.)||channel==5";   // DESY
 //const TCut selection = "metPfType1>50.&&mt2ll<110.";//&&channel==5";   // NU
 //const TCut selection = "( (channel==3||channel==4) && metPfType1>50. ) || ( channel==5 && metPfType1>0. )";
-//const TCut selection = "( channel==3 && metPfType1>50. )";
+const TCut selection = "( metPfType1>80. )";
 
 
 // loyola
@@ -351,7 +355,7 @@ void Assign(){
 	eventW[QCDdo    ] = "eventW"          ;
 	eventW[PDFup    ] = "eventW"          ;
 	eventW[PDFdo    ] = "eventW"          ;
-	eventW[toppTrwup] = "eventW_Toppt"    ;
+	eventW[toppTrwup] = "eventW"          ;
 	eventW[toppTrwdo] = "eventW"          ;
 
 
