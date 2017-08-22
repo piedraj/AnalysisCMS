@@ -6,26 +6,30 @@ const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/data
 
 
 
-const TString theproduction   = "loyola"; 
+const TString theproduction   = "lima"; 
 const TString histoSite       = "histos/loyola_AN-updating_fig-6-7/"; 
 
 
 
-const TString datacard_folder = "170818_ANN_blinded2016_toppTrw/";   // "work/";
+const TString datacard_folder = "full-lumi-invar/";   // "work/";
 
 const TString histoSite_datacards = datacard_dir + datacard_folder; //"histos/loyola_sync/"; 
 
+
+///////////////////////////////////
+      const bool doshape = 0; 
+///////////////////////////////////
 
 
 const float inicio = 0.00;
 const float paso   = 1.00;
 
-const float thelumi = 35.867/15.; 
+const float thelumi = 35.867; 
 
 const float xs2l = 1.0/9; 
 
-const float    ttSF = 0.97;  const float ettSF = 0.073;
-const float    DYSF = 1.07;  const float eDYSF = 0.26;   // 7% + 25%
+const float    ttSF = 1.00;  const float ettSF = 0.073;
+const float    DYSF = 1.00;  const float eDYSF = 0.26;   // 7% + 25%
 			     const float efakes= 0.30;
                              const float ettV  = 0.20;
 
@@ -42,14 +46,14 @@ const float elumi   = 0.025;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //			       const float efakes= 0.30;
 
-const bool doshape = 0; 
+
 
 //const TCut selection = "metPfType1>80.&&mt2ll>100.&&channel==5";  // sync
-//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; // hard
+const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; // hard
 //const TCut selection = "((channel==3||channel==4)&&metPfType1>50.)||channel==5";   // DESY
 //const TCut selection = "metPfType1>50.&&mt2ll<110.";//&&channel==5";   // NU
 //const TCut selection = "( (channel==3||channel==4) && metPfType1>50. ) || ( channel==5 && metPfType1>0. )";
-const TCut selection = "( metPfType1>80. )";
+//const TCut selection = "( metPfType1>0. )";
 
 
 // loyola
