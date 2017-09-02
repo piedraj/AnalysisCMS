@@ -2396,7 +2396,6 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetDark]\n");
 
   if (!_ismc) return;
@@ -2491,7 +2490,7 @@ void AnalysisCMS::GetTopReco()
   
   // Extract the mediator pt
   //----------------------------------------------------------------------------
-  _darkpt = -10000.0*_topRecoW;
+  _darkpt = -1e4 * _topRecoW;
 
   if (top1.X() == 0 && top1.Y() == 0 && top2.X() == 0 && top2.Y() == 0) {
     
