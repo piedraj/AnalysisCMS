@@ -187,8 +187,7 @@ void HistogramReader::Draw(TString hname,
 
   if (setlogy) cname += "_log";
 
-  _writeyields = (hname.Contains("_evolution") || hname.Contains("mt2ll")) ? true : false;
-  //_writeyields = (hname.Contains("_evolution")) ? true : false;
+  _writeyields = (hname.Contains("_evolution")) ? true : false;
 
   if (_writeyields)
     {
@@ -1324,8 +1323,7 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	if (!hname.Contains("evolution")) binlabel = Form("%d", i);
 	    
-	//_yields_table << Form(" | %-24s", binlabel.Data());
-	_yields_table << Form("%-24s", binlabel.Data());
+	_yields_table << Form(" | %-24s", binlabel.Data());
       }
 
       _yields_table << Form("\n");
@@ -1340,13 +1338,11 @@ void HistogramReader::WriteYields(TH1*    hist,
 
     if (label.EqualTo("data"))
       {
-	//_yields_table << Form(" | %8.0f %15s", process_yield, " ");
-	_yields_table << Form("%8.0f %15s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %15s", process_yield, " ");
       }
     else
       {
-	//_yields_table << Form(" | %11.2f +/- %8.2f", process_yield, process_error);
-	_yields_table << Form(" %11.2f", process_yield);
+	_yields_table << Form(" | %11.2f +/- %8.2f", process_yield, process_error);
       }
   }
 

@@ -45,8 +45,8 @@ void SelectSystematics(){
 			k == METdo      ||  
 			k == JESup      || 
 			k == JESdo      ||  
-			//k == EleESup    || <--
-			//k == EleESdo    || 
+			k == EleESup    || 
+			k == EleESdo    || 
 			k == MuESup     || 
 			k == MuESdo     || 
 			//k == QCDup      || 
