@@ -89,7 +89,8 @@ void GetHistograms( int process ){
 		if ( process == DY   ) thecut = Form("         %4.2f", DYSF)*thecut; 
                 if ( process == ttDM ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
-		mytree -> Draw( Form("%s >> myhisto( %d, %f, %f )", b_name[ANN].Data(), nbinraw[ANN], lowraw[ANN], upraw[ANN] ), thecut );
+		mytree -> Draw( Form("1-%s >> myhisto( %d, %f, %f )", b_name[ANN].Data(), nbinraw[ANN], log(lowraw[ANN]), log(upraw[ANN]) ), thecut );
+		//mytree -> Draw( Form("%s >> myhisto( %d, %f, %f )", b_name[ANN].Data(), nbinraw[ANN], lowraw[ANN], upraw[ANN] ), thecut );
 
 		histo[process][k] = (TH1F*) gDirectory -> Get( "myhisto" );
 
@@ -98,7 +99,6 @@ void GetHistograms( int process ){
 		if(  process == ttDM )                       histo[process][k] -> Scale( zoom ); 
 	
 		//myfile->Close(); 
-
 		c1->Destructor(); 
 
 	}   // k 
@@ -116,7 +116,7 @@ void Plot(){
 		if( k%2 == 0 ) continue; 
 
 		TCanvas* c1 = new TCanvas("canvas", "the canvas");
-
+		gPad->SetLogx();
 		histo[TT][ 0 ] -> SetLineColor( kRed    );  histo[TT][ 0 ] -> SetLineWidth(2.);
 		histo[TT][ k ] -> SetLineColor( kBlue+4 );  histo[TT][ k ] -> SetLineWidth(2.);
 		histo[TT][k+1] -> SetLineColor( kBlue   );  histo[TT][k+1] -> SetLineWidth(2.);
@@ -138,7 +138,6 @@ void Plot(){
 		histo[ttDM][k+1] -> Draw("hist,same");
 		histo[ttDM][ 0 ] -> Draw("hist,same");
 
-
 		TLegend* theleg = new TLegend( 0.58+offset, 0.60, 0.88+offset, 0.88 );
 
 		theleg->AddEntry( histo[TT][ 0 ],       "t#bar{t} nominal"                                  , "l" );
@@ -151,8 +150,10 @@ void Plot(){
 
 		theleg->Draw();
 
-		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
-		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
+		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
+		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
+		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
+		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
 
 		c1 -> Destructor(); 
 

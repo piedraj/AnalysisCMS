@@ -133,8 +133,17 @@ void MassReconstructor::makePair(TLorentzVector &lep1, TLorentzVector &lep2, TLo
      
      for(unsigned int i = 0; i < Ntoys; i++) {
 
-        Float_t theUncJet1 = random->Gaus(0, 0.3) * jet1.E(); 
-        Float_t theUncJet2 = random->Gaus(0, 0.3) * jet2.E(); 
+       Float_t smearing1 = 0, smearing2 = 0;
+       if(jet1.E() < 100 && fabs(jet1.Eta()) < 1.5) smearing1 = 0.02;
+       if(jet1.E() < 100 && fabs(jet1.Eta()) >= 1.5) smearing1 = 0.03;
+       if(jet1.E() >= 100) smearing1 = 0.015;
+       if(jet2.E() < 100 && fabs(jet2.Eta()) < 1.5) smearing2 = 0.02;
+       if(jet2.E() < 100 && fabs(jet2.Eta()) >= 1.5) smearing2 = 0.03;
+       if(jet2.E() >= 100) smearing2 = 0.015;
+       Float_t theUncJet1 = random->Gaus(0, smearing1) * jet1.E();
+       Float_t theUncJet2 = random->Gaus(0, smearing2) * jet2.E();
+       //Float_t theUncJet1 = random->Gaus(0, 0.3) * jet1.E(); 
+       //Float_t theUncJet2 = random->Gaus(0, 0.3) * jet2.E(); 
         Float_t theMassTop1 = random->BreitWigner(173.34, 1);
         Float_t theMassTop2 = random->BreitWigner(173.34, 1);
         Float_t theMassW1   = random->BreitWigner(80.385, 0.015);
@@ -245,7 +254,7 @@ Float_t MassReconstructor::l_weight(Float_t mlb) {
 float MassReconstructor::performAllVariations(Int_t NtoysJec, Int_t NtoysMassTop, Int_t NtoysMassW, TLorentzVector & lep1, TLorentzVector & lep2, 
                                      std::vector<TLorentzVector> & jets, std::vector<Float_t> & unc, TVector2 & MET, std::vector<TLorentzVector> &nu1, std::vector<TLorentzVector> &nu2, int &theJet1, int &theJet2) {
 
-    float darkpt = -99.; 
+    float darkpt = -9999.; 
 
     float maxCost = 99;
     int indexjet1 = -1, indexjet2 = -1;
