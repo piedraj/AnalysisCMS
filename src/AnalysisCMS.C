@@ -410,6 +410,7 @@ void AnalysisCMS::ApplyWeights()
   _event_weight_Recodo     = 1.0;
   _event_weight_Fastsimup  = 1.0;
   _event_weight_Fastsimdo  = 1.0;
+  _event_weight_Toppt      = 1.0;
   _event_weight_genmatched = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
@@ -1569,8 +1570,6 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("top2phi_gen",       &_top2phi_gen,      "top2phi_gen/F");
   minitree->Branch("top2pt_gen",        &_top2pt_gen,       "top2pt_gen/F");
   minitree->Branch("topRecoW",          &_topRecoW,         "topRecoW/F");
-  minitree->Branch("antitopLHEpt",      &antitopLHEpt,      "antitopLHEpt/F");
-  minitree->Branch("topLHEpt",          &topLHEpt,          "topLHEpt/F");
   minitree->Branch("trailingPtCSVv2L",  &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M",  &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T",  &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
@@ -2397,7 +2396,6 @@ void AnalysisCMS::GetRazor()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetDark()
 {
-
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetDark]\n");
 
   if (!_ismc) return;
@@ -2492,7 +2490,7 @@ void AnalysisCMS::GetTopReco()
   
   // Extract the mediator pt
   //----------------------------------------------------------------------------
-  _darkpt = 0.;
+  _darkpt = -1e4 * _topRecoW;
 
   if (top1.X() == 0 && top1.Y() == 0 && top2.X() == 0 && top2.Y() == 0) {
     
@@ -2616,7 +2614,6 @@ void AnalysisCMS::GetSampleWeight()
   // Top pt reweight for POWHEG
   // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
-  _event_weight_Toppt = 1.0;
   if (_sample.Contains("TTTo2L2Nu")) _event_weight_Toppt = sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 }
 
