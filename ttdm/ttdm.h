@@ -6,18 +6,18 @@ const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/data
 
 
 
-const TString theproduction   = "lima"; 
+const TString theproduction   = "loyola"; 
 const TString histoSite       = "histos/loyola_AN-updating_fig-6-7/"; 
 
 
 
-const TString datacard_folder = "full-lumi-invar/";   // "work/";
+const TString datacard_folder = "170828_5050/";   // "work/";
 
 const TString histoSite_datacards = datacard_dir + datacard_folder; //"histos/loyola_sync/"; 
 
 
 ///////////////////////////////////
-      const bool doshape = 0; 
+      const bool doshape = 1; 
 ///////////////////////////////////
 
 
@@ -28,8 +28,8 @@ const float thelumi = 35.867;
 
 const float xs2l = 1.0/9; 
 
-const float    ttSF = 1.00;  const float ettSF = 0.073;
-const float    DYSF = 1.00;  const float eDYSF = 0.26;   // 7% + 25%
+const float    ttSF = 0.97;  const float ettSF = 0.073;
+const float    DYSF = 1.07;  const float eDYSF = 0.26;   // 7% + 25%
 			     const float efakes= 0.30;
                              const float ettV  = 0.20;
 
@@ -49,7 +49,7 @@ const float elumi   = 0.025;
 
 
 //const TCut selection = "metPfType1>80.&&mt2ll>100.&&channel==5";  // sync
-const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0."; // hard
+const TCut selection = "lep1id*lep2id<0&&metPfType1>50.&&mt2ll>50.";//&&darkpt>0."; // hard
 //const TCut selection = "((channel==3||channel==4)&&metPfType1>50.)||channel==5";   // DESY
 //const TCut selection = "metPfType1>50.&&mt2ll<110.";//&&channel==5";   // NU
 //const TCut selection = "( (channel==3||channel==4) && metPfType1>50. ) || ( channel==5 && metPfType1>0. )";
@@ -194,7 +194,7 @@ void Assign(){
 	//processID[data ] = "01_Data_Full2016"        ;
 	//processID[fakes] = "00_Fakes_1outof15"       ; 
 	processID[fakes] = "00_Fakes_Full2016"       ; 
-	processID[TT   ] = "04_TTTo2L2Nu"            ; 
+	processID[TT   ] = "04_TTTo2L2Nu"        ; 
 	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
 	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
  	//processID[TTSemi]= "04_TTToSemiLepton"       ;

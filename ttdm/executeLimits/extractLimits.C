@@ -1,5 +1,8 @@
 #include "../ttdm.h"
 
+double scut[nscalar];
+double pcut[npseudo]; 
+ 
 void extractLimits2( int j, TString signalID );
 
 
@@ -7,17 +10,23 @@ void extractLimits(){
 
 	Assign();
 
-	for( int s = 0; s < nscalar; s++){
+	for( int s = 0; s < nscalar; s++ ){
  
 		extractLimits2( s, scalarID[s] ); 
 
 	}
 	
-	for( int p = 0; p < npseudo; p++){
+	//for( int p = 0; p < npseudo; p++ ){
  
-		extractLimits2( p, pseudoID[p] ); 
+	//	extractLimits2( p, pseudoID[p] ); 
 
-	}
+	//}
+
+	//for( int s = 0; s < nscalar; s++ ) 
+	//cout << "cp " + datacard_dir + datacard_folder + scalarID[s] + "_camille_0." + Form( "%2.0f", scut[s] ) + "_combined.txt s" + Form( "%1d", s+1 ) + ".txt" << endl; 
+
+	//for( int p = 0; p < nscalar; p++ ) 
+	//cout << "cp " + datacard_dir + datacard_folder + pseudoID[p] + "_camille_0." + Form( "%2.0f", pcut[p] ) + "_combined.txt p" + Form( "%1d", p+1 ) + ".txt" << endl; 
 
 }
 
@@ -51,12 +60,15 @@ for( int i = 0; i < nentries; i++ ){
 
 	if ( quantileExpected != 0.5 ) continue;
 
-	//cout << "\t\t" << cut << "\t" << limit << endl; 
+	cout << "\t\t" << cut << "\t" << limit << endl; 
 
 	if( limit < limitOpt ){ cutOpt = cut; limitOpt = limit; } 
 }
 
 cout << "\n\t the best:  cut = " << cutOpt << "\t exp. limit = " << limitOpt << "\n" << endl; 
+
+if( signalID.Contains("scalar") ) scut[j] = cutOpt;
+if( signalID.Contains("pseudo") ) pcut[j] = cutOpt;
 
 f_limit -> Close(); 
 

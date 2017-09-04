@@ -21,12 +21,11 @@ void CreateHistograms_parbol(){
 
 	for(int j = 0; j < nscalar; j++ ){
 
-		//if( j != 1 ) continue;
+		if( j != 0 ) continue;
 
 		cuentita = 0.0; 
 
-		//processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
-		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_checkWodphillmet_" + processID[ttDM];
+		processID[ttDM] = scalarID[j];	b_name[ANN] = "ANN_170828_5050_" + processID[ttDM];
 
 		//pathway = histoSite + processID[ttDM] + "/";	
 		pathway = datacard_dir + datacard_folder + "/" + processID[ttDM] + "/";
@@ -45,6 +44,29 @@ void CreateHistograms_parbol(){
 		cout << "\n\n \t yield total = " << cuentita << endl;
 
 		//if( doshape == 1 ){ /*AddStatHistograms();*/ SplitQCDHistograms(); }
+
+continue;
+	
+		cuentita = 0.0; 
+
+		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_170828_all_" + processID[ttDM];
+
+		//pathway = histoSite + processID[ttDM] + "/";	
+		pathway = datacard_dir + datacard_folder + "/" + processID[ttDM] + "/";
+
+		gSystem -> mkdir( pathway, kTRUE );
+		
+
+		for( int i = 0; i < nprocess; i++ ){
+
+			if ( i == Wg || i == Zg ) continue; 
+
+			CreateHistograms2( i ); 
+
+		}
+
+		cout << "\n\n \t yield total = " << cuentita << endl;
+
 
 
 	}   // j 
@@ -251,7 +273,7 @@ void CreateHistograms2( int process ){
 				//--- 1st approach: TTree::Project()
 				if( i == ANN && doshape == 1 ){
 
-					double cloison[] = { -0.20, 0.30, 0.50, 0.70, 0.80, 0.95, 1.20 };
+					double cloison[] = { 0.00, 0.30, 0.50, 0.70, 0.80, 0.95, 1.00 };
 
 					myhisto[i] = new TH1F(h_name[i], h_name[i], 6, cloison);
 
@@ -270,6 +292,8 @@ void CreateHistograms2( int process ){
 					myhisto[i] = new TH1F(h_name[i], h_name[i], nbinraw[i], lowraw[i], upraw[i]); 
 
 				}
+
+				//TH1::Sumw2();
 
 				mytree -> Project( h_name[i], b_name[i], thecut ); 
 

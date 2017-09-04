@@ -527,7 +527,7 @@ void HistogramReader::Draw(TString hname,
     }
 
   if (_luminosity_fb > 0)
-    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.3f fb^{-1} (13TeV)", _luminosity_fb));
+    DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", _luminosity_fb));
   else
     DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 

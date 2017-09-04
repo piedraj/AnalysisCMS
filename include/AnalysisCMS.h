@@ -193,8 +193,6 @@ class AnalysisCMS : public AnalysisBase
   bool                   _systematic_reco_up;
   bool                   _systematic_fastsim_do;
   bool                   _systematic_fastsim_up;
-  bool                   _systematic_toppt;
-  bool                   _applytopptreweighting;
 
   TString                _analysis;
   TString                _dataperiod;

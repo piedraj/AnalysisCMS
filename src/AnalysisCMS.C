@@ -15,10 +15,9 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
-  _ismc                  = true;
-  _saveminitree          = false;
-  _eventdump             = false;
-  _applytopptreweighting = false;
+  _ismc         = true;
+  _saveminitree = false;
+  _eventdump    = false;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -30,7 +29,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
   _systematic_fastsim_do = (systematic.Contains("Fastsimdo")) ? true : false;
   _systematic_fastsim_up = (systematic.Contains("Fastsimup")) ? true : false;
-  _systematic_toppt      = (systematic.Contains("Toppt"))     ? true : false;
 
   _systematic = systematic;
 
@@ -475,12 +473,23 @@ void AnalysisCMS::ApplyWeights()
   float sf_idiso_up = 1.0;
   float sf_idiso_do = 1.0;
 
-  // Full2016_Apr17
+  // The following scale factors (LepSF2l) have been implemented at
+  // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/formulasToAdd_MC.py
   if (!_analysis.EqualTo("Stop"))
     {
-      sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      sf_idiso = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      
+      sf_idiso_up  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(0));
+      sf_idiso_up *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(1));
+
+      sf_idiso_do  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(0));
+      sf_idiso_do *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(1));
+
+      // Xavier has split the idiso nuisance into one for electrons and one for muons
+      //      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__Up;  // idiso SF Up for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__Do;  // idiso SF Do for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Up;      // idiso SF Up for muons     only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Do;      // idiso SF Do for muons     only, used by Xavier in nuisances.py
     }
 
   if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
@@ -1102,16 +1111,14 @@ void AnalysisCMS::GetSoftMuon()
 void AnalysisCMS::GetFakeWeights()
 {
   _fake_weight            = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
-  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;  // To be updated
-
-  //  if (Nlep != 2) fakeW = "fakeW_ele_cut_WP_Tight80X_mu_cut_Tight80x_" + Nlep + "l";  // To be adapted from python to C++
+  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp;
+  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown;
+  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp;
+  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown;
+  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp;
+  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown;
+  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp;
+  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown;
 }
 
 
@@ -1562,6 +1569,8 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("top2phi_gen",       &_top2phi_gen,      "top2phi_gen/F");
   minitree->Branch("top2pt_gen",        &_top2pt_gen,       "top2pt_gen/F");
   minitree->Branch("topRecoW",          &_topRecoW,         "topRecoW/F");
+  minitree->Branch("antitopLHEpt",      &antitopLHEpt,      "antitopLHEpt/F");
+  minitree->Branch("topLHEpt",          &topLHEpt,          "topLHEpt/F");
   minitree->Branch("trailingPtCSVv2L",  &_trailingPtCSVv2L, "trailingPtCSVv2L/F");
   minitree->Branch("trailingPtCSVv2M",  &_trailingPtCSVv2M, "trailingPtCSVv2M/F");
   minitree->Branch("trailingPtCSVv2T",  &_trailingPtCSVv2T, "trailingPtCSVv2T/F");
@@ -2605,24 +2614,10 @@ void AnalysisCMS::GetSampleWeight()
 
 
   // Top pt reweight for POWHEG
-  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
-  _event_weight_Toppt = _event_weight;
-
-  if (_sample.Contains("TTTo2L2Nu")) {
-
-    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
-
-    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
-
-    if (_applytopptreweighting) {
-
-      float save_this_weight = _event_weight;
-
-      _event_weight       = _event_weight_Toppt;
-      _event_weight_Toppt = save_this_weight;
-    }
-  }
+  _event_weight_Toppt = 1.0;
+  if (_sample.Contains("TTTo2L2Nu")) _event_weight_Toppt = sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 }
 
 

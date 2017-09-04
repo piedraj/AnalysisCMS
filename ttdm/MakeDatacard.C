@@ -28,9 +28,25 @@ void MakeDatacard(){
 
 		for( int m = 0; m < nscalar; m++ ){
 
-			//if( m != 0 ) continue;
+			if( m != 0 ) continue;
 
-			processID[ttDM] = pseudoID[m];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
+			processID[ttDM] = scalarID[m];	//b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
+
+			for( int i = 0; i < nprocess; i++ ){ 
+
+				//if( i == DY || i == VZ || i == VVV ) continue; 
+
+				if ( i == Wg || i == Zg ) continue; 
+		
+				GetRelUnc( i, threshold );
+
+			}
+
+			WriteDatacard( threshold, processID[ttDM] ); //scalarMVAcut[m]);
+
+	continue;
+
+			processID[ttDM] = pseudoID[m];	//b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
 
 			for( int i = 0; i < nprocess; i++ ){ 
 
@@ -98,7 +114,7 @@ void GetRelUnc( int process, float threshold ){
 		//if( process != TT ){
 			///if( j == nominal ) myfile = new TFile( pathway + processID[process] +                         ".root", "read" ); 
 			///if( j >  nominal ) myfile = new TFile( pathway + processID[process] + "_" + systematicID[j] + ".root", "read" ); 
-			myfile = new TFile( pathway + "simple-shapes-TH1-final.root", "read");
+			myfile = new TFile( pathway + "simple-shapes-TH1-semi.root", "read");
 
 			///h_syst[j] = (TH1F*) myfile -> Get( b_name[ANN] );
 
@@ -214,7 +230,7 @@ void WriteDatacard( float threshold, TString ttdmID ){
 	TString datacard_name1 = pathway1 + datacard_suffix;
 	TString datacard_name2 = pathway2 + datacard_suffix;
 
-	cout << datacard_name1 << endl; 
+	//cout << datacard_name1 << endl; 
 
 	//datacard.open( pathway + Form( "%s_%s_%4.2f.txt", processID[ttDM].Data(), "camille", threshold ) );
 	//datacard.open( pathway + Form( "%s_%s.txt", processID[ttDM].Data(), "camille-side" ) );
@@ -224,9 +240,9 @@ void WriteDatacard( float threshold, TString ttdmID ){
 
 	datacard << "imax 1 number of channels \n" ;
 	datacard << Form( "jmax %d number of backgrounds \n", 9 );//nprocess );
-	datacard << Form( "kmax %d  number of nuisance parameters \n", 40 ); //nsystematic-1 );
+	datacard << Form( "kmax %d  number of nuisance parameters \n", 0 ); //nsystematic-1 );
 	datacard << "------------ \n" ;
-	datacard << "shapes * * simple-shapes-TH1-final.root $PROCESS $PROCESS_$SYSTEMATIC \n";
+	datacard << "shapes * * simple-shapes-TH1-semi.root $PROCESS $PROCESS_$SYSTEMATIC \n";
 	datacard << "--------------- \n";	
 	datacard << "\n" ;
 	datacard << Form("bin %s \n", region.Data());
@@ -300,13 +316,13 @@ if( ( j == DDtt   || j == DDDY  || j == DDfakes || j == DDttV   || j == pileup |
 			if( j == pileup  && k == shape ) continue; 
 			if( j == luminosity&&k== shape ) continue;*/
 
-if( j >= METup   && j <= METdo  ) continue;
+//if( j >= METup   && j <= METdo  ) continue;
 if( j >= EleESup && j <= MuESdo ) continue; 
 if( j == DDtt )                   continue;
-//if( j == DDDY )                   continue;
+// if( j == DDDY )                   continue;
 if( j == QCDup)                   continue;
 
-			if( ( j == Triggerup || j == Idisoup ) && k == lnN )
+/*			if( ( j == Triggerup || j == Idisoup ) && k == lnN )
 
 				datacard << Form( "%7s2%5s     \t", systematicIDdatacard0[j].Data(), systtypeID[k].Data() ); 
 
@@ -344,7 +360,7 @@ if( j == QCDup)                   continue;
 				
 			}   // process	
 
-			datacard << "\n" ; 
+			datacard << "\n" ; */
 
 
 		}   // lnN or shape
@@ -353,11 +369,12 @@ if( j == QCDup)                   continue;
 
 
 
-
+/*
 datacard << "QCD_signal   shape        1.0      -       -       -       -       -       -       -       -       -\n";
 datacard << "QCD_TTV      shape         -       -       -      1.0      -       -       -       -       -       -\n";
 datacard << "QCD_DY       shape         -       -       -       -      1.0      -       -       -       -       -\n";
 datacard << "QCD_TT       shape         -       -       -       -       -      1.0      -       -       -       -\n";
+//datacard << "QCD          shape        1.0      -       -      1.0     1.0     1.0      -       -       -       -\n";
 datacard << "ibin_1_stat_ shape        1.0      -       -       -       -       -       -       -       -       -\n";
 datacard << "ibin_2_stat_ shape        1.0      -       -       -       -       -       -       -       -       -\n";        
 datacard << "ibin_1_stat_ shape         -       -      1.0      -       -       -       -       -       -       -\n";       
@@ -381,7 +398,7 @@ datacard << "WW_xs     lnN              -       -       -       -       -       
 datacard << "WZ_xs     lnN              -       -       -       -       -       -       -      1.2      -       -\n";
 datacard << "VZ_xs     lnN              -       -       -       -       -       -       -       -      1.2      -\n";
 datacard << "VVV_xs    lnN              -       -       -       -       -       -       -       -       -      1.2\n";
-
+*/
 	datacard.close();
 
 	cout << "\n" << datacard_name1 << " was created"  << endl; 
