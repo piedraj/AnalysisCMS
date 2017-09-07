@@ -2,34 +2,35 @@
 #include "TH1F.h"
 
 const TString storageSite     = "/eos/user/j/jgarciaf/minitrees/"; 
+//const TString storageSite     = "/eos/user/c/cprieels/minitrees/"; 
 const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/";
 
 
 
-const TString theproduction   = "loyola"; 
+const TString theproduction   = "carlota"; 
 const TString histoSite       = "histos/loyola_AN-updating_fig-6-7/"; 
 
 
-
-const TString datacard_folder = "170828_5050/";   // "work/";
+//const TString datacard_folder = "mierda/";   // "work/";
+const TString datacard_folder = "carlota_blinded/";   // "work/";
 
 const TString histoSite_datacards = datacard_dir + datacard_folder; //"histos/loyola_sync/"; 
 
 
 ///////////////////////////////////
-      const bool doshape = 1; 
+      const bool doshape = 0; 
 ///////////////////////////////////
 
 
 const float inicio = 0.00;
 const float paso   = 1.00;
 
-const float thelumi = 35.867; 
+const float thelumi = 35.867/15.; 
 
 const float xs2l = 1.0/9; 
 
-const float    ttSF = 0.97;  const float ettSF = 0.073;
-const float    DYSF = 1.07;  const float eDYSF = 0.26;   // 7% + 25%
+const float    ttSF = 1.00;  const float ettSF = 0.073;
+const float    DYSF = 1.04;  const float eDYSF = 0.26;   // 7% + 25%
 			     const float efakes= 0.30;
                              const float ettV  = 0.20;
 
@@ -49,7 +50,9 @@ const float elumi   = 0.025;
 
 
 //const TCut selection = "metPfType1>80.&&mt2ll>100.&&channel==5";  // sync
-const TCut selection = "lep1id*lep2id<0&&metPfType1>50.&&mt2ll>50.";//&&darkpt>0."; // hard
+const TCut selection = "(channel==3&&metPfType1>50.)||(channel==4&&metPfType1>50.)||(channel==5&&metPfType1>0.)";//&&darkpt>0."; // hard
+//const TCut selection = "(channel==3&&metPfType1>80.)||(channel==4&&metPfType1>80.)||(channel==5&&metPfType1>0.)&&mt2ll>80.&&darkpt>-5000";//&&darkpt>0."; // hard
+//const TCut selection = "lep1id*lep2id<0&&metPfType1>50.&&mt2ll>50.";//&&darkpt>0."; // hard
 //const TCut selection = "((channel==3||channel==4)&&metPfType1>50.)||channel==5";   // DESY
 //const TCut selection = "metPfType1>50.&&mt2ll<110.";//&&channel==5";   // NU
 //const TCut selection = "( (channel==3||channel==4) && metPfType1>50. ) || ( channel==5 && metPfType1>0. )";
@@ -349,8 +352,8 @@ void Assign(){
 	eventW[Triggerdo] = "eventW_Triggerdo";
 	eventW[METup    ] = "eventW"          ;
 	eventW[METdo    ] = "eventW"          ;
-	eventW[JESup    ] = "eventW"          ;
-	eventW[JESdo    ] = "eventW"          ;
+	eventW[JESup    ] = "eventW_Btagup*1.01";
+	eventW[JESdo    ] = "eventW_Btagdo*0.99";
 	eventW[EleESup  ] = "eventW"          ;
 	eventW[EleESdo  ] = "eventW"          ;
 	eventW[MuESup   ] = "eventW"          ;
@@ -367,7 +370,9 @@ void Assign(){
 
 		minitreeDir[i] = theproduction;
 
-		if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
+		if( i >= METup && i <= METdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
+
+		//if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
 
 	}      
 
@@ -428,7 +433,7 @@ void Assign(){
 
 	b_name[nvtx] = "nvtx";                           nbinraw[nvtx]         =  60;	lowraw[nvtx]         =   0. ;	upraw[nvtx]         =  60. ;
 
-	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
+	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 1300;	lowraw[darkpt]       =-10000.;	upraw[darkpt]       =3000. ;
 
 	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];   
                                                          nbinraw[ANN]          = 120;   lowraw[ANN]          =  -0.1;   upraw[ANN]          =   1.1;

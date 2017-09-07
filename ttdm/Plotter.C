@@ -2,8 +2,8 @@
 
 #include "../test/HistogramReader.C"
 
-const TString inputdir  = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/170822_blinded2016_lima_ANNs/";
-const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170822_lima/";
+const TString inputdir  = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/carlota_blinded/";
+const TString outputdir = "/afs/cern.ch/user/j/jgarciaf/www/figures/Analysis_170907_carlota_blinded/";
 
 const TString sl  = "#font[12]{l}";
 const TString sll = "#font[12]{ll}";
@@ -32,15 +32,15 @@ enum {linY, logY};
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-void Plotter(TString option = "hist", TString signal = "ttDM0001pseudo00100" ){
+void Plotter(TString option = "hist", TString signal = "ttDM0001scalar00010" ){
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
-  float lumi = lumi_fb_Full2016/15.0;
+  float lumi = lumi_fb_Full2016/15.;
 
   Bool_t scale = logY;
 
-  float ymin = ( scale == linY )  ?  0  :  0.1 ;
+  float ymin = ( scale == linY )  ?  0  :  1 ;
 
   HistogramReader plotter( inputdir + signal + "/", outputdir);
 
@@ -84,25 +84,28 @@ void Plotter(TString option = "hist", TString signal = "ttDM0001pseudo00100" ){
   // Add signals
   //----------------------------------------------------------------------------
 
-  ///plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x20"  ,  color_Signal, roc_signal,20./35.9 );
-  ///plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x1e4",  color_Signal+4, roc_signal,10000./35.9);
-  //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100 x200",  color_Signal, roc_signal, 200./35.9 );
-  //plotter.AddSignal("ttDM0001pseudo00100", "m_{#chi}1 m_{P}100 x300",  color_Signal, roc_signal, 300./35.9 );
+  ///plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x20"  ,  color_Signal, roc_signal,20./2.4 );
+  ///plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x1e4",  color_Signal+4, roc_signal,10000./2.4);
+  //plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100 x200",  color_Signal, roc_signal, 200./2.4 );
+  //plotter.AddSignal("ttDM0001pseudo00100", "m_{#chi}1 m_{P}100 x300",  color_Signal, roc_signal, 300./2.4 );
 
-  if( signal.Contains("ttDM0001scalar00010") )   plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x20",    color_Signal, roc_signal, 20.  );
-  if( signal.Contains("ttDM0001scalar00020") )   plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20 x50",    color_Signal, roc_signal, 50.  );
-  if( signal.Contains("ttDM0001scalar00050") )   plotter.AddSignal("ttDM0001scalar00050", "m_{#chi}1 m_{S}50 x100",   color_Signal, roc_signal, 100. );
-  if( signal.Contains("ttDM0001scalar00100") )   plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100 x200",  color_Signal, roc_signal, 200. );
-  if( signal.Contains("ttDM0001scalar00200") )   plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200 x400",  color_Signal, roc_signal, 400. );
-  if( signal.Contains("ttDM0001scalar00300") )   plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300 x1000", color_Signal, roc_signal, 1000.);
-  if( signal.Contains("ttDM0001scalar00500") )   plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x1e4",  color_Signal, roc_signal,10000.);
-  if( signal.Contains("ttDM0001pseudo00010") )   plotter.AddSignal("ttDM0001pseudo00010", "m_{#chi}1 m_{P}10 x100",   color_Signal, roc_signal, 100. );
-  if( signal.Contains("ttDM0001pseudo00020") )   plotter.AddSignal("ttDM0001pseudo00020", "m_{#chi}1 m_{P}20 x150",   color_Signal, roc_signal, 150. );
-  if( signal.Contains("ttDM0001pseudo00050") )   plotter.AddSignal("ttDM0001pseudo00050", "m_{#chi}1 m_{P}50 x200",   color_Signal, roc_signal, 200. );
-  if( signal.Contains("ttDM0001pseudo00100") )   plotter.AddSignal("ttDM0001pseudo00100", "m_{#chi}1 m_{P}100 x300",  color_Signal, roc_signal, 300. );
-  if( signal.Contains("ttDM0001pseudo00200") )   plotter.AddSignal("ttDM0001pseudo00200", "m_{#chi}1 m_{P}200 x400",  color_Signal, roc_signal, 400. );
-  if( signal.Contains("ttDM0001pseudo00300") )   plotter.AddSignal("ttDM0001pseudo00300", "m_{#chi}1 m_{P}300 x1000", color_Signal, roc_signal, 1000.);
-  if( signal.Contains("ttDM0001pseudo00500") )   plotter.AddSignal("ttDM0001pseudo00500", "m_{#chi}1 m_{P}500 x1e4",  color_Signal, roc_signal,10000.);
+//plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200 x400",  color_Signal, roc_signal, 400./2.4  );
+//plotter.AddSignal("ttDM0001pseudo00200", "m_{#chi}1 m_{P}200 x400",  color_Signal+4, roc_signal, 400./2.4  );
+
+  if( signal.Contains("ttDM0001scalar00010") )   plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x20",    color_Signal, roc_signal, 20./2.4   );
+  if( signal.Contains("ttDM0001scalar00020") )   plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20 x50",    color_Signal, roc_signal, 50./2.4   );
+  if( signal.Contains("ttDM0001scalar00050") )   plotter.AddSignal("ttDM0001scalar00050", "m_{#chi}1 m_{S}50 x100",   color_Signal, roc_signal, 100./2.4  );
+  if( signal.Contains("ttDM0001scalar00100") )   plotter.AddSignal("ttDM0001scalar00100", "m_{#chi}1 m_{S}100 x200",  color_Signal, roc_signal, 200./2.4  );
+  if( signal.Contains("ttDM0001scalar00200") )   plotter.AddSignal("ttDM0001scalar00200", "m_{#chi}1 m_{S}200 x400",  color_Signal, roc_signal, 400./2.4  );
+  if( signal.Contains("ttDM0001scalar00300") )   plotter.AddSignal("ttDM0001scalar00300", "m_{#chi}1 m_{S}300 x1000", color_Signal, roc_signal, 1000./2.4 );
+  if( signal.Contains("ttDM0001scalar00500") )   plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x1e4",  color_Signal, roc_signal,10000./2.4 );
+  if( signal.Contains("ttDM0001pseudo00010") )   plotter.AddSignal("ttDM0001pseudo00010", "m_{#chi}1 m_{P}10 x100",   color_Signal, roc_signal, 100./2.4  );
+  if( signal.Contains("ttDM0001pseudo00020") )   plotter.AddSignal("ttDM0001pseudo00020", "m_{#chi}1 m_{P}20 x150",   color_Signal, roc_signal, 150./2.4  );
+  if( signal.Contains("ttDM0001pseudo00050") )   plotter.AddSignal("ttDM0001pseudo00050", "m_{#chi}1 m_{P}50 x200",   color_Signal, roc_signal, 200./2.4  );
+  if( signal.Contains("ttDM0001pseudo00100") )   plotter.AddSignal("ttDM0001pseudo00100", "m_{#chi}1 m_{P}100 x300",  color_Signal, roc_signal, 300./2.4  );
+  if( signal.Contains("ttDM0001pseudo00200") )   plotter.AddSignal("ttDM0001pseudo00200", "m_{#chi}1 m_{P}200 x400",  color_Signal, roc_signal, 400./2.4  );
+  if( signal.Contains("ttDM0001pseudo00300") )   plotter.AddSignal("ttDM0001pseudo00300", "m_{#chi}1 m_{P}300 x1000", color_Signal, roc_signal, 1000./2.4 );
+  if( signal.Contains("ttDM0001pseudo00500") )   plotter.AddSignal("ttDM0001pseudo00500", "m_{#chi}1 m_{P}500 x1e4",  color_Signal, roc_signal,10000./2.4 );
 
   /*if( signal.Contains("ttDM0001scalar00010") )   plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x2",    color_Signal, roc_signal, 2.  );
   if( signal.Contains("ttDM0001scalar00020") )   plotter.AddSignal("ttDM0001scalar00020", "m_{#chi}1 m_{S}20 x5",    color_Signal, roc_signal, 5.  );
@@ -149,7 +152,7 @@ void Plotter(TString option = "hist", TString signal = "ttDM0001pseudo00100" ){
 
   //            hname              xtitle                     ngroup precision units  setlogy moveoverflow xmin xmax ymin ymax
   // -------------------------------------------------------------------------------------------------------------------------
-  //plotter.Draw( "darkpt"         , "(reconstructed) mediator p_{T}",      5, 0, "GeV",  scale, false, -100, 800, ymin, 1e7);
+plotter.Draw( "darkpt"         , "(reconstructed) mediator p_{T}",      20, 0, "GeV",  scale, false, -3500, 2000, ymin, 1e7);
   //plotter.Draw( "dphijet1met"    , "#Delta#phi(jet1,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphijet2met"    , "#Delta#phi(jet2,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphijj"         , "#Delta#phi(jet1,jet2)",              5, 2, "rad",  scale, false);
@@ -159,7 +162,7 @@ void Plotter(TString option = "hist", TString signal = "ttDM0001pseudo00100" ){
   //plotter.Draw( "dphilep2jet1"   , "#Delta#phi(lep2,jet1)",              5, 2, "rad",  scale, false);
   //plotter.Draw( "dphilep2jet2"   , "#Delta#phi(lep2,jet2)",              5, 2, "rad",  scale, false);
   //plotter.Draw( "dphill"         , "#Delta#phi(lep1,lep2)",              5, 2, "rad",  scale, false);
-  //plotter.Draw( "dphillmet"      , "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale, true, 0, 3.2, ymin, 1e7);
+plotter.Draw( "dphillmet"      , "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale, true, 0, 3.2, ymin, 1e7);
   //plotter.Draw( "dphilmet1"      , "#Delta#phi(lep1,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   //plotter.Draw( "dphilmet2"      , "#Delta#phi(lep2,E_{T}^{miss})",      5, 2, "rad",  scale, false);
   ///plotter.Draw( "ht"             , "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500, 1);
@@ -181,15 +184,15 @@ void Plotter(TString option = "hist", TString signal = "ttDM0001pseudo00100" ){
   //plotter.Draw( "lep2pt"         , "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150, ymin, 1e6);
   //plotter.Draw( "nlepton"        , "number of leptons",                 -1, 0, "NULL", scale, true, 0,  10, ymin);
   //plotter.Draw( "m2l"            , "m_{" + sll + "}",                   10, 0, "GeV",  scale, true, 0,  300, ymin, 1e6);
-  //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200, ymin, 1e7);
+plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  700, ymin, 1e7);
   //plotter.Draw( "mt2lblb"        , "M_{T2}(" + sl + "b" + sl + "b)",    10, 0, "GeV",  scale, false, 0, 600);
-  //plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 200, ymin, 1e7); 
+plotter.Draw( "mt2ll"          , "M_{T2}(" + sll + ")",               10, 0, "GeV",  scale, true, 0, 200, ymin, 1e7); 
   //plotter.Draw( "mtw1"           , "m_{T}^{W,1}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "mtw2"           , "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
   //plotter.Draw( "nbjet30csvv2m"  , "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale, true, 0,  6, ymin);
   //plotter.Draw( "njet"           , "number of 30 GeV jets",             -1, 0, "NULL", scale, true, 0,  10, ymin);
   ///plotter.Draw( "nvtx"          , "number of vertices",                -1, 0, "NULL", linY,  true, 0,   30, 1);
-  plotter.Draw( "ANN_lima_" + signal, "ANN output", 4, 2, "NULL", scale, true, 0, 1.0, ymin, 1e5);
+plotter.Draw( "ANN_170904_justMET50SF_" + signal, "ANN output", 4, 2, "NULL", scale, true, 0, 1.0, ymin, 1e7);
 
 
   //plotter.Draw( "metPfType1"     , sm,                                  10, 0, "GeV",  scale, true, 0,  200, 1);

@@ -21,11 +21,11 @@ void CreateHistograms_parbol(){
 
 	for(int j = 0; j < nscalar; j++ ){
 
-		if( j != 0 ) continue;
+		if( j != 4 ) continue;
 
 		cuentita = 0.0; 
 
-		processID[ttDM] = scalarID[j];	b_name[ANN] = "ANN_170828_5050_" + processID[ttDM];
+		processID[ttDM] = scalarID[j];	b_name[ANN] = "ANN_170904_justMET50SF_" + processID[ttDM];
 
 		//pathway = histoSite + processID[ttDM] + "/";	
 		pathway = datacard_dir + datacard_folder + "/" + processID[ttDM] + "/";
@@ -33,24 +33,23 @@ void CreateHistograms_parbol(){
 		gSystem -> mkdir( pathway, kTRUE );
 		
 
-		for( int i = 0; i < nprocess; i++ ){
+		/*for( int i = 0; i < nprocess; i++ ){
 
 			if ( i == Wg || i == Zg ) continue; 
 
 			CreateHistograms2( i ); 
 
-		}
+		}*/
 
 		cout << "\n\n \t yield total = " << cuentita << endl;
 
-		//if( doshape == 1 ){ /*AddStatHistograms();*/ SplitQCDHistograms(); }
+		//if( doshape == 1 ){ AddStatHistograms(); SplitQCDHistograms(); }
 
-continue;
+		//continue;
 	
 		cuentita = 0.0; 
 
-		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_170828_all_" + processID[ttDM];
-
+		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_170904_justMET50SF_" + processID[ttDM]; 
 		//pathway = histoSite + processID[ttDM] + "/";	
 		pathway = datacard_dir + datacard_folder + "/" + processID[ttDM] + "/";
 
@@ -88,7 +87,7 @@ void CreateHistograms2( int process ){
 
 	//if ( process != WW ) return;
 
-	//if ( process == DY ) return;
+	//if ( process != DY ) return;
 
 	//if ( process != Wg ) return;
 
@@ -96,7 +95,7 @@ void CreateHistograms2( int process ){
 
 	//if ( process == VVV) return;
 
-	//if ( process == TT ) return;
+	//if ( process != TT ) return;
 
 	//if ( process !=ttDM) return;
 
@@ -106,12 +105,15 @@ void CreateHistograms2( int process ){
 
 	for( int k = 0; k <= toppTrwdo; k++ ){ 
 
-		if(  k > nominal  ) continue; 
+		if(  k > nominal ) continue; 
+
+		//if(  k != METup  && k != METdo ) continue; 
 
 		//if ( processID[process] == "ttDM0001pseudo00010" && k == EleESdo ) continue;  // 1-pseudo-010 (jefferson)     VALUABLE INFORMATION, DO NOT ERASE !!! 
 
-		if( k >= EleESup && k <= MuESdo ) continue;
+		//if( k >= EleESup && k <= MuESdo ) continue;
 		//if( k >= METup   && k <= METdo  ) continue;
+		//if( k >= JESup   && k <= JESdo  ) continue;
 
 		if(  process == data  &&  k > nominal  ) continue; 
 
@@ -165,15 +167,15 @@ void CreateHistograms2( int process ){
 		if ( process == DY    )                    thecut = Form("%4.2f", DYSF   )*thecut; 
                 if ( process == ttDM  )                    thecut = Form("%4.2f", xs2l   )*thecut;
                 if ( process != data && process != fakes ) thecut = Form("%6.3f", thelumi)*thecut;
-                //if ( process == fakes )                    thecut = Form("%6.3f", 1./15. )*thecut;
+                if ( process == data || process == fakes ) thecut = Form("%6.3f", 1./15. )*thecut;
 
 		if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST ) ){
 
-			TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
+			//TH1F* weights = (TH1F*) myfile -> Get( "list_vectors_weights" );
 
 			if( k == QCDup ){
 
-				float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
+				//float qcd_norm_up = weights->GetBinContent(9)/weights->GetBinContent(1);
 
 				//thecut = Form("(LHEweight[8]/LHEweight[0])/%7.4f", qcd_norm_up)*thecut;
 				thecut = "(LHEweight[8]/LHEweight[0])"*thecut;
@@ -181,7 +183,7 @@ void CreateHistograms2( int process ){
 
 			if( k == QCDdo ){
 
-				float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
+				//float qcd_norm_do = weights->GetBinContent(5)/weights->GetBinContent(1);
 
 				//thecut = Form("(LHEweight[4]/LHEweight[0])/%7.4f", qcd_norm_do)*thecut;
 				thecut = "(LHEweight[4]/LHEweight[0])"*thecut;
@@ -189,7 +191,7 @@ void CreateHistograms2( int process ){
 
 			if( k == PDFup ){
 
-				float PDF_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
+				//float PDF_norm_up = weights->GetBinContent(10)/weights->GetBinContent(1);
 
 				//thecut = Form("(LHEweight[9]/LHEweight[0])/%7.4f", PDF_norm_up)*thecut;
 				thecut = "(LHEweight[9]/LHEweight[0])"*thecut;
@@ -197,7 +199,7 @@ void CreateHistograms2( int process ){
 
 			if( k == PDFdo ){
 
-				float PDF_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
+				//float PDF_norm_do = weights->GetBinContent(11)/weights->GetBinContent(1);
 
 				//thecut = Form("(LHEweight[10]/LHEweight[0])/%7.4f", PDF_norm_do)*thecut;
 				thecut = "(LHEweight[10]/LHEweight[0])"*thecut;
@@ -229,10 +231,10 @@ void CreateHistograms2( int process ){
 				//i == jet2eta       || 
 				//i == jet2phi       || 
 				//i == jet2mass      ||
-				//i == metPfType1    || 
+			i == metPfType1    || 
 				//i == metPfType1Phi ||
 				//i == m2l           || 
-				//i == mt2ll         || 
+			i == mt2ll         || 
 				//i == mt2lblb       || 
 				//i == mtw1          || 
 				//i == mtw2          ||
@@ -253,10 +255,10 @@ void CreateHistograms2( int process ){
 				//i == dphilep2jet2  || 
 				//i == dphilmet1     || 
 				//i == dphilmet2     ||
-				//i == dphillmet     ||	
+			i == dphillmet     ||	
 				//i == nvtx          || 
-				//i == darkpt        ||
-				i == ANN           ||
+			i == darkpt        ||
+			i == ANN           ||
                                 1 < 0               )
 			{
 
@@ -273,9 +275,18 @@ void CreateHistograms2( int process ){
 				//--- 1st approach: TTree::Project()
 				if( i == ANN && doshape == 1 ){
 
-					double cloison[] = { 0.00, 0.30, 0.50, 0.70, 0.80, 0.95, 1.00 };
+					double cloison[] = {  0.00, 0.30, 0.50, 0.70, 0.80, 0.95, 0.96, 0.97, 0.98, 0.99, 1.00 };
 
-					myhisto[i] = new TH1F(h_name[i], h_name[i], 6, cloison);
+					myhisto[i] = new TH1F(h_name[i], h_name[i], 10, cloison);
+
+					//double cloison[] = {  0.00, 0.30, 0.50, 0.70, 0.80, 0.95, 1.00 };
+
+					//myhisto[i] = new TH1F(h_name[i], h_name[i], 6, cloison);
+
+
+
+					//myhisto[i] = new TH1F(h_name[i], h_name[i], nbinraw[i], lowraw[i], upraw[i]);
+
 
 				} 
 
