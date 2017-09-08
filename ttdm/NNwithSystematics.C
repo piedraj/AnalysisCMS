@@ -154,20 +154,11 @@ void Plot(){
 
 		theleg->Draw();
 
-<<<<<<< HEAD
-		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
-		//c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
-		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
-		//c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
-=======
 		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
 		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
 		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
 		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
->>>>>>> d5af11e20aad6977e9cc0abf1d0e09369473d933
 
-		c1 -> Destructor(); 
-
+		c1 -> Destructor();
 	}
-
 }
