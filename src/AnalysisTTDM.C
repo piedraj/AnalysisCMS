@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
+  SetWriteHistograms(false);
   SetWriteMinitree(true);
   SetMinitreePath("/eos/user/j/jgarciaf/");
 }
@@ -25,32 +26,35 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
   // Define histograms
   //----------------------------------------------------------------------------
-  root_output->cd();
-
-  for (int j=0; j<ncut; j++) {
-
-    for (int k=0; k<=njetbin; k++) {
-
-      TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
-
-      TString directory = scut[j] + sbin;
-
+  if (_writehistograms)
+    {
       root_output->cd();
 
-      if (k < njetbin) gDirectory->mkdir(directory);
+      for (int j=0; j<ncut; j++) {
 
-      root_output->cd(directory);
+	for (int k=0; k<=njetbin; k++) {
 
-      for (int i=ee; i<=ll; i++) {
+	  TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
 
-	TString suffix = "_" + schannel[i];
+	  TString directory = scut[j] + sbin;
 
-	DefineHistograms(i, j, k, suffix);
+	  root_output->cd();
+
+	  if (k < njetbin) gDirectory->mkdir(directory);
+
+	  root_output->cd(directory);
+
+	  for (int i=ee; i<=ll; i++) {
+
+	    TString suffix = "_" + schannel[i];
+
+	    DefineHistograms(i, j, k, suffix);
+	  }
+	}
       }
-    }
-  }
 
-  root_output->cd();
+      root_output->cd();
+    }
 
 
   // Loop over events
@@ -234,6 +238,8 @@ void AnalysisTTDM::FillAnalysisHistograms(int ichannel,
 void AnalysisTTDM::FillLevelHistograms(int  icut,
 				       bool pass)
 {
+  if (!_writehistograms) return;
+
   if (!pass) return;
 
   FillHistograms(_channel, icut, _jetbin);
