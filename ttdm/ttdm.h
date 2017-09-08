@@ -2,21 +2,41 @@
 #include "TH1F.h"
 
 const TString storageSite     = "/eos/user/j/jgarciaf/minitrees/"; 
+//const TString storageSite     = "/eos/user/c/cprieels/minitrees/"; 
 const TString datacard_dir    = "/afs/cern.ch/user/j/jgarciaf/www/txt-files/datacards/";
-const TString theproduction   = "jefferson"; 
-const TString histoSite       = "histos/macrocheck/"; 
-const TString datacard_folder = "170727/";
 
-const float inicio = 0.50;
-const float paso   = 0.01;
 
-const float thelumi = 35.867; 
+
+const TString theproduction   = "carlota"; 
+const TString histoSite       = "histos/loyola_AN-updating_fig-6-7/"; 
+
+
+//const TString datacard_folder = "mierda/";   // "work/";
+const TString datacard_folder = "carlota_blinded/";   // "work/";
+
+const TString histoSite_datacards = datacard_dir + datacard_folder; //"histos/loyola_sync/"; 
+
+
+///////////////////////////////////
+      const bool doshape = 0; 
+///////////////////////////////////
+
+
+const float inicio = 0.00;
+const float paso   = 1.00;
+
+const float thelumi = 35.867/15.; 
 
 const float xs2l = 1.0/9; 
 
-const float    ttSF = 0.97;  const float ettSF = 0.073;
-const float    DYSF = 1.07;  const float eDYSF = 0.07;
+const float    ttSF = 1.00;  const float ettSF = 0.073;
+const float    DYSF = 1.04;  const float eDYSF = 0.26;   // 7% + 25%
 			     const float efakes= 0.30;
+                             const float ettV  = 0.20;
+
+const float epileup = 0.046; 
+const float elumi   = 0.025;
+
 
 //---- Omaha --- 
 //const float    ttSF = 0.91;  const float ettSF = 0.05;
@@ -27,16 +47,23 @@ const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //const float    DYSF = 1.07;  const float eDYSF = 0.07;
 //			       const float efakes= 0.30;
 
-const bool doshape = false; 
 
-//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_camille_ttDM0001scalar00300>0.60";//nbjet30csvv2m>0&&nlepton==2&&channel==5"; 
-//const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.&&ANN_tanh_mt2ll80_regina_ttDM0001scalar00500>0.95"; 
-const TCut selection = "lep1id*lep2id<0&&metPfType1>80.&&mt2ll>80.&&darkpt>0.";//&&abs(jet_eta[0])<2.4&&abs(jet_eta[1])<2.4"; 
-//const TCut selection = "lep1id*lep2id<0&&nbjet30csvv2m==0&&mt2ll>10.";//&&nlepton==2";
 
+//const TCut selection = "metPfType1>80.&&mt2ll>100.&&channel==5";  // sync
+const TCut selection = "(channel==3&&metPfType1>50.)||(channel==4&&metPfType1>50.)||(channel==5&&metPfType1>0.)";//&&darkpt>0."; // hard
+//const TCut selection = "(channel==3&&metPfType1>80.)||(channel==4&&metPfType1>80.)||(channel==5&&metPfType1>0.)&&mt2ll>80.&&darkpt>-5000";//&&darkpt>0."; // hard
+//const TCut selection = "lep1id*lep2id<0&&metPfType1>50.&&mt2ll>50.";//&&darkpt>0."; // hard
+//const TCut selection = "((channel==3||channel==4)&&metPfType1>50.)||channel==5";   // DESY
+//const TCut selection = "metPfType1>50.&&mt2ll<110.";//&&channel==5";   // NU
+//const TCut selection = "( (channel==3||channel==4) && metPfType1>50. ) || ( channel==5 && metPfType1>0. )";
+//const TCut selection = "( metPfType1>0. )";
+
+
+// loyola
+const TCut RemovingFakes = "eventW_genmatched";
 
 // jefferson
-const TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
+//const TCut RemovingFakes = "eventW_truegenmatched&&eventW_genmatched";
 
 // fucking-mum
 //const TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
@@ -51,11 +78,11 @@ enum{ data,
       fakes,
       ST,
       TTV,
+      DY,
+      //DYTT,
       //TT1,
       //TT2,
       //TTSemi,
-      DY,
-      //DYTT,
       TT,
       WW,
       WZ, 
@@ -96,7 +123,7 @@ enum{ ee, mm, em, ll, nchannel };
 
 enum{ soft, hard, NN, nlevel };
 
-enum{ nrmlz, shape, nsysttype };
+enum{ lnN, shape, nsysttype };
 
 enum{ 	nominal, 
 	Btagup, 
@@ -117,10 +144,14 @@ enum{ 	nominal,
 	QCDdo,
 	PDFup,
 	PDFdo,
-	toppTrw,
+	toppTrwup,
+	toppTrwdo,
 	DDtt,
 	DDDY,
 	DDfakes,
+	DDttV,
+	pileup,
+	luminosity,
 	nsystematic }; 
 
 enum{ nlepton,
@@ -141,12 +172,14 @@ enum{ nlepton,
 TCut eventW[nsystematic];  
 
 TString processID  [nprocess];
+TString processID2 [nprocess];
 TString minitreeDir[nsystematic];
 TString scalarID   [nscalar];
 float  scalarMVAcut[nscalar]; 
 TString  pseudoID  [npseudo ];
 TString         systematicID[nsystematic];
 TString systematicIDdatacard[nsystematic];
+TString systematicIDdatacard0[nsystematic];
 TString systtypeID[nsysttype];
 
 TString b_name[nhisto];
@@ -164,7 +197,7 @@ void Assign(){
 	//processID[data ] = "01_Data_Full2016"        ;
 	//processID[fakes] = "00_Fakes_1outof15"       ; 
 	processID[fakes] = "00_Fakes_Full2016"       ; 
-	processID[TT   ] = "04_TTTo2L2Nu"            ; 
+	processID[TT   ] = "04_TTTo2L2Nu"        ; 
 	//processID[TT1  ] = "04_TTTo2L2Nu_1"          ;
 	//processID[TT2  ] = "04_TTTo2L2Nu_2"          ;
  	//processID[TTSemi]= "04_TTToSemiLepton"       ;
@@ -183,6 +216,17 @@ void Assign(){
 	//processID[ttDMlight] = "ttDM0001scalar00010" ; 
 	//processID[ttDMheavy] = "ttDM0001scalar00500" ; 
 
+	processID2[ttDM ] = "signal"  ;  
+	processID2[data ] = "data_obs";
+	processID2[fakes] = "fakes"   ; 
+	processID2[TT   ] = "TT"      ; 
+	processID2[ST   ] = "ST"      ; 
+	processID2[DY   ] = "DY"      ; 
+	processID2[TTV  ] = "TTV"     ; 
+	processID2[WW   ] = "WW"      ; 
+	processID2[WZ   ] = "WZ"      ;
+	processID2[VZ   ] = "VZ"      ; 
+	processID2[VVV  ] = "VVV"     ; 
 
 	///scalarMVAcut[ttDM0001scalar00010] = 0.74; 
 	///scalarMVAcut[ttDM0001scalar00020] = 0.50; 
@@ -229,36 +273,72 @@ void Assign(){
 	systematicID[QCDdo    ] = "QCDdo"    ;
 	systematicID[PDFup    ] = "PDFup"    ;
 	systematicID[PDFdo    ] = "PDFdo"    ;
-	systematicID[toppTrw  ] = "toppTrw"  ;
+	systematicID[toppTrwup] = "toppTrwup";
+	systematicID[toppTrwdo] = "toppTrwdo";
 	systematicID[DDtt     ] = "DDtt"     ;
 	systematicID[DDDY     ] = "DDDY"     ;
 	systematicID[DDfakes  ] = "DDfakes"  ;
+	systematicID[DDttV    ] = "DDttV"    ;
+	systematicID[pileup   ] = "pileup"   ;
+	systematicID[luminosity]= "lumi"     ;
 
-	systematicIDdatacard[nominal  ] = "nominal";
-	systematicIDdatacard[Btagup   ] = "Btag"   ;
-	systematicIDdatacard[Btagdo   ] = ""       ;
-	systematicIDdatacard[Idisoup  ] = "Idiso"  ;
-	systematicIDdatacard[Idisodo  ] = ""       ;
-	systematicIDdatacard[Triggerup] = "Trigger";
-	systematicIDdatacard[Triggerdo] = ""       ;
-	systematicIDdatacard[METup    ] = "MET";
-	systematicIDdatacard[METdo    ] = "";
-	systematicIDdatacard[JESup    ] = "JES";
-	systematicIDdatacard[JESdo    ] = "";
-	systematicIDdatacard[EleESup  ] = "EleES";
-	systematicIDdatacard[EleESdo  ] = "";
-	systematicIDdatacard[MuESup   ] = "MuES";
-	systematicIDdatacard[MuESdo   ] = "";
-	systematicIDdatacard[QCDup    ] = "QCD"    ;
-	systematicIDdatacard[QCDdo    ] = ""       ;
-	systematicIDdatacard[PDFup    ] = "PDF"    ;
-	systematicIDdatacard[PDFdo    ] = ""       ;
-	systematicIDdatacard[toppTrw  ] = "toppTrw";
+	systematicIDdatacard[nominal  ] = "";
+	systematicIDdatacard[Btagup   ] = "BtagUp";
+	systematicIDdatacard[Btagdo   ] = "BtagDown";
+	systematicIDdatacard[Idisoup  ] = "IdisoUp";
+	systematicIDdatacard[Idisodo  ] = "IdisoDown";
+	systematicIDdatacard[Triggerup] = "TriggerUp";
+	systematicIDdatacard[Triggerdo] = "TriggerDown";
+	systematicIDdatacard[METup    ] = "METUp";
+	systematicIDdatacard[METdo    ] = "METDown";
+	systematicIDdatacard[JESup    ] = "JESUp";
+	systematicIDdatacard[JESdo    ] = "JESDown";
+	systematicIDdatacard[EleESup  ] = "EleESUp";
+	systematicIDdatacard[EleESdo  ] = "EleESDown";
+	systematicIDdatacard[MuESup   ] = "MuESUp";
+	systematicIDdatacard[MuESdo   ] = "MuESDown";
+	systematicIDdatacard[QCDup    ] = "QCDUp";
+	systematicIDdatacard[QCDdo    ] = "QCDDown";
+	systematicIDdatacard[PDFup    ] = "PDFUp";
+	systematicIDdatacard[PDFdo    ] = "PDFDown";
+	systematicIDdatacard[toppTrwup] = "toppTrwUp";
+	systematicIDdatacard[toppTrwdo] = "toppTrwDown";
 	systematicIDdatacard[DDtt     ] = "DDtt"   ;
 	systematicIDdatacard[DDDY     ] = "DDDY"   ;
 	systematicIDdatacard[DDfakes  ] = "DDfakes";
+	systematicIDdatacard[DDttV    ] = "DDttV"  ;
+	systematicIDdatacard[pileup   ] = "pileup" ;
+	systematicIDdatacard[luminosity]= "lumi"   ;
 
-	systtypeID[nrmlz] = "nrmlz";
+	systematicIDdatacard0[nominal  ] = "";
+	systematicIDdatacard0[Btagup   ] = "Btag"   ;
+	systematicIDdatacard0[Btagdo   ] = ""       ;
+	systematicIDdatacard0[Idisoup  ] = "Idiso"  ;
+	systematicIDdatacard0[Idisodo  ] = ""       ;
+	systematicIDdatacard0[Triggerup] = "Trigger";
+	systematicIDdatacard0[Triggerdo] = ""       ;
+	systematicIDdatacard0[METup    ] = "MET";
+	systematicIDdatacard0[METdo    ] = "";
+	systematicIDdatacard0[JESup    ] = "JES";
+	systematicIDdatacard0[JESdo    ] = "";
+	systematicIDdatacard0[EleESup  ] = "EleES";
+	systematicIDdatacard0[EleESdo  ] = "";
+	systematicIDdatacard0[MuESup   ] = "MuES";
+	systematicIDdatacard0[MuESdo   ] = "";
+	systematicIDdatacard0[QCDup    ] = "QCD"    ;
+	systematicIDdatacard0[QCDdo    ] = ""       ;
+	systematicIDdatacard0[PDFup    ] = "PDF"    ;
+	systematicIDdatacard0[PDFdo    ] = ""       ;
+	systematicIDdatacard0[toppTrwup] = "toppTrw";
+	systematicIDdatacard0[toppTrwdo] = "";
+	systematicIDdatacard0[DDtt     ] = "DDtt"   ;
+	systematicIDdatacard0[DDDY     ] = "DDDY"   ;
+	systematicIDdatacard0[DDfakes  ] = "DDfakes";
+	systematicIDdatacard0[DDttV    ] = "DDttV"  ;
+	systematicIDdatacard0[pileup   ] = "pileup" ;
+	systematicIDdatacard0[luminosity]= "lumi"   ;
+
+	systtypeID[lnN  ] = "lnN";
 	systtypeID[shape] = "shape";
 
 	//----------
@@ -272,8 +352,8 @@ void Assign(){
 	eventW[Triggerdo] = "eventW_Triggerdo";
 	eventW[METup    ] = "eventW"          ;
 	eventW[METdo    ] = "eventW"          ;
-	eventW[JESup    ] = "eventW"          ;
-	eventW[JESdo    ] = "eventW"          ;
+	eventW[JESup    ] = "eventW_Btagup*1.01";
+	eventW[JESdo    ] = "eventW_Btagdo*0.99";
 	eventW[EleESup  ] = "eventW"          ;
 	eventW[EleESdo  ] = "eventW"          ;
 	eventW[MuESup   ] = "eventW"          ;
@@ -282,14 +362,17 @@ void Assign(){
 	eventW[QCDdo    ] = "eventW"          ;
 	eventW[PDFup    ] = "eventW"          ;
 	eventW[PDFdo    ] = "eventW"          ;
-	eventW[toppTrw  ] = "eventW_Toppt"    ;
+	eventW[toppTrwup] = "eventW"          ;
+	eventW[toppTrwdo] = "eventW"          ;
 
 
 	for( int i = 0; i < nsystematic; i++ ){
 
 		minitreeDir[i] = theproduction;
 
-		if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
+		if( i >= METup && i <= METdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
+
+		//if( i >= METup && i <= MuESdo ) minitreeDir[i] = minitreeDir[i] + "_" + systematicID[i];
 
 	}      
 
@@ -350,7 +433,7 @@ void Assign(){
 
 	b_name[nvtx] = "nvtx";                           nbinraw[nvtx]         =  60;	lowraw[nvtx]         =   0. ;	upraw[nvtx]         =  60. ;
 
-	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 310;	lowraw[darkpt]       =-100. ;	upraw[darkpt]       =3000. ;
+	b_name[darkpt] = "darkpt";                       nbinraw[darkpt]       = 1300;	lowraw[darkpt]       =-10000.;	upraw[darkpt]       =3000. ;
 
 	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];   
                                                          nbinraw[ANN]          = 120;   lowraw[ANN]          =  -0.1;   upraw[ANN]          =   1.1;

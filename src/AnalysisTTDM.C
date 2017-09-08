@@ -9,7 +9,7 @@
 AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetSaveMinitree(true);
-  SetMinitreePath("/eos/user/c/cprieels/");
+  SetMinitreePath("/eos/user/j/jgarciaf/");
 }
 
 
@@ -56,36 +56,35 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
   // Loop over events
   //----------------------------------------------------------------------------
 
+    //if ( _nentries > 100000 )  _nentries = 100000;  
     for (Long64_t jentry=0; jentry<_nentries;jentry++) {
+
+    //if (jentry%15!=0) continue; 
 
     //cout << "\n" << jentry << endl;
 
     Long64_t ientry = LoadTree(jentry);
 
     if (ientry < 0) break;
-    //if (jentry%15 != 0) continue;
 
     fChain->GetEntry(jentry);
 
     PrintProgress(jentry, _nentries);
 
-    EventSetup(4.0);  // We consider only jets up to |eta| < 4.0
+    EventSetup(2.4);  // We consider only jets up to |eta| < 4.0
 
 
     // Analysis
     //--------------------------------------------------------------------------
     //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
 
+
     //if (_saveminitree) minitree->Fill();   // the most primitive pruning
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
-    //if (Lepton1.flavour * Lepton2.flavour < 0) continue; // For the ttV same sign control region
 
     if (Lepton1.v.Pt() < 25.) continue;
     if (Lepton2.v.Pt() < 20.) continue;
-
-    //if (Lepton1.v.Pt() < 40.) continue; // For the ttV same sign control region
-    //if (Lepton2.v.Pt() < 30.) continue; // For the ttV same sign control region
 
     _nelectron = 0;
 
@@ -108,72 +107,28 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 //FillLevelHistograms(step_2, pass);
 //FillLevelHistograms(step_3, pass);
 
-    //pass &= (std_vector_lepton_pt->at(2) < 10.);
+    pass &= (std_vector_lepton_pt->at(2) < 10.);
 
-    // missing: 
-    // Cut applied in AN-16-105 but not in AN-16-011 = 
-    // At least one lepton passes a single lepton trigger
 
-    //FillLevelHistograms(TTDM_00_Has2Leptons, pass);
+
+
+
 
     pass &= ( _m2l > 20.                                    );
-    //FillLevelHistograms(step_4, pass);
+
     pass &= ( _channel == em  ||  fabs(_m2l - Z_MASS) > 15. );
-    //FillLevelHistograms(step_5, pass);
+
     pass &= ( _njet > 1                                     );
-    //FillLevelHistograms(step_6, pass);
-    pass &= ( metPfType1  > 50.                             );
-    //FillLevelHistograms(step_7, pass);
+
+    ///pass &= ( metPfType1  > 50.                             );
+//FillLevelHistograms(step_7, pass);
     pass &= ( _nbjet30csvv2m > 0                            );
-    //FillLevelHistograms(step_8, pass);
+//FillLevelHistograms(step_8, pass);
 
-    //pass &= (_event_weight_genmatched && ( fabs(_lep1mid)==24. || fabs(_lep1mid)==15. || fabs(_lep1mid)==21. || fabs(_lep1mid)==23. ) &&  ( fabs(_lep2mid)==24. || fabs(_lep2mid)==15. || fabs(_lep2mid)==21. || fabs(_lep2mid)==23. ));
+//FillLevelHistograms(TTDM_01_NewPresel, pass);
 
-    FillLevelHistograms(TTDM_01_NewPresel, pass);
     if (_saveminitree && pass ) minitree->Fill();
 
-    // TTV Three Leptons Control Region
-    //--------------------------------------------------------------------------
-    /*  
-    pass  = true; 
-    pass &= (std_vector_lepton_pt->at(2) > 10.);
-    //pass &= (MET.Et() > 50.); 
-    pass &= (_nbjet30csvv2m > 0);
-
-    //Reconstruction of the Z
-    for (UInt_t i=0; i<3; i++) {
-    
-      for (UInt_t j=i+1; j<3; j++) {
-
-	if (AnalysisLeptons[i].flavour + AnalysisLeptons[j].flavour != 0) continue;
-
-	float inv_mass = (AnalysisLeptons[i].v + AnalysisLeptons[j].v).M();
-
-	if (_m2l < 0 || fabs(inv_mass - Z_MASS) < fabs(_m2l - Z_MASS)) {
-
-	  _m2l = inv_mass;
-	  
-	}
-      }
-    }
-    
-    pass &= (_m2l > 76. && _m2l < 106.);
-
-    FillLevelHistograms(TTDM_Control_ttV, pass);
-    if (_saveminitree && pass ) minitree->Fill();
-    */
-    // TTV Same Sign Control Region
-    //--------------------------------------------------------------------------
-    /*
-    pass  = true; 
-    pass &= (std_vector_lepton_pt->at(2) < 10.);
-    pass &= (MET.Et() > 30.); 
-    pass &= (_nbjet30csvv2m > 0);
-    pass &= (_njet > 0);
-
-    FillLevelHistograms(TTDM_Control_ttV, pass);
-    if (_saveminitree && pass ) minitree->Fill();
-    */
     // TT Control Region
     //--------------------------------------------------------------------------
     /*pass  = true; 
@@ -187,13 +142,14 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_nbjet30csvv2m > 0);
 
-    if ( _saveminitree && pass ) minitree->Fill();
+    //if ( _saveminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_05_tt, pass);
 
     pass &= (_nbjet30csvv2m > 1);
 
     FillLevelHistograms(TTDM_06_tt, pass);*/
+
 
     // WW Control Region
     //--------------------------------------------------------------------------
@@ -232,8 +188,8 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel != em && fabs(_m2l - Z_MASS) < 15.);
     pass &= (MET.Et() > 20.); 
     
-    if ( _saveminitree && pass ) minitree->Fill();
-    FillLevelHistograms(TTDM_Zjets, pass);*/
+    //if ( _saveminitree && pass ) minitree->Fill();
+    FillLevelHistograms(TTDM_Zjets, pass);*/  
 
 
     // AN-16-105, Northwestern University

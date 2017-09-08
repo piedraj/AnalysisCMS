@@ -14,15 +14,19 @@ void CreateHistograms(){
 
 	//-----
 
-	for(int j = 0; j < npseudo; j++ ){
+	for(int j = 0; j < nscalar; j++ ){
+
+		if( j != ttDM0001pseudo00100 ) continue;
 
 		cuentita = 0.0; 
 
-		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
+		processID[ttDM] = pseudoID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM]; 
 
 		if( doLoop == true ){
 
 			for( int i = 0; i < nprocess; i++ ){
+
+				if ( i == Wg || i == Zg ) continue; 
 
 				CreateHistograms2( i ); 
 
@@ -47,36 +51,37 @@ void CreateHistograms(){
 
 void CreateHistograms2( int process ){ 
 
-	//if(  process != ttDM && process != TT && process != data ) return; 
+	//if(  process == data || process == fakes || process == TT || process == TTV ) return; 
 
 	//if ( process != WZ ) return;
 
-	//if ( process != VZ ) return;
+	///if ( process == VZ ) return;
 
 	//if ( process != ST ) return;
 
 	//if ( process != WW ) return;
 
-	//if ( process != DY ) return;
+	///if ( process == DY ) return;
 
 	//if ( process != Wg ) return;
 
 	//if ( process != Zg ) return;
 
-	//if ( process != VVV) return;
+	///if ( process == VVV) return;
 
-	//if ( process != TT ) return;
+	if ( process == TT ) return;
 
 	//if ( process !=ttDM) return;
 
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
-	for( int k = 0; k <= toppTrw; k++ ){ 
+	for( int k = 0; k <= toppTrwdo; k++ ){ 
 
-		//if ( k != nominal ) continue;
+		if ( k > nominal ) continue;
 
-		if ( processID[process] == "ttDM0001pseudo00010" && k == EleESdo ) continue;  // 1-pseudo-010      VALUABLE INFORMATION, DO NOT ERASE !!! 
+		//if ( processID[process] == "ttDM0001pseudo00010" && k == EleESdo ) continue;  // 1-pseudo-010 (jefferson)     VALUABLE INFORMATION, DO NOT ERASE !!! 
+
 
 		if(  process == data  &&  k > nominal  ) continue; 
 
@@ -103,15 +108,17 @@ void CreateHistograms2( int process ){
 
 		TFile* storagefile; 
 
+		//storagefile = new TFile( pathway + "simple-shapes-TH1.root", "update");
+
 		if( k == nominal ) storagefile = new TFile( pathway + processID[process] +                         ".root", "recreate" );
 		if( k >  nominal ) storagefile = new TFile( pathway + processID[process] + "_" + systematicID[k] + ".root", "recreate" );
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
+		TCut thecut       = ( process == data || process == fakes ) ? eventW[0] : eventW[k];
 
-		// jefferson
-		TCut newselection = ( process == data || process == fakes  ) ? selection : selection&&RemovingFakes; 
+		// jefferson and after jefferson
+		TCut newselection = ( process == data || process == fakes ) ? selection : selection&&RemovingFakes; 
 
 		// fucking-mum
 		//TCut newselection = ( process == TT && ( k == nominal || k == toppTrw )  ) ? selection&&RemovingFakes : selection               ; 
@@ -120,13 +127,13 @@ void CreateHistograms2( int process ){
 		//TCut newselection = selection; 
 
 
-                                        thecut = newselection                    *thecut; 
-		if ( process == TT    ) thecut = Form("             %4.2f", ttSF)*thecut; 
-		if ( process == DY    ) thecut = Form("             %4.2f", DYSF)*thecut; 
-                if ( process == ttDM  ) thecut = Form("             %4.2f", xs2l)*thecut; 
-                //if ( process == fakes ) thecut = Form("         %7.5f",1/15.)*thecut;
-		//if ( process == TT1 || process == TT2 ) thecut = Form(" %4.2f", ttSF)*thecut; 
-
+                                                           thecut = newselection          *thecut; 
+		if ( process == TT    )                    thecut = Form("%4.2f", ttSF   )*thecut; 
+		if ( process == DY    )                    thecut = Form("%4.2f", DYSF   )*thecut; 
+		if ( process == TT && k != toppTrwdo )     thecut ="eventW_Toppt"         *thecut; 
+                if ( process == ttDM  )                    thecut = Form("%4.2f", xs2l   )*thecut;
+                if ( process != data && process != fakes ) thecut = Form("%6.3f", thelumi)*thecut;
+                if ( process == fakes )                    thecut = Form("%6.3f", 1./15. )*thecut;
 
 		if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST ) ){
 
@@ -190,10 +197,10 @@ void CreateHistograms2( int process ){
 				//i == jet2eta       || 
 				//i == jet2phi       || 
 				//i == jet2mass      ||
-				//i == metPfType1    || 
+				i == metPfType1    || 
 				//i == metPfType1Phi ||
 				//i == m2l           || 
-				//i == mt2ll         || 
+				i == mt2ll         || 
 				//i == mt2lblb       || 
 				//i == mtw1          || 
 				//i == mtw2          ||
@@ -214,24 +221,56 @@ void CreateHistograms2( int process ){
 				//i == dphilep2jet2  || 
 				//i == dphilmet1     || 
 				//i == dphilmet2     ||
-				//i == dphillmet     ||	
+				i == dphillmet     ||	
 				//i == nvtx          || 
-				//i == darkpt        ||
+				i == darkpt        ||
 				i == ANN           ||
                                 1 < 0               )
 			{
 
 				HowManyVar += 1; 
 		 
-				if ( doshape == 0 ) h_name[i] =                                                    b_name[i]; 
-				if ( doshape == 1 ) h_name[i] = processID[process] + "_" + systematicID[k] + "_" + b_name[i];
+				if ( doshape == 0 ) h_name[i] = b_name[i]; 
+				if ( doshape == 1 ){ 
+
+					if( k == nominal ) h_name[i] = processID2[process]                                ;
+					if( k != nominal ) h_name[i] = processID2[process] + "_" + systematicIDdatacard[k];
+
+				}
+
+				//--- 1st approach: TTree::Project()
+				/*if( i == ANN ){
+
+					double cloison[] = { 0.00, 0.50, 0.95, 1.00 };
+
+					myhisto[i] = new TH1F(h_name[i], h_name[i], 3, cloison);
+
+				} 
+
+				if( i == mt2ll ){
+
+					double cloison[] = { 100.00, 140.00, 3000.00 };
+
+					myhisto[i] = new TH1F(h_name[i], h_name[i], 2, cloison);
+
+				}
+
+				else{
+
+					myhisto[i] = new TH1F(h_name[i], h_name[i], nbinraw[i], lowraw[i], upraw[i]); 
+
+				}
+
+				mytree -> Project( h_name[i], b_name[i], thecut );*/
 
 
-
+				//--- 2nd approach: TTree::Draw()
 				mytree -> Draw( Form("%s >> %s( %d, %f, %f )", b_name[i].Data(), h_name[i].Data(), nbinraw[i], lowraw[i], upraw[i] ), thecut );
 
 				myhisto[i] = (TH1F*) gDirectory -> Get( h_name[i] );
 	
+
+
 				myhisto[i] -> Write(); 
 
 
@@ -240,12 +279,13 @@ void CreateHistograms2( int process ){
 
 					float yield;
 
-					if( process == data                     ) yield =         myhisto[i]-> Integral(-1, -1);
-					if( process == fakes                    ) yield =   1./15*myhisto[i]-> Integral(-1, -1);
-		                        if( process != data && process != fakes ) yield = thelumi*myhisto[i]-> Integral(-1, -1);
+					if( process == data                     ) yield = myhisto[i]-> Integral(-1, -1);
+					if( process == fakes                    ) yield = myhisto[i]-> Integral(-1, -1);
+		                        if( process != data && process != fakes ) yield = myhisto[i]-> Integral(-1, -1);
 
-					cout << "\t\t\t" << myhisto[i] -> GetEntries() << "\t\t" << yield << endl; 
-					//cout << "\t\t\t" << myhisto[i] -> GetEntries() << "\t\t" << yield << endl;
+					//cout << "\t\t\t" << myhisto[i] -> GetEntries() << "\t\t" << yield << endl; 
+
+					cout << Form("\t\t\t %8.0f \t\t %8.2f", myhisto[i]->GetEntries(), yield) << endl; 
  
 					if( k == nominal && process != data && process != ttDM ) cuentita += yield;
 
@@ -254,7 +294,7 @@ void CreateHistograms2( int process ){
 			}
 
 		}
-		
+
 		storagefile -> Close();
 
 		myfile -> Close();

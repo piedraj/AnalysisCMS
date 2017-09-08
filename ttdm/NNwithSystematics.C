@@ -1,7 +1,7 @@
 #include "ttdm.h"
 
 int zoom = 2500; 
-TString folder = "Analysis_170615_NN-with-systematics";
+TString folder = "Analysis_170803_NN-with-systematics";
 float offset = -0.20; 
 
 bool doit[nsystematic]; 
@@ -19,11 +19,17 @@ void NNwithSystematics(){
 
 	SelectSystematics(); 
 
-	GetHistograms( TT   );
+	for( int j = 0; j < nscalar; j++ ){
 
-	GetHistograms( ttDM );  
+		processID[ttDM] = scalarID[j];	b_name[ANN] = "ANN_tanh_mt2ll80_camille_" + processID[ttDM];
 
-	Plot();
+		GetHistograms( TT   );
+
+		GetHistograms( ttDM );  
+
+		Plot();
+
+	}
 
 }
 
@@ -37,18 +43,18 @@ void SelectSystematics(){
 		 if(    k == nominal    || 
 			k == Btagup     ||  
 			k == Btagdo     ||  
-			k == Idisoup    ||  
-			k == Idisodo    ||  
-			k == Triggerup  ||  
-			k == Triggerdo  || 
-			k == METup      || 
-			k == METdo      ||  
-			k == JESup      || 
-			k == JESdo      ||  
-			k == EleESup    || 
-			k == EleESdo    || 
-			k == MuESup     || 
-			k == MuESdo     || 
+			///k == Idisoup    ||  
+			///k == Idisodo    ||  
+			///k == Triggerup  ||  
+			///k == Triggerdo  || 
+			///k == METup      || 
+			///k == METdo      ||  
+			///k == JESup      || 
+			///k == JESdo      ||  
+			//k == EleESup    || <--
+			//k == EleESdo    || 
+			///k == MuESup     || 
+			///k == MuESdo     || 
 			//k == QCDup      || 
 			//k == QCDdo      || 
 			//k == PDFup      || 
@@ -78,11 +84,9 @@ void GetHistograms( int process ){
 
 		TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
-		TCut thecut = (  process == data  ||  process == fakes )  ?  eventW[0]  :  eventW[k];
+		TCut thecut       = ( process == data || process == fakes )  ?  eventW[0] : eventW[k];
 
-		TCut RemovingFakes = "eventW_genMatched && ( abs(lep1mid)==24 || abs(lep1mid)==15 ) && ( abs(lep2mid)==24 || abs(lep2mid)==15 )"; 
-
-		TCut newselection = selection; //TCut newselection = ( process == TT ) ? selection&&RemovingFakes : selection ; 
+		TCut newselection = ( process == data || process == fakes  ) ?  selection : selection && RemovingFakes; 
 
                                        thecut = newselection                *thecut;
 		if ( process == TT   ) thecut = Form("         %4.2f", ttSF)*thecut; 
@@ -150,10 +154,17 @@ void Plot(){
 
 		theleg->Draw();
 
+<<<<<<< HEAD
+		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
+		//c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
+		c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
+		//c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
+=======
 		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
 		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".png");
 		//c1 -> SaveAs("~/www/figures/" + folder + "/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
 		c1 -> SaveAs("figures/" + b_name[ANN] + "_" + systematicIDdatacard[k] +".pdf");
+>>>>>>> d5af11e20aad6977e9cc0abf1d0e09369473d933
 
 		c1 -> Destructor(); 
 
