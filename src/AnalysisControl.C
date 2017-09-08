@@ -7,7 +7,8 @@
 //------------------------------------------------------------------------------
 AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetWriteMinitree  (true);
+  SetWriteHistograms(false);
 }
 
 
@@ -18,37 +19,47 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 {
   if (fChain == 0) return;
 
+  if (!_writehistograms && !_writeminitree)
+    {
+      printf("\n [AnalysisControl::Loop] Please check. You are not writing any output...\n\n");
+
+      return;
+    }
+
   Setup(analysis, filename, luminosity);
 
 
   // Define histograms
   //----------------------------------------------------------------------------
-  root_output->cd();
-
-  for (int j=0; j<ncut; j++) {
-
-    for (int k=0; k<=njetbin; k++) {
-
-      TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
-
-      TString directory = scut[j] + sbin;
-
+  if (_writehistograms)
+    {
       root_output->cd();
 
-      if (k < njetbin) gDirectory->mkdir(directory);
+      for (int j=0; j<ncut; j++) {
 
-      root_output->cd(directory);
+	for (int k=0; k<=njetbin; k++) {
 
-      for (int i=ee; i<=ll; i++) {
+	  TString sbin = (k < njetbin) ? Form("/%djet", k) : "";
 
-	TString suffix = "_" + schannel[i];
+	  TString directory = scut[j] + sbin;
 
-	DefineHistograms(i, j, k, suffix);
+	  root_output->cd();
+
+	  if (k < njetbin) gDirectory->mkdir(directory);
+
+	  root_output->cd(directory);
+
+	  for (int i=ee; i<=ll; i++) {
+
+	    TString suffix = "_" + schannel[i];
+	    
+	    DefineHistograms(i, j, k, suffix);
+	  }
+	}
       }
-    }
-  }
 
-  root_output->cd();
+      root_output->cd();
+    }
 
 
   // Loop over events
@@ -135,6 +146,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     pass = (pass_os && pass_pt && pass_zveto && pass_btag && mll > 80 && ptll > 30 && mth > 60 && metPfType1 > 20);
 
+    if (_writeminitree && pass) minitree->Fill();
+
     FillLevelHistograms(Control_03_Top, pass);
 
 
@@ -156,6 +169,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 void AnalysisControl::FillLevelHistograms(int  icut,
 					  bool pass)
 {
+  if (!_writehistograms) return;
+
   if (!pass) return;
 
   FillHistograms(_channel, icut, _jetbin);

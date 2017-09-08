@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 AnalysisMET::AnalysisMET(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetWriteMinitree(true);
 }
 
 
@@ -45,7 +45,7 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
     //--------------------------------------------------------------------------
     //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
 
-    //if (_saveminitree) minitree->Fill();   // the most primitive pruning
+    //if (_writeminitree) minitree->Fill();   // the most primitive pruning
 
     //if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -81,7 +81,7 @@ void AnalysisMET::Loop(TString analysis, TString filename, float luminosity)
     pass &= (std_vector_lepton_pt->at(1) > 20.);
 
 
-    if (_saveminitree && pass ) minitree->Fill();
+    if (_writeminitree && pass ) minitree->Fill();
 
  
 

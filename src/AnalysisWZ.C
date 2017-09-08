@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisWZ::AnalysisWZ(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetWriteMinitree(false);
 }
 
 
@@ -185,7 +185,7 @@ void AnalysisWZ::Loop(TString analysis, TString filename, float luminosity)
 
     FillLevelHistograms(WZ_05_TopRegion, pass);
 
-    if (pass && _saveminitree) minitree->Fill();
+    if (pass && _writeminitree) minitree->Fill();
   }
 
 

@@ -97,7 +97,9 @@ class AnalysisCMS : public AnalysisBase
   void        PrintProgress        (Long64_t counter,
 				    Long64_t total);
 
-  void        SetSaveMinitree      (Bool_t   saveminitree) {_saveminitree = saveminitree;}
+  void        SetWriteMinitree     (Bool_t   writeminitree) {_writeminitree = writeminitree;}
+
+  void        SetWriteHistograms   (Bool_t   writehistograms) {_writehistograms = writehistograms;}
 
   void        SetMinitreePath      (TString  minitreepath) {_minitreepath = minitreepath;}
 
@@ -176,7 +178,8 @@ class AnalysisCMS : public AnalysisBase
 
   TH1F*                  _shapemlb; 
 
-  bool                   _saveminitree;
+  bool                   _writeminitree;
+  bool                   _writehistograms;
   bool                   _eventdump;
   bool                   _foundsoftmuon;
   bool                   _ismc;

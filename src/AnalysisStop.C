@@ -3,30 +3,39 @@
 #include <fstream>
 #include <iostream>
 
+
 //------------------------------------------------------------------------------
 // AnalysisStop
 //------------------------------------------------------------------------------
 AnalysisStop::AnalysisStop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-
   SetStopNeutralinoMap();
+
   if (systematic=="nominal") {
-    SetSaveMinitree(true);
+
+    SetWriteMinitree(true);
     _SaveHistograms = 0;
-  } else {
-    SetSaveMinitree(false);
+  }
+  else {
+
+    SetWriteMinitree(false);
     _SaveHistograms = 1;
   }
 }
 
+
+//------------------------------------------------------------------------------
+// AnalysisStop
+//------------------------------------------------------------------------------
 AnalysisStop::AnalysisStop(TFile* MiniTreeFile, TString systematic, int SaveHistograms) 
 {
-  SetSaveMinitree(false);
+  SetWriteMinitree(false);
   SetStopNeutralinoMap();
   GetMiniTree(MiniTreeFile, systematic);
   _systematic = systematic;
   _SaveHistograms = SaveHistograms;
 }
+
 
 //------------------------------------------------------------------------------
 // Loop
@@ -93,7 +102,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
     bool pass_masspoint = true;
     if (filename.Contains("T2tt")) 
       pass_masspoint = (susyMstop==StopRefMass && susyMLSP==NeutralinoRefMass) ? true : false;
-    if (!pass_masspoint && !_saveminitree) continue;
+    if (!pass_masspoint && !_writeminitree) continue;
 
     if (!_isminitree) {
 
@@ -210,7 +219,7 @@ void AnalysisStop::Loop(TString analysis, TString filename, float luminosity, fl
        //~~~~~~~~~~~~~~~~~~~~~~ save minitree ~~~~~~~~~~~~~~~~~~
 
       // Leave this line at the end of this if or the results on latino trees and minitrees will be inconsistent
-      if (pass && _saveminitree) minitree->Fill();      
+      if (pass && _writeminitree) minitree->Fill();      
        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     } 
 

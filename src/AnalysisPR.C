@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisPR::AnalysisPR(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetWriteMinitree(false);
 }
 
 

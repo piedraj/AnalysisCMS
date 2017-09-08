@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisDY::AnalysisDY(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetWriteMinitree(true);
 }
 
 
@@ -101,7 +101,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     //---------------------------------------------------------------------------     
     FillLevelHistograms(DY_01_Has2Leptons, pass_2l);
 
-    if (_saveminitree && pass_2l) minitree->Fill();
+    if (_writeminitree && pass_2l) minitree->Fill();
     
     // DY-Control Region  
     //---------------------------------------------------------------------------  

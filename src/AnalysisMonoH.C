@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisMonoH::AnalysisMonoH(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetWriteMinitree(true);
 }
 
 
@@ -140,7 +140,7 @@ void AnalysisMonoH::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(MonoH_07_BVeto, pass && pass_zveto);
 
-    if (_saveminitree && pass && pass_zveto) minitree->Fill();
+    if (_writeminitree && pass && pass_zveto) minitree->Fill();
 
     //ZH->4l Control Region
     if (AnalysisLeptons[2].v.Pt() > 0 || AnalysisLeptons[3].v.Pt() > 0 ){

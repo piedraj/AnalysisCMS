@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 AnalysisTTDM::AnalysisTTDM(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(true);
+  SetWriteMinitree(true);
   SetMinitreePath("/eos/user/j/jgarciaf/");
 }
 
@@ -79,7 +79,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     //if (!_ismc && run > 258750) continue;  // Luminosity for any blinded analysis
 
 
-    //if (_saveminitree) minitree->Fill();   // the most primitive pruning
+    //if (_writeminitree) minitree->Fill();   // the most primitive pruning
 
     if (Lepton1.flavour * Lepton2.flavour > 0) continue;
 
@@ -127,7 +127,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
 //FillLevelHistograms(TTDM_01_NewPresel, pass);
 
-    if (_saveminitree && pass ) minitree->Fill();
+    if (_writeminitree && pass ) minitree->Fill();
 
     // TT Control Region
     //--------------------------------------------------------------------------
@@ -142,7 +142,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
 
     pass &= (_nbjet30csvv2m > 0);
 
-    //if ( _saveminitree && pass ) minitree->Fill();
+    //if ( _writeminitree && pass ) minitree->Fill();
 
     FillLevelHistograms(TTDM_05_tt, pass);
 
@@ -174,7 +174,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(TTDM_WW0jet, pass && _njet == 0);
     FillLevelHistograms(TTDM_WW1jet, pass && _njet == 1);
 
-    //if ( _saveminitree && pass && _njet == 0 ) minitree->Fill();*/
+    //if ( _writeminitree && pass && _njet == 0 ) minitree->Fill();*/
 
 
     // Zjets Control Region
@@ -188,7 +188,7 @@ void AnalysisTTDM::Loop(TString analysis, TString filename, float luminosity)
     pass &= (_channel != em && fabs(_m2l - Z_MASS) < 15.);
     pass &= (MET.Et() > 20.); 
     
-    //if ( _saveminitree && pass ) minitree->Fill();
+    //if ( _writeminitree && pass ) minitree->Fill();
     FillLevelHistograms(TTDM_Zjets, pass);*/  
 
 

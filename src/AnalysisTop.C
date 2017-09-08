@@ -8,7 +8,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 AnalysisTop::AnalysisTop(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetWriteMinitree(false);
 }
 
 
