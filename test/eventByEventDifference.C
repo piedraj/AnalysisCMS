@@ -11,7 +11,7 @@ const TString path = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_A
 
 //------------------------------------------------------------------------------
 //
-//  root -l eventByEventDifference.C
+//  root -l 'eventByEventDifference.C+("ZZZ")'
 //
 //------------------------------------------------------------------------------
 void eventByEventDifference(TString filename = "ttDM0001pseudo00020")
@@ -37,8 +37,10 @@ void eventByEventDifference(TString filename = "ttDM0001pseudo00020")
 
   // Loop
   //----------------------------------------------------------------------------
-  TH2F* deltaMet_all = new TH2F("deltaMet_all", ";MET up - MET nominal [GeV];MET do - MET nominal [GeV]", 100, -25, 25, 100, -25, 25);
-  TH2F* deltaMet_bad = new TH2F("deltaMet_bad", ";MET up - MET nominal [GeV];MET do - MET nominal [GeV]", 100, -25, 25, 100, -25, 25);
+  TString titles = filename + ";MET up - MET nominal [GeV];MET do - MET nominal [GeV]";
+
+  TH2F* deltaMet_all = new TH2F("deltaMet_all", titles, 100, -25, 25, 100, -25, 25);
+  TH2F* deltaMet_bad = new TH2F("deltaMet_bad", titles, 100, -25, 25, 100, -25, 25);
 
   Long64_t nentries = chain->GetEntries();
 
