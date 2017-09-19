@@ -11,10 +11,10 @@ const TString path = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_A
 
 //------------------------------------------------------------------------------
 //
-//  root -l 'eventByEventDifference.C+("ZZZ")'
+//  root -l 'eventByEventDifference.C+("latino_ZZZ")'
 //
 //------------------------------------------------------------------------------
-void eventByEventDifference(TString filename = "ttDM0001pseudo00020")
+void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
@@ -22,9 +22,9 @@ void eventByEventDifference(TString filename = "ttDM0001pseudo00020")
   TChain* chain_up = new TChain("latino", "latino");
   TChain* chain_do = new TChain("latino", "latino");
 
-  chain   ->Add(path + "/latino_"        + filename + ".root");
-  chain_up->Add(path + "__METup/latino_" + filename + ".root");
-  chain_do->Add(path + "__METdo/latino_" + filename + ".root");
+  chain   ->Add(path + "/"        + filename + ".root");
+  chain_up->Add(path + "__METup/" + filename + ".root");
+  chain_do->Add(path + "__METdo/" + filename + ".root");
 
   float metPfType1;
   float metPfType1_up;
