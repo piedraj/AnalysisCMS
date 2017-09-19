@@ -31,11 +31,26 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
   chain_up->Add(path + "__METup/" + filename + ".root");
   chain_do->Add(path + "__METdo/" + filename + ".root");
 
+
+  // Prepare tree branches
+  //----------------------------------------------------------------------------
+  vector<float> *std_vector_lepton_flavour = 0;
+  vector<float> *std_vector_lepton_pt      = 0;
+
   float metPfType1;
+  float mll;
+  float njet;
+
   float metPfType1_up;
   float metPfType1_do;
 
-  chain   ->SetBranchAddress("metPfType1", &metPfType1);
+  chain->SetBranchAddress("std_vector_lepton_flavour", &std_vector_lepton_flavour);
+  chain->SetBranchAddress("std_vector_lepton_pt",      &std_vector_lepton_pt);
+
+  chain->SetBranchAddress("metPfType1", &metPfType1);
+  chain->SetBranchAddress("mll",        &mll);
+  chain->SetBranchAddress("njet",       &njet);
+
   chain_up->SetBranchAddress("metPfType1", &metPfType1_up);
   chain_do->SetBranchAddress("metPfType1", &metPfType1_do);
 
@@ -68,8 +83,25 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 
     // Selection
     //--------------------------------------------------------------------------
+    if (std_vector_lepton_pt->at(0) < 25.) continue;
+
+    if (std_vector_lepton_pt->at(1) < 20.) continue;
+
+    if (std_vector_lepton_pt->at(2) > 10.) continue;
+
+    if (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) > 0) continue;
+
+    if (njet < 2) continue;
+
+    if (mll < 20.) continue;
+
+    if (fabs(mll - 91.188) < 15.) continue;
+
     if (metPfType1 < 50.) continue;
 
+
+    // Fill histograms
+    //--------------------------------------------------------------------------
     float deltaMet_up = metPfType1_up - metPfType1;
     float deltaMet_do = metPfType1_do - metPfType1;
 
@@ -81,11 +113,13 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
   }
 
 
-  // Print some statistics
+  // Print statistics
   //----------------------------------------------------------------------------
   float fraction_bad = 1e2 * deltaMet_bad->GetEntries() / deltaMet_all->GetEntries();
 
-  printf("\n %.2f%% of the events have MET (up-nominal)*(down-nominal) > 0\n\n", fraction_bad);
+  printf("\n %.0f events have passed the selection\n", deltaMet_all->GetEntries());
+
+  printf("\n %.2f%% of these events have MET (up-nominal)*(down-nominal) > 0\n\n", fraction_bad);
 
 
   // Draw all
