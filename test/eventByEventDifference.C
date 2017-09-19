@@ -50,9 +50,14 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 
   // Loop
   //----------------------------------------------------------------------------
-  Long64_t nentries = chain->GetEntries();
+  Long64_t nentries    = chain   ->GetEntries();
+  Long64_t nentries_up = chain_up->GetEntries();
+  Long64_t nentries_do = chain_do->GetEntries();
 
   printf ("\n Loop over %lld events\n", nentries);
+
+  if (nentries_up != nentries) printf("\n Warning: up file has %lld events\n", nentries_up);
+  if (nentries_do != nentries) printf("\n Warning: do file has %lld events\n", nentries_do);
 
   for (Long64_t jentry=0; jentry<nentries; jentry++) {
 
@@ -94,7 +99,7 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 
   deltaMet_all->Draw("colz");
 
-  c1->SaveAs("deltaMet_all.png");
+  c1->SaveAs(filename + "__deltaMet_all.png");
 
 
   // Draw bad
@@ -108,5 +113,5 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 
   deltaMet_bad->Draw("colz");
 
-  c2->SaveAs("deltaMet_bad.png");
+  c2->SaveAs(filename + "__deltaMet_bad.png");
 }
