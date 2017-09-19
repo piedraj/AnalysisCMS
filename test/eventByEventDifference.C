@@ -18,6 +18,11 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 {
   gInterpreter->ExecuteMacro("PaperStyle.C");
 
+
+  // Read inputs
+  //----------------------------------------------------------------------------
+  printf("\n Reading %s\n", filename.Data());
+
   TChain* chain    = new TChain("latino", "latino");
   TChain* chain_up = new TChain("latino", "latino");
   TChain* chain_do = new TChain("latino", "latino");
@@ -35,22 +40,30 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
   chain_do->SetBranchAddress("metPfType1", &metPfType1_do);
 
 
-  // Loop
+  // Prepare histograms
   //----------------------------------------------------------------------------
   TString titles = filename + ";MET up - MET nominal [GeV];MET do - MET nominal [GeV]";
 
   TH2F* deltaMet_all = new TH2F("deltaMet_all", titles, 100, -25, 25, 100, -25, 25);
   TH2F* deltaMet_bad = new TH2F("deltaMet_bad", titles, 100, -25, 25, 100, -25, 25);
 
+
+  // Loop
+  //----------------------------------------------------------------------------
   Long64_t nentries = chain->GetEntries();
 
-  printf ("\n Loop over %lld entries\n\n", nentries);
+  printf ("\n Loop over %lld events\n", nentries);
 
   for (Long64_t jentry=0; jentry<nentries; jentry++) {
 
     chain   ->GetEntry(jentry);
     chain_up->GetEntry(jentry);
     chain_do->GetEntry(jentry);
+
+
+    // Selection
+    //--------------------------------------------------------------------------
+    if (metPfType1 < 50.) continue;
 
     float deltaMet_up = metPfType1_up - metPfType1;
     float deltaMet_do = metPfType1_do - metPfType1;
@@ -61,6 +74,13 @@ void eventByEventDifference(TString filename = "latino_ttDM0001pseudo00020")
 
     deltaMet_bad->Fill(deltaMet_up, deltaMet_do);
   }
+
+
+  // Print some statistics
+  //----------------------------------------------------------------------------
+  float fraction_bad = 1e2 * deltaMet_bad->GetEntries() / deltaMet_all->GetEntries();
+
+  printf("\n %.2f%% of the events have MET (up-nominal)*(down-nominal) > 0\n\n", fraction_bad);
 
 
   // Draw all
