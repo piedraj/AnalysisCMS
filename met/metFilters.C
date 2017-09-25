@@ -61,7 +61,18 @@ TLegend* DrawLegend(Float_t     x1,
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void metFilters(TString input = "NONE")
 {
-  if (input.EqualTo("NONE")) return;
+  if (input.EqualTo("NONE"))
+    {
+      printf("\n");
+      printf(" root -l -b -q \'metFilters.C+(\"SingleMuon\")\'\n");
+      printf(" root -l -b -q \'metFilters.C+(\"SingleElectron\")\'\n");
+      printf(" root -l -b -q \'metFilters.C+(\"DoubleMuon\")\'\n");
+      printf(" root -l -b -q \'metFilters.C+(\"DoubleEG\")\'\n");
+      printf(" root -l -b -q \'metFilters.C+(\"MuonEG\")\'\n");
+      printf("\n");
+
+      return;
+    }
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
@@ -78,12 +89,12 @@ void metFilters(TString input = "NONE")
 
   if (_ismc)
     {
-      tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_" + input + "*.root");
+      tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_" + input + "*.root");
     }
   else
     {
       for (int i=0; i<nrun; i++)
-	tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016" + srun[i] + "_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_" + input + "_Run2016" + srun[i] + "-03Feb2017*.root");
+	tree->Add("/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016" + srun[i] + "_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__formulasDATA/latino_" + input + "_Run2016" + srun[i] + "-03Feb2017*.root");
     }
 
   printf("\n Reading %lld events from %s\n\n", tree->GetEntries(), input.Data());
@@ -103,23 +114,15 @@ void metFilters(TString input = "NONE")
     }
 
 
-  // Prepare the MET filters
-  //----------------------------------------------------------------------------
-  TCut commonFilters = "std_vector_trigger_special[0]*std_vector_trigger_special[1]*std_vector_trigger_special[2]*std_vector_trigger_special[3]*std_vector_trigger_special[5]";
-  TCut dataFilters   = "std_vector_trigger_special[4]*!std_vector_trigger_special[6]*!std_vector_trigger_special[7]*std_vector_trigger_special[8]*std_vector_trigger_special[9]";
-  TCut mcFiltersOld  = "std_vector_trigger_special[6]*std_vector_trigger_special[7]";  // Some MC were not produced with the latest skimEventProducer_cfi.py
-  TCut mcFiltersNew  = "std_vector_trigger_special[8]*std_vector_trigger_special[9]";
-  TCut latinoCheck   = "std_vector_trigger_special[8] == -2";
-
   TCut applyFilters;
 
   if (_ismc)
     {
-      applyFilters = commonFilters && ((latinoCheck && mcFiltersOld) || (!latinoCheck && mcFiltersNew));
+      applyFilters = "METFilter_MC";
     }
   else
     {
-      applyFilters = commonFilters && dataFilters;
+      applyFilters = "METFilter_DATA";
     }
 
 

@@ -7,8 +7,8 @@
 //------------------------------------------------------------------------------
 AnalysisControl::AnalysisControl(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetWriteMinitree  (true);
-  SetWriteHistograms(false);
+  SetWriteMinitree  (false);
+  SetWriteHistograms(true);
 }
 
 
