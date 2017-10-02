@@ -6,6 +6,15 @@ void SetAxis(TH1*    hist,
 	     Float_t xoffset,
 	     Float_t yoffset);
 
+TLegend* DrawLegend(Float_t       x1,
+		    Float_t       y1,
+		    TObject*      hist,
+		    TString       label,
+		    TString       option  = "lp",
+		    Float_t       tsize   = 0.030,
+		    Float_t       xoffset = 0.200,
+		    Float_t       yoffset = 0.050);
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
@@ -25,6 +34,9 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   //----------------------------------------------------------------------------
   TCanvas* c1 = new TCanvas("c1", "c1");
 
+  ratio->SetMinimum(0.8);
+  ratio->SetMaximum(1.2);
+
   ratio->Draw("ep");
 
   SetAxis(ratio, ratio->GetXaxis()->GetTitle(), "data / MC", 1.7, 1.8);
@@ -34,12 +46,15 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   //----------------------------------------------------------------------------
   TF1* fOld = new TF1("fOld", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 100);
 
-  fOld->SetLineColor(kBlue);
+  fOld->SetLineColor  (kBlue);
+  fOld->SetMarkerColor(kBlue);
 
   fOld->SetParameter(0,   12.5151);
   fOld->SetParameter(1,   5.51582);
   fOld->SetParameter(2,   1.08683);
   fOld->SetParameter(3, 0.0657370);
+
+  fOld->Draw("same");
 
 
   // New function
@@ -52,7 +67,8 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   //----------------------------------------------------------------------------
   TF1* fNew = new TF1("fNew", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 100);
 
-  fNew->SetLineColor(kRed+1);
+  fNew->SetLineColor  (kRed+1);
+  fNew->SetMarkerColor(kRed+1);
 
   fNew->SetParameter(0,  10);
   fNew->SetParameter(1,   1);
@@ -61,7 +77,11 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
 
   ratio->Fit(fNew);
 
-  fOld->Draw("same");
+
+  // Legend
+  //----------------------------------------------------------------------------
+  DrawLegend(0.7, 0.83, (TObject*)fOld, " old fit");
+  DrawLegend(0.7, 0.77, (TObject*)fNew, " new fit");
 
 
   // Save
@@ -109,4 +129,34 @@ void SetAxis(TH1*    hist,
 
   gPad->GetFrame()->DrawClone();
   gPad->RedrawAxis();
+}
+
+
+//------------------------------------------------------------------------------
+// DrawLegend
+//------------------------------------------------------------------------------
+TLegend* DrawLegend(Float_t  x1,
+		    Float_t  y1,
+		    TObject* hist,
+		    TString  label,
+		    TString  option,
+		    Float_t  tsize,
+		    Float_t  xoffset,
+		    Float_t  yoffset)
+{
+  TLegend* legend = new TLegend(x1,
+				y1,
+				x1 + xoffset,
+				y1 + yoffset);
+  
+  legend->SetBorderSize(    0);
+  legend->SetFillColor (    0);
+  legend->SetTextAlign (   12);
+  legend->SetTextFont  (   42);
+  legend->SetTextSize  (tsize);
+
+  legend->AddEntry(hist, label.Data(), option.Data());
+  legend->Draw();
+
+  return legend;
 }
