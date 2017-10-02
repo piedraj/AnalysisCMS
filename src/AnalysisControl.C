@@ -129,7 +129,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
     // DY
     // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/DY/Full2016/cuts.py
     //--------------------------------------------------------------------------
-    pass = (pass_os && pass_pt && mll > 80 && mll < 100);
+    pass = (pass_os && pass_pt && mll > 60);
 
     FillLevelHistograms(Control_01_DY, pass);
 

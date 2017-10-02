@@ -1196,7 +1196,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetRazor();
 
-  _m2l  = mll;
+  _m2l = mll;
+
   _pt2l = ptll;
 }
 
@@ -2596,6 +2597,8 @@ void AnalysisCMS::GetScaleAndResolution()
 void AnalysisCMS::GetSampleWeight()
 {
   float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
+
+  ptllDYW_NLO = 1.0;  // WARNING: Set to 1.0 while computing new value
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
