@@ -2585,7 +2585,7 @@ void AnalysisCMS::GetScaleAndResolution()
 //
 //     2. Fit ptll in the mumu channel with the following function
 //
-//        TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//        TF1* f4 = new TF1("f4", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 100);
 //
 //        f4->SetParameter(0,  10);
 //        f4->SetParameter(1,   1);
@@ -2596,9 +2596,8 @@ void AnalysisCMS::GetScaleAndResolution()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetSampleWeight()
 {
-  float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
-
-  ptllDYW_NLO = 1.0;  // WARNING: Set to 1.0 while computing new value
+//float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // Old
+  float ptllDYW_NLO = 1.04796 * (0.95 - 0.0740024*TMath::Erf((gen_ptll-12.9841)/6.01778));  // New
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;

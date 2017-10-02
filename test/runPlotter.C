@@ -7,7 +7,7 @@ const Bool_t allplots   = false;
 const Bool_t datadriven = true;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
-const Bool_t basictest  = false;
+const Bool_t basictest  = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -190,7 +190,7 @@ void runPlotter(TString level,
 
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
-	  if (basictest && i != lastchannel) continue;
+	  //	  if (basictest && i != lastchannel) continue;
 
 	  TString suffix = "_" + schannel[i];
 	  
@@ -201,7 +201,12 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300); if (basictest) continue;
+	  plotter.Draw(prefix + "pt2l" + suffix, "p_{T}^{#font[12]{ll}}", -1, 0, "GeV", scale, true, 0, 100);
+
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
+
+	  if (basictest) continue;
+
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",              -1, 0, "NULL", scale);
@@ -285,7 +290,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htjets"       + suffix, "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htnojets"     + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
-	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  300);
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);

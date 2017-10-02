@@ -28,7 +28,8 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _minitreebased   (false),
   _publicstyle     (false),
   _savepdf         (false),
-  _savepng         (true)
+  _savepng         (true),
+  _saveratio       (false)
 {
   _datafile  = NULL;
   _datahist  = NULL;
@@ -588,11 +589,23 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep,same");
 
       SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
+
+
+      // Save the ratio histogram
+      //------------------------------------------------------------------------
+      if (_saveratio)
+	{
+	  TFile* ratiofile = new TFile(_outputdir + cname + ".root", "recreate");
+	  
+	  ratio->Write();
+	  
+	  ratiofile->Close();
+	}
     }
-  else if (_drawsignificance)
-    {
-      // Barbara's stuff
-    }
+  //  else if (_drawsignificance)
+  //    {
+  //      // Barbara's stuff
+  //    }
 
 
   //----------------------------------------------------------------------------

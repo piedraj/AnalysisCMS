@@ -189,6 +189,7 @@ class HistogramReader
   Bool_t                _publicstyle;
   Bool_t                _savepdf;
   Bool_t                _savepng;
+  Bool_t                _saveratio;
   Bool_t                _writelabels;
   Bool_t                _writeyields;
   Bool_t                _minitreebased;
