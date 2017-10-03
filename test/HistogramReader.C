@@ -29,7 +29,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _publicstyle     (false),
   _savepdf         (false),
   _savepng         (true),
-  _saveratio       (false)
+  _saveratio       (true)
 {
   _datafile  = NULL;
   _datahist  = NULL;
@@ -593,9 +593,9 @@ void HistogramReader::Draw(TString hname,
 
       // Save the ratio histogram
       //------------------------------------------------------------------------
-      if (_saveratio)
+      if (_saveratio && hname.Contains("pt2l_mm"))
 	{
-	  TFile* ratiofile = new TFile(_outputdir + cname + ".root", "recreate");
+	  TFile* ratiofile = new TFile(_outputdir + "/" + hname + ".root", "recreate");
 	  
 	  ratio->Write();
 	  

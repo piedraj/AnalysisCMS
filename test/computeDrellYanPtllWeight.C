@@ -46,6 +46,7 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   //----------------------------------------------------------------------------
   TF1* fOld = new TF1("fOld", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 100);
 
+  fOld->SetLineStyle  (3);
   fOld->SetLineColor  (kBlue);
   fOld->SetMarkerColor(kBlue);
 
@@ -77,15 +78,28 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
 
   ratio->Fit(fNew);
 
+  
+  // Lorenzo's function
+  //----------------------------------------------------------------------------
+  TF1* fLorenzo = new TF1("fLorenzo", "(0.876979 + 4.11598e-03*x - 2.35520e-05*x*x) * (1.10211 * (0.958512 - 0.131835*TMath::Erf((x-14.1972)/10.1525)))", 0, 100);
+
+  fLorenzo->SetLineColor  (kGreen+1);
+  fLorenzo->SetMarkerColor(kGreen+1);
+
+  fLorenzo->Draw("same");
+
 
   // Legend
   //----------------------------------------------------------------------------
-  DrawLegend(0.7, 0.83, (TObject*)fOld, " old fit");
-  DrawLegend(0.7, 0.77, (TObject*)fNew, " new fit");
+  DrawLegend(0.68, 0.83, (TObject*)fOld,     " old fit");
+  DrawLegend(0.68, 0.77, (TObject*)fNew,     " new fit");
+  DrawLegend(0.68, 0.71, (TObject*)fLorenzo, " Lorenzo's fit");
 
 
   // Save
   //----------------------------------------------------------------------------
+  ratio->Draw("ep,same");
+
   c1->SaveAs(fname + "_ratio_fit.png");
 }
 
