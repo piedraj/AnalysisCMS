@@ -2597,7 +2597,7 @@ void AnalysisCMS::GetScaleAndResolution()
 void AnalysisCMS::GetSampleWeight()
 {
 //float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // Old
-  float ptllDYW_NLO = 1.04796 * (0.95 - 0.0740024*TMath::Erf((gen_ptll-12.9841)/6.01778));  // New
+  float ptllDYW_NLO = 1.04796 * (0.95 - 0.0740024*TMath::Erf((gen_ptll-12.9841)/6.01778));  // Using Full2016_Apr17 latino trees
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
