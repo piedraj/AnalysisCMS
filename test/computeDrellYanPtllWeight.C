@@ -27,7 +27,8 @@ TLegend* DrawLegend(Float_t  x1,
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// root -l computeDrellYanPtllWeight.C
+// root -l       computeDrellYanPtllWeight.C+
+// root -l -b -q computeDrellYanPtllWeight.C+
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
