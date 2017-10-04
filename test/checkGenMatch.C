@@ -37,16 +37,15 @@ void PrintPercent(TString label,
 //
 //    Reading /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root
 //   
-//    number of input events:      200000
-//    number of events genmatched: 728
-//   
-//    mother PID |    lep1 |    lep2
-//   ------------+---------+---------
-//    non-prompt |   0.41% |   0.82%
-//    muon       |   0.14% |   0.27%
-//    tau        |  98.08% |  98.21%
-//    Z          |   1.37% |   0.69%
-//   
+//    number of            input events: 200000
+//    number of promptgenmatched events: 719
+//    
+//     mother PID |    lep1 |    lep2
+//    ------------+---------+---------
+//     muon       |   0.14% |   0.28%
+//     tau        |  99.17% |  99.17%
+//     Z          |   0.70% |   0.56%
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root")
 {
@@ -63,7 +62,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   vector<float> *std_vector_lepton_eta = 0;
   vector<float> *std_vector_lepton_flavour = 0;
-  vector<float> *std_vector_lepton_genmatched = 0;
+  vector<float> *std_vector_lepton_promptgenmatched = 0;
   vector<float> *std_vector_lepton_phi = 0;
   vector<float> *std_vector_lepton_pt = 0;
 
@@ -78,11 +77,11 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   tree->SetBranchAddress("mll", &mll);
 
-  tree->SetBranchAddress("std_vector_lepton_eta",        &std_vector_lepton_eta);
-  tree->SetBranchAddress("std_vector_lepton_flavour",    &std_vector_lepton_flavour);
-  tree->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched);
-  tree->SetBranchAddress("std_vector_lepton_phi",        &std_vector_lepton_phi);
-  tree->SetBranchAddress("std_vector_lepton_pt",         &std_vector_lepton_pt);
+  tree->SetBranchAddress("std_vector_lepton_eta",              &std_vector_lepton_eta);
+  tree->SetBranchAddress("std_vector_lepton_flavour",          &std_vector_lepton_flavour);
+  tree->SetBranchAddress("std_vector_lepton_promptgenmatched", &std_vector_lepton_promptgenmatched);
+  tree->SetBranchAddress("std_vector_lepton_phi",              &std_vector_lepton_phi);
+  tree->SetBranchAddress("std_vector_lepton_pt",               &std_vector_lepton_pt);
 
   tree->SetBranchAddress("std_vector_leptonGen_eta",                           &std_vector_leptonGen_eta);
   tree->SetBranchAddress("std_vector_leptonGen_isDirectPromptTauDecayProduct", &std_vector_leptonGen_isDirectPromptTauDecayProduct);
@@ -147,8 +146,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
     if (std_vector_lepton_pt->at(0) < 25) continue;
     if (std_vector_lepton_pt->at(1) < 10) continue;
 
-    if (std_vector_lepton_genmatched->at(0) < 1) continue;
-    if (std_vector_lepton_genmatched->at(1) < 1) continue;
+    if (std_vector_lepton_promptgenmatched->at(0) < 1) continue;
+    if (std_vector_lepton_promptgenmatched->at(1) < 1) continue;
 
     counter_genmatched++;
 
@@ -270,8 +269,8 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   // Print the results
   //----------------------------------------------------------------------------
   printf("\n");
-  printf(" number of input events:      %lld\n", nentries);
-  printf(" number of events genmatched: %d\n",   counter_genmatched);
+  printf(" number of            input events: %lld\n", nentries);
+  printf(" number of promptgenmatched events: %d\n", counter_genmatched);
   printf("\n");
   printf(" mother PID |    lep1 |    lep2\n");
   printf("------------+---------+---------\n");
