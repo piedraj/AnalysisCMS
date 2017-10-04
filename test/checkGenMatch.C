@@ -47,7 +47,8 @@ void PrintPercent(TString label,
 //     Z          |   0.70% |   0.56%
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root")
+//void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root")
+void checkGenMatch(TString filename = "/eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_DY/MCl2stop__SFWeights__hadd/latino_DYJetsToLL_M-50_HT-70to100__part0.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
@@ -62,7 +63,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   vector<float> *std_vector_lepton_eta = 0;
   vector<float> *std_vector_lepton_flavour = 0;
-  vector<float> *std_vector_lepton_promptgenmatched = 0;
+  vector<float> *std_vector_lepton_genmatched = 0;
   vector<float> *std_vector_lepton_phi = 0;
   vector<float> *std_vector_lepton_pt = 0;
 
@@ -79,7 +80,7 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   tree->SetBranchAddress("std_vector_lepton_eta",              &std_vector_lepton_eta);
   tree->SetBranchAddress("std_vector_lepton_flavour",          &std_vector_lepton_flavour);
-  tree->SetBranchAddress("std_vector_lepton_promptgenmatched", &std_vector_lepton_promptgenmatched);
+  tree->SetBranchAddress("std_vector_lepton_genmatched",       &std_vector_lepton_genmatched);
   tree->SetBranchAddress("std_vector_lepton_phi",              &std_vector_lepton_phi);
   tree->SetBranchAddress("std_vector_lepton_pt",               &std_vector_lepton_pt);
 
@@ -139,15 +140,22 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
     tree->GetEntry(jentry);
 
-    //    if (mll > 75 && mll < 105) continue;  // Require to be outside of the Z-peak
+    if (mll < 20) continue;
 
-    if (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) != -11*13) continue;  // Require different flavour
+    if (mll > 75 && mll < 105) continue;
+
+    int channel = std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1);
+
+    if (channel != -11*11 && channel != -13*13) continue;
 
     if (std_vector_lepton_pt->at(0) < 25) continue;
-    if (std_vector_lepton_pt->at(1) < 10) continue;
+    if (std_vector_lepton_pt->at(1) < 20) continue;
 
-    if (std_vector_lepton_promptgenmatched->at(0) < 1) continue;
-    if (std_vector_lepton_promptgenmatched->at(1) < 1) continue;
+    if (std_vector_lepton_genmatched->at(0) < 1) continue;
+    if (std_vector_lepton_genmatched->at(1) < 1) continue;
+
+    if (std_vector_leptonGen_isPrompt->at(0) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0) != 1) continue;
+    if (std_vector_leptonGen_isPrompt->at(1) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1) != 1) continue;
 
     counter_genmatched++;
 
