@@ -26,12 +26,29 @@ void PrintPercent(TString label,
 //
 //------------------------------------------------------------------------------
 //
-// How to run this macro,
+// How to run it,
 //
 //    root -l -b -q checkGenMatch.C+
 //
+//------------------------------------------------------------------------------
+//
+// The results below correspond to the em channel,
+// with pt1 > 25 GeV and pt2 > 10 GeV
+//
+//    Reading /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root
+//   
+//    number of input events:      200000
+//    number of events genmatched: 728
+//   
+//    mother PID |    lep1 |    lep2
+//   ------------+---------+---------
+//    non-prompt |   0.41% |   0.82%
+//    muon       |   0.14% |   0.27%
+//    tau        |  98.08% |  98.21%
+//    Z          |   1.37% |   0.69%
+//   
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part7.root")
+void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
@@ -129,9 +146,6 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
     if (std_vector_lepton_pt->at(0) < 25) continue;
     if (std_vector_lepton_pt->at(1) < 10) continue;
-
-    if (abs(std_vector_lepton_flavour->at(0)) != 11 && abs(std_vector_lepton_flavour->at(0)) != 13) continue;
-    if (abs(std_vector_lepton_flavour->at(1)) != 11 && abs(std_vector_lepton_flavour->at(1)) != 13) continue;
 
     if (std_vector_lepton_genmatched->at(0) < 1) continue;
     if (std_vector_lepton_genmatched->at(1) < 1) continue;
@@ -256,7 +270,9 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   // Print the results
   //----------------------------------------------------------------------------
   printf("\n");
-  printf(" number of events genmatched: %d for %s\n\n", counter_genmatched, filename.Data());
+  printf(" number of input events:      %lld\n", nentries);
+  printf(" number of events genmatched: %d\n",   counter_genmatched);
+  printf("\n");
   printf(" mother PID |    lep1 |    lep2\n");
   printf("------------+---------+---------\n");
   PrintPercent("non-prompt", counter1_nonprompt,          counter2_nonprompt,          counter_genmatched);
