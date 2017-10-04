@@ -1,3 +1,12 @@
+#include "TCanvas.h"
+#include "TF1.h"
+#include "TFile.h"
+#include "TFrame.h"
+#include "TH1.h"
+#include "TLegend.h"
+#include "TString.h"
+
+
 // Member functions
 //------------------------------------------------------------------------------
 void     SetAxis   (TH1*     hist,
