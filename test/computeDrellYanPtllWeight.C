@@ -1,24 +1,24 @@
 // Member functions
 //------------------------------------------------------------------------------
-void SetAxis(TH1*    hist,
-	     TString xtitle,
-	     TString ytitle,
-	     Float_t xoffset,
-	     Float_t yoffset);
+void     SetAxis   (TH1*     hist,
+		    TString  xtitle,
+		    TString  ytitle,
+		    Float_t  xoffset,
+		    Float_t  yoffset);
 
-TLegend* DrawLegend(Float_t       x1,
-		    Float_t       y1,
-		    TObject*      hist,
-		    TString       label,
-		    TString       option  = "lp",
-		    Float_t       tsize   = 0.030,
-		    Float_t       xoffset = 0.200,
-		    Float_t       yoffset = 0.050);
+TLegend* DrawLegend(Float_t  x1,
+		    Float_t  y1,
+		    TObject* hist,
+		    TString  label,
+		    TString  option  = "lp",
+		    Float_t  tsize   = 0.030,
+		    Float_t  xoffset = 0.200,
+		    Float_t  yoffset = 0.050);
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// computeDrellYanPtllWeight
+// root -l computeDrellYanPtllWeight.C
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
