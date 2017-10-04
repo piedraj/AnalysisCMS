@@ -2638,6 +2638,9 @@ void AnalysisCMS::GetSampleWeight()
 
 //------------------------------------------------------------------------------
 // GetMotherPID
+//
+// Should be equivalent to
+// https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
 //------------------------------------------------------------------------------
 int AnalysisCMS::GetMotherPID(int index)
 {
