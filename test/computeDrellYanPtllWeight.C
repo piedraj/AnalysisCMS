@@ -54,31 +54,63 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   SetAxis(ratio, ratio->GetXaxis()->GetTitle(), ytitle, 1.7, 1.8);
 
 
+  // Lorenzo's function
+  //----------------------------------------------------------------------------
+  TF1* fLo = new TF1("fLo", "(0.876979 + 4.11598e-03*x - 2.35520e-05*x*x) * (1.10211 * (0.958512 - 0.131835*TMath::Erf((x-14.1972)/10.1525)))", 0, 50);
+
+  fLo->SetLineColor  (kGreen+1);
+  fLo->SetMarkerColor(kGreen+1);
+
+  fLo->Draw("same");
+
+  //  TF1* fHi = new TF1("fHi", "0.903433", 140, 200);
+  //
+  //  fHi->SetLineColor  (kGreen+1);
+  //  fHi->SetMarkerColor(kGreen+1);
+  //
+  //  fHi->Draw("same");
+
+
   // Old function
   //----------------------------------------------------------------------------
-  TF1* fOld = new TF1("fOld", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 200);
+  TF1* fOld = new TF1("fOld", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 50);
 
-  fOld->SetLineStyle  (3);
   fOld->SetLineColor  (kBlue);
   fOld->SetMarkerColor(kBlue);
 
-  fOld->SetParameter(0,   12.5151);
-  fOld->SetParameter(1,   5.51582);
-  fOld->SetParameter(2,   1.08683);
-  fOld->SetParameter(3, 0.0657370);
+  // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ggH/nuisances_iteos.py#L969-L977
+  fOld->SetParameter(0,    14.0);
+  fOld->SetParameter(1,     8.8);
+  fOld->SetParameter(2, 1.08683);
+  fOld->SetParameter(3,     0.1);
 
   fOld->Draw("same");
 
 
+  // Error band
+  //------------------------------------------------------------------------------
+  TF1* fOld_down = (TF1*)fOld->Clone("fOld_down");
+  TF1* fOld_up   = (TF1*)fOld->Clone("fOld_up");
+
+  fOld_down->SetParameter(0, 13.6);
+  fOld_down->SetParameter(1,  8.6);
+
+  fOld_up->SetParameter(0, 14.4);
+  fOld_up->SetParameter(1,  9.0);
+
+  fOld_down->Draw("same");
+  fOld_up  ->Draw("same");
+
+
   // New function
   //
-  //   1  p0           1.29958e+01   4.23053e-02   1.06849e-03   2.04585e-04
-  //   2  p1           6.07104e+00   7.76956e-02   2.06469e-03   6.87068e-04
-  //   3  p2           1.04798e+00   3.23177e-04   7.65406e-06   7.18357e-03
-  //   4  p3           7.40372e-02   3.09339e-04   8.05905e-06  -2.08644e-02
+  //   1  p0           1.35313e+01   4.66851e-02   5.69026e-04  -3.19912e-03
+  //   2  p1           7.14458e+00   9.07914e-02   1.12944e-03   1.18232e-03
+  //   3  p2           1.04249e+00   3.67360e-04   4.30444e-06   2.31867e-03
+  //   4  p3           8.19525e-02   3.84461e-04   4.88893e-06   7.81338e-02
   //
   //----------------------------------------------------------------------------
-  TF1* fNew = new TF1("fNew", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 200);
+  TF1* fNew = new TF1("fNew", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 50);
 
   fNew->SetLineColor  (kRed+1);
   fNew->SetMarkerColor(kRed+1);
@@ -88,31 +120,29 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   fNew->SetParameter(2,   1);
   fNew->SetParameter(3, 0.1);
 
-  ratio->Fit(fNew);
+  ratio->Fit(fNew, "r");
 
 
-  // Lorenzo's function
-  //----------------------------------------------------------------------------
-  TF1* fLo = new TF1("fLo", "(0.876979 + 4.11598e-03*x - 2.35520e-05*x*x) * (1.10211 * (0.958512 - 0.131835*TMath::Erf((x-14.1972)/10.1525)))", 0, 140);
+  // Error band
+  //------------------------------------------------------------------------------
+  TF1* fNew_down = (TF1*)fNew->Clone("fNew_down");
+  TF1* fNew_up   = (TF1*)fNew->Clone("fNew_up");
 
-  fLo->SetLineColor  (kGreen+1);
-  fLo->SetMarkerColor(kGreen+1);
+  fNew_down->SetParameter(0, 0.97 * fNew->GetParameter(0));
+  fNew_down->SetParameter(1, 0.97 * fNew->GetParameter(1));
 
-  fLo->Draw("same");
+  fNew_up->SetParameter(0, 1.03 * fNew->GetParameter(0));
+  fNew_up->SetParameter(1, 1.03 * fNew->GetParameter(1));
 
-  TF1* fHi = new TF1("fHi", "0.891188", 140, 200);
-
-  fHi->SetLineColor  (kGreen+1);
-  fHi->SetMarkerColor(kGreen+1);
-
-  fHi->Draw("same");
+  fNew_down->Draw("same");
+  fNew_up  ->Draw("same");
 
 
   // Legend
   //----------------------------------------------------------------------------
-  DrawLegend(0.23, 0.83, (TObject*)fOld, " old fit");
-  DrawLegend(0.23, 0.77, (TObject*)fNew, " new fit");
-  DrawLegend(0.23, 0.71, (TObject*)fLo,  " Lorenzo's fit");
+  DrawLegend(0.69, 0.83, (TObject*)fOld, " old fit");
+  DrawLegend(0.69, 0.77, (TObject*)fNew, " new fit");
+  DrawLegend(0.69, 0.71, (TObject*)fLo,  " Lorenzo's fit");
 
 
   // Save
