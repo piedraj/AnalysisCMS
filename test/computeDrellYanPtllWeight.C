@@ -7,6 +7,9 @@
 #include "TString.h"
 
 
+const bool errorband = false;
+
+
 // Member functions
 //------------------------------------------------------------------------------
 void     SetAxis   (TH1*     hist,
@@ -40,7 +43,7 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   TH1D* ratio = (TH1D*)file->Get("ratio");
 
 
-  // Draw
+  // Draw the ratio
   //----------------------------------------------------------------------------
   TCanvas* c1 = new TCanvas("c1", "c1");
 
@@ -54,88 +57,143 @@ void computeDrellYanPtllWeight(TString fname = "h_pt2l_mm")
   SetAxis(ratio, ratio->GetXaxis()->GetTitle(), ytitle, 1.7, 1.8);
 
 
-  // Lorenzo's function
+  // Draw the old function
   //----------------------------------------------------------------------------
-  TF1* fLo = new TF1("fLo", "(0.876979 + 4.11598e-03*x - 2.35520e-05*x*x) * (1.10211 * (0.958512 - 0.131835*TMath::Erf((x-14.1972)/10.1525)))", 0, 50);
+  TF1* fOld = new TF1("fOld", "[3]*(0.95 - [0]*TMath::Erf((x-[1])/[2]))", 0, 90);
 
-  fLo->SetLineColor  (kGreen+1);
-  fLo->SetMarkerColor(kGreen+1);
-
-  fLo->Draw("same");
-
-  //  TF1* fHi = new TF1("fHi", "0.903433", 140, 200);
-  //
-  //  fHi->SetLineColor  (kGreen+1);
-  //  fHi->SetMarkerColor(kGreen+1);
-  //
-  //  fHi->Draw("same");
-
-
-  // Old function
-  //----------------------------------------------------------------------------
-  TF1* fOld = new TF1("fOld", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 50);
-
-  fOld->SetLineColor  (kBlue);
-  fOld->SetMarkerColor(kBlue);
+  fOld->SetLineColor  (kGreen+2);
+  fOld->SetMarkerColor(kGreen+2);
 
   // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ggH/nuisances_iteos.py#L969-L977
-  fOld->SetParameter(0,    14.0);
-  fOld->SetParameter(1,     8.8);
-  fOld->SetParameter(2, 1.08683);
-  fOld->SetParameter(3,     0.1);
+  fOld->SetParameter(0,     0.1);
+  fOld->SetParameter(1,    14.0);
+  fOld->SetParameter(2,     8.8);
+  fOld->SetParameter(3, 1.08683);
 
   fOld->Draw("same");
 
 
-  // Error band
+  // Draw the old function error band
   //------------------------------------------------------------------------------
-  TF1* fOld_down = (TF1*)fOld->Clone("fOld_down");
-  TF1* fOld_up   = (TF1*)fOld->Clone("fOld_up");
+  if (errorband)
+    {
+      TF1* fOld_down = (TF1*)fOld->Clone("fOld_down");
+      TF1* fOld_up   = (TF1*)fOld->Clone("fOld_up");
 
-  fOld_down->SetParameter(0, 13.6);
-  fOld_down->SetParameter(1,  8.6);
+      fOld_down->SetParameter(0, 13.6);
+      fOld_down->SetParameter(1,  8.6);
 
-  fOld_up->SetParameter(0, 14.4);
-  fOld_up->SetParameter(1,  9.0);
+      fOld_up->SetParameter(0, 14.4);
+      fOld_up->SetParameter(1,  9.0);
 
-  fOld_down->Draw("same");
-  fOld_up  ->Draw("same");
+      fOld_down->Draw("same");
+      fOld_up  ->Draw("same");
+    }
 
 
-  // New function
+  // Update the fit parameters of the old function
   //
-  //   1  p0           1.35313e+01   4.66851e-02   5.69026e-04  -3.19912e-03
-  //   2  p1           7.14458e+00   9.07914e-02   1.12944e-03   1.18232e-03
-  //   3  p2           1.04249e+00   3.67360e-04   4.30444e-06   2.31867e-03
-  //   4  p3           8.19525e-02   3.84461e-04   4.88893e-06   7.81338e-02
+  //   1  p0           6.85257e-02   2.99341e-01   1.42129e-05   4.16760e-04
+  //   2  p1           1.24518e+01   4.76906e+01   3.55312e-03   6.41625e-07
+  //   3  p2           5.40627e+00   7.83907e+01   6.49546e-03  -1.96376e-06
+  //   4  p3           1.05396e+00   3.48880e-01   1.58779e-05  -3.97115e-05
   //
   //----------------------------------------------------------------------------
-  TF1* fNew = new TF1("fNew", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 50);
+  TF1* fNew = new TF1("fNew", "[3]*(0.95 - [0]*TMath::Erf((x-[1])/[2]))", 0, 90);
 
   fNew->SetLineColor  (kRed+1);
   fNew->SetMarkerColor(kRed+1);
 
-  fNew->SetParameter(0,  10);
-  fNew->SetParameter(1,   1);
+  fNew->SetParameter(0, 0.1);
+  fNew->SetParameter(1,  10);
   fNew->SetParameter(2,   1);
-  fNew->SetParameter(3, 0.1);
+  fNew->SetParameter(3,   1);
 
-  ratio->Fit(fNew, "r");
+  ratio->Fit(fNew, "mlr0");
+
+  fNew->Draw("same");
 
 
-  // Error band
+  // Draw the updated error band
   //------------------------------------------------------------------------------
-  TF1* fNew_down = (TF1*)fNew->Clone("fNew_down");
-  TF1* fNew_up   = (TF1*)fNew->Clone("fNew_up");
+  if (errorband)
+    {
+      TF1* fNew_down = (TF1*)fNew->Clone("fNew_down");
+      TF1* fNew_up   = (TF1*)fNew->Clone("fNew_up");
 
-  fNew_down->SetParameter(0, 0.97 * fNew->GetParameter(0));
-  fNew_down->SetParameter(1, 0.97 * fNew->GetParameter(1));
+      fNew_down->SetParameter(0, 0.97 * fNew->GetParameter(0));
+      fNew_down->SetParameter(1, 0.97 * fNew->GetParameter(1));
 
-  fNew_up->SetParameter(0, 1.03 * fNew->GetParameter(0));
-  fNew_up->SetParameter(1, 1.03 * fNew->GetParameter(1));
+      fNew_up->SetParameter(0, 1.03 * fNew->GetParameter(0));
+      fNew_up->SetParameter(1, 1.03 * fNew->GetParameter(1));
 
-  fNew_down->Draw("same");
-  fNew_up  ->Draw("same");
+      fNew_down->Draw("same");
+      fNew_up  ->Draw("same");
+    }
+
+
+  // Fit Lorenzo's function
+  //
+  //   1  p0           1.17864e-01   7.44869e-01   1.03478e-05   1.79528e-03
+  //   2  p1           1.34231e+01   6.10789e+01   2.78074e-03   6.38697e-06
+  //   3  p2           9.76801e+00   1.03947e+02   5.51661e-03  -2.28998e-06
+  //   4  p3           1.01367e+00   6.56154e-01   1.29644e-05  -1.36428e-04
+  //   5  p4           2.50141e-03   2.62347e-02   1.53669e-07  -1.11290e-01
+  //   6  p5           1.10637e-05   1.42769e-04   1.32442e-09   1.17953e+01
+  //
+  //----------------------------------------------------------------------------
+  TF1* fLo = new TF1("fLo", "([3] + [4]*x - [5]*x*x) * (0.95 - [0]*TMath::Erf((x-[1])/[2]))", 0, 150);
+
+  fLo->SetLineColor  (kBlue);
+  fLo->SetMarkerColor(kBlue);
+
+  fLo->SetParameter(0,    0.131835);
+  fLo->SetParameter(1,     14.1972);
+  fLo->SetParameter(2,     10.1525);
+  fLo->SetParameter(3,    0.876979);
+  fLo->SetParameter(4, 4.11598e-03);
+  fLo->SetParameter(5, 2.35520e-05);
+
+  ratio->Fit(fLo, "mlr0");
+
+
+  // Get the point where the first derivative is closest to zero
+  //
+  //   fLo = 0.9608 and d(fLo)/d(ptll) = -0.000110 for ptll = 119 GeV
+  //
+  //----------------------------------------------------------------------------
+  float smallest_derivative_value = 999;
+  float smallest_derivative_x     = 999;
+
+  for (int x=90; x<120; x++)
+    {
+      if (fLo->Derivative(x) < smallest_derivative_value)
+	{
+	  smallest_derivative_value = fLo->Derivative(x);
+	  smallest_derivative_x     = x;
+	}
+    }
+
+  printf("\n fLo = %.4f and d(fLo)/d(ptll) = %f for ptll = %.0f GeV\n\n",
+	 fLo->Eval(smallest_derivative_x),
+	 fLo->Derivative(smallest_derivative_x),
+	 smallest_derivative_x);
+
+
+  // Draw Lorenzo's function in two ranges
+  //----------------------------------------------------------------------------
+  fLo->SetRange(0, smallest_derivative_x);
+
+  fLo->Draw("same");
+
+  TF1* fHi = new TF1("fHi", "[0]", smallest_derivative_x, 150);
+
+  fHi->SetLineColor  (kBlue);
+  fHi->SetMarkerColor(kBlue);
+
+  fHi->SetParameter(0, fLo->Eval(smallest_derivative_x));
+
+  fHi->Draw("same");
 
 
   // Legend

@@ -201,7 +201,7 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",              -1, 0, "GeV",  scale, true, 0, 100);
+	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",               2, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",                5, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",               5, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",                -1, 1, "NULL", scale);
