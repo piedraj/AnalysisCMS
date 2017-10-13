@@ -392,7 +392,9 @@ void HistogramReader::Draw(TString hname,
 
   // Set xtitle and ytitle
   //----------------------------------------------------------------------------
-  TString ytitle = Form("events / %s.%df", "%", precision);
+  TString ytitle = "events / bin";
+
+  if (precision > -1) ytitle = Form("events / %s.%df", "%", precision);
 
   ytitle = Form(ytitle.Data(), hfirst->GetBinWidth(0));
 

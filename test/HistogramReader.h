@@ -56,7 +56,7 @@ class HistogramReader
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
 			       Int_t          ngroup       = -1,
-			       Int_t          precision    =  0,
+			       Int_t          precision    = -1,
 			       TString        units        = "NULL",
 			       Bool_t         setlogy      = false,
 			       Bool_t         moveoverflow = true,
