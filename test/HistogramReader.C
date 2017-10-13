@@ -532,7 +532,21 @@ void HistogramReader::Draw(TString hname,
   else
     DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
-  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.8);
+  SetAxis(hfirst, xtitle, ytitle);
+
+
+  //----------------------------------------------------------------------------
+  // For Cedric, work in progress
+  //----------------------------------------------------------------------------
+  Bool_t _changebinlabel = false;
+
+  if (_changebinlabel)
+    {
+      for (Int_t ibin=1; ibin<=hfirst->GetNbinsX(); ibin++) {
+	
+	hfirst->GetXaxis()->SetBinLabel(ibin, Form("%d", ibin));
+      }
+    }
 
 
   //----------------------------------------------------------------------------
@@ -548,10 +562,12 @@ void HistogramReader::Draw(TString hname,
       //      g->SetMarkerStyle(kFullCircle);
       //      g->Draw("ap");
 
-      TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
+      TH1D* ratio       = (TH1D*)_datahist->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
+
+	if (_changebinlabel) ratio->GetXaxis()->SetBinLabel(ibin, Form("%d", ibin));
 
 	Float_t dtValue = _datahist->GetBinContent(ibin);
 	Float_t dtError = _datahist->GetBinError(ibin);
@@ -588,7 +604,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
+      SetAxis(ratio, xtitle, "data / MC");
 
 
       // Save the ratio histogram
@@ -741,8 +757,8 @@ void HistogramReader::CrossSection(TString level,
 }
 
 
-//-----------------------------------------------------------------------------
-// DrawLatex 
+//------------------------------------------------------------------------------
+// DrawLatex
 //------------------------------------------------------------------------------
 void HistogramReader::DrawLatex(Font_t      tfont,
 				Float_t     x,
@@ -944,30 +960,26 @@ void HistogramReader::SetAxis(TH1*    hist,
   gPad->cd();
   gPad->Update();
 
-  // See https://root.cern.ch/doc/master/classTAttText.html#T4
-  Float_t padw = gPad->XtoPixel(gPad->GetX2());
-  Float_t padh = gPad->YtoPixel(gPad->GetY1());
-
-  Float_t size = (padw < padh) ? padw : padh;
-
-  size = 20. / size;  // Like this label size is always 20 pixels
-  
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
 
+  xaxis->SetLabelFont(43);  // Text font code = 10*fontnumber + precision
+  yaxis->SetLabelFont(43);  // Text font code = 10*fontnumber + precision
+  xaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
+  yaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
+
+  xaxis->SetLabelSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetLabelSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetTitleSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetTitleSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
-
-  xaxis->SetLabelSize(size);
-  yaxis->SetLabelSize(size);
 
   if (_minitreebased) {
     xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
     yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
   }
-
-  xaxis->SetTitleSize(size);
-  yaxis->SetTitleSize(size);
 
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
@@ -1592,7 +1604,7 @@ void HistogramReader::Roc(TString hname,
   DrawLegend(0.22, 0.84, dummy_min, Form("%s > x", xtitle.Data()), "lp", false);
   DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
 
-  SetAxis(sigGraph_min->GetHistogram(), myxtitle, fom, 1.5, 2.1);
+  SetAxis(sigGraph_min->GetHistogram(), myxtitle, fom);
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");
