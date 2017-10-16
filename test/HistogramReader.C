@@ -393,9 +393,9 @@ void HistogramReader::Draw(TString hname,
 
   // Set xtitle and ytitle
   //----------------------------------------------------------------------------
-  TString ytitle = "events / bin";
+  TString ytitle = "Events / bin";
 
-  if (precision > -1) ytitle = Form("events / %s.%df", "%", precision);
+  if (precision > -1) ytitle = Form("Events / %s.%df", "%", precision);
 
   ytitle = Form(ytitle.Data(), hfirst->GetBinWidth(0));
 
@@ -605,7 +605,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC");
+      SetAxis(ratio, xtitle, "Data / MC");
 
 
       // Save the ratio histogram
