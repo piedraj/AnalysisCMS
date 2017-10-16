@@ -155,7 +155,7 @@ const Color_t color_HZ        = kOrange+1;
 
 // Process colors -- NW style
 //------------------------------------------------------------------------------
-const Color_t color_Signal    = kRed;
+const Color_t color_Signal    = kRed;        // iSIG
 const Color_t color_Fakes     = kMagenta+2;  // iFAKES
 const Color_t color_Data      = kBlack;      // iDATA
 const Color_t color_WZTo3LNu  = kRed-6;      // iVV
