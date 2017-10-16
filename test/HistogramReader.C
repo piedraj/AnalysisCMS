@@ -632,7 +632,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "Data / MC");
+      SetAxis(ratio, xtitle, "Data / Bkg");
 
 
       // Save the ratio histogram
@@ -985,6 +985,8 @@ void HistogramReader::SetAxis(TH1*    hist,
 			      Float_t xoffset,
 			      Float_t yoffset)
 {
+  TString hname = hist->GetName();
+
   gPad->cd();
   gPad->Update();
 
@@ -1012,7 +1014,7 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
 
-  yaxis->CenterTitle();
+  if (hname.Contains("ratio")) yaxis->CenterTitle();
 
   gPad->GetFrame()->DrawClone();
   gPad->RedrawAxis();
