@@ -220,11 +220,12 @@ void HistogramReader::Draw(TString hname,
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
 
       pad1->SetTopMargin   (0.08);
-      pad1->SetBottomMargin(0.02);
-      pad1->Draw();
+      pad1->SetBottomMargin(0.01);  // 0.02
 
-      pad2->SetTopMargin   (0.08);
-      pad2->SetBottomMargin(0.35);
+      pad2->SetTopMargin   (0.05);  // 0.08
+      pad2->SetBottomMargin(0.45);  // 0.35
+
+      pad1->Draw();
       pad2->Draw();
     }
   else
