@@ -124,6 +124,8 @@ class HistogramReader
 			       Float_t&       xmin,
 			       Float_t&       xmax);
 
+  void     SetChangeBinLabel  (Bool_t         changebinlabel) {_changebinlabel = changebinlabel;}
+
   void     SetDataNorm        (Bool_t         datanorm) {_datanorm = datanorm;}
 
   void     SetDrawRatio       (Bool_t         drawratio) {_drawratio = drawratio;}
@@ -182,6 +184,7 @@ class HistogramReader
 
  private :
 
+  Bool_t                _changebinlabel;
   Bool_t                _datanorm;
   Bool_t                _drawratio;
   Bool_t                _drawsignificance;

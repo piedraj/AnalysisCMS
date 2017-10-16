@@ -21,6 +21,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _stackoption     ("nostack,hist"),
   _title           ("inclusive"),
   _luminosity_fb   (-1),
+  _changebinlabel  (false),
   _datanorm        (false),
   _drawratio       (false),
   _drawsignificance(false),
@@ -538,10 +539,8 @@ void HistogramReader::Draw(TString hname,
 
 
   //----------------------------------------------------------------------------
-  // For Cedric, work in progress
+  // Set the bin label to the bin number
   //----------------------------------------------------------------------------
-  Bool_t _changebinlabel = false;
-
   if (_changebinlabel)
     {
       for (Int_t ibin=1; ibin<=hfirst->GetNbinsX(); ibin++) {
