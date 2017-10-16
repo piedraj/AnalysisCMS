@@ -109,10 +109,9 @@ void runPlotter(TString level,
 
   // Add signals
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("TTDM"))
+  if (analysis.EqualTo("Control"))
     {
-      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
-      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
+      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 M_{#chi}=1", color_Signal, roc_background);
     }
 
 
