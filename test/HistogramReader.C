@@ -532,22 +532,31 @@ void HistogramReader::Draw(TString hname,
     }
 
 
-  // Titles
+  // CMS title
   //----------------------------------------------------------------------------
-  Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
-
-  if (_publicstyle) xprelim = 0.268;
-
-  if (_title.EqualTo("inclusive"))
+  if (_publicstyle)
     {
-      DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
-      DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+      DrawLatex(61, 0.22, 0.843, 0.050, 11, "CMS");
+      DrawLatex(52, 0.22, 0.800, 0.030, 11, "Preliminary");
     }
   else
     {
-      DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+      Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
+
+      if (_title.EqualTo("inclusive"))
+	{
+	  DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+	  DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+	}
+      else
+	{
+	  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+	}
     }
 
+
+  // Luminosity title
+  //----------------------------------------------------------------------------
   if (_luminosity_fb > 0)
     DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", _luminosity_fb));
   else
