@@ -128,7 +128,7 @@ const bool systematicfromweight[nsystematic] = {
 };
 
 
-// Process colors  -- IFCA style
+// Process colors -- IFCA settings
 //------------------------------------------------------------------------------
 /*
 const Color_t color_Signal    = kRed;
@@ -153,7 +153,7 @@ const Color_t color_HZ        = kOrange+1;
 */
 
 
-// Process colors -- NW style
+// Process colors -- NW settings
 //------------------------------------------------------------------------------
 const Color_t color_Signal    = kRed;        // iSIG
 const Color_t color_Fakes     = kMagenta+2;  // iFAKES

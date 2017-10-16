@@ -211,7 +211,7 @@ void HistogramReader::Draw(TString hname,
 
   if ((_drawratio && _datafile) || _drawsignificance)
     {
-      canvas = new TCanvas(cname, cname, 550, 720);
+      canvas = new TCanvas(cname, cname, 550, 720);  // IFCA settings
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
