@@ -211,7 +211,10 @@ void HistogramReader::Draw(TString hname,
 
   if ((_drawratio && _datafile) || _drawsignificance)
     {
-      canvas = new TCanvas(cname, cname, 550, 720);  // IFCA settings
+      Int_t ww = (_publicstyle) ? 800 : 550;
+      Int_t wh = (_publicstyle) ? 800 : 720;
+
+      canvas = new TCanvas(cname, cname, ww, wh);
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
@@ -369,7 +372,7 @@ void HistogramReader::Draw(TString hname,
 
   }
 
-  _allmclabel = "stat";
+  _allmclabel = "Bkg. unc.";
 
   _allmchist->SetFillColor  (kGray+1);
   _allmchist->SetFillStyle  (   3345);
@@ -471,6 +474,8 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
+  if (_publicstyle) x0 = 0.7;
+
 
   // Data legend
   //----------------------------------------------------------------------------
@@ -483,7 +488,7 @@ void HistogramReader::Draw(TString hname,
 
   // All MC legend
   //----------------------------------------------------------------------------
-  if (!_stackoption.Contains("nostack"))
+  if (!_stackoption.Contains("nostack") && !_publicstyle)
     {
       DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
       ny++;
@@ -494,6 +499,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Int_t nrow = (_mchist.size() > 10) ? 5 : 4;
 
+  if (_publicstyle) nrow = 10;
+
   for (int i=0; i<_mchist.size(); i++)
     {
       if (ny == nrow)
@@ -503,6 +510,15 @@ void HistogramReader::Draw(TString hname,
 	}
 
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
+      ny++;
+    }
+
+
+  // All MC legend
+  //----------------------------------------------------------------------------
+  if (!_stackoption.Contains("nostack") && _publicstyle)
+    {
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
       ny++;
     }
 
@@ -519,6 +535,8 @@ void HistogramReader::Draw(TString hname,
   // Titles
   //----------------------------------------------------------------------------
   Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
+
+  if (_publicstyle) xprelim = 0.268;
 
   if (_title.EqualTo("inclusive"))
     {

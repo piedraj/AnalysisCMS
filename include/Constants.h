@@ -128,7 +128,7 @@ const bool systematicfromweight[nsystematic] = {
 };
 
 
-// Process colors -- IFCA settings
+// Process colors
 //------------------------------------------------------------------------------
 /*
 const Color_t color_Signal    = kRed;
@@ -153,7 +153,7 @@ const Color_t color_HZ        = kOrange+1;
 */
 
 
-// Process colors -- NW settings
+// EXO-17-014 process colors
 //------------------------------------------------------------------------------
 const Color_t color_Signal    = kRed;        // iSIG
 const Color_t color_Fakes     = kMagenta+2;  // iFAKES

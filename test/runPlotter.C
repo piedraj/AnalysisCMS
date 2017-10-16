@@ -79,32 +79,23 @@ void runPlotter(TString level,
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  plotter.AddData("01_Data", "Data", color_Data);
 
 
   // Add processes
   //----------------------------------------------------------------------------
-  plotter.AddProcess("14_HZ",        "HZ",                   color_HZ);
-  plotter.AddProcess("10_HWW",       "HWW",                  color_HWW);
-  plotter.AddProcess("06_WW",        "WW",                   color_WW, roc_signal);
-  plotter.AddProcess("02_WZTo3LNu",  "WZ",                   color_WZTo3LNu);
-  plotter.AddProcess("03_VZ",        "VZ",                   color_VZ);
-  plotter.AddProcess("11_Wg",        "W#gamma",              color_Wg);
-  plotter.AddProcess("15_WgStar",    "W#gamma*",             color_WgStar);
-  plotter.AddProcess("07_ZJets",     "Z+jets",               color_ZJets, roc_background, 1.0);
-//plotter.AddProcess("16_ZJetsToTT", "Z#rightarrow#tau#tau", color_ZJetsToTT);
-  plotter.AddProcess("09_TTV",       "ttV",                  color_TTV);
-  plotter.AddProcess("04_TTTo2L2Nu", "tt",                   color_TTTo2L2Nu, roc_background, 1.0);
-  plotter.AddProcess("05_ST",        "tW",                   color_ST);
-
-  if (datadriven)
-    {
-      plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
-    }
-  else
-    {
-      plotter.AddProcess("08_WJets", "W+jets", color_WJets);
-    }
+  plotter.AddProcess("07_ZJets",     "DY",         color_ZJets, roc_background, 1.0);
+  plotter.AddProcess("03_VZ",        "Diboson",    color_VZ);
+  plotter.AddProcess("00_Fakes",     "Non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
+  plotter.AddProcess("09_TTV",       "tt+V",       color_TTV);
+  plotter.AddProcess("05_ST",        "tW",         color_ST);
+  plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu, roc_background, 1.0);
+  //  plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
+  //  plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
+  //  plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
+  //  plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
+  //  plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
+  //  plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
 
 
   // Add signals
