@@ -347,6 +347,8 @@ void HistogramReader::Draw(TString hname,
       if (_luminosity_fb) _prefithist->Scale(_luminosity_fb);
       
       SetHistogram(_prefithist, _prefitcolor, 0, kDot, 7, 3, ngroup, moveoverflow, xmin, xmax);
+
+      for (Int_t ibin=1; ibin<=_prefithist->GetNbinsX(); ibin++) _prefithist->SetBinError(ibin, 1e-9);
     }
 
 
@@ -432,7 +434,7 @@ void HistogramReader::Draw(TString hname,
 
   if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
 
-  if (_prefitfile) _prefithist->Draw("hist,same");
+  if (_prefitfile) _prefithist->Draw("ep,same");
 
   if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
 
@@ -693,7 +695,6 @@ void HistogramReader::Draw(TString hname,
 	    Float_t prefitratioVal = (prefitValue > 0) ? dtValue / prefitValue : 999;
 
 	    prefitratio->SetBinContent(ibin, prefitratioVal);
-	    prefitratio->SetBinError  (ibin, 1e-9);
 	  }
       }
 
