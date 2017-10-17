@@ -102,7 +102,7 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("Control"))
     {
-      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 M_{#chi}=1", color_Signal, roc_background);
+      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV", color_Signal, roc_background);
     }
 
 
@@ -181,7 +181,7 @@ void runPlotter(TString level,
 
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
-	  //	  if (basictest && i != lastchannel) continue;
+	  if (basictest && i != lastchannel) continue;
 
 	  TString suffix = "_" + schannel[i];
 	  
@@ -192,13 +192,16 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",               2, 0, "GeV",  scale, true, 0, 150);
-	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",                5, 0, "GeV",  scale, true, 0, 150);
-	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",               5, 0, "GeV",  scale, true, 0, 150);
-	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",                -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",               -1, 1, "NULL", scale);
-	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                 5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",                5, 2, "rad",  scale);
+	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",               2,  0, "GeV",  scale, true, 0, 150);
+	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",                5,  0, "GeV",  scale, true, 0, 150);
+	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",               5,  0, "GeV",  scale, true, 0, 150);
+	  plotter.Draw(prefix + "lep1eta"        + suffix, "leading lepton #eta",                -1,  1, "NULL", scale);
+	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",               -1,  1, "NULL", scale);
+	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                 5,  2, "rad",  scale);
+	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",                5,  2, "rad",  scale);
+	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, -1, "NULL", scale, true, 0,  30);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  logY,  true, 0, 200);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  linY,  true, 0, 200);
 
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
@@ -210,8 +213,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",     -1, -1, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" + sll + "," + sm + ")",  5,  2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                          5,  2, "rad",  scale);
-          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  scale, true, 0, 200);
-	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, -1, "NULL", scale, true, 0,  30);
 	  plotter.Draw(prefix + "jet1eta"        + suffix, "leading jet #eta",                   -1,  1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet2eta"        + suffix, "trailing jet #eta",                  -1,  1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet1phi"        + suffix, "leading jet #phi",                    5,  2, "rad",  scale, false);

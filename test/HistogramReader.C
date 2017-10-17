@@ -288,7 +288,7 @@ void HistogramReader::Draw(TString hname,
 
     if (_signalscale[i] > 0) _signalhist[i]->Scale(_signalscale[i]);
 
-    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
     
     signalstack->Add(_signalhist[i]);
   }
@@ -375,10 +375,10 @@ void HistogramReader::Draw(TString hname,
 
   _allmclabel = "Bkg. unc.";
 
-  _allmchist->SetFillColor  (kGray+1);
+  _allmchist->SetFillColor  (kGray+2);  // kGray+1
   _allmchist->SetFillStyle  (   3345);
-  _allmchist->SetLineColor  (kGray+1);
-  _allmchist->SetMarkerColor(kGray+1);
+  _allmchist->SetLineColor  (kGray+2);  // kGray+1
+  _allmchist->SetMarkerColor(kGray+2);  // KGray+1
   _allmchist->SetMarkerSize (      0);
 
 
@@ -449,7 +449,7 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-5;
+      theMin = 1e-1;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
   else
@@ -466,6 +466,7 @@ void HistogramReader::Draw(TString hname,
 
   // Legend
   //----------------------------------------------------------------------------
+  Float_t tsize  = 0.030;                         // text size
   Float_t x0     = 0.220;                         // x position of the data on the top left
   Float_t y0     = 0.843;                         // y position of the data on the top left
   Float_t xdelta = (_drawyield) ? 0.228 : 0.170;  // x width between columns
@@ -475,14 +476,18 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
-  if (_publicstyle) x0 = 0.7;
-
+  if (_publicstyle)
+    {
+      tsize  = 0.035;
+      x0     = 0.570;
+      ydelta = 0.048;
+    }
 
   // Data legend
   //----------------------------------------------------------------------------
   if (_datahist)
     {
-      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp", true, tsize);
       ny++;
     }
 
@@ -491,7 +496,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (!_stackoption.Contains("nostack") && !_publicstyle)
     {
-      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt, true, tsize);
       ny++;
     }
 
@@ -500,17 +505,19 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Int_t nrow = (_mchist.size() > 10) ? 5 : 4;
 
-  if (_publicstyle) nrow = 10;
+  if (_publicstyle) nrow = 100;
 
   for (int i=0; i<_mchist.size(); i++)
     {
+      int j = (_publicstyle) ? _mchist.size()-i-1 : i;
+
       if (ny == nrow)
 	{
 	  ny = 0;
 	  nx++;
 	}
 
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[j], _mclabel[j].Data(), opt, true, tsize);
       ny++;
     }
 
@@ -519,7 +526,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (!_stackoption.Contains("nostack") && _publicstyle)
     {
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt, true, tsize);
       ny++;
     }
 
@@ -528,7 +535,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   for (int i=0; i<_signalhist.size(); i++)
     {
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l", true, tsize);
       ny++;
     }
 
@@ -1007,10 +1014,17 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  if (_minitreebased) {
-    xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
-    yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
-  }
+  if (_minitreebased)
+    {
+      xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
+      yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
+    }
+
+  if (_publicstyle)
+    {
+      xaxis->SetNdivisions(510);
+      yaxis->SetNdivisions(104);
+    }
 
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
