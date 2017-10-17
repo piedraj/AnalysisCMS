@@ -32,9 +32,11 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _savepng         (true),
   _saveratio       (true)
 {
-  _datafile  = NULL;
-  _datahist  = NULL;
-  _allmchist = NULL;
+  _datafile   = NULL;
+  _datahist   = NULL;
+  _allmchist  = NULL;
+  _prefitfile = NULL;
+  _prefithist = NULL;
 
   _mcfile.clear();
   _mccolor.clear();
@@ -71,6 +73,30 @@ void HistogramReader::AddData(const TString& filename,
   _datafile     = file;
   _datafilename = filename;
   _datalabel    = label;
+}
+
+
+//------------------------------------------------------------------------------
+// AddPrefit
+//------------------------------------------------------------------------------
+void HistogramReader::AddPrefit(const TString& filename,
+				const TString& label,
+				Color_t        color)
+{
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddPrefit] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
+
+  _prefitcolor    = color;
+  _prefitfile     = file;
+  _prefitfilename = filename;
+  _prefitlabel    = label;
 }
 
 
@@ -288,10 +314,7 @@ void HistogramReader::Draw(TString hname,
 
     if (_signalscale[i] > 0) _signalhist[i]->Scale(_signalscale[i]);
 
-    Style_t lstyle = (_signallabel[i].Contains("pre-fit")) ? 7 : kSolid;
-    Width_t lwidth = (_signallabel[i].Contains("pre-fit")) ? 3 : 4;
-
-    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, lstyle, lwidth, ngroup, moveoverflow, xmin, xmax);
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
     
     signalstack->Add(_signalhist[i]);
   }
@@ -308,6 +331,22 @@ void HistogramReader::Draw(TString hname,
       _datahist = (TH1D*)dummy->Clone();
       
       SetHistogram(_datahist, kBlack, 0, kFullCircle, kSolid, 1, ngroup, moveoverflow, xmin, xmax);
+    }
+
+
+  // Get the prefit
+  //----------------------------------------------------------------------------
+  if (_prefitfile)
+    {
+      _prefitfile->cd();
+
+      TH1D* dummy = (TH1D*)_prefitfile->Get(hname);
+
+      _prefithist = (TH1D*)dummy->Clone();
+      
+      if (_luminosity_fb) _prefithist->Scale(_luminosity_fb);
+      
+      SetHistogram(_prefithist, _prefitcolor, 0, kDot, 7, 3, ngroup, moveoverflow, xmin, xmax);
     }
 
 
@@ -392,6 +431,8 @@ void HistogramReader::Draw(TString hname,
   mcstack->Draw(_stackoption + ",same");
 
   if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
+
+  if (_prefitfile) _prefithist->Draw("hist,same");
 
   if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
 
@@ -486,6 +527,7 @@ void HistogramReader::Draw(TString hname,
       ydelta = 0.048;
     }
 
+
   // Data legend
   //----------------------------------------------------------------------------
   if (_datahist)
@@ -530,6 +572,15 @@ void HistogramReader::Draw(TString hname,
   if (!_stackoption.Contains("nostack") && _publicstyle)
     {
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt, true, tsize);
+      ny++;
+    }
+
+
+  // Prefit legend
+  //----------------------------------------------------------------------------
+  if (_prefithist)
+    {
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _prefithist, _prefitlabel.Data(), "l", true, tsize);
       ny++;
     }
 
@@ -603,6 +654,7 @@ void HistogramReader::Draw(TString hname,
 
       TH1D* ratio       = (TH1D*)_datahist->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
+      TH1D* prefitratio = (_prefithist) ? (TH1D*)_prefithist->Clone("prefitratio") : NULL;
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
@@ -614,22 +666,35 @@ void HistogramReader::Draw(TString hname,
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
 	Float_t mcError = _allmchist->GetBinError(ibin);
 
-	Float_t ratioVal         = 999;
-	Float_t ratioErr         = 999;
-	Float_t uncertaintyError = 999;
+	Float_t ratioVal       = 999;
+	Float_t ratioErr       = 999;
+	Float_t uncertaintyErr = 999;
 
 	if (mcValue > 0)
 	  {
-	    ratioVal         = dtValue / mcValue;
-	    ratioErr         = dtError / mcValue;
-	    uncertaintyError = ratioVal * mcError / mcValue;
+	    ratioVal       = dtValue / mcValue;
+	    ratioErr       = dtError / mcValue;
+	    uncertaintyErr = ratioVal * mcError / mcValue;
 	  }
 
 	ratio->SetBinContent(ibin, ratioVal);
 	ratio->SetBinError  (ibin, ratioErr);
 	
 	uncertainty->SetBinContent(ibin, 1.);
-	uncertainty->SetBinError  (ibin, uncertaintyError);
+	uncertainty->SetBinError  (ibin, uncertaintyErr);
+
+
+	// Prefit part
+	//----------------------------------------------------------------------
+	if (_prefithist)
+	  {
+	    Float_t prefitValue = _prefithist->GetBinContent(ibin);
+
+	    Float_t prefitratioVal = (prefitValue > 0) ? dtValue / prefitValue : 999;
+
+	    prefitratio->SetBinContent(ibin, prefitratioVal);
+	    prefitratio->SetBinError  (ibin, 1e-9);
+	  }
       }
 
       ratio->SetTitle("");
@@ -638,14 +703,13 @@ void HistogramReader::Draw(TString hname,
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
 
-      if (_publicstyle)
-	ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
-      else
-	ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
+      ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
 
       uncertainty->Draw("e2,same");
 
       ratio->Draw("ep,same");
+
+      if (_prefithist) prefitratio->Draw("ep,same");
 
       SetAxis(ratio, xtitle, "Data / Bkg");
 

@@ -98,11 +98,12 @@ void runPlotter(TString level,
   //  plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
 
 
-  // Add signals
+  // Add prefit and signal
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("Control"))
     {
-      plotter.AddSignal("ttDM0001scalar00050", "pre-fit",                             kBlue+1);
+      plotter.AddPrefit("99_Prefit", "pre-fit", kBlue+1);
+
       plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV", color_Signal);
     }
 

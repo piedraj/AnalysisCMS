@@ -39,6 +39,10 @@ class HistogramReader
 			       const TString& label,
 			       Color_t        color);
 
+  void     AddPrefit          (const TString& filename,
+			       const TString& label,
+			       Color_t        color);
+
   void     AddProcess         (const TString& filename,
 			       const TString& label,
 			       Color_t        color,
@@ -208,9 +212,16 @@ class HistogramReader
   TString 		_datafilename;
   TFile*                _datafile;
   TH1*                  _datahist;
-  TH1*                  _allmchist;
   Color_t               _datacolor;
   TString               _datalabel;
+
+  TString 		_prefitfilename;
+  TFile*                _prefitfile;
+  TH1*                  _prefithist;
+  Color_t               _prefitcolor;
+  TString               _prefitlabel;
+
+  TH1*                  _allmchist;
   TString               _allmclabel;
 
   std::vector<TString>  _mcfilename;
