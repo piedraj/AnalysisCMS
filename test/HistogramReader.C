@@ -316,6 +316,8 @@ void HistogramReader::Draw(TString hname,
 
     SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
     
+    for (Int_t ibin=1; ibin<=_signalhist[i]->GetNbinsX(); ibin++) _signalhist[i]->SetBinError(ibin, 1e-9);
+
     signalstack->Add(_signalhist[i]);
   }
 
@@ -434,9 +436,9 @@ void HistogramReader::Draw(TString hname,
 
   if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
 
-  if (_prefitfile) _prefithist->Draw("ep,same");
+  if (_prefitfile) _prefithist->Draw("p,same");
 
-  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
+  if (_signalfile.size() > 0) signalstack->Draw("nostack,p,same");
 
   if (_datahist) _datahist->Draw("ep,same");
 
@@ -710,7 +712,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      if (_prefithist) prefitratio->Draw("ep,same");
+      if (_prefithist) prefitratio->Draw("p,same");
 
       SetAxis(ratio, xtitle, "Data / Bkg");
 
