@@ -449,7 +449,7 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-1;
+      theMin = 0.2;
       theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
     }
   else
@@ -1014,6 +1014,9 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
+  xaxis->SetTitle(xtitle);
+  yaxis->SetTitle(ytitle);
+
   if (_minitreebased)
     {
       xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
@@ -1023,13 +1026,14 @@ void HistogramReader::SetAxis(TH1*    hist,
   if (_publicstyle)
     {
       xaxis->SetNdivisions(510);
-      yaxis->SetNdivisions(104);
+      yaxis->SetNdivisions(709);
     }
 
-  xaxis->SetTitle(xtitle);
-  yaxis->SetTitle(ytitle);
-
-  if (hname.Contains("ratio")) yaxis->CenterTitle();
+  if (hname.Contains("ratio"))
+    {
+      yaxis->CenterTitle();
+      yaxis->SetNdivisions(104);
+    }
 
   gPad->GetFrame()->DrawClone();
   gPad->RedrawAxis();
