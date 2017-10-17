@@ -288,7 +288,10 @@ void HistogramReader::Draw(TString hname,
 
     if (_signalscale[i] > 0) _signalhist[i]->Scale(_signalscale[i]);
 
-    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
+    Style_t lstyle = (_signallabel[i].Contains("pre-fit")) ? 7 : kSolid;
+    Width_t lwidth = (_signallabel[i].Contains("pre-fit")) ? 3 : 4;
+
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, lstyle, lwidth, ngroup, moveoverflow, xmin, xmax);
     
     signalstack->Add(_signalhist[i]);
   }
@@ -634,7 +637,11 @@ void HistogramReader::Draw(TString hname,
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
-      ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
+
+      if (_publicstyle)
+	ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
+      else
+	ratio->GetYaxis()->SetRangeUser(0.7, 1.3);
 
       uncertainty->Draw("e2,same");
 

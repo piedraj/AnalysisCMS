@@ -102,7 +102,8 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (analysis.EqualTo("Control"))
     {
-      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV", color_Signal, roc_background);
+      plotter.AddSignal("ttDM0001scalar00050", "pre-fit",                             kBlue+1);
+      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV", color_Signal);
     }
 
 
