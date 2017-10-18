@@ -204,13 +204,13 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, -1, "NULL", scale, true,  0,  30);
           plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  logY,  true, 20, 200);
           plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  linY,  true, 20, 200);
+	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",              -1, -1, "NULL", logY);
 
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
 
 	  if (basictest) continue;
 
-	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",              -1, -1, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",    -1, -1, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",     -1, -1, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" + sll + "," + sm + ")",  5,  2, "rad",  scale);
