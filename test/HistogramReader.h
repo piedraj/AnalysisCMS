@@ -114,8 +114,8 @@ class HistogramReader
   void     SetAxis            (TH1*           hist,
 			       TString        xtitle,
 			       TString        ytitle,
-			       Float_t        xoffset = 5.2,
-			       Float_t        yoffset = 2.4);
+			       Float_t        xoffset = 5.3,
+			       Float_t        yoffset = 2.2);
 
   void     SetHistogram       (TH1*           hist,
 			       Color_t        color,

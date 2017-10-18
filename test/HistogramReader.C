@@ -532,7 +532,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (_datahist)
     {
-      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp", true, tsize);
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "elp", true, tsize);
       ny++;
     }
 
@@ -1076,10 +1076,10 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
   yaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
 
-  xaxis->SetLabelSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetLabelSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  xaxis->SetTitleSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetTitleSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
 
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
