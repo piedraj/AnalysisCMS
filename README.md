@@ -10,7 +10,8 @@
 [9. EOS](#eos)  
 [10. Copy latino trees](#copy-latino-trees)  
 [11. brilcalc](#brilcalc)  
-[12. CRAB output destination](#crab-output-destination)  
+[12. CRAB output destination](#crab-output-destination)
+[13. Polycom connection](#polycom-connection)
 
 
 # <a name="analysis-documentation"/>0. Analysis documentation
@@ -336,3 +337,11 @@ Find the latino files and change their ACL permissions.
 
     popd
 
+
+# <a name="polycom-connection"/>13. Polycom connection
+
+1. Open the *Address Book* and call *Vidyogw06.cern.ch*.
+2. Once the call fails (because it will fail) enter *Video Call* and connect.
+3. It will ask for the number below. Once you enter it you are all set.
+
+   * 10 444 191 #
