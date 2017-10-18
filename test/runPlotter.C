@@ -63,7 +63,7 @@ void runPlotter(TString level,
 
   plotter.SetStackOption   (option);
   plotter.SetPublicStyle   (  true);
-  plotter.SetSavePdf       ( false);
+  plotter.SetSavePdf       (  true);
   plotter.SetChangeBinLabel( false);
 
   if (option.Contains("nostack"))
