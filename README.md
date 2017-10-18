@@ -344,4 +344,4 @@ Find the latino files and change their ACL permissions.
 2. Once the call fails (because it will fail) enter **Video Call** and connect.
 3. It will ask for the number below. Once you enter it you are all set.
 
-    * 10 444 191 #
+    \* 10 444 191 #
