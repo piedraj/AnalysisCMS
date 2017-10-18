@@ -342,7 +342,6 @@ Find the latino files and change their ACL permissions.
 
 1. Open the **Address Book** and call **Vidyogw06.cern.ch**.
 2. Once the call fails (because it will fail) enter **Video Call** and connect.
-3. It will ask for the number below. Once you enter it you are all set.
-
+3. It will ask for the number below. Enter it you are all set.
 
     \* 10 444 191 #
