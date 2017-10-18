@@ -316,9 +316,7 @@ void HistogramReader::Draw(TString hname,
 
     SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
     
-    for (Int_t ibin=1; ibin<=_signalhist[i]->GetNbinsX(); ibin++) _signalhist[i]->SetBinError(ibin, 1e-9);
-
-    signalstack->Add(_signalhist[i]);
+    signalstack->Add(_signalhist[i], "][");
   }
 
 
@@ -348,9 +346,7 @@ void HistogramReader::Draw(TString hname,
       
       if (_luminosity_fb) _prefithist->Scale(_luminosity_fb);
       
-      SetHistogram(_prefithist, _prefitcolor, 0, kDot, 7, 3, ngroup, moveoverflow, xmin, xmax);
-
-      for (Int_t ibin=1; ibin<=_prefithist->GetNbinsX(); ibin++) _prefithist->SetBinError(ibin, 1e-9);
+      SetHistogram(_prefithist, _prefitcolor, 0, kDot, 7, 4, ngroup, moveoverflow, xmin, xmax);
     }
 
 
@@ -436,9 +432,9 @@ void HistogramReader::Draw(TString hname,
 
   if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
 
-  if (_prefitfile) _prefithist->Draw("p,same");
+  if (_prefitfile) _prefithist->Draw("hist,][,same");
 
-  if (_signalfile.size() > 0) signalstack->Draw("nostack,p,same");
+  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,][,same");
 
   if (_datahist) _datahist->Draw("ep,same");
 
@@ -603,7 +599,7 @@ void HistogramReader::Draw(TString hname,
   if (_publicstyle)
     {
       DrawLatex(61, 0.22, 0.843, 0.050, 11, "CMS");
-      DrawLatex(52, 0.22, 0.800, 0.030, 11, "Preliminary");
+      DrawLatex(52, 0.22, 0.803, 0.030, 11, "Preliminary");
     }
   else
     {
@@ -670,9 +666,9 @@ void HistogramReader::Draw(TString hname,
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
 	Float_t mcError = _allmchist->GetBinError(ibin);
 
-	Float_t ratioVal       = 999;
-	Float_t ratioErr       = 999;
-	Float_t uncertaintyErr = 999;
+	Float_t ratioVal       = -999;
+	Float_t ratioErr       = -999;
+	Float_t uncertaintyErr = -999;
 
 	if (mcValue > 0)
 	  {
@@ -694,7 +690,7 @@ void HistogramReader::Draw(TString hname,
 	  {
 	    Float_t prefitValue = _prefithist->GetBinContent(ibin);
 
-	    Float_t prefitratioVal = (prefitValue > 0) ? dtValue / prefitValue : 999;
+	    Float_t prefitratioVal = (prefitValue > 0) ? dtValue / prefitValue : -999;
 
 	    prefitratio->SetBinContent(ibin, prefitratioVal);
 	  }
@@ -712,7 +708,7 @@ void HistogramReader::Draw(TString hname,
 
       ratio->Draw("ep,same");
 
-      if (_prefithist) prefitratio->Draw("p,same");
+      if (_prefithist) prefitratio->Draw("hist,][,same");
 
       SetAxis(ratio, xtitle, "Data / Bkg");
 
@@ -1080,10 +1076,10 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
   yaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
 
-  xaxis->SetLabelSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetLabelSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  xaxis->SetTitleSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetTitleSize(20);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetLabelSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetLabelSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetTitleSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetTitleSize(24);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
 
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);

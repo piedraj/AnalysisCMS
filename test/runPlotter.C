@@ -84,12 +84,12 @@ void runPlotter(TString level,
 
   // Add processes
   //----------------------------------------------------------------------------
-  plotter.AddProcess("07_ZJets",     "DY",         color_ZJets, roc_background, 1.0);
-  plotter.AddProcess("03_VZ",        "Diboson",    color_VZ);
-  plotter.AddProcess("00_Fakes",     "Non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
-  plotter.AddProcess("09_TTV",       "tt+V",       color_TTV);
-  plotter.AddProcess("05_ST",        "tW",         color_ST);
-  plotter.AddProcess("04_TTTo2L2Nu", "tt",         color_TTTo2L2Nu, roc_background, 1.0);
+  plotter.AddProcess("07_ZJets",     "DY",                             color_ZJets, roc_background, 1.0);
+  plotter.AddProcess("03_VZ",        "Diboson",                        color_VZ);
+  plotter.AddProcess("00_Fakes",     "W+jets / t#bar{t}(1l) / tW(1l)", color_Fakes, roc_background, -999);  // Don't lumi scale
+  plotter.AddProcess("09_TTV",       "t#bar{t}+V",                     color_TTV);
+  plotter.AddProcess("05_ST",        "Single t (2l)",                  color_ST);
+  plotter.AddProcess("04_TTTo2L2Nu", "t#bar{t}(2l)",                   color_TTTo2L2Nu, roc_background, 1.0);
   //  plotter.AddProcess("14_HZ",        "HZ",       color_HZ);
   //  plotter.AddProcess("10_HWW",       "HWW",      color_HWW);
   //  plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
@@ -201,9 +201,9 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "lep2eta"        + suffix, "trailing lepton #eta",               -1,  1, "NULL", scale);
 	  plotter.Draw(prefix + "lep1phi"        + suffix, "leading lepton #phi",                 5,  2, "rad",  scale);
 	  plotter.Draw(prefix + "lep2phi"        + suffix, "trailing lepton #phi",                5,  2, "rad",  scale);
-	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, -1, "NULL", scale, true, 0,  30);
-          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  logY,  true, 0, 200);
-          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  linY,  true, 0, 200);
+	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, -1, "NULL", scale, true,  0,  30);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  logY,  true, 20, 200);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  linY,  true, 20, 200);
 
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
