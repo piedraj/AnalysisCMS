@@ -494,7 +494,7 @@ void HistogramReader::Draw(TString hname,
   if (pad1->GetLogy())
     {
       theMin = 0.2;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 8);
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 7);
     }
   else
     {
