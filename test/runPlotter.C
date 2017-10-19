@@ -104,7 +104,7 @@ void runPlotter(TString level,
     {
       plotter.AddPrefit("99_Prefit", "pre-fit", kBlue+1);
 
-      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV", color_Signal);
+      plotter.AddSignal("ttDM0001pseudo00100", "PS M_{#Phi}=100 GeV, M_{#chi}=1 GeV x1000", color_Signal, roc_background, 250);
     }
 
 
