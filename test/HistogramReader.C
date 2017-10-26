@@ -524,7 +524,7 @@ void HistogramReader::Draw(TString hname,
     {
       tsize  = 0.035;
       xdelta = 0.282;
-      ydelta = 0.049;
+      ydelta = 0.050;
     }
 
 
