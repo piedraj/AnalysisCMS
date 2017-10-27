@@ -493,8 +493,8 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 0.2;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 4);
+      theMin = 0.02;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 10);
     }
   else
     {
@@ -522,8 +522,9 @@ void HistogramReader::Draw(TString hname,
 
   if (_publicstyle)
     {
-      tsize  = 0.035;
-      xdelta = 0.282;
+      x0     = 0.490;
+      tsize  = 0.040;
+      ydelta = 0.051;
     }
 
 
@@ -549,7 +550,7 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Int_t nrow = (_mchist.size() > 10) ? 5 : 4;
 
-  if (_publicstyle) nrow = 5;
+  if (_publicstyle) nrow = 15;
 
   for (int i=0; i<_mchist.size(); i++)
     {
@@ -597,8 +598,8 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   if (_publicstyle)
     {
-      DrawLatex(61, 0.190, 0.945, 0.050, 11, "CMS");
-      DrawLatex(52, 0.268, 0.945, 0.035, 11, "Preliminary");
+      DrawLatex(61, 0.223, 0.843, 0.050, 11, "CMS");
+      DrawLatex(52, 0.223, 0.800, 0.035, 11, "Preliminary");
     }
   else
     {

@@ -104,7 +104,7 @@ void runPlotter(TString level,
     {
       plotter.AddPrefit("99_Prefit", "pre-fit", kBlue+1);
 
-      plotter.AddSignal("ttDM0001pseudo00300", "PS M_{#Phi}=300 GeV, M_{#chi}=1 GeV x1000", color_Signal, roc_background, 1000);
+      plotter.AddSignal("ttDM0001pseudo00010", "PS M_{#Phi}=10 GeV, M_{#chi}=1 GeV x100", kMagenta+1, roc_background, 100);
     }
 
 
@@ -194,6 +194,13 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
+	  plotter.Draw(prefix + "dphillmet" + suffix, "#Delta#phi(" + sll + "," + sm + ")", 5, 2, "rad", logY, false, 0, 3.14);
+
+	  if (basictest) continue;
+
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
+
 	  plotter.Draw(prefix + "pt2l"           + suffix, "p_{T}^{#font[12]{ll}}",               2,  0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",                5,  0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",               5,  0, "GeV",  scale, true, 0, 150);
@@ -205,15 +212,8 @@ void runPlotter(TString level,
           plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  logY,  true, 20, 200);
           plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10,  0, "GeV",  linY,  true, 20, 200);
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",              -1, -1, "NULL", logY);
-
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
-
-	  if (basictest) continue;
-
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",    -1, -1, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",     -1, -1, "NULL", scale);
-	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" + sll + "," + sm + ")",  5,  2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                          5,  2, "rad",  scale);
 	  plotter.Draw(prefix + "jet1eta"        + suffix, "leading jet #eta",                   -1,  1, "NULL", scale, false);
 	  plotter.Draw(prefix + "jet2eta"        + suffix, "trailing jet #eta",                  -1,  1, "NULL", scale, false);
