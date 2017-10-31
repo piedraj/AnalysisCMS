@@ -1254,6 +1254,8 @@ void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByCut(_signalfile[i], analysis, hname);
+
+  if (_prefitfile) EventsByCut(_prefitfile, analysis, hname);
 }
 
 
@@ -1267,7 +1269,6 @@ void HistogramReader::EventsByChannel(TFile*  file,
   TH1D* test_hist = (TH1D*)file->Get(level + "/h_counterLum_evolution");
 
   if (test_hist) return;
-
 
   // Get the number of bins
   Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
@@ -1312,6 +1313,8 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
+
+  if (_prefitfile) EventsByChannel(_prefitfile, level);
 }
 
 
