@@ -1459,7 +1459,7 @@ void HistogramReader::WriteYields(TH1*    hist,
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %15s", " ");
+      _yields_table << Form("\n %40s", " ");
 
       for (int i=firstBin; i<=lastBin; i++) {
 
@@ -1467,26 +1467,26 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	if (!hname.Contains("evolution")) binlabel = Form("%d", i);
 	    
-	_yields_table << Form(" | %-24s", binlabel.Data());
+	_yields_table << Form(" | %-25s", binlabel.Data());
       }
 
       _yields_table << Form("\n");
     }
 
-  _yields_table << Form(" %15s", label.Data());
+  _yields_table << Form(" %40s", label.Data());
 
   for (int i=firstBin; i<=lastBin; i++) {
 
     float process_yield = hist->GetBinContent(i);
     float process_error = sqrt(hist->GetSumw2()->At(i));
 
-    if (label.EqualTo("data"))
+    if (label.EqualTo("data") || label.EqualTo("Data"))
       {
-	_yields_table << Form(" | %8.0f %15s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %16s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" | %11.2f +/- %8.2f", process_yield, process_error);
+	_yields_table << Form(" | %11.2f +/- %9.2f", process_yield, process_error);
       }
   }
 
