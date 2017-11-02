@@ -34,3 +34,4 @@ Wg_MADGRAPHMLM.root
 ZZTo2L2Q__part*.root
 ZZZ.root
 Zg__part*.root
+ttDM*.root

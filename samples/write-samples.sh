@@ -3,7 +3,7 @@
 if [ $# -lt 3 ]; then
     echo "  "
     echo "  ./write-samples.sh \\"
-    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/' \\"
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__LepTrgFix__formulasMC/' \\"
     echo "  mc-names.txt \\"
     echo "  samples_mc_l2tightOR.txt"
     echo "  "
@@ -26,11 +26,6 @@ if [ $# -lt 3 ]; then
     echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__fakeSelMC__hadd/' \\"
     echo "  mc-fakeSel-names.txt \\"
     echo "  samples_mc_fakeSel.txt"
-    echo "  "
-    echo "  ./write-samples.sh \\"
-    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/' \\"
-    echo "  ttdm-names.txt \\"
-    echo "  samples_ttdm_l2tightOR.txt"
     echo "  "
 
     exit -1

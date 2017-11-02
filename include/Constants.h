@@ -130,7 +130,7 @@ const bool systematicfromweight[nsystematic] = {
 
 // Process colors
 //------------------------------------------------------------------------------
-/*
+const Color_t color_Prefit    = kBlue+1;
 const Color_t color_Signal    = kRed;
 const Color_t color_Fakes     = kGray+1;
 const Color_t color_Data      = kBlack;
@@ -150,12 +150,13 @@ const Color_t color_WgStar    = kBlue+2;
 const Color_t color_Zg        = kTeal;
 const Color_t color_VVV       = kYellow-6;
 const Color_t color_HZ        = kOrange+1;
-*/
 
 
 // EXO-17-014 process colors
 //------------------------------------------------------------------------------
-const Color_t color_Signal    = kRed;        // iSIG
+/*
+const Color_t color_Prefit    = kBlue+1;
+const Color_t color_Signal    = kMagenta+1;  // iSIG
 const Color_t color_Fakes     = kMagenta+2;  // iFAKES
 const Color_t color_Data      = kBlack;      // iDATA
 const Color_t color_WZTo3LNu  = kRed-6;      // iVV
@@ -174,6 +175,7 @@ const Color_t color_WgStar    = kBlue+2;
 const Color_t color_Zg        = kTeal;
 const Color_t color_VVV       = kYellow-6;
 const Color_t color_HZ        = kOrange+1;
+*/
 
 
 // Branching ratios
