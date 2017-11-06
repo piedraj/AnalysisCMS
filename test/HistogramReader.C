@@ -633,8 +633,8 @@ void HistogramReader::Draw(TString hname,
   if (_changebinlabel)
     {
       for (Int_t ibin=1; ibin<=hfirst->GetNbinsX(); ibin++) {
-	
-	hfirst->GetXaxis()->SetBinLabel(ibin, Form("%d", ibin));
+
+      	hfirst->GetXaxis()->SetBinLabel(ibin, Form("%d", ibin));
       }
     }
 
