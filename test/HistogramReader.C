@@ -628,7 +628,7 @@ void HistogramReader::Draw(TString hname,
 
 
   //----------------------------------------------------------------------------
-  // Set the bin label to the bin number
+  // Change the bin label
   //----------------------------------------------------------------------------
   if (_changebinlabel)
     {
@@ -658,6 +658,7 @@ void HistogramReader::Draw(TString hname,
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
+	// Change the bin label
 	if (_changebinlabel) ratio->GetXaxis()->SetBinLabel(ibin, Form("%d", ibin));
 
 	Float_t dtValue = _datahist->GetBinContent(ibin);
@@ -695,6 +696,32 @@ void HistogramReader::Draw(TString hname,
 	    prefitratio->SetBinContent(ibin, prefitratioVal);
 	  }
       }
+
+
+      //////////////////////////////////////////////////////////////////////////
+      //
+      // The ChangeLabel method requires ROOT 6.10/05 (available in CMSSW_9_3_3)
+      //
+      //////////////////////////////////////////////////////////////////////////
+      bool testForCedric = false;
+
+      if (testForCedric)
+	{
+	  TAxis* xaxis = (TAxis*)ratio->GetXaxis();
+      
+	  xaxis->ChangeLabel( -1, -1, -1, -1, -1, -1, "1.0");
+	  xaxis->ChangeLabel( -2, -1, -1, -1, -1, -1, "0.99");
+	  xaxis->ChangeLabel( -3, -1, -1, -1, -1, -1, "0.98");
+	  xaxis->ChangeLabel( -4, -1, -1, -1, -1, -1, "0.97");
+	  xaxis->ChangeLabel( -5, -1, -1, -1, -1, -1, "0.96");
+	  xaxis->ChangeLabel( -6, -1, -1, -1, -1, -1, "0.95");
+	  xaxis->ChangeLabel( -7, -1, -1, -1, -1, -1, "0.8");
+	  xaxis->ChangeLabel( -8, -1, -1, -1, -1, -1, "0.7");
+	  xaxis->ChangeLabel( -9, -1, -1, -1, -1, -1, "0.5");
+	  xaxis->ChangeLabel(-10, -1, -1, -1, -1, -1, "0.3");
+	  xaxis->ChangeLabel(-11, -1, -1, -1, -1, -1, "0.0");
+	}
+
 
       ratio->SetTitle("");
 
