@@ -61,10 +61,10 @@ void runPlotter(TString level,
 
   HistogramReader plotter(inputdir + analysis, outputdir);
 
-  plotter.SetStackOption   (option);
-  plotter.SetPublicStyle   ( false);
-  plotter.SetSavePdf       (  true);
-  plotter.SetChangeBinLabel( false);
+  plotter.SetStackOption(option);
+  plotter.SetPublicStyle( false);
+  plotter.SetSavePdf    (  true);
+  plotter.SetChangeLabel( false);
 
   if (option.Contains("nostack"))
     {
