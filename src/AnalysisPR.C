@@ -89,23 +89,13 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 	    
 	    _m2l = inv_mass;
 
-
-	    ////////////////////////////////////////////////////////////////////
-	    //
-	    //  This code needs to be fixed
-	    //  AnalysisLeptons and std_vector
-	    //  don't necessarily match
-	    //
-	    ////////////////////////////////////////////////////////////////////
-
-
 	    // Is the first Z lepton tight?
-	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(0) > 0.5)
+	    if (AnalysisLeptons[iLep1].type > 0.5 && AnalysisLeptons[iLep1].flavour == ELECTRON_FLAVOUR)
 	      {
 		_Zlepton1type  = Tight;
 		_Zdecayflavour = ELECTRON_FLAVOUR;
 	      }
-	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(0) > 0.5)
+	    else if (AnalysisLeptons[iLep1].type > 0.5 && AnalysisLeptons[iLep1].flavour == MUON_FLAVOUR)
 	      {
 		_Zlepton1type  = Tight;
 		_Zdecayflavour = MUON_FLAVOUR;
@@ -113,11 +103,11 @@ void AnalysisPR::Loop(TString analysis, TString filename, float luminosity)
 
 	    
 	    // Is the second Z lepton tight?
-	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(1) > 0.5)
+	    if (AnalysisLeptons[iLep2].type > 0.5 && AnalysisLeptons[iLep2].flavour == ELECTRON_FLAVOUR)
 	      {
 		_Zlepton2type = Tight;
 	      }
-	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(1) > 0.5)
+	    else if (AnalysisLeptons[iLep2].type > 0.5 && AnalysisLeptons[iLep2].flavour == MUON_FLAVOUR)
 	      {
 		_Zlepton2type = Tight;
 	      }

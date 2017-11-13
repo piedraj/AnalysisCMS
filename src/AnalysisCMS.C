@@ -58,56 +58,6 @@ bool AnalysisCMS::PassTrigger()
 
 
 //------------------------------------------------------------------------------
-// MuonIsolation
-//------------------------------------------------------------------------------
-float AnalysisCMS::MuonIsolation(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  float relative_isolation = -999;
-
-  if (fabs(flavour) != MUON_FLAVOUR) return relative_isolation;
-
-  relative_isolation =
-    std_vector_lepton_chargedHadronIso->at(k) +
-    max(float(0.0),
-	float(std_vector_lepton_photonIso->at(k) +
-	      std_vector_lepton_neutralHadronIso->at(k) -
-	      0.5*std_vector_lepton_sumPUPt->at(k)));
-
-  relative_isolation /= pt;
-
-  return relative_isolation;
-}
-
-
-//------------------------------------------------------------------------------
-// ElectronIsolation
-//------------------------------------------------------------------------------
-float AnalysisCMS::ElectronIsolation(int k)
-{
-  float pt      = std_vector_lepton_pt     ->at(k);
-  float flavour = std_vector_lepton_flavour->at(k);
-
-  float relative_isolation = -999;
-
-  if (fabs(flavour) != ELECTRON_FLAVOUR) return relative_isolation;
-
-  relative_isolation =
-    std_vector_lepton_chargedHadronIso->at(k) +
-    max(float(0.0),
-	float(std_vector_lepton_photonIso->at(k) +
-	      std_vector_lepton_neutralHadronIso->at(k) -
-	      jetRho*std_vector_electron_effectiveArea->at(k)));
-  
-  relative_isolation /= pt;
-  
-  return relative_isolation;
-}
-
-
-//------------------------------------------------------------------------------
 // FillHistograms
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
@@ -597,13 +547,13 @@ void AnalysisCMS::GetLeptons()
     if (abs(lep.flavour) == ELECTRON_FLAVOUR)
       {
 	mass     = ELECTRON_MASS;
-	lep.iso  = ElectronIsolation(i);
+	lep.iso  = std_vector_electron_idisoW_cut_WP_Tight80X->at(i);
 	lep.type = std_vector_electron_isTightLepton_cut_WP_Tight80X->at(i);
       }
     else if (abs(lep.flavour) == MUON_FLAVOUR)
       {
 	mass     = MUON_MASS;
-	lep.iso  = MuonIsolation(i);
+	lep.iso  = std_vector_muon_idisoW_cut_Tight80x->at(i);
 	lep.type = std_vector_muon_isTightLepton_cut_Tight80x->at(i);
       }
 
