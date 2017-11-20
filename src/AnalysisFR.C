@@ -8,8 +8,8 @@
 AnalysisFR::AnalysisFR(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
   SetWriteMinitree(false);
+  SetWriteHistograms(true);
 }
-
 
 //------------------------------------------------------------------------------
 // Loop
@@ -132,45 +132,35 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
 
 	    _m2l = inv_mass;
 
-
-	    ////////////////////////////////////////////////////////////////////
-	    //
-	    //  This code needs to be fixed
-	    //  AnalysisLeptons and std_vector
-	    //  don't necessarily match
-	    //
-	    ////////////////////////////////////////////////////////////////////
-
-
 	    // Is the first Z lepton tight?
-	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(0) > 0.5)
+	    if (AnalysisLeptons[iLep1].type > 0.5 && AnalysisLeptons[iLep1].flavour == ELECTRON_FLAVOUR)
 	      {
 		_Zlepton1type  = Tight;
 		_Zdecayflavour = ELECTRON_FLAVOUR;
 		    
-		if (_ismc) _Zlepton1idisoW = std_vector_electron_idisoW_cut_WP_Tight80X->at(0);
+		if (_ismc) _Zlepton1idisoW = Lepton1.iso;
 	      }
-	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(0) > 0.5)
+	    else if (AnalysisLeptons[iLep1].type > 0.5 && AnalysisLeptons[iLep1].flavour == MUON_FLAVOUR)
 	      {
 		_Zlepton1type  = Tight;
 		_Zdecayflavour = MUON_FLAVOUR;
 
-		if (_ismc) _Zlepton1idisoW = std_vector_muon_idisoW_cut_Tight80x->at(0);
+		if (_ismc) _Zlepton1idisoW = Lepton1.iso;
 	      }
 
 	    
 	    // Is the second Z lepton tight?
-	    if (std_vector_electron_isTightLepton_cut_WP_Tight80X->at(1) > 0.5)
+	    if (AnalysisLeptons[iLep2].type > 0.5 && AnalysisLeptons[iLep2].flavour == ELECTRON_FLAVOUR)
 	      {
 		_Zlepton2type = Tight;
 		
-		if (_ismc) _Zlepton2idisoW = std_vector_electron_idisoW_cut_WP_Tight80X->at(1);
+		if (_ismc) _Zlepton2idisoW = Lepton2.iso;
 	      }
-	    else if (std_vector_muon_isTightLepton_cut_Tight80x->at(1) > 0.5)
+	    else if (AnalysisLeptons[iLep2].type > 0.5 && AnalysisLeptons[iLep2].flavour == MUON_FLAVOUR)
 	      {
 		_Zlepton2type = Tight;
 		
-		if (_ismc) _Zlepton2idisoW = std_vector_muon_idisoW_cut_Tight80x->at(1);
+		if (_ismc) _Zlepton2idisoW = Lepton2.iso;
 	      }
 	  }
 	}
@@ -178,7 +168,6 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
     }
 
     _l2tight_weight = (_Zlepton1idisoW * _Zlepton2idisoW);
-
 
     // Get the event weight
     //--------------------------------------------------------------------------
@@ -341,11 +330,9 @@ void AnalysisFR::Loop(TString analysis, TString filename, float luminosity)
       }
     }
   }
-  
 
   EndJob();
 }
-
 
 //------------------------------------------------------------------------------
 // FillLevelHistograms
