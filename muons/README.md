@@ -1,6 +1,6 @@
 Below you can find all the necessary information for both Higgs Muon Coordination and Muon Validation.
 
-# 0. Do not go anywhere without this.
+# 0. Do not go anywhere without this
 
 Subscribe to the following CMS HyperNews forums.
 
@@ -22,7 +22,7 @@ Muon Object Coordination twikis.
 
 Muon Physics reference twikis.
 
-    https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSLeptonSF (estos son los SF de SUSY, que ver
+    https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSLeptonSF
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/MiniIsolationSUSY
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceScaleResolRun2
 
