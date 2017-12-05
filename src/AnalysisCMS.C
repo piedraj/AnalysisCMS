@@ -547,13 +547,13 @@ void AnalysisCMS::GetLeptons()
     if (abs(lep.flavour) == ELECTRON_FLAVOUR)
       {
 	mass     = ELECTRON_MASS;
-	lep.iso  = std_vector_electron_idisoW_cut_WP_Tight80X->at(i);
+	lep.iso  = -999;  // TO BE FILLED
 	lep.type = std_vector_electron_isTightLepton_cut_WP_Tight80X->at(i);
       }
     else if (abs(lep.flavour) == MUON_FLAVOUR)
       {
 	mass     = MUON_MASS;
-	lep.iso  = std_vector_muon_idisoW_cut_Tight80x->at(i);
+	lep.iso  = -999;  // TO BE FILLED
 	lep.type = std_vector_muon_isTightLepton_cut_Tight80x->at(i);
       }
 
