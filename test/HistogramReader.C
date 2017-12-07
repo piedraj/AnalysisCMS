@@ -415,7 +415,7 @@ void HistogramReader::Draw(TString hname,
 
   }
 
-  _allmclabel = "Bkg. unc.";
+  _allmclabel = "Bkg";
 
   _allmchist->SetFillColor  (kGray+2);  // kGray+1
   _allmchist->SetFillStyle  (   3345);
@@ -513,7 +513,7 @@ void HistogramReader::Draw(TString hname,
   Float_t tsize  = 0.030;                         // text size
   Float_t x0     = 0.218;                         // x position of the data on the top left
   Float_t y0     = 0.843;                         // y position of the data on the top left
-  Float_t xdelta = (_drawyield) ? 0.228 : 0.170;  // x width between columns
+  Float_t xdelta = (_drawyield) ? 0.245 : 0.170;  // x width between columns
   Float_t ydelta = 0.050;                         // y width between rows
   Int_t   nx     = 0;                             // column number
   Int_t   ny     = 0;                             // row    number
@@ -587,6 +587,9 @@ void HistogramReader::Draw(TString hname,
 
   // Search signals legend
   //----------------------------------------------------------------------------
+  ny = nrow;
+  nx = 0;
+
   for (int i=0; i<_signalhist.size(); i++)
     {
       DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l", true, tsize);
@@ -720,7 +723,7 @@ void HistogramReader::Draw(TString hname,
 
       if (_prefithist) prefitratio->Draw("hist,][,same");
 
-      SetAxis(ratio, xtitle, "Data / Bkg");
+      SetAxis(ratio, xtitle, "Data / Bkg", 5.1, 2.0);
 
 
       // Save the ratio histogram
@@ -1086,10 +1089,10 @@ void HistogramReader::SetAxis(TH1*    hist,
   xaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
   yaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
 
-  xaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  xaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
-  yaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetLabelSize(25);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetLabelSize(25);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetTitleSize(25);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetTitleSize(25);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
 
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
@@ -1101,6 +1104,10 @@ void HistogramReader::SetAxis(TH1*    hist,
     {
       xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
       yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
+    }
+  else
+    {
+      yaxis->SetLabelOffset(0.6*yaxis->GetLabelOffset());
     }
 
   if (_publicstyle)
