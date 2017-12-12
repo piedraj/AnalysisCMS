@@ -6,7 +6,6 @@
 const Bool_t allplots   = false;
 const Bool_t datadriven = true;
 const Bool_t drawroc    = false;
-const Bool_t xsection   = false;
 const Bool_t basictest  = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
@@ -323,45 +322,6 @@ void runPlotter(TString level,
 	      plotter.Draw(prefix + "wlzldeltar" + suffix, "min #DeltaR(W lepton, Z leptons)",  5, 1, "NULL", scale);
 	    }
 	}
-    }
-
-
-  // Cross section
-  //----------------------------------------------------------------------------
-  //
-  // 1. How to extract the total number of generated events from the latino trees:
-  //
-  //   root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root
-  //   mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
-  //   1.96718e+06
-  //
-  //
-  // 2. The qqWW and ggWW exclusive leptonic cross sections at 13 TeV (in pb) have been taken from:
-  //
-  //   https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/python/samplesCrossSections.py
-  //
-  //   samples['WWTo2L2Nu']           .extend( ['xsec=12.178', 'kfact=1.000', 'ref=E'] ) 
-  //   samples['GluGluWWTo2L2Nu_MCFM'].extend( ['xsec=0.5905', 'kfact=1.000', 'ref=E'] )
-  //
-  //
-  // 3. Some theoretical cross sections can be found at the following paper:
-  //
-  //   Vector boson pair production at the LHC
-  //   https://arxiv.org/pdf/1105.0020v1.pdf
-  //
-  //----------------------------------------------------------------------------
-  if (xsection && level.Contains("WW"))
-    {
-      printf("\n Cross section\n");
-      printf("---------------\n\n");
-
-      for (int i=firstchannel; i<=lastchannel; i++)
-	plotter.CrossSection(level,
-			     schannel[i],
-			     "WW",
-			     WW2lnu,
-			     "WWTo2L2Nu",            12.1780, 1967180,
-			     "GluGluWWTo2L2Nu_MCFM",  0.5905,  481600);
     }
 
 

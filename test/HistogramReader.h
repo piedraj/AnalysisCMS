@@ -73,17 +73,6 @@ class HistogramReader
 			       TString        fom,
 			       Int_t          ngroup = -1);
 
-  void     CrossSection       (TString        level,
-			       TString        channel,
-			       TString        process,
-			       Float_t        branchingratio,
-			       TString        signal1_filename,
-			       Float_t        signal1_xs,
-			       Float_t        signal1_ngen,
-			       TString        signal2_filename = "NULL",
-			       Float_t        signal2_xs       = -999,
-			       Float_t        signal2_ngen     = -999);
-
   void     DrawLatex          (Font_t         tfont,
 			       Float_t        x,
 			       Float_t        y,

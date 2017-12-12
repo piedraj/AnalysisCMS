@@ -417,10 +417,10 @@ void HistogramReader::Draw(TString hname,
 
   _allmclabel = "Bkg";
 
-  _allmchist->SetFillColor  (kGray+2);  // kGray+1
+  _allmchist->SetFillColor  (kGray+2);
   _allmchist->SetFillStyle  (   3345);
-  _allmchist->SetLineColor  (kGray+2);  // kGray+1
-  _allmchist->SetMarkerColor(kGray+2);  // KGray+1
+  _allmchist->SetLineColor  (kGray+2);
+  _allmchist->SetMarkerColor(kGray+2);
   _allmchist->SetMarkerSize (      0);
 
 
@@ -737,10 +737,10 @@ void HistogramReader::Draw(TString hname,
 	  ratiofile->Close();
 	}
     }
-  //  else if (_drawsignificance)
-  //    {
-  //      // Barbara's stuff
-  //    }
+  else if (_drawsignificance)
+    {
+      printf("\n [HistogramReader::Draw] Barbara's stuff\n\n");
+    }
 
 
   //----------------------------------------------------------------------------
@@ -757,122 +757,6 @@ void HistogramReader::Draw(TString hname,
       
       _yields_table.close();
     }
-}
-
-
-//------------------------------------------------------------------------------
-// CrossSection
-//------------------------------------------------------------------------------
-void HistogramReader::CrossSection(TString level,
-				   TString channel,
-				   TString process,
-				   Float_t branchingratio,
-				   TString signal1_filename,
-				   Float_t signal1_xs,
-				   Float_t signal1_ngen,
-				   TString signal2_filename,
-				   Float_t signal2_xs,
-				   Float_t signal2_ngen)
-{
-  if (_luminosity_fb < 0)
-    {
-      printf("\n [HistogramReader::CrossSection] Warning: reading negative luminosity\n\n");
-    }
-
-
-  // Get the signal (example qqWW)
-  //----------------------------------------------------------------------------
-  TFile* signal1_file = new TFile(_inputdir + "/" + signal1_filename + ".root");
-
-  float signal1_counterLum = Yield((TH1D*)signal1_file->Get(level + "/h_counterLum_" + channel));
-  float signal1_counterRaw = Yield((TH1D*)signal1_file->Get(level + "/h_counterRaw_" + channel));
-
-  float counterSignal = signal1_counterLum * _luminosity_fb;
-
-  float efficiency = signal1_counterRaw / signal1_ngen;
-
-
-  // Get the second signal (example ggWW)
-  //----------------------------------------------------------------------------
-  if (!signal2_filename.Contains("NULL"))
-    {
-      TFile* signal2_file = new TFile(_inputdir + "/" + signal2_filename + ".root");
-
-      float signal2_counterLum = Yield((TH1D*)signal2_file->Get(level + "/h_counterLum_" + channel));
-      float signal2_counterRaw = Yield((TH1D*)signal2_file->Get(level + "/h_counterRaw_" + channel));
-
-      counterSignal += (signal2_counterLum * _luminosity_fb);
-
-      float signal1_fraction = signal1_xs / (signal1_xs + signal2_xs);
-      float signal2_fraction = 1. - signal1_fraction;
-
-      float signal1_efficiency = signal1_counterRaw / signal1_ngen;
-      float signal2_efficiency = signal2_counterRaw / signal2_ngen;
-
-      efficiency = signal1_fraction*signal1_efficiency + signal2_fraction*signal2_efficiency;
-    }
-
-
-  // Get the backgrounds
-  //----------------------------------------------------------------------------
-  float counterBackground = 0;
-
-  for (UInt_t i=0; i<_mcfile.size(); i++) {
-
-    if (_mclabel[i].EqualTo(process)) continue;
-
-    _mcfile[i]->cd();
-
-    TH1D* dummy = (TH1D*)_mcfile[i]->Get(level + "/h_counterLum_" + channel);
-
-    float counterDummy = Yield(dummy);
-
-    if (_luminosity_fb > 0 && _mcscale[i] > -999) counterDummy *= _luminosity_fb;
-
-    if (_mcscale[i] > 0) counterDummy *= _mcscale[i];
-
-    counterBackground += counterDummy;
-  }
-
-
-  // Get the data
-  //----------------------------------------------------------------------------
-  if (_datafile)
-    {
-      _datafile->cd();
-
-      TH1D* dummy = (TH1D*)_datafile->Get(level + "/h_counterLum_" + channel);
-
-      _datahist = (TH1D*)dummy->Clone();      
-    }
-
-  float counterData = Yield(_datahist);
-
-
-  // Cross-section calculation
-  //----------------------------------------------------------------------------  
-  float xs = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
-  float mu = (counterData - counterBackground) / (counterSignal);
-
-
-  // Statistical error
-  //----------------------------------------------------------------------------  
-  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * branchingratio);
-  float muErrorStat = sqrt(counterData) / (counterSignal); 
-
- 
-  // Print
-  //----------------------------------------------------------------------------  
-  printf("      channel = %s\n", channel.Data());
-  printf("        ndata = %.0f\n", counterData);
-  printf("         nbkg = %.2f\n", counterBackground);
-  printf(" ndata - nbkg = %.2f\n", counterData - counterBackground);
-  printf("      nsignal = %.2f\n", counterSignal);
-  printf("           mu = (ndata - nbkg) / nsignal = %.2f +- %.2f (stat) +- %.2f (lumi)\n", mu, muErrorStat, mu * lumi_error_percent / 1e2);
-  printf("         lumi = %.0f pb\n", 1e3 * _luminosity_fb);
-  printf("           br = %f\n", branchingratio);
-  printf("          eff = %.4f\n", efficiency);
-  printf("           xs = (ndata - nbkg) / (lumi * eff * br) = %.2f +- %.2f (stat) +- %.2f (lumi) pb\n\n", xs, xsErrorStat, xs * lumi_error_percent / 1e2);
 }
 
 
