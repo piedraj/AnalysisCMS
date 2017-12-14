@@ -12,6 +12,7 @@
 [11. brilcalc](#brilcalc)  
 [12. CRAB output destination](#crab-output-destination)  
 [13. Polycom connection](#polycom-connection)  
+[14. Combine](#combine)  
 
 
 # <a name="latino-documentation"/>0. Latino documentation
@@ -85,9 +86,9 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 # <a name="always-do"/>2. Always do
 
-    ssh -Y gridui.ifca.es -o ServerAliveInterval=240
-    source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_8_0_5/src
+    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    bash -l
+    cd CMSSW_9_3_3/src
     cmsenv
     cd AnalysisCMS
 
@@ -345,3 +346,9 @@ Find the latino files and change their ACL permissions.
 3. It will ask for the number below. Enter it you are all set.
 
     \* 10 444 191 #
+
+
+# <a name="combine"/>14. Combine
+
+Combine provides a command line interface to many different statistical techniques available inside RooFit/RooStats used widely inside CMS. It is extensively documented [here](https://cms-hcomb.gitbooks.io/combine/content/).
+
