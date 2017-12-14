@@ -1,4 +1,4 @@
-[0. Analysis documentation](#analysis-documentation)  
+[0. Latino documentation](#latino-documentation)  
 [1. Everything begins here](#everything-begins-here)  
 [2. Always do](#always-do)  
 [3. Compile and run](#compile-and-run)  
@@ -14,7 +14,7 @@
 [13. Polycom connection](#polycom-connection)  
 
 
-# <a name="analysis-documentation"/>0. Analysis documentation
+# <a name="latino-documentation"/>0. Latino documentation
 
 AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
@@ -39,9 +39,9 @@ Execute this line only in gridui.
 
 Set a CMSSW release.
 
-    export SCRAM_ARCH=slc6_amd64_gcc530
-    cmsrel CMSSW_8_0_5
-    cd CMSSW_8_0_5/src
+    export SCRAM_ARCH=slc6_amd64_gcc630
+    cmsrel CMSSW_9_3_3
+    cd CMSSW_9_3_3/src
     cmsenv
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
