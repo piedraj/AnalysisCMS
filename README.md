@@ -350,5 +350,18 @@ Find the latino files and change their ACL permissions.
 
 # <a name="combine"/>14. Combine
 
-Combine provides a command line interface to many different statistical techniques available inside RooFit/RooStats used widely inside CMS. It is extensively documented [here](https://cms-hcomb.gitbooks.io/combine/content/).
+Combine provides a command line interface to many different statistical techniques available inside RooFit/RooStats used widely inside CMS. It is extensively documented [here](https://cms-hcomb.gitbooks.io/combine/content/). These are the current (December 14th, 2017) setup instructions.
+
+    export SCRAM_ARCH=slc6_amd64_gcc530
+    cmsrel CMSSW_8_1_0
+    cd CMSSW_8_1_0/src 
+    cmsenv
+    git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+    cd HiggsAnalysis/CombinedLimit
+    git fetch origin
+    git checkout v7.0.4
+    scramv1 b clean
+    scramv1 b
+
+To be continued.
 
