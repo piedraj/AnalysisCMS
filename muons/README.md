@@ -60,7 +60,7 @@ Code
 
 # 3. How to produce the muon validation plots
 
-As usual, first to login to lxplus and go to your CMSSW releases area.
+As usual, first login to lxplus and go to your CMSSW releases area.
 
     ssh -Y piedra@lxplus.cern.ch -o ServerAliveInterval=240
     bash -l
@@ -86,13 +86,13 @@ Here comes the validation part. Get the package from the official repository, an
 
 In principle you are all set. It is time to run the muon validation.
 
-    cd test
+    cd Validation/RecoMuon/test
     export X509_USER_PROXY=/tmp/x509up_u23679
     export X509_CERT_DIR=/etc/grid-security/certificates/
     voms-proxy-init -voms cms
     python muonReleaseSummaryValidation.py
 
-If the previous step was successful, now you start doing the real work. For that, you should modify the *userparams.py* file with the information that you will find in RelMon, at the crossing of the *Muon* and *TTbar* lines.
+Now you can start doing the real work. For that you should modify the **userparams.py** file with the information that you will find in RelMon, at the crossing of the **Muon** and **TTbar** lines.
 
     emacs -nw RecoMuon/test/userparams.py
 
