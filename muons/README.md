@@ -92,7 +92,7 @@ In principle you are all set. It is time to run the muon validation.
     voms-proxy-init -voms cms
     python muonReleaseSummaryValidation.py
 
-Now you can start doing the real work. For that you should modify the **userparams.py** file with the information that you will find in RelMon, at the crossing of the **Muon** and **TTbar** lines.
+Now you can start doing the real work. You should modify the **userparams.py** file with the information that you will find in [RelMon](https://cms-pdmv.cern.ch/relmon/), at the crossing of the **Muon** and **TTbar** lines.
 
     emacs -nw RecoMuon/test/userparams.py
 
