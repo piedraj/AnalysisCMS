@@ -57,3 +57,61 @@ Code
     https://github.com/cms-sw/cmssw/tree/master/Validation/RecoMuon
     https://github.com/cms-sw/cmssw/tree/master/Validation/MuonIsolation
     https://github.com/cms-sw/cmssw/tree/master/Validation/MuonIdentification
+
+# 3. How to produce the muon validation plots
+
+As usual, first to login to lxplus and go to your CMSSW releases area.
+
+    ssh -Y piedra@lxplus.cern.ch -o ServerAliveInterval=240
+    bash -l
+    cd work/CMSSW_projects/
+
+Once there you need to setup the CMSSW release.
+
+    export SCRAM_ARCH=slc6_amd64_gcc530
+    cmsrel CMSSW_9_3_0_pre1
+    cd CMSSW_9_3_0_pre1/src/
+    cmsenv
+
+Here comes the validation part. Get the package from the official repository, and then copy the modified files from rocio's public area.
+
+    git cms-addpkg Validation/RecoMuon
+
+    cd Validation/RecoMuon/test
+    cp /afs/cern.ch/user/r/rocio/public/forNicola/muonReleaseSummaryValidation.py .
+    cp /afs/cern.ch/user/r/rocio/public/forNicola/userparams.py .
+
+    cd macro
+    cp /afs/cern.ch/user/r/rocio/public/forNicola/macro/* .
+
+In principle you are all set. It is time to run the muon validation.
+
+    cd test
+    export X509_USER_PROXY=/tmp/x509up_u23679
+    export X509_CERT_DIR=/etc/grid-security/certificates/
+    voms-proxy-init -voms cms
+    python muonReleaseSummaryValidation.py
+
+If the previous step was successful, now you start doing the real work. For that, you should modify the *userparams.py* file with the information that you will find in RelMon, at the crossing of the *Muon* and *TTbar* lines.
+
+    emacs -nw RecoMuon/test/userparams.py
+
+    NewParams
+      Type='New',
+      Release='CMSSW_10_0_0_pre3_GEANT4',
+      Release_c='CMSSW_10_0_0_pre3_GEANT4',  # Name of the output folder
+      Condition='100X_upgrade2018',
+      PileUp='no',
+      FastSim=False,
+      Label='realistic_v4_mahiON',
+      Version='v1'
+
+    RefParams
+      Type='Ref',
+      Release='CMSSW_10_0_0_pre3',
+      Release_c='CMSSW_10_0_0_pre3',  # Name of the output folder
+      Condition='100X_upgrade2018',
+      PileUp='no',
+      FastSim=False,
+      Label='realistic_v4_mahiON',
+      Version='v1'
