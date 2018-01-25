@@ -1,15 +1,15 @@
-# Higgs Muon Coordination
+# Higgs muon coordination
 
-Tutorial for Muon Object Contacts.
+Tutorial for muon object contacts from May 2016.
 
     https://indico.cern.ch/event/536432/
 
-Muon Object Coordination twikis.
+Muon object coordination twikis.
 
     https://twiki.cern.ch/twiki/bin/view/CMS/TWikiPAGsMUO
     https://twiki.cern.ch/twiki/bin/view/CMS/TWikiHIG-MUO
 
-Muon Physics reference twikis.
+Muon physics reference twikis.
 
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSLeptonSF
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/MiniIsolationSUSY
