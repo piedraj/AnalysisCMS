@@ -65,14 +65,14 @@ Then, do a git remote in order to check if the upstream appears.
 *Do this only if you want to create a tag.*
 
     pushd AnalysisCMS
-    git tag -a 20160919_tau -m 'Third AnalysisCMS tag'
-    git push origin 20160919_tau
+    git tag -a 20180219_down -m 'Welcome Pablo Matorras'
+    git push origin 20180219_down
     popd
 
 *Do this only if you want to use a tag.*
 
     pushd AnalysisCMS
-    git checkout tags/20160919_tau
+    git checkout tags/20180219_down
     popd
 
 <!---
