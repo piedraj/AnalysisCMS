@@ -3,10 +3,9 @@
 
 // Constants
 //------------------------------------------------------------------------------
-const Bool_t allplots   = false;
-const Bool_t datadriven = true;
-const Bool_t drawroc    = false;
-const Bool_t basictest  = true;
+const Bool_t allplots  = false;
+const Bool_t drawroc   = false;
+const Bool_t basictest = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -62,7 +61,7 @@ void runPlotter(TString level,
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    (  true);
+  plotter.SetSavePdf    ( false);
   plotter.SetChangeLabel( false);
 
   if (option.Contains("nostack"))
