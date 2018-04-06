@@ -171,7 +171,6 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://amanjong.web.cern.ch/amanjong/
     https://bchazinq.web.cern.ch/bchazinq/
     https://cprieels.web.cern.ch/cprieels/
     https://fernanpe.web.cern.ch/fernanpe/
