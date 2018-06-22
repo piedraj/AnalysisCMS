@@ -6,6 +6,8 @@
 
 void AnalysisBase::Loop()
 {
+  printf(" <<< Entering [AnalysisBase::Loop]\n");  // Debug
+
 //   In a ROOT session, you can do:
 //      root> .L AnalysisBase.C
 //      root> AnalysisBase t
@@ -33,11 +35,41 @@ void AnalysisBase::Loop()
 
    Long64_t nentries = fChain->GetEntriesFast();
 
+   printf(" nentries = %lld\n", nentries);  // Debug
+
+   if (nentries > 200) nentries = 200;  // Debug. Please remove me when debug has finished
+
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+
+
+      if (nLepton == nMuon)     continue;
+      if (nLepton == nElectron) continue;
+
+
+      printf("\n------------------------------------------------\n");
+
+
+      // Lepton
+      //------------------------------------------------------------------------
+      for (UInt_t i=0; i<nLepton; i++)
+	printf(" Lepton i   = %d (nLepton   = %d);  pt = %6.2f;  eta = %5.2f;  eIdx = %2d;  mIdx = %2d\n",
+	       i, nLepton, Lepton_pt[i], Lepton_eta[i], Lepton_electronIdx[i], Lepton_muonIdx[i]);
+
+
+      // Muon
+      //------------------------------------------------------------------------
+      for (UInt_t j=0; j<nMuon; j++)
+	printf(" Muon   j   = %d (nMuon     = %d);  pt = %6.2f;  eta = %5.2f\n", j, nMuon, Muon_pt[j], Muon_eta[j]);
+
+
+      // Electron
+      //------------------------------------------------------------------------
+      for (UInt_t k=0; k<nElectron; k++)
+	printf(" Electron k = %d (nElectron = %d);  pt = %6.2f;  eta = %5.2f\n", k, nElectron, Electron_pt[k], Electron_eta[k]);
    }
 }
