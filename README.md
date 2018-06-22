@@ -65,8 +65,8 @@ Then, do a git remote in order to check if the upstream appears.
 *Do this only if you want to create a tag.*
 
     pushd AnalysisCMS
-    git tag -a 20180219_down -m 'Welcome Pablo Matorras'
-    git push origin 20180219_down
+    git tag -a 20180622_charm -m 'Legacy tag for latino trees'
+    git push origin 20180622_charm
     popd
 
 *Do this only if you want to use a tag.*
