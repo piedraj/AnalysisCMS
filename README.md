@@ -285,7 +285,7 @@ Log in to lxplus.
 
 Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
 
-    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
+    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH
 
 Do this the first time. Do it also if you want to update the brilcalc version.
 
@@ -296,7 +296,28 @@ Do this the first time. Do it also if you want to update the brilcalc version.
 Check your brilcalc version.
 
     brilcalc --version
-    2.0.5
+    3.1.1
+
+Get the 2017 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2017Analysis) and on the [TwikiLUM](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM) TWikis one should use the following.
+
+    brilcalc lumi -b "STABLE BEAMS" \
+                  --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json \
+                  -u /fb \
+                  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
+                  
+    +-------+------+--------+--------+-------------------+------------------+
+    | nfill | nrun | nls    | ncms   | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+--------+--------+-------------------+------------------+
+    | 175   | 474  | 206564 | 205445 | 44.172            | 41.530           |
+    +-------+------+--------+--------+-------------------+------------------+
+    
+It is also possible to calculate the luminosity run by run by using the correct JSOn file, such as /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Era/Prompt/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt:
+
+    +-------+------+-------+-------+-------------------+------------------+
+    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+-------+-------+-------------------+------------------+
+    | 26    | 81   | 24526 | 24323 | 5.124             | 4.823            |
+    +-------+------+-------+-------+-------------------+------------------+
 
 Get the 2016 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis) TWiki one should use the following.
 
