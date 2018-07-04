@@ -131,11 +131,13 @@ void AnalysisBase::Loop()
       if (pass) nElectronPass++;
 
       if (verbosity > 0 && pass)
-	printf(" ele %2d;  pt = %6.2f;  eta = %5.2f;  pass = %2d\n",
+	printf(" ele %2d;  pt = %6.2f;  eta = %5.2f;  pass = %2d;  dxy = %.3f;  dz = %.3f\n",
 	       k,
 	       Electron_pt[k],
 	       Electron_eta[k],
-	       pass);
+	       pass,
+	       fabs(Electron_dxy[k]),
+	       fabs(Electron_dz[k]));
     }
 
 
