@@ -167,7 +167,7 @@ Bool_t testNano::Process(Long64_t entry)
   //pass &= (fabs(Electron_eta[k] < 2.5);  // NOT USED
     pass &= (Electron_lostHits[k] < 2);
     pass &= (Electron_convVeto[k] == 1);
-    pass &= (Electron_eInvMinusPInv[k] < 0.013);
+    pass &= (fabs(Electron_eInvMinusPInv[k]) < 0.013);
   //pass &= (Electron_pfRelIso03_all[k] < 0.06);  // NOT USED
     pass &= (Electron_dr03TkSumPt[k] < 0.1);
     pass &= (Electron_dr03HcalDepth1TowerSumEt[k]/Electron_pt[k] < 0.12);
@@ -246,7 +246,7 @@ void testNano::Terminate()
 
   txt_eventdump.close();
   
-  if (verbosity > 0) printf("\n\n");
+  printf("\n\n");
   
   printf(" nentries analyzed      = %lld\n", nentries);
   printf(" nentries muon     fail = %lld\n", nentriesMuonFail);
