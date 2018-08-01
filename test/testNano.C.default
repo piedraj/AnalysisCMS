@@ -115,16 +115,18 @@ Bool_t testNano::Process(Long64_t entry)
 
   for (UInt_t i=0; i<*nLepton; i++) {
 
-    if (Lepton_electronIdx[i] > -1) nElectronLepton++;
-    if (Lepton_muonIdx[i]     > -1) nMuonLepton++;
+    if (Lepton_electronIdx[i] > -1 && Lepton_isTightElectron_mvaFall17Iso_WP80[i]) nElectronLepton++;  // Isabel's test
+
+    if (Lepton_muonIdx[i] > -1) nMuonLepton++;
       
     if (verbosity > 0)
-      printf(" lep %2d;  pt = %6.2f;  eta = %5.2f;  eIdx = %2d;  mIdx = %2d\n",
+      printf(" lep %2d;  pt = %6.2f;  eta = %5.2f;  eIdx = %2d;  mIdx = %2d;  mva = %2d\n",
 	     i,
 	     Lepton_pt[i],
 	     Lepton_eta[i],
 	     Lepton_electronIdx[i],
-	     Lepton_muonIdx[i]);
+	     Lepton_muonIdx[i],
+	     Lepton_isTightElectron_mvaFall17Iso_WP80[i]);
   }
 
 
@@ -164,6 +166,8 @@ Bool_t testNano::Process(Long64_t entry)
 
     pass = true;
 
+    pass &= (Electron_mvaFall17Iso_WP80[k] == 1);  // Isabel's test
+
   //pass &= (fabs(Electron_eta[k] < 2.5);  // NOT USED
     pass &= (Electron_lostHits[k] < 2);
     pass &= (Electron_convVeto[k] == 1);
@@ -196,13 +200,14 @@ Bool_t testNano::Process(Long64_t entry)
     if (pass) nElectronPass++;
     
     if (verbosity > 0 && pass)
-      printf(" ele %2d;  pt = %6.2f;  eta = %5.2f;  pass = %2d;  dxy = %.3f;  dz = %.3f\n",
+      printf(" ele %2d;  pt = %6.2f;  eta = %5.2f;  pass = %2d;  dxy = %.3f;  dz = %.3f;  mva = %2d\n",
 	     k,
 	     Electron_pt[k],
 	     Electron_eta[k],
 	     pass,
 	     fabs(Electron_dxy[k]),
-	     fabs(Electron_dz[k]));
+	     fabs(Electron_dz[k]),
+	     Electron_mvaFall17Iso_WP80[k]);
   }
 
 

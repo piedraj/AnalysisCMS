@@ -17,6 +17,7 @@ void runTestNano(TString filename = "NONE")
     {
       printf("\n Examples\n\n");
       printf(" root -l -b -q \'runTestNano.C(\"nanoLatino_SingleMuon_Run2017E-31Mar2018-v1__part2.root\")\'\n");
+      printf(" root -l -b -q \'runTestNano.C(\"nanoLatino_SingleElectron_Run2017E-31Mar2018-v1__part2.root\")\'\n");
       printf(" root -l -b -q \'runTestNano.C(\"nanoLatino_WWW__part0.root\")\'\n");
       printf("\n");
       
