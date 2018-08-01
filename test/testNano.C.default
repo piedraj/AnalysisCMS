@@ -48,8 +48,8 @@ void testNano::Begin(TTree * /*tree*/)
 
   TString option = GetOption();
 
-  verbosity            =  0;
-  maxentries           = -1;  // Set to -1 to consider all the events
+  verbosity            =  1;
+  maxentries           = 10000;
   nentries             =  0;
   nentriesMuonFail     =  0;
   nentriesElectronFail =  0;
@@ -248,8 +248,19 @@ void testNano::Terminate()
   
   printf("\n\n");
   
-  printf(" nentries analyzed      = %lld\n", nentries);
+  printf(" nentries analyzed      = %lld", nentries);
+
+  if (maxentries > -1) printf(" (Set maxentries to -1 to consider all the events)");
+
+  printf("\n");
+
   printf(" nentries muon     fail = %lld\n", nentriesMuonFail);
   printf(" nentries electron fail = %lld\n", nentriesElectronFail);
+
+  if (verbosity > 0)
+    printf("\n You can set verbosity to 0 for less details\n");
+  else
+    printf("\n You can set verbosity to 1 for more details\n");
+
   printf("\n");
 }
