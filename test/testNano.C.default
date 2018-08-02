@@ -50,8 +50,9 @@ void testNano::Begin(TTree * /*tree*/)
 
   TString option = GetOption();
 
-  verbosity             = 0;
-  maxentries            = 10000;
+  verbosity  = 0;
+  maxentries = 50000;
+
   nentries              = 0;
   nentriesMuonFail      = 0;
   nentriesMuonMatch     = 0;
@@ -262,22 +263,27 @@ void testNano::Terminate()
   // the results graphically or save the results to file.
 
   txt_eventdump.close();
-  
-  printf("\n nentries analyzed       = %6lld", nentries);
-
-  if (maxentries > -1) printf(" (Set maxentries to -1 to consider all the events)");
 
   printf("\n");
+  
+  printf(" nentries analyzed       = %7lld\n",                                    nentries);
+  printf(" nentries muon     fail  = %7lld (nMuonLepton != nMuonPass)\n",         nentriesMuonFail);
+  printf(" nentries electron fail  = %7lld (nElectronLepton != nElectronPass)\n", nentriesElectronFail);
+  printf(" nentries muon     match = %7lld (nMuonLepton > 0)\n",                  nentriesMuonMatch);
+  printf(" nentries electron match = %7lld (nElectronLepton > 0)\n",              nentriesElectronMatch);
 
-  printf(" nentries muon     fail  = %6lld (nMuonLepton != nMuonPass)\n",         nentriesMuonFail);
-  printf(" nentries electron fail  = %6lld (nElectronLepton != nElectronPass)\n", nentriesElectronFail);
-  printf(" nentries muon     match = %6lld (nMuonLepton > 0)\n",                  nentriesMuonMatch);
-  printf(" nentries electron match = %6lld (nElectronLepton > 0)\n",              nentriesElectronMatch);
 
+  // Instructions
+  //----------------------------------------------------------------------------
   if (verbosity > 0)
-    printf("\n You can set verbosity to 0 for less details\n");
+    printf("\n Set verbosity to 0 for less details\n");
   else
-    printf("\n You can set verbosity to 1 for more details\n");
+    printf("\n Set verbosity to 1 for more details\n");
+
+  if (maxentries > -1)
+    printf("\n Set maxentries to -1 to read all events\n");
+  else
+    printf("\n Set maxentries different from -1 to read a subset of all events\n");
 
   printf("\n");
 }
