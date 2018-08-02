@@ -2,7 +2,7 @@
 //
 //      Target: Check nanoLatino trees
 //     Authors: Jonatan Piedra, Cedric Prieels
-// Last update: August 1st, 2018
+// Last update: August 2nd, 2018
 //
 //------------------------------------------------------------------------------
 TString path_mc = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2017_nAOD_v1_Study2017/MCl1loose2017__baseW__hadd/";
