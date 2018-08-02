@@ -119,9 +119,7 @@ Bool_t testNano::Process(Long64_t entry)
 
   for (UInt_t i=0; i<*nLepton; i++) {
 
-    //    if (Lepton_electronIdx[i] > -1 && Lepton_isTightElectron_mvaFall17Iso_WP80[i]) nElectronLepton++;  // Isabel's test
-
-    if (Lepton_electronIdx[i] > -1) nElectronLepton++;
+    if (Lepton_electronIdx[i] > -1 && Lepton_isTightElectron_mvaFall17Iso_WP80[i]) nElectronLepton++;  // Isabel's test
 
     if (Lepton_muonIdx[i] > -1) nMuonLepton++;
       
@@ -172,7 +170,7 @@ Bool_t testNano::Process(Long64_t entry)
 
     pass = true;
 
-    //    pass &= (Electron_mvaFall17Iso_WP80[k] == 1);  // Isabel's test
+    pass &= (Electron_mvaFall17Iso_WP80[k] == 1);  // Isabel's test
 
   //pass &= (fabs(Electron_eta[k] < 2.5);  // NOT USED
     pass &= (Electron_lostHits[k] < 2);
