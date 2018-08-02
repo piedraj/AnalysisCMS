@@ -36,7 +36,9 @@ Int_t    verbosity;
 Int_t    maxentries;
 Long64_t nentries;
 Long64_t nentriesMuonFail;
+Long64_t nentriesMuonMatch;
 Long64_t nentriesElectronFail;
+Long64_t nentriesElectronMatch;
 ofstream txt_eventdump;
 
 
@@ -48,11 +50,13 @@ void testNano::Begin(TTree * /*tree*/)
 
   TString option = GetOption();
 
-  verbosity            =  1;
-  maxentries           = 10000;
-  nentries             =  0;
-  nentriesMuonFail     =  0;
-  nentriesElectronFail =  0;
+  verbosity             = 0;
+  maxentries            = 10000;
+  nentries              = 0;
+  nentriesMuonFail      = 0;
+  nentriesMuonMatch     = 0;
+  nentriesElectronFail  = 0;
+  nentriesElectronMatch = 0;
   
   txt_eventdump.open("eventdump.txt");
 }
@@ -115,7 +119,9 @@ Bool_t testNano::Process(Long64_t entry)
 
   for (UInt_t i=0; i<*nLepton; i++) {
 
-    if (Lepton_electronIdx[i] > -1 && Lepton_isTightElectron_mvaFall17Iso_WP80[i]) nElectronLepton++;  // Isabel's test
+    //    if (Lepton_electronIdx[i] > -1 && Lepton_isTightElectron_mvaFall17Iso_WP80[i]) nElectronLepton++;  // Isabel's test
+
+    if (Lepton_electronIdx[i] > -1) nElectronLepton++;
 
     if (Lepton_muonIdx[i] > -1) nMuonLepton++;
       
@@ -166,7 +172,7 @@ Bool_t testNano::Process(Long64_t entry)
 
     pass = true;
 
-    pass &= (Electron_mvaFall17Iso_WP80[k] == 1);  // Isabel's test
+    //    pass &= (Electron_mvaFall17Iso_WP80[k] == 1);  // Isabel's test
 
   //pass &= (fabs(Electron_eta[k] < 2.5);  // NOT USED
     pass &= (Electron_lostHits[k] < 2);
@@ -213,23 +219,31 @@ Bool_t testNano::Process(Long64_t entry)
 
   // Events with some mismatch between Leptons, Electrons and Muons
   //----------------------------------------------------------------------------
-  if (nMuonLepton != nMuonPass) {
+  if (nMuonLepton != nMuonPass)
+    {
+      nentriesMuonFail++;
     
-    nentriesMuonFail++;
-    
-    if (verbosity > 0) printf("\n >>>>>>> nMuonLepton(%d) != nMuonPass(%d) <<<<<<<\n", nMuonLepton, nMuonPass);
+      if (verbosity > 0) printf("\n >>>>>>> nMuonLepton(%d) != nMuonPass(%d) <<<<<<<\n", nMuonLepton, nMuonPass);
 
-    txt_eventdump << Form("Muon:%d:%d:%lld:%d:%d\n", *run, *luminosityBlock, *event, nMuonLepton, nMuonPass);
-  }
+      txt_eventdump << Form("Muon:%d:%d:%lld:%d:%d\n", *run, *luminosityBlock, *event, nMuonLepton, nMuonPass);
+    }
+  else if (nMuonLepton > 0)
+    {
+      nentriesMuonMatch++;
+    }
   
-  if (nElectronLepton != nElectronPass) {
+  if (nElectronLepton != nElectronPass)
+    {
+      nentriesElectronFail++;
     
-    nentriesElectronFail++;
+      if (verbosity > 0) printf("\n +++++++ nElectronLepton(%d) != nElectronPass(%d) +++++++\n", nElectronLepton, nElectronPass);
     
-    if (verbosity > 0) printf("\n +++++++ nElectronLepton(%d) != nElectronPass(%d) +++++++\n", nElectronLepton, nElectronPass);
-    
-    txt_eventdump << Form("Electron:%d:%d:%lld:%d:%d\n", *run, *luminosityBlock, *event, nElectronLepton, nElectronPass);
-  }
+      txt_eventdump << Form("Electron:%d:%d:%lld:%d:%d\n", *run, *luminosityBlock, *event, nElectronLepton, nElectronPass);
+    }
+  else if (nElectronLepton > 0)
+    {
+      nentriesElectronMatch++;
+    }
    
   return kTRUE;
 }
@@ -251,16 +265,16 @@ void testNano::Terminate()
 
   txt_eventdump.close();
   
-  printf("\n\n");
-  
-  printf(" nentries analyzed      = %lld", nentries);
+  printf("\n nentries analyzed       = %6lld", nentries);
 
   if (maxentries > -1) printf(" (Set maxentries to -1 to consider all the events)");
 
   printf("\n");
 
-  printf(" nentries muon     fail = %lld\n", nentriesMuonFail);
-  printf(" nentries electron fail = %lld\n", nentriesElectronFail);
+  printf(" nentries muon     fail  = %6lld (nMuonLepton != nMuonPass)\n",         nentriesMuonFail);
+  printf(" nentries electron fail  = %6lld (nElectronLepton != nElectronPass)\n", nentriesElectronFail);
+  printf(" nentries muon     match = %6lld (nMuonLepton > 0)\n",                  nentriesMuonMatch);
+  printf(" nentries electron match = %6lld (nElectronLepton > 0)\n",              nentriesElectronMatch);
 
   if (verbosity > 0)
     printf("\n You can set verbosity to 0 for less details\n");
