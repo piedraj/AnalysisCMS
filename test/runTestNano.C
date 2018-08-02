@@ -34,7 +34,7 @@ void runTestNano(TString filename = "NONE")
 
   mychain->MakeSelector("testNano");
 
-  gSystem->Exec("cp testNano.C.default testNano.C");
+  gSystem->Exec("cp testNano_template.C testNano.C");
 
   printf("\nExecuting mychain->Process(\"testNano.C+\")...\n\n");
 
