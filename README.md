@@ -296,7 +296,7 @@ Do this the first time. Do it also if you want to update the brilcalc version.
 Check your brilcalc version.
 
     brilcalc --version
-    3.1.1
+    3.3.2
 
 Get the 2017 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2017Analysis) and on the [TwikiLUM](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM) TWikis one should use the following.
 
