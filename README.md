@@ -311,7 +311,7 @@ Get the 2017 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/vie
     | 175   | 474  | 206564 | 205445 | 44.172            | 41.530           |
     +-------+------+--------+--------+-------------------+------------------+
     
-It is also possible to calculate the luminosity run by run by using the correct JSOn file, such as /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Era/Prompt/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt:
+It is also possible to calculate the luminosity run by run by using the correct JSON file, such as /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Era/Prompt/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt:
 
     +-------+------+-------+-------+-------------------+------------------+
     | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
