@@ -10,7 +10,8 @@ TString path_mc = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Fall2
 TString path_data = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/HWWNano/Run2017_nAOD_v1_Study2017/DATAl1loose2017__hadd/";
 
 
-void runTestNano(TString filename = "NONE")
+void runTestNano(TString filename     = "NONE",
+		 Bool_t  makeSelector = kTRUE)
 {
   if (filename.EqualTo("NONE"))
     {
@@ -31,11 +32,14 @@ void runTestNano(TString filename = "NONE")
 
   mychain->Add(path + "nanoLatino_" + filename + ".root");
 
-  printf("\nExecuting mychain->MakeSelector(\"testNano\")...\n\n");
+  if (makeSelector) {
 
-  mychain->MakeSelector("testNano");
+    printf("\nExecuting mychain->MakeSelector(\"testNano\")...\n\n");
 
-  gSystem->Exec("cp testNano_template.C testNano.C");
+    mychain->MakeSelector("testNano");
+
+    gSystem->Exec("cp testNano_template.C testNano.C");
+  }
 
   printf("\nExecuting mychain->Process(\"testNano.C+\")...\n\n");
 
