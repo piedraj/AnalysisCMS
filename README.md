@@ -9,10 +9,9 @@
 [8. Edit a CMS Analysis Note](#edit-a-cms-analysis-note)  
 [9. EOS](#eos)  
 [10. Copy latino trees](#copy-latino-trees)  
-[11. brilcalc](#brilcalc)  
-[12. CRAB output destination](#crab-output-destination)  
-[13. Polycom connection](#polycom-connection)  
-[14. Combine](#combine)  
+[11. CRAB output destination](#crab-output-destination)  
+[12. Polycom connection](#polycom-connection)  
+[13. Combine](#combine)  
 
 
 # <a name="latino-documentation"/>0. Latino documentation
@@ -275,70 +274,7 @@ Check that the input folder has be copied at the following gridui path.
     /gpfs/csic_projects/tier3data/LatinosSkims/RunII/cernbox/
 
 
-# <a name="brilcalc"/>11. brilcalc
-
-Log in to lxplus.
-
-    ssh -Y piedra@lxplus.cern.ch -o ServerAliveInterval=240
-
-    bash -l
-
-Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
-
-    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH
-
-Do this the first time. Do it also if you want to update the brilcalc version.
-
-    pip uninstall brilws
-
-    pip install --install-option="--prefix=$HOME/.local" brilws
-
-Check your brilcalc version.
-
-    brilcalc --version
-    3.1.1
-
-Get the 2017 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2017Analysis) and on the [TwikiLUM](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM) TWikis one should use the following.
-
-    brilcalc lumi -b "STABLE BEAMS" \
-                  --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json \
-                  -u /fb \
-                  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
-                  
-    +-------+------+--------+--------+-------------------+------------------+
-    | nfill | nrun | nls    | ncms   | totdelivered(/fb) | totrecorded(/fb) |
-    +-------+------+--------+--------+-------------------+------------------+
-    | 175   | 474  | 206564 | 205445 | 44.172            | 41.530           |
-    +-------+------+--------+--------+-------------------+------------------+
-    
-It is also possible to calculate the luminosity run by run by using the correct JSOn file, such as /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Era/Prompt/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt:
-
-    +-------+------+-------+-------+-------------------+------------------+
-    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
-    +-------+------+-------+-------+-------------------+------------------+
-    | 26    | 81   | 24526 | 24323 | 5.124             | 4.823            |
-    +-------+------+-------+-------+-------------------+------------------+
-
-Get the 2016 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis) TWiki one should use the following.
-
-    brilcalc lumi -b "STABLE BEAMS" \
-                  --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json \
-                  -u /fb \
-                  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt \
-                  --hltpath "HLT_Mu8_TrkIsoVVL_v*"
-
-Get the 2015 luminosity.
-
-    brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json -u /fb -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt
-
-    +-------+------+-------+-------+-------------------+------------------+
-    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
-    +-------+------+-------+-------+-------------------+------------------+
-    | 47    | 115  | 33208 | 33208 | 2.398             | 2.318            |
-    +-------+------+-------+-------+-------------------+------------------+
-
-
-# <a name="crab-output-destination"/>12. CRAB output destination
+# <a name="crab-output-destination"/>11. CRAB output destination
 
     ls -l /gpfs/gaes/cms/store/group/phys_higgs/cmshww/amassiro/RunII/2016/Feb2017/
 
@@ -359,7 +295,7 @@ Find the latino files and change their ACL permissions.
     popd
 
 
-# <a name="polycom-connection"/>13. Polycom connection
+# <a name="polycom-connection"/>12. Polycom connection
 
 1. Open the **Address Book** and call **Vidyogw06.cern.ch**.
 2. Once the call fails (because it will fail) enter **Video Call** and connect.
@@ -368,7 +304,7 @@ Find the latino files and change their ACL permissions.
     \* 10 444 191 #
 
 
-# <a name="combine"/>14. Combine
+# <a name="combine"/>13. Combine
 
 Combine provides a command line interface to many different statistical techniques available inside RooFit/RooStats used widely inside CMS. It is extensively documented [here](https://cms-hcomb.gitbooks.io/combine/content/). These are the current (December 14th, 2017) setup instructions.
 
@@ -384,4 +320,3 @@ Combine provides a command line interface to many different statistical techniqu
     scramv1 b
 
 To be continued.
-
