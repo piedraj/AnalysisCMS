@@ -16,6 +16,7 @@ void runTestNano(TString filename = "NONE")
     {
       printf("\n Examples\n\n");
       printf(" root -l -b -q \'runTestNano.C(\"SingleMuon_Run2017E-31Mar2018-v1__part2\")\'\n");
+      printf(" root -l -b -q \'runTestNano.C(\"SingleElectron_Run2017B-31Mar2018-v1__part1\")\' *** Break *** segmentation violation\n");
       printf(" root -l -b -q \'runTestNano.C(\"SingleElectron_Run2017E-31Mar2018-v1__part2\")\'\n");
       printf(" root -l -b -q \'runTestNano.C(\"WWW\")\'\n");
       printf(" root -l -b -q \'runTestNano.C(\"GluGluHToWWTo2L2NuPowheg_M125_private\")\'\n");
