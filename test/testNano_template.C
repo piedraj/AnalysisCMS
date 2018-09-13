@@ -50,6 +50,8 @@ void testNano::Begin(TTree * /*tree*/)
 
   TString option = GetOption();
 
+  printf("\n [testNano::Begin] option = %s\n", option.Data());
+
   verbosity  = 0;
   maxentries = 50000;
 

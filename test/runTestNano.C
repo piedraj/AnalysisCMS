@@ -43,7 +43,7 @@ void runTestNano(TString filename     = "NONE",
 
   printf("\nExecuting mychain->Process(\"testNano.C+\")...\n\n");
 
-  mychain->Process("testNano.C+");
+  mychain->Process("testNano.C+", "this is a test");
 
   return;
 }
