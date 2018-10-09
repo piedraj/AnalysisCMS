@@ -15,7 +15,11 @@ void runTestNano(TString filename     = "NONE",
 {
   if (filename.EqualTo("NONE"))
     {
-      printf("\n Examples\n\n");
+      printf("\n");
+      printf(" The MC   path is %s\n", path_mc.Data());
+      printf(" The data path is %s\n", path_data.Data());
+      printf("\n");
+
       printf(" root -l -b -q \'runTestNano.C(\"SingleMuon_Run2017E-31Mar2018-v1__part2\")\'\n");
       printf(" root -l -b -q \'runTestNano.C(\"SingleElectron_Run2017B-31Mar2018-v1__part1\")\' *** Break *** segmentation violation\n");
       printf(" root -l -b -q \'runTestNano.C(\"SingleElectron_Run2017E-31Mar2018-v1__part2\")\'\n");
