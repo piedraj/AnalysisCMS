@@ -33,7 +33,7 @@ Log in to gridui or lxplus.
 
     bash -l
 
-Execute this line only in gridui.
+Execute this line **only** in gridui.
 
     source /cvmfs/cms.cern.ch/cmsset_default.sh
 
