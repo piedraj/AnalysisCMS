@@ -170,11 +170,8 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://bchazinq.web.cern.ch/bchazinq/
     https://cprieels.web.cern.ch/cprieels/
     https://fernanpe.web.cern.ch/fernanpe/
-    https://jgarciaf.web.cern.ch/jgarciaf/
-    https://ntrevisa.web.cern.ch/ntrevisa/
     https://piedra.web.cern.ch/piedra/
     https://rocio.web.cern.ch/rocio/
 
